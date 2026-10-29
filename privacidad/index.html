@@ -26,7 +26,7 @@
 <p>Tu marca activa, los packs y rotuladores que tienes, tus favoritos, tus paletas guardadas, el historial de tus últimas elecciones al emparejar colores y tus ajustes se guardan solo en el almacenamiento privado de la app, en tu dispositivo. Los catálogos de rotuladores van dentro de la app y todo funciona sin conexión. No hay sincronización ni copia en ningún servidor nuestro.</p>
 <p>La copia de seguridad del sistema de Android está <strong>desactivada</strong> para esta app, de modo que ni tus ajustes ni tu clave salen del móvil por esa vía. En iPhone, las preferencias entran en la copia del dispositivo que gestionas con tu cuenta de Apple.</p>
 <h3>Cámara y galería</h3>
-<p>Solo cuando usas «Emparejar» y eliges hacer una foto o elegir una de la galería, la app pide el permiso o abre el selector del sistema. La foto se decodifica y se muestrea <strong>en tu móvil</strong> para hallar el rotulador más parecido: no se sube a ningún sitio, no se guarda y nunca se envía a un proveedor de IA. De la elección solo se conserva el color muestreado y el rotulador emparejado, en tu historial local.</p>
+<p>Solo cuando usas «Emparejar» o «Escena desde una foto» (en Paleta) y eliges hacer una foto o elegir una de la galería, la app pide el permiso o abre el selector del sistema. La foto se decodifica y se analiza <strong>en tu móvil</strong>: no se sube a ningún sitio, no se guarda y nunca se envía a un proveedor de IA. En «Emparejar», de la elección solo se conserva el color muestreado y el rotulador emparejado, en tu historial local. En «Escena desde una foto» se sacan sus colores principales para proponerte rotuladores de tu colección; la foto solo se mantiene en memoria mientras ves el resultado, y si guardas la paleta se guardan los códigos de los rotuladores, nunca la foto.</p>
 <h3>Copia de seguridad</h3>
 <p>«Exportar copia» (Ajustes) genera un texto JSON con tus colecciones, favoritos, paletas e historial, y lo <strong>copia al portapapeles</strong> para que lo pegues donde quieras; «Importar copia» lo recibe pegándolo. No está cifrado, no lleva ningún identificador y nunca incluye tu clave de API. Lo que hagas con él después (guardarlo en tu nube, mandarlo por un mensaje...) queda fuera de la app. Ten en cuenta que, según tu sistema, el portapapeles puede ser visible para tu teclado o para otras apps.</p>
 <h3>IA opcional</h3>
@@ -38,7 +38,7 @@
 </ul>
 <p>Tu clave de OpenRouter se guarda en el almacén seguro del sistema (Android Keystore o Keychain de iOS, solo en este dispositivo). No se sube al desarrollador, no se incluye en las copias de seguridad y puedes borrarla en Ajustes cuando quieras. Si la IA falla, la app vuelve a la teoría del color.</p>
 <h3>Permisos</h3>
-<p>La app pide el permiso de <strong>cámara o fotos</strong> solo cuando usas «Emparejar», y declara el acceso a <strong>red</strong> solo para la IA opcional con OpenRouter. No pide ubicación, contactos, calendario, micrófono ni notificaciones, y no usa el identificador publicitario.</p>
+<p>La app pide el permiso de <strong>cámara o fotos</strong> solo cuando usas «Emparejar» o «Escena desde una foto», y declara el acceso a <strong>red</strong> solo para la IA opcional con OpenRouter. No pide ubicación, contactos, calendario, micrófono ni notificaciones, y no usa el identificador publicitario.</p>
 <h3>Datos que NO se tratan</h3>
 <ul>
 <li>No pedimos ni guardamos nombre, correo, teléfono, edad ni ningún dato de cuenta: no hay cuentas.</li>
@@ -52,7 +52,7 @@
 <th scope="col">Tratamiento</th><th scope="col">Finalidad</th><th scope="col">Base jurídica (RGPD)</th>
 </tr></thead><tbody>
 <tr><td>Colecciones, favoritos, paletas y ajustes en tu móvil</td><td>Que uses la app y conserves tu trabajo</td><td>No los recibimos: se quedan en tu dispositivo, bajo tu control</td></tr>
-<tr><td>Foto de «Emparejar»</td><td>Hallar el rotulador más parecido</td><td>Se procesa solo en tu móvil, a petición tuya; no la recibimos</td></tr>
+<tr><td>Foto de «Emparejar» o de «Escena desde una foto»</td><td>Hallar los rotuladores más parecidos</td><td>Se procesa solo en tu móvil, a petición tuya; no la recibimos</td></tr>
 <tr><td>IA con OpenRouter (opcional)</td><td>Generar sugerencias de paleta</td><td>Tu consentimiento al activarla y usar tu propia clave; el tratamiento lo hace OpenRouter bajo sus condiciones</td></tr>
 <tr><td>Correos de soporte</td><td>Responder a tu consulta</td><td>Tu solicitud y nuestro interés legítimo en atenderla (art. 6.1.f)</td></tr>
 </tbody></table></div>

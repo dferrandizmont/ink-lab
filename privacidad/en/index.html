@@ -27,7 +27,7 @@
 <p>Your active brand, the packs and markers you own, your favourites, your saved palettes, the history of your latest colour matches and your settings are stored only in the app&#x27;s private storage, on your device. The marker catalogues ship inside the app and everything works offline. There is no synchronisation or copy on any server of ours.</p>
 <p>Android&#x27;s system backup is <strong>switched off</strong> for this app, so neither your settings nor your key leave the phone that way. On iPhone, the preferences are part of the device backup that you manage with your Apple account.</p>
 <h3>Camera and gallery</h3>
-<p>Only when you use &quot;Match&quot; and choose to take a photo or pick one from the gallery, the app asks for the permission or opens the system picker. The photo is decoded and sampled <strong>on your phone</strong> to find the closest marker: it is not uploaded anywhere, it is not stored and it is never sent to an AI provider. Only the sampled colour and the matched marker are kept, in your local history.</p>
+<p>Only when you use &quot;Match&quot; or &quot;Scene from a photo&quot; (in Palette) and choose to take a photo or pick one from the gallery, the app asks for the permission or opens the system picker. The photo is decoded and analysed <strong>on your phone</strong>: it is not uploaded anywhere, it is not stored and it is never sent to an AI provider. In &quot;Match&quot;, only the sampled colour and the matched marker are kept, in your local history. In &quot;Scene from a photo&quot;, its main colours are found to suggest markers from your collection; the photo is only kept in memory while you look at the result, and if you save the palette, the marker codes are saved, never the photo.</p>
 <h3>Backup</h3>
 <p>&quot;Export backup&quot; (Settings) produces a JSON text with your collections, favourites, palettes and history, and <strong>copies it to the clipboard</strong> for you to paste wherever you like; &quot;Import backup&quot; receives it by pasting. It is not encrypted, carries no identifier and never includes your API key. What you do with it afterwards (saving it in your cloud, sending it in a message...) is outside the app. Note that, depending on your system, the clipboard may be visible to your keyboard or to other apps.</p>
 <h3>Optional AI</h3>
@@ -39,7 +39,7 @@
 </ul>
 <p>Your OpenRouter key is stored in the system&#x27;s secure storage (Android Keystore or iOS Keychain, on this device only). It is not uploaded to the developer, it is not included in backups, and you can delete it in Settings at any time. If the AI fails, the app goes back to colour theory.</p>
 <h3>Permissions</h3>
-<p>The app asks for the <strong>camera or photos</strong> permission only when you use &quot;Match&quot;, and declares <strong>network</strong> access only for the optional AI with OpenRouter. It does not ask for location, contacts, calendar, microphone or notifications, and it does not use the advertising identifier.</p>
+<p>The app asks for the <strong>camera or photos</strong> permission only when you use &quot;Match&quot; or &quot;Scene from a photo&quot;, and declares <strong>network</strong> access only for the optional AI with OpenRouter. It does not ask for location, contacts, calendar, microphone or notifications, and it does not use the advertising identifier.</p>
 <h3>Data that is NOT processed</h3>
 <ul>
 <li>We do not ask for or keep your name, email, phone, age or any account data: there are no accounts.</li>
@@ -53,7 +53,7 @@
 <th scope="col">Processing</th><th scope="col">Purpose</th><th scope="col">Legal basis (GDPR)</th>
 </tr></thead><tbody>
 <tr><td>Collections, favourites, palettes and settings on your phone</td><td>So that you can use the app and keep your work</td><td>We do not receive them: they stay on your device, under your control</td></tr>
-<tr><td>&quot;Match&quot; photo</td><td>Finding the closest marker</td><td>Processed only on your phone, at your request; we do not receive it</td></tr>
+<tr><td>&quot;Match&quot; or &quot;Scene from a photo&quot; photo</td><td>Finding the closest markers</td><td>Processed only on your phone, at your request; we do not receive it</td></tr>
 <tr><td>AI with OpenRouter (optional)</td><td>Generating palette suggestions</td><td>Your consent when you turn it on and use your own key; OpenRouter performs the processing under its own terms</td></tr>
 <tr><td>Support emails</td><td>Replying to your query</td><td>Your request and our legitimate interest in handling it (art. 6.1.f)</td></tr>
 </tbody></table></div>
