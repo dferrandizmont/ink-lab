@@ -45,7 +45,7 @@ They are requested when the user taps the feature, never at launch.
 
 | Permission | What for | Where |
 |---|---|---|
-| Camera and photos (`NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription` on iOS; system picker on Android) | Matching the colour of a photo to a marker. The photo is decoded and sampled **on the phone**; it is not uploaded, not stored and not sent to any AI provider. | `ios/Runner/Info.plist`, `lib/ui/pages/match/` |
+| Camera and photos (`NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription` on iOS; system picker on Android) | Matching the colour of a photo to a marker, and finding a photo's main colours for a palette ("Scene from a photo"). The photo is decoded and analysed **on the phone**; it is not uploaded, not stored and not sent to any AI provider. | `ios/Runner/Info.plist`, `lib/ui/pages/match/`, `lib/ui/pages/palette/palette_photo_scene.dart` |
 | Network (`INTERNET`, Android) | Only the optional AI with OpenRouter. Without it the app opens no socket. | `AndroidManifest.xml` |
 
 No location, contacts, calendar, microphone, general storage, notifications or advertising identifier.

@@ -241,37 +241,6 @@ extension PhraseLocalizations on AppLocalizations {
     _ => null,
   };
 
-  String? scenarioText(String label) => switch (label) {
-    'Ghost Character' => scenarioGhostCharacter,
-    'Cute Character' => scenarioCuteCharacter,
-    'Fantasy Creature' => scenarioFantasyCreature,
-    'Warm Portrait' => scenarioWarmPortrait,
-    'Cool Portrait' => scenarioCoolPortrait,
-    'Sunset Landscape' => scenarioSunsetLandscape,
-    'Forest Scene' => scenarioForestScene,
-    'Ocean Scene' => scenarioOceanScene,
-    'Autumn Scene' => scenarioAutumnScene,
-    'Spring Garden' => scenarioSpringGarden,
-    'Cozy Interior' => scenarioCozyInterior,
-    'Vintage Room' => scenarioVintageRoom,
-    'Pastel Dream' => scenarioPastelDream,
-    'Neon Night' => scenarioNeonNight,
-    'Moody Night' => scenarioMoodyNight,
-    'Floral Pattern' => scenarioFloralPattern,
-    'Geometric Pattern' => scenarioGeometricPattern,
-    'Plaid Pattern' => scenarioPlaidPattern,
-    'Polka Dot Pattern' => scenarioPolkaDotPattern,
-    'Candy Stripes' => scenarioCandyStripes,
-    'Halloween Mood' => scenarioHalloweenMood,
-    'Christmas Mood' => scenarioChristmasMood,
-    'Spring Mood' => scenarioSpringMood,
-    'Summer Mood' => scenarioSummerMood,
-    'Autumn Mood' => scenarioAutumnMood,
-    'Winter Mood' => scenarioWinterMood,
-    'Winter Snow' => scenarioWinterSnow,
-    _ => null,
-  };
-
   String? packLabelText(String label) => switch (label) {
     '120 New' => packLabel120New,
     '36 Skin' => packLabel36Skin,

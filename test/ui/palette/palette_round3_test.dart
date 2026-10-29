@@ -56,7 +56,11 @@ void main() {
       expect(strip.lockedIndices, contains(0));
       expect(find.text('Combinations (5)'), findsOneWidget);
       // The paint order lists the base first and uses the same colours.
-      expect(find.textContaining('${l10n.roleBase} · '), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('palette-step-zone-1')),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.roleBase), findsWidgets);
     });
 
     for (final int size in <int>[3, 4]) {

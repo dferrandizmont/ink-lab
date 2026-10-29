@@ -6,6 +6,7 @@ import 'color_utils.dart';
 import 'models.dart';
 import 'palette_advisor.dart';
 
+export 'model/scene.dart' show ScenarioTarget;
 export 'palette_advisor.dart' show PaletteSuggestion;
 
 part 'palette_scenarios.dart';
@@ -27,26 +28,6 @@ final class _ScoredColor {
   final List<double> hsv;
   final double score;
   final String reason;
-}
-
-/// A scenario role's HSV target and optional saturation bounds.
-final class ScenarioTarget {
-  const ScenarioTarget(
-    this.role,
-    this.hueOffsets, {
-    required this.valueDelta,
-    required this.saturationDelta,
-    this.preferNeutral = false,
-    this.minSaturation,
-    this.maxSaturation,
-  });
-  final String role;
-  final List<double> hueOffsets;
-  final double valueDelta, saturationDelta;
-  // All source scenario targets use these fixed default weights.
-  final double weightHue = 0.58, weightValue = 0.27, weightSaturation = 0.15;
-  final bool preferNeutral;
-  final double? minSaturation, maxSaturation;
 }
 
 /// Default, entirely local implementation. Callers supply collection state;
@@ -111,7 +92,7 @@ MarkerColor? resolveBaseColor(String input, List<MarkerColor> colors) {
 
 MarkerColor? findScenarioDefaultBase(
   List<MarkerColor> candidates,
-  DrawingScenario scenario,
+  Scene scenario,
 ) {
   final seed = _scenarioSeed(scenario);
   return minBy(candidates, (color) {
@@ -160,7 +141,7 @@ List<PaletteSuggestion> buildPalette(
 List<PaletteSuggestion> buildScenarioPalette(
   MarkerColor baseColor,
   List<MarkerColor> candidates,
-  DrawingScenario scenario, {
+  Scene scenario, {
   int size = 5,
   int variationToken = 0,
 }) {

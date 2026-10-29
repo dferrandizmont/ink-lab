@@ -125,9 +125,82 @@
   "paletteTitle": "Paleta",
   "paletteBaseCodeLabel": "Código del rotulador base",
   "paletteBaseCodeHint": "E08 o B271",
-  "paletteHarmonyLabel": "Armonía",
   "paletteScenarioToggle": "Escenas",
-  "paletteScenarioTitle": "Escenas",
+  "paletteTypeTitle": "Tipo de paleta",
+  "paletteTypeSheetTitle": "Elige el tipo de paleta",
+  "paletteTypeTheoryGroup": "Teoría del color",
+  "paletteTypeScenesGroup": "Escenas",
+  "paletteTypeScenesHint": "Recetas listas por motivo",
+  "paletteTypeDescRecommended": "Combinaciones para tu base",
+  "paletteTypeDescComplementary": "Matiz opuesto, contraste fuerte",
+  "paletteTypeDescAnalogous": "Matices vecinos, en calma",
+  "paletteTypeDescSplitComplementary": "Dos matices junto al opuesto",
+  "paletteTypeDescTriad": "Tres matices equidistantes",
+  "paletteTypeDescSquare": "Cuatro matices equidistantes",
+  "paletteTypeDescRectangle": "Dos pares complementarios",
+  "paletteTypeDescMonochrome": "Un matiz, de claro a oscuro",
+  "paletteTypeDescShadow": "Tonos oscuros para sombrear",
+  "paletteTypeDescCustomPalette": "Constrúyela a mano",
+  "paletteTypeSemantic": "Tipo de paleta, {value}",
+  "@paletteTypeSemantic": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteSceneTitle": "Escena",
+  "paletteSceneSheetTitle": "Elige una escena",
+  "paletteSceneSearchHint": "Busca escena o categoría",
+  "paletteSceneEmpty": "Ninguna escena coincide con tu búsqueda.",
+  "paletteSceneSemantic": "Escena, {value}",
+  "@paletteSceneSemantic": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteFromPhotoTitle": "Desde una foto",
+  "@paletteFromPhotoTitle": {
+    "description": "Scene sheet entry and source sheet title: build a palette from the colours of a photo."
+  },
+  "paletteFromPhotoHint": "Tu foto, con tus rotuladores",
+  "@paletteFromPhotoHint": {
+    "description": "One-line explanation under the From a photo entry."
+  },
+  "paletteFromPhotoValue": "Tu foto",
+  "@paletteFromPhotoValue": {
+    "description": "Value of the scene field while a photo palette is shown."
+  },
+  "paletteFromPhotoRole": "Color de la foto · {percent} %",
+  "@paletteFromPhotoRole": {
+    "description": "Role line of a colour taken from the photo, with the share of the photo it covers.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteFromPhotoEmpty": "No se han podido sacar colores de esta foto",
+  "@paletteFromPhotoEmpty": {
+    "description": "Error when no colours (or no owned markers) came out of the photo."
+  },
+  "paletteFromPhotoFarNote": "Algunos colores de la foto no tienen un rotulador parecido en tu colección",
+  "@paletteFromPhotoFarNote": {
+    "description": "Note shown when a photo colour has no usable owned marker close to it."
+  },
+  "sceneCategoryCharacters": "Personajes",
+  "sceneCategorySkin": "Pieles y retratos",
+  "sceneCategorySkyWater": "Cielos y agua",
+  "sceneCategoryNature": "Naturaleza",
+  "sceneCategoryMaterials": "Materiales",
+  "sceneCategoryAnimals": "Animales y pelaje",
+  "sceneCategoryFood": "Comida",
+  "sceneCategoryHolidays": "Fiestas y ambientes",
+  "sceneCategoryInteriors": "Interiores",
+  "sceneCategoryPatterns": "Patrones",
+  "sceneCategoryFantasy": "Fantasía",
   "paletteSizeTitle": "Tamaño",
   "paletteSizeSemantic": "Tamaño de la paleta",
   "paletteGenerateButton": "Generar",
@@ -146,7 +219,7 @@
   "palettePaintTipHighlight": "Coloca la luz donde incide directamente.",
   "palettePaintTipAccent": "Reserva el acento solo para las zonas focales.",
   "palettePaintTipSupport": "Usa este tono de apoyo para suavizar las transiciones.",
-  "paletteSubtitleIdle": "Crea una paleta a partir de un rotulador que tengas",
+  "paletteSubtitleIdle": "Crea una paleta con un rotulador que tengas",
   "paletteAiOptionalNote": "La IA es opcional y viene desactivada.",
   "paletteLockButton": "Bloquear",
   "paletteUnlockButton": "Desbloquear",
@@ -161,7 +234,7 @@
   "paletteDeleteDialogTitle": "¿Borrar la paleta?",
   "paletteDeleteDialogBody": "Esta acción no se puede deshacer.",
   "paletteAiFellBack": "IA no disponible. Se muestran sugerencias locales.",
-  "paletteEmptyHint": "Elige un rotulador base para crear una paleta, o una escena con el chip Escenas.",
+  "paletteEmptyHint": "Elige un rotulador base para crear una paleta, o elige Escenas como tipo de paleta.",
   "paletteCustomModeHint": "El modo de paleta personalizada es manual: carga una paleta guardada o aplica una desde Ideas.",
   "paletteNoSuggestions": "No se pudo crear ninguna paleta con tu colección. Prueba otro modo o añade más rotuladores.",
   "palettePickBaseTooltip": "Elegir de tus rotuladores",
@@ -673,8 +746,6 @@
   "paletteAiLabelPartial": "IA + teoría del color · {name} · {aiCount}/{total}",
   "paletteResultTitle": "Combinaciones ({count})",
   "paletteSavedSubtitle": "{mode} · {size} colores",
-  "paletteSubtitleFrom": "{mode} desde {base} · {available}",
-  "paletteSubtitleScenario": "{scenario} · {available}",
   "paletteSubtitleCustom": "Paleta personalizada · {count, plural, =1{1 rotulador} other{{count} rotuladores}}",
   "paletteSavedNotice": "Paleta «{name}» guardada.",
   "paletteLoadedNotice": "Paleta «{name}» cargada.",
@@ -940,33 +1011,6 @@
   "modeMonochrome": "Monocroma",
   "modeCustomPalette": "Paleta personalizada",
   "modeShadow": "Sombra",
-  "scenarioGhostCharacter": "Personaje fantasma",
-  "scenarioCuteCharacter": "Personaje adorable",
-  "scenarioFantasyCreature": "Criatura fantástica",
-  "scenarioWarmPortrait": "Retrato cálido",
-  "scenarioCoolPortrait": "Retrato frío",
-  "scenarioSunsetLandscape": "Paisaje al atardecer",
-  "scenarioForestScene": "Escena de bosque",
-  "scenarioOceanScene": "Escena marina",
-  "scenarioAutumnScene": "Escena otoñal",
-  "scenarioSpringGarden": "Jardín primaveral",
-  "scenarioCozyInterior": "Interior acogedor",
-  "scenarioVintageRoom": "Habitación vintage",
-  "scenarioPastelDream": "Sueño pastel",
-  "scenarioNeonNight": "Noche de neón",
-  "scenarioMoodyNight": "Noche melancólica",
-  "scenarioFloralPattern": "Patrón floral",
-  "scenarioGeometricPattern": "Patrón geométrico",
-  "scenarioPlaidPattern": "Patrón de cuadros",
-  "scenarioPolkaDotPattern": "Patrón de lunares",
-  "scenarioCandyStripes": "Rayas de caramelo",
-  "scenarioHalloweenMood": "Ambiente de Halloween",
-  "scenarioChristmasMood": "Ambiente navideño",
-  "scenarioSpringMood": "Ambiente primaveral",
-  "scenarioSummerMood": "Ambiente veraniego",
-  "scenarioAutumnMood": "Ambiente otoñal",
-  "scenarioWinterMood": "Ambiente invernal",
-  "scenarioWinterSnow": "Nieve de invierno",
   "packLabel120New": "120 Nuevo",
   "packLabel36Skin": "36 Piel",
   "packLabel36Gray": "36 Grises",

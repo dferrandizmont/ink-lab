@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'json_value.dart';
 import 'models.dart';
+import 'scene_catalog.dart';
 import 'swatch_card_location.dart';
 
 /// The required brand chooses the catalog format and overrides stored brand IDs.
@@ -64,6 +65,25 @@ final class MarkerRepository {
       return decodeSwatchCardLocationCatalog(raw);
     } catch (_) {
       return const {};
+    }
+  }
+
+  Future<SceneCatalog>? _scenes;
+
+  /// The drawing scenes (scenes.json), loaded once and installed
+  /// as the catalogue that [Scene.fromJson] resolves ids against.
+  Future<SceneCatalog> loadScenes() => _scenes ??= _loadScenes();
+
+  Future<SceneCatalog> _loadScenes() async {
+    try {
+      final catalog = SceneCatalog.parse(
+        await Future<String>.sync(() => loadAsset(SceneCatalog.assetPath)),
+      );
+      SceneCatalog.install(catalog);
+      return catalog;
+    } catch (_) {
+      _scenes = null;
+      rethrow;
     }
   }
 

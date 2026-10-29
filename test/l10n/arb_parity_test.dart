@@ -69,7 +69,6 @@ void main() {
       'settingsLanguageEnglish',
       'settingsLanguageSpanish',
       'settingsPaletteDescription',
-      'paletteSubtitleScenario',
       'swatchesAlternativeSemantics',
       'swatchesDeltaEUnit',
       'swatchesHex',

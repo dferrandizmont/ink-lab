@@ -1,0 +1,1048 @@
+{
+  "version": 1,
+  "categories": ["characters","skin","skyWater","nature","materials","animals","food","holidays","interiors","patterns","fantasy"],
+  "roles": {
+    "Amber eye": "Ojo ámbar",
+    "Ash tone": "Tono ceniza",
+    "Aurora teal": "Turquesa de aurora",
+    "Blossom pink": "Rosa de flor",
+    "Blossom shadow": "Sombra de flor",
+    "Blue sheen": "Brillo azulado",
+    "Book spine red": "Rojo de lomo",
+    "Bounce light": "Luz de rebote",
+    "Branch bark": "Corteza de rama",
+    "Bronze shadow": "Sombra de bronce",
+    "Bruised purple": "Morado amoratado",
+    "Burgundy shadow": "Sombra burdeos",
+    "Burnt edge": "Borde quemado",
+    "Butter chick": "Pollito mantequilla",
+    "Butter yellow": "Amarillo mantequilla",
+    "Buttercup": "Botón de oro",
+    "Cactus green": "Verde cactus",
+    "Canopy shadow": "Sombra del dosel",
+    "Cape shadow": "Sombra de la capa",
+    "Caramel drip": "Hilo de caramelo",
+    "Cave shadow": "Sombra de cueva",
+    "Charcoal accent": "Acento carbón",
+    "Cheek warmth": "Calidez de mejilla",
+    "Cherry accent": "Acento cereza",
+    "Citrus yellow": "Amarillo cítrico",
+    "Cloud light": "Luz de nube",
+    "Cloud shadow": "Sombra de nube",
+    "Cold highlight": "Luz fría",
+    "Cone brown": "Marrón de cono",
+    "Cool backdrop": "Fondo frío",
+    "Cool grey": "Gris frío",
+    "Cool reflection": "Reflejo frío",
+    "Cool rim light": "Luz de borde fría",
+    "Cool rock": "Roca fría",
+    "Cool wash": "Veladura fría",
+    "Copper glow": "Brillo cobrizo",
+    "Coral hair": "Pelo coral",
+    "Cornflower": "Azul aciano",
+    "Cream foam": "Espuma cremosa",
+    "Crevice shadow": "Sombra de grieta",
+    "Crumb light": "Miga clara",
+    "Crust shadow": "Sombra de corteza",
+    "Dark edge": "Borde oscuro",
+    "Dark reflection": "Reflejo oscuro",
+    "Deep accent": "Acento profundo",
+    "Deep black": "Negro profundo",
+    "Deep crease": "Arruga profunda",
+    "Deep grain": "Veta profunda",
+    "Deep shade": "Sombra profunda",
+    "Desert sky": "Cielo del desierto",
+    "Dune shadow": "Sombra de duna",
+    "Dusty blue": "Azul empolvado",
+    "Ear dark": "Oreja oscura",
+    "Ebony black": "Negro ébano",
+    "Egg shadow": "Sombra de huevo",
+    "Ember glow": "Brillo de brasa",
+    "Eye green": "Verde de ojos",
+    "Faded grey": "Gris desgastado",
+    "Fairy wing": "Ala de hada",
+    "Feather highlight": "Luz de plumas",
+    "Feather shadow": "Sombra de plumas",
+    "Firefly gold": "Oro de luciérnaga",
+    "Fold highlight": "Luz de pliegue",
+    "Fold shadow": "Sombra de pliegue",
+    "Freckle tan": "Pecas tostadas",
+    "Fruit shadow": "Sombra de fruta",
+    "Fur highlight": "Luz de pelaje",
+    "Fur shadow": "Sombra de pelaje",
+    "Glowing mushroom": "Seta luminosa",
+    "Gold foil": "Pan de oro",
+    "Gold hoard": "Tesoro de oro",
+    "Golden midtone": "Medio tono dorado",
+    "Grain shadow": "Sombra de veta",
+    "Grass green": "Verde hierba",
+    "Grass shade": "Sombra de hierba",
+    "Green undertone": "Subtono verdoso",
+    "Heart highlight": "Luz de corazón",
+    "Hibiscus pop": "Toque de hibisco",
+    "Horizon haze": "Bruma del horizonte",
+    "Hot glow": "Brillo candente",
+    "Ice blue": "Azul hielo",
+    "Indigo deep": "Añil profundo",
+    "Jam red": "Rojo mermelada",
+    "Juicy highlight": "Luz jugosa",
+    "Knot dark": "Nudo oscuro",
+    "Lagoon violet": "Violeta de laguna",
+    "Lamp glow": "Luz de lámpara",
+    "Lavender note": "Nota de lavanda",
+    "Leaf green": "Verde hoja",
+    "Leather green": "Verde cuero",
+    "Lichen yellow": "Amarillo liquen",
+    "Light face": "Cara iluminada",
+    "Light fur": "Pelo claro",
+    "Lightning glow": "Destello de rayo",
+    "Lilac egg": "Huevo lila",
+    "Lips": "Labios",
+    "Menace red": "Rojo amenazante",
+    "Mid grey": "Gris medio",
+    "Midnight": "Medianoche",
+    "Milk chocolate": "Chocolate con leche",
+    "Mint scoop": "Bola de menta",
+    "Moonlight": "Luz de luna",
+    "Moss green": "Verde musgo",
+    "Moss shadow": "Sombra de musgo",
+    "Muzzle dark": "Hocico oscuro",
+    "Navy deep": "Azul marino profundo",
+    "Nose pink": "Rosa de nariz",
+    "Orange zest": "Piel de naranja",
+    "Orchid accent": "Acento orquídea",
+    "Pale wood": "Madera pálida",
+    "Parchment": "Pergamino",
+    "Pink bunny": "Conejo rosa",
+    "Pink nose": "Nariz rosada",
+    "Plate blue": "Azul de plato",
+    "Plum shade": "Sombra ciruela",
+    "Polish highlight": "Brillo de barniz",
+    "Poppy red": "Rojo amapola",
+    "Rain teal": "Turquesa de lluvia",
+    "Reddish glow": "Brillo rojizo",
+    "Roast shadow": "Sombra tostada",
+    "Root brown": "Raíz castaña",
+    "Rope tan": "Cuerda arena",
+    "Rose red": "Rojo rosa",
+    "Sage green": "Verde salvia",
+    "Scale highlight": "Luz de escamas",
+    "Scale shadow": "Sombra de escamas",
+    "Scarlet wing": "Ala escarlata",
+    "Scoop shadow": "Sombra de bola",
+    "Sea teal": "Turquesa marino",
+    "Seam shadow": "Sombra de costura",
+    "Seashell pink": "Rosa concha",
+    "Signal red": "Rojo señal",
+    "Sky pastel": "Cielo pastel",
+    "Sky reflection": "Reflejo del cielo",
+    "Smoke grey": "Gris humo",
+    "Soft grey shadow": "Sombra gris suave",
+    "Specular": "Brillo especular",
+    "Spring sky": "Cielo de primavera",
+    "Star glow": "Brillo de estrellas",
+    "Strawberry scoop": "Bola de fresa",
+    "Stripe shadow": "Sombra de rayas",
+    "Stripe white": "Blanco de raya",
+    "Sun gold": "Oro solar",
+    "Sun warmth": "Calidez del sol",
+    "Sun yellow": "Amarillo sol",
+    "Sunlit crest": "Cresta al sol",
+    "Sunlit frond": "Fronda al sol",
+    "Sunlit grass": "Hierba al sol",
+    "Tail shadow": "Sombra de cola",
+    "Teal contrast": "Contraste turquesa",
+    "Terracotta": "Terracota",
+    "Thread contrast": "Contraste de hilo",
+    "Topstitch gold": "Pespunte dorado",
+    "Toxic glow": "Brillo tóxico",
+    "Twilight canopy": "Dosel crepuscular",
+    "Vanilla cream": "Crema de vainilla",
+    "Verdigris": "Cardenillo",
+    "Violet haze": "Bruma violeta",
+    "Void background": "Fondo vacío",
+    "Warm bounce": "Rebote cálido",
+    "Warm cream": "Crema cálida",
+    "Warm glow": "Brillo cálido",
+    "Warm midtone": "Medio tono cálido",
+    "Warm reflection": "Reflejo cálido",
+    "Warm sheen": "Brillo cálido",
+    "Washed highlight": "Luz desteñida",
+    "Window night": "Noche en la ventana",
+    "Wood highlight": "Luz de madera",
+    "Zenith blue": "Azul cenital"
+  },
+  "scenes": [
+    {
+      "id": "ghostCharacter",
+      "category": "characters",
+      "name": {"en": "Ghost Character", "es": "Personaje fantasma"},
+      "seed": {"h": 210, "s": 0.18, "v": 0.88},
+      "targets": [
+        {"role": "Soft shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.05},
+        {"role": "Deep shadow", "hues": [8,352], "valueDelta": -0.32, "saturationDelta": -0.1},
+        {"role": "Highlight", "hues": [0], "valueDelta": 0.22, "saturationDelta": -0.12, "preferNeutral": true},
+        {"role": "Accent", "hues": [170,190], "valueDelta": -0.06, "saturationDelta": 0.05},
+        {"role": "Background", "hues": [145,215], "valueDelta": 0.1, "saturationDelta": -0.09}
+      ]
+    },
+    {
+      "id": "cuteCharacter",
+      "category": "characters",
+      "name": {"en": "Cute Character", "es": "Personaje adorable"},
+      "seed": {"h": 330, "s": 0.28, "v": 0.9},
+      "targets": [
+        {"role": "Soft shadow", "hues": [0], "valueDelta": -0.15, "saturationDelta": -0.03},
+        {"role": "Highlight", "hues": [0], "valueDelta": 0.2, "saturationDelta": -0.08, "preferNeutral": true},
+        {"role": "Companion hue", "hues": [20,340], "valueDelta": 0.02, "saturationDelta": -0.02},
+        {"role": "Accent", "hues": [150,210], "valueDelta": -0.04, "saturationDelta": 0.08},
+        {"role": "Background", "hues": [165], "valueDelta": 0.12, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "villainCharacter",
+      "category": "characters",
+      "name": {"en": "Villain", "es": "Villano"},
+      "seed": {"h": 275, "s": 0.55, "v": 0.45},
+      "targets": [
+        {"role": "Toxic glow", "hues": [190,200], "valueDelta": 0.3, "saturationDelta": 0.25},
+        {"role": "Cape shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": 0.05},
+        {"role": "Menace red", "hues": [100,110], "valueDelta": 0.25, "saturationDelta": 0.2},
+        {"role": "Cold highlight", "hues": [0], "valueDelta": 0.35, "saturationDelta": -0.3},
+        {"role": "Void background", "hues": [-30,-60], "valueDelta": -0.1, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "warmPortrait",
+      "category": "skin",
+      "name": {"en": "Warm Portrait", "es": "Retrato cálido"},
+      "seed": {"h": 22, "s": 0.46, "v": 0.74},
+      "targets": [
+        {"role": "Skin/subject shadow", "hues": [0], "valueDelta": -0.17, "saturationDelta": -0.02},
+        {"role": "Warm companion", "hues": [20,340], "valueDelta": 0, "saturationDelta": 0.02},
+        {"role": "Neutral balance", "hues": [0], "valueDelta": 0.06, "saturationDelta": -0.18, "preferNeutral": true, "maxSaturation": 0.35},
+        {"role": "Accent", "hues": [155,205], "valueDelta": -0.05, "saturationDelta": 0.05},
+        {"role": "Background", "hues": [30], "valueDelta": 0.14, "saturationDelta": -0.12}
+      ]
+    },
+    {
+      "id": "coolPortrait",
+      "category": "skin",
+      "name": {"en": "Cool Portrait", "es": "Retrato frío"},
+      "seed": {"h": 205, "s": 0.38, "v": 0.7},
+      "targets": [
+        {"role": "Subject shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.03},
+        {"role": "Cool companion", "hues": [25,335], "valueDelta": -0.02, "saturationDelta": 0},
+        {"role": "Airy highlight", "hues": [0], "valueDelta": 0.22, "saturationDelta": -0.12, "preferNeutral": true},
+        {"role": "Accent", "hues": [170,190], "valueDelta": -0.06, "saturationDelta": 0.07},
+        {"role": "Background", "hues": [205,230], "valueDelta": 0.1, "saturationDelta": -0.08}
+      ]
+    },
+    {
+      "id": "skinPorcelain",
+      "category": "skin",
+      "name": {"en": "Porcelain Skin", "es": "Piel de porcelana"},
+      "seed": {"h": 18, "s": 0.16, "v": 0.96},
+      "targets": [
+        {"role": "Highlight", "hues": [35,45], "valueDelta": 0.03, "saturationDelta": -0.08},
+        {"role": "Soft shadow", "hues": [0,8], "valueDelta": -0.14, "saturationDelta": 0.1},
+        {"role": "Blush", "hues": [348,355], "valueDelta": -0.06, "saturationDelta": 0.2},
+        {"role": "Cool shadow", "hues": [245,260], "valueDelta": -0.16, "saturationDelta": -0.02},
+        {"role": "Lips", "hues": [340,350], "valueDelta": -0.3, "saturationDelta": 0.4}
+      ]
+    },
+    {
+      "id": "skinTan",
+      "category": "skin",
+      "name": {"en": "Tan Skin", "es": "Piel bronceada"},
+      "seed": {"h": 24, "s": 0.5, "v": 0.82},
+      "targets": [
+        {"role": "Highlight", "hues": [12,18], "valueDelta": 0.14, "saturationDelta": -0.26},
+        {"role": "Warm shadow", "hues": [-12,-6], "valueDelta": -0.26, "saturationDelta": 0.1},
+        {"role": "Cheek warmth", "hues": [-14], "valueDelta": -0.08, "saturationDelta": 0.12},
+        {"role": "Bounce light", "hues": [16], "valueDelta": -0.04, "saturationDelta": 0.14},
+        {"role": "Cool shadow", "hues": [190,210], "valueDelta": -0.32, "saturationDelta": -0.24}
+      ]
+    },
+    {
+      "id": "skinOlive",
+      "category": "skin",
+      "name": {"en": "Olive Skin", "es": "Piel aceitunada"},
+      "seed": {"h": 38, "s": 0.42, "v": 0.76},
+      "targets": [
+        {"role": "Highlight", "hues": [10,20], "valueDelta": 0.16, "saturationDelta": -0.2},
+        {"role": "Green undertone", "hues": [32,45], "valueDelta": -0.14, "saturationDelta": -0.04},
+        {"role": "Shadow", "hues": [-18,-10], "valueDelta": -0.32, "saturationDelta": 0.1},
+        {"role": "Blush", "hues": [-35,-28], "valueDelta": -0.1, "saturationDelta": 0.1},
+        {"role": "Deep accent", "hues": [-20], "valueDelta": -0.5, "saturationDelta": 0.05}
+      ]
+    },
+    {
+      "id": "skinBrown",
+      "category": "skin",
+      "name": {"en": "Brown Skin", "es": "Piel morena"},
+      "seed": {"h": 20, "s": 0.7, "v": 0.62},
+      "targets": [
+        {"role": "Highlight", "hues": [8,16], "valueDelta": 0.28, "saturationDelta": -0.2},
+        {"role": "Deep shadow", "hues": [-14,-8], "valueDelta": -0.26, "saturationDelta": 0.04},
+        {"role": "Warm glow", "hues": [14,22], "valueDelta": 0.14, "saturationDelta": 0.12},
+        {"role": "Plum shade", "hues": [-50,-40], "valueDelta": -0.18, "saturationDelta": -0.1},
+        {"role": "Cool reflection", "hues": [190,200], "valueDelta": -0.12, "saturationDelta": -0.3}
+      ]
+    },
+    {
+      "id": "skinDeep",
+      "category": "skin",
+      "name": {"en": "Deep Skin", "es": "Piel oscura"},
+      "seed": {"h": 18, "s": 0.72, "v": 0.34},
+      "targets": [
+        {"role": "Highlight", "hues": [8,16], "valueDelta": 0.3, "saturationDelta": -0.2},
+        {"role": "Deep shadow", "hues": [-20,-12], "valueDelta": -0.2, "saturationDelta": 0.02},
+        {"role": "Cool rim light", "hues": [190,200], "valueDelta": 0.4, "saturationDelta": -0.4},
+        {"role": "Plum shade", "hues": [-50,-40], "valueDelta": -0.04, "saturationDelta": -0.2},
+        {"role": "Midtone", "hues": [8], "valueDelta": 0.12, "saturationDelta": -0.05}
+      ]
+    },
+    {
+      "id": "hairBlonde",
+      "category": "skin",
+      "name": {"en": "Blonde Hair", "es": "Pelo rubio"},
+      "seed": {"h": 45, "s": 0.55, "v": 0.88},
+      "targets": [
+        {"role": "Highlight", "hues": [5,10], "valueDelta": 0.1, "saturationDelta": -0.35},
+        {"role": "Shadow", "hues": [-12], "valueDelta": -0.28, "saturationDelta": 0.08},
+        {"role": "Root brown", "hues": [-22], "valueDelta": -0.45, "saturationDelta": 0.02},
+        {"role": "Golden midtone", "hues": [0], "valueDelta": -0.08, "saturationDelta": 0.1},
+        {"role": "Ash tone", "hues": [25,35], "valueDelta": -0.1, "saturationDelta": -0.4}
+      ]
+    },
+    {
+      "id": "hairRed",
+      "category": "skin",
+      "name": {"en": "Red Hair", "es": "Pelo pelirrojo"},
+      "seed": {"h": 14, "s": 0.78, "v": 0.7},
+      "targets": [
+        {"role": "Highlight", "hues": [14,22], "valueDelta": 0.22, "saturationDelta": -0.4},
+        {"role": "Shadow", "hues": [-14,-8], "valueDelta": -0.36, "saturationDelta": 0.06},
+        {"role": "Copper glow", "hues": [8], "valueDelta": 0.08, "saturationDelta": 0.1},
+        {"role": "Teal contrast", "hues": [170,190], "valueDelta": -0.1, "saturationDelta": -0.3},
+        {"role": "Freckle tan", "hues": [18,26], "valueDelta": 0.1, "saturationDelta": -0.45}
+      ]
+    },
+    {
+      "id": "sunsetLandscape",
+      "category": "skyWater",
+      "name": {"en": "Sunset Landscape", "es": "Paisaje al atardecer"},
+      "seed": {"h": 28, "s": 0.58, "v": 0.82},
+      "targets": [
+        {"role": "Ground shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": -0.02},
+        {"role": "Sky blend", "hues": [30], "valueDelta": 0.08, "saturationDelta": 0.03},
+        {"role": "Sun highlight", "hues": [45], "valueDelta": 0.24, "saturationDelta": 0.06},
+        {"role": "Contrast accent", "hues": [190], "valueDelta": -0.05, "saturationDelta": 0.08},
+        {"role": "Neutral buffer", "hues": [0], "valueDelta": 0.02, "saturationDelta": -0.2, "preferNeutral": true, "maxSaturation": 0.35}
+      ]
+    },
+    {
+      "id": "oceanScene",
+      "category": "skyWater",
+      "name": {"en": "Ocean Scene", "es": "Escena marina"},
+      "seed": {"h": 195, "s": 0.6, "v": 0.62},
+      "targets": [
+        {"role": "Subject shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.03},
+        {"role": "Cool companion", "hues": [25,335], "valueDelta": -0.02, "saturationDelta": 0},
+        {"role": "Airy highlight", "hues": [0], "valueDelta": 0.22, "saturationDelta": -0.12, "preferNeutral": true},
+        {"role": "Accent", "hues": [170,190], "valueDelta": -0.06, "saturationDelta": 0.07},
+        {"role": "Background", "hues": [205,230], "valueDelta": 0.1, "saturationDelta": -0.08}
+      ]
+    },
+    {
+      "id": "clearSky",
+      "category": "skyWater",
+      "name": {"en": "Clear Sky", "es": "Cielo despejado"},
+      "seed": {"h": 205, "s": 0.5, "v": 0.9},
+      "targets": [
+        {"role": "Zenith blue", "hues": [0], "valueDelta": -0.18, "saturationDelta": 0.25},
+        {"role": "Horizon haze", "hues": [-20,-15], "valueDelta": 0.06, "saturationDelta": -0.4},
+        {"role": "Cloud light", "hues": [0,45,90,135,180,225,270,315], "valueDelta": 0.1, "saturationDelta": -0.45, "preferNeutral": true, "maxSaturation": 0.2},
+        {"role": "Cloud shadow", "hues": [25,35], "valueDelta": -0.28, "saturationDelta": -0.3},
+        {"role": "Sun warmth", "hues": [195,205], "valueDelta": 0.1, "saturationDelta": -0.2}
+      ]
+    },
+    {
+      "id": "stormClouds",
+      "category": "skyWater",
+      "name": {"en": "Storm Clouds", "es": "Nubes de tormenta"},
+      "seed": {"h": 215, "s": 0.2, "v": 0.5},
+      "targets": [
+        {"role": "Cloud shadow", "hues": [0], "valueDelta": -0.3, "saturationDelta": 0.1},
+        {"role": "Lightning glow", "hues": [185,200], "valueDelta": 0.4, "saturationDelta": 0.4},
+        {"role": "Bruised purple", "hues": [55,70], "valueDelta": -0.1, "saturationDelta": 0.12},
+        {"role": "Rain teal", "hues": [-40,-30], "valueDelta": -0.05, "saturationDelta": 0.2},
+        {"role": "Cloud light", "hues": [0], "valueDelta": 0.3, "saturationDelta": -0.1, "preferNeutral": true, "maxSaturation": 0.25}
+      ]
+    },
+    {
+      "id": "starryNight",
+      "category": "skyWater",
+      "name": {"en": "Starry Night", "es": "Noche estrellada"},
+      "seed": {"h": 232, "s": 0.82, "v": 0.3},
+      "targets": [
+        {"role": "Midnight", "hues": [10], "valueDelta": -0.12, "saturationDelta": 0},
+        {"role": "Star glow", "hues": [175,185], "valueDelta": 0.5, "saturationDelta": -0.1},
+        {"role": "Aurora teal", "hues": [-60,-50], "valueDelta": 0.3, "saturationDelta": -0.15},
+        {"role": "Moonlight", "hues": [-180,-170], "valueDelta": 0.62, "saturationDelta": -0.6},
+        {"role": "Violet haze", "hues": [40,50], "valueDelta": 0.15, "saturationDelta": -0.3}
+      ]
+    },
+    {
+      "id": "forestScene",
+      "category": "nature",
+      "name": {"en": "Forest Scene", "es": "Escena de bosque"},
+      "seed": {"h": 118, "s": 0.5, "v": 0.62},
+      "targets": [
+        {"role": "Leaf shadow", "hues": [0], "valueDelta": -0.22, "saturationDelta": -0.01},
+        {"role": "Moss midtone", "hues": [20,340], "valueDelta": -0.04, "saturationDelta": -0.02},
+        {"role": "Sunlit leaf", "hues": [12], "valueDelta": 0.18, "saturationDelta": 0.03},
+        {"role": "Trunk accent", "hues": [150,210], "valueDelta": -0.1, "saturationDelta": -0.06},
+        {"role": "Sky/fog", "hues": [180], "valueDelta": 0.12, "saturationDelta": -0.08}
+      ]
+    },
+    {
+      "id": "autumnScene",
+      "category": "nature",
+      "name": {"en": "Autumn Scene", "es": "Escena otoñal"},
+      "seed": {"h": 24, "s": 0.7, "v": 0.78},
+      "targets": [
+        {"role": "Skin/subject shadow", "hues": [0], "valueDelta": -0.17, "saturationDelta": -0.02},
+        {"role": "Warm companion", "hues": [20,340], "valueDelta": 0, "saturationDelta": 0.02},
+        {"role": "Neutral balance", "hues": [0], "valueDelta": 0.06, "saturationDelta": -0.18, "preferNeutral": true, "maxSaturation": 0.35},
+        {"role": "Accent", "hues": [155,205], "valueDelta": -0.05, "saturationDelta": 0.05},
+        {"role": "Background", "hues": [30], "valueDelta": 0.14, "saturationDelta": -0.12}
+      ]
+    },
+    {
+      "id": "springGarden",
+      "category": "nature",
+      "name": {"en": "Spring Garden", "es": "Jardín primaveral"},
+      "seed": {"h": 108, "s": 0.42, "v": 0.86},
+      "targets": [
+        {"role": "Soft shadow", "hues": [0], "valueDelta": -0.15, "saturationDelta": -0.03},
+        {"role": "Highlight", "hues": [0], "valueDelta": 0.2, "saturationDelta": -0.08, "preferNeutral": true},
+        {"role": "Companion hue", "hues": [20,340], "valueDelta": 0.02, "saturationDelta": -0.02},
+        {"role": "Accent", "hues": [150,210], "valueDelta": -0.04, "saturationDelta": 0.08},
+        {"role": "Background", "hues": [165], "valueDelta": 0.12, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "springMood",
+      "category": "nature",
+      "name": {"en": "Spring Mood", "es": "Ambiente primaveral"},
+      "seed": {"h": 104, "s": 0.38, "v": 0.86},
+      "targets": [
+        {"role": "Bud shadow", "hues": [0], "valueDelta": -0.14, "saturationDelta": -0.02},
+        {"role": "Blossom tint", "hues": [228], "valueDelta": 0.06, "saturationDelta": 0.03},
+        {"role": "Fresh leaf", "hues": [0], "valueDelta": 0.04, "saturationDelta": 0.08},
+        {"role": "Daffodil light", "hues": [305], "valueDelta": 0.22, "saturationDelta": 0.02},
+        {"role": "Rainy sky", "hues": [130], "valueDelta": 0.1, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "summerMood",
+      "category": "nature",
+      "name": {"en": "Summer Mood", "es": "Ambiente veraniego"},
+      "seed": {"h": 34, "s": 0.62, "v": 0.84},
+      "targets": [
+        {"role": "Palm shadow", "hues": [0], "valueDelta": -0.22, "saturationDelta": -0.02},
+        {"role": "Coral accent", "hues": [320], "valueDelta": 0.02, "saturationDelta": 0.1},
+        {"role": "Ocean splash", "hues": [170], "valueDelta": -0.04, "saturationDelta": 0.09},
+        {"role": "Sunbeam highlight", "hues": [18], "valueDelta": 0.24, "saturationDelta": 0.04},
+        {"role": "Warm sand", "hues": [0], "valueDelta": 0.1, "saturationDelta": -0.22, "preferNeutral": true, "maxSaturation": 0.34}
+      ]
+    },
+    {
+      "id": "autumnMood",
+      "category": "nature",
+      "name": {"en": "Autumn Mood", "es": "Ambiente otoñal"},
+      "seed": {"h": 26, "s": 0.58, "v": 0.66},
+      "targets": [
+        {"role": "Bark shadow", "hues": [0], "valueDelta": -0.26, "saturationDelta": -0.04},
+        {"role": "Maple red", "hues": [334], "valueDelta": -0.02, "saturationDelta": 0.12},
+        {"role": "Pumpkin glow", "hues": [10], "valueDelta": 0.12, "saturationDelta": 0.08},
+        {"role": "Olive accent", "hues": [92], "valueDelta": -0.06, "saturationDelta": -0.02},
+        {"role": "Morning mist", "hues": [0], "valueDelta": 0.18, "saturationDelta": -0.24, "preferNeutral": true, "maxSaturation": 0.32}
+      ]
+    },
+    {
+      "id": "winterMood",
+      "category": "nature",
+      "name": {"en": "Winter Mood", "es": "Ambiente invernal"},
+      "seed": {"h": 212, "s": 0.24, "v": 0.84},
+      "targets": [
+        {"role": "Snow shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": -0.04},
+        {"role": "Frost highlight", "hues": [0], "valueDelta": 0.24, "saturationDelta": -0.16, "preferNeutral": true, "maxSaturation": 0.3},
+        {"role": "Evergreen depth", "hues": [265], "valueDelta": -0.08, "saturationDelta": 0.06},
+        {"role": "Berry accent", "hues": [128], "valueDelta": -0.02, "saturationDelta": 0.12},
+        {"role": "Twilight sky", "hues": [30], "valueDelta": -0.04, "saturationDelta": 0.03}
+      ]
+    },
+    {
+      "id": "winterSnow",
+      "category": "nature",
+      "name": {"en": "Winter Snow", "es": "Nieve de invierno"},
+      "seed": {"h": 210, "s": 0.18, "v": 0.88},
+      "targets": [
+        {"role": "Subject shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.03},
+        {"role": "Cool companion", "hues": [25,335], "valueDelta": -0.02, "saturationDelta": 0},
+        {"role": "Airy highlight", "hues": [0], "valueDelta": 0.22, "saturationDelta": -0.12, "preferNeutral": true},
+        {"role": "Accent", "hues": [170,190], "valueDelta": -0.06, "saturationDelta": 0.07},
+        {"role": "Background", "hues": [205,230], "valueDelta": 0.1, "saturationDelta": -0.08}
+      ]
+    },
+    {
+      "id": "cherryBlossom",
+      "category": "nature",
+      "name": {"en": "Cherry Blossom", "es": "Cerezo en flor"},
+      "seed": {"h": 342, "s": 0.22, "v": 0.97},
+      "targets": [
+        {"role": "Blossom pink", "hues": [0], "valueDelta": -0.04, "saturationDelta": 0.2},
+        {"role": "Blossom shadow", "hues": [-10,-5], "valueDelta": -0.18, "saturationDelta": 0.16},
+        {"role": "Branch bark", "hues": [60,70], "valueDelta": -0.55, "saturationDelta": 0.1},
+        {"role": "Fresh leaf", "hues": [140], "valueDelta": -0.2, "saturationDelta": 0.3},
+        {"role": "Spring sky", "hues": [-140,-130], "valueDelta": -0.05, "saturationDelta": -0.02}
+      ]
+    },
+    {
+      "id": "wildflowerMeadow",
+      "category": "nature",
+      "name": {"en": "Wildflower Meadow", "es": "Prado de flores silvestres"},
+      "seed": {"h": 95, "s": 0.55, "v": 0.78},
+      "targets": [
+        {"role": "Grass shade", "hues": [15], "valueDelta": -0.28, "saturationDelta": 0.08},
+        {"role": "Sunlit grass", "hues": [-40,-30], "valueDelta": 0.12, "saturationDelta": 0.05},
+        {"role": "Poppy red", "hues": [-95,-85], "valueDelta": -0.05, "saturationDelta": 0.15},
+        {"role": "Cornflower", "hues": [130,140], "valueDelta": -0.1, "saturationDelta": -0.1},
+        {"role": "Buttercup", "hues": [-60,-50], "valueDelta": 0.15, "saturationDelta": 0.1}
+      ]
+    },
+    {
+      "id": "tropicalJungle",
+      "category": "nature",
+      "name": {"en": "Tropical Jungle", "es": "Selva tropical"},
+      "seed": {"h": 140, "s": 0.7, "v": 0.5},
+      "targets": [
+        {"role": "Canopy shadow", "hues": [10,20], "valueDelta": -0.22, "saturationDelta": 0.05},
+        {"role": "Sunlit frond", "hues": [-55,-45], "valueDelta": 0.3, "saturationDelta": -0.05},
+        {"role": "Hibiscus pop", "hues": [-155,-145], "valueDelta": 0.3, "saturationDelta": -0.05},
+        {"role": "Sun gold", "hues": [-95,-85], "valueDelta": 0.35, "saturationDelta": 0},
+        {"role": "Orchid accent", "hues": [140,150], "valueDelta": 0.1, "saturationDelta": -0.2}
+      ]
+    },
+    {
+      "id": "desertDunes",
+      "category": "nature",
+      "name": {"en": "Desert Dunes", "es": "Dunas del desierto"},
+      "seed": {"h": 32, "s": 0.48, "v": 0.88},
+      "targets": [
+        {"role": "Dune shadow", "hues": [-12,-6], "valueDelta": -0.32, "saturationDelta": 0.1},
+        {"role": "Sunlit crest", "hues": [12], "valueDelta": 0.08, "saturationDelta": -0.2},
+        {"role": "Cactus green", "hues": [80,90], "valueDelta": -0.3, "saturationDelta": -0.15},
+        {"role": "Desert sky", "hues": [170], "valueDelta": -0.1, "saturationDelta": -0.12},
+        {"role": "Terracotta", "hues": [-30,-25], "valueDelta": -0.2, "saturationDelta": 0.12}
+      ]
+    },
+    {
+      "id": "lightWood",
+      "category": "materials",
+      "name": {"en": "Light Wood", "es": "Madera clara"},
+      "seed": {"h": 34, "s": 0.5, "v": 0.84},
+      "targets": [
+        {"role": "Wood highlight", "hues": [8,12], "valueDelta": 0.1, "saturationDelta": -0.32},
+        {"role": "Grain shadow", "hues": [-10,-8], "valueDelta": -0.28, "saturationDelta": 0.1},
+        {"role": "Knot dark", "hues": [-16], "valueDelta": -0.5, "saturationDelta": 0.1},
+        {"role": "Warm midtone", "hues": [0], "valueDelta": -0.12, "saturationDelta": 0.06},
+        {"role": "Cool wash", "hues": [180,190,200], "valueDelta": -0.05, "saturationDelta": -0.4, "preferNeutral": true, "maxSaturation": 0.3}
+      ]
+    },
+    {
+      "id": "darkWood",
+      "category": "materials",
+      "name": {"en": "Dark Wood", "es": "Madera oscura"},
+      "seed": {"h": 22, "s": 0.62, "v": 0.36},
+      "targets": [
+        {"role": "Polish highlight", "hues": [12,20], "valueDelta": 0.34, "saturationDelta": -0.28},
+        {"role": "Deep grain", "hues": [-8], "valueDelta": -0.2, "saturationDelta": 0.04},
+        {"role": "Reddish glow", "hues": [-14,-10], "valueDelta": 0.12, "saturationDelta": 0.06},
+        {"role": "Warm midtone", "hues": [0], "valueDelta": 0.2, "saturationDelta": -0.04},
+        {"role": "Ebony black", "hues": [0,45,90,135,180,225,270,315], "valueDelta": -0.28, "saturationDelta": -0.3, "preferNeutral": true, "maxSaturation": 0.3}
+      ]
+    },
+    {
+      "id": "stone",
+      "category": "materials",
+      "name": {"en": "Stone", "es": "Piedra"},
+      "seed": {"h": 30, "s": 0.1, "v": 0.62},
+      "targets": [
+        {"role": "Light face", "hues": [0,20,180,200], "valueDelta": 0.22, "saturationDelta": 0, "maxSaturation": 0.25},
+        {"role": "Crevice shadow", "hues": [0,20,180,200], "valueDelta": -0.36, "saturationDelta": 0, "maxSaturation": 0.25},
+        {"role": "Moss green", "hues": [80,90], "valueDelta": -0.12, "saturationDelta": 0.28},
+        {"role": "Lichen yellow", "hues": [35,50], "valueDelta": 0.1, "saturationDelta": 0.25},
+        {"role": "Cool rock", "hues": [165,185], "valueDelta": -0.08, "saturationDelta": 0.04}
+      ]
+    },
+    {
+      "id": "fabric",
+      "category": "materials",
+      "name": {"en": "Fabric", "es": "Tela"},
+      "seed": {"h": 350, "s": 0.4, "v": 0.7},
+      "targets": [
+        {"role": "Fold highlight", "hues": [8,12], "valueDelta": 0.22, "saturationDelta": -0.22},
+        {"role": "Fold shadow", "hues": [-6], "valueDelta": -0.26, "saturationDelta": 0.08},
+        {"role": "Deep crease", "hues": [-12], "valueDelta": -0.42, "saturationDelta": 0.04},
+        {"role": "Thread contrast", "hues": [170,190], "valueDelta": -0.1, "saturationDelta": -0.1},
+        {"role": "Warm bounce", "hues": [25,30], "valueDelta": 0.04, "saturationDelta": -0.18}
+      ]
+    },
+    {
+      "id": "denim",
+      "category": "materials",
+      "name": {"en": "Denim", "es": "Tela vaquera"},
+      "seed": {"h": 218, "s": 0.6, "v": 0.5},
+      "targets": [
+        {"role": "Washed highlight", "hues": [-10,-5], "valueDelta": 0.28, "saturationDelta": -0.35},
+        {"role": "Seam shadow", "hues": [8], "valueDelta": -0.24, "saturationDelta": 0.08},
+        {"role": "Indigo deep", "hues": [20,30], "valueDelta": -0.38, "saturationDelta": 0},
+        {"role": "Topstitch gold", "hues": [-175,-170], "valueDelta": 0.3, "saturationDelta": 0.1},
+        {"role": "Faded grey", "hues": [0,20,200], "valueDelta": 0.12, "saturationDelta": -0.5, "preferNeutral": true, "maxSaturation": 0.3}
+      ]
+    },
+    {
+      "id": "gold",
+      "category": "materials",
+      "name": {"en": "Gold", "es": "Oro"},
+      "seed": {"h": 44, "s": 0.76, "v": 0.82},
+      "targets": [
+        {"role": "Specular", "hues": [6,10], "valueDelta": 0.16, "saturationDelta": -0.55},
+        {"role": "Bronze shadow", "hues": [-22,-16], "valueDelta": -0.46, "saturationDelta": -0.02},
+        {"role": "Sky reflection", "hues": [150,165], "valueDelta": -0.1, "saturationDelta": -0.52},
+        {"role": "Warm reflection", "hues": [-16,-10], "valueDelta": -0.12, "saturationDelta": 0.06},
+        {"role": "Dark edge", "hues": [-8], "valueDelta": -0.62, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "silver",
+      "category": "materials",
+      "name": {"en": "Silver", "es": "Plata"},
+      "seed": {"h": 208, "s": 0.1, "v": 0.76},
+      "targets": [
+        {"role": "Specular", "hues": [0,45,90,135,180,225,270,315], "valueDelta": 0.2, "saturationDelta": -0.1, "preferNeutral": true, "maxSaturation": 0.22},
+        {"role": "Dark reflection", "hues": [0,45,90,135,180,225,270,315], "valueDelta": -0.44, "saturationDelta": 0, "preferNeutral": true, "maxSaturation": 0.22},
+        {"role": "Sky reflection", "hues": [0], "valueDelta": 0, "saturationDelta": 0.25},
+        {"role": "Warm reflection", "hues": [180,190], "valueDelta": -0.05, "saturationDelta": 0.3},
+        {"role": "Mid grey", "hues": [0,45,90,135,180,225,270,315], "valueDelta": -0.16, "saturationDelta": 0, "preferNeutral": true, "maxSaturation": 0.22}
+      ]
+    },
+    {
+      "id": "copper",
+      "category": "materials",
+      "name": {"en": "Copper", "es": "Cobre"},
+      "seed": {"h": 20, "s": 0.72, "v": 0.74},
+      "targets": [
+        {"role": "Specular", "hues": [20,28], "valueDelta": 0.2, "saturationDelta": -0.5},
+        {"role": "Dark reflection", "hues": [-12,-10], "valueDelta": -0.4, "saturationDelta": 0},
+        {"role": "Verdigris", "hues": [150,160], "valueDelta": -0.06, "saturationDelta": -0.3},
+        {"role": "Hot glow", "hues": [8,12], "valueDelta": 0.1, "saturationDelta": 0.1},
+        {"role": "Burnt edge", "hues": [-6], "valueDelta": -0.55, "saturationDelta": -0.05}
+      ]
+    },
+    {
+      "id": "orangeCat",
+      "category": "animals",
+      "name": {"en": "Orange Cat", "es": "Gato naranja"},
+      "seed": {"h": 26, "s": 0.76, "v": 0.88},
+      "targets": [
+        {"role": "Light fur", "hues": [10,14], "valueDelta": 0.1, "saturationDelta": -0.5},
+        {"role": "Stripe shadow", "hues": [-10], "valueDelta": -0.3, "saturationDelta": 0.06},
+        {"role": "Eye green", "hues": [60,70], "valueDelta": -0.04, "saturationDelta": -0.1},
+        {"role": "Nose pink", "hues": [-30,-25], "valueDelta": 0.04, "saturationDelta": -0.38},
+        {"role": "Cool backdrop", "hues": [175,190], "valueDelta": -0.2, "saturationDelta": -0.5}
+      ]
+    },
+    {
+      "id": "goldenFur",
+      "category": "animals",
+      "name": {"en": "Golden Fur", "es": "Pelaje dorado"},
+      "seed": {"h": 36, "s": 0.58, "v": 0.88},
+      "targets": [
+        {"role": "Fur highlight", "hues": [8,12], "valueDelta": 0.1, "saturationDelta": -0.35},
+        {"role": "Fur shadow", "hues": [-14], "valueDelta": -0.32, "saturationDelta": 0.08},
+        {"role": "Ear dark", "hues": [-18], "valueDelta": -0.5, "saturationDelta": 0.02},
+        {"role": "Muzzle dark", "hues": [0,45,90,135,180,225,270,315], "valueDelta": -0.6, "saturationDelta": -0.4, "preferNeutral": true, "maxSaturation": 0.35},
+        {"role": "Grass green", "hues": [75,85], "valueDelta": -0.16, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "blackFur",
+      "category": "animals",
+      "name": {"en": "Black Fur", "es": "Pelaje negro"},
+      "seed": {"h": 225, "s": 0.25, "v": 0.22},
+      "targets": [
+        {"role": "Blue sheen", "hues": [0], "valueDelta": 0.45, "saturationDelta": 0.15},
+        {"role": "Deep black", "hues": [0], "valueDelta": -0.12, "saturationDelta": -0.15},
+        {"role": "Amber eye", "hues": [180,190], "valueDelta": 0.6, "saturationDelta": 0.5},
+        {"role": "Warm sheen", "hues": [155,165], "valueDelta": 0.3, "saturationDelta": 0.3},
+        {"role": "Cool grey", "hues": [0], "valueDelta": 0.3, "saturationDelta": -0.1, "preferNeutral": true, "maxSaturation": 0.3}
+      ]
+    },
+    {
+      "id": "whiteFur",
+      "category": "animals",
+      "name": {"en": "White Fur", "es": "Pelaje blanco"},
+      "seed": {"h": 205, "s": 0.1, "v": 0.96},
+      "targets": [
+        {"role": "Cool shadow", "hues": [20,30], "valueDelta": -0.22, "saturationDelta": 0.1},
+        {"role": "Deep shade", "hues": [40], "valueDelta": -0.42, "saturationDelta": 0.08},
+        {"role": "Warm cream", "hues": [-170,-165], "valueDelta": -0.02, "saturationDelta": 0.05},
+        {"role": "Pink nose", "hues": [150,160], "valueDelta": -0.04, "saturationDelta": 0.08},
+        {"role": "Ice blue", "hues": [0], "valueDelta": -0.08, "saturationDelta": 0.1}
+      ]
+    },
+    {
+      "id": "tropicalBird",
+      "category": "animals",
+      "name": {"en": "Tropical Bird", "es": "Ave tropical"},
+      "seed": {"h": 170, "s": 0.8, "v": 0.7},
+      "targets": [
+        {"role": "Feather highlight", "hues": [5,10], "valueDelta": 0.25, "saturationDelta": -0.4},
+        {"role": "Feather shadow", "hues": [10,20], "valueDelta": -0.36, "saturationDelta": 0.08},
+        {"role": "Scarlet wing", "hues": [175,190], "valueDelta": 0.15, "saturationDelta": 0.1},
+        {"role": "Sun yellow", "hues": [-120,-115], "valueDelta": 0.25, "saturationDelta": 0},
+        {"role": "Leaf green", "hues": [-55,-45], "valueDelta": -0.25, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "freshFruit",
+      "category": "food",
+      "name": {"en": "Fresh Fruit", "es": "Fruta fresca"},
+      "seed": {"h": 8, "s": 0.8, "v": 0.86},
+      "targets": [
+        {"role": "Juicy highlight", "hues": [8,14], "valueDelta": 0.12, "saturationDelta": -0.6},
+        {"role": "Fruit shadow", "hues": [-8], "valueDelta": -0.38, "saturationDelta": 0},
+        {"role": "Leaf green", "hues": [115,125], "valueDelta": -0.3, "saturationDelta": -0.2},
+        {"role": "Citrus yellow", "hues": [45,50], "valueDelta": 0.12, "saturationDelta": -0.05},
+        {"role": "Orange zest", "hues": [25], "valueDelta": 0, "saturationDelta": -0.05}
+      ]
+    },
+    {
+      "id": "bakery",
+      "category": "food",
+      "name": {"en": "Bakery", "es": "Panadería"},
+      "seed": {"h": 34, "s": 0.55, "v": 0.88},
+      "targets": [
+        {"role": "Crumb light", "hues": [12], "valueDelta": 0.1, "saturationDelta": -0.35},
+        {"role": "Crust shadow", "hues": [-10], "valueDelta": -0.34, "saturationDelta": 0.06},
+        {"role": "Jam red", "hues": [-30,-26], "valueDelta": -0.22, "saturationDelta": 0.25},
+        {"role": "Butter yellow", "hues": [18], "valueDelta": 0.08, "saturationDelta": -0.1},
+        {"role": "Plate blue", "hues": [170], "valueDelta": -0.2, "saturationDelta": -0.4}
+      ]
+    },
+    {
+      "id": "chocolateCoffee",
+      "category": "food",
+      "name": {"en": "Chocolate and Coffee", "es": "Chocolate y café"},
+      "seed": {"h": 24, "s": 0.7, "v": 0.32},
+      "targets": [
+        {"role": "Cream foam", "hues": [12,16], "valueDelta": 0.55, "saturationDelta": -0.5},
+        {"role": "Roast shadow", "hues": [-10], "valueDelta": -0.18, "saturationDelta": 0},
+        {"role": "Caramel drip", "hues": [12], "valueDelta": 0.32, "saturationDelta": 0},
+        {"role": "Milk chocolate", "hues": [0], "valueDelta": 0.14, "saturationDelta": -0.08},
+        {"role": "Cherry accent", "hues": [-24,-20], "valueDelta": 0.3, "saturationDelta": 0.05}
+      ]
+    },
+    {
+      "id": "iceCream",
+      "category": "food",
+      "name": {"en": "Ice Cream", "es": "Helado"},
+      "seed": {"h": 330, "s": 0.3, "v": 0.95},
+      "targets": [
+        {"role": "Mint scoop", "hues": [-180,-170], "valueDelta": -0.05, "saturationDelta": 0},
+        {"role": "Scoop shadow", "hues": [-10], "valueDelta": -0.2, "saturationDelta": 0.12},
+        {"role": "Cone brown", "hues": [60,70], "valueDelta": -0.4, "saturationDelta": 0.3},
+        {"role": "Vanilla cream", "hues": [90,100], "valueDelta": 0, "saturationDelta": -0.05},
+        {"role": "Strawberry scoop", "hues": [0], "valueDelta": -0.03, "saturationDelta": 0.1}
+      ]
+    },
+    {
+      "id": "pastelDream",
+      "category": "holidays",
+      "name": {"en": "Pastel Dream", "es": "Sueño pastel"},
+      "seed": {"h": 268, "s": 0.26, "v": 0.9},
+      "targets": [
+        {"role": "Soft shadow", "hues": [0], "valueDelta": -0.15, "saturationDelta": -0.03},
+        {"role": "Highlight", "hues": [0], "valueDelta": 0.2, "saturationDelta": -0.08, "preferNeutral": true},
+        {"role": "Companion hue", "hues": [20,340], "valueDelta": 0.02, "saturationDelta": -0.02},
+        {"role": "Accent", "hues": [150,210], "valueDelta": -0.04, "saturationDelta": 0.08},
+        {"role": "Background", "hues": [165], "valueDelta": 0.12, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "neonNight",
+      "category": "holidays",
+      "name": {"en": "Neon Night", "es": "Noche de neón"},
+      "seed": {"h": 322, "s": 0.78, "v": 0.6},
+      "targets": [
+        {"role": "Primary shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": 0},
+        {"role": "Mystic accent", "hues": [120,240], "valueDelta": -0.08, "saturationDelta": 0.12},
+        {"role": "Secondary accent", "hues": [180], "valueDelta": 0, "saturationDelta": 0.09},
+        {"role": "Highlight", "hues": [20,340], "valueDelta": 0.16, "saturationDelta": -0.06},
+        {"role": "Background", "hues": [210], "valueDelta": -0.14, "saturationDelta": -0.02}
+      ]
+    },
+    {
+      "id": "moodyNight",
+      "category": "holidays",
+      "name": {"en": "Moody Night", "es": "Noche melancólica"},
+      "seed": {"h": 225, "s": 0.5, "v": 0.35},
+      "targets": [
+        {"role": "Subject shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.03},
+        {"role": "Cool companion", "hues": [25,335], "valueDelta": -0.02, "saturationDelta": 0},
+        {"role": "Airy highlight", "hues": [0], "valueDelta": 0.22, "saturationDelta": -0.12, "preferNeutral": true},
+        {"role": "Accent", "hues": [170,190], "valueDelta": -0.06, "saturationDelta": 0.07},
+        {"role": "Background", "hues": [205,230], "valueDelta": 0.1, "saturationDelta": -0.08}
+      ]
+    },
+    {
+      "id": "halloweenMood",
+      "category": "holidays",
+      "name": {"en": "Halloween Mood", "es": "Ambiente de Halloween"},
+      "seed": {"h": 28, "s": 0.72, "v": 0.78},
+      "targets": [
+        {"role": "Pumpkin shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": 0.02},
+        {"role": "Pumpkin glow", "hues": [14,348], "valueDelta": 0.16, "saturationDelta": 0.08},
+        {"role": "Witchy purple", "hues": [248,266], "valueDelta": -0.02, "saturationDelta": 0.1},
+        {"role": "Toxic accent", "hues": [92,108], "valueDelta": -0.06, "saturationDelta": 0.1},
+        {"role": "Night background", "hues": [205], "valueDelta": -0.18, "saturationDelta": -0.04}
+      ]
+    },
+    {
+      "id": "christmasMood",
+      "category": "holidays",
+      "name": {"en": "Christmas Mood", "es": "Ambiente navideño"},
+      "seed": {"h": 4, "s": 0.64, "v": 0.72},
+      "targets": [
+        {"role": "Ribbon red", "hues": [0], "valueDelta": -0.08, "saturationDelta": 0.04},
+        {"role": "Evergreen", "hues": [120], "valueDelta": -0.12, "saturationDelta": 0.06},
+        {"role": "Gold accent", "hues": [48], "valueDelta": 0.14, "saturationDelta": 0.06},
+        {"role": "Pine depth", "hues": [140], "valueDelta": -0.22, "saturationDelta": -0.02},
+        {"role": "Snow highlight", "hues": [0], "valueDelta": 0.24, "saturationDelta": -0.24, "preferNeutral": true, "maxSaturation": 0.32}
+      ]
+    },
+    {
+      "id": "easterPastels",
+      "category": "holidays",
+      "name": {"en": "Easter Pastels", "es": "Pasteles de Pascua"},
+      "seed": {"h": 150, "s": 0.28, "v": 0.92},
+      "targets": [
+        {"role": "Lilac egg", "hues": [120,130], "valueDelta": -0.04, "saturationDelta": 0},
+        {"role": "Butter chick", "hues": [-100,-90], "valueDelta": 0, "saturationDelta": 0.1},
+        {"role": "Pink bunny", "hues": [180,190], "valueDelta": -0.02, "saturationDelta": 0},
+        {"role": "Egg shadow", "hues": [10], "valueDelta": -0.28, "saturationDelta": 0.12},
+        {"role": "Sky pastel", "hues": [50,60], "valueDelta": 0, "saturationDelta": 0}
+      ]
+    },
+    {
+      "id": "valentines",
+      "category": "holidays",
+      "name": {"en": "Valentine's Day", "es": "San Valentín"},
+      "seed": {"h": 348, "s": 0.62, "v": 0.82},
+      "targets": [
+        {"role": "Rose red", "hues": [4], "valueDelta": -0.22, "saturationDelta": 0.2},
+        {"role": "Heart highlight", "hues": [-4], "valueDelta": 0.14, "saturationDelta": -0.45},
+        {"role": "Burgundy shadow", "hues": [0,6], "valueDelta": -0.5, "saturationDelta": 0},
+        {"role": "Gold foil", "hues": [60,70], "valueDelta": 0.14, "saturationDelta": -0.2},
+        {"role": "Lavender note", "hues": [-70,-60], "valueDelta": -0.04, "saturationDelta": -0.3}
+      ]
+    },
+    {
+      "id": "cozyInterior",
+      "category": "interiors",
+      "name": {"en": "Cozy Interior", "es": "Interior acogedor"},
+      "seed": {"h": 28, "s": 0.5, "v": 0.6},
+      "targets": [
+        {"role": "Skin/subject shadow", "hues": [0], "valueDelta": -0.17, "saturationDelta": -0.02},
+        {"role": "Warm companion", "hues": [20,340], "valueDelta": 0, "saturationDelta": 0.02},
+        {"role": "Neutral balance", "hues": [0], "valueDelta": 0.06, "saturationDelta": -0.18, "preferNeutral": true, "maxSaturation": 0.35},
+        {"role": "Accent", "hues": [155,205], "valueDelta": -0.05, "saturationDelta": 0.05},
+        {"role": "Background", "hues": [30], "valueDelta": 0.14, "saturationDelta": -0.12}
+      ]
+    },
+    {
+      "id": "vintageRoom",
+      "category": "interiors",
+      "name": {"en": "Vintage Room", "es": "Habitación vintage"},
+      "seed": {"h": 40, "s": 0.3, "v": 0.7},
+      "targets": [
+        {"role": "Skin/subject shadow", "hues": [0], "valueDelta": -0.17, "saturationDelta": -0.02},
+        {"role": "Warm companion", "hues": [20,340], "valueDelta": 0, "saturationDelta": 0.02},
+        {"role": "Neutral balance", "hues": [0], "valueDelta": 0.06, "saturationDelta": -0.18, "preferNeutral": true, "maxSaturation": 0.35},
+        {"role": "Accent", "hues": [155,205], "valueDelta": -0.05, "saturationDelta": 0.05},
+        {"role": "Background", "hues": [30], "valueDelta": 0.14, "saturationDelta": -0.12}
+      ]
+    },
+    {
+      "id": "scandinavian",
+      "category": "interiors",
+      "name": {"en": "Scandinavian", "es": "Estilo nórdico"},
+      "seed": {"h": 40, "s": 0.08, "v": 0.95},
+      "targets": [
+        {"role": "Pale wood", "hues": [0], "valueDelta": -0.12, "saturationDelta": 0.28},
+        {"role": "Soft grey shadow", "hues": [170,190], "valueDelta": -0.25, "saturationDelta": 0, "maxSaturation": 0.25},
+        {"role": "Sage green", "hues": [70,80], "valueDelta": -0.2, "saturationDelta": 0.14},
+        {"role": "Dusty blue", "hues": [160,175], "valueDelta": -0.18, "saturationDelta": 0.1},
+        {"role": "Charcoal accent", "hues": [0,45,90,135,180,225,270,315], "valueDelta": -0.65, "saturationDelta": 0, "preferNeutral": true, "maxSaturation": 0.3}
+      ]
+    },
+    {
+      "id": "studyLibrary",
+      "category": "interiors",
+      "name": {"en": "Study and Library", "es": "Estudio y biblioteca"},
+      "seed": {"h": 20, "s": 0.6, "v": 0.38},
+      "targets": [
+        {"role": "Lamp glow", "hues": [25,30], "valueDelta": 0.55, "saturationDelta": -0.1},
+        {"role": "Leather green", "hues": [100,110], "valueDelta": 0, "saturationDelta": 0},
+        {"role": "Book spine red", "hues": [-18], "valueDelta": 0.12, "saturationDelta": 0},
+        {"role": "Parchment", "hues": [20], "valueDelta": 0.55, "saturationDelta": -0.35},
+        {"role": "Window night", "hues": [190,200], "valueDelta": 0, "saturationDelta": -0.2}
+      ]
+    },
+    {
+      "id": "floralPattern",
+      "category": "patterns",
+      "name": {"en": "Floral Pattern", "es": "Patrón floral"},
+      "seed": {"h": 340, "s": 0.42, "v": 0.84},
+      "targets": [
+        {"role": "Petal shadow", "hues": [0], "valueDelta": -0.16, "saturationDelta": 0},
+        {"role": "Petal highlight", "hues": [0], "valueDelta": 0.18, "saturationDelta": -0.08},
+        {"role": "Secondary petal", "hues": [30,330], "valueDelta": 0.04, "saturationDelta": 0.04},
+        {"role": "Leaf accent", "hues": [140,220], "valueDelta": -0.02, "saturationDelta": 0.04},
+        {"role": "Pattern background", "hues": [180], "valueDelta": 0.1, "saturationDelta": -0.1}
+      ]
+    },
+    {
+      "id": "geometricPattern",
+      "category": "patterns",
+      "name": {"en": "Geometric Pattern", "es": "Patrón geométrico"},
+      "seed": {"h": 28, "s": 0.5, "v": 0.74},
+      "targets": [
+        {"role": "Tone A", "hues": [0], "valueDelta": 0, "saturationDelta": 0},
+        {"role": "Tone B", "hues": [90], "valueDelta": 0, "saturationDelta": 0.05},
+        {"role": "Tone C", "hues": [180], "valueDelta": -0.04, "saturationDelta": 0.03},
+        {"role": "Tone D", "hues": [270], "valueDelta": 0.08, "saturationDelta": -0.02},
+        {"role": "Neutral linework", "hues": [0], "valueDelta": -0.1, "saturationDelta": -0.22, "preferNeutral": true, "maxSaturation": 0.33}
+      ]
+    },
+    {
+      "id": "plaidPattern",
+      "category": "patterns",
+      "name": {"en": "Plaid Pattern", "es": "Patrón de cuadros"},
+      "seed": {"h": 4, "s": 0.62, "v": 0.55},
+      "targets": [
+        {"role": "Tone A", "hues": [0], "valueDelta": 0, "saturationDelta": 0},
+        {"role": "Tone B", "hues": [90], "valueDelta": 0, "saturationDelta": 0.05},
+        {"role": "Tone C", "hues": [180], "valueDelta": -0.04, "saturationDelta": 0.03},
+        {"role": "Tone D", "hues": [270], "valueDelta": 0.08, "saturationDelta": -0.02},
+        {"role": "Neutral linework", "hues": [0], "valueDelta": -0.1, "saturationDelta": -0.22, "preferNeutral": true, "maxSaturation": 0.33}
+      ]
+    },
+    {
+      "id": "polkaDotPattern",
+      "category": "patterns",
+      "name": {"en": "Polka Dot Pattern", "es": "Patrón de lunares"},
+      "seed": {"h": 200, "s": 0.45, "v": 0.85},
+      "targets": [
+        {"role": "Tone A", "hues": [0], "valueDelta": 0, "saturationDelta": 0},
+        {"role": "Tone B", "hues": [90], "valueDelta": 0, "saturationDelta": 0.05},
+        {"role": "Tone C", "hues": [180], "valueDelta": -0.04, "saturationDelta": 0.03},
+        {"role": "Tone D", "hues": [270], "valueDelta": 0.08, "saturationDelta": -0.02},
+        {"role": "Neutral linework", "hues": [0], "valueDelta": -0.1, "saturationDelta": -0.22, "preferNeutral": true, "maxSaturation": 0.33}
+      ]
+    },
+    {
+      "id": "candyStripes",
+      "category": "patterns",
+      "name": {"en": "Candy Stripes", "es": "Rayas de caramelo"},
+      "seed": {"h": 338, "s": 0.55, "v": 0.92},
+      "targets": [
+        {"role": "Tone A", "hues": [0], "valueDelta": 0, "saturationDelta": 0},
+        {"role": "Tone B", "hues": [90], "valueDelta": 0, "saturationDelta": 0.05},
+        {"role": "Tone C", "hues": [180], "valueDelta": -0.04, "saturationDelta": 0.03},
+        {"role": "Tone D", "hues": [270], "valueDelta": 0.08, "saturationDelta": -0.02},
+        {"role": "Neutral linework", "hues": [0], "valueDelta": -0.1, "saturationDelta": -0.22, "preferNeutral": true, "maxSaturation": 0.33}
+      ]
+    },
+    {
+      "id": "nauticalStripes",
+      "category": "patterns",
+      "name": {"en": "Nautical Stripes", "es": "Rayas marineras"},
+      "seed": {"h": 222, "s": 0.8, "v": 0.45},
+      "targets": [
+        {"role": "Stripe white", "hues": [0,45,90,135,180,225,270,315], "valueDelta": 0.5, "saturationDelta": -0.75, "preferNeutral": true, "maxSaturation": 0.15},
+        {"role": "Rope tan", "hues": [175,185], "valueDelta": 0.3, "saturationDelta": -0.35},
+        {"role": "Signal red", "hues": [140,145], "valueDelta": 0.2, "saturationDelta": 0},
+        {"role": "Sea teal", "hues": [-50,-40], "valueDelta": 0.05, "saturationDelta": -0.2},
+        {"role": "Navy deep", "hues": [5], "valueDelta": -0.15, "saturationDelta": 0}
+      ]
+    },
+    {
+      "id": "fantasyCreature",
+      "category": "fantasy",
+      "name": {"en": "Fantasy Creature", "es": "Criatura fantástica"},
+      "seed": {"h": 285, "s": 0.62, "v": 0.68},
+      "targets": [
+        {"role": "Primary shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": 0},
+        {"role": "Mystic accent", "hues": [120,240], "valueDelta": -0.08, "saturationDelta": 0.12},
+        {"role": "Secondary accent", "hues": [180], "valueDelta": 0, "saturationDelta": 0.09},
+        {"role": "Highlight", "hues": [20,340], "valueDelta": 0.16, "saturationDelta": -0.06},
+        {"role": "Background", "hues": [210], "valueDelta": -0.14, "saturationDelta": -0.02}
+      ]
+    },
+    {
+      "id": "dragon",
+      "category": "fantasy",
+      "name": {"en": "Dragon", "es": "Dragón"},
+      "seed": {"h": 6, "s": 0.78, "v": 0.62},
+      "targets": [
+        {"role": "Ember glow", "hues": [20,25], "valueDelta": 0.3, "saturationDelta": 0},
+        {"role": "Scale shadow", "hues": [-12,-8], "valueDelta": -0.32, "saturationDelta": 0},
+        {"role": "Gold hoard", "hues": [35,42], "valueDelta": 0.2, "saturationDelta": 0},
+        {"role": "Smoke grey", "hues": [0,45,90,135,180,225,270,315], "valueDelta": 0, "saturationDelta": -0.7, "preferNeutral": true, "maxSaturation": 0.2},
+        {"role": "Cave shadow", "hues": [230,240], "valueDelta": -0.3, "saturationDelta": -0.3}
+      ]
+    },
+    {
+      "id": "fairyForest",
+      "category": "fantasy",
+      "name": {"en": "Fairy Forest", "es": "Bosque de hadas"},
+      "seed": {"h": 135, "s": 0.5, "v": 0.7},
+      "targets": [
+        {"role": "Glowing mushroom", "hues": [170,185], "valueDelta": 0.2, "saturationDelta": 0},
+        {"role": "Moss shadow", "hues": [10,15], "valueDelta": -0.35, "saturationDelta": 0},
+        {"role": "Firefly gold", "hues": [-85,-75], "valueDelta": 0.25, "saturationDelta": 0.1},
+        {"role": "Fairy wing", "hues": [100,110], "valueDelta": 0.15, "saturationDelta": -0.3},
+        {"role": "Twilight canopy", "hues": [85,95], "valueDelta": -0.4, "saturationDelta": 0}
+      ]
+    },
+    {
+      "id": "mermaid",
+      "category": "fantasy",
+      "name": {"en": "Mermaid", "es": "Sirena"},
+      "seed": {"h": 176, "s": 0.68, "v": 0.7},
+      "targets": [
+        {"role": "Scale highlight", "hues": [8,12], "valueDelta": 0.2, "saturationDelta": -0.35},
+        {"role": "Tail shadow", "hues": [20,30], "valueDelta": -0.34, "saturationDelta": 0},
+        {"role": "Seashell pink", "hues": [160,170], "valueDelta": 0.2, "saturationDelta": -0.35},
+        {"role": "Coral hair", "hues": [-175,-165], "valueDelta": 0.15, "saturationDelta": 0},
+        {"role": "Lagoon violet", "hues": [75,85], "valueDelta": -0.1, "saturationDelta": -0.2}
+      ]
+    }
+  ]
+}

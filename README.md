@@ -49,17 +49,19 @@ Android now; iOS and Google Play coming soon.
 
 <p>
   <a href="docs/readme/en/01-swatches.png"><img src="docs/readme/en/01-swatches.png" width="19%" alt="Swatches with codes, names and colours"></a>
-  <a href="docs/readme/en/02-swatch-detail.png"><img src="docs/readme/en/02-swatch-detail.png" width="19%" alt="Marker detail with its codes and hex"></a>
   <a href="docs/readme/en/03-match.png"><img src="docs/readme/en/03-match.png" width="19%" alt="A photo matched to the closest marker"></a>
-  <a href="docs/readme/en/04-palette.png"><img src="docs/readme/en/04-palette.png" width="19%" alt="A colour-theory palette"></a>
-  <a href="docs/readme/en/05-ideas.png"><img src="docs/readme/en/05-ideas.png" width="19%" alt="Ideas with a technique and a palette"></a>
+  <a href="docs/readme/en/04-palette.png"><img src="docs/readme/en/04-palette.png" width="19%" alt="A palette with its type, scene and colours"></a>
+  <a href="docs/readme/en/06-photo-scene.png"><img src="docs/readme/en/06-photo-scene.png" width="19%" alt="A scene made from a photo with your markers"></a>
+  <a href="docs/readme/en/07-ideas.png"><img src="docs/readme/en/07-ideas.png" width="19%" alt="Ideas with a technique and a palette"></a>
 </p>
 
 <details>
 <summary>More screenshots</summary>
 
 <p>
-  <a href="docs/readme/en/06-settings.png"><img src="docs/readme/en/06-settings.png" width="19%" alt="Settings"></a>
+  <a href="docs/readme/en/02-swatch-detail.png"><img src="docs/readme/en/02-swatch-detail.png" width="19%" alt="Marker detail with its codes and hex"></a>
+  <a href="docs/readme/en/05-scenes.png"><img src="docs/readme/en/05-scenes.png" width="19%" alt="The scene list, by category"></a>
+  <a href="docs/readme/en/08-settings-dark.png"><img src="docs/readme/en/08-settings-dark.png" width="19%" alt="Settings in the dark theme"></a>
 </p>
 
 </details>
@@ -68,14 +70,21 @@ Tap a screenshot to enlarge it.
 
 ## Features
 
+- **My markers:** one collection per brand, built from the series you use, the
+  sets you own and any loose markers. A short first-run guide sets it up.
 - **Swatches:** the catalogue by code and name, with the hex of each marker,
-  search, pack filters and favourites. On Ohuhu Oahu it also shows where each
+  search, filters, your own markers and favourites. On Ohuhu Oahu it also shows where each
   marker sits on the colour card.
 - **Match from a photo:** take a photo or pick one from the gallery, tap a point
-  and the app tells you which marker in your collection is closest.
+  and the app tells you which marker in your collection is closest, or says so
+  when none is close.
 - **Colour-theory palettes:** pick a base colour and get harmonies
   (complementary, analogous, split complementary, triad, square, rectangle,
   monochrome and shadow), always resolved with the markers you own.
+- **Scenes:** 67 ready-made recipes in 11 categories (skin, sky and water,
+  nature, animals, food, fantasy…), searchable, each with its colour roles.
+- **Scene from a photo:** the app finds the main colours of a photo and turns
+  them into the closest markers you own.
 - **Ideas:** challenges and techniques with a palette from your active
   collection.
 - **Two brands:** Ohuhu (Oahu, Honolulu and Kaala, 503 colours, with the new
@@ -91,7 +100,7 @@ Tap a screenshot to enlarge it.
 
 Everything is stored on the phone. There are no accounts, no server of ours, no
 analytics, no ads and no tracking. The camera and the gallery are only used to
-match a photo, and the photo never leaves the device.
+match a photo or to make a scene from one, and the photo never leaves the device.
 
 [Privacy policy](https://dferrandizmont.github.io/ink-lab/privacidad/en/) ·
 [Technical details](docs/privacy.en.md) · Support: **dev@mainshai.com**.

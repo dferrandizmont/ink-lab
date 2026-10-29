@@ -7,6 +7,7 @@
 # docs/design-mockups/ y docs/release/ (internos); .claude, APK/AAB y keystores.
 # Sin gradlew ni el JAR del wrapper (no estan versionados): Flutter los repone al compilar.
 .gitattributes
+.github/PULL_REQUEST_TEMPLATE.md
 .github/workflows/ci.yml
 .gitignore
 .metadata
@@ -127,7 +128,23 @@ docs/legal/politica-privacidad.en.md
 docs/legal/politica-privacidad.md
 docs/privacy.en.md
 docs/privacy.md
+docs/readme/en/01-swatches.png
+docs/readme/en/02-swatch-detail.png
+docs/readme/en/03-match.png
+docs/readme/en/04-palette.png
+docs/readme/en/05-scenes.png
+docs/readme/en/06-photo-scene.png
+docs/readme/en/07-ideas.png
+docs/readme/en/08-settings-dark.png
 docs/readme/en/header.png
+docs/readme/es/01-swatches.png
+docs/readme/es/02-swatch-detail.png
+docs/readme/es/03-match.png
+docs/readme/es/04-palette.png
+docs/readme/es/05-scenes.png
+docs/readme/es/06-photo-scene.png
+docs/readme/es/07-ideas.png
+docs/readme/es/08-settings-dark.png
 docs/readme/es/header.png
 ios/.gitignore
 ios/Flutter/AppFrameworkInfo.plist
@@ -375,18 +392,6 @@ web/legal/rellenar.py
 web/legal/robots.txt
 web/legal/styles.css
 web/legal/test_legal.py
-docs/readme/en/01-swatches.png
-docs/readme/en/02-swatch-detail.png
-docs/readme/en/03-match.png
-docs/readme/en/04-palette.png
-docs/readme/en/05-ideas.png
-docs/readme/en/06-settings.png
-docs/readme/es/01-swatches.png
-docs/readme/es/02-swatch-detail.png
-docs/readme/es/03-match.png
-docs/readme/es/04-palette.png
-docs/readme/es/05-ideas.png
-docs/readme/es/06-settings.png
 lib/core/match_quality.dart
 lib/l10n/ideas_text.dart
 lib/ui/pages/collection/collection_page.dart
@@ -405,3 +410,14 @@ test/ui/no_pill_test.dart
 test/ui/text_fit_test.dart
 tool/ideas/content.mjs
 tool/ideas/gen.mjs
+assets/data/scenes.json
+lib/core/model/scene.dart
+lib/core/scene_catalog.dart
+lib/ui/pages/palette/palette_type_picker.dart
+test/flutter_test_config.dart
+test/core/scene_catalog_test.dart
+test/ui/palette/palette_type_picker_test.dart
+lib/core/photo_palette.dart
+test/core/photo_palette_test.dart
+lib/ui/pages/palette/palette_photo_scene.dart
+test/ui/palette/palette_photo_scene_test.dart

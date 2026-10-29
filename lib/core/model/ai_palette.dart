@@ -1,6 +1,6 @@
 import '../json_value.dart';
 import 'marker_color.dart';
-import 'drawing_scenario.dart';
+import 'scene.dart';
 import 'palette_mode.dart';
 
 final class AiPaletteRequest with JsonValue {
@@ -20,7 +20,7 @@ final class AiPaletteRequest with JsonValue {
   final String brandLabel;
   final MarkerColor? baseColor;
   final List<MarkerColor> candidates;
-  final DrawingScenario? scenario;
+  final Scene? scenario;
   final PaletteMode mode;
   final int paletteSize;
   final String? userGoal;
@@ -38,7 +38,7 @@ final class AiPaletteRequest with JsonValue {
             .toList(),
         scenario: json['scenario'] == null
             ? null
-            : DrawingScenario.fromJson(json['scenario']),
+            : Scene.fromJson(json['scenario']),
         mode: PaletteMode.fromJson(json['mode']),
         paletteSize: json['paletteSize'] as int,
         userGoal: json['userGoal'] as String?,

@@ -49,17 +49,19 @@ Android ya; iOS y Google Play próximamente.
 
 <p>
   <a href="docs/readme/es/01-swatches.png"><img src="docs/readme/es/01-swatches.png" width="19%" alt="Muestras con código, nombre y color"></a>
-  <a href="docs/readme/es/02-swatch-detail.png"><img src="docs/readme/es/02-swatch-detail.png" width="19%" alt="Detalle de un rotulador con sus códigos y su hex"></a>
   <a href="docs/readme/es/03-match.png"><img src="docs/readme/es/03-match.png" width="19%" alt="Color de una foto emparejado con el rotulador más cercano"></a>
-  <a href="docs/readme/es/04-palette.png"><img src="docs/readme/es/04-palette.png" width="19%" alt="Paleta por teoría del color"></a>
-  <a href="docs/readme/es/05-ideas.png"><img src="docs/readme/es/05-ideas.png" width="19%" alt="Ideas con técnica y paleta"></a>
+  <a href="docs/readme/es/04-palette.png"><img src="docs/readme/es/04-palette.png" width="19%" alt="Paleta con su tipo, su escena y sus colores"></a>
+  <a href="docs/readme/es/06-photo-scene.png"><img src="docs/readme/es/06-photo-scene.png" width="19%" alt="Escena hecha desde una foto con tus rotuladores"></a>
+  <a href="docs/readme/es/07-ideas.png"><img src="docs/readme/es/07-ideas.png" width="19%" alt="Ideas con técnica y paleta"></a>
 </p>
 
 <details>
 <summary>Más capturas</summary>
 
 <p>
-  <a href="docs/readme/es/06-settings.png"><img src="docs/readme/es/06-settings.png" width="19%" alt="Ajustes"></a>
+  <a href="docs/readme/es/02-swatch-detail.png"><img src="docs/readme/es/02-swatch-detail.png" width="19%" alt="Detalle de un rotulador con sus códigos y su hex"></a>
+  <a href="docs/readme/es/05-scenes.png"><img src="docs/readme/es/05-scenes.png" width="19%" alt="La lista de escenas, por categorías"></a>
+  <a href="docs/readme/es/08-settings-dark.png"><img src="docs/readme/es/08-settings-dark.png" width="19%" alt="Ajustes con el tema oscuro"></a>
 </p>
 
 </details>
@@ -68,15 +70,24 @@ Pulsa una captura para ampliarla.
 
 ## Funciones
 
+- **Mis rotuladores:** una colección por marca, hecha con las series que usas,
+  los sets que tienes y los rotuladores sueltos. Una guía corta la prepara al
+  empezar.
 - **Muestras:** el catálogo por código y nombre, con el hex de cada rotulador,
-  búsqueda, filtro por tus packs y favoritos. En Ohuhu Oahu indica además dónde
+  búsqueda, filtros, tus rotuladores y favoritos. En Ohuhu Oahu indica además dónde
   está cada rotulador en la tarjeta de colores.
 - **Emparejar con una foto:** haz una foto o elige una de la galería, toca un
-  punto y la app te dice qué rotulador de tu colección se le parece más.
+  punto y la app te dice qué rotulador de tu colección se le parece más, o te
+  avisa si ninguno se parece.
 - **Paletas con teoría del color:** elige un color base y obtén armonías
   (complementarios, análogos, complementarios divididos, tríada, cuadrado,
   rectángulo, monocromo y sombra), resueltas siempre con los rotuladores que
   tienes.
+- **Escenas:** 67 recetas listas en 11 categorías (pieles, cielo y agua,
+  naturaleza, animales, comida, fantasía…), con buscador y los papeles de cada
+  color.
+- **Escena desde una foto:** la app saca los colores principales de una foto y
+  los convierte en los rotuladores más parecidos que tienes.
 - **Ideas:** retos y técnicas con una paleta que tiene en cuenta tu colección
   activa.
 - **Dos marcas:** Ohuhu (Oahu, Honolulu y Kaala, 503 colores, con el código nuevo
@@ -91,8 +102,8 @@ Pulsa una captura para ampliarla.
 ## Privacidad
 
 Todo se guarda en el móvil. No hay cuentas, servidor propio, analítica, anuncios
-ni rastreo. La cámara y la galería solo se usan al emparejar una foto, y la foto
-nunca sale del dispositivo.
+ni rastreo. La cámara y la galería solo se usan al emparejar una foto o al crear
+una escena desde ella, y la foto nunca sale del dispositivo.
 
 [Política de privacidad](https://dferrandizmont.github.io/ink-lab/privacidad/) ·
 [Detalle técnico](docs/privacy.md) · Soporte: **dev@mainshai.com**.

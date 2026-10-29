@@ -125,9 +125,82 @@
   "paletteTitle": "Palette",
   "paletteBaseCodeLabel": "Base marker code",
   "paletteBaseCodeHint": "E08 or B271",
-  "paletteHarmonyLabel": "Harmony",
   "paletteScenarioToggle": "Scenes",
-  "paletteScenarioTitle": "Scenes",
+  "paletteTypeTitle": "Palette type",
+  "paletteTypeSheetTitle": "Choose the palette type",
+  "paletteTypeTheoryGroup": "Colour theory",
+  "paletteTypeScenesGroup": "Scenes",
+  "paletteTypeScenesHint": "Ready-made recipes by subject",
+  "paletteTypeDescRecommended": "Balanced picks for your base",
+  "paletteTypeDescComplementary": "Opposite hue, strong contrast",
+  "paletteTypeDescAnalogous": "Neighbouring hues, calm",
+  "paletteTypeDescSplitComplementary": "Two hues beside the opposite",
+  "paletteTypeDescTriad": "Three evenly spaced hues",
+  "paletteTypeDescSquare": "Four evenly spaced hues",
+  "paletteTypeDescRectangle": "Two complementary pairs",
+  "paletteTypeDescMonochrome": "One hue, light to dark",
+  "paletteTypeDescShadow": "Deeper tones for shading",
+  "paletteTypeDescCustomPalette": "Build it by hand",
+  "paletteTypeSemantic": "Palette type, {value}",
+  "@paletteTypeSemantic": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteSceneTitle": "Scene",
+  "paletteSceneSheetTitle": "Choose a scene",
+  "paletteSceneSearchHint": "Search scene or category",
+  "paletteSceneEmpty": "No scene matches your search.",
+  "paletteSceneSemantic": "Scene, {value}",
+  "@paletteSceneSemantic": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteFromPhotoTitle": "From a photo",
+  "@paletteFromPhotoTitle": {
+    "description": "Scene sheet entry and source sheet title: build a palette from the colours of a photo."
+  },
+  "paletteFromPhotoHint": "Your photo, with your markers",
+  "@paletteFromPhotoHint": {
+    "description": "One-line explanation under the From a photo entry."
+  },
+  "paletteFromPhotoValue": "Your photo",
+  "@paletteFromPhotoValue": {
+    "description": "Value of the scene field while a photo palette is shown."
+  },
+  "paletteFromPhotoRole": "Photo colour · {percent} %",
+  "@paletteFromPhotoRole": {
+    "description": "Role line of a colour taken from the photo, with the share of the photo it covers.",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteFromPhotoEmpty": "Couldn't get colours from this photo",
+  "@paletteFromPhotoEmpty": {
+    "description": "Error when no colours (or no owned markers) came out of the photo."
+  },
+  "paletteFromPhotoFarNote": "Some photo colours have no close marker in your collection",
+  "@paletteFromPhotoFarNote": {
+    "description": "Note shown when a photo colour has no usable owned marker close to it."
+  },
+  "sceneCategoryCharacters": "Characters",
+  "sceneCategorySkin": "Skin and portraits",
+  "sceneCategorySkyWater": "Sky and water",
+  "sceneCategoryNature": "Nature",
+  "sceneCategoryMaterials": "Materials",
+  "sceneCategoryAnimals": "Animals and fur",
+  "sceneCategoryFood": "Food",
+  "sceneCategoryHolidays": "Holidays and moods",
+  "sceneCategoryInteriors": "Interiors",
+  "sceneCategoryPatterns": "Patterns",
+  "sceneCategoryFantasy": "Fantasy",
   "paletteSizeTitle": "Size",
   "paletteSizeSemantic": "Palette size",
   "paletteGenerateButton": "Generate",
@@ -161,7 +234,7 @@
   "paletteDeleteDialogTitle": "Delete palette?",
   "paletteDeleteDialogBody": "This action cannot be undone.",
   "paletteAiFellBack": "AI unavailable. Showing local suggestions.",
-  "paletteEmptyHint": "Pick a base marker to build a palette, or choose a scene with the Scenes chip.",
+  "paletteEmptyHint": "Pick a base marker to build a palette, or choose Scenes as the palette type.",
   "paletteCustomModeHint": "Custom palette mode is manual: load a saved palette or apply one from Ideas.",
   "paletteNoSuggestions": "No palette could be built from your collection. Try another mode or add more markers.",
   "palettePickBaseTooltip": "Choose from your markers",
@@ -922,31 +995,6 @@
       }
     }
   },
-  "paletteSubtitleFrom": "{mode} from {base} · {available}",
-  "@paletteSubtitleFrom": {
-    "placeholders": {
-      "mode": {
-        "type": "String"
-      },
-      "base": {
-        "type": "String"
-      },
-      "available": {
-        "type": "String"
-      }
-    }
-  },
-  "paletteSubtitleScenario": "{scenario} · {available}",
-  "@paletteSubtitleScenario": {
-    "placeholders": {
-      "scenario": {
-        "type": "String"
-      },
-      "available": {
-        "type": "String"
-      }
-    }
-  },
   "paletteSubtitleCustom": "Custom palette · {count, plural, =1{1 marker} other{{count} markers}}",
   "@paletteSubtitleCustom": {
     "placeholders": {
@@ -1430,33 +1478,6 @@
   "modeMonochrome": "Monochrome",
   "modeCustomPalette": "Custom Palette",
   "modeShadow": "Shadow",
-  "scenarioGhostCharacter": "Ghost Character",
-  "scenarioCuteCharacter": "Cute Character",
-  "scenarioFantasyCreature": "Fantasy Creature",
-  "scenarioWarmPortrait": "Warm Portrait",
-  "scenarioCoolPortrait": "Cool Portrait",
-  "scenarioSunsetLandscape": "Sunset Landscape",
-  "scenarioForestScene": "Forest Scene",
-  "scenarioOceanScene": "Ocean Scene",
-  "scenarioAutumnScene": "Autumn Scene",
-  "scenarioSpringGarden": "Spring Garden",
-  "scenarioCozyInterior": "Cozy Interior",
-  "scenarioVintageRoom": "Vintage Room",
-  "scenarioPastelDream": "Pastel Dream",
-  "scenarioNeonNight": "Neon Night",
-  "scenarioMoodyNight": "Moody Night",
-  "scenarioFloralPattern": "Floral Pattern",
-  "scenarioGeometricPattern": "Geometric Pattern",
-  "scenarioPlaidPattern": "Plaid Pattern",
-  "scenarioPolkaDotPattern": "Polka Dot Pattern",
-  "scenarioCandyStripes": "Candy Stripes",
-  "scenarioHalloweenMood": "Halloween Mood",
-  "scenarioChristmasMood": "Christmas Mood",
-  "scenarioSpringMood": "Spring Mood",
-  "scenarioSummerMood": "Summer Mood",
-  "scenarioAutumnMood": "Autumn Mood",
-  "scenarioWinterMood": "Winter Mood",
-  "scenarioWinterSnow": "Winter Snow",
   "packLabel120New": "120 New",
   "packLabel36Skin": "36 Skin",
   "packLabel36Gray": "36 Gray",

@@ -76,6 +76,17 @@ marker code and the value you believe is correct, ideally with a link to a
 public source. Trademark concerns should use the private channel in
 [SECURITY.md](SECURITY.md) instead of a public issue.
 
+## Photos in the screenshots
+
+The photos shown inside the README and store screenshots are not part of the
+app. Both come from Wikimedia Commons and need no attribution; they are credited
+here as a courtesy:
+
+- "Matterhorn sunset 2016" by Sam Ferrara (via Unsplash), CC0:
+  https://commons.wikimedia.org/wiki/File:Matterhorn_sunset_2016_(Unsplash).jpg
+- "Burano - 1" by Luu, public domain:
+  https://commons.wikimedia.org/wiki/File:Burano_-_1.JPG
+
 ## Bundled fonts
 
 - Inter: Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter).

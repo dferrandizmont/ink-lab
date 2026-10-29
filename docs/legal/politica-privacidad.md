@@ -34,10 +34,12 @@ salen del móvil por esa vía. En iPhone, las preferencias entran en la copia de
 de Apple.
 
 ### Cámara y galería
-Solo cuando usas «Emparejar» y eliges hacer una foto o elegir una de la galería, la app pide el permiso o abre el
-selector del sistema. La foto se decodifica y se muestrea **en tu móvil** para hallar el rotulador más parecido: no se
-sube a ningún sitio, no se guarda y nunca se envía a un proveedor de IA. De la elección solo se conserva el color
-muestreado y el rotulador emparejado, en tu historial local.
+Solo cuando usas «Emparejar» o «Escena desde una foto» (en Paleta) y eliges hacer una foto o elegir una de la galería,
+la app pide el permiso o abre el selector del sistema. La foto se decodifica y se analiza **en tu móvil**: no se sube a
+ningún sitio, no se guarda y nunca se envía a un proveedor de IA. En «Emparejar», de la elección solo se conserva el
+color muestreado y el rotulador emparejado, en tu historial local. En «Escena desde una foto» se sacan sus colores
+principales para proponerte rotuladores de tu colección; la foto solo se mantiene en memoria mientras ves el resultado,
+y si guardas la paleta se guardan los códigos de los rotuladores, nunca la foto.
 
 ### Copia de seguridad
 «Exportar copia» (Ajustes) genera un texto JSON con tus colecciones, favoritos, paletas e historial, y lo **copia al
@@ -69,7 +71,7 @@ dispositivo). No se sube al desarrollador, no se incluye en las copias de seguri
 quieras. Si la IA falla, la app vuelve a la teoría del color.
 
 ### Permisos
-La app pide el permiso de **cámara o fotos** solo cuando usas «Emparejar», y declara el acceso a **red** solo para la IA
+La app pide el permiso de **cámara o fotos** solo cuando usas «Emparejar» o «Escena desde una foto», y declara el acceso a **red** solo para la IA
 opcional con OpenRouter. No pide ubicación, contactos, calendario, micrófono ni notificaciones, y no usa el
 identificador publicitario.
 
@@ -88,7 +90,7 @@ datos de prueba.
 | Tratamiento | Finalidad | Base jurídica (RGPD) |
 |---|---|---|
 | Colecciones, favoritos, paletas y ajustes en tu móvil | Que uses la app y conserves tu trabajo | No los recibimos: se quedan en tu dispositivo, bajo tu control |
-| Foto de «Emparejar» | Hallar el rotulador más parecido | Se procesa solo en tu móvil, a petición tuya; no la recibimos |
+| Foto de «Emparejar» o de «Escena desde una foto» | Hallar los rotuladores más parecidos | Se procesa solo en tu móvil, a petición tuya; no la recibimos |
 | IA con OpenRouter (opcional) | Generar sugerencias de paleta | Tu consentimiento al activarla y usar tu propia clave; el tratamiento lo hace OpenRouter bajo sus condiciones |
 | Correos de soporte | Responder a tu consulta | Tu solicitud y nuestro interés legítimo en atenderla (art. 6.1.f) |
 

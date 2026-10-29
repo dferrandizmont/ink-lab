@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -10,7 +11,11 @@ import '../../../app_scope.dart';
 import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
 import '../../../core/palette_advisor.dart';
+import '../../../core/match_quality.dart';
 import '../../../core/palette_generator.dart';
+import '../../../core/photo_palette.dart';
+import '../../../core/color_utils.dart';
+import '../../../core/scene_catalog.dart';
 import '../../../data/data.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
@@ -23,8 +28,12 @@ import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
+import '../match/color_sampling.dart';
+import '../match/image_picker_service.dart';
 import 'palette_draft.dart';
+import 'palette_photo_scene.dart';
 import 'palette_reasons.dart';
+import 'palette_type_picker.dart';
 import '../../../l10n/l10n.dart';
 
 /// Composition root above the page, or `null` in isolated previews/tests.
@@ -42,7 +51,13 @@ AppScope? _scopeOf(BuildContext context) =>
 /// and renders it as a strip plus per-color rows, a paint plan, quick
 /// variations and the brand's saved palettes.
 class PalettePage extends StatefulWidget {
-  const PalettePage({super.key, this.advisor = const PaletteGenerator()});
+  const PalettePage({
+    super.key,
+    this.advisor = const PaletteGenerator(),
+    this.picker,
+    this.decoder,
+    this.photoExtractor,
+  });
 
   /// Key of the page body, handy for tests and for state restoration.
   static const Key pageKey = Key('palette-page');
@@ -51,11 +66,31 @@ class PalettePage extends StatefulWidget {
   /// [PaletteGenerator]; a future AI advisor can be injected here.
   final PaletteAdvisor advisor;
 
+  /// Photo picker for "From a photo". Production wraps `image_picker`; tests
+  /// inject a fake.
+  final ImagePickerService? picker;
+
+  /// Decoder of the picked photo. Production uses `decodePhoto`.
+  final PhotoDecoder? decoder;
+
+  /// Finds the dominant colours of the decoded photo. Production does it off
+  /// the UI thread; tests inject a synchronous one.
+  final PhotoColorExtractor? photoExtractor;
+
   @override
   State<PalettePage> createState() => _PalettePageState();
 }
 
 class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
+  late final ImagePickerService _picker =
+      widget.picker ?? PlatformImagePickerService();
+  late final PhotoDecoder _decode =
+      widget.decoder ??
+      (Uint8List bytes) =>
+          decodePhoto(bytes, maxDimension: PhotoScene.maxDimension);
+  late final PhotoColorExtractor _extract =
+      widget.photoExtractor ?? extractPhotoColors;
+
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
   StreamSubscription<AiSettings>? _aiSubscription;
@@ -96,7 +131,39 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   PaletteMode _mode = PaletteMode.recommended;
   bool _useScenario = false;
-  DrawingScenario _scenario = DrawingScenario.ghostCharacter;
+  Scene? _sceneChoice;
+
+  /// The scene in use: the one picked, or the first by default.
+  Scene get _scenario => _sceneChoice ?? Scene.byId('ghostCharacter');
+
+  /// The photo the palette was built from (Scenes > From a photo), or `null`.
+  /// Its colours are matched to [_available] in [_recompute].
+  PhotoScene? _photoScene;
+
+  /// Generation of the photo flow (pick, read, analyse). Every await checks
+  /// it, so a result that arrives after Clear, another type, a saved palette,
+  /// an Ideas draft or an undo is dropped; [_dropPhoto] moves it on.
+  int _photoToken = 0;
+
+  /// Generation of the AI request. Entering photo mode moves it on, so a late
+  /// AI answer never overwrites the photo palette.
+  int _aiVersion = 0;
+
+  /// The owned markers chosen for the photo's colours, most prominent first.
+  /// As many as the palette size asks for.
+  List<PhotoMarkerPick> _photoPicks = const <PhotoMarkerPick>[];
+
+  /// A photo is being picked, read or analysed.
+  bool _photoBusy = false;
+
+  /// Why the last photo could not be used, shown as an error note.
+  String? _photoError;
+
+  /// Whether the palette on screen comes from a photo.
+  bool get _photoMode => _useScenario && _photoScene != null;
+
+  /// Preview colours of the scenes against the whole brand range.
+  ScenePreviews _previews = ScenePreviews(const <MarkerColor>[]);
   int _paletteSize = 5;
   int _variationToken = 0;
 
@@ -164,6 +231,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     paletteBaseDraft.removeListener(_onBaseDraftChanged);
     _settingsSubscription?.cancel();
     _aiSubscription?.cancel();
+    _photoToken++;
+    _photoScene?.dispose();
     _baseController.dispose();
     _baseFocus.dispose();
     super.dispose();
@@ -203,6 +272,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     } catch (_) {
       catalog = const <MarkerColor>[];
     }
+    try {
+      await scope.markers.loadScenes();
+    } catch (_) {
+      // Without the scene catalogue the Scenes type is simply not offered.
+    }
     if (!mounted) return;
     final available = paletteCandidateColors(
       colors: catalog,
@@ -213,6 +287,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     setState(() {
       _brand = brand;
       _catalog = catalog;
+      _previews = ScenePreviews(catalog);
       _available = available;
       _loading = false;
     });
@@ -254,12 +329,16 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         _baseInput.trim().toUpperCase() == color.newCode.toUpperCase() &&
         _mode != PaletteMode.customPalette &&
         !_useScenario;
-    final _PaletteSnapshot? previous = _suggestions.isEmpty || sameBase
+    // A palette made from a photo cannot be brought back (the photo is not
+    // kept), so replacing one offers no undo.
+    final _PaletteSnapshot? previous =
+        _suggestions.isEmpty || sameBase || _photoMode
         ? null
         : _PaletteSnapshot.of(this);
     setState(() {
       if (_mode == PaletteMode.customPalette) _mode = PaletteMode.recommended;
       _useScenario = false;
+      _dropPhoto();
       _baseInput = color.newCode;
       _baseController.text = color.newCode;
       _lockedCodes = const <String>[];
@@ -336,6 +415,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     void apply() {
       _mode = PaletteMode.customPalette;
       _useScenario = false;
+      _dropPhoto();
       _baseInput = '';
       _baseController.text = '';
       _failure = null;
@@ -370,7 +450,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   /// The base shown first in the strip and the paint order: the typed one or
   /// the default base of the selected scenario.
-  MarkerColor? get _stripBase => _resolvedBase ?? _scenarioDefaultBase;
+  MarkerColor? get _stripBase => _photoMode
+      ? (_photoPicks.isEmpty ? null : _photoPicks.first.marker)
+      : _resolvedBase ?? _scenarioDefaultBase;
 
   MarkerColor? get _resolvedBase {
     final input = _baseInput.trim();
@@ -385,6 +467,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   }
 
   void _recompute() {
+    final PhotoScene? photo = _useScenario ? _photoScene : null;
+    if (photo != null) {
+      _applyPhotoScene(photo);
+      return;
+    }
     if (_mode == PaletteMode.customPalette) {
       // Manual mode: keep whatever was loaded or applied from Ideas.
       return;
@@ -465,6 +552,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final scope = _scope;
     if (scope == null || _aiLoading) return;
     final request = _buildRequest();
+    final int version = ++_aiVersion;
     setState(() {
       _aiLoading = true;
       _aiUsed = false;
@@ -478,7 +566,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     try {
       final advisor = await scope.aiService.buildAdvisor();
       final ai.PaletteAdvice advice = await advisor.advise(request);
-      if (!mounted) return;
+      if (!mounted || version != _aiVersion) return;
       setState(() {
         _aiLoading = false;
         switch (advice) {
@@ -508,7 +596,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         }
       });
     } catch (_) {
-      if (!mounted) return;
+      if (!mounted || version != _aiVersion) return;
       setState(() {
         _aiLoading = false;
         _aiUsed = false;
@@ -619,9 +707,204 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     });
   }
 
+  /// Opens the palette type sheet: a colour-theory mode or the scenes.
+  Future<void> _pickType() async {
+    _baseFocus.unfocus();
+    final PaletteTypeChoice? choice = await showPaletteTypeSheet(
+      context,
+      mode: _mode,
+      scenesSelected: _useScenario,
+      scenesAvailable: SceneCatalog.isInstalled,
+    );
+    if (choice == null || !mounted) return;
+    switch (choice) {
+      case ModeChoice(:final PaletteMode mode):
+        if (mode == _mode && !_useScenario) return;
+        _selectMode(mode);
+      case ScenesChoice():
+        if (_useScenario) return;
+        _selectScenes();
+    }
+  }
+
+  /// Opens the tall, searchable list of scenes.
+  Future<void> _pickScene() async {
+    _baseFocus.unfocus();
+    final SceneSheetResult? picked = await showPaletteSceneSheet(
+      context,
+      selected: _photoScene == null ? _scenario : null,
+      previews: _previews,
+      photoSelected: _photoScene != null,
+    );
+    if (picked == null || !mounted) return;
+    switch (picked) {
+      case ScenePicked(:final Scene scene):
+        _selectScenario(scene);
+      case PhotoScenePicked():
+        await _pickPhotoScene();
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // From a photo
+  // ---------------------------------------------------------------------------
+
+  /// Asks for a photo, finds its dominant colours on the device and shows the
+  /// nearest owned markers. The photo is read into memory only: it is not
+  /// stored and never leaves the phone.
+  ///
+  /// Every await is followed by a check of the flow's token: if the photo was
+  /// dropped meanwhile (Clear, another type, a saved palette...) the late
+  /// result is ignored.
+  Future<void> _pickPhotoScene() async {
+    if (_photoBusy) return;
+    final PhotoSource? source = await showPhotoSourceSheet(context);
+    if (source == null || !mounted) return;
+    final int token = ++_photoToken;
+    setState(() {
+      _photoBusy = true;
+      _photoError = null;
+      _notice = null;
+    });
+    final PhotoPickResult result = await _picker.pick(source);
+    if (!mounted || token != _photoToken) return;
+    final AppLocalizations t = context.l10n;
+    switch (result) {
+      case PhotoPicked(:final Uint8List bytes):
+        await _loadPhotoScene(bytes, token);
+      case PhotoPickCancelled():
+        setState(() => _photoBusy = false);
+      case PhotoPickDenied(:final PhotoSource source):
+        setState(() {
+          _photoBusy = false;
+          _photoError = source == PhotoSource.camera
+              ? t.matchCameraDenied
+              : t.matchGalleryDenied;
+        });
+      case PhotoPickFailed():
+        setState(() {
+          _photoBusy = false;
+          _photoError = t.matchPickFailed;
+        });
+    }
+  }
+
+  Future<void> _loadPhotoScene(Uint8List bytes, int token) async {
+    final AppLocalizations t = context.l10n;
+    Map<int, List<PhotoColor>> colors;
+    try {
+      // The decoded pixels live only until the colours are found.
+      final SampledImage sampled = await _decode(bytes);
+      if (!mounted || token != _photoToken) return;
+      colors = await _extract(sampled);
+      if (!mounted || token != _photoToken) return;
+    } on PhotoDecodeException {
+      if (!mounted || token != _photoToken) return;
+      setState(() {
+        _photoBusy = false;
+        _photoError = t.matchDecodeFailed;
+      });
+      return;
+    } catch (_) {
+      if (!mounted || token != _photoToken) return;
+      setState(() {
+        _photoBusy = false;
+        _photoError = t.paletteFromPhotoEmpty;
+      });
+      return;
+    }
+    final PhotoScene scene = PhotoScene(bytes: bytes, colors: colors);
+    // Needs a base and at least one companion, from markers the user owns.
+    if (matchPhotoColorsToMarkers(
+          scene.colorsFor(_companions + 1),
+          _available,
+        ).length <
+        2) {
+      scene.dispose();
+      setState(() {
+        _photoBusy = false;
+        _photoError = t.paletteFromPhotoEmpty;
+      });
+      return;
+    }
+    setState(() {
+      _photoScene?.dispose();
+      _photoBusy = false;
+      _photoError = null;
+      _photoScene = scene;
+      _useScenario = true;
+      if (_mode == PaletteMode.customPalette) _mode = PaletteMode.recommended;
+      _failure = null;
+      _unknownInput = false;
+      _lockedCodes = const <String>[];
+      _lockedSuggestions.clear();
+      // A pending AI answer must not overwrite the photo palette.
+      _aiVersion++;
+      _aiLoading = false;
+      _aiUsed = false;
+      _aiError = null;
+    });
+    _recompute();
+  }
+
+  /// Shows the photo as a palette of the chosen size (call from [_recompute]):
+  /// the colours found for that size, matched to the owned markers.
+  void _applyPhotoScene(PhotoScene scene) {
+    final List<PhotoMarkerPick> picks = matchPhotoColorsToMarkers(
+      scene.colorsFor(_companions + 1),
+      _available,
+    ).take(_companions + 1).toList();
+    setState(() {
+      _unknownInput = false;
+      _aiUsed = false;
+      _aiError = null;
+      _lockedCodes = const <String>[];
+      _lockedSuggestions.clear();
+      _photoPicks = picks;
+      if (picks.length < 2) {
+        // The collection changed under the photo: nothing close is left.
+        _suggestions = const <PaletteSuggestion>[];
+        _failure = _available.isEmpty
+            ? PaletteFailureReason.noAvailableColors
+            : null;
+        _photoError = _available.isEmpty
+            ? null
+            : context.l10n.paletteFromPhotoEmpty;
+        return;
+      }
+      _failure = null;
+      _photoError = null;
+      _suggestions = <PaletteSuggestion>[
+        for (final PhotoMarkerPick pick in picks.skip(1))
+          PaletteSuggestion(color: pick.marker, reason: PaletteReasons.photo),
+      ];
+    });
+  }
+
+  /// The role line of [marker] in a photo palette: "Photo colour · 32 %".
+  String _photoRole(MarkerColor marker) {
+    for (final PhotoMarkerPick pick in _photoPicks) {
+      if (pick.marker.newCode == marker.newCode) {
+        return context.l10n.paletteFromPhotoRole(
+          (pick.source.share * 100).round(),
+        );
+      }
+    }
+    return context.l10n.paletteFromPhotoTitle;
+  }
+
+  /// Whether a photo colour has no usable owned marker among those shown.
+  bool get _photoHasFarPick =>
+      _photoMode &&
+      _photoPicks.any((PhotoMarkerPick p) => !MatchQuality.isUsable(p.deltaE));
+
   void _selectMode(PaletteMode mode) {
     setState(() {
       _mode = mode;
+      // A type is one choice among the others: a colour-theory mode leaves
+      // the scenes.
+      _useScenario = false;
+      _dropPhoto();
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
       if (mode == PaletteMode.customPalette) {
@@ -635,18 +918,35 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _recompute();
   }
 
-  void _toggleScenario() {
+  void _selectScenes() {
     setState(() {
-      _useScenario = !_useScenario;
+      _useScenario = true;
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
     });
     _recompute();
   }
 
-  void _selectScenario(DrawingScenario scenario) {
-    setState(() => _scenario = scenario);
+  void _selectScenario(Scene scene) {
+    setState(() {
+      _sceneChoice = scene;
+      // A scene replaces the photo palette.
+      _dropPhoto();
+    });
     _recompute();
+  }
+
+  /// Forgets the photo and what came from it (call inside [setState]).
+  ///
+  /// It also ends a photo still being read: its result is dropped when it
+  /// arrives and the spinner is cleared here.
+  void _dropPhoto() {
+    _photoScene?.dispose();
+    _photoScene = null;
+    _photoPicks = const <PhotoMarkerPick>[];
+    _photoError = null;
+    _photoToken++;
+    _photoBusy = false;
   }
 
   void _selectSize(int size) {
@@ -671,6 +971,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _aiUsed = false;
       _aiError = null;
       _notice = null;
+      _dropPhoto();
     });
   }
 
@@ -683,7 +984,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final base = _stripBase;
     if (scope == null || base == null || _suggestions.isEmpty) return;
     final name = await _askName(
-      _useScenario
+      _photoMode
+          ? '${base.newCode} ${context.l10n.paletteFromPhotoTitle}'
+          : _useScenario
           ? '${base.newCode} ${context.l10n.scenarioLabel(_scenario)}'
           : '${base.newCode} ${context.l10n.modeLabel(_mode)}',
     );
@@ -704,7 +1007,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
           for (final suggestion in _suggestions) suggestion.color.newCode,
         ],
         isCustom: _mode == PaletteMode.customPalette,
-        scenarioName: _useScenario ? _scenario.name : null,
+        scenarioName: _photoMode
+            ? PhotoScene.savedName
+            : _useScenario
+            ? _scenario.id
+            : null,
       ),
     );
     if (!mounted) return;
@@ -739,6 +1046,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _mode = palette.mode;
       _paletteSize = (suggestions.length + 1).clamp(3, 5);
       _useScenario = false;
+      _dropPhoto();
       _failure = null;
       _unknownInput = false;
       _lockedCodes = const <String>[];
@@ -791,6 +1099,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     // An AI item carries its own role, from the same item as its reason.
     final String? given = suggestion.role?.trim();
     if (given != null && given.isNotEmpty) return given;
+    if (_photoMode) return _photoRole(suggestion.color);
     if (_useScenario) return suggestion.reason;
     return _roleFromReason(suggestion.reason);
   }
@@ -856,10 +1165,12 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       steps.add(
         _PlanStep(
           order: order++,
-          zone: context.l10n.roleLabel(_roleBase),
+          zone: _photoMode
+              ? _photoRole(base)
+              : context.l10n.roleLabel(_roleBase),
           code: base.newCode,
           name: base.newName,
-          tip: context.l10n.palettePaintTipBase,
+          tip: _photoMode ? '' : context.l10n.palettePaintTipBase,
         ),
       );
     }
@@ -875,7 +1186,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       <String>[],
       <String>[],
     ];
-    final bool keepOrder = _mode == PaletteMode.customPalette;
+    final bool keepOrder = _mode == PaletteMode.customPalette || _photoMode;
     for (final suggestion in _suggestions) {
       final role = _roleFor(suggestion);
       // A custom palette (an idea, a loaded palette) is already in painting
@@ -888,7 +1199,12 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       for (var i = 0; i < groups[index].length; i++) {
         final suggestion = groups[index][i];
         final role = grouped[index][i];
-        final tip = suggestion.reason == role
+        // The plan row already names the marker, so a loaded palette (whose
+        // reason says nothing) gets the generic tip of its group instead.
+        final tip = _photoMode
+            ? ''
+            : suggestion.reason == role ||
+                  suggestion.reason == PaletteReasons.loaded
             ? _groupTip(index)
             : context.l10n.reasonLabel(suggestion.reason);
         steps.add(
@@ -939,8 +1255,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   String get _brandSelector =>
       _brand == MarkerBrand.decoTime ? 'decoTime' : 'other';
 
-  DrawingScenario? get _defaultScenarioBaseNotice {
-    if (!_useScenario) return null;
+  Scene? get _defaultScenarioBaseNotice {
+    if (!_useScenario || _photoMode) return null;
     if (_baseInput.trim().isNotEmpty) return null;
     if (_available.isEmpty) return null;
     return _scenario;
@@ -975,7 +1291,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     }
 
     final bool customMode = _mode == PaletteMode.customPalette;
-    final String? error = _errorMessage();
+    final String? error = _photoError ?? _errorMessage();
     final bool hasResult = _suggestions.isNotEmpty;
 
     return Column(
@@ -989,9 +1305,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
             child: ListView(
               padding: const EdgeInsets.only(bottom: InkSpacing.pageBottom),
               children: <Widget>[
-                _buildHarmonyChips(),
-                if (_useScenario) _buildScenarioSelector(),
-                _buildBaseAndSize(customMode: customMode),
+                _buildTypeFields(),
+                _buildBaseAndSize(customMode: customMode || _photoMode),
                 if (_scenarioDefaultBase != null)
                   _inset(
                     _InfoCard(
@@ -1007,6 +1322,16 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                     _InfoCard(message: context.l10n.paletteCustomModeHint),
                     top: InkSpacing.block,
                   ),
+                if (_photoHasFarPick)
+                  _inset(
+                    KeyedSubtree(
+                      key: const ValueKey<String>('palette-photo-far-note'),
+                      child: _InfoCard(
+                        message: context.l10n.paletteFromPhotoFarNote,
+                      ),
+                    ),
+                    top: InkSpacing.block,
+                  ),
                 if (_notice != null)
                   _inset(_buildNotice(), top: InkSpacing.block),
                 if (error != null)
@@ -1017,7 +1342,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                     _InfoCard(message: context.l10n.paletteEmptyHint),
                     top: InkSpacing.block,
                   ),
-                _buildActions(customMode: customMode),
+                _buildActions(customMode: customMode, photoMode: _photoMode),
                 _buildSavedPalettes(scope),
               ],
             ),
@@ -1049,21 +1374,14 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   String _subtitle() {
     if (_useScenario) {
-      return context.l10n.paletteSubtitleScenario(
-        context.l10n.scenarioLabel(_scenario),
-        context.l10n.commonMarkersAvailable(_available.length),
-      );
+      return context.l10n.commonMarkersAvailable(_available.length);
     }
     if (_mode == PaletteMode.customPalette) {
       return context.l10n.paletteSubtitleCustom(_suggestions.length);
     }
     final MarkerColor? base = _resolvedBase;
     if (base != null) {
-      return context.l10n.paletteSubtitleFrom(
-        context.l10n.modeLabel(_mode),
-        base.newCode,
-        context.l10n.commonMarkersAvailable(_available.length),
-      );
+      return context.l10n.commonMarkersAvailable(_available.length);
     }
     return context.l10n.paletteSubtitleIdle;
   }
@@ -1076,49 +1394,98 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _buildHarmonyChips() {
-    return InkChipRow(
-      semanticLabel: context.l10n.paletteHarmonyLabel,
-      children: <Widget>[
-        for (final mode in PaletteMode.values) ...<Widget>[
-          InkChip(
-            key: ValueKey<String>('palette-mode-${mode.name}'),
-            label: context.l10n.modeLabel(mode),
-            selected: !_useScenario && _mode == mode,
-            onSelected: (_) => _selectMode(mode),
-          ),
-          // Scenes sit right after Recommended, where the empty-state hint
-          // can point to them, not at the end of the scroller.
-          if (mode == PaletteMode.recommended)
-            InkChip(
-              key: const ValueKey<String>('palette-scenario-toggle'),
-              label: context.l10n.paletteScenarioToggle,
-              selected: _useScenario,
-              onSelected: (_) => _toggleScenario(),
-            ),
-        ],
-      ],
+  /// The palette type field and, once Scenes is the type, the scene field.
+  Widget _buildTypeFields() {
+    final AppLocalizations t = context.l10n;
+    final InkColors ink = InkColors.of(context);
+    final String typeName = _useScenario
+        ? t.paletteScenarioToggle
+        : t.modeLabel(_mode);
+    final Widget type = PaletteChoiceField(
+      label: t.paletteTypeTitle,
+      semanticLabel: t.paletteTypeSemantic(typeName),
+      fieldKey: const ValueKey<String>('palette-type-field'),
+      onTap: _pickType,
+      leading: _useScenario
+          ? const ScenesGlyph()
+          : PaletteModeGlyph(mode: _mode),
+      child: Text(
+        typeName,
+        key: const ValueKey<String>('palette-type-value'),
+        style: AppTypography.button.copyWith(color: ink.fg),
+      ),
     );
-  }
-
-  Widget _buildScenarioSelector() {
+    if (!_useScenario) return _inset(type, top: InkSpacing.block);
+    final PhotoScene? photo = _photoScene;
+    final Scene scene = _scenario;
+    final String sceneName = photo != null
+        ? t.paletteFromPhotoValue
+        : t.scenarioLabel(scene);
+    final Widget sceneValue = _photoBusy
+        ? Row(
+            children: <Widget>[
+              SizedBox.square(
+                dimension: InkGeometry.smallIcon,
+                child: CircularProgressIndicator(
+                  key: const ValueKey<String>('palette-photo-busy'),
+                  strokeWidth: 2,
+                  color: ink.action,
+                ),
+              ),
+              const SizedBox(width: InkSpacing.s8),
+              Expanded(
+                child: Text(
+                  t.matchLoadingPhoto,
+                  key: const ValueKey<String>('palette-scene-value'),
+                  style: AppTypography.button.copyWith(color: ink.fg2),
+                ),
+              ),
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                sceneName,
+                key: const ValueKey<String>('palette-scene-value'),
+                style: AppTypography.button.copyWith(color: ink.fg),
+              ),
+              const SizedBox(height: InkSpacing.s8),
+              SceneStrip(
+                key: photo == null
+                    ? null
+                    : const ValueKey<String>('palette-photo-strip'),
+                hexes: photo == null
+                    ? _previews.of(scene)
+                    : <String>[
+                        for (final PhotoMarkerPick pick in _photoPicks)
+                          colorIntToHex(pick.source.colorInt),
+                      ],
+                height: 16,
+              ),
+            ],
+          );
     return _inset(
       Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          _caps(context.l10n.paletteScenarioTitle),
-          const SizedBox(height: InkSpacing.group),
-          Wrap(
-            spacing: InkSpacing.chipGap,
-            runSpacing: InkSpacing.s4,
-            children: <Widget>[
-              for (final scenario in DrawingScenario.values)
-                InkChip(
-                  label: context.l10n.scenarioLabel(scenario),
-                  selected: _scenario == scenario,
-                  onSelected: (_) => _selectScenario(scenario),
-                ),
-            ],
+          type,
+          const SizedBox(height: InkSpacing.block),
+          PaletteChoiceField(
+            label: t.paletteSceneTitle,
+            semanticLabel: _photoBusy
+                ? t.matchLoadingPhoto
+                : t.paletteSceneSemantic(sceneName),
+            fieldKey: const ValueKey<String>('palette-scene-field'),
+            onTap: _photoBusy ? null : _pickScene,
+            leading: photo == null || _photoBusy
+                ? null
+                : PhotoThumb(
+                    key: const ValueKey<String>('palette-photo-thumb'),
+                    image: photo.thumbnail,
+                  ),
+            child: sceneValue,
           ),
         ],
       ),
@@ -1484,11 +1851,14 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final MarkerColor? base = _stripBase;
     // The base is the first band of the strip; companions follow it.
     final int offset = base == null ? 0 : 1;
-    final Set<int> locked = <int>{
-      if (base != null) 0,
-      for (var index = 0; index < _suggestions.length; index++)
-        if (_isLocked(_suggestions[index])) index + offset,
-    };
+    final bool photo = _photoMode;
+    final Set<int> locked = photo
+        ? const <int>{}
+        : <int>{
+            if (base != null) 0,
+            for (var index = 0; index < _suggestions.length; index++)
+              if (_isLocked(_suggestions[index])) index + offset,
+          };
     return <Widget>[
       _inset(
         Row(
@@ -1572,27 +1942,30 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                   role: _roleFor(_suggestions[index]),
                   locked: _isLocked(_suggestions[index]),
                   last: index == _suggestions.length - 1,
-                  onToggleLock: () => _toggleLock(_suggestions[index]),
+                  onToggleLock: photo
+                      ? null
+                      : () => _toggleLock(_suggestions[index]),
                 ),
             ],
           ),
         ),
         top: InkSpacing.block,
       ),
-      Padding(
-        padding: const EdgeInsets.only(top: InkSpacing.block),
-        child: InkChipRow(
-          semanticLabel: context.l10n.paletteVariationsLabel,
-          children: <Widget>[
-            for (final variation in QuickPaletteVariation.values)
-              InkChip(
-                label: context.l10n.variationName(variation),
-                selected: false,
-                onSelected: (_) => _applyVariation(variation),
-              ),
-          ],
+      if (!photo)
+        Padding(
+          padding: const EdgeInsets.only(top: InkSpacing.block),
+          child: InkChipRow(
+            semanticLabel: context.l10n.paletteVariationsLabel,
+            children: <Widget>[
+              for (final variation in QuickPaletteVariation.values)
+                InkChip(
+                  label: context.l10n.variationName(variation),
+                  selected: false,
+                  onSelected: (_) => _applyVariation(variation),
+                ),
+            ],
+          ),
         ),
-      ),
       ..._buildPaintOrder(),
     ];
   }
@@ -1633,49 +2006,57 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     ];
   }
 
-  Widget _buildActions({required bool customMode}) {
-    final bool showAi = _aiAvailable && !customMode;
+  Widget _buildActions({required bool customMode, required bool photoMode}) {
+    final bool showAi = _aiAvailable && !customMode && !photoMode;
     final bool hasResult = _suggestions.isNotEmpty;
     final InkColors ink = InkColors.of(context);
+    final Widget clear = InkButton.text(
+      key: const ValueKey<String>('palette-clear'),
+      label: context.l10n.paletteClearButton,
+      onPressed: _clear,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        _inset(
-          Wrap(
-            spacing: InkSpacing.buttonGap,
-            runSpacing: InkSpacing.s8,
-            children: <Widget>[
-              InkButton(
-                key: const ValueKey<String>('palette-generate'),
-                variant: InkButtonVariant.smallSecondary,
-                label: context.l10n.paletteGenerateButton,
-                icon: InkIcons.shuffle,
-                onPressed:
-                    customMode || (_baseInput.trim().isEmpty && !_useScenario)
-                    ? null
-                    : _recompute,
-              ),
-              if (_useScenario)
-                InkButton(
-                  key: const ValueKey<String>('palette-regenerate'),
-                  variant: InkButtonVariant.smallSecondary,
-                  label: context.l10n.paletteRegenerateButton,
-                  icon: InkIcons.rotateCcw,
-                  onPressed: () {
-                    setState(() => _variationToken++);
-                    _recompute();
-                  },
-                ),
-              InkButton.text(
-                key: const ValueKey<String>('palette-clear'),
-                label: context.l10n.paletteClearButton,
-                onPressed: _clear,
-              ),
-            ],
+        // A photo palette has no Generate or Regenerate: Clear follows Save
+        // on the one row, flush with the content like the other buttons.
+        if (!photoMode)
+          _inset(
+            Wrap(
+              spacing: InkSpacing.buttonGap,
+              runSpacing: InkSpacing.s8,
+              children: <Widget>[
+                // A photo palette has nothing to regenerate: same photo, same
+                // markers.
+                if (!photoMode)
+                  InkButton(
+                    key: const ValueKey<String>('palette-generate'),
+                    variant: InkButtonVariant.smallSecondary,
+                    label: context.l10n.paletteGenerateButton,
+                    icon: InkIcons.shuffle,
+                    onPressed:
+                        customMode ||
+                            (_baseInput.trim().isEmpty && !_useScenario)
+                        ? null
+                        : _recompute,
+                  ),
+                if (_useScenario && !photoMode)
+                  InkButton(
+                    key: const ValueKey<String>('palette-regenerate'),
+                    variant: InkButtonVariant.smallSecondary,
+                    label: context.l10n.paletteRegenerateButton,
+                    icon: InkIcons.rotateCcw,
+                    onPressed: () {
+                      setState(() => _variationToken++);
+                      _recompute();
+                    },
+                  ),
+                clear,
+              ],
+            ),
+            top: InkSpacing.block,
           ),
-          top: InkSpacing.block,
-        ),
-        if (showAi || hasResult)
+        if (showAi || hasResult || photoMode)
           _inset(
             Wrap(
               spacing: InkSpacing.buttonGap,
@@ -1696,6 +2077,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                     label: context.l10n.paletteSaveButton,
                     onPressed: _save,
                   ),
+                if (photoMode) clear,
               ],
             ),
             top: InkSpacing.s8,
@@ -1708,7 +2090,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
             ),
             top: InkSpacing.buttonGap,
           ),
-        if (!_aiAvailable)
+        if (!_aiAvailable && !photoMode)
           _inset(
             Text(
               context.l10n.paletteAiOptionalNote,
@@ -1788,7 +2170,61 @@ final class _PlanStep {
   final String zone, code, name, tip;
 }
 
-/// One row of the paint order: number, step, then a dot swatch and the code.
+/// Smallest factor a single line of text is scaled down to. Below it the
+/// text wraps to [_wrapLines] lines with an ellipsis instead of shrinking
+/// further (only reachable at large accessibility text scales).
+const double _minLineScale = 0.8;
+const int _wrapLines = 2;
+
+/// A single line of text that is scaled down, never cut, when it is wider
+/// than the space it has. It shrinks to [_minLineScale] at most; beyond that
+/// it wraps to two lines and ends with an ellipsis.
+class _OneLine extends StatelessWidget {
+  const _OneLine({super.key, required this.text, required this.style});
+
+  final String text;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextDirection direction = Directionality.of(context);
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double available = constraints.maxWidth;
+        final TextPainter painter = TextPainter(
+          text: TextSpan(text: text, style: style),
+          textDirection: direction,
+          textScaler: scaler,
+          maxLines: 1,
+        )..layout();
+        final double width = painter.width;
+        painter.dispose();
+        if (!available.isFinite || width <= available) {
+          return Text(text, maxLines: 1, softWrap: false, style: style);
+        }
+        if (available / width >= _minLineScale) {
+          return FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(text, maxLines: 1, softWrap: false, style: style),
+          );
+        }
+        return Text(
+          text,
+          maxLines: _wrapLines,
+          overflow: TextOverflow.ellipsis,
+          style: style.copyWith(
+            fontSize: (style.fontSize ?? 14) * _minLineScale,
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// One row of the paint order: number, then the step (zone) with the marker
+/// name under it, and a dot swatch with the code at the right.
 class _PaintStepRow extends StatelessWidget {
   const _PaintStepRow({required this.step, required this.hex});
 
@@ -1802,7 +2238,8 @@ class _PaintStepRow extends StatelessWidget {
     return Semantics(
       container: true,
       label:
-          '${step.order}. ${step.zone}, ${step.code} ${step.name}. ${step.tip}',
+          '${step.order}. ${step.zone}, ${step.code} ${step.name}.'
+          '${step.tip.isEmpty ? '' : ' ${step.tip}'}',
       child: ExcludeSemantics(
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 22),
@@ -1817,9 +2254,21 @@ class _PaintStepRow extends StatelessWidget {
               ),
               const SizedBox(width: InkSpacing.s12),
               Expanded(
-                child: Text(
-                  '${step.zone} · ${step.name}',
-                  style: AppTypography.secondary.copyWith(color: ink.fg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _OneLine(
+                      key: ValueKey<String>('palette-step-zone-${step.order}'),
+                      text: step.zone,
+                      style: AppTypography.secondary.copyWith(color: ink.fg),
+                    ),
+                    _OneLine(
+                      key: ValueKey<String>('palette-step-name-${step.order}'),
+                      text: step.name,
+                      style: AppTypography.secondary.copyWith(color: ink.fg2),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: InkSpacing.s12),
@@ -1860,22 +2309,17 @@ class _SuggestionRow extends StatefulWidget {
   final String role;
   final bool locked;
   final bool last;
-  final VoidCallback onToggleLock;
+
+  /// Locks or unlocks the colour; `null` hides the lock (photo palettes).
+  final VoidCallback? onToggleLock;
 
   @override
   State<_SuggestionRow> createState() => _SuggestionRowState();
 }
 
-/// Width of the role column of a suggestion row.
-///
-/// 104 fits "COMPLEMENTARIO", the longest Spanish role, once [RoleLabel] has
-/// shrunk it by a few percent; multi-word roles wrap onto a second line.
-const double roleColumnWidth = 104;
-
-/// A role in caps that always fits its column: it wraps at spaces (three lines
-/// at most, only reached with very large text) and, when one word is wider than the column, the type is scaled
-/// down just enough for that word to fit instead of being cut with an
-/// ellipsis.
+/// A role in caps on a single line: when the whole text is wider than the
+/// space it has, the type is scaled down just enough to fit, instead of
+/// wrapping or being cut with an ellipsis.
 @visibleForTesting
 class RoleLabel extends StatelessWidget {
   const RoleLabel({super.key, required this.text, required this.style});
@@ -1891,31 +2335,39 @@ class RoleLabel extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final double available = constraints.maxWidth;
-        double scale = 1;
-        for (final String word in caps.split(RegExp(r'\s+'))) {
-          if (word.isEmpty) continue;
-          final TextPainter painter = TextPainter(
-            text: TextSpan(text: word, style: style),
-            textDirection: direction,
-            textScaler: scaler,
-          )..layout();
-          final double width = painter.width;
-          painter.dispose();
-          if (width > available) scale = math.min(scale, available / width);
+        final TextPainter painter = TextPainter(
+          text: TextSpan(text: caps, style: style),
+          textDirection: direction,
+          textScaler: scaler,
+          maxLines: 1,
+        )..layout();
+        final double width = painter.width;
+        painter.dispose();
+        if (width <= available) {
+          return Text(caps, maxLines: 1, softWrap: false, style: style);
         }
-        // A hair of margin so rounding never pushes the word onto its own
-        // overflowing line.
-        final TextStyle fitted = scale >= 1
-            ? style
-            : style.copyWith(
-                fontSize: (style.fontSize ?? 12) * scale * 0.97,
-                letterSpacing: (style.letterSpacing ?? 0) * scale,
-              );
+        // A hair of margin so rounding never pushes the text past the edge.
+        final double scale = available / width * 0.97;
+        if (scale < _minLineScale) {
+          // Too long to shrink any further: wrap, like _OneLine.
+          return Text(
+            caps,
+            maxLines: _wrapLines,
+            overflow: TextOverflow.ellipsis,
+            style: style.copyWith(
+              fontSize: (style.fontSize ?? 12) * _minLineScale,
+              letterSpacing: (style.letterSpacing ?? 0) * _minLineScale,
+            ),
+          );
+        }
         return Text(
           caps,
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
-          style: fitted,
+          maxLines: 1,
+          softWrap: false,
+          style: style.copyWith(
+            fontSize: (style.fontSize ?? 12) * scale,
+            letterSpacing: (style.letterSpacing ?? 0) * scale,
+          ),
         );
       },
     );
@@ -1934,11 +2386,18 @@ class _SuggestionRowState extends State<_SuggestionRow> {
     final PaletteSuggestion suggestion = widget.suggestion;
     final String role = widget.role;
     final MarkerColor color = suggestion.color;
-    // In scenario mode the role is the reason itself: show the name instead.
-    final String why = suggestion.reason == role
+    // In scenario mode the role is the reason itself, and a loaded palette's
+    // reason says nothing: show the marker name instead.
+    final bool nameOnly =
+        suggestion.reason == role ||
+        suggestion.reason == PaletteReasons.loaded ||
+        suggestion.reason == PaletteReasons.photo;
+    final String why = nameOnly
         ? color.newName
         : context.l10n.reasonLabel(suggestion.reason);
     final String roleText = context.l10n.roleLabel(role);
+    // The name alone is one line; a reason is a sentence that clamps and
+    // expands on tap.
     return Semantics(
       container: true,
       label: '${color.newCode}, ${color.newName}, $roleText',
@@ -1952,42 +2411,64 @@ class _SuggestionRowState extends State<_SuggestionRow> {
         ),
         child: Row(
           children: <Widget>[
-            SizedBox(
-              width: roleColumnWidth,
-              child: RoleLabel(
-                key: ValueKey<String>('palette-row-role-${color.newCode}'),
-                text: roleText,
-                style: AppTypography.capsStyle.copyWith(color: ink.fg2),
-              ),
-            ),
-            const SizedBox(width: InkSpacing.s12),
             Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => setState(() => _expanded = !_expanded),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: InkSpacing.s8),
-                  child: Text(
-                    why,
-                    key: ValueKey<String>('palette-row-why-${color.newCode}'),
-                    maxLines: _expanded ? null : _collapsedLines,
-                    overflow: _expanded
-                        ? TextOverflow.visible
-                        : TextOverflow.ellipsis,
-                    style: AppTypography.secondary.copyWith(color: ink.fg),
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: InkSpacing.s8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    RoleLabel(
+                      key: ValueKey<String>(
+                        'palette-row-role-${color.newCode}',
+                      ),
+                      text: roleText,
+                      style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+                    ),
+                    const SizedBox(height: InkSpacing.s4),
+                    // The name alone has nothing to expand: only a reason does.
+                    if (nameOnly)
+                      _OneLine(
+                        key: ValueKey<String>(
+                          'palette-row-why-${color.newCode}',
+                        ),
+                        text: why,
+                        style: AppTypography.secondary.copyWith(color: ink.fg),
+                      )
+                    else
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => setState(() => _expanded = !_expanded),
+                        child: Text(
+                          why,
+                          key: ValueKey<String>(
+                            'palette-row-why-${color.newCode}',
+                          ),
+                          maxLines: _expanded ? null : _collapsedLines,
+                          overflow: _expanded
+                              ? TextOverflow.visible
+                              : TextOverflow.ellipsis,
+                          style: AppTypography.secondary.copyWith(
+                            color: ink.fg,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
-            InkIconButton(
-              icon: widget.locked ? InkIcons.lock : InkIcons.unlock,
-              iconSize: InkGeometry.smallIcon,
-              color: widget.locked ? ink.action : ink.fg2,
-              tooltip: widget.locked
-                  ? context.l10n.paletteUnlockButton
-                  : context.l10n.paletteLockButton,
-              onPressed: widget.onToggleLock,
-            ),
+            if (widget.onToggleLock != null)
+              InkIconButton(
+                icon: widget.locked ? InkIcons.lock : InkIcons.unlock,
+                iconSize: InkGeometry.smallIcon,
+                color: widget.locked ? ink.action : ink.fg2,
+                tooltip: widget.locked
+                    ? context.l10n.paletteUnlockButton
+                    : context.l10n.paletteLockButton,
+                onPressed: widget.onToggleLock,
+              )
+            else
+              const SizedBox(width: InkSpacing.cardH),
           ],
         ),
       ),
@@ -2009,6 +2490,27 @@ class _SavedPaletteRow extends StatelessWidget {
   final VoidCallback onLoad;
   final VoidCallback onDelete;
 
+  /// What kind of palette this is: the scene it came from, or the colour
+  /// theory mode. A scene that cannot be resolved reads as "Scenes".
+  String _kindLabel(BuildContext context) {
+    final String? sceneId = palette.scenarioName;
+    if (sceneId == null || sceneId.isEmpty) {
+      return context.l10n.modeLabel(palette.mode);
+    }
+    if (sceneId == PhotoScene.savedName) {
+      return context.l10n.paletteFromPhotoTitle;
+    }
+    // Older saves hold the wire value (`ForestScene`), newer ones the id.
+    final Scene? scene = SceneCatalog.isInstalled
+        ? SceneCatalog.current.find(
+            '${sceneId[0].toLowerCase()}${sceneId.substring(1)}',
+          )
+        : null;
+    return scene == null
+        ? context.l10n.paletteTypeScenesGroup
+        : context.l10n.scenarioLabel(scene);
+  }
+
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
@@ -2029,9 +2531,10 @@ class _SavedPaletteRow extends StatelessWidget {
                   ?.copyWith(color: ink.fg),
             ),
             const SizedBox(height: InkSpacing.s4),
-            Text(
-              context.l10n.paletteSavedSubtitle(
-                context.l10n.modeLabel(palette.mode),
+            _OneLine(
+              key: ValueKey<String>('palette-saved-subtitle-${palette.id}'),
+              text: context.l10n.paletteSavedSubtitle(
+                _kindLabel(context),
                 palette.paletteSize,
               ),
               style: AppTypography.secondary.copyWith(color: ink.fg2),
@@ -2200,7 +2703,7 @@ final class _PaletteSnapshot {
 
   final PaletteMode mode;
   final bool useScenario;
-  final DrawingScenario scenario;
+  final Scene scenario;
   final String baseInput;
   final int paletteSize;
   final List<PaletteSuggestion> suggestions;
@@ -2212,7 +2715,7 @@ final class _PaletteSnapshot {
   void restore(_PalettePageState s) {
     s._mode = mode;
     s._useScenario = useScenario;
-    s._scenario = scenario;
+    s._sceneChoice = scenario;
     s._baseInput = baseInput;
     s._baseController.text = baseInput;
     s._paletteSize = paletteSize;
@@ -2222,6 +2725,8 @@ final class _PaletteSnapshot {
       ..clear()
       ..addAll(lockedSuggestions);
     s._aiUsed = aiUsed;
+    // Whatever photo came since goes, with a photo still being read.
+    s._dropPhoto();
     s._failure = null;
     s._unknownInput = false;
     s._notice = null;

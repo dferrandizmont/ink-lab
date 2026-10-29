@@ -4,6 +4,7 @@ import '../ai/palette_advisor.dart' as ai;
 import '../core/match_quality.dart';
 import '../core/models.dart';
 import '../core/palette_generator.dart' show QuickPaletteVariation;
+import '../core/scene_catalog.dart';
 import 'app_localizations.dart';
 import 'ideas_text.dart';
 import 'phrases.dart';
@@ -25,8 +26,24 @@ extension CoreLabelLocalizations on AppLocalizations {
   String modeLabel(PaletteMode mode) =>
       paletteModeText(mode.label) ?? mode.label;
 
-  String scenarioLabel(DrawingScenario scenario) =>
-      scenarioText(scenario.label) ?? scenario.label;
+  /// The name of [scene] in the current language (the names live in scenes.json).
+  String scenarioLabel(Scene scene) => scene.nameFor(localeName);
+
+  /// The name of the scene category [id] (an id of the scene catalogue).
+  String sceneCategoryLabel(String id) => switch (id) {
+    'characters' => sceneCategoryCharacters,
+    'skin' => sceneCategorySkin,
+    'skyWater' => sceneCategorySkyWater,
+    'nature' => sceneCategoryNature,
+    'materials' => sceneCategoryMaterials,
+    'animals' => sceneCategoryAnimals,
+    'food' => sceneCategoryFood,
+    'holidays' => sceneCategoryHolidays,
+    'interiors' => sceneCategoryInteriors,
+    'patterns' => sceneCategoryPatterns,
+    'fantasy' => sceneCategoryFantasy,
+    _ => id,
+  };
 
   /// The pack name inside its line ("160", "White Case 24"), translated.
   String packSetLabel(OahuSet set) {
@@ -142,6 +159,14 @@ extension CoreLabelLocalizations on AppLocalizations {
     if (idea != null) return idea;
     final String? known = phrase(value);
     if (known != null) return known;
+    // Roles of the bundled scenes that the phrases above do not cover.
+    if (SceneCatalog.isInstalled) {
+      final String? sceneRole = SceneCatalog.current.roleName(
+        value,
+        localeName,
+      );
+      if (sceneRole != null) return sceneRole;
+    }
     final RegExpMatch? variation = _variationPattern.firstMatch(value);
     if (variation != null) {
       final String prefix = variation.group(1)!;

@@ -99,3 +99,32 @@ MarkerColor markerColor(String code, String hex) => MarkerColor(
   hex: hex,
   sets: const <String>['classic_160'],
 );
+
+/// Opens the palette type sheet from the type field.
+Future<void> openPaletteTypeSheet(WidgetTester tester) async {
+  await tester.ensureVisible(
+    find.byKey(const ValueKey<String>('palette-type-field')),
+  );
+  await tester.tap(find.byKey(const ValueKey<String>('palette-type-field')));
+  await tester.pumpAndSettle();
+}
+
+/// Picks the type row with [rowKey] (palette-mode-NAME or
+/// palette-scenario-toggle) in the type sheet; the sheet closes.
+Future<void> choosePaletteType(WidgetTester tester, String rowKey) async {
+  await openPaletteTypeSheet(tester);
+  final Finder row = find.byKey(ValueKey<String>(rowKey));
+  await tester.ensureVisible(row);
+  await tester.pumpAndSettle();
+  await tester.tap(row);
+  await tester.pumpAndSettle();
+}
+
+/// Opens the scene sheet from the scene field (Scenes must be the type).
+Future<void> openPaletteSceneSheet(WidgetTester tester) async {
+  await tester.ensureVisible(
+    find.byKey(const ValueKey<String>('palette-scene-field')),
+  );
+  await tester.tap(find.byKey(const ValueKey<String>('palette-scene-field')));
+  await tester.pumpAndSettle();
+}

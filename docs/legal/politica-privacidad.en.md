@@ -34,10 +34,12 @@ Android's system backup is **switched off** for this app, so neither your settin
 way. On iPhone, the preferences are part of the device backup that you manage with your Apple account.
 
 ### Camera and gallery
-Only when you use "Match" and choose to take a photo or pick one from the gallery, the app asks for the permission or
-opens the system picker. The photo is decoded and sampled **on your phone** to find the closest marker: it is not
-uploaded anywhere, it is not stored and it is never sent to an AI provider. Only the sampled colour and the matched
-marker are kept, in your local history.
+Only when you use "Match" or "Scene from a photo" (in Palette) and choose to take a photo or pick one from the gallery,
+the app asks for the permission or opens the system picker. The photo is decoded and analysed **on your phone**: it is
+not uploaded anywhere, it is not stored and it is never sent to an AI provider. In "Match", only the sampled colour and
+the matched marker are kept, in your local history. In "Scene from a photo", its main colours are found to suggest
+markers from your collection; the photo is only kept in memory while you look at the result, and if you save the
+palette, the marker codes are saved, never the photo.
 
 ### Backup
 "Export backup" (Settings) produces a JSON text with your collections, favourites, palettes and history, and **copies
@@ -69,7 +71,7 @@ It is not uploaded to the developer, it is not included in backups, and you can 
 the AI fails, the app goes back to colour theory.
 
 ### Permissions
-The app asks for the **camera or photos** permission only when you use "Match", and declares **network** access only
+The app asks for the **camera or photos** permission only when you use "Match" or "Scene from a photo", and declares **network** access only
 for the optional AI with OpenRouter. It does not ask for location, contacts, calendar, microphone or notifications, and
 it does not use the advertising identifier.
 
@@ -87,7 +89,7 @@ send your API key or backups containing data you do not want to share: test data
 | Processing | Purpose | Legal basis (GDPR) |
 |---|---|---|
 | Collections, favourites, palettes and settings on your phone | So that you can use the app and keep your work | We do not receive them: they stay on your device, under your control |
-| "Match" photo | Finding the closest marker | Processed only on your phone, at your request; we do not receive it |
+| "Match" or "Scene from a photo" photo | Finding the closest markers | Processed only on your phone, at your request; we do not receive it |
 | AI with OpenRouter (optional) | Generating palette suggestions | Your consent when you turn it on and use your own key; OpenRouter performs the processing under its own terms |
 | Support emails | Replying to your query | Your request and our legitimate interest in handling it (art. 6.1.f) |
 

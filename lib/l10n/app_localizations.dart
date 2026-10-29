@@ -848,23 +848,239 @@ abstract class AppLocalizations {
   /// **'E08 or B271'**
   String get paletteBaseCodeHint;
 
-  /// No description provided for @paletteHarmonyLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Harmony'**
-  String get paletteHarmonyLabel;
-
   /// No description provided for @paletteScenarioToggle.
   ///
   /// In en, this message translates to:
   /// **'Scenes'**
   String get paletteScenarioToggle;
 
-  /// No description provided for @paletteScenarioTitle.
+  /// No description provided for @paletteTypeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Palette type'**
+  String get paletteTypeTitle;
+
+  /// No description provided for @paletteTypeSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the palette type'**
+  String get paletteTypeSheetTitle;
+
+  /// No description provided for @paletteTypeTheoryGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour theory'**
+  String get paletteTypeTheoryGroup;
+
+  /// No description provided for @paletteTypeScenesGroup.
   ///
   /// In en, this message translates to:
   /// **'Scenes'**
-  String get paletteScenarioTitle;
+  String get paletteTypeScenesGroup;
+
+  /// No description provided for @paletteTypeScenesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready-made recipes by subject'**
+  String get paletteTypeScenesHint;
+
+  /// No description provided for @paletteTypeDescRecommended.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced picks for your base'**
+  String get paletteTypeDescRecommended;
+
+  /// No description provided for @paletteTypeDescComplementary.
+  ///
+  /// In en, this message translates to:
+  /// **'Opposite hue, strong contrast'**
+  String get paletteTypeDescComplementary;
+
+  /// No description provided for @paletteTypeDescAnalogous.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbouring hues, calm'**
+  String get paletteTypeDescAnalogous;
+
+  /// No description provided for @paletteTypeDescSplitComplementary.
+  ///
+  /// In en, this message translates to:
+  /// **'Two hues beside the opposite'**
+  String get paletteTypeDescSplitComplementary;
+
+  /// No description provided for @paletteTypeDescTriad.
+  ///
+  /// In en, this message translates to:
+  /// **'Three evenly spaced hues'**
+  String get paletteTypeDescTriad;
+
+  /// No description provided for @paletteTypeDescSquare.
+  ///
+  /// In en, this message translates to:
+  /// **'Four evenly spaced hues'**
+  String get paletteTypeDescSquare;
+
+  /// No description provided for @paletteTypeDescRectangle.
+  ///
+  /// In en, this message translates to:
+  /// **'Two complementary pairs'**
+  String get paletteTypeDescRectangle;
+
+  /// No description provided for @paletteTypeDescMonochrome.
+  ///
+  /// In en, this message translates to:
+  /// **'One hue, light to dark'**
+  String get paletteTypeDescMonochrome;
+
+  /// No description provided for @paletteTypeDescShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper tones for shading'**
+  String get paletteTypeDescShadow;
+
+  /// No description provided for @paletteTypeDescCustomPalette.
+  ///
+  /// In en, this message translates to:
+  /// **'Build it by hand'**
+  String get paletteTypeDescCustomPalette;
+
+  /// No description provided for @paletteTypeSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Palette type, {value}'**
+  String paletteTypeSemantic(String value);
+
+  /// No description provided for @paletteSceneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scene'**
+  String get paletteSceneTitle;
+
+  /// No description provided for @paletteSceneSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a scene'**
+  String get paletteSceneSheetTitle;
+
+  /// No description provided for @paletteSceneSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search scene or category'**
+  String get paletteSceneSearchHint;
+
+  /// No description provided for @paletteSceneEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No scene matches your search.'**
+  String get paletteSceneEmpty;
+
+  /// No description provided for @paletteSceneSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Scene, {value}'**
+  String paletteSceneSemantic(String value);
+
+  /// Scene sheet entry and source sheet title: build a palette from the colours of a photo.
+  ///
+  /// In en, this message translates to:
+  /// **'From a photo'**
+  String get paletteFromPhotoTitle;
+
+  /// One-line explanation under the From a photo entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Your photo, with your markers'**
+  String get paletteFromPhotoHint;
+
+  /// Value of the scene field while a photo palette is shown.
+  ///
+  /// In en, this message translates to:
+  /// **'Your photo'**
+  String get paletteFromPhotoValue;
+
+  /// Role line of a colour taken from the photo, with the share of the photo it covers.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo colour · {percent} %'**
+  String paletteFromPhotoRole(int percent);
+
+  /// Error when no colours (or no owned markers) came out of the photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t get colours from this photo'**
+  String get paletteFromPhotoEmpty;
+
+  /// Note shown when a photo colour has no usable owned marker close to it.
+  ///
+  /// In en, this message translates to:
+  /// **'Some photo colours have no close marker in your collection'**
+  String get paletteFromPhotoFarNote;
+
+  /// No description provided for @sceneCategoryCharacters.
+  ///
+  /// In en, this message translates to:
+  /// **'Characters'**
+  String get sceneCategoryCharacters;
+
+  /// No description provided for @sceneCategorySkin.
+  ///
+  /// In en, this message translates to:
+  /// **'Skin and portraits'**
+  String get sceneCategorySkin;
+
+  /// No description provided for @sceneCategorySkyWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Sky and water'**
+  String get sceneCategorySkyWater;
+
+  /// No description provided for @sceneCategoryNature.
+  ///
+  /// In en, this message translates to:
+  /// **'Nature'**
+  String get sceneCategoryNature;
+
+  /// No description provided for @sceneCategoryMaterials.
+  ///
+  /// In en, this message translates to:
+  /// **'Materials'**
+  String get sceneCategoryMaterials;
+
+  /// No description provided for @sceneCategoryAnimals.
+  ///
+  /// In en, this message translates to:
+  /// **'Animals and fur'**
+  String get sceneCategoryAnimals;
+
+  /// No description provided for @sceneCategoryFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get sceneCategoryFood;
+
+  /// No description provided for @sceneCategoryHolidays.
+  ///
+  /// In en, this message translates to:
+  /// **'Holidays and moods'**
+  String get sceneCategoryHolidays;
+
+  /// No description provided for @sceneCategoryInteriors.
+  ///
+  /// In en, this message translates to:
+  /// **'Interiors'**
+  String get sceneCategoryInteriors;
+
+  /// No description provided for @sceneCategoryPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Patterns'**
+  String get sceneCategoryPatterns;
+
+  /// No description provided for @sceneCategoryFantasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Fantasy'**
+  String get sceneCategoryFantasy;
 
   /// No description provided for @paletteSizeTitle.
   ///
@@ -1067,7 +1283,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteEmptyHint.
   ///
   /// In en, this message translates to:
-  /// **'Pick a base marker to build a palette, or choose a scene with the Scenes chip.'**
+  /// **'Pick a base marker to build a palette, or choose Scenes as the palette type.'**
   String get paletteEmptyHint;
 
   /// No description provided for @paletteCustomModeHint.
@@ -4140,18 +4356,6 @@ abstract class AppLocalizations {
   /// **'{mode} · {size} colours'**
   String paletteSavedSubtitle(String mode, int size);
 
-  /// No description provided for @paletteSubtitleFrom.
-  ///
-  /// In en, this message translates to:
-  /// **'{mode} from {base} · {available}'**
-  String paletteSubtitleFrom(String mode, String base, String available);
-
-  /// No description provided for @paletteSubtitleScenario.
-  ///
-  /// In en, this message translates to:
-  /// **'{scenario} · {available}'**
-  String paletteSubtitleScenario(String scenario, String available);
-
   /// No description provided for @paletteSubtitleCustom.
   ///
   /// In en, this message translates to:
@@ -5741,168 +5945,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shadow'**
   String get modeShadow;
-
-  /// No description provided for @scenarioGhostCharacter.
-  ///
-  /// In en, this message translates to:
-  /// **'Ghost Character'**
-  String get scenarioGhostCharacter;
-
-  /// No description provided for @scenarioCuteCharacter.
-  ///
-  /// In en, this message translates to:
-  /// **'Cute Character'**
-  String get scenarioCuteCharacter;
-
-  /// No description provided for @scenarioFantasyCreature.
-  ///
-  /// In en, this message translates to:
-  /// **'Fantasy Creature'**
-  String get scenarioFantasyCreature;
-
-  /// No description provided for @scenarioWarmPortrait.
-  ///
-  /// In en, this message translates to:
-  /// **'Warm Portrait'**
-  String get scenarioWarmPortrait;
-
-  /// No description provided for @scenarioCoolPortrait.
-  ///
-  /// In en, this message translates to:
-  /// **'Cool Portrait'**
-  String get scenarioCoolPortrait;
-
-  /// No description provided for @scenarioSunsetLandscape.
-  ///
-  /// In en, this message translates to:
-  /// **'Sunset Landscape'**
-  String get scenarioSunsetLandscape;
-
-  /// No description provided for @scenarioForestScene.
-  ///
-  /// In en, this message translates to:
-  /// **'Forest Scene'**
-  String get scenarioForestScene;
-
-  /// No description provided for @scenarioOceanScene.
-  ///
-  /// In en, this message translates to:
-  /// **'Ocean Scene'**
-  String get scenarioOceanScene;
-
-  /// No description provided for @scenarioAutumnScene.
-  ///
-  /// In en, this message translates to:
-  /// **'Autumn Scene'**
-  String get scenarioAutumnScene;
-
-  /// No description provided for @scenarioSpringGarden.
-  ///
-  /// In en, this message translates to:
-  /// **'Spring Garden'**
-  String get scenarioSpringGarden;
-
-  /// No description provided for @scenarioCozyInterior.
-  ///
-  /// In en, this message translates to:
-  /// **'Cozy Interior'**
-  String get scenarioCozyInterior;
-
-  /// No description provided for @scenarioVintageRoom.
-  ///
-  /// In en, this message translates to:
-  /// **'Vintage Room'**
-  String get scenarioVintageRoom;
-
-  /// No description provided for @scenarioPastelDream.
-  ///
-  /// In en, this message translates to:
-  /// **'Pastel Dream'**
-  String get scenarioPastelDream;
-
-  /// No description provided for @scenarioNeonNight.
-  ///
-  /// In en, this message translates to:
-  /// **'Neon Night'**
-  String get scenarioNeonNight;
-
-  /// No description provided for @scenarioMoodyNight.
-  ///
-  /// In en, this message translates to:
-  /// **'Moody Night'**
-  String get scenarioMoodyNight;
-
-  /// No description provided for @scenarioFloralPattern.
-  ///
-  /// In en, this message translates to:
-  /// **'Floral Pattern'**
-  String get scenarioFloralPattern;
-
-  /// No description provided for @scenarioGeometricPattern.
-  ///
-  /// In en, this message translates to:
-  /// **'Geometric Pattern'**
-  String get scenarioGeometricPattern;
-
-  /// No description provided for @scenarioPlaidPattern.
-  ///
-  /// In en, this message translates to:
-  /// **'Plaid Pattern'**
-  String get scenarioPlaidPattern;
-
-  /// No description provided for @scenarioPolkaDotPattern.
-  ///
-  /// In en, this message translates to:
-  /// **'Polka Dot Pattern'**
-  String get scenarioPolkaDotPattern;
-
-  /// No description provided for @scenarioCandyStripes.
-  ///
-  /// In en, this message translates to:
-  /// **'Candy Stripes'**
-  String get scenarioCandyStripes;
-
-  /// No description provided for @scenarioHalloweenMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Halloween Mood'**
-  String get scenarioHalloweenMood;
-
-  /// No description provided for @scenarioChristmasMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Christmas Mood'**
-  String get scenarioChristmasMood;
-
-  /// No description provided for @scenarioSpringMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Spring Mood'**
-  String get scenarioSpringMood;
-
-  /// No description provided for @scenarioSummerMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Summer Mood'**
-  String get scenarioSummerMood;
-
-  /// No description provided for @scenarioAutumnMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Autumn Mood'**
-  String get scenarioAutumnMood;
-
-  /// No description provided for @scenarioWinterMood.
-  ///
-  /// In en, this message translates to:
-  /// **'Winter Mood'**
-  String get scenarioWinterMood;
-
-  /// No description provided for @scenarioWinterSnow.
-  ///
-  /// In en, this message translates to:
-  /// **'Winter Snow'**
-  String get scenarioWinterSnow;
 
   /// No description provided for @packLabel120New.
   ///

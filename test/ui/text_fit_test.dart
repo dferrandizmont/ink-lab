@@ -20,6 +20,9 @@ import 'package:ink_lab/ui/pages/match/match_page.dart';
 import 'package:ink_lab/ui/pages/onboarding/onboarding_page.dart';
 import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
+import 'package:ink_lab/ui/pages/palette/palette_photo_scene.dart';
+import 'package:ink_lab/ui/pages/match/color_sampling.dart';
+import 'package:ink_lab/ui/pages/palette/palette_type_picker.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
 import 'package:ink_lab/ui/pages/settings/settings_widgets.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
@@ -138,6 +141,17 @@ bool _isControlLabel(Element element, String text) {
       control = text == w.label.toUpperCase();
     } else if (w is InkSectionHeading) {
       control = text == w.title;
+    } else if (w is PaletteChoiceField) {
+      // The caps label and the current choice of the type and scene fields.
+      control = true;
+    } else if (w is Text &&
+        w.key is ValueKey<String> &&
+        _controlTextKeys.any(
+          (String prefix) =>
+              (w.key! as ValueKey<String>).value.startsWith(prefix),
+        )) {
+      // Names in the palette type and scene sheets.
+      control = true;
     } else {
       return true;
     }
@@ -145,6 +159,12 @@ bool _isControlLabel(Element element, String text) {
   });
   return control;
 }
+
+/// Key prefixes of the names in the palette type and scene sheets.
+const List<String> _controlTextKeys = <String>[
+  'palette-type-title-',
+  'palette-scene-name-',
+];
 
 /// How many lines [p] is laid out on (distinct tops of its text boxes).
 int _lineCount(RenderParagraph p) {
@@ -190,6 +210,59 @@ void _check(WidgetTester tester, String where) {
     if (_lineCount(render) > 1) {
       _problems.add('$_tag wrapped: "${_oneLine(text)}"  [$where]');
     }
+  }
+}
+
+/// Asserts that every role label and paint-order line on screen is laid out
+/// on a single line; returns how many there were.
+int _expectSingleLines(WidgetTester tester, String scene) {
+  final Finder lines = find.byWidgetPredicate(
+    (Widget w) =>
+        w is RoleLabel ||
+        (w.key is ValueKey<String> &&
+            (w.key! as ValueKey<String>).value.startsWith('palette-step-')),
+  );
+  var count = 0;
+  for (final Element e in lines.evaluate()) {
+    final Finder paragraph = find.descendant(
+      of: find.byWidget(e.widget),
+      matching: find.byType(RichText),
+    );
+    if (paragraph.evaluate().isEmpty) continue;
+    final RenderParagraph p = tester.renderObject(paragraph.first);
+    expect(
+      _lineCount(p),
+      1,
+      reason: '$_tag "${p.text.toPlainText()}" wraps  [$scene]',
+    );
+    expect(p.didExceedMaxLines, isFalse);
+    count++;
+  }
+  return count;
+}
+
+/// Asserts that every explanation in the palette type sheet is one line (at
+/// normal text size; larger text may wrap them, they are paragraphs).
+void _expectTypeDescriptionsOneLine(WidgetTester tester) {
+  final Finder descriptions = find.byWidgetPredicate(
+    (Widget w) =>
+        w is Text &&
+        w.key is ValueKey<String> &&
+        (w.key! as ValueKey<String>).value.startsWith('palette-type-desc-'),
+  );
+  expect(descriptions, findsWidgets, reason: '$_tag type sheet descriptions');
+  for (final Element e in descriptions.evaluate()) {
+    final RenderParagraph p = tester.renderObject(
+      find.descendant(
+        of: find.byWidget(e.widget),
+        matching: find.byType(RichText),
+      ),
+    );
+    expect(
+      _lineCount(p),
+      1,
+      reason: '$_tag type description "${p.text.toPlainText()}" wraps',
+    );
   }
 }
 
@@ -280,6 +353,83 @@ Future<AppScope> _pumpSettings(
   );
 }
 
+/// "Scenes > From a photo" at [env]: the scene sheet entry, the source sheet,
+/// the "Your photo" field, the role lines and (with few markers) the note.
+Future<void> _fromPhotoScenario(
+  WidgetTester tester,
+  _Env env, {
+  required Set<String> owned,
+  required bool expectNote,
+}) async {
+  final AppScope scope = await _pump(
+    tester,
+    env,
+    PalettePage(
+      picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+      decoder: fixedDecoder(
+        imageFromRgb(5, 1, <List<int>>[
+          <int>[223, 62, 53],
+          <int>[223, 62, 53],
+          <int>[19, 144, 77],
+          <int>[38, 79, 179],
+          <int>[243, 207, 72],
+        ]),
+      ),
+      photoExtractor: (SampledImage image) async =>
+          extractPhotoColorSets(image.rgba, image.width, image.height),
+    ),
+  );
+  await scope.settings.setCollection(
+    AppSettings(ownedSetIds: const <String>{}, extraMarkerIds: owned),
+  );
+  await tester.pumpAndSettle();
+  await _tap(tester, find.byKey(const ValueKey<String>('palette-type-field')));
+  await _tap(
+    tester,
+    find.byKey(const ValueKey<String>('palette-scenario-toggle')),
+  );
+  await tester.drag(find.byType(Scrollable).first, const Offset(0, 9000));
+  await tester.pumpAndSettle();
+  await _tap(tester, find.byKey(const ValueKey<String>('palette-scene-field')));
+  _check(tester, 'scene sheet with From a photo');
+  if (env.scale == 1.0) _expectTypeDescriptionsOneLine(tester);
+  await _tap(tester, find.byKey(const ValueKey<String>('palette-scene-photo')));
+  _check(tester, 'photo source sheet');
+  await _tap(
+    tester,
+    find.byKey(const ValueKey<String>('palette-photo-camera')),
+  );
+  _check(tester, 'photo palette');
+  expect(
+    find.byKey(const ValueKey<String>('palette-photo-thumb')),
+    findsOneWidget,
+    reason: '$_tag photo thumbnail',
+  );
+  expect(
+    find.byKey(const ValueKey<String>('palette-photo-far-note')),
+    expectNote ? findsOneWidget : findsNothing,
+    reason: '$_tag far note',
+  );
+  final RenderParagraph name = tester.renderObject(
+    find.byKey(const ValueKey<String>('palette-scene-value')),
+  );
+  expect(_lineCount(name), 1, reason: '$_tag "Your photo"');
+  expect(name.didExceedMaxLines, isFalse);
+  expect(
+    find.text(env.t.paletteFromPhotoValue),
+    findsWidgets,
+    reason: '$_tag "Your photo" text',
+  );
+  await tester.drag(find.byType(Scrollable).first, const Offset(0, 9000));
+  await tester.pumpAndSettle();
+  var seen = 0;
+  await scrollThrough(tester, find.byType(Scrollable).first, (_) {
+    seen += _expectSingleLines(tester, 'photo palette');
+    _check(tester, 'photo palette');
+  });
+  expect(seen, greaterThan(0), reason: '$_tag photo palette has rows');
+}
+
 typedef _Scenario = Future<void> Function(WidgetTester tester, _Env env);
 
 final Map<String, _Scenario> _scenarios = <String, _Scenario>{
@@ -362,13 +512,147 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await _close(tester);
         await tester.drag(find.byType(Scrollable).first, const Offset(0, 9000));
         await tester.pumpAndSettle();
+        // The type sheet: every mode with its glyph and explanation.
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-type-field')),
+        );
+        _check(tester, 'palette type sheet');
+        if (env.scale == 1.0) _expectTypeDescriptionsOneLine(tester);
+        await _scroll(
+          tester,
+          'palette type sheet',
+          within: find.descendant(
+            of: find.byType(BottomSheet),
+            matching: find.byType(Scrollable),
+          ),
+        );
         await _tap(
           tester,
           find.byKey(const ValueKey<String>('palette-scenario-toggle')),
         );
         _check(tester, 'palette scenarios');
         await _scroll(tester, 'palette scenarios');
+        // The scene sheet: every category and scene, then a search.
+        await tester.drag(find.byType(Scrollable).first, const Offset(0, 9000));
+        await tester.pumpAndSettle();
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-scene-field')),
+        );
+        _check(tester, 'scene sheet');
+        await _scroll(
+          tester,
+          'scene sheet',
+          within: find.descendant(
+            of: find.byType(BottomSheet),
+            matching: find.byType(Scrollable),
+          ),
+        );
+        await tester.enterText(
+          find.byKey(const ValueKey<String>('palette-scene-search')),
+          'piel',
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'scene sheet search');
+        await _close(tester);
+        _check(tester, 'palette with a scene');
+        // The longest type names, in the field itself.
+        for (final String mode in <String>[
+          'splitComplementary',
+          'customPalette',
+          'rectangle',
+        ]) {
+          await tester.drag(
+            find.byType(Scrollable).first,
+            const Offset(0, 9000),
+          );
+          await tester.pumpAndSettle();
+          await _tap(
+            tester,
+            find.byKey(const ValueKey<String>('palette-type-field')),
+          );
+          await _tap(
+            tester,
+            find.byKey(ValueKey<String>('palette-mode-$mode')),
+          );
+          _check(tester, 'palette type $mode');
+        }
       },
+  'palette: scene rows, paint order and scene name on one line':
+      (WidgetTester tester, _Env env) async {
+        await _pump(tester, env, const PalettePage());
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-type-field')),
+        );
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-scenario-toggle')),
+        );
+        // The longest scene name, then scenes whose roles are the longest
+        // ones ("Amarillo mantequilla", "Azul marino profundo").
+        for (final String id in <String>[
+          'wildflowerMeadow',
+          'bakery',
+          'nauticalStripes',
+        ]) {
+          await tester.drag(
+            find.byType(Scrollable).first,
+            const Offset(0, 9000),
+          );
+          await tester.pumpAndSettle();
+          await _tap(
+            tester,
+            find.byKey(const ValueKey<String>('palette-scene-field')),
+          );
+          await tester.enterText(
+            find.byKey(const ValueKey<String>('palette-scene-search')),
+            Scene.byId(id).nameFor(env.locale.languageCode),
+          );
+          await tester.pumpAndSettle();
+          await _tap(tester, find.byKey(ValueKey<String>('palette-scene-$id')));
+          _check(tester, 'scene $id');
+          final Scene scene = Scene.byId(id);
+          expect(
+            find.text(env.t.scenarioLabel(scene)),
+            findsWidgets,
+            reason: '$_tag scene name of $id',
+          );
+          final RenderParagraph name = tester.renderObject(
+            find.byKey(const ValueKey<String>('palette-scene-value')),
+          );
+          expect(_lineCount(name), 1, reason: '$_tag scene name of $id');
+          expect(name.didExceedMaxLines, isFalse);
+
+          // Every role label and every paint-order line, screen by screen
+          // (the lists build lazily), is a single line.
+          await tester.drag(
+            find.byType(Scrollable).first,
+            const Offset(0, 9000),
+          );
+          await tester.pumpAndSettle();
+          var seen = 0;
+          await scrollThrough(tester, find.byType(Scrollable).first, (_) {
+            seen += _expectSingleLines(tester, id);
+          });
+          expect(seen, greaterThan(0), reason: '$_tag $id has rows');
+        }
+      },
+  'palette: from a photo, close markers': (WidgetTester tester, _Env env) =>
+      _fromPhotoScenario(
+        tester,
+        env,
+        owned: const <String>{'R014', 'G312', 'BV310', 'Y19', 'RV315'},
+        expectNote: false,
+      ),
+  'palette: from a photo, no close marker note':
+      (WidgetTester tester, _Env env) => _fromPhotoScenario(
+        tester,
+        env,
+        owned: const <String>{'R014', '0', 'B08'},
+        expectNote: true,
+      ),
   'match: page, results, recent pick sheet':
       (WidgetTester tester, _Env env) async {
         final FakeImagePickerService picker = FakeImagePickerService(

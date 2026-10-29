@@ -13,6 +13,10 @@ import 'package:ink_lab/ui/theme/app_typography.dart';
 
 import '../support/l10n.dart';
 
+/// About the width a role label has in a suggestion row at 360 dp (the row
+/// minus the card padding and the lock button).
+const double _roleWidth = 240;
+
 MarkerRepository _markers() =>
     MarkerRepository(loadAsset: (String path) => File(path).readAsStringSync());
 
@@ -133,7 +137,7 @@ void main() {
       expect(find.textContaining('rotuladores disponibles'), findsWidgets);
       expect(tester.takeException(), isNull);
 
-      // Every role column fits: wrapped, never cut.
+      // Every role label is one line that fits, never cut.
       final Finder roles = find.byType(RoleLabel);
       expect(roles, findsWidgets);
       for (final Element element in roles.evaluate()) {
@@ -143,7 +147,7 @@ void main() {
         );
         final RenderParagraph paragraph = tester.renderObject(text);
         expect(paragraph.didExceedMaxLines, isFalse);
-        expect(paragraph.size.width, lessThanOrEqualTo(roleColumnWidth));
+        expect(paragraph.size.width, lessThanOrEqualTo(_roleWidth));
       }
     });
 
@@ -151,6 +155,10 @@ void main() {
       WidgetTester tester,
     ) async {
       await _pumpSpanish(tester, const PalettePage());
+      await tester.tap(
+        find.byKey(const ValueKey<String>('palette-type-field')),
+      );
+      await tester.pumpAndSettle();
       final Finder toggle = find.byKey(
         const ValueKey<String>('palette-scenario-toggle'),
       );
@@ -161,6 +169,13 @@ void main() {
 
       expect(find.text('Personaje fantasma'), findsWidgets);
       expect(find.text('Ghost Character'), findsNothing);
+      // The scene sheet lists the Spanish names and categories.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('palette-scene-field')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('PERSONAJES'), findsOneWidget);
+      expect(find.text('Personaje fantasma'), findsWidgets);
       expect(tester.takeException(), isNull);
     });
   });
@@ -187,7 +202,7 @@ void main() {
             body: Align(
               alignment: Alignment.topLeft,
               child: SizedBox(
-                width: roleColumnWidth,
+                width: _roleWidth,
                 child: RoleLabel(
                   text: role,
                   style: AppTypography.capsStyle.copyWith(color: Colors.black),
@@ -210,7 +225,7 @@ void main() {
       expect(paragraph.didExceedMaxLines, isFalse);
       // One line of the 12/16 caps style is 16 dp high.
       expect(paragraph.size.height, lessThan(20));
-      expect(paragraph.size.width, lessThanOrEqualTo(roleColumnWidth));
+      expect(paragraph.size.width, lessThanOrEqualTo(_roleWidth));
       expect(find.text('COMPLEMENTARIO'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
@@ -233,7 +248,7 @@ void main() {
             );
             expect(
               paragraph.size.width,
-              lessThanOrEqualTo(roleColumnWidth),
+              lessThanOrEqualTo(_roleWidth),
               reason: '"$role" at x$scale',
             );
             expect(

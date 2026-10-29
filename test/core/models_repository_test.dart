@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
+import 'package:ink_lab/core/scene_catalog.dart';
 
 import 'fixtures.dart';
 
@@ -178,8 +179,8 @@ void main() {
     for (final mode in PaletteMode.values) {
       expect(PaletteMode.fromJson(mode.toJson()), mode);
     }
-    for (final scenario in DrawingScenario.values) {
-      expect(DrawingScenario.fromJson(scenario.toJson()), scenario);
+    for (final scenario in SceneCatalog.current.scenes) {
+      expect(Scene.fromJson(scenario.toJson()), scenario);
     }
     for (final set in OahuSet.values) {
       expect(OahuSet.byId[set.id], set);
@@ -228,7 +229,7 @@ void main() {
       brandLabel: 'Ohuhu',
       baseColor: harmonyColors.first,
       candidates: harmonyColors,
-      scenario: DrawingScenario.forestScene,
+      scenario: Scene.byId('forestScene'),
       mode: PaletteMode.recommended,
       paletteSize: 5,
       userGoal: 'forest',

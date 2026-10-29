@@ -44,7 +44,7 @@ final class PaletteAdvisorRequest {
   }) : availableColors = List.unmodifiable(availableColors),
        ownedMarkerCodes = Set.unmodifiable(ownedMarkerCodes),
        activeSetIds = Set.unmodifiable(activeSetIds);
-  final DrawingScenario? scenario;
+  final Scene? scenario;
   final MarkerColor? baseColor;
   final List<MarkerColor> availableColors;
   final int paletteSize, variationToken;

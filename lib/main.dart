@@ -22,6 +22,9 @@ Future<void> main() async {
     aiSettings.load(),
   ]);
   final secrets = SecureSecretStore();
+  final markers = MarkerRepository(loadAsset: rootBundle.loadString);
+  // Saved palettes and AI requests name their scene: have the catalogue ready.
+  await markers.loadScenes();
   runApp(
     AppScope(
       settings: settings,
@@ -29,7 +32,7 @@ Future<void> main() async {
       matchHistory: matchHistory,
       aiSettings: aiSettings,
       secrets: secrets,
-      markers: MarkerRepository(loadAsset: rootBundle.loadString),
+      markers: markers,
       aiService: AiService(
         aiSettings: aiSettings,
         secrets: secrets,

@@ -423,13 +423,130 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paletteBaseCodeHint => 'E08 o B271';
 
   @override
-  String get paletteHarmonyLabel => 'Armonía';
-
-  @override
   String get paletteScenarioToggle => 'Escenas';
 
   @override
-  String get paletteScenarioTitle => 'Escenas';
+  String get paletteTypeTitle => 'Tipo de paleta';
+
+  @override
+  String get paletteTypeSheetTitle => 'Elige el tipo de paleta';
+
+  @override
+  String get paletteTypeTheoryGroup => 'Teoría del color';
+
+  @override
+  String get paletteTypeScenesGroup => 'Escenas';
+
+  @override
+  String get paletteTypeScenesHint => 'Recetas listas por motivo';
+
+  @override
+  String get paletteTypeDescRecommended => 'Combinaciones para tu base';
+
+  @override
+  String get paletteTypeDescComplementary => 'Matiz opuesto, contraste fuerte';
+
+  @override
+  String get paletteTypeDescAnalogous => 'Matices vecinos, en calma';
+
+  @override
+  String get paletteTypeDescSplitComplementary =>
+      'Dos matices junto al opuesto';
+
+  @override
+  String get paletteTypeDescTriad => 'Tres matices equidistantes';
+
+  @override
+  String get paletteTypeDescSquare => 'Cuatro matices equidistantes';
+
+  @override
+  String get paletteTypeDescRectangle => 'Dos pares complementarios';
+
+  @override
+  String get paletteTypeDescMonochrome => 'Un matiz, de claro a oscuro';
+
+  @override
+  String get paletteTypeDescShadow => 'Tonos oscuros para sombrear';
+
+  @override
+  String get paletteTypeDescCustomPalette => 'Constrúyela a mano';
+
+  @override
+  String paletteTypeSemantic(String value) {
+    return 'Tipo de paleta, $value';
+  }
+
+  @override
+  String get paletteSceneTitle => 'Escena';
+
+  @override
+  String get paletteSceneSheetTitle => 'Elige una escena';
+
+  @override
+  String get paletteSceneSearchHint => 'Busca escena o categoría';
+
+  @override
+  String get paletteSceneEmpty => 'Ninguna escena coincide con tu búsqueda.';
+
+  @override
+  String paletteSceneSemantic(String value) {
+    return 'Escena, $value';
+  }
+
+  @override
+  String get paletteFromPhotoTitle => 'Desde una foto';
+
+  @override
+  String get paletteFromPhotoHint => 'Tu foto, con tus rotuladores';
+
+  @override
+  String get paletteFromPhotoValue => 'Tu foto';
+
+  @override
+  String paletteFromPhotoRole(int percent) {
+    return 'Color de la foto · $percent %';
+  }
+
+  @override
+  String get paletteFromPhotoEmpty =>
+      'No se han podido sacar colores de esta foto';
+
+  @override
+  String get paletteFromPhotoFarNote =>
+      'Algunos colores de la foto no tienen un rotulador parecido en tu colección';
+
+  @override
+  String get sceneCategoryCharacters => 'Personajes';
+
+  @override
+  String get sceneCategorySkin => 'Pieles y retratos';
+
+  @override
+  String get sceneCategorySkyWater => 'Cielos y agua';
+
+  @override
+  String get sceneCategoryNature => 'Naturaleza';
+
+  @override
+  String get sceneCategoryMaterials => 'Materiales';
+
+  @override
+  String get sceneCategoryAnimals => 'Animales y pelaje';
+
+  @override
+  String get sceneCategoryFood => 'Comida';
+
+  @override
+  String get sceneCategoryHolidays => 'Fiestas y ambientes';
+
+  @override
+  String get sceneCategoryInteriors => 'Interiores';
+
+  @override
+  String get sceneCategoryPatterns => 'Patrones';
+
+  @override
+  String get sceneCategoryFantasy => 'Fantasía';
 
   @override
   String get paletteSizeTitle => 'Tamaño';
@@ -491,7 +608,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get paletteSubtitleIdle =>
-      'Crea una paleta a partir de un rotulador que tengas';
+      'Crea una paleta con un rotulador que tengas';
 
   @override
   String get paletteAiOptionalNote => 'La IA es opcional y viene desactivada.';
@@ -539,7 +656,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get paletteEmptyHint =>
-      'Elige un rotulador base para crear una paleta, o una escena con el chip Escenas.';
+      'Elige un rotulador base para crear una paleta, o elige Escenas como tipo de paleta.';
 
   @override
   String get paletteCustomModeHint =>
@@ -2469,16 +2586,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String paletteSubtitleFrom(String mode, String base, String available) {
-    return '$mode desde $base · $available';
-  }
-
-  @override
-  String paletteSubtitleScenario(String scenario, String available) {
-    return '$scenario · $available';
-  }
-
-  @override
   String paletteSubtitleCustom(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -3379,87 +3486,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get modeShadow => 'Sombra';
-
-  @override
-  String get scenarioGhostCharacter => 'Personaje fantasma';
-
-  @override
-  String get scenarioCuteCharacter => 'Personaje adorable';
-
-  @override
-  String get scenarioFantasyCreature => 'Criatura fantástica';
-
-  @override
-  String get scenarioWarmPortrait => 'Retrato cálido';
-
-  @override
-  String get scenarioCoolPortrait => 'Retrato frío';
-
-  @override
-  String get scenarioSunsetLandscape => 'Paisaje al atardecer';
-
-  @override
-  String get scenarioForestScene => 'Escena de bosque';
-
-  @override
-  String get scenarioOceanScene => 'Escena marina';
-
-  @override
-  String get scenarioAutumnScene => 'Escena otoñal';
-
-  @override
-  String get scenarioSpringGarden => 'Jardín primaveral';
-
-  @override
-  String get scenarioCozyInterior => 'Interior acogedor';
-
-  @override
-  String get scenarioVintageRoom => 'Habitación vintage';
-
-  @override
-  String get scenarioPastelDream => 'Sueño pastel';
-
-  @override
-  String get scenarioNeonNight => 'Noche de neón';
-
-  @override
-  String get scenarioMoodyNight => 'Noche melancólica';
-
-  @override
-  String get scenarioFloralPattern => 'Patrón floral';
-
-  @override
-  String get scenarioGeometricPattern => 'Patrón geométrico';
-
-  @override
-  String get scenarioPlaidPattern => 'Patrón de cuadros';
-
-  @override
-  String get scenarioPolkaDotPattern => 'Patrón de lunares';
-
-  @override
-  String get scenarioCandyStripes => 'Rayas de caramelo';
-
-  @override
-  String get scenarioHalloweenMood => 'Ambiente de Halloween';
-
-  @override
-  String get scenarioChristmasMood => 'Ambiente navideño';
-
-  @override
-  String get scenarioSpringMood => 'Ambiente primaveral';
-
-  @override
-  String get scenarioSummerMood => 'Ambiente veraniego';
-
-  @override
-  String get scenarioAutumnMood => 'Ambiente otoñal';
-
-  @override
-  String get scenarioWinterMood => 'Ambiente invernal';
-
-  @override
-  String get scenarioWinterSnow => 'Nieve de invierno';
 
   @override
   String get packLabel120New => '120 Nuevo';

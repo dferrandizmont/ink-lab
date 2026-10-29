@@ -6,6 +6,7 @@ import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/core/palette_advisor.dart';
 import 'package:ink_lab/core/palette_generator.dart';
+import 'package:ink_lab/core/scene_catalog.dart';
 
 import 'fixtures.dart';
 
@@ -107,11 +108,8 @@ void main() {
       ['first', 'second', 'third'],
     );
     expect(buildPalette(base, [base], PaletteMode.shadow), isEmpty);
-    expect(findScenarioDefaultBase([], DrawingScenario.forestScene), isNull);
-    expect(
-      buildScenarioPalette(base, [], DrawingScenario.forestScene),
-      isEmpty,
-    );
+    expect(findScenarioDefaultBase([], Scene.byId('forestScene')), isNull);
+    expect(buildScenarioPalette(base, [], Scene.byId('forestScene')), isEmpty);
   });
   test('collection validation preserves MainActivity natural order and equal-code stability', () {
     final first = color('R02', 'ff0000');
@@ -125,9 +123,9 @@ void main() {
     expect(sorted[1], same(first));
     expect(sorted[2], same(second));
   });
-  for (final scenario in DrawingScenario.values) {
+  for (final scenario in SceneCatalog.current.scenes) {
     test(
-      '${scenario.name} default seed and scenario palette stay inside collection',
+      '${scenario.id} default seed and scenario palette stay inside collection',
       () {
         final seed = findScenarioDefaultBase(collection, scenario)!;
         expect(collection, contains(seed));
@@ -168,13 +166,13 @@ void main() {
         findScenarioDefaultBase([
           harmonyColors.first,
           seed,
-        ], DrawingScenario.ghostCharacter),
+        ], Scene.byId('ghostCharacter')),
         seed,
       );
       final result = buildScenarioPalette(seed, [
         seed,
         ...harmonyColors,
-      ], DrawingScenario.ghostCharacter);
+      ], Scene.byId('ghostCharacter'));
       expect(result.map((s) => s.reason), [
         'Soft shadow',
         'Deep shadow',
@@ -186,7 +184,7 @@ void main() {
         buildScenarioPalette(
           seed,
           [seed, ...harmonyColors],
-          DrawingScenario.ghostCharacter,
+          Scene.byId('ghostCharacter'),
           variationToken: 1,
         ),
         isNot(result),
@@ -361,7 +359,7 @@ void main() {
         PaletteAdvisorRequest(
           availableColors: ohuhu,
           activeSetIds: {'classic_40'},
-          scenario: DrawingScenario.forestScene,
+          scenario: Scene.byId('forestScene'),
         ),
       );
       expect(success, isA<PaletteAdviceSuccess>());
@@ -395,7 +393,7 @@ void main() {
       buildScenarioPalette(
         seed,
         candidates,
-        DrawingScenario.forestScene,
+        Scene.byId('forestScene'),
       ).single.color,
       same(foreign),
     );

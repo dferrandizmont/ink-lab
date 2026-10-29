@@ -44,7 +44,7 @@ Se piden cuando el usuario toca la función, nunca al arrancar.
 
 | Permiso | Para qué | Dónde |
 |---|---|---|
-| Cámara y fotos (`NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription` en iOS; selector del sistema en Android) | Emparejar el color de una foto con un rotulador. La foto se decodifica y se muestrea **en el móvil**; no se sube, no se guarda y no se envía a ningún proveedor de IA. | `ios/Runner/Info.plist`, `lib/ui/pages/match/` |
+| Cámara y fotos (`NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription` en iOS; selector del sistema en Android) | Emparejar el color de una foto con un rotulador, y sacar los colores principales de una foto para una paleta («Escena desde una foto»). La foto se decodifica y se analiza **en el móvil**; no se sube, no se guarda y no se envía a ningún proveedor de IA. | `ios/Runner/Info.plist`, `lib/ui/pages/match/`, `lib/ui/pages/palette/palette_photo_scene.dart` |
 | Red (`INTERNET`, Android) | Solo la IA opcional con OpenRouter. Sin ella, la app no abre ningún socket. | `AndroidManifest.xml` |
 
 Sin permisos de ubicación, contactos, calendario, micrófono, almacenamiento general, notificaciones ni

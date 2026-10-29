@@ -10,6 +10,20 @@ so they can skip numbers.
 
 ## Unreleased
 
+## 0.6.0 · 2026-10-29
+
+- Palette: the palette type and the scene are chosen from fields that open a list, instead of rows of chips. The scene
+  list has a search box, categories and a colour preview for each scene.
+- 67 scenes in 11 categories (characters, skin and portraits, sky and water, nature, materials, animals, food,
+  holidays, interiors, patterns and fantasy), up from 27. Palettes saved with the old scenes still open.
+- Scene from a photo: in Palette → Scenes, "From a photo" takes a photo or picks one from the gallery, finds its main
+  colours on the phone and turns them into the closest markers you own. The photo never leaves the phone and is not
+  saved; only the marker codes are, if you save the palette.
+- Fix: you can now leave Scenes by choosing a colour-theory type again.
+- Combinations and paint order show the role above the marker name, each on one line, so long Spanish roles no longer
+  break in two. Loaded palettes show their marker names instead of "Loaded palette" on every row.
+- Saved palettes made from a scene show the scene's name instead of a colour-theory type.
+
 ## 0.5.0 · 2026-10-29
 
 - New app id `es.inklab.app` and new Ink Cross icon. Android sees this as a different app from the 0.4.0 test build:

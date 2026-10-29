@@ -7,6 +7,7 @@ import 'package:ink_lab/core/collection_selection.dart';
 import 'package:ink_lab/core/ideas_engine.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
+import 'package:ink_lab/core/scene_catalog.dart';
 import 'package:ink_lab/core/palette_generator.dart';
 
 import '../support/l10n.dart';
@@ -28,7 +29,7 @@ void main() {
       for (final PaletteMode m in PaletteMode.values) {
         expect(l10n.modeLabel(m), m.label);
       }
-      for (final DrawingScenario s in DrawingScenario.values) {
+      for (final Scene s in SceneCatalog.current.scenes) {
         expect(l10n.scenarioLabel(s), s.label);
       }
       for (final OahuSet s in OahuSet.values) {
@@ -46,8 +47,8 @@ void main() {
       for (final PaletteMode m in PaletteMode.values) {
         expect(l10nEs.modeLabel(m), isNot(m.label), reason: m.name);
       }
-      for (final DrawingScenario s in DrawingScenario.values) {
-        expect(l10nEs.scenarioLabel(s), isNot(s.label), reason: s.name);
+      for (final Scene s in SceneCatalog.current.scenes) {
+        expect(l10nEs.scenarioLabel(s), isNot(s.label), reason: s.id);
       }
       for (final IdeaCategory c in IdeaCategory.values) {
         expect(l10nEs.ideaCategoryLabel(c), isNot(c.label), reason: c.name);
@@ -69,7 +70,7 @@ void main() {
           reasons.add(s.reason);
         }
       }
-      for (final DrawingScenario scenario in DrawingScenario.values) {
+      for (final Scene scenario in SceneCatalog.current.scenes) {
         for (var token = 0; token < 3; token++) {
           for (final s in buildScenarioPalette(
             base,

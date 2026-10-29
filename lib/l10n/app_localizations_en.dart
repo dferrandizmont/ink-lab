@@ -418,13 +418,129 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paletteBaseCodeHint => 'E08 or B271';
 
   @override
-  String get paletteHarmonyLabel => 'Harmony';
-
-  @override
   String get paletteScenarioToggle => 'Scenes';
 
   @override
-  String get paletteScenarioTitle => 'Scenes';
+  String get paletteTypeTitle => 'Palette type';
+
+  @override
+  String get paletteTypeSheetTitle => 'Choose the palette type';
+
+  @override
+  String get paletteTypeTheoryGroup => 'Colour theory';
+
+  @override
+  String get paletteTypeScenesGroup => 'Scenes';
+
+  @override
+  String get paletteTypeScenesHint => 'Ready-made recipes by subject';
+
+  @override
+  String get paletteTypeDescRecommended => 'Balanced picks for your base';
+
+  @override
+  String get paletteTypeDescComplementary => 'Opposite hue, strong contrast';
+
+  @override
+  String get paletteTypeDescAnalogous => 'Neighbouring hues, calm';
+
+  @override
+  String get paletteTypeDescSplitComplementary =>
+      'Two hues beside the opposite';
+
+  @override
+  String get paletteTypeDescTriad => 'Three evenly spaced hues';
+
+  @override
+  String get paletteTypeDescSquare => 'Four evenly spaced hues';
+
+  @override
+  String get paletteTypeDescRectangle => 'Two complementary pairs';
+
+  @override
+  String get paletteTypeDescMonochrome => 'One hue, light to dark';
+
+  @override
+  String get paletteTypeDescShadow => 'Deeper tones for shading';
+
+  @override
+  String get paletteTypeDescCustomPalette => 'Build it by hand';
+
+  @override
+  String paletteTypeSemantic(String value) {
+    return 'Palette type, $value';
+  }
+
+  @override
+  String get paletteSceneTitle => 'Scene';
+
+  @override
+  String get paletteSceneSheetTitle => 'Choose a scene';
+
+  @override
+  String get paletteSceneSearchHint => 'Search scene or category';
+
+  @override
+  String get paletteSceneEmpty => 'No scene matches your search.';
+
+  @override
+  String paletteSceneSemantic(String value) {
+    return 'Scene, $value';
+  }
+
+  @override
+  String get paletteFromPhotoTitle => 'From a photo';
+
+  @override
+  String get paletteFromPhotoHint => 'Your photo, with your markers';
+
+  @override
+  String get paletteFromPhotoValue => 'Your photo';
+
+  @override
+  String paletteFromPhotoRole(int percent) {
+    return 'Photo colour · $percent %';
+  }
+
+  @override
+  String get paletteFromPhotoEmpty => 'Couldn\'t get colours from this photo';
+
+  @override
+  String get paletteFromPhotoFarNote =>
+      'Some photo colours have no close marker in your collection';
+
+  @override
+  String get sceneCategoryCharacters => 'Characters';
+
+  @override
+  String get sceneCategorySkin => 'Skin and portraits';
+
+  @override
+  String get sceneCategorySkyWater => 'Sky and water';
+
+  @override
+  String get sceneCategoryNature => 'Nature';
+
+  @override
+  String get sceneCategoryMaterials => 'Materials';
+
+  @override
+  String get sceneCategoryAnimals => 'Animals and fur';
+
+  @override
+  String get sceneCategoryFood => 'Food';
+
+  @override
+  String get sceneCategoryHolidays => 'Holidays and moods';
+
+  @override
+  String get sceneCategoryInteriors => 'Interiors';
+
+  @override
+  String get sceneCategoryPatterns => 'Patterns';
+
+  @override
+  String get sceneCategoryFantasy => 'Fantasy';
 
   @override
   String get paletteSizeTitle => 'Size';
@@ -533,7 +649,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paletteEmptyHint =>
-      'Pick a base marker to build a palette, or choose a scene with the Scenes chip.';
+      'Pick a base marker to build a palette, or choose Scenes as the palette type.';
 
   @override
   String get paletteCustomModeHint =>
@@ -2461,16 +2577,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String paletteSubtitleFrom(String mode, String base, String available) {
-    return '$mode from $base · $available';
-  }
-
-  @override
-  String paletteSubtitleScenario(String scenario, String available) {
-    return '$scenario · $available';
-  }
-
-  @override
   String paletteSubtitleCustom(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -3358,87 +3464,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get modeShadow => 'Shadow';
-
-  @override
-  String get scenarioGhostCharacter => 'Ghost Character';
-
-  @override
-  String get scenarioCuteCharacter => 'Cute Character';
-
-  @override
-  String get scenarioFantasyCreature => 'Fantasy Creature';
-
-  @override
-  String get scenarioWarmPortrait => 'Warm Portrait';
-
-  @override
-  String get scenarioCoolPortrait => 'Cool Portrait';
-
-  @override
-  String get scenarioSunsetLandscape => 'Sunset Landscape';
-
-  @override
-  String get scenarioForestScene => 'Forest Scene';
-
-  @override
-  String get scenarioOceanScene => 'Ocean Scene';
-
-  @override
-  String get scenarioAutumnScene => 'Autumn Scene';
-
-  @override
-  String get scenarioSpringGarden => 'Spring Garden';
-
-  @override
-  String get scenarioCozyInterior => 'Cozy Interior';
-
-  @override
-  String get scenarioVintageRoom => 'Vintage Room';
-
-  @override
-  String get scenarioPastelDream => 'Pastel Dream';
-
-  @override
-  String get scenarioNeonNight => 'Neon Night';
-
-  @override
-  String get scenarioMoodyNight => 'Moody Night';
-
-  @override
-  String get scenarioFloralPattern => 'Floral Pattern';
-
-  @override
-  String get scenarioGeometricPattern => 'Geometric Pattern';
-
-  @override
-  String get scenarioPlaidPattern => 'Plaid Pattern';
-
-  @override
-  String get scenarioPolkaDotPattern => 'Polka Dot Pattern';
-
-  @override
-  String get scenarioCandyStripes => 'Candy Stripes';
-
-  @override
-  String get scenarioHalloweenMood => 'Halloween Mood';
-
-  @override
-  String get scenarioChristmasMood => 'Christmas Mood';
-
-  @override
-  String get scenarioSpringMood => 'Spring Mood';
-
-  @override
-  String get scenarioSummerMood => 'Summer Mood';
-
-  @override
-  String get scenarioAutumnMood => 'Autumn Mood';
-
-  @override
-  String get scenarioWinterMood => 'Winter Mood';
-
-  @override
-  String get scenarioWinterSnow => 'Winter Snow';
 
   @override
   String get packLabel120New => '120 New';
