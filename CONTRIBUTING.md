@@ -33,20 +33,36 @@ first. By taking part you agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
 - Keep commit messages short and imperative, with an optional prefix
   (`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`).
 
-With Flutter **3.47.7**, from the repository root:
+## Build and test
+
+Requirements: **Flutter 3.47.7** (stable channel), the Android SDK for Android,
+or macOS with Xcode and CocoaPods for iPhone.
 
 ```sh
+git clone https://github.com/dferrandizmont/ink-lab.git
+cd ink-lab
 flutter pub get
 flutter analyze
 flutter test
+flutter run
 ```
 
-That is what CI runs on every pull request. Include the commands and results in
-your PR, and a screenshot for UI changes. If you change the privacy policy,
-update `docs/privacy.md`, `docs/legal/politica-privacidad.md` (and the English
-versions) together and regenerate the web page with
-`python -B web/legal/md2html.py`.
+CI runs `flutter pub get`, `flutter analyze` and `flutter test` on every pull
+request. Include the commands and results in your PR, and a screenshot for UI
+changes. If you change the privacy policy, update `docs/privacy.md`,
+`docs/legal/politica-privacidad.md` (and the English versions) together and
+regenerate the web page with `python -B web/legal/md2html.py`.
+
+A local test APK, signed with the debug key (never for stores):
+
+```sh
+flutter build apk --release --android-project-arg=allowDebugSigning=true
+```
+
+Public APKs are signed with the owner's key, which is not in the repository.
+The public selection is prepared with the [exporter](tool/publish/LEEME.en.md)
+and the privacy page is generated with [web/legal](web/legal/LEEME.md).
 
 By contributing, you agree that your code is offered under the
 [MIT License](LICENSE) and that your documentation and texts are offered under
-[CC BY-SA 4.0](LICENSE-CONTENT.en.md).
+[CC BY-SA 4.0](LICENSE-CONTENT.md).

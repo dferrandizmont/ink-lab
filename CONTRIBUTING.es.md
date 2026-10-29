@@ -33,19 +33,37 @@ Al participar aceptas el [Código de conducta](CODE_OF_CONDUCT.md).
 - Mensajes de commit breves y en imperativo, con prefijo opcional
   (`feat:`, `fix:`, `docs:`, `refactor:`, `chore:`).
 
-Con Flutter **3.47.7**, desde la raíz:
+## Compilar y probar
+
+Requisitos: **Flutter 3.47.7** (canal estable), Android SDK para Android o macOS
+con Xcode y CocoaPods para iPhone.
 
 ```sh
+git clone https://github.com/dferrandizmont/ink-lab.git
+cd ink-lab
 flutter pub get
 flutter analyze
 flutter test
+flutter run
 ```
 
-Es lo que ejecuta la CI en cada solicitud de cambio. Incluye en tu PR los
-comandos ejecutados y su resultado, y una captura si cambias la interfaz.
-Si cambias la política de privacidad, actualiza a la vez `docs/privacy.md`,
-`docs/legal/politica-privacidad.md` (y las versiones inglesas) y regenera la web
-con `python -B web/legal/md2html.py`.
+La CI ejecuta `flutter pub get`, `flutter analyze` y `flutter test` en cada
+solicitud de cambio. Incluye en tu PR los comandos ejecutados y su resultado, y
+una captura si cambias la interfaz. Si cambias la política de privacidad,
+actualiza a la vez `docs/privacy.md`, `docs/legal/politica-privacidad.md` (y las
+versiones inglesas) y regenera la web con `python -B web/legal/md2html.py`.
+
+Un APK de pruebas locales, firmado con la clave de depuración (nunca para
+tiendas):
+
+```sh
+flutter build apk --release --android-project-arg=allowDebugSigning=true
+```
+
+Los APK públicos se firman con una clave del dueño que no está en el
+repositorio. La selección pública se prepara con el
+[exportador](tool/publish/LEEME.md) y la página de privacidad se genera con
+[web/legal](web/legal/LEEME.md).
 
 Al contribuir aceptas que tu código se ofrezca bajo [MIT](LICENSE) y que tu
 documentación y tus textos se ofrezcan bajo [CC BY-SA 4.0](LICENSE-CONTENT.es.md).
