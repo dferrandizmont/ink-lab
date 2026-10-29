@@ -1,0 +1,1410 @@
+{
+  "@@locale": "en",
+  "settingsTitle": "Settings",
+  "settingsCollectionGroup": "Collection",
+  "settingsDisplayGroup": "Display",
+  "settingsDataGroup": "Your data",
+  "settingsAiGroup": "AI assistant",
+  "settingsAiOffByDefault": "Off by default",
+  "settingsUnavailable": "The app services are not available, so the settings cannot be shown.",
+  "settingsBrandTitle": "Brand",
+  "settingsBrandDecoTimeHint": "DecoTime shows only the markers you mark as owned.",
+  "settingsBrandSubtitle": "The brand selects the catalogue of markers the app works with.",
+  "settingsPacksTitle": "Ohuhu packs",
+  "settingsPacksSubtitle": "The packs that make up your Ohuhu collection.",
+  "settingsPackMode": "Pack selection",
+  "settingsSinglePackHint": "With a single pack only the first selected pack is used.",
+  "settingsCorePacks": "Core packs",
+  "settingsAddonPacks": "Add-on packs",
+  "settingsOwnedTitle": "Owned markers",
+  "settingsOwnedSubtitle": "Tick the markers you own. DecoTime only shows the colors of the markers you own.",
+  "settingsOwnedSearchHint": "Search markers",
+  "settingsSelectAll": "Select all",
+  "settingsSelectNone": "Select none",
+  "settingsClearOwned": "Clear all",
+  "settingsClearOwnedTitle": "Remove every owned marker?",
+  "settingsClearOwnedBody": "The markers you own will be forgotten. You can tick them again afterwards.",
+  "settingsOwnedEmpty": "No marker is owned yet. Tick the ones you have.",
+  "settingsPalettesTitle": "Saved palettes",
+  "settingsPalettesEmpty": "No palette has been saved yet.",
+  "settingsClearPalettes": "Clear all",
+  "settingsClearPalettesTitle": "Delete every saved palette?",
+  "settingsClearPalettesBody": "The palettes saved for this brand will be deleted. This cannot be undone.",
+  "settingsDeletePalette": "Delete the palette",
+  "settingsFavoritesTitle": "Favorites",
+  "settingsFavoritesEmpty": "No color is a favorite yet.",
+  "settingsClearFavorites": "Clear all",
+  "settingsClearFavoritesTitle": "Remove every favorite?",
+  "settingsClearFavoritesBody": "The favorite colors of this brand will be removed. This cannot be undone.",
+  "settingsDeleteFavorite": "Remove the favorite",
+  "settingsLabelsTitle": "Name display",
+  "settingsLabelsSubtitle": "How the marker codes and names are shown in the app.",
+  "settingsNewLabels": "New",
+  "settingsOldLabels": "Old",
+  "settingsBothLabels": "Both",
+  "settingsAppearanceTitle": "Appearance",
+  "settingsAppearanceSystem": "System",
+  "settingsAppearanceLight": "Light",
+  "settingsAppearanceDark": "Dark",
+  "settingsBackupTitle": "Backup",
+  "settingsBackupSubtitle": "Your settings, palettes, history and AI settings can be exported as a JSON file and imported back.",
+  "settingsExportBackup": "Export",
+  "settingsImportBackup": "Import",
+  "settingsBackupExported": "Backup copied to the clipboard",
+  "settingsBackupImported": "Backup imported",
+  "settingsImportTitle": "Import a backup",
+  "settingsImportHint": "Paste the exported JSON here",
+  "settingsImportConfirm": "Import",
+  "settingsCancel": "Cancel",
+  "settingsImportConfirmTitle": "Replace your current data?",
+  "settingsImportConfirmBody": "The backup replaces your settings, your saved palettes, your color match history and your AI settings.",
+  "settingsImportInvalidJson": "The text is not valid JSON.",
+  "settingsImportInvalidDocument": "The text is not a backup document.",
+  "settingsAiTitle": "AI assistant",
+  "settingsAiSubtitle": "The AI only suggests palettes. It never changes your collection.",
+  "settingsAiEnabled": "Suggest with AI",
+  "settingsAiEnabledSubtitleColourTheory": "Pick On-device or OpenRouter below to use an AI",
+  "settingsAiEnabledSubtitleOnDevice": "Gemini Nano on this phone",
+  "settingsAiEnabledSubtitleOpenRouter": "Uses your own OpenRouter key",
+  "settingsAiExplainColourTheory": "Palettes come from the built-in colour-theory engine. No AI, nothing leaves your phone.",
+  "settingsAiExplainOnDevice": "Gemini Nano runs on this phone. Nothing leaves your phone.",
+  "settingsAiExplainOpenRouter": "Requests go to openrouter.ai with your own key. Photos are never sent.",
+  "settingsAiProvider": "Provider",
+  "settingsAiProviderColourTheory": "Colour theory",
+  "settingsAiProviderOnDevice": "On-device",
+  "settingsAiProviderOpenRouter": "OpenRouter",
+  "settingsAiTextModel": "Text model",
+  "settingsAiTextModelHint": "Model id used for text requests",
+  "settingsAiVisionModel": "Vision model",
+  "settingsAiVisionModelHint": "Model id used for image requests",
+  "settingsAiTemperature": "Temperature",
+  "settingsAiMaxTokens": "Max tokens",
+  "settingsAiAutoFallback": "Fall back to colour theory",
+  "settingsAiAutoFallbackSubtitle": "If the AI fails, the built-in engine answers instead.",
+  "settingsAiApiKey": "API key",
+  "settingsAiApiKeySubtitle": "Your own key, kept in the secure store of this device.",
+  "settingsAiApiKeySave": "Save key",
+  "settingsAiApiKeyRemove": "Remove key",
+  "settingsAiApiKeySaved": "Key saved.",
+  "settingsAiRemoveKeyTitle": "Remove the API key?",
+  "settingsAiRemoveKeyBody": "The key is deleted from this device. AI suggestions stop until you enter a key again.",
+  "settingsAiRemoveKeyConfirm": "Remove",
+  "settingsAiApiKeyInvalid": "That does not look like an OpenRouter key. It should start with sk-or- and have no spaces.",
+  "settingsAiApiKeyUnreadable": "Your saved key could not be read. Enter it again.",
+  "settingsAiApiKeyStorageError": "The key could not be saved. Try again.",
+  "settingsAiDisclosureTitle": "Turn on AI suggestions?",
+  "settingsAiDisclosure": "When this is on and you use a suggestion with OpenRouter, the app sends your scenario, the base colour code, name and hex value, and the list of candidate colours to openrouter.ai and to the model provider, using your own API key. Photos are never sent: this feature has no image upload. Nothing at all is sent while this switch is off.",
+  "settingsAiDisclosureColourTheory": "With Colour theory selected, palettes come from the built-in engine: no AI is used and nothing leaves your phone. Choose On-device or OpenRouter to use an AI.",
+  "settingsAiDisclosureConfirm": "Enable",
+  "settingsAiDisclosureCancel": "Not now",
+  "settingsAiDisclosureOnDevice": "On-device (Gemini Nano) requests are answered by the model on this phone. Your scenario and colour codes never leave it, and no key is needed.",
+  "settingsAiOnDeviceName": "On-device (Gemini Nano)",
+  "settingsAiOnDevicePrivacy": "On-device requests never leave your phone.",
+  "settingsAiOnDeviceDownloadable": "The model is not on this phone yet. Android downloads it once and keeps it for every app.",
+  "settingsAiOnDeviceDownloading": "Downloading the model...",
+  "settingsAiOnDevicePreparing": "Android is preparing the model. This can take a while and may wait for Wi‑Fi and charging. You can leave this screen; the download continues in the background.",
+  "settingsAiOnDeviceCheckAgain": "Check again",
+  "settingsAiOnDeviceReady": "The model is ready on this phone.",
+  "settingsAiOnDeviceDownload": "Download model",
+  "settingsAiOnDeviceFailed": "The download did not finish. Check the connection and try again.",
+  "settingsAiTestConnection": "Test connection",
+  "settingsAiTestingConnection": "Testing...",
+  "settingsAiModelsTitle": "Model",
+  "settingsAiModelsFilterFree": "Free",
+  "settingsAiModelsFilterPaid": "Paid",
+  "settingsAiModelsFilterBoth": "Both",
+  "settingsAiModelsLoad": "Load models",
+  "settingsAiModelsEmpty": "No models matched this filter.",
+  "settingsAiModelsNeedsKey": "Save a key to load the models from OpenRouter.",
+  "settingsAiPrimaryModel": "Text model",
+  "settingsAiModelNone": "Not set",
+  "settingsAiModelsPickerHint": "Load the models, then pick them from the list.",
+  "settingsAiModelSearchHint": "Search models",
+  "settingsAiModelFree": "Free",
+  "settingsAiModelPaid": "Paid",
+  "settingsAiModelsDone": "Done",
+  "settingsAiModelsNotLoaded": "Load the models first, or type a model id above.",
+  "settingsAiRecommended": "Recommended",
+  "settingsAiFreeModelsNote": "Free models may be slow or unreliable. The recommended models are inexpensive and answer more consistently.",
+  "settingsAiAllModels": "All models",
+  "settingsAiRecommendedDefault": "Recommended default",
+  "settingsAiFallbacksTitle": "Fallbacks",
+  "settingsAboutTitle": "About",
+  "settingsVersion": "Version",
+  "settingsSourceCode": "Source code",
+  "settingsCopyRepository": "Copy the link",
+  "settingsRepositoryCopied": "The link was copied",
+  "settingsDisclaimer": "Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu or DecoTime, and it uses their marker codes, names and color values only as factual reference data.",
+  "paletteTitle": "Palette",
+  "paletteBaseCodeLabel": "Base marker code",
+  "paletteBaseCodeHint": "E08 or B271",
+  "paletteHarmonyLabel": "Harmony",
+  "paletteScenarioToggle": "Scenes",
+  "paletteScenarioTitle": "Scenarios",
+  "paletteSizeTitle": "Size",
+  "paletteSizeSemantic": "Palette size",
+  "paletteGenerateButton": "Generate",
+  "paletteRegenerateButton": "Regenerate",
+  "paletteClearButton": "Clear",
+  "paletteSuggestAiButton": "Suggest with AI",
+  "paletteSuggestAiLoading": "Suggesting…",
+  "paletteAiBadge": "AI",
+  "paletteSaveButton": "Save palette",
+  "paletteOkButton": "OK",
+  "paletteBaseMarkerTitle": "Base marker",
+  "paletteVariationsLabel": "Variations",
+  "palettePaintPlanTitle": "Paint order",
+  "palettePaintTipBase": "Block the overall shape with the base color first.",
+  "palettePaintTipShadow": "Lay this shadow where light does not reach.",
+  "palettePaintTipHighlight": "Place the highlight where light hits directly.",
+  "palettePaintTipAccent": "Reserve the accent for focal areas only.",
+  "palettePaintTipSupport": "Use this support tone to blend transitions.",
+  "paletteSubtitleIdle": "Build a palette from a base marker you own",
+  "paletteAiOptionalNote": "AI is optional and off by default.",
+  "paletteLockButton": "Lock",
+  "paletteUnlockButton": "Unlock",
+  "paletteSaveDialogTitle": "Save palette",
+  "paletteSaveDialogHint": "Palette name",
+  "paletteSaveDialogCancel": "Cancel",
+  "paletteSaveDialogConfirm": "Save",
+  "paletteSavedTitle": "Saved palettes",
+  "paletteSavedEmpty": "No saved palettes for this brand yet.",
+  "paletteLoadButton": "Load",
+  "paletteDeleteButton": "Delete",
+  "paletteDeleteDialogTitle": "Delete palette?",
+  "paletteDeleteDialogBody": "This action cannot be undone.",
+  "paletteAiFellBack": "AI unavailable. Showing local suggestions.",
+  "paletteEmptyHint": "Enter a base marker code to build a palette, or turn on Scenario mode.",
+  "paletteCustomModeHint": "Custom palette mode is manual: load a saved palette or apply one from Ideas.",
+  "paletteNoSuggestions": "No palette could be built from your collection. Try another mode or add more markers.",
+  "swatchesTitle": "Swatches",
+  "swatchesSearchHint": "Code, name, hex or old code",
+  "swatchesClearSearch": "Clear the search",
+  "swatchesAllFilter": "All",
+  "swatchesFavoritesOnly": "Favourites",
+  "swatchesOwnedOnly": "Owned",
+  "swatchesFilters": "Filters",
+  "swatchesFiltersTitle": "Filters",
+  "swatchesLabelPack": "Pack",
+  "swatchesLabelLayout": "Layout",
+  "swatchesAllPacks": "All packs",
+  "swatchesClearFilters": "Clear filters",
+  "swatchesLoadingSemantics": "Loading colours",
+  "swatchesClosestAlternatives": "Closest alternatives",
+  "swatchesDeltaEUnit": "ΔE 76",
+  "swatchesInPacks": "In packs",
+  "swatchesLocation": "Location",
+  "swatchesAddToPalette": "Add to palette",
+  "swatchesLayoutGrid": "Grid",
+  "swatchesLayoutList": "List",
+  "swatchesOwned": "Owned",
+  "swatchesNewLabels": "New",
+  "swatchesOldLabels": "Old",
+  "swatchesBothLabels": "Both",
+  "swatchesLabelMode": "Labels",
+  "swatchesToggleLayout": "Switch between the grid and the list",
+  "swatchesGridLayout": "Grid",
+  "swatchesListLayout": "List",
+  "swatchesNewCode": "New code",
+  "swatchesOldCode": "Old code",
+  "swatchesNewName": "New name",
+  "swatchesOldName": "Old name",
+  "swatchesHex": "Hex",
+  "swatchesCopyHex": "Copy hex",
+  "swatchesHexCopied": "Hex copied to the clipboard",
+  "swatchesAddFavorite": "Add to favorites",
+  "swatchesRemoveFavorite": "Remove from favorites",
+  "swatchesEmptyNoOwnedTitle": "No markers added yet",
+  "swatchesEmptyNoOwnedBody": "DecoTime swatches only show the markers you own. Add the markers you have in Settings, in the owned markers manager, and their colours will show up here.",
+  "swatchesEmptyNoOwnedAction": "Add my markers",
+  "swatchesEmptyNoOwnedHint": "Open the Settings tab and use the owned markers manager.",
+  "swatchesEmptySearchTitle": "No colors found",
+  "swatchesEmptySearchBody": "No color of this collection matches your search.",
+  "swatchesEmptyFiltersTitle": "Nothing to show",
+  "swatchesEmptyFiltersBody": "This brand has no colors for the selected packs and filters.",
+  "swatchesLoading": "Loading colors…",
+  "swatchesLoadFailedTitle": "Colors unavailable",
+  "swatchesLoadFailedBody": "The marker catalogue could not be read, so no colors can be shown.",
+  "swatchesUnavailable": "The app services are not available, so the swatches cannot be shown.",
+  "swatchesVisibleCount": "Colors",
+  "swatchesScopeCollection": "Your collection",
+  "swatchesScopePack": "Pack",
+  "ideasTitle": "Ideas",
+  "ideasHeaderSubtitle": "Guides and challenges for your markers",
+  "ideasSelectedLabel": "Selected",
+  "ideasSearchHint": "Search ideas",
+  "ideasCategoryAll": "All",
+  "ideasBadgeGuideOnly": "Guide only",
+  "ideasBadgeGuideAndPalette": "Guide + palette",
+  "ideasShowTechnique": "Show technique",
+  "ideasGenerateIdea": "Generate idea",
+  "ideasApplyButton": "Apply to Palette",
+  "ideasHowToTitle": "How to execute",
+  "ideasExtraTouchesTitle": "Extra touches",
+  "ideasSuggestedColorsTitle": "Suggested colors",
+  "ideasGuideOnlyNote": "This idea is intentionally technique-first. It does not enforce a fixed palette, so you can choose colors freely.",
+  "ideasNoMarkersDecoTime": "Select your owned DecoTime markers in Settings to generate color suggestions for this idea.",
+  "ideasNoMarkersOther": "No markers available for the current collection filters.",
+  "ideasCategoriesLabel": "Categories",
+  "ideasEmptyTitle": "No ideas found",
+  "ideasClearFilters": "Clear filters",
+  "ideasEmptySearch": "No ideas match your search.",
+  "ideasSelectHint": "Pick an idea to see how to execute it.",
+  "ideasNoMarkers": "No markers currently available",
+  "matchTitle": "Match",
+  "matchPrivacyCaption": "Photos stay on this phone.",
+  "matchCameraButton": "Camera",
+  "matchGalleryButton": "Gallery",
+  "matchLoadingPhoto": "Reading photo…",
+  "matchEmptyPhotoTitle": "No photo yet",
+  "matchEmptyPhotoMessage": "Take a photo or pick one from the gallery to find the closest marker.",
+  "matchPhotoSemantics": "Photo to sample a colour from",
+  "matchPickToSample": "Tap or drag on the photo to sample a colour.",
+  "matchSampledLabel": "Sampled",
+  "matchBestMatchTitle": "Best match",
+  "matchAlternatesTitle": "Alternatives",
+  "matchDeltaMethod": "ΔE 76",
+  "matchSaveButton": "Save",
+  "matchRecentTitle": "Recent picks",
+  "matchRecentDetailSampled": "Sampled",
+  "matchRecentEmpty": "No recent picks yet. Tap a match to save it here.",
+  "matchClearButton": "Clear",
+  "matchRemoveTooltip": "Remove",
+  "matchCloseTooltip": "Close",
+  "matchRecentPickLabel": "Recent pick",
+  "matchClearDialogTitle": "Clear recent picks?",
+  "matchClearDialogBody": "Every saved pick is removed. This cannot be undone.",
+  "matchCancelButton": "Cancel",
+  "matchCancelNotice": "No photo selected.",
+  "matchCameraDenied": "Camera access is off. Allow it in your device settings, or pick a photo from the gallery instead.",
+  "matchGalleryDenied": "Photo access is off. Allow it in your device settings, then try again.",
+  "matchDecodeFailed": "That photo could not be read. Try another one.",
+  "matchPickFailed": "The photo could not be opened. Try again.",
+  "matchNoMarkers": "No markers are available for the current collection. Check the active brand and sets in Settings.",
+  "matchOkButton": "OK",
+  "appTitle": "Ink Lab",
+  "commonOk": "OK",
+  "commonOwned": "Owned",
+  "commonFavourite": "Favourite",
+  "commonAddToFavourites": "Add to favourites",
+  "commonRemoveFromFavourites": "Remove from favourites",
+  "commonClearSearch": "Clear search",
+  "commonClose": "Close",
+  "commonBaseLocked": "Base locked",
+  "commonDeltaE": "ΔE {value}",
+  "@commonDeltaE": {
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 1
+        }
+      }
+    }
+  },
+  "commonRgb": "RGB {r} {g} {b}",
+  "@commonRgb": {
+    "placeholders": {
+      "r": {
+        "type": "int"
+      },
+      "g": {
+        "type": "int"
+      },
+      "b": {
+        "type": "int"
+      }
+    }
+  },
+  "commonOldCode": "Old {code}",
+  "@commonOldCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "commonMarkersAvailable": "{count, plural, =1{1 marker available} other{{count} markers available}}",
+  "@commonMarkersAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonColorCount": "{count, plural, =1{1 color} other{{count} colors}}",
+  "@commonColorCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonCardLocation": "Swatch card {number}",
+  "@commonCardLocation": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "navTabHint": "Tab {index} of {count}",
+  "@navTabHint": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsLanguageTitle": "Language",
+  "settingsLanguageSystem": "System",
+  "settingsLanguageSpanish": "Español",
+  "settingsLanguageEnglish": "English",
+  "settingsOwnedCount": "{owned} of {total} markers",
+  "@settingsOwnedCount": {
+    "placeholders": {
+      "owned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPacksSelected": "{count, plural, =1{1 pack selected} other{{count} packs selected}}",
+  "@settingsPacksSelected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPaletteDescription": "{mode} · {colors}",
+  "@settingsPaletteDescription": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      },
+      "colors": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsImportUnsupportedVersion": "This backup has the unsupported version {version}.",
+  "@settingsImportUnsupportedVersion": {
+    "placeholders": {
+      "version": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsImportFailed": "The backup could not be imported: {reason}",
+  "@settingsImportFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAiOnDeviceProgressTotal": "{bytes} of {total} MB downloaded ({percent}%)",
+  "@settingsAiOnDeviceProgressTotal": {
+    "placeholders": {
+      "bytes": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAiOnDeviceProgressBytes": "{bytes} MB downloaded",
+  "@settingsAiOnDeviceProgressBytes": {
+    "placeholders": {
+      "bytes": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAiConnectionOk": "Connection OK ({count, plural, =1{1 model} other{{count} models}} available).",
+  "@settingsAiConnectionOk": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAiConnectionFailed": "Connection failed: {reason}",
+  "@settingsAiConnectionFailed": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAiFallbacksCount": "{count} of {max}",
+  "@settingsAiFallbacksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAiUseTyped": "Use \"{id}\"",
+  "@settingsAiUseTyped": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAiFallbacksHint": "Tried in order when the model above fails (up to {max}).",
+  "@settingsAiFallbacksHint": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAiOnDeviceUnavailable": "On-device AI is not available on this phone right now. Colour theory is used until it is.",
+  "paletteSizeChip": "{size} colors",
+  "@paletteSizeChip": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteAiLabel": "AI · {name}",
+  "@paletteAiLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteAiLabelPartial": "AI + colour theory · {name} · {aiCount}/{total}",
+  "@paletteAiLabelPartial": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "aiCount": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteResultTitle": "Combinations ({count})",
+  "@paletteResultTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteSavedSubtitle": "{mode} · {size} colors",
+  "@paletteSavedSubtitle": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      },
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteSubtitleFrom": "{mode} from {base} · {available}",
+  "@paletteSubtitleFrom": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      },
+      "base": {
+        "type": "String"
+      },
+      "available": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteSubtitleScenario": "{scenario} · {available}",
+  "@paletteSubtitleScenario": {
+    "placeholders": {
+      "scenario": {
+        "type": "String"
+      },
+      "available": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteSubtitleCustom": "Custom palette · {count, plural, =1{1 marker} other{{count} markers}}",
+  "@paletteSubtitleCustom": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteSavedNotice": "Palette \"{name}\" saved.",
+  "@paletteSavedNotice": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteLoadedNotice": "Palette \"{name}\" loaded.",
+  "@paletteLoadedNotice": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteVariationApplied": "{label} variation applied.",
+  "@paletteVariationApplied": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteDraftApplied": "Ideas palette applied ({count} colors).",
+  "@paletteDraftApplied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteUsingDefaultBase": "Using {code} as the default base for {scenario}. Enter a code to override it.",
+  "@paletteUsingDefaultBase": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "scenario": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteUnknownCode": "{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example} or check your owned markers in Settings.} other{{input} is not an Ink Lab marker code. Try {example}.}}",
+  "@paletteUnknownCode": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      },
+      "input": {
+        "type": "String"
+      },
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteNotAvailable": "{brand, select, decoTime{{input} is not in your owned DecoTime markers. Try {example} or update Owned markers in Settings.} other{{input} is not in your active collection. Try {example} or switch sets in Settings.}}",
+  "@paletteNotAvailable": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      },
+      "input": {
+        "type": "String"
+      },
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteNoAvailableColors": "{brand, select, decoTime{No DecoTime markers are selected. Go to Settings > Collection > Owned markers and select the markers you own.} other{No markers are available for the current collection filters.}}",
+  "@paletteNoAvailableColors": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteMissingBase": "Enter a base marker code, like {example}, or turn on Scenario mode.",
+  "@paletteMissingBase": {
+    "placeholders": {
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "swatchesFiltersCount": "Filters · {count}",
+  "@swatchesFiltersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "swatchesCodeCopied": "{code} copied. Paste it as the base colour on the Palette tab.",
+  "@swatchesCodeCopied": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "swatchesAlternativeSemantics": "{code}, {name}, delta E {value}",
+  "@swatchesAlternativeSemantics": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 1
+        }
+      }
+    }
+  },
+  "swatchesCountOf": "{visible} of {total}",
+  "@swatchesCountOf": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "swatchesOwnedSubtitle": "{brand} · {count} owned",
+  "@swatchesOwnedSubtitle": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "swatchesFilteredColorCount": "{visible} of {total} colors",
+  "@swatchesFilteredColorCount": {
+    "placeholders": {
+      "visible": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "swatchesSwatchSemantics": "{favorite, select, true{{code}, {name}, favorite} other{{code}, {name}}}",
+  "@swatchesSwatchSemantics": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "favorite": {
+        "type": "String"
+      }
+    }
+  },
+  "swatchesClassicPack": "Classic {label}",
+  "@swatchesClassicPack": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "ideasPaletteSent": "\"{title}\" palette sent to the Palette tab.",
+  "@ideasPaletteSent": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "matchSubtitle": "Matching against your {count, plural, =1{1 marker} other{{count} markers}}",
+  "@matchSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "matchQualityExcellent": "Excellent",
+  "matchQualityVeryClose": "Very close",
+  "matchQualityClose": "Close",
+  "matchQualityFair": "Fair",
+  "matchQualityApproximate": "Approximate",
+  "matchRecorded": "{code} saved to recent picks.",
+  "@matchRecorded": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "errDisabled": "AI suggestions are turned off.",
+  "errMissingKey": "No API key configured.",
+  "errNoModelSelected": "No AI model selected.",
+  "errUnauthorized": "The API key was rejected.",
+  "errPaymentRequired": "The account has no credit or the key is out of quota.",
+  "errRateLimited": "The provider is rate limiting requests. Try again shortly.",
+  "errServerError": "The provider had a server error. Try again later.",
+  "errHttpError": "The provider rejected the request.",
+  "errNetworkError": "The provider could not be reached. Check the connection.",
+  "errInvalidJson": "The provider returned an unreadable response.",
+  "errInvalidResponse": "The provider returned no usable palette.",
+  "errNoValidSuggestions": "The provider suggested colours that are not in the active collection.",
+  "errNoAvailableColors": "There are no available markers to choose from.",
+  "errNoSuggestions": "No suggestions could be generated.",
+  "errTimeout": "The on-device model took too long. Try again.",
+  "errOnDeviceUnavailable": "The on-device model is not ready on this phone.",
+  "errUnknown": "AI suggestions are unavailable.",
+  "errAiUnavailableWithReason": "AI unavailable ({reason}) Showing local suggestions.",
+  "@errAiUnavailableWithReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "roleMainTone": "Main tone",
+  "roleMidtone": "Midtone",
+  "roleShadow": "Shadow",
+  "roleHighlight": "Highlight",
+  "roleBlend": "Blend",
+  "roleToneA": "Tone A",
+  "roleToneAShadow": "Tone A shadow",
+  "roleToneB": "Tone B",
+  "roleToneBShadow": "Tone B shadow",
+  "roleBridge": "Bridge",
+  "roleWarmBase": "Warm base",
+  "roleWarmShadow": "Warm shadow",
+  "roleSunlitAccent": "Sunlit accent",
+  "roleDepthTone": "Depth tone",
+  "roleCoolBase": "Cool base",
+  "roleCoolShadow": "Cool shadow",
+  "roleAtmosphere": "Atmosphere",
+  "roleDeepCool": "Deep cool",
+  "rolePastelBase": "Pastel base",
+  "roleSoftShade": "Soft shade",
+  "rolePastelHighlight": "Pastel highlight",
+  "roleAccent": "Accent",
+  "roleSupport": "Support",
+  "roleNeonLead": "Neon lead",
+  "roleNeonSecondary": "Neon secondary",
+  "roleGlow": "Glow",
+  "rolePopAccent": "Pop accent",
+  "roleHue1": "Hue 1",
+  "roleHue2": "Hue 2",
+  "roleHue3": "Hue 3",
+  "roleHue4": "Hue 4",
+  "roleHue5": "Hue 5",
+  "roleUnexpectedLead": "Unexpected lead",
+  "roleContrastPair": "Contrast pair",
+  "roleTensionAccent": "Tension accent",
+  "roleOffbeatSupport": "Offbeat support",
+  "roleRandom1": "Random 1",
+  "roleRandom2": "Random 2",
+  "roleRandom3": "Random 3",
+  "roleRandom4": "Random 4",
+  "roleRandom5": "Random 5",
+  "roleLightValue": "Light value",
+  "roleMidLight": "Mid-light",
+  "roleMid": "Mid",
+  "roleMidDark": "Mid-dark",
+  "roleDarkValue": "Dark value",
+  "roleWarmSideA": "Warm side A",
+  "roleWarmSideB": "Warm side B",
+  "roleCoolSideA": "Cool side A",
+  "roleCoolSideB": "Cool side B",
+  "roleBridgeTone": "Bridge tone",
+  "roleSeasonLead": "Season lead",
+  "roleSeasonSupport": "Season support",
+  "roleFestiveRed": "Festive red",
+  "roleEvergreen": "Evergreen",
+  "roleGoldAccent": "Gold accent",
+  "rolePineShadow": "Pine shadow",
+  "roleSnowSupport": "Snow support",
+  "roleRomanticLead": "Romantic lead",
+  "roleRoseShadow": "Rose shadow",
+  "roleSoftBlush": "Soft blush",
+  "roleBalanceTone": "Balance tone",
+  "roleBase": "Base",
+  "roleGlowZone": "Glow zone",
+  "rolePatternAccent": "Pattern accent",
+  "roleContrastColor": "Contrast color",
+  "rolePrimary1": "Primary 1",
+  "rolePrimary2": "Primary 2",
+  "rolePrimary3": "Primary 3",
+  "roleSecondary": "Secondary",
+  "roleSepiaLight": "Sepia light",
+  "roleDustMidtone": "Dust midtone",
+  "roleLeatherShadow": "Leather shadow",
+  "roleAgedAccent": "Aged accent",
+  "roleSmokeNeutral": "Smoke neutral",
+  "roleHauntBase": "Haunt base",
+  "rolePumpkinGlow": "Pumpkin glow",
+  "roleNightShadow": "Night shadow",
+  "roleEerieAccent": "Eerie accent",
+  "roleFogSupport": "Fog support",
+  "roleNightBase": "Night base",
+  "roleDeepShadow": "Deep shadow",
+  "roleMoonlitEdge": "Moonlit edge",
+  "roleCoolAccent": "Cool accent",
+  "roleMist": "Mist",
+  "roleWaterBase": "Water base",
+  "roleDepth": "Depth",
+  "roleShadowWater": "Shadow water",
+  "roleLightBeam": "Light beam",
+  "roleBubbleHighlight": "Bubble highlight",
+  "roleSpookyBase": "Spooky base",
+  "roleColdShadow": "Cold shadow",
+  "roleHauntedAccent": "Haunted accent",
+  "roleEerieHighlight": "Eerie highlight",
+  "roleFogTone": "Fog tone",
+  "roleMysticBase": "Mystic base",
+  "roleSpellShadow": "Spell shadow",
+  "roleMagicalAccent": "Magical accent",
+  "roleRuneGlow": "Rune glow",
+  "roleMoodLead": "Mood lead",
+  "roleMoodShadow": "Mood shadow",
+  "roleEmotionAccent": "Emotion accent",
+  "roleMaterialBase": "Material base",
+  "rolePlaneShift": "Plane shift",
+  "roleHardShadow": "Hard shadow",
+  "roleSpecularEdge": "Specular edge",
+  "rolePatinaAccent": "Patina accent",
+  "roleSpaceBase": "Space base",
+  "roleNebulaGlow": "Nebula glow",
+  "roleDeepVoid": "Deep void",
+  "roleStarAccent": "Star accent",
+  "roleDustCloud": "Dust cloud",
+  "roleGlassPaneA": "Glass pane A",
+  "roleGlassPaneB": "Glass pane B",
+  "roleGlassPaneC": "Glass pane C",
+  "roleGlassPaneD": "Glass pane D",
+  "roleLightHit": "Light hit",
+  "roleShade": "Shade",
+  "roleContrast": "Contrast",
+  "roleSoftShadow": "Soft shadow",
+  "roleBackground": "Background",
+  "roleCompanionHue": "Companion hue",
+  "rolePrimaryShadow": "Primary shadow",
+  "roleMysticAccent": "Mystic accent",
+  "roleSecondaryAccent": "Secondary accent",
+  "rolePumpkinShadow": "Pumpkin shadow",
+  "roleWitchyPurple": "Witchy purple",
+  "roleToxicAccent": "Toxic accent",
+  "roleNightBackground": "Night background",
+  "roleRibbonRed": "Ribbon red",
+  "rolePineDepth": "Pine depth",
+  "roleSnowHighlight": "Snow highlight",
+  "roleBudShadow": "Bud shadow",
+  "roleBlossomTint": "Blossom tint",
+  "roleFreshLeaf": "Fresh leaf",
+  "roleDaffodilLight": "Daffodil light",
+  "roleRainySky": "Rainy sky",
+  "roleSkinSubjectShadow": "Skin/subject shadow",
+  "roleWarmCompanion": "Warm companion",
+  "roleNeutralBalance": "Neutral balance",
+  "roleBarkShadow": "Bark shadow",
+  "roleMapleRed": "Maple red",
+  "roleOliveAccent": "Olive accent",
+  "roleMorningMist": "Morning mist",
+  "roleSubjectShadow": "Subject shadow",
+  "roleCoolCompanion": "Cool companion",
+  "roleAiryHighlight": "Airy highlight",
+  "roleSnowShadow": "Snow shadow",
+  "roleFrostHighlight": "Frost highlight",
+  "roleEvergreenDepth": "Evergreen depth",
+  "roleBerryAccent": "Berry accent",
+  "roleTwilightSky": "Twilight sky",
+  "roleGroundShadow": "Ground shadow",
+  "roleSkyBlend": "Sky blend",
+  "roleSunHighlight": "Sun highlight",
+  "roleContrastAccent": "Contrast accent",
+  "roleNeutralBuffer": "Neutral buffer",
+  "rolePalmShadow": "Palm shadow",
+  "roleCoralAccent": "Coral accent",
+  "roleOceanSplash": "Ocean splash",
+  "roleSunbeamHighlight": "Sunbeam highlight",
+  "roleWarmSand": "Warm sand",
+  "roleLeafShadow": "Leaf shadow",
+  "roleMossMidtone": "Moss midtone",
+  "roleSunlitLeaf": "Sunlit leaf",
+  "roleTrunkAccent": "Trunk accent",
+  "roleSkyFog": "Sky/fog",
+  "rolePetalShadow": "Petal shadow",
+  "rolePetalHighlight": "Petal highlight",
+  "roleSecondaryPetal": "Secondary petal",
+  "roleLeafAccent": "Leaf accent",
+  "rolePatternBackground": "Pattern background",
+  "roleToneC": "Tone C",
+  "roleToneD": "Tone D",
+  "roleNeutralLinework": "Neutral linework",
+  "roleComplement": "Complement",
+  "roleNeutral": "Neutral",
+  "roleCompanion": "Companion",
+  "reasonScenarioSupport": "Scenario support",
+  "reasonBalancedPairing": "Balanced pairing",
+  "reasonShadowDepth": "Shadow depth",
+  "reasonSoftNearbyHue": "Soft nearby hue",
+  "reasonControlledContrast": "Controlled contrast",
+  "reasonHighlightLift": "Highlight lift",
+  "reasonLocked": "Locked",
+  "reasonVariationSupport": "Variation support",
+  "reasonOppositeHueContrast": "Opposite hue contrast",
+  "reasonSplitComplementContrast": "Split complement contrast",
+  "reasonTriadBalance": "Triad balance",
+  "reasonSquareHarmony": "Square harmony",
+  "reasonRectangleHarmony": "Rectangle harmony",
+  "reasonSameFamilyDeeperTone": "Same family, deeper tone",
+  "reasonSameFamilyLighterTone": "Same family, lighter tone",
+  "reasonManualPalette": "Manual palette",
+  "reasonSupportTone": "Support tone",
+  "reasonAISuggestion": "AI suggestion",
+  "reasonLoadedPalette": "Loaded palette",
+  "reasonAppliedFromIdeas": "Applied from Ideas",
+  "reasonNearbyHue": "Nearby hue harmony ({degrees}deg)",
+  "@reasonNearbyHue": {
+    "placeholders": {
+      "degrees": {
+        "type": "int"
+      }
+    }
+  },
+  "reasonShadowTone": "Shadow tone ({percent}% darker)",
+  "@reasonShadowTone": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "reasonVariation": "{prefix}: {reason}",
+  "@reasonVariation": {
+    "placeholders": {
+      "prefix": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "variationPrefixVibrant": "Vibrant",
+  "variationPrefixSoft": "Soft",
+  "variationPrefixContrast": "Contrast",
+  "variationPrefixWarm": "Warm",
+  "variationPrefixCool": "Cool",
+  "variationLabelMoreVibrant": "More vibrant",
+  "variationLabelSofter": "Softer",
+  "variationLabelHigherContrast": "Higher contrast",
+  "variationLabelWarmer": "Warmer",
+  "variationLabelCooler": "Cooler",
+  "modeRecommended": "Recommended",
+  "modeComplementary": "Complementary",
+  "modeAnalogous": "Analogous",
+  "modeSplitComplementary": "Split Complementary",
+  "modeTriad": "Triad",
+  "modeSquare": "Square",
+  "modeRectangle": "Rectangle",
+  "modeMonochrome": "Monochrome",
+  "modeCustomPalette": "Custom Palette",
+  "modeShadow": "Shadow",
+  "scenarioGhostCharacter": "Ghost Character",
+  "scenarioCuteCharacter": "Cute Character",
+  "scenarioFantasyCreature": "Fantasy Creature",
+  "scenarioWarmPortrait": "Warm Portrait",
+  "scenarioCoolPortrait": "Cool Portrait",
+  "scenarioSunsetLandscape": "Sunset Landscape",
+  "scenarioForestScene": "Forest Scene",
+  "scenarioOceanScene": "Ocean Scene",
+  "scenarioAutumnScene": "Autumn Scene",
+  "scenarioSpringGarden": "Spring Garden",
+  "scenarioCozyInterior": "Cozy Interior",
+  "scenarioVintageRoom": "Vintage Room",
+  "scenarioPastelDream": "Pastel Dream",
+  "scenarioNeonNight": "Neon Night",
+  "scenarioMoodyNight": "Moody Night",
+  "scenarioFloralPattern": "Floral Pattern",
+  "scenarioGeometricPattern": "Geometric Pattern",
+  "scenarioPlaidPattern": "Plaid Pattern",
+  "scenarioPolkaDotPattern": "Polka Dot Pattern",
+  "scenarioCandyStripes": "Candy Stripes",
+  "scenarioHalloweenMood": "Halloween Mood",
+  "scenarioChristmasMood": "Christmas Mood",
+  "scenarioSpringMood": "Spring Mood",
+  "scenarioSummerMood": "Summer Mood",
+  "scenarioAutumnMood": "Autumn Mood",
+  "scenarioWinterMood": "Winter Mood",
+  "scenarioWinterSnow": "Winter Snow",
+  "packModeSinglePack": "Single pack",
+  "packModeComparePacks": "Compare packs",
+  "packLabel120New": "120 New",
+  "packLabel36Skin": "36 Skin",
+  "packLabel36Gray": "36 Gray",
+  "packLabel48Pastel": "48 Pastel",
+  "categorySignature": "Signature",
+  "categoryChallenges": "Challenges",
+  "categoryAtmosphere": "Atmosphere",
+  "ideaStickerEffectTitle": "Sticker Effect",
+  "ideaStickerEffectSummary": "Make subjects look like cut-out stickers using a white halo and black outer outline.",
+  "ideaStickerEffectOverview": "Technique-first challenge. The illusion comes from edge treatment, not from a specific palette.",
+  "ideaStickerEffectStep1": "Color the main subject normally first.",
+  "ideaStickerEffectStep2": "Add a clean white halo around the full silhouette.",
+  "ideaStickerEffectStep3": "Trace the outside edge of that white halo with a black line.",
+  "ideaStickerEffectStep4": "Optional: add a tiny drop shadow under one side to make it pop.",
+  "ideaStickerEffectEmbellishment1": "Keep halo width consistent for a cleaner cut-out look.",
+  "ideaStickerEffectEmbellishment2": "If edges feel noisy, smooth with white pen before black contour.",
+  "ideaPolaroidFrameTitle": "Polaroid Frame",
+  "ideaPolaroidFrameSummary": "Draw a Polaroid frame, color only inside it, and keep everything outside in grayscale.",
+  "ideaPolaroidFrameOverview": "Build a fake instant-photo composition. The interior gets full color while the rest stays in controlled grayscale.",
+  "ideaPolaroidFrameStep1": "Sketch a Polaroid frame with a wider bottom border.",
+  "ideaPolaroidFrameStep2": "Block everything outside the frame using 2-3 grayscale values.",
+  "ideaPolaroidFrameStep3": "Color only the interior photo window with your subject colors.",
+  "ideaPolaroidFrameStep4": "Add a subtle frame shadow so the photo appears on top of the page.",
+  "ideaPolaroidFrameEmbellishment1": "Write a tiny date caption on the bottom frame for realism.",
+  "ideaPolaroidFrameEmbellishment2": "Make outside grayscale slightly cooler to boost interior warmth.",
+  "ideaSpotlightTitle": "Spotlight",
+  "ideaSpotlightSummary": "Create a strong focal light with dark edges and smooth value falloff.",
+  "ideaSpotlightOverview": "Direct attention with value contrast: bright center, dark perimeter, and clear light falloff.",
+  "ideaSpotlightStep1": "Mark the spotlight center before laying color.",
+  "ideaSpotlightStep2": "Keep the focal zone bright and high-contrast.",
+  "ideaSpotlightStep3": "Darken values gradually as you move away from the center.",
+  "ideaSpotlightStep4": "Finish with a soft vignette around page edges.",
+  "ideaSpotlightEmbellishment1": "Use harder edges near the focal point, softer edges far away.",
+  "ideaSpotlightEmbellishment2": "Avoid bright accents in corners so focus stays centered.",
+  "ideaOneColorTitle": "One Color",
+  "ideaOneColorSummary": "Use a single hue family and control contrast only through value and saturation.",
+  "ideaOneColorOverview": "One hue, many values. Depth comes from shifts in lightness and saturation, not hue variety.",
+  "ideaOneColorStep1": "Choose one dominant hue family for the full piece.",
+  "ideaOneColorStep2": "Separate planes with value shifts, not hue shifts.",
+  "ideaOneColorStep3": "Reserve highest contrast for your focal element.",
+  "ideaOneColorStep4": "Use saturation variation to avoid flat areas.",
+  "ideaOneColorEmbellishment1": "Use texture shifts to separate materials when hue variety is limited.",
+  "ideaOneColorEmbellishment2": "Keep one micro-accent at the brightest value for focal clarity.",
+  "ideaTwoColorsTitle": "Two Colors",
+  "ideaTwoColorsSummary": "Build the scene using only two dominant hue families plus subtle support tones.",
+  "ideaTwoColorsOverview": "Restrict the scene to two hue families and let contrast come from value, not palette breadth.",
+  "ideaTwoColorsStep1": "Assign each major area to one of the two hue families.",
+  "ideaTwoColorsStep2": "Keep transitions clean to preserve the two-tone concept.",
+  "ideaTwoColorsStep3": "Use one neutral bridge only where needed.",
+  "ideaTwoColorsStep4": "Keep one hue dominant and one supporting.",
+  "ideaTwoColorsEmbellishment1": "Let one hue occupy larger shapes and the second hue act as accent.",
+  "ideaTwoColorsEmbellishment2": "If harmony breaks, add a low-saturation bridge tone in transitions.",
+  "ideaFiftyFiftyTitle": "50/50 Split",
+  "ideaFiftyFiftySummary": "Split the composition in two moods. One side warm, the other cool, with a bridge color.",
+  "ideaFiftyFiftyOverview": "Compose two distinct moods in one image. Keep each side coherent and blend with one bridge tone.",
+  "ideaFiftyFiftyStep1": "Split the page vertically or horizontally.",
+  "ideaFiftyFiftyStep2": "Assign warm hues to one side and cool hues to the other.",
+  "ideaFiftyFiftyStep3": "Use one bridge tone at the boundary so the split feels intentional.",
+  "ideaFiftyFiftyStep4": "Keep each half internally consistent in value and saturation.",
+  "ideaFiftyFiftyEmbellishment1": "Mirror one small motif on both halves to tie the concept together.",
+  "ideaFiftyFiftyEmbellishment2": "Keep one side slightly darker to avoid visual symmetry fatigue.",
+  "ideaWarmColorsTitle": "Warm Colors",
+  "ideaWarmColorsSummary": "Use only warm hues for an energetic, cozy, sunlit scene.",
+  "ideaWarmColorsOverview": "Warm hues carry energy and intimacy. Keep shadows warm instead of neutral gray.",
+  "ideaCoolColorsTitle": "Cool Colors",
+  "ideaCoolColorsSummary": "Use cool hues for calm, depth, and atmospheric distance.",
+  "ideaCoolColorsOverview": "Cool hues create depth and calm. Control value steps to avoid a flat finish.",
+  "ideaPastelTitle": "Pastel",
+  "ideaPastelSummary": "Light value and low saturation for a soft, dreamy finish.",
+  "ideaPastelOverview": "Pastel scenes rely on value control and subtle contrast more than hue intensity.",
+  "ideaNeonTitle": "Neon",
+  "ideaNeonSummary": "High-energy, vivid colors that pop against dark support tones.",
+  "ideaNeonOverview": "Neon needs contrast. Reserve at least one dark support area so bright accents can glow.",
+  "ideaRainbowTitle": "Rainbow",
+  "ideaRainbowSummary": "Distribute hue families across the artwork while keeping values controlled.",
+  "ideaRainbowOverview": "Use broad hue coverage but keep one dominant hue family so the piece still feels unified.",
+  "ideaUnlikelyColorsTitle": "Unlikely Colors",
+  "ideaUnlikelyColorsSummary": "Try unexpected color pairings to make ordinary subjects feel stylized.",
+  "ideaUnlikelyColorsOverview": "Unexpected combinations can feel intentional when value hierarchy stays clear.",
+  "ideaRandomColorsTitle": "Random Colors",
+  "ideaRandomColorsSummary": "Use a randomized palette and force cohesion through value planning.",
+  "ideaRandomColorsOverview": "Random palettes look coherent if you keep one focal area and controlled contrast.",
+  "ideaGrayscaleTitle": "Grayscale",
+  "ideaGrayscaleSummary": "Work in values only to improve depth and contrast control.",
+  "ideaGrayscaleOverview": "Limit color information and focus on depth, hierarchy, and material separation through value only.",
+  "ideaSeasonalTitle": "Seasonal",
+  "ideaSeasonalSummary": "Blend spring, summer, autumn, or winter cues into a cohesive palette.",
+  "ideaSeasonalOverview": "Seasonal palettes work best when one season dominates and others support the mood.",
+  "ideaChristmasTitle": "Christmas",
+  "ideaChristmasSummary": "Classic red-green-gold range for festive contrast and cozy highlights.",
+  "ideaChristmasOverview": "Classic holiday balance: warm highlights, rich reds/greens, and selective bright accents.",
+  "ideaValentinesTitle": "Valentine's Day",
+  "ideaValentinesSummary": "Romantic reds and pinks with soft highlights and warm transitions.",
+  "ideaValentinesOverview": "Romantic harmony comes from warm transitions and gentle highlight placement.",
+  "ideaWhiteEffectsTitle": "White Effects",
+  "ideaWhiteEffectsSummary": "Plan the palette to leave room for white-pen sparkles and shine accents.",
+  "ideaWhiteEffectsOverview": "Reserve whitespace and bright value zones so white-ink effects read clearly.",
+  "ideaWhiteEffectsEmbellishment1": "Use white pen for sparkles on metal, eyes, and water reflections.",
+  "ideaWhiteEffectsEmbellishment2": "Dot highlights in clusters, not evenly, for natural shine.",
+  "ideaBlackEffectsTitle": "Black Effects",
+  "ideaBlackEffectsSummary": "Use black line details, dots, and pattern overlays to enhance contrast.",
+  "ideaBlackEffectsOverview": "Plan midtone areas where black pen details can add texture and graphic punch.",
+  "ideaBlackEffectsEmbellishment1": "Use black dots/stripes to add texture after color layers dry.",
+  "ideaBlackEffectsEmbellishment2": "Concentrate black details near focal areas for stronger emphasis.",
+  "ideaCrayonsOnlyTitle": "Crayons Only",
+  "ideaCrayonsOnlySummary": "Simple bold palette that mimics classic crayon behavior and texture.",
+  "ideaCrayonsOnlyOverview": "Crayon style favors simple blocks, bold primaries, and visible stroke texture.",
+  "ideaOldWestTitle": "Old West",
+  "ideaOldWestSummary": "Dusty sepia range with muted warmth, like an aged Western print.",
+  "ideaOldWestOverview": "Aged-photo atmosphere with dusty mids, muted warms, and restrained highlights.",
+  "ideaOldWestStep1": "Lay a sepia-like base across major areas.",
+  "ideaOldWestStep2": "Use dusty midtones and avoid highly saturated accents.",
+  "ideaOldWestStep3": "Push shadows with muted browns instead of pure black.",
+  "ideaOldWestStep4": "Reserve highlights for worn edges and sun hit points.",
+  "ideaOldWestEmbellishment1": "Add subtle grain dots in empty regions for aged texture.",
+  "ideaOldWestEmbellishment2": "Use broken edges on highlights to mimic worn print paper.",
+  "ideaHorrorHalloweenTitle": "Horror/Halloween",
+  "ideaHorrorHalloweenSummary": "Dark values and eerie accents to transform normal scenes into spooky mood.",
+  "ideaHorrorHalloweenOverview": "Push darkness and selective eerie accents to convert normal scenes into unsettling ones.",
+  "ideaHorrorHalloweenStep1": "Drop overall value to establish darkness first.",
+  "ideaHorrorHalloweenStep2": "Place eerie accent hues only near focal shapes.",
+  "ideaHorrorHalloweenStep3": "Use harder edge shadows for tension.",
+  "ideaHorrorHalloweenStep4": "Keep bright highlights sparse and directional.",
+  "ideaHorrorHalloweenEmbellishment1": "Add subtle color noise in shadows for unsettling texture.",
+  "ideaHorrorHalloweenEmbellishment2": "Use one sharp high-contrast edge to create visual tension.",
+  "ideaMidnightTitle": "Midnight",
+  "ideaMidnightSummary": "Turn daytime scenes into night by pushing cool shadows and selective highlights.",
+  "ideaMidnightOverview": "Night conversion depends on cooler shadows, lower values, and sparse light accents.",
+  "ideaMidnightStep1": "Convert warm daytime areas into cooler night tones.",
+  "ideaMidnightStep2": "Push sky/background values darker than midground.",
+  "ideaMidnightStep3": "Add moonlight accents on top-facing edges.",
+  "ideaMidnightStep4": "Soften distant elements to increase nocturnal depth.",
+  "ideaMidnightEmbellishment1": "Keep highlights cool and sparse to avoid reintroducing daytime feel.",
+  "ideaMidnightEmbellishment2": "Darken corners more than center to create natural nighttime framing.",
+  "ideaUnderwaterTitle": "Underwater",
+  "ideaUnderwaterSummary": "Cool aquatic palette with depth haze, light rays, and bubble accents.",
+  "ideaUnderwaterOverview": "Water depth appears through cool shifts, softened distance, suspended particles, and bubbles.",
+  "ideaUnderwaterStep1": "Start with cool blue-green base layers.",
+  "ideaUnderwaterStep2": "Fade distant elements by lowering contrast.",
+  "ideaUnderwaterStep3": "Add directional light rays to suggest water depth.",
+  "ideaUnderwaterStep4": "Use pale highlights sparingly on bubbles and reflective edges.",
+  "ideaUnderwaterEmbellishment1": "Add bubble clusters of different sizes, denser near the light path.",
+  "ideaUnderwaterEmbellishment2": "Paint tiny suspended particles for volume in the water.",
+  "ideaUnderwaterEmbellishment3": "Curve light rays slightly for a natural underwater feel.",
+  "ideaSpookyTitle": "Spooky",
+  "ideaSpookySummary": "Haunted-place vibe using desaturated darks and chilling accent tones.",
+  "ideaSpookyOverview": "A haunted look uses desaturated dark fields and isolated eerie accents.",
+  "ideaSpookyStep1": "Start from a dim neutral base with low saturation.",
+  "ideaSpookyStep2": "Introduce one eerie accent hue in key focal areas.",
+  "ideaSpookyStep3": "Use uneven shadow edges for haunted atmosphere.",
+  "ideaSpookyStep4": "Keep backgrounds subdued so the subject feels isolated.",
+  "ideaFantasyTitle": "Fantasy",
+  "ideaFantasySummary": "Magical tones with luminous accents and stylized contrast.",
+  "ideaFantasyOverview": "Push stylized hue choices and luminous accents while keeping shadows readable.",
+  "ideaInTheMoodTitle": "In the Mood",
+  "ideaInTheMoodSummary": "Express one emotional tone through value rhythm and hue bias.",
+  "ideaInTheMoodOverview": "Choose one emotional direction and keep every hue/value decision aligned with it.",
+  "ideaSculptureTitle": "Sculpture",
+  "ideaSculptureSummary": "Metallic or stone-like palette focused on material highlights and hard edges.",
+  "ideaSculptureOverview": "Material realism comes from edge control, value planes, and restrained saturation.",
+  "ideaGalaxyTitle": "Galaxy",
+  "ideaGalaxySummary": "Nebula-inspired range with deep space shadows and starlight accents.",
+  "ideaGalaxyOverview": "Cosmic scenes need deep darks, vibrant nebula zones, and tiny high-contrast stars.",
+  "ideaStainedGlassTitle": "Stained Glass",
+  "ideaStainedGlassSummary": "Jewel-tone palette with dark separators to mimic leaded glass pieces.",
+  "ideaStainedGlassOverview": "Think in colored panels and dark separators rather than smooth painterly blending.",
+  "ideaStainedGlassStep1": "Block separate color panels before any blending.",
+  "ideaStainedGlassStep2": "Leave dark separators between major shapes.",
+  "ideaStainedGlassStep3": "Increase saturation in center panels for luminosity.",
+  "ideaStainedGlassStep4": "Use highlights as reflected light, not smooth gradients.",
+  "ideaStainedGlassEmbellishment1": "Use thin black separators to mimic lead came lines.",
+  "ideaStainedGlassEmbellishment2": "Keep each panel hue clean and avoid muddy mixes.",
+  "ideaDefaultOverview": "Creative challenge",
+  "ideaDefaultStep1": "Block large shapes with your dominant tones.",
+  "ideaDefaultStep2": "Build depth using one lighter and one darker support color.",
+  "ideaDefaultStep3": "Use your accent color only on focal areas.",
+  "ideaDefaultStep4": "Finish with line cleanup and controlled highlights.",
+  "ideaDefaultEmbellishment1": "Run a final pass to simplify accents and keep one clear focal area.",
+  "ideaDefaultEmbellishment2": "Reserve your brightest highlight for the subject you want first attention on.",
+  "settingsLinesTitle": "Lines you own",
+  "settingsLinesHint": "Pick every Ohuhu line you own. Turning a line off removes its packs from your selection.",
+  "settingsLineSelectedOfTotal": "{selected} of {total} packs selected",
+  "@settingsLineSelectedOfTotal": {
+    "placeholders": {
+      "selected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsCurrentPacks": "Current packs ({count})",
+  "@settingsCurrentPacks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsLegacyPacks": "Older / community packs ({count})",
+  "@settingsLegacyPacks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsLegacyPacksNote": "Pack list from the community; may no longer be sold.",
+  "settingsPackColorsSemantics": "{pack}, {count, plural, =1{1 colour} other{{count} colours}}",
+  "@settingsPackColorsSemantics": {
+    "placeholders": {
+      "pack": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "swatchesLines": "Lines",
+  "swatchesLabelLine": "Line",
+  "swatchesAllLines": "All lines",
+  "swatchesLegacyPacks": "Older / community",
+  "packLabelSkin": "{n} Skin",
+  "@packLabelSkin": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelPastel": "{n} Pastel",
+  "@packLabelPastel": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelPastels": "{n} Pastels",
+  "@packLabelPastels": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelBasic": "{n} Basic",
+  "@packLabelBasic": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelIllustration": "{n} Illustration",
+  "@packLabelIllustration": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelLandscape": "{n} Landscape",
+  "@packLabelLandscape": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelSweetPastels": "{n} Sweetness Pastels",
+  "@packLabelSweetPastels": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelMidTones": "{n} Mid-Tones",
+  "@packLabelMidTones": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelBlossomPastels": "{n} Blossoming Pastels",
+  "@packLabelBlossomPastels": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelWhiteCase": "White Case {n}",
+  "@packLabelWhiteCase": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelWhiteCaseVersion": "White Case {n} (V{v})",
+  "@packLabelWhiteCaseVersion": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      },
+      "v": {
+        "type": "String"
+      }
+    }
+  },
+  "packLabelJapanVersion": "Japan {n} (V{v})",
+  "@packLabelJapanVersion": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      },
+      "v": {
+        "type": "String"
+      }
+    }
+  },
+  "packFullLabel": "{line} {pack}",
+  "@packFullLabel": {
+    "placeholders": {
+      "line": {
+        "type": "String"
+      },
+      "pack": {
+        "type": "String"
+      }
+    }
+  },
+  "swatchesMorePacks": "+{count} more",
+  "@swatchesMorePacks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

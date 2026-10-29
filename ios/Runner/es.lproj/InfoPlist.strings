@@ -1,0 +1,3 @@
+/* Spanish permission texts; the English originals are in Info.plist. */
+"NSCameraUsageDescription" = "Ink Lab usa la cámara para que puedas fotografiar un dibujo u objeto y buscar sus colores en tu colección de rotuladores. Las fotos se procesan en tu dispositivo y nunca se suben.";
+"NSPhotoLibraryUsageDescription" = "Ink Lab te permite elegir una foto para buscar sus colores en tu colección de rotuladores. Las fotos se procesan en tu dispositivo y nunca se suben.";

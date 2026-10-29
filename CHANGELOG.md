@@ -1,0 +1,67 @@
+# Changelog
+
+What changes in each version of Ink Lab, newest first. The "Unreleased" section fills up as changes land and becomes
+the next version on the day it ships.
+
+Numbering: the last number goes up with fixes (0.3.1 → 0.3.2), the middle one with new features (→ 0.4.0), and 1.0.0
+will be the production launch in the stores. Every version ships on
+[GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
+so they can skip numbers.
+
+## Unreleased
+
+- On-device AI on Android: the optional AI can now run on the phone with Gemini Nano (ML Kit GenAI Prompt API, through
+  Android's AICore). Your scenario and colour codes never leave the phone. If the model is not on the phone yet, the app
+  asks Android to download it in the background and shows the progress. The prompt is trimmed to the model's small
+  context, code matching is lenient and a partly valid answer still gives you a palette. iOS has no on-device model yet.
+- The optional AI texts now tell you which provider is active (on-device or OpenRouter) and what would leave the phone.
+- Fix: merged DecoTime names are shown correctly.
+- Android: ML Kit registrars are kept under R8, so the release build keeps the on-device AI.
+- iOS (in preparation): privacy manifest declaring no tracking and no collected data, and the export-compliance flag so
+  the app no longer asks about encryption on every upload. Camera and photo-library texts say photos stay on the phone.
+- Internationalisation: the interface texts move to translation files, in Spanish and English.
+- Public repository: bilingual (Spanish and English) documentation, privacy policy and GitHub Pages page, content
+  licence, security policy, and an exporter that publishes a reviewed selection of the private repository.
+
+## 0.3.1 · 2026-10-29
+
+- Safer storage of the OpenRouter key: the Keystore/Keychain key no longer needs biometrics, which made reading the saved
+  key fail on some phones.
+- AI suggestions are more robust: tolerant parsing of the model response, one narrower retry, recommended default
+  models, colour roles taken from the model, an "AI" tag on suggested palettes, wrapped reasons and a sanitised model
+  catalogue. The free/paid filter uses the real pricing.
+- Fix: a crash when the settings screen re-listened to a stream.
+- "Add my markers" for DecoTime, autocomplete when searching, a clearer model picker, feedback while the AI works and
+  the base colour in the palette strip.
+- Consistent spacing across screens, based on semantic tokens.
+
+## 0.3.0 · 2026-10-29
+
+New visual design (design G): neutral surfaces, light and dark themes, bundled Inter, Archivo and JetBrains Mono fonts
+(SIL OFL 1.1) and Feather-style icons, applied to Swatches, Match, Palette, Ideas and Settings.
+
+- "Add to palette" from a swatch, Ohuhu Oahu card locations and an appearance setting (system, light or dark).
+- Pack chips, safe-area handling on every page and a first-run flow that hides the brand flag.
+
+## 0.2.0 · 2026-10-28
+
+Internal test build (private prerelease).
+
+- The optional AI advisor is wired into Settings and Palette, with a disclosure of exactly what leaves the phone before
+  you can turn it on, and a model picker.
+- Your OpenRouter key is stored in the Android Keystore or the iOS Keychain. Requests go only to `openrouter.ai`, over
+  HTTPS, without following redirects; responses are size-capped and sanitised, and any failure falls back to the local
+  engine.
+- Android: system cloud backup disabled and cleartext traffic refused. Importing a backup never turns the AI on.
+- Release builds are signed with an upload key, with R8 minification and a hardened release workflow.
+
+## 0.1.0 · 2026-10-28
+
+First Flutter version, a rewrite of the original Android app for Android and iOS (private prerelease).
+
+- Pure-Dart core: marker models, colour maths (Lab and OKLab), the palette generator (analogous, complementary, split
+  complementary, triad, square, rectangle, monochrome, shadow and more) and the Ideas engine.
+- Offline catalogues for Ohuhu Oahu (new and legacy codes, packs) and DecoTime (owned-markers selection).
+- Swatches, Match (a photo colour to the nearest marker, processed on the device), Palette, Ideas and Settings.
+- Local storage, favourites, saved palettes and a plain JSON backup you can export and import.
+- Completely free and open source: no account, no ads, no analytics.

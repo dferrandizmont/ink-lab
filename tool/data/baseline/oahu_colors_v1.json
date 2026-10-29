@@ -1,0 +1,4220 @@
+[
+  {
+    "newCode": "0",
+    "newName": "Colorless Blender",
+    "oldCode": "0",
+    "oldName": "Colorless Blender",
+    "hex": "ffffff",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "120",
+    "newName": "Black",
+    "oldCode": "120",
+    "oldName": "Black",
+    "hex": "000000",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV04",
+    "newName": "Light Cornflower",
+    "oldCode": "B188",
+    "oldName": "Light Hydrangea",
+    "hex": "bcd1ed",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B28",
+    "newName": "Smoke Blue",
+    "oldCode": "B190",
+    "oldName": "Light Blue",
+    "hex": "a4cce1",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "BV35",
+    "newName": "Arctic Blue",
+    "oldCode": "B193",
+    "oldName": "Pale Blue",
+    "hex": "accce3",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV34",
+    "newName": "Ice Blue",
+    "oldCode": "B194",
+    "oldName": "Horizon Blue",
+    "hex": "c5ddec",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "BV19",
+    "newName": "Blue Iris",
+    "oldCode": "B271",
+    "oldName": "Grayish Blue",
+    "hex": "9da2c3",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV26",
+    "newName": "Pale Blue Violet",
+    "oldCode": "B281",
+    "oldName": "Pale Blue Violet",
+    "hex": "abb4db",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV05",
+    "newName": "Cornflower",
+    "oldCode": "B287",
+    "oldName": "Lavender Mist",
+    "hex": "9bc0e6",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "B08",
+    "newName": "Cotton Candy Blue",
+    "oldCode": "B289",
+    "oldName": "Pastel Blue",
+    "hex": "82dcfa",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV38",
+    "newName": "Sky Blue",
+    "oldCode": "B290",
+    "oldName": "Sky Blue",
+    "hex": "80aaff",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV48",
+    "newName": "Distressed Denim",
+    "oldCode": "B291",
+    "oldName": "Smoky Blue",
+    "hex": "97b4cf",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B07",
+    "newName": "Light Blue",
+    "oldCode": "B292",
+    "oldName": "Light Sky Blue",
+    "hex": "8dd6e9",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "BV37",
+    "newName": "Glacier Blue",
+    "oldCode": "B294",
+    "oldName": "Galaxy Blue",
+    "hex": "79b1db",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "BV09",
+    "newName": "Deep Cornflower",
+    "oldCode": "B369",
+    "oldName": "Purplish Blue",
+    "hex": "698ec8",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV414",
+    "newName": "Denim Blue",
+    "oldCode": "B383",
+    "oldName": "Vivid Blue",
+    "hex": "6e98b7",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV59",
+    "newName": "Summer Sky",
+    "oldCode": "B384",
+    "oldName": "Hydron Blue",
+    "hex": "77a6d9",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B010",
+    "newName": "Blue Lagoon",
+    "oldCode": "B389",
+    "oldName": "Fresh Blue",
+    "hex": "5bc4d8",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B315",
+    "newName": "Deep Cerulean",
+    "oldCode": "B459",
+    "oldName": "Marine Blue",
+    "hex": "457393",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV514",
+    "newName": "Vintage Navy",
+    "oldCode": "B463",
+    "oldName": "Prussian Blue",
+    "hex": "59739b",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV415",
+    "newName": "Antwerp Blue",
+    "oldCode": "B563",
+    "oldName": "Antwerp Blue",
+    "hex": "4d88a9",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV013",
+    "newName": "French Ultramarine",
+    "oldCode": "B572",
+    "oldName": "Capri Blue",
+    "hex": "4867b1",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV310",
+    "newName": "Brilliant Blue",
+    "oldCode": "B575",
+    "oldName": "Brilliant Blue",
+    "hex": "264fb3",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV314",
+    "newName": "Lapis Lazuli",
+    "oldCode": "B659",
+    "oldName": "Cobalt Blue",
+    "hex": "5176a7",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV311",
+    "newName": "Royal Blue",
+    "oldCode": "B672",
+    "oldName": "Vienna Blue",
+    "hex": "2471b8",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B112",
+    "newName": "Process Blue",
+    "oldCode": "B683",
+    "oldName": "Process Blue",
+    "hex": "259ac6",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV014",
+    "newName": "Ultramarine",
+    "oldCode": "B768",
+    "oldName": "Stratospheric Blue",
+    "hex": "3561ad",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B114",
+    "newName": "Cerulean Blue",
+    "oldCode": "B860",
+    "oldName": "Indian Blue",
+    "hex": "2d6e9c",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV312",
+    "newName": "Deep Royal Blue",
+    "oldCode": "B878",
+    "oldName": "Ultramarine",
+    "hex": "2670b7",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B111",
+    "newName": "Pool Blue",
+    "oldCode": "B883",
+    "oldName": "Cerulean Blue",
+    "hex": "07a5d7",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV315",
+    "newName": "Cobalt Blue",
+    "oldCode": "B953",
+    "oldName": "Napoleon Blue",
+    "hex": "43719b",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B115",
+    "newName": "Classic Blue",
+    "oldCode": "B956",
+    "oldName": "Sapphire",
+    "hex": "005297",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V33",
+    "newName": "Lavender Mist",
+    "oldCode": "B990",
+    "oldName": "Pale Lavender",
+    "hex": "d9dff0",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV03",
+    "newName": "Powder Blue",
+    "oldCode": "B991",
+    "oldName": "Pale Blue Gray",
+    "hex": "dae2f3",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B03",
+    "newName": "Frost",
+    "oldCode": "B996",
+    "oldName": "Frost Blue",
+    "hex": "bedbe5",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "WG10",
+    "newName": "Porcelain",
+    "oldCode": "BG038",
+    "oldName": "Cool Grey 038",
+    "hex": "efedef",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "WG12",
+    "newName": "Smoke White",
+    "oldCode": "BG041",
+    "oldName": "Cool Grey 041",
+    "hex": "e6e5e8",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "GG10",
+    "newName": "Soft Cool Grey",
+    "oldCode": "BG042",
+    "oldName": "Cool Grey 042",
+    "hex": "ced0d2",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "GG11",
+    "newName": "Fog Grey",
+    "oldCode": "BG043",
+    "oldName": "Cool Grey 043",
+    "hex": "b5b9be",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "BGY00",
+    "newName": "Cashmere Grey",
+    "oldCode": "BG050",
+    "oldName": "Cool Grey 050",
+    "hex": "d0d8d9",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "GG12",
+    "newName": "Pastel Icy Grey",
+    "oldCode": "BG080",
+    "oldName": "Cool Grey 080",
+    "hex": "a6b6bd",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "CG17",
+    "newName": "Cool Grey",
+    "oldCode": "BG081",
+    "oldName": "Cool Grey 081",
+    "hex": "9aa3ac",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "BGY05",
+    "newName": "Shark Grey",
+    "oldCode": "BG082",
+    "oldName": "Cool Grey 082",
+    "hex": "879098",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BGY24",
+    "newName": "Storm Grey",
+    "oldCode": "BG083",
+    "oldName": "Cool Grey 083",
+    "hex": "75828c",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "BGY36",
+    "newName": "Navy Grey",
+    "oldCode": "BG120",
+    "oldName": "Cool Grey 120",
+    "hex": "646f79",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "GG20",
+    "newName": "Pale Grey",
+    "oldCode": "CG021",
+    "oldName": "Neutral Grey 021",
+    "hex": "dbe0dd",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "CG03",
+    "newName": "Beacon Grey",
+    "oldCode": "CG022",
+    "oldName": "Neutral Grey 022",
+    "hex": "dde4e7",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "CG13",
+    "newName": "Thundercloud Grey",
+    "oldCode": "CG023",
+    "oldName": "Neutral Grey 03",
+    "hex": "dbdddf",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "CG14",
+    "newName": "Pewter Grey",
+    "oldCode": "CG040",
+    "oldName": "Neutral Grey 040",
+    "hex": "cfd0d2",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "CG25",
+    "newName": "Deep Grey",
+    "oldCode": "CG041",
+    "oldName": "Neutral Grey 041",
+    "hex": "a1a7a9",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "CG26",
+    "newName": "Anchor Grey",
+    "oldCode": "CG051",
+    "oldName": "Neutral Grey 051",
+    "hex": "999fa3",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "CG28",
+    "newName": "Web Grey",
+    "oldCode": "CG070",
+    "oldName": "Neutral Grey 070",
+    "hex": "7e848b",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "CG27",
+    "newName": "Dark Grey",
+    "oldCode": "CG071",
+    "oldName": "Neutral Grey 071",
+    "hex": "868a92",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "GG16",
+    "newName": "Dark Anchor Grey",
+    "oldCode": "CG080",
+    "oldName": "Neutral Grey 080",
+    "hex": "6c7177",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "GG15",
+    "newName": "Dark Neutral Grey",
+    "oldCode": "CG090",
+    "oldName": "Neutral Grey 090",
+    "hex": "656970",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "GG18",
+    "newName": "Eclipse Grey",
+    "oldCode": "CG130",
+    "oldName": "Neutral Grey 130",
+    "hex": "60646d",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "BGY38",
+    "newName": "Charcoal Grey",
+    "oldCode": "CG140",
+    "oldName": "Neutral Grey 140",
+    "hex": "55575d",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "E64",
+    "newName": "Light Taupe",
+    "oldCode": "E180",
+    "oldName": "Shallow Camelia",
+    "hex": "cbaca2",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y610",
+    "newName": "Sand",
+    "oldCode": "E182",
+    "oldName": "Putty",
+    "hex": "d7bb9f",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E85",
+    "newName": "Cherry Taupe",
+    "oldCode": "E183",
+    "oldName": "Lipstick Natural",
+    "hex": "c38379",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "Y68",
+    "newName": "Light Milk Tea",
+    "oldCode": "E187",
+    "oldName": "Milk Tea Multi",
+    "hex": "e3c7a9",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E93",
+    "newName": "Rosy Grey",
+    "oldCode": "E188",
+    "oldName": "Champagne",
+    "hex": "d7bfb9",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E66",
+    "newName": "Light Fawn",
+    "oldCode": "E189",
+    "oldName": "Thin Persimmon",
+    "hex": "c8a092",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E75",
+    "newName": "Light Rose Taupe",
+    "oldCode": "E190",
+    "oldName": "Honey",
+    "hex": "e3b2a9",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "Y43",
+    "newName": "Warm Beige",
+    "oldCode": "E191",
+    "oldName": "Cream Color",
+    "hex": "f7ddc0",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR34",
+    "newName": "Peach Cream",
+    "oldCode": "E194",
+    "oldName": "Powder Pink",
+    "hex": "fac7b9",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "E13",
+    "newName": "Limestone",
+    "oldCode": "E195",
+    "oldName": "Shell White",
+    "hex": "d8ceba",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "E814",
+    "newName": "Caput Mortuum",
+    "oldCode": "E258",
+    "oldName": "Colocasia Tonoimo",
+    "hex": "826b6c",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E912",
+    "newName": "Hearthstone",
+    "oldCode": "E262",
+    "oldName": "Tan",
+    "hex": "a68681",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y611",
+    "newName": "Dark Sand",
+    "oldCode": "E280",
+    "oldName": "Brown Grey",
+    "hex": "caa585",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y66",
+    "newName": "Almond Cream",
+    "oldCode": "E286",
+    "oldName": "Mushroom White",
+    "hex": "e6c2a0",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "YR39",
+    "newName": "Cinnamon",
+    "oldCode": "E287",
+    "oldName": "Rose Beige",
+    "hex": "ffaa9a",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E47",
+    "newName": "Camel",
+    "oldCode": "E288",
+    "oldName": "Hazelnuts",
+    "hex": "dcb092",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "E36",
+    "newName": "Old Salem Grey",
+    "oldCode": "E289",
+    "oldName": "Lye Color",
+    "hex": "d7c1a3",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y57",
+    "newName": "Unbleached Titanium",
+    "oldCode": "E293",
+    "oldName": "Pale Cream",
+    "hex": "fbcea0",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "E49",
+    "newName": "Honey Brown",
+    "oldCode": "E294",
+    "oldName": "Buttercup Yellow",
+    "hex": "d7a792",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E513",
+    "newName": "Taupe Brown",
+    "oldCode": "E340",
+    "oldName": "Burnt Sienna",
+    "hex": "82726e",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E514",
+    "newName": "Dark Chocolate",
+    "oldCode": "E342",
+    "oldName": "Chocolate",
+    "hex": "7a6966",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E712",
+    "newName": "Sweet Rosy Brown",
+    "oldCode": "E355",
+    "oldName": "Madder Red",
+    "hex": "a77477",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E913",
+    "newName": "Walnut Brown",
+    "oldCode": "E356",
+    "oldName": "Maroon",
+    "hex": "8c7372",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E511",
+    "newName": "Chocolate Mocha",
+    "oldCode": "E357",
+    "oldName": "Mahogany",
+    "hex": "96716b",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E710",
+    "newName": "Copper Brown",
+    "oldCode": "E363",
+    "oldName": "Red Bean",
+    "hex": "c28d88",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E711",
+    "newName": "Old Mahogany",
+    "oldCode": "E364",
+    "oldName": "Pale Mauve",
+    "hex": "a87e7a",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E59",
+    "newName": "Chestnut",
+    "oldCode": "E367",
+    "oldName": "Caramel",
+    "hex": "ab7a6c",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "Y613",
+    "newName": "Twine Beige",
+    "oldCode": "E371",
+    "oldName": "From Dust",
+    "hex": "bd9f7d",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E69",
+    "newName": "Russet Brown",
+    "oldCode": "E373",
+    "oldName": "Reddish Brass",
+    "hex": "b27a6f",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR310",
+    "newName": "Light Toffee",
+    "oldCode": "E384",
+    "oldName": "Red Gray",
+    "hex": "d1957e",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR36",
+    "newName": "Orange Pie",
+    "oldCode": "E399",
+    "oldName": "Sandy Brown",
+    "hex": "f4b69c",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E315",
+    "newName": "Vandyke Brown",
+    "oldCode": "E440",
+    "oldName": "Bronze",
+    "hex": "7b6c63",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E413",
+    "newName": "Dark Brown",
+    "oldCode": "E460",
+    "oldName": "Dark Brown",
+    "hex": "9a7d72",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E312",
+    "newName": "Fennel Seed",
+    "oldCode": "E463",
+    "oldName": "Walnut",
+    "hex": "af967a",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E411",
+    "newName": "Tumbleweed",
+    "oldCode": "E475",
+    "oldName": "Tumbleweed",
+    "hex": "c59274",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR37",
+    "newName": "Roasted Cashew",
+    "oldCode": "E477",
+    "oldName": "Morin",
+    "hex": "f1b28d",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR04",
+    "newName": "Pastel Peach",
+    "oldCode": "E494",
+    "oldName": "Pastel Peach",
+    "hex": "fae1d0",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "E915",
+    "newName": "Dark Bark Brown",
+    "oldCode": "E530",
+    "oldName": "Dark Bark",
+    "hex": "625754",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E515",
+    "newName": "Black Brown",
+    "oldCode": "E533",
+    "oldName": "Chestnut Brown",
+    "hex": "635756",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E415",
+    "newName": "Cedar Brown",
+    "oldCode": "E557",
+    "oldName": "Raw Umber",
+    "hex": "704123",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E612",
+    "newName": "Brick Brown",
+    "oldCode": "E558",
+    "oldName": "Brun",
+    "hex": "a37871",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E615",
+    "newName": "Cherry Cola",
+    "oldCode": "E644",
+    "oldName": "Natural Oak",
+    "hex": "7c564f",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR316",
+    "newName": "Hazelnut Cocoa",
+    "oldCode": "E645",
+    "oldName": "Burnt Orange",
+    "hex": "8d6255",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR515",
+    "newName": "Burnt Sienna",
+    "oldCode": "E679",
+    "oldName": "Terra Cotta",
+    "hex": "c97765",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YGY03",
+    "newName": "Worldly Grey",
+    "oldCode": "E685",
+    "oldName": "Gray Wolf Hair",
+    "hex": "e0d4cc",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "YR214",
+    "newName": "Terracotta",
+    "oldCode": "E686",
+    "oldName": "Brown",
+    "hex": "df8574",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y516",
+    "newName": "Walnut",
+    "oldCode": "E761",
+    "oldName": "Vignone",
+    "hex": "9a6f5a",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR313",
+    "newName": "Potato Brown",
+    "oldCode": "E763",
+    "oldName": "Potato Brown",
+    "hex": "a6552a",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "E613",
+    "newName": "Reddish Brown",
+    "oldCode": "E769",
+    "oldName": "Brick Brown",
+    "hex": "99655f",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E30",
+    "newName": "French Grey",
+    "oldCode": "E989",
+    "oldName": "Further Color of Skin",
+    "hex": "ddcfbf",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "FY00",
+    "newName": "Fluorescent Yellow",
+    "oldCode": "FY010",
+    "oldName": "Fluorescent Yellow",
+    "hex": "efff59",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "FY01",
+    "newName": "Fluorescent Orange",
+    "oldCode": "FY020",
+    "oldName": "Fluorescent Orange",
+    "hex": "ff8a28",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "FY02",
+    "newName": "Fluorescent Red",
+    "oldCode": "FY030",
+    "oldName": "Fluorescent Red",
+    "hex": "ff5972",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "FY03",
+    "newName": "Fluorescent Pink",
+    "oldCode": "FY040",
+    "oldName": "Fluorescent Pink",
+    "hex": "ea73ad",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "FY04",
+    "newName": "Fluorescent Violet",
+    "oldCode": "FY050",
+    "oldName": "Fluorescent Violet",
+    "hex": "6a29ff",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G112",
+    "newName": "Pale Cobalt Green",
+    "oldCode": "G177",
+    "oldName": "Porcelain Blue",
+    "hex": "8fb7ab",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G44",
+    "newName": "Sea Glass Green",
+    "oldCode": "G185",
+    "oldName": "Leaf Green",
+    "hex": "b8ddba",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G47",
+    "newName": "Spring Green",
+    "oldCode": "G189",
+    "oldName": "Horseradish",
+    "hex": "a4d49a",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "BG310",
+    "newName": "Seafoam Green",
+    "oldCode": "G190",
+    "oldName": "Horizon Green",
+    "hex": "a6dbd2",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "BG05",
+    "newName": "Light Sea Blue",
+    "oldCode": "G191",
+    "oldName": "Turquoise Blue",
+    "hex": "9dd9dc",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y03",
+    "newName": "Pastel Yellow",
+    "oldCode": "G193",
+    "oldName": "Crescent Yellow",
+    "hex": "f5f3c4",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y14",
+    "newName": "Pale Lemon Yellow",
+    "oldCode": "G195",
+    "oldName": "Pale Lemon Yellow",
+    "hex": "eff0a1",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "G29",
+    "newName": "Faded Green",
+    "oldCode": "G271",
+    "oldName": "Lieberman Green",
+    "hex": "8cb29c",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G49",
+    "newName": "Sour Apple",
+    "oldCode": "G284",
+    "oldName": "Pale Green",
+    "hex": "b3e187",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG29",
+    "newName": "Apple Green",
+    "oldCode": "G287",
+    "oldName": "Apple Green",
+    "hex": "b5c083",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG012",
+    "newName": "Yellow Green",
+    "oldCode": "G289",
+    "oldName": "Yellow Green",
+    "hex": "dae67f",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG07",
+    "newName": "Honeydew Melon",
+    "oldCode": "G291",
+    "oldName": "Celadon Green",
+    "hex": "d9dc93",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG111",
+    "newName": "Celery",
+    "oldCode": "G292",
+    "oldName": "Celery Yellow",
+    "hex": "e1d791",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG66",
+    "newName": "Fresh Green",
+    "oldCode": "G299",
+    "oldName": "Acid Green",
+    "hex": "cce3ae",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG414",
+    "newName": "Dark Fern Green",
+    "oldCode": "G345",
+    "oldName": "Deep Olive Green",
+    "hex": "6f8d70",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG313",
+    "newName": "Camo Green",
+    "oldCode": "G364",
+    "oldName": "Seedling Green",
+    "hex": "94a57b",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG014",
+    "newName": "Matcha",
+    "oldCode": "G369",
+    "oldName": "Matcha Green",
+    "hex": "a1a25a",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G210",
+    "newName": "Sea Green",
+    "oldCode": "G370",
+    "oldName": "Viridian",
+    "hex": "7cb79d",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG211",
+    "newName": "Spearmint",
+    "oldCode": "G382",
+    "oldName": "Pond Green",
+    "hex": "76c8ae",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E03",
+    "newName": "Pale Sage",
+    "oldCode": "G391",
+    "oldName": "Pale Moss",
+    "hex": "eaebdc",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G215",
+    "newName": "Dark Green",
+    "oldCode": "G448",
+    "oldName": "Dark Green",
+    "hex": "507f6f",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G213",
+    "newName": "Rainforest Green",
+    "oldCode": "G458",
+    "oldName": "Hunter Green",
+    "hex": "518f73",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG115",
+    "newName": "Dark Teal",
+    "oldCode": "G460",
+    "oldName": "Deep Sky Blue",
+    "hex": "5496a7",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG212",
+    "newName": "Guacamole",
+    "oldCode": "G468",
+    "oldName": "Petits Pois",
+    "hex": "9e945d",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG312",
+    "newName": "Deep Turquoise",
+    "oldCode": "G471",
+    "oldName": "Mint Green",
+    "hex": "44b2a5",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G310",
+    "newName": "Shamrock Green",
+    "oldCode": "G472",
+    "oldName": "Vivid Green",
+    "hex": "6bb180",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG212",
+    "newName": "Bright Pine Green",
+    "oldCode": "G473",
+    "oldName": "Mint Green Light",
+    "hex": "38b999",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG311",
+    "newName": "Turquoise",
+    "oldCode": "G477",
+    "oldName": "Turquoise Green Light",
+    "hex": "68d0b7",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG510",
+    "newName": "Bud Green",
+    "oldCode": "G479",
+    "oldName": "Bud Green",
+    "hex": "9bcd24",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG010",
+    "newName": "Peacock Blue",
+    "oldCode": "G482",
+    "oldName": "Ice Blue",
+    "hex": "37bebd",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G410",
+    "newName": "Grass Green",
+    "oldCode": "G483",
+    "oldName": "Grass Green",
+    "hex": "91bb76",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG013",
+    "newName": "Chartreuse",
+    "oldCode": "G487",
+    "oldName": "Chartreuse Green",
+    "hex": "c6bc5e",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G24",
+    "newName": "Celadon",
+    "oldCode": "G493",
+    "oldName": "Light Holly Green",
+    "hex": "bdd0bf",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "YG610",
+    "newName": "Bright Lime",
+    "oldCode": "G494",
+    "oldName": "May Green",
+    "hex": "99cd69",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG112",
+    "newName": "Lemon Lime",
+    "oldCode": "G495",
+    "oldName": "Lemon Green",
+    "hex": "dfd478",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG215",
+    "newName": "Thatch Green",
+    "oldCode": "G536",
+    "oldName": "Dark Olive",
+    "hex": "8d8670",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG015",
+    "newName": "Dark Olive",
+    "oldCode": "G554",
+    "oldName": "Bronze Green",
+    "hex": "88895d",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YG114",
+    "newName": "Olive Green",
+    "oldCode": "G578",
+    "oldName": "Deep Yellow Green",
+    "hex": "b2a45b",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG22",
+    "newName": "Mint Mist",
+    "oldCode": "G693",
+    "oldName": "Heksinki Green",
+    "hex": "cee9da",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G312",
+    "newName": "Emerald Green",
+    "oldCode": "G750",
+    "oldName": "Emerald Green",
+    "hex": "13904d",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG24",
+    "newName": "Sea Glass Blue",
+    "oldCode": "G786",
+    "oldName": "Green Shadow",
+    "hex": "bde1cd",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "G34",
+    "newName": "Pale Green",
+    "oldCode": "G794",
+    "oldName": "Yellowish Green",
+    "hex": "c8e5c9",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "G41",
+    "newName": "Peppermint",
+    "oldCode": "G796",
+    "oldName": "Mignonette",
+    "hex": "d4ead0",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G316",
+    "newName": "Deep Jade Green",
+    "oldCode": "G840",
+    "oldName": "Deep Green",
+    "hex": "44756b",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG315",
+    "newName": "Castleton Green",
+    "oldCode": "G850",
+    "oldName": "Forest Green",
+    "hex": "408982",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BG314",
+    "newName": "Peacock Green",
+    "oldCode": "G862",
+    "oldName": "Peacock Green",
+    "hex": "2b948e",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "G315",
+    "newName": "Dark Emerald",
+    "oldCode": "G950",
+    "oldName": "Turquoise Green",
+    "hex": "004b26",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "GG03",
+    "newName": "Silver Cloud",
+    "oldCode": "GG010",
+    "oldName": "Green Grey 010",
+    "hex": "ccdbd8",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "GG05",
+    "newName": "Evergreen Fog",
+    "oldCode": "GG030",
+    "oldName": "Green Grey 030",
+    "hex": "96a9a8",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "BGY15",
+    "newName": "Blue Steel Grey",
+    "oldCode": "GG080",
+    "oldName": "Green Grey 080",
+    "hex": "8e9da2",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "BGY17",
+    "newName": "Cyberspace",
+    "oldCode": "GG090",
+    "oldName": "Green Grey 090",
+    "hex": "748087",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "BV31",
+    "newName": "Cloud Blue",
+    "oldCode": "MG011",
+    "oldName": "Blue Grey 011",
+    "hex": "e0eef4",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B27",
+    "newName": "Fog Blue",
+    "oldCode": "MG030",
+    "oldName": "Blue Grey 030",
+    "hex": "bcd1e0",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "B310",
+    "newName": "Blue Dusk",
+    "oldCode": "MG031",
+    "oldName": "Blue Grey 031",
+    "hex": "a6c1cc",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "B311",
+    "newName": "Stone Blue",
+    "oldCode": "MG060",
+    "oldName": "Blue Grey 060",
+    "hex": "8fafc0",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "B411",
+    "newName": "Rich Slate Blue",
+    "oldCode": "MG069",
+    "oldName": "Blue Grey 069",
+    "hex": "7897a7",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "BGY08",
+    "newName": "Gentleman Grey",
+    "oldCode": "MG109",
+    "oldName": "Blue Grey 109",
+    "hex": "5f7582",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "B415",
+    "newName": "Stormy Night",
+    "oldCode": "MG170",
+    "oldName": "Blue Grey 170",
+    "hex": "53606c",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "RV45",
+    "newName": "Plum Blossom",
+    "oldCode": "R186",
+    "oldName": "Dark Pink",
+    "hex": "d1b2c7",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R54",
+    "newName": "Lavender Fog",
+    "oldCode": "R189",
+    "oldName": "Antique Fuchsia",
+    "hex": "dfc2ce",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "E81",
+    "newName": "Spanish Pink",
+    "oldCode": "R192",
+    "oldName": "Pinkish Vanilla",
+    "hex": "f6d5d2",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "R16",
+    "newName": "Light Salmon",
+    "oldCode": "R193",
+    "oldName": "Fruit Pink",
+    "hex": "f9c3c2",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "YR44",
+    "newName": "Pale Complexion",
+    "oldCode": "R194",
+    "oldName": "Skin White",
+    "hex": "f4ccc0",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR47",
+    "newName": "Dusty Peach",
+    "oldCode": "R195",
+    "oldName": "Pear Color",
+    "hex": "f7c4b9",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR33",
+    "newName": "Rose Cream",
+    "oldCode": "R196",
+    "oldName": "Barely Beige",
+    "hex": "fadacb",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "R15",
+    "newName": "Lychee Juice",
+    "oldCode": "R197",
+    "oldName": "Sardonyx",
+    "hex": "f9bfbb",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "YR54",
+    "newName": "Pink Frost",
+    "oldCode": "R198",
+    "oldName": "Light Salmon Pink",
+    "hex": "fad5cb",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "R612",
+    "newName": "Raisin",
+    "oldCode": "R247",
+    "oldName": "Argyle Purple",
+    "hex": "81636e",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R68",
+    "newName": "Deep Mauve",
+    "oldCode": "R275",
+    "oldName": "Orchid Smoke",
+    "hex": "a5828e",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R57",
+    "newName": "Rose Dust",
+    "oldCode": "R278",
+    "oldName": "Currant",
+    "hex": "c0889e",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R28",
+    "newName": "Pink Carnation",
+    "oldCode": "R293",
+    "oldName": "Pastel Rose",
+    "hex": "ff7e9e",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR58",
+    "newName": "Pink Sand",
+    "oldCode": "R294",
+    "oldName": "Chocolate Pink",
+    "hex": "fabdb2",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV17",
+    "newName": "Pink",
+    "oldCode": "R295",
+    "oldName": "Dark Blush",
+    "hex": "f6a6bd",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R27",
+    "newName": "Pink Satin",
+    "oldCode": "R296",
+    "oldName": "Light Prawn",
+    "hex": "e690ab",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "R613",
+    "newName": "Burgundy Bark",
+    "oldCode": "R341",
+    "oldName": "Russet Brown",
+    "hex": "7d6469",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R210",
+    "newName": "Deep Blush",
+    "oldCode": "R393",
+    "oldName": "Coral Pink",
+    "hex": "ff6565",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R19",
+    "newName": "Amsterdam Rose",
+    "oldCode": "R394",
+    "oldName": "Light Rouge",
+    "hex": "e17b82",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "E714",
+    "newName": "Madder Brown",
+    "oldCode": "R446",
+    "oldName": "Red Bean Paste",
+    "hex": "895a5d",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R513",
+    "newName": "Deep Wine",
+    "oldCode": "R455",
+    "oldName": "Cardinal",
+    "hex": "925b68",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R510",
+    "newName": "Wine Red",
+    "oldCode": "R457",
+    "oldName": "Wine Red",
+    "hex": "8e5768",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R59",
+    "newName": "Wine Berry",
+    "oldCode": "R468",
+    "oldName": "Garnet",
+    "hex": "9c5e73",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R58",
+    "newName": "Garnet Rose",
+    "oldCode": "R480",
+    "oldName": "Garnet Rose",
+    "hex": "b67084",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R48",
+    "newName": "Cherry Rose",
+    "oldCode": "R490",
+    "oldName": "Coral",
+    "hex": "e07488",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R50",
+    "newName": "Orchid Wisp",
+    "oldCode": "R495",
+    "oldName": "Grayish Cherry",
+    "hex": "f8e5eb",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R412",
+    "newName": "Cerise",
+    "oldCode": "R584",
+    "oldName": "Coral Haze",
+    "hex": "ce5872",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R414",
+    "newName": "Light Maroon",
+    "oldCode": "R585",
+    "oldName": "Vivid Red",
+    "hex": "bb667c",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R015",
+    "newName": "Crimson",
+    "oldCode": "R586",
+    "oldName": "Coral Red",
+    "hex": "b14f5a",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R111",
+    "newName": "Hot Pink Carnation",
+    "oldCode": "R588",
+    "oldName": "Scarlet",
+    "hex": "e5727e",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R014",
+    "newName": "Deep Vemilion",
+    "oldCode": "R687",
+    "oldName": "Vermillion",
+    "hex": "df3e35",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R215",
+    "newName": "Morello Cherry",
+    "oldCode": "R865",
+    "oldName": "Geranium",
+    "hex": "a4000a",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R214",
+    "newName": "Cranberry",
+    "oldCode": "R872",
+    "oldName": "Tomato",
+    "hex": "af5065",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YGY01",
+    "newName": "Cornforth White",
+    "oldCode": "RG020",
+    "oldName": "Red Grey 020",
+    "hex": "eae6e3",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "WG24",
+    "newName": "Pavestone Grey",
+    "oldCode": "RG040",
+    "oldName": "Red Grey 040",
+    "hex": "c3bbbc",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "WG08",
+    "newName": "Heathered Grape",
+    "oldCode": "RG080",
+    "oldName": "Red Grey 080",
+    "hex": "8f878f",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "WG05",
+    "newName": "Lavender Grey",
+    "oldCode": "RG140",
+    "oldName": "Red Grey 140",
+    "hex": "d1cbd1",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "WG06",
+    "newName": "Star Dust",
+    "oldCode": "RG160",
+    "oldName": "Red Grey 160",
+    "hex": "aca4ad",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "RV23",
+    "newName": "Pink Wisp",
+    "oldCode": "RV192",
+    "oldName": "Queen Pink",
+    "hex": "f8d7e7",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R23",
+    "newName": "Sakura",
+    "oldCode": "RV193",
+    "oldName": "Shadow Pink",
+    "hex": "fbd4dc",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "RV24",
+    "newName": "Dull Pink",
+    "oldCode": "RV194",
+    "oldName": "Medium Pink",
+    "hex": "f3bbd6",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV31",
+    "newName": "Lilac Mist",
+    "oldCode": "RV195",
+    "oldName": "Cotton Candy",
+    "hex": "f6deeb",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "RV05",
+    "newName": "Pink Pearl",
+    "oldCode": "RV198",
+    "oldName": "Light Pink",
+    "hex": "f8b9d4",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "RV08",
+    "newName": "Pastel Pink",
+    "oldCode": "RV210",
+    "oldName": "Pastel Pink",
+    "hex": "ff91cd",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV18",
+    "newName": "Bubblegum",
+    "oldCode": "RV211",
+    "oldName": "Pale Purple",
+    "hex": "f498b8",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV28",
+    "newName": "Hibiscus Pink",
+    "oldCode": "RV288",
+    "oldName": "Mineral Violet",
+    "hex": "d189ae",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV25",
+    "newName": "Rosy Lilac",
+    "oldCode": "RV295",
+    "oldName": "Hollyhock",
+    "hex": "ecb3d2",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "RV27",
+    "newName": "Orchid Pink",
+    "oldCode": "RV380",
+    "oldName": "Raspberry",
+    "hex": "d88ebd",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R38",
+    "newName": "Rose Pink",
+    "oldCode": "RV390",
+    "oldName": "Rose Pink",
+    "hex": "e58ead",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV09",
+    "newName": "Disco Pink",
+    "oldCode": "RV394",
+    "oldName": "Sakura Pink",
+    "hex": "f286b6",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV19",
+    "newName": "Dahlia Pink",
+    "oldCode": "RV398",
+    "oldName": "Cerise",
+    "hex": "f38ebb",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV514",
+    "newName": "Violet Merlot",
+    "oldCode": "RV457",
+    "oldName": "Bronze Purple",
+    "hex": "956683",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV210",
+    "newName": "Red Violet",
+    "oldCode": "RV477",
+    "oldName": "Calamus Color",
+    "hex": "bd6e9c",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV29",
+    "newName": "Plum Pink",
+    "oldCode": "RV490",
+    "oldName": "Apricot Pink",
+    "hex": "cf7aa5",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV39",
+    "newName": "Bright Fuchsia",
+    "oldCode": "RV497",
+    "oldName": "Bright Pink",
+    "hex": "c776af",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R310",
+    "newName": "Purplish Pink",
+    "oldCode": "RV591",
+    "oldName": "Strawberry Pink",
+    "hex": "cd7598",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV211",
+    "newName": "Dragonfruit Pink",
+    "oldCode": "RV593",
+    "oldName": "Fuchsia",
+    "hex": "d45193",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV111",
+    "newName": "Hot Pink",
+    "oldCode": "RV610",
+    "oldName": "Vivid Pink",
+    "hex": "ed5ea2",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV515",
+    "newName": "Ripe Mulberry",
+    "oldCode": "RV649",
+    "oldName": "Peony",
+    "hex": "895a7d",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R413",
+    "newName": "Amaranth",
+    "oldCode": "RV687",
+    "oldName": "Cherry Pink",
+    "hex": "bf5b75",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R514",
+    "newName": "Prune Juice",
+    "oldCode": "RV757",
+    "oldName": "Old Red",
+    "hex": "8f586c",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV313",
+    "newName": "Dark Pansy",
+    "oldCode": "RV777",
+    "oldName": "Azalea Purple",
+    "hex": "b64597",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "R213",
+    "newName": "Pomegranate",
+    "oldCode": "RV783",
+    "oldName": "Rose Red",
+    "hex": "b9576d",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV212",
+    "newName": "Rich Raspberry",
+    "oldCode": "RV789",
+    "oldName": "Vivid Reddish Purple",
+    "hex": "f5229b",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV04",
+    "newName": "Light Orchid",
+    "oldCode": "RV910",
+    "oldName": "Light Hot Pink",
+    "hex": "f3bfd8",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "RV314",
+    "newName": "Grape Juice",
+    "oldCode": "RV968",
+    "oldName": "Vivid Purple",
+    "hex": "ae0777",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV57",
+    "newName": "Dark lilac",
+    "oldCode": "V185",
+    "oldName": "Deep Lilac",
+    "hex": "d0a7ce",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V35",
+    "newName": "Lavender Silk",
+    "oldCode": "V187",
+    "oldName": "Vine Purple",
+    "hex": "bbbade",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V23",
+    "newName": "Pale Lavender",
+    "oldCode": "V188",
+    "oldName": "Sakura Purple",
+    "hex": "cfc8e2",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V38",
+    "newName": "Deep Periwinkle",
+    "oldCode": "V189",
+    "oldName": "Dark Violet Light",
+    "hex": "a7acd7",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV35",
+    "newName": "Bright Lilac",
+    "oldCode": "V191",
+    "oldName": "Mallow",
+    "hex": "e2c0db",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV32",
+    "newName": "Lilac Blush",
+    "oldCode": "V192",
+    "oldName": "Begonia",
+    "hex": "f7dfec",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "V09",
+    "newName": "Vintage Purple",
+    "oldCode": "V268",
+    "oldName": "Violet",
+    "hex": "9e7db8",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V07",
+    "newName": "Smoky Lavender",
+    "oldCode": "V276",
+    "oldName": "Royal Light",
+    "hex": "a190c4",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV58",
+    "newName": "Deep Lilac",
+    "oldCode": "V280",
+    "oldName": "Jacaranda",
+    "hex": "c492ba",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV18",
+    "newName": "Hydrangea Blue",
+    "oldCode": "V281",
+    "oldName": "Hydrangea Blue",
+    "hex": "a0a7d0",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V18",
+    "newName": "Bright Lavender",
+    "oldCode": "V284",
+    "oldName": "Pastel Violet",
+    "hex": "d293ce",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V24",
+    "newName": "Evening Petunia",
+    "oldCode": "V287",
+    "oldName": "Purple Mallow",
+    "hex": "beb2d8",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V25",
+    "newName": "Violet Rose",
+    "oldCode": "V289",
+    "oldName": "Mentha Purple",
+    "hex": "c3add3",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "V411",
+    "newName": "Lavender Indigo",
+    "oldCode": "V366",
+    "oldName": "Potato Purple",
+    "hex": "938ec5",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V010",
+    "newName": "Faded Violet",
+    "oldCode": "V369",
+    "oldName": "Lavender",
+    "hex": "a76ab7",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV27",
+    "newName": "Bluebell",
+    "oldCode": "V377",
+    "oldName": "Light Purple",
+    "hex": "8b9ace",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V29",
+    "newName": "Dull Violet",
+    "oldCode": "V380",
+    "oldName": "Amethyst",
+    "hex": "9186b5",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV28",
+    "newName": "Bluebonnet",
+    "oldCode": "V381",
+    "oldName": "Blue Bell",
+    "hex": "6c83c1",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V016",
+    "newName": "Eggplant",
+    "oldCode": "V449",
+    "oldName": "Deep Purple",
+    "hex": "776288",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V013",
+    "newName": "Violet",
+    "oldCode": "V460",
+    "oldName": "Signal Violet",
+    "hex": "8a639a",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V015",
+    "newName": "Deep Violet",
+    "oldCode": "V463",
+    "oldName": "Dark Violet",
+    "hex": "887497",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "BV210",
+    "newName": "Blueberry",
+    "oldCode": "V473",
+    "oldName": "Dark Slate Blue",
+    "hex": "5968af",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V413",
+    "newName": "Blue Violet",
+    "oldCode": "V558",
+    "oldName": "Rust Purple",
+    "hex": "7673b1",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV311",
+    "newName": "Pansy",
+    "oldCode": "V567",
+    "oldName": "Light Violet",
+    "hex": "bc0fa1",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV316",
+    "newName": "Grape Jelly",
+    "oldCode": "V651",
+    "oldName": "Deep Violet",
+    "hex": "804e83",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V214",
+    "newName": "Purple",
+    "oldCode": "V660",
+    "oldName": "Blue Violet",
+    "hex": "785ea8",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "RV53",
+    "newName": "Lilac",
+    "oldCode": "V789",
+    "oldName": "Light Peach",
+    "hex": "d9c4df",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V32",
+    "newName": "Icy Periwinkle",
+    "oldCode": "V889",
+    "oldName": "Rain Flower Purple",
+    "hex": "dae4f1",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "V12",
+    "newName": "Dusty Orchid",
+    "oldCode": "V890",
+    "oldName": "Pale Hibiscus",
+    "hex": "e0d3e8",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "V13",
+    "newName": "Greyed Lavender",
+    "oldCode": "V891",
+    "oldName": "Mauve Shadow",
+    "hex": "d9cee4",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YGY13",
+    "newName": "Oyster Grey",
+    "oldCode": "WG050",
+    "oldName": "Warm Grey 050",
+    "hex": "d5d2c8",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "YR02",
+    "newName": "Peach Silk",
+    "oldCode": "WG140",
+    "oldName": "Warm Grey 140",
+    "hex": "fee7d6",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "YGY11",
+    "newName": "Collingwood Grey",
+    "oldCode": "WG150",
+    "oldName": "Warm Grey 150",
+    "hex": "d5d2c8",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "WG23",
+    "newName": "Dorian Grey",
+    "oldCode": "WG160",
+    "oldName": "Warm Grey 160",
+    "hex": "cfcccb",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "WG27",
+    "newName": "Antique Silver",
+    "oldCode": "WG170",
+    "oldName": "Warm Grey 170",
+    "hex": "a3a0a0",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "WG28",
+    "newName": "Jet Grey",
+    "oldCode": "WG180",
+    "oldName": "Warm Grey 180",
+    "hex": "8d898b",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "WG35",
+    "newName": "Peppercorn Grey",
+    "oldCode": "WG190",
+    "oldName": "Warm Grey 190",
+    "hex": "807779",
+    "sets": [
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "WG36",
+    "newName": "Deep Slate Grey",
+    "oldCode": "WG200",
+    "oldName": "Warm Grey 200",
+    "hex": "666063",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "E26",
+    "newName": "Pale Celery",
+    "oldCode": "Y190",
+    "oldName": "Deep Cream",
+    "hex": "e8d0ad",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "Y34",
+    "newName": "Eggnog Yellow",
+    "oldCode": "Y195",
+    "oldName": "Primrose",
+    "hex": "fbf1d9",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "Y02",
+    "newName": "Lemon Chiffon",
+    "oldCode": "Y196",
+    "oldName": "Lemon Chiffon",
+    "hex": "f4eebb",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "Y37",
+    "newName": "Light Wheat",
+    "oldCode": "Y291",
+    "oldName": "Naples Yellow",
+    "hex": "ebca94",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y26",
+    "newName": "Light Gold",
+    "oldCode": "Y295",
+    "oldName": "Barium Yellow",
+    "hex": "fde16d",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y48",
+    "newName": "Light Apricot",
+    "oldCode": "Y396",
+    "oldName": "Primary Yellow",
+    "hex": "edb37e",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "Y08",
+    "newName": "Pineapple",
+    "oldCode": "Y397",
+    "oldName": "Canaria Yellow",
+    "hex": "ecd384",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y615",
+    "newName": "Olive Wood",
+    "oldCode": "Y468",
+    "oldName": "Taffy",
+    "hex": "a38065",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y310",
+    "newName": "Gold Satin",
+    "oldCode": "Y488",
+    "oldName": "Shallow Earth",
+    "hex": "ddb16e",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y27",
+    "newName": "Sunflower",
+    "oldCode": "Y494",
+    "oldName": "Pastel Yellow",
+    "hex": "ffd348",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y28",
+    "newName": "Corn Yellow",
+    "oldCode": "Y495",
+    "oldName": "Lemon Yellow",
+    "hex": "ebae5c",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y416",
+    "newName": "Golden Brown",
+    "oldCode": "Y569",
+    "oldName": "Deep Teak",
+    "hex": "ad7957",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y216",
+    "newName": "Caramel",
+    "oldCode": "Y583",
+    "oldName": "Dark Yellow",
+    "hex": "c68e54",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "Y415",
+    "newName": "Sand Storm",
+    "oldCode": "Y585",
+    "oldName": "Yellow Ocher",
+    "hex": "c89367",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "Y210",
+    "newName": "Pumpkin Yellow",
+    "oldCode": "Y593",
+    "oldName": "Yellow",
+    "hex": "e89b53",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "Y29",
+    "newName": "Melon Yellow",
+    "oldCode": "Y691",
+    "oldName": "Melon Yellow",
+    "hex": "eda14c",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y111",
+    "newName": "Mustard",
+    "oldCode": "Y696",
+    "oldName": "Sunflower",
+    "hex": "f0af42",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y211",
+    "newName": "Deep Yellow",
+    "oldCode": "Y697",
+    "oldName": "Deep Yellow",
+    "hex": "e0944b",
+    "sets": [
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y315",
+    "newName": "Olive Yellow",
+    "oldCode": "Y764",
+    "oldName": "Olive Yellow",
+    "hex": "bd9057",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y213",
+    "newName": "Dark Marigold",
+    "oldCode": "Y792",
+    "oldName": "Marigold",
+    "hex": "e49c01",
+    "sets": [
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YGY21",
+    "newName": "Pearl",
+    "oldCode": "YG010",
+    "oldName": "Yellow Grey 010",
+    "hex": "eae8e1",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YGY22",
+    "newName": "Grey Tint",
+    "oldCode": "YG020",
+    "oldName": "Yellow Grey 020",
+    "hex": "d7d4d2",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YGY24",
+    "newName": "Horizon Grey",
+    "oldCode": "YG030",
+    "oldName": "Yellow Grey 030",
+    "hex": "c8c5c2",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YGY25",
+    "newName": "Sea Salt",
+    "oldCode": "YG040",
+    "oldName": "Yellow Grey 040",
+    "hex": "cacac5",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "gray_36",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "YGY26",
+    "newName": "Cement Grey",
+    "oldCode": "YG051",
+    "oldName": "Yellow Grey 51",
+    "hex": "aaa9a0",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "E111",
+    "newName": "Pewter Green",
+    "oldCode": "YG100",
+    "oldName": "Yellow Grey 100",
+    "hex": "b5a696",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "gray_36"
+    ]
+  },
+  {
+    "newCode": "E215",
+    "newName": "Dark Khaki Green",
+    "oldCode": "YG130",
+    "oldName": "Yellow Grey 130",
+    "hex": "786b5f",
+    "sets": [
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "GG28",
+    "newName": "Rock Bottom Grey",
+    "oldCode": "YG140",
+    "oldName": "Yellow Grey 140",
+    "hex": "727673",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YGY27",
+    "newName": "Deep Horizon Grey",
+    "oldCode": "YG150",
+    "oldName": "Yellow Grey 150",
+    "hex": "9a988e",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR25",
+    "newName": "Powder Orange",
+    "oldCode": "YR196",
+    "oldName": "Powdery Orange",
+    "hex": "fab898",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR52",
+    "newName": "Cameo Rose",
+    "oldCode": "YR198",
+    "oldName": "Carmine Red",
+    "hex": "fae0d7",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "YR07",
+    "newName": "Salmon Orange",
+    "oldCode": "YR295",
+    "oldName": "Salmon Pink",
+    "hex": "ffaf71",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR57",
+    "newName": "Tropical Peach",
+    "oldCode": "YR296",
+    "oldName": "Black Brown",
+    "hex": "ee8354",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR11",
+    "newName": "Peachy Blush",
+    "oldCode": "YR297",
+    "oldName": "Mellow Peach",
+    "hex": "fcdacb",
+    "sets": [
+      "new_120",
+      "classic_320",
+      "pastel_48"
+    ]
+  },
+  {
+    "newCode": "Y411",
+    "newName": "Eggshell Brown",
+    "oldCode": "YR394",
+    "oldName": "Eggshell",
+    "hex": "f2b383",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR38",
+    "newName": "Burnt Ochre",
+    "oldCode": "YR492",
+    "oldName": "Reddish Yellow",
+    "hex": "e5a484",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR510",
+    "newName": "Spicy Salmon",
+    "oldCode": "YR493",
+    "oldName": "Mid Orange",
+    "hex": "f8a390",
+    "sets": [
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR511",
+    "newName": "Pale Coral",
+    "oldCode": "YR494",
+    "oldName": "Peach Pie",
+    "hex": "f69172",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR29",
+    "newName": "Grapefruit",
+    "oldCode": "YR495",
+    "oldName": "Salmon",
+    "hex": "f69476",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR27",
+    "newName": "Peach Cobbler",
+    "oldCode": "YR496",
+    "oldName": "Peach Puff",
+    "hex": "f1a485",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "Y214",
+    "newName": "Sweet Potato",
+    "oldCode": "YR593",
+    "oldName": "Jurassic Gold",
+    "hex": "dc874c",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR09",
+    "newName": "Sandstone",
+    "oldCode": "YR596",
+    "oldName": "Cadmium Yellow",
+    "hex": "f9a375",
+    "sets": [
+      "classic_200",
+      "classic_320",
+      "skin_36"
+    ]
+  },
+  {
+    "newCode": "YR014",
+    "newName": "Tuscan Orange",
+    "oldCode": "YR687",
+    "oldName": "Tuscan Orange",
+    "hex": "da8560",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR110",
+    "newName": "Light Orange",
+    "oldCode": "YR695",
+    "oldName": "Apricot Orange",
+    "hex": "ed8e5c",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR19",
+    "newName": "Marigold Orange",
+    "oldCode": "YR696",
+    "oldName": "Chrome Orange",
+    "hex": "f8ad66",
+    "sets": [
+      "new_120",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR112",
+    "newName": "Orange",
+    "oldCode": "YR792",
+    "oldName": "Orange",
+    "hex": "ff8a28",
+    "sets": [
+      "classic_40",
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  },
+  {
+    "newCode": "YR114",
+    "newName": "Deep Sunset Orange",
+    "oldCode": "YR892",
+    "oldName": "French Vermillion",
+    "hex": "f1735a",
+    "sets": [
+      "classic_60",
+      "classic_80",
+      "classic_100",
+      "classic_120",
+      "classic_160",
+      "classic_200",
+      "classic_320"
+    ]
+  }
+]
