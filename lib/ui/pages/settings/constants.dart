@@ -13,6 +13,12 @@ abstract final class SettingsConstants {
   static const String repositoryUrl =
       'https://github.com/dferrandizmont/ink-lab';
 
+  /// Privacy policy page (Spanish; English lives under `en/`).
+  static const String privacyUrlEs =
+      'https://dferrandizmont.github.io/ink-lab/privacidad/';
+  static const String privacyUrlEn =
+      'https://dferrandizmont.github.io/ink-lab/privacidad/en/';
+
   /// Placeholder of the maximum tokens field.
   static const String aiMaxTokensHint = '1200';
 

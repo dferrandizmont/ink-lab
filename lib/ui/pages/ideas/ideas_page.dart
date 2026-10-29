@@ -7,18 +7,18 @@ import '../../../core/collection_selection.dart';
 import '../../../core/ideas_engine.dart';
 import '../../../core/models.dart';
 import '../../../data/data.dart';
-import '../../icons/ink_icons.dart';
+import '../../../l10n/l10n.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
-import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_search_field.dart';
+import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
 import '../palette/palette_draft.dart';
-import '../../../l10n/l10n.dart';
+import 'idea_detail_sheet.dart';
 
 /// Composition root above the page, or `null` in isolated previews/tests.
 AppScope? _scopeOf(BuildContext context) =>
@@ -26,16 +26,23 @@ AppScope? _scopeOf(BuildContext context) =>
 
 /// The ideas browser.
 ///
-/// Lists the presets of [IdeasEngine] grouped by category, filters them with a
-/// search box and shows the selected preset's plan (overview, steps,
-/// embellishments and, when the preset is palette-ready, its suggested
-/// palette). "Apply to Palette" hands the palette to the Palette page through
-/// the shared [paletteDraft] notifier.
+/// Drawing exercises for alcohol markers, by category, with the idea of the
+/// day on top. Every exercise picks its palette from the user's own markers
+/// (with real light → dark roles); tapping one opens its detail sheet, and
+/// "Use in Palette" hands the palette, roles included, to the Palette page
+/// through [paletteDraft] and switches to that tab.
 class IdeasPage extends StatefulWidget {
-  const IdeasPage({super.key});
+  const IdeasPage({super.key, this.onOpenPalette, this.today});
 
   /// Key of the page body, handy for tests and for state restoration.
   static const Key pageKey = Key('ideas-page');
+
+  /// Opens the Palette tab after a palette was handed over (wired by the app
+  /// shell; null in isolated previews and tests).
+  final VoidCallback? onOpenPalette;
+
+  /// The day of the "idea of the day"; defaults to now (tests pin it).
+  final DateTime? today;
 
   @override
   State<IdeasPage> createState() => _IdeasPageState();
@@ -48,15 +55,21 @@ class _IdeasPageState extends State<IdeasPage> {
 
   MarkerBrand _brand = MarkerBrand.ohuhuOahu;
   List<MarkerColor> _available = const <MarkerColor>[];
+
+  /// True while the palette comes from the whole range because the active
+  /// brand has no collection configured.
+  bool _wholeRange = false;
   bool _loading = true;
 
   IdeaCategory? _category;
   String _query = '';
   final TextEditingController _searchController = TextEditingController();
 
-  String? _selectedPresetId;
-  IdeaPlan? _plan;
-  static const int _paletteSize = 5;
+  /// Plans with the first pick of markers, one per preset, for the strips.
+  final Map<String, IdeaPlan> _plans = <String, IdeaPlan>{};
+
+  /// A new draw of random markers every time the page opens.
+  final int _sessionSeed = DateTime.now().millisecondsSinceEpoch & 0x7fffffff;
 
   @override
   void didChangeDependencies() {
@@ -103,18 +116,35 @@ class _IdeasPageState extends State<IdeasPage> {
       catalog = const <MarkerColor>[];
     }
     if (!mounted) return;
+    final bool hasCollection = ownedColors(
+      colors: catalog,
+      brand: brand,
+      ownedSetIds: settings.effectiveSetIds(),
+      ownedMarkerCodes: settings.ownedMarkerCodes,
+    ).isNotEmpty;
     setState(() {
       _brand = brand;
+      _wholeRange = !hasCollection;
       _available = paletteCandidateColors(
         colors: catalog,
         brand: brand,
         activeSetIds: settings.effectiveSetIds(),
         ownedMarkerCodes: settings.ownedMarkerCodes,
       );
-      _plan = null;
+      _plans.clear();
       _loading = false;
     });
   }
+
+  /// The first seed of [preset]: random markers change every session, the
+  /// others start from the best pick.
+  int _seedFor(IdeaPreset preset) =>
+      preset.id == 'random_colors' ? _sessionSeed : 0;
+
+  IdeaPlan _planFor(IdeaPreset preset) => _plans.putIfAbsent(
+    preset.id,
+    () => IdeasEngine.generatePlan(preset, _available, seed: _seedFor(preset)),
+  );
 
   List<IdeaPreset> get _filteredPresets {
     final query = _query.trim().toLowerCase();
@@ -126,33 +156,41 @@ class _IdeasPageState extends State<IdeasPage> {
     }).toList();
   }
 
-  void _selectPreset(IdeaPreset preset) {
-    setState(() {
-      _selectedPresetId = preset.id;
-      _plan = null;
-    });
+  Future<void> _open(IdeaPreset preset) async {
+    final IdeaPlan initial = _planFor(preset);
+    final IdeaPlan? applied = await showInkSheet<IdeaPlan>(
+      context: context,
+      builder: (BuildContext context) => IdeaDetailSheet(
+        initial: initial,
+        candidates: _available,
+        brand: _brand,
+      ),
+    );
+    if (applied == null || !mounted) return;
+    _applyToPalette(applied);
   }
 
-  void _generate(IdeaPreset preset) {
-    setState(() {
-      _plan = IdeasEngine.generatePlan(preset, _available, _paletteSize);
-    });
-  }
-
-  void _applyToPalette() {
-    final plan = _plan;
-    if (plan == null || plan.palette.isEmpty) return;
-    paletteDraft.value = <MarkerColor>[
-      for (final suggestion in plan.palette) suggestion.color,
-    ];
-    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+  /// Hands the palette (roles and reasons included) to the Palette page,
+  /// opens that tab and confirms it with a snackbar.
+  void _applyToPalette(IdeaPlan plan) {
+    if (plan.palette.isEmpty) return;
+    final String title = context.l10n.ideaTitle(plan.preset);
+    paletteDraft.value = PaletteDraft(suggestions: plan.palette, title: title);
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    final String sent = context.l10n.ideasPaletteSent(title);
+    _openPaletteTab();
+    messenger?.hideCurrentSnackBar();
+    messenger?.showSnackBar(
       SnackBar(
-        content: Text(
-          context.l10n.ideasPaletteSent(context.l10n.ideaTitle(plan.preset)),
-        ),
+        key: const ValueKey<String>('ideas-palette-sent'),
+        content: Text(sent),
       ),
     );
   }
+
+  void _openPaletteTab() => widget.onOpenPalette?.call();
 
   // ---------------------------------------------------------------------------
   // Build
@@ -178,10 +216,10 @@ class _IdeasPageState extends State<IdeasPage> {
     }
 
     final List<IdeaPreset> filtered = _filteredPresets;
-    IdeaPreset? selected;
-    for (final IdeaPreset preset in filtered) {
-      if (preset.id == _selectedPresetId) selected = preset;
-    }
+    final bool browsing = _category == null && _query.trim().isEmpty;
+    final IdeaPreset featured = IdeasEngine.featuredFor(
+      widget.today ?? DateTime.now(),
+    );
 
     return Column(
       key: IdeasPage.pageKey,
@@ -191,6 +229,8 @@ class _IdeasPageState extends State<IdeasPage> {
           title: context.l10n.ideasTitle,
           subtitle: _available.isEmpty
               ? context.l10n.ideasNoMarkers
+              : _wholeRange
+              ? context.l10n.ideasHeaderSubtitleWholeRange
               : context.l10n.ideasHeaderSubtitle,
         ),
         Padding(
@@ -216,10 +256,15 @@ class _IdeasPageState extends State<IdeasPage> {
               bottom: InkSpacing.pageBottom,
             ),
             children: <Widget>[
-              if (selected != null)
-                _inset(_buildSelectedCard(selected))
-              else if (filtered.isNotEmpty && _selectedPresetId == null)
-                _inset(_Hint(message: context.l10n.ideasSelectHint)),
+              if (browsing)
+                _inset(
+                  _FeaturedCard(
+                    key: ValueKey<String>('ideas-featured-${featured.id}'),
+                    preset: featured,
+                    plan: _planFor(featured),
+                    onOpen: () => _open(featured),
+                  ),
+                ),
               if (filtered.isEmpty)
                 EmptyState(
                   title: context.l10n.ideasEmptyTitle,
@@ -236,14 +281,13 @@ class _IdeasPageState extends State<IdeasPage> {
                         _IdeaRow(
                           key: ValueKey<String>('ideas-preset-${preset.id}'),
                           preset: preset,
-                          selected: preset.id == _selectedPresetId,
-                          onTap: () => _selectPreset(preset),
+                          plan: _planFor(preset),
+                          showCategory: _category == null,
+                          onTap: () => _open(preset),
                         ),
                     ],
                   ),
-                  top: selected != null || _selectedPresetId == null
-                      ? InkSpacing.block
-                      : 0,
+                  top: browsing ? InkSpacing.block : 0,
                 ),
             ],
           ),
@@ -285,42 +329,61 @@ class _IdeasPageState extends State<IdeasPage> {
       ],
     );
   }
+}
 
-  /// The selected idea: label and type, title, summary, then its plan.
-  Widget _buildSelectedCard(IdeaPreset preset) {
+/// `TECHNIQUES · EASY · 15 MIN` (the category is left out inside a tab).
+String ideaMetaLine(
+  BuildContext context,
+  IdeaPreset preset, {
+  bool withCategory = true,
+}) {
+  final AppLocalizations l10n = context.l10n;
+  return AppTypography.caps(
+    <String>[
+      if (withCategory) l10n.ideaCategoryLabel(preset.category),
+      l10n.ideaDifficultyLabel(preset.difficulty),
+      l10n.ideasMinutes(preset.minutes),
+    ].join(' · '),
+  );
+}
+
+/// The idea of the day: the same preset all day, with its palette and a
+/// button to its steps (design G "Featured" card).
+class _FeaturedCard extends StatelessWidget {
+  const _FeaturedCard({
+    super.key,
+    required this.preset,
+    required this.plan,
+    required this.onOpen,
+  });
+
+  final IdeaPreset preset;
+  final IdeaPlan plan;
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
-    final IdeaPlan? plan = _plan;
-    final bool paletteReady =
-        preset.outputMode == IdeaOutputMode.guideAndPalette;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(InkSpacing.s16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    AppTypography.caps(context.l10n.ideasSelectedLabel),
-                    style: AppTypography.capsStyle.copyWith(color: ink.action),
-                  ),
-                ),
-                Text(
-                  AppTypography.caps(_typeLabel(context, preset)),
-                  style: AppTypography.capsStyle.copyWith(color: ink.fg2),
-                ),
-              ],
+            Text(
+              AppTypography.caps(context.l10n.ideasFeaturedLabel),
+              style: AppTypography.capsStyle.copyWith(color: ink.action),
+            ),
+            const SizedBox(height: InkSpacing.s4),
+            Text(
+              ideaMetaLine(context, preset),
+              style: AppTypography.capsStyle.copyWith(color: ink.fg2),
             ),
             const SizedBox(height: InkSpacing.group),
             Semantics(
               header: true,
               child: Text(
                 context.l10n.ideaTitle(preset),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
                 style: AppTypography.sheetTitle.copyWith(color: ink.fg),
               ),
             ),
@@ -329,164 +392,44 @@ class _IdeasPageState extends State<IdeasPage> {
               context.l10n.ideaSummary(preset),
               style: AppTypography.secondary.copyWith(color: ink.fg2),
             ),
+            if (plan.palette.isNotEmpty) ...<Widget>[
+              const SizedBox(height: InkSpacing.block),
+              PaletteStrip(
+                colors: <String>[for (final s in plan.palette) s.color.hex],
+                colorHeight: 32,
+                radius: InkRadii.control,
+              ),
+            ],
             const SizedBox(height: InkSpacing.block),
             Align(
               alignment: Alignment.centerLeft,
               child: InkButton(
-                key: ValueKey<String>('ideas-generate-${preset.id}'),
-                variant: plan == null
-                    ? InkButtonVariant.primary
-                    : InkButtonVariant.secondary,
-                label: paletteReady
-                    ? context.l10n.ideasGenerateIdea
-                    : context.l10n.ideasShowTechnique,
-                onPressed: () => _generate(preset),
+                key: ValueKey<String>('ideas-open-${preset.id}'),
+                label: context.l10n.ideasOpenButton,
+                onPressed: onOpen,
               ),
             ),
-            if (paletteReady && _available.isEmpty) ...<Widget>[
-              const SizedBox(height: InkSpacing.block),
-              Text(
-                _brand == MarkerBrand.decoTime
-                    ? context.l10n.ideasNoMarkersDecoTime
-                    : context.l10n.ideasNoMarkersOther,
-                style: AppTypography.secondary.copyWith(color: ink.fg2),
-              ),
-            ],
-            if (plan != null) ..._buildPlan(plan),
-            if (plan != null && plan.palette.isNotEmpty) ...<Widget>[
-              const SizedBox(height: InkSpacing.s24),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: PaletteStrip(
-                      colors: <String>[
-                        for (final suggestion in plan.palette)
-                          suggestion.color.hex,
-                      ],
-                      colorHeight: 44,
-                    ),
-                  ),
-                  const SizedBox(width: InkSpacing.buttonGap),
-                  InkButton(
-                    key: ValueKey<String>('ideas-apply-${preset.id}'),
-                    label: context.l10n.ideasApplyButton,
-                    trailingIcon: InkIcons.arrowRight,
-                    onPressed: _applyToPalette,
-                  ),
-                ],
-              ),
-            ],
           ],
         ),
       ),
     );
   }
-
-  List<Widget> _buildPlan(IdeaPlan plan) {
-    final InkColors ink = InkColors.of(context);
-    final List<String> steps = context.l10n.ideaStepsText(plan.preset.id);
-    Widget caps(String text) => Padding(
-      padding: const EdgeInsets.only(
-        top: InkSpacing.s24,
-        bottom: InkSpacing.group,
-      ),
-      child: Text(
-        AppTypography.caps(text),
-        style: AppTypography.capsStyle.copyWith(color: ink.fg2),
-      ),
-    );
-    return <Widget>[
-      caps(context.l10n.ideasHowToTitle),
-      Text(
-        context.l10n.ideaOverviewText(plan.preset.id),
-        style: AppTypography.secondary.copyWith(color: ink.fg2),
-      ),
-      const SizedBox(height: InkSpacing.s12),
-      for (var index = 0; index < steps.length; index++)
-        _StepRow(number: index + 1, text: steps[index]),
-      caps(context.l10n.ideasExtraTouchesTitle),
-      for (final tip in context.l10n.ideaEmbellishmentsText(plan.preset.id))
-        Padding(
-          padding: const EdgeInsets.only(bottom: InkSpacing.group),
-          child: Text(
-            tip,
-            style: AppTypography.secondary.copyWith(color: ink.fg),
-          ),
-        ),
-      if (plan.palette.isEmpty)
-        Padding(
-          padding: const EdgeInsets.only(top: InkSpacing.block),
-          child: Text(
-            context.l10n.ideasGuideOnlyNote,
-            style: AppTypography.secondary.copyWith(color: ink.fg2),
-          ),
-        )
-      else ...<Widget>[
-        caps(context.l10n.ideasSuggestedColorsTitle),
-        for (final suggestion in plan.palette)
-          _IdeaColorRow(
-            color: suggestion.color,
-            reason: context.l10n.reasonLabel(suggestion.reason),
-          ),
-      ],
-    ];
-  }
 }
 
-String _typeLabel(BuildContext context, IdeaPreset preset) =>
-    preset.outputMode == IdeaOutputMode.guideOnly
-    ? context.l10n.ideasBadgeGuideOnly
-    : context.l10n.ideasBadgeGuideAndPalette;
-
-/// A numbered step of a plan.
-class _StepRow extends StatelessWidget {
-  const _StepRow({required this.number, required this.text});
-
-  final int number;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final InkColors ink = InkColors.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: InkSpacing.group),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            width: 12,
-            child: Padding(
-              padding: const EdgeInsets.only(top: InkSpacing.s2),
-              child: Text(
-                '$number',
-                style: AppTypography.data.copyWith(color: ink.fg2),
-              ),
-            ),
-          ),
-          const SizedBox(width: InkSpacing.s12),
-          Expanded(
-            child: Text(
-              text,
-              style: AppTypography.secondary.copyWith(color: ink.fg),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// A hairline-separated list row: type, title and a one-line summary.
+/// A hairline-separated list row: meta line with the mini strip of its
+/// markers, title and summary.
 class _IdeaRow extends StatelessWidget {
   const _IdeaRow({
     super.key,
     required this.preset,
-    required this.selected,
+    required this.plan,
+    required this.showCategory,
     required this.onTap,
   });
 
   final IdeaPreset preset;
-  final bool selected;
+  final IdeaPlan plan;
+  final bool showCategory;
   final VoidCallback onTap;
 
   @override
@@ -498,7 +441,6 @@ class _IdeaRow extends StatelessWidget {
       ),
       child: Semantics(
         button: true,
-        selected: selected,
         child: InkWell(
           onTap: onTap,
           child: Padding(
@@ -506,15 +448,35 @@ class _IdeaRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  AppTypography.caps(
-                    '${context.l10n.ideaCategoryLabel(preset.category)} · ${_typeLabel(context, preset)}',
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTypography.capsStyle.copyWith(
-                    color: selected ? ink.action : ink.fg2,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        ideaMetaLine(
+                          context,
+                          preset,
+                          withCategory: showCategory,
+                        ),
+                        style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+                      ),
+                    ),
+                    if (plan.palette.isNotEmpty) ...<Widget>[
+                      const SizedBox(width: InkSpacing.s12),
+                      ExcludeSemantics(
+                        child: SizedBox(
+                          width: 72,
+                          child: PaletteStrip(
+                            colors: <String>[
+                              for (final s in plan.palette) s.color.hex,
+                            ],
+                            colorHeight: 14,
+                            radius: InkRadii.xs,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: InkSpacing.s4),
                 Text(
@@ -524,8 +486,6 @@ class _IdeaRow extends StatelessWidget {
                 const SizedBox(height: InkSpacing.s4),
                 Text(
                   context.l10n.ideaSummary(preset),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                   style: AppTypography.secondary.copyWith(color: ink.fg2),
                 ),
               ],
@@ -533,81 +493,6 @@ class _IdeaRow extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// A suggested color of an idea, with its role/reason.
-class _IdeaColorRow extends StatelessWidget {
-  const _IdeaColorRow({required this.color, required this.reason});
-
-  final MarkerColor color;
-  final String reason;
-
-  @override
-  Widget build(BuildContext context) {
-    final InkColors ink = InkColors.of(context);
-    return Semantics(
-      container: true,
-      label: '${color.newCode}, ${color.newName}, $reason',
-      child: ExcludeSemantics(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: InkSpacing.buttonGap),
-          child: Row(
-            children: <Widget>[
-              SwatchBlock(hex: color.hex, size: 36),
-              const SizedBox(width: InkSpacing.s12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          color.newCode,
-                          style: AppTypography.code.copyWith(color: ink.fg),
-                        ),
-                        const SizedBox(width: InkSpacing.s8),
-                        Expanded(
-                          child: Text(
-                            color.newName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.secondary.copyWith(
-                              color: ink.fg2,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: InkSpacing.s4),
-                    Text(
-                      reason,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.secondary.copyWith(color: ink.fg),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Hint extends StatelessWidget {
-  const _Hint({required this.message});
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      message,
-      style: AppTypography.secondary.copyWith(color: InkColors.of(context).fg2),
     );
   }
 }

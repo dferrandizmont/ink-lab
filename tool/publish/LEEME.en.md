@@ -47,7 +47,7 @@ Included: the Flutter code, the Android and iOS native projects, tests, the
 catalogues and fonts in `assets/`, CI, READMEs, licences, security and privacy
 documents, the legal web pages and the technical contribution contracts
 (`docs/ARCHITECTURE.md`, `docs/RELEASING.md`, `docs/privacy*.md`, `docs/legal/`).
-Public contribution rules are in `CONTRIBUTING.md` and `CONTRIBUTING.en.md`.
+Public contribution rules are in `CONTRIBUTING.md` and `CONTRIBUTING.es.md`.
 
 Excluded:
 
@@ -125,6 +125,7 @@ images and final identity before any publication. Publishing is a separate step.
 
 ```sh
 python -B tool/publish/test_export_public.py
+python -B tool/publish/test_update_public.py
 sh tool/publish/export_public.sh HEAD /empty/path/ink-lab-public
 cd /empty/path/ink-lab-public
 python -B web/legal/test_legal.py
@@ -149,15 +150,26 @@ publication of `dferrandizmont/ink-lab`:
    `git push -u origin main`.
 3. Enable GitHub Pages with the contents of `web/legal/dist/` (`web/legal/LEEME.md`).
 
-To publish later changes while keeping the public history:
+To publish later changes while keeping the public history, use the update mode
+(it uses no network and does not push):
 
-1. Export `HEAD` to an empty folder: `sh tool/publish/export_public.sh HEAD ../il-public-export`.
-2. In the public clone (`../ink-lab-public`, up to date with `origin/main`), replace the whole tree:
-   `git rm -r -q --cached .`, delete everything except `.git`, extract the export with
-   `(cd ../il-public-export && git archive HEAD) | tar -x -C .`, then `git add -A`.
-3. Commit **in English** with the public identity:
-   `git -c user.name="Daniel Mont Ferrandiz" -c user.email="dev@mainshai.com" commit -m "<summary>"`.
-4. `git push origin main` (with the owner's go-ahead) and delete `../il-public-export`.
+1. Prepare the commit's `CHANGELOG.md`: a `## X.Y.Z · date` section with the version's
+   bullets (the "Unreleased" section is renamed when you publish). Its bullets become the
+   public commit body.
+2. Clone (or refresh with `git pull --ff-only`) the public repository in a folder
+   outside this repository: `git clone https://github.com/dferrandizmont/ink-lab.git ../ink-lab-public`.
+3. With the candidate already committed (`HEAD` or a specific commit) run:
+   `sh tool/publish/update_public.sh HEAD ../ink-lab-public "0.4.0"`.
+   The script exports the allowlisted tree of the commit with **the same scanners** as
+   `export_public.sh`, replaces the clone's tree (keeping `.git`) and creates **one single
+   commit** `Ink Lab 0.4.0` with the public identity (`PUBLIC_AUTHOR_NAME` and
+   `PUBLIC_AUTHOR_EMAIL` override it, as in the export) and the changelog bullets as body.
+   It refuses if the clone has local changes or ignored files, if `origin` (or any
+   remote) is not `github.com/dferrandizmont/ink-lab`, if it is behind `origin/main`, if
+   HEAD is detached, if the changelog has no such version, or if nothing changed. On any
+   failure the clone is left as it was.
+4. Review `git show --stat HEAD` in the clone and, with the owner's go-ahead,
+   `git push origin main`.
 
 Public releases carry the APKs signed with the upload key (`docs/RELEASING.md`), with
 `SHA256SUMS.txt` and the certificate SHA-256 fingerprint in the notes, in Spanish and English.

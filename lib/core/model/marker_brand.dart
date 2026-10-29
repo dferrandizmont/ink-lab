@@ -6,7 +6,8 @@ enum MarkerBrand {
   /// "Oahu" spelling so colour ids (`ohuhu_oahu:BV04`), favourites, owned
   /// markers, saved palettes and backups keep working; the brand itself now
   /// covers the [MarkerLine]s Oahu, Honolulu and Kaala (`ohuhu_colors.json`).
-  ohuhuOahu('ohuhu_oahu', 'Ohuhu Oahu', 'ohuhu_colors.json', MarkerLine.values),
+  /// Its label is "Ohuhu": Oahu is one of its series, never the brand.
+  ohuhuOahu('ohuhu_oahu', 'Ohuhu', 'ohuhu_colors.json', MarkerLine.values),
   decoTime('decotime', 'DecoTime', 'decotime_colors.json');
 
   const MarkerBrand(

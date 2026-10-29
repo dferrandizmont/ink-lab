@@ -7,7 +7,7 @@ import 'tokens.dart';
 ///
 /// Flat: no surface tint, no elevation overlays, no shadows. Every colour
 /// comes from [InkColors]; component themes are set so that stock Material
-/// widgets already follow the spec (pill buttons and chips, 1 px borders,
+/// widgets already follow the spec (8-radius buttons and chips, 1 px borders,
 /// pale active tokens).
 abstract final class AppTheme {
   /// The light theme. The legacy `accent` / `selection` parameters are
@@ -70,7 +70,10 @@ abstract final class AppTheme {
       bodyColor: c.fg,
       displayColor: c.fg,
     );
-    const StadiumBorder pill = StadiumBorder();
+    // Design G small radius family: controls are 8-radius rectangles, no pills.
+    const RoundedRectangleBorder control = RoundedRectangleBorder(
+      borderRadius: InkRadii.controlRadius,
+    );
     final BorderSide lineSide = BorderSide(color: c.line);
     final BorderSide strongSide = BorderSide(color: c.strong);
     final TextStyle button = AppTypography.button;
@@ -164,7 +167,7 @@ abstract final class AppTheme {
         shadowColor: Colors.transparent,
         elevation: 0,
         indicatorColor: c.pale,
-        indicatorShape: pill,
+        indicatorShape: control,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (Set<WidgetState> s) => AppTypography.nav.copyWith(
@@ -183,7 +186,7 @@ abstract final class AppTheme {
         elevation: 0,
         useIndicator: true,
         indicatorColor: c.pale,
-        indicatorShape: pill,
+        indicatorShape: control,
         selectedIconTheme: IconThemeData(color: c.action, size: 24),
         unselectedIconTheme: IconThemeData(color: c.fg2, size: 24),
         selectedLabelTextStyle: AppTypography.nav.copyWith(color: c.action),
@@ -197,7 +200,7 @@ abstract final class AppTheme {
           disabledForegroundColor: c.fg2,
           minimumSize: const Size(InkGeometry.target, InkGeometry.buttonHeight),
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          shape: pill,
+          shape: control,
           elevation: 0,
           shadowColor: Colors.transparent,
           textStyle: button,
@@ -212,7 +215,7 @@ abstract final class AppTheme {
           disabledForegroundColor: c.fg2,
           minimumSize: const Size(InkGeometry.target, InkGeometry.buttonHeight),
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          shape: pill,
+          shape: control,
           elevation: 0,
           shadowColor: Colors.transparent,
           surfaceTintColor: Colors.transparent,
@@ -227,7 +230,7 @@ abstract final class AppTheme {
           side: strongSide,
           minimumSize: const Size(InkGeometry.target, InkGeometry.buttonHeight),
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          shape: pill,
+          shape: control,
           textStyle: button,
           iconSize: InkGeometry.smallIcon,
         ),
@@ -238,7 +241,7 @@ abstract final class AppTheme {
           disabledForegroundColor: c.fg2,
           minimumSize: const Size(InkGeometry.target, InkGeometry.buttonHeight),
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          shape: pill,
+          shape: control,
           textStyle: button,
           iconSize: InkGeometry.smallIcon,
         ),
@@ -259,7 +262,7 @@ abstract final class AppTheme {
         focusElevation: 0,
         hoverElevation: 0,
         highlightElevation: 0,
-        shape: pill,
+        shape: control,
       ),
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
@@ -269,7 +272,7 @@ abstract final class AppTheme {
           padding: const WidgetStatePropertyAll<EdgeInsetsGeometry>(
             EdgeInsets.symmetric(horizontal: 12),
           ),
-          shape: const WidgetStatePropertyAll<OutlinedBorder>(pill),
+          shape: const WidgetStatePropertyAll<OutlinedBorder>(control),
           side: WidgetStatePropertyAll<BorderSide>(strongSide),
           textStyle: WidgetStatePropertyAll<TextStyle>(button),
           backgroundColor: WidgetStateProperty.resolveWith(
@@ -300,7 +303,7 @@ abstract final class AppTheme {
         shadowColor: Colors.transparent,
         selectedShadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
-        shape: pill,
+        shape: control,
         side: WidgetStateBorderSide.resolveWith(
           (Set<WidgetState> s) => BorderSide(
             color: s.contains(WidgetState.selected) ? c.pale : c.line,

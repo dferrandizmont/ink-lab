@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
+import 'package:ink_lab/core/ideas_engine.dart';
 import 'package:ink_lab/core/models.dart';
+import 'package:ink_lab/core/palette_advisor.dart';
 import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
@@ -116,10 +118,7 @@ void main() {
     );
 
     await enterBaseCode(tester, '05');
-    expect(
-      find.textContaining('is not in your owned DecoTime markers'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('is not in your collection'), findsOneWidget);
 
     await enterBaseCode(tester, '02');
     expect(find.textContaining('Combinations ('), findsOneWidget);
@@ -215,10 +214,21 @@ void main() {
     WidgetTester tester,
   ) async {
     addTearDown(() => paletteDraft.value = null);
-    paletteDraft.value = <MarkerColor>[
-      markerColor('AA1', '#ff0000'),
-      markerColor('AA2', '#00ff00'),
-    ];
+    paletteDraft.value = PaletteDraft(
+      title: 'Two-marker challenge',
+      suggestions: <PaletteSuggestion>[
+        PaletteSuggestion(
+          color: markerColor('AA1', '#ffcccc'),
+          reason: IdeaRoles.reasonFor(IdeaRoles.light),
+          role: IdeaRoles.light,
+        ),
+        PaletteSuggestion(
+          color: markerColor('AA2', '#660000'),
+          reason: IdeaRoles.reasonFor(IdeaRoles.shadow),
+          role: IdeaRoles.shadow,
+        ),
+      ],
+    );
 
     await pumpPalette(tester);
     await tester.pumpAndSettle();
@@ -226,7 +236,19 @@ void main() {
     expect(paletteDraft.value, isNull);
     expect(find.text('AA1'), findsWidgets);
     expect(find.text('AA2'), findsWidgets);
-    expect(find.textContaining('Ideas palette applied'), findsOneWidget);
+    expect(
+      find.text(l10n.paletteIdeaApplied('Two-marker challenge', 2)),
+      findsOneWidget,
+    );
+    // The roles and reasons of the idea are kept, not "Applied from Ideas".
+    expect(
+      find.text(l10n.reasonLabel(IdeaRoles.reasonFor(IdeaRoles.light))),
+      findsWidgets,
+    );
+    expect(
+      find.textContaining(l10n.reasonLabel('Applied from Ideas')),
+      findsNothing,
+    );
   });
 
   testWidgets('locks a colour so a variation keeps it', (
@@ -247,5 +269,88 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byTooltip(l10n.paletteUnlockButton), findsOneWidget);
     expect(find.textContaining('variation applied'), findsOneWidget);
+  });
+
+  testWidgets('the base marker can be picked from a searchable list', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(tester);
+
+    await tester.tap(find.byKey(const ValueKey<String>('palette-pick-base')));
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey<String>('palette-base-picker')),
+      findsOneWidget,
+    );
+
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('palette-picker-search')),
+      'B08',
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('palette-picker-B08')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey<String>('palette-base-picker')),
+      findsNothing,
+    );
+    final TextField field = tester.widget(
+      find.byKey(const ValueKey<String>('palette-base-input')),
+    );
+    expect(field.controller!.text, 'B08');
+    expect(find.byType(PaletteStrip), findsWidgets);
+  });
+
+  testWidgets('"Add to palette" from Swatches can be undone', (
+    WidgetTester tester,
+  ) async {
+    addTearDown(() => paletteBaseDraft.value = null);
+    await pumpPalette(tester);
+    await enterBaseCode(tester, 'B08');
+    expect(find.byType(PaletteStrip), findsWidgets);
+
+    final MarkerColor other = markerColor('R16', '#f2a6a0');
+    paletteBaseDraft.value = other;
+    await tester.pumpAndSettle();
+
+    final TextField field = tester.widget(
+      find.byKey(const ValueKey<String>('palette-base-input')),
+    );
+    expect(field.controller!.text, 'R16');
+    expect(find.text(l10n.paletteBaseReplaced('R16')), findsOneWidget);
+
+    await tester.tap(find.text(l10n.paletteUndoButton));
+    await tester.pumpAndSettle();
+    expect(field.controller!.text, 'B08');
+  });
+
+  testWidgets('"Add to palette" on an empty palette just sets the base', (
+    WidgetTester tester,
+  ) async {
+    addTearDown(() => paletteBaseDraft.value = null);
+    await pumpPalette(tester);
+
+    paletteBaseDraft.value = markerColor('B08', '#9fd6ee');
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.paletteBaseReplaced('B08')), findsNothing);
+  });
+
+  testWidgets('the empty state points to the Scenes chip, which is near', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(tester);
+
+    expect(find.text(l10n.paletteEmptyHint), findsOneWidget);
+    expect(l10n.paletteEmptyHint, contains(l10n.paletteScenarioToggle));
+    final double recommended = tester
+        .getRect(find.byKey(const ValueKey<String>('palette-mode-recommended')))
+        .right;
+    final double scenes = tester
+        .getRect(find.byKey(const ValueKey<String>('palette-scenario-toggle')))
+        .left;
+    expect(scenes, greaterThan(recommended));
+    expect(scenes - recommended, lessThan(24));
   });
 }

@@ -1,14 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+import '../../app_scope.dart';
+import '../../data/data.dart';
+
 import '../../core/models.dart';
+import '../../core/palette_advisor.dart' show PaletteSuggestion;
 import '../../l10n/l10n.dart';
 import '../icons/ink_icons.dart';
+import '../pages/collection/collection_page.dart';
 import '../pages/ideas/ideas_page.dart';
 import '../pages/match/match_page.dart';
 import '../pages/palette/palette_draft.dart';
 import '../pages/palette/palette_page.dart';
 import '../pages/settings/settings_page.dart';
-import '../pages/settings/settings_target.dart';
 import '../pages/swatches/swatches_page.dart';
 import '../theme/app_typography.dart';
 import '../theme/tokens.dart';
@@ -44,8 +50,8 @@ class AppDestination {
 /// Index of the Palette destination in [appDestinations].
 const int _paletteIndex = 2;
 
-/// Index of the Settings destination in [appDestinations].
-const int _settingsIndex = 4;
+/// Index of the Ideas destination in [appDestinations].
+const int _ideasIndex = 3;
 
 Widget _buildSwatches(BuildContext context) => SwatchesPage(
   onAddToPalette: (MarkerColor color) {
@@ -53,19 +59,17 @@ Widget _buildSwatches(BuildContext context) => SwatchesPage(
     paletteBaseDraft.value = color;
     context.findAncestorStateOfType<_AppShellState>()?._goTo(_paletteIndex);
   },
-  onOpenOwnedMarkers: () {
-    // Ask Settings to bring the owned markers manager into view, then open
-    // the tab.
-    settingsTarget.value = SettingsTarget.ownedMarkers;
-    context.findAncestorStateOfType<_AppShellState>()?._goTo(_settingsIndex);
-  },
+  onOpenCollection: () => CollectionPage.open(context),
 );
 
 Widget _buildMatch(BuildContext context) => const MatchPage();
 
 Widget _buildPalette(BuildContext context) => const PalettePage();
 
-Widget _buildIdeas(BuildContext context) => const IdeasPage();
+Widget _buildIdeas(BuildContext context) => IdeasPage(
+  onOpenPalette: () =>
+      context.findAncestorStateOfType<_AppShellState>()?._goTo(_paletteIndex),
+);
 
 Widget _buildSettings(BuildContext context) => const SettingsPage();
 
@@ -142,6 +146,60 @@ class _AppShellState extends State<AppShell> {
   int _selectedIndex = 0;
   final Set<int> _visited = <int>{0};
 
+  AppScope? _scope;
+  StreamSubscription<AppSettingsState>? _brandSubscription;
+
+  /// The active brand. Palette and Ideas are keyed by it, so switching brand
+  /// starts them fresh: no colour of the other brand stays on screen.
+  String _brandId = '';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final AppScope? scope = context
+        .dependOnInheritedWidgetOfExactType<AppScope>();
+    if (scope == null || identical(scope, _scope)) return;
+    _scope = scope;
+    _brandId = scope.settings.brand.id;
+    _brandSubscription?.cancel();
+    _brandSubscription = scope.settings.changes.listen((AppSettingsState s) {
+      if (s.brand.id == _brandId || !mounted) return;
+      // Hand-offs still pending for the other brand are dropped.
+      final MarkerColor? base = paletteBaseDraft.value;
+      if (base != null && base.brandId != s.brand.id) {
+        paletteBaseDraft.value = null;
+      }
+      final PaletteDraft? draft = paletteDraft.value;
+      if (draft != null &&
+          draft.suggestions.any(
+            (PaletteSuggestion p) => p.color.brandId != s.brand.id,
+          )) {
+        paletteDraft.value = null;
+      }
+      // A notice of the old brand (Palette undo, Ideas hand-off) would act on
+      // a page that is about to be rebuilt fresh.
+      ScaffoldMessenger.maybeOf(context)?.removeCurrentSnackBar();
+      // Palette and Ideas are re-keyed below, so their own state (base picker,
+      // idea of the day, re-picked palettes, undo snapshot) starts fresh.
+      setState(() => _brandId = s.brand.id);
+    });
+  }
+
+  @override
+  void dispose() {
+    _brandSubscription?.cancel();
+    super.dispose();
+  }
+
+  /// Key of a destination's page: per brand for the pages that hold colours
+  /// of one brand in their own state (Palette, Ideas).
+  String _pageKey(int index) {
+    final String id = appDestinations[index].id;
+    return index == _paletteIndex || index == _ideasIndex
+        ? '$id-$_brandId'
+        : id;
+  }
+
   void _goTo(int index) => _onDestinationSelected(index);
 
   void _onDestinationSelected(int index) {
@@ -166,7 +224,7 @@ class _AppShellState extends State<AppShell> {
           for (int i = 0; i < appDestinations.length; i++)
             _visited.contains(i)
                 ? KeyedSubtree(
-                    key: ValueKey<String>(appDestinations[i].id),
+                    key: ValueKey<String>(_pageKey(i)),
                     child: Builder(builder: appDestinations[i].builder),
                   )
                 : const SizedBox.shrink(),
@@ -222,8 +280,9 @@ class _AppShellState extends State<AppShell> {
 /// The design G bottom navigation (spec §4 "Bottom nav").
 ///
 /// 72 high, `surface`, top hairline `line`, equal columns, always labelled.
-/// Each item: a 56×32 pill holding the 24 icon, gap 4, `nav` label. Active:
-/// `pale` pill, `action` icon and label. Inactive: no pill, `fg2`.
+/// Each item: a 56×32 indicator (8 radius) holding the 24 icon, gap 4, `nav`
+/// label. Active: `pale` indicator, `action` icon and label. Inactive: none,
+/// `fg2`.
 class InkNavigationBar extends StatelessWidget {
   const InkNavigationBar({
     super.key,
@@ -315,7 +374,9 @@ class _NavItem extends StatelessWidget {
               height: InkGeometry.navPillHeight,
               decoration: ShapeDecoration(
                 color: selected ? ink.pale : ink.pale.withValues(alpha: 0),
-                shape: const StadiumBorder(),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: InkRadii.controlRadius,
+                ),
               ),
               alignment: Alignment.center,
               child: IconTheme.merge(
@@ -324,11 +385,17 @@ class _NavItem extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              destination.label(context.l10n),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTypography.nav.copyWith(color: fg),
+            // Five equal columns leave a fixed width per label, so the label
+            // grows with the system scale only up to 1.1x (as most bottom bars
+            // do) and never wraps or gets cut.
+            MediaQuery.withClampedTextScaling(
+              maxScaleFactor: 1.1,
+              child: Text(
+                destination.label(context.l10n),
+                maxLines: 1,
+                softWrap: false,
+                style: AppTypography.nav.copyWith(color: fg),
+              ),
             ),
           ],
         ),

@@ -155,16 +155,33 @@ void main() {
 
     test('set line metadata is coherent', () {
       for (final set in OahuSet.values) {
-        if (set.line != MarkerLine.oahu) {
+        // The Honolulu 6 packs predate the line prefix; their ids are
+        // persisted, so they keep them.
+        if (set.line != MarkerLine.oahu && !set.id.endsWith('_6')) {
           expect(set.id, startsWith('${set.line.id}_'));
         }
         expect(OahuSet.forLine(set.line), contains(set));
         if (set.isLegacy) expect(set.isCommunity, isTrue, reason: set.id);
       }
+      // Official on ohuhu.com (brand research 2026-10-29).
       for (final id in [
         'basic_6',
         'pastel_6',
         'skin_6',
+        'honolulu_pastel_sweet_48',
+        'honolulu_pastel_blossom_48',
+        'kaala_basic_108',
+      ]) {
+        final set = OahuSet.byId[id]!;
+        expect(set.source, SetSource.official, reason: id);
+        expect(set.isLegacy, isFalse, reason: id);
+      }
+      for (final id in ['basic_6', 'pastel_6', 'skin_6']) {
+        expect(OahuSet.byId[id]!.line, MarkerLine.honolulu, reason: id);
+      }
+      // No official product: stays community.
+      expect(OahuSet.kaalaPastel60.source, SetSource.community);
+      for (final id in [
         'white_24',
         'white_48',
         'white_72',
@@ -183,7 +200,8 @@ void main() {
     test('Honolulu and Kaala add exactly 182 colours on top of Oahu', () {
       expect(ohuhu.where((c) => c.inLine(MarkerLine.oahu)).length, 321);
       expect(ohuhu.where((c) => !c.inLine(MarkerLine.oahu)).length, 182);
-      expect(ohuhu.where((c) => c.inLine(MarkerLine.honolulu)).length, 364);
+      // 364 + BV27, Y08 and E613, sold in the Honolulu 6 packs.
+      expect(ohuhu.where((c) => c.inLine(MarkerLine.honolulu)).length, 367);
       expect(ohuhu.where((c) => c.inLine(MarkerLine.kaala)).length, 200);
     });
   });
@@ -297,25 +315,18 @@ void main() {
           for (final item in baseline)
             if ((item['sets'] as List).contains(id)) item['newCode'] as String,
         };
-        final now = swatchCandidateColors(
+        final now = ownedColors(
           colors: ohuhu,
           brand: MarkerBrand.ohuhuOahu,
-          activeSetIds: {id},
+          ownedSetIds: {id},
         ).map((c) => c.newCode).toList();
         expect(now.toSet(), expected, reason: id);
         expect(now.length, expected.length, reason: id);
       }
-      final defaults = swatchCandidateColors(
-        colors: ohuhu,
-        brand: MarkerBrand.ohuhuOahu,
-      );
-      final classic160 = swatchCandidateColors(
-        colors: ohuhu,
-        brand: MarkerBrand.ohuhuOahu,
-        activeSetIds: {'classic_160'},
-      );
-      expect(defaults, classic160);
-      expect(AppSettings().effectiveSetIds(), {'classic_160'});
+      // The old default (nothing picked = Oahu 160) migrates to owning it.
+      expect(AppSettings.fromLegacy(selectedCoreSetIds: {}).ownedSetIds, {
+        'classic_160',
+      });
     });
 
     test('the retired oahu_colors.json asset is gone, the new one loads', () {

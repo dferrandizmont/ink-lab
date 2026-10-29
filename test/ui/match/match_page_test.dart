@@ -8,6 +8,7 @@ import 'package:ink_lab/ui/pages/match/color_sampling.dart';
 import 'package:ink_lab/ui/pages/match/image_picker_service.dart';
 import 'package:ink_lab/ui/pages/match/match_page.dart';
 import 'package:ink_lab/ui/pages/match/match_result_tile.dart';
+import 'package:ink_lab/ui/theme/app_typography.dart';
 
 import 'match_test_support.dart';
 import '../../support/l10n.dart';
@@ -233,7 +234,7 @@ void main() {
     expect(find.text(l10n.matchDecodeFailed), findsOneWidget);
   });
 
-  testWidgets('a DecoTime collection without owned markers warns instead', (
+  testWidgets('a collection not set up matches the whole range', (
     WidgetTester tester,
   ) async {
     final FakeImagePickerService picker = FakeImagePickerService(
@@ -248,7 +249,91 @@ void main() {
 
     await pickAndSample(tester);
 
-    expect(find.text(l10n.matchNoMarkers), findsOneWidget);
-    expect(find.byType(BestMatchTile), findsNothing);
+    // The page explains that the whole range is used, with a way to set the
+    // collection up.
+    expect(find.text(l10n.matchSubtitleEmpty), findsOneWidget);
+    expect(find.text(l10n.matchWholeRangeBody('DecoTime')), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('match-whole-range-setup')),
+      findsOneWidget,
+    );
+    // The best match comes from the whole range and is not flagged as
+    // missing: the whole range is what is being matched.
+    expect(find.byType(BestMatchTile), findsWidgets);
+    expect(
+      tester.widget<BestMatchTile>(find.byType(BestMatchTile).first).notOwned,
+      isFalse,
+    );
+  });
+
+  testWidgets('no close match: says so and offers the whole range', (
+    WidgetTester tester,
+  ) async {
+    final FakeImagePickerService picker = FakeImagePickerService(
+      PhotoPicked(tinyPng),
+    );
+    // A single wine red against a pure blue sample.
+    final AppScope scope = await pumpMatch(
+      tester,
+      picker: picker,
+      image: sampledImage(32, 32, <int>[0, 0, 255]),
+      brand: MarkerBrand.decoTime,
+      ownedMarkerCodes: <String>{'decotime:01'},
+    );
+
+    await pickAndSample(tester);
+
+    expect(
+      find.byKey(const ValueKey<String>('match-no-close')),
+      findsOneWidget,
+    );
+    // The closest owned marker stays visible with an honest label.
+    expect(find.byKey(const ValueKey<String>('match-best-01')), findsOneWidget);
+    expect(
+      find.text(AppTypography.caps(l10n.matchQualityApproximate)),
+      findsWidgets,
+    );
+    expect(find.text(l10n.matchRangeTitle('DecoTime')), findsOneWidget);
+    final Iterable<BestMatchTile> tiles = tester.widgetList<BestMatchTile>(
+      find.byType(BestMatchTile),
+    );
+    expect(tiles.where((BestMatchTile t) => t.notOwned), hasLength(1));
+
+    // The suggestion can be turned off in Settings.
+    await scope.settings.setMatchSuggestUnowned(false);
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.matchRangeTitle('DecoTime')), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('match-no-close')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('recent picks are kept per brand', (WidgetTester tester) async {
+    final FakeImagePickerService picker = FakeImagePickerService(
+      PhotoPicked(tinyPng),
+    );
+    final AppScope scope = await pumpMatch(
+      tester,
+      picker: picker,
+      image: sampledImage(64, 64, <int>[255, 0, 0]),
+    );
+    await pickAndSample(tester);
+    await tester.tap(find.byType(BestMatchTile).first);
+    await tester.pumpAndSettle();
+    final ColorMatchPick pick = scope.matchHistory.entries.single;
+    final Finder tile = find.byKey(ValueKey<String>('match-pick-${pick.id}'));
+    expect(tile, findsOneWidget);
+
+    await scope.settings.setBrand(MarkerBrand.decoTime);
+    await tester.pumpAndSettle();
+    expect(tile, findsNothing);
+    expect(find.text(l10n.matchRecentEmpty), findsOneWidget);
+    // The Ohuhu pick is kept, not deleted.
+    expect(scope.matchHistory.entries, hasLength(1));
+
+    await scope.settings.setBrand(MarkerBrand.ohuhuOahu);
+    await tester.pumpAndSettle();
+    expect(tile, findsOneWidget);
   });
 }

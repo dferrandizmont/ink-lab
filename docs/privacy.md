@@ -23,7 +23,7 @@ English version: [`privacy.en.md`](privacy.en.md).
   sistema (servicios de Google), no la app. iOS aún no tiene modelo en el dispositivo.
 - **Sin telemetría ni dependencias de rastreo:** `pubspec.yaml` no incluye SDK de analítica, publicidad ni informes de
   errores. La app no usa el identificador publicitario.
-- **App gratuita y de código abierto:** código MIT, contenido propio CC BY-SA 4.0 (`LICENSE`, `LICENSE-CONTENT.md`).
+- **App gratuita y de código abierto:** código MIT, contenido propio CC BY-SA 4.0 (`LICENSE`, `LICENSE-CONTENT.es.md`).
 - Todo funciona sin pedir nombre, correo, teléfono ni edad.
 
 ## Qué se guarda en el móvil

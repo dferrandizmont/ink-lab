@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../app_scope.dart';
 import '../../../core/collection_selection.dart';
 import '../../../core/color_utils.dart';
+import '../../../core/match_quality.dart';
 import '../../../core/models.dart';
 import '../../../data/data.dart';
 import '../../icons/ink_icons.dart';
@@ -16,6 +17,7 @@ import '../../widgets/empty_state.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
+import '../collection/collection_page.dart';
 import 'color_sampling.dart';
 import 'image_picker_service.dart';
 import 'match_result_tile.dart';
@@ -33,9 +35,13 @@ AppScope? _scopeOf(BuildContext context) =>
 ///
 /// Picks a photo from the camera or the gallery, shows it, lets the user tap or
 /// drag a loupe reticle over it to sample the average colour of a small region,
-/// then ranks the closest markers of the active collection with
-/// [findClosestMarkerMatches]. Tapping a result records a [ColorMatchPick] in
-/// the recent picks. Photos are decoded on the device and never uploaded.
+/// then ranks the closest markers of the user's collection with
+/// [findClosestMarkerMatches]. Matches are labelled with honest [MatchQuality]
+/// bands; when none of the user's markers is close (ΔE76 above
+/// [MatchQuality.noCloseMatchThreshold]) the page says so and, unless turned
+/// off in Settings, shows the closest marker of the whole range ("You don't
+/// own it"). Tapping a result records a [ColorMatchPick] in the recent picks
+/// of the active brand. Photos are decoded on the device and never uploaded.
 class MatchPage extends StatefulWidget {
   const MatchPage({super.key, this.picker, this.decoder});
 
@@ -65,7 +71,18 @@ class _MatchPageState extends State<MatchPage> {
   String _collectionSignature = '';
 
   MarkerBrand _brand = MarkerBrand.ohuhuOahu;
+
+  /// The user's markers of the active brand.
   List<MarkerColor> _available = const <MarkerColor>[];
+
+  /// What the photo is matched against: the user's markers, or the whole
+  /// range while the collection is not set up yet.
+  List<MarkerColor> get _pool => _available.isEmpty ? _range : _available;
+
+  /// The whole range of the active brand.
+  List<MarkerColor> _range = const <MarkerColor>[];
+  ColorDistanceMatch? _rangeBest;
+  bool _suggestUnowned = true;
   bool _loading = true;
 
   Uint8List? _bytes;
@@ -102,9 +119,10 @@ class _MatchPageState extends State<MatchPage> {
   }
 
   String _signatureOf(AppSettingsState state) {
-    final List<String> sets = state.settings.effectiveSetIds().toList()..sort();
-    final List<String> owned = state.settings.ownedMarkerCodes.toList()..sort();
-    return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}';
+    final List<String> sets = state.settings.ownedSetIds.toList()..sort();
+    final List<String> owned = state.settings.extraMarkerIds.toList()..sort();
+    return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}|'
+        '${state.matchSuggestUnowned}';
   }
 
   void _onSettingsChanged(AppSettingsState state) {
@@ -119,6 +137,7 @@ class _MatchPageState extends State<MatchPage> {
     if (scope == null) return;
     final MarkerBrand brand = scope.settings.brand;
     final AppSettings settings = scope.settings.settings;
+    final bool suggest = scope.settings.state.matchSuggestUnowned;
     setState(() => _loading = true);
     List<MarkerColor> catalog;
     try {
@@ -127,25 +146,20 @@ class _MatchPageState extends State<MatchPage> {
       catalog = const <MarkerColor>[];
     }
     if (!mounted) return;
-    final List<MarkerColor> available = paletteCandidateColors(
+    final List<MarkerColor> available = ownedColors(
       colors: catalog,
       brand: brand,
-      activeSetIds: settings.effectiveSetIds(),
-      ownedMarkerCodes: settings.ownedMarkerCodes,
+      ownedSetIds: settings.ownedSetIds,
+      ownedMarkerCodes: settings.extraMarkerIds,
     );
     setState(() {
       _brand = brand;
       _available = available;
+      _range = brandRangeColors(colors: catalog, brand: brand);
+      _suggestUnowned = suggest;
       _loading = false;
-      // A new collection can re-rank the current sample.
-      final int? sample = _sampledColorInt;
-      _matches = sample == null
-          ? const <ColorDistanceMatch>[]
-          : findClosestMarkerMatches(
-              sample,
-              available,
-              limit: MatchPage.matchLimit,
-            );
+      // A new collection or brand re-ranks the current sample.
+      _rank(_sampledColorInt);
     });
   }
 
@@ -211,10 +225,48 @@ class _MatchPageState extends State<MatchPage> {
       _pick = null;
       _sampledColorInt = null;
       _matches = const <ColorDistanceMatch>[];
+      _rangeBest = null;
       _picking = false;
       _error = null;
       _notice = null;
     });
+  }
+
+  /// Ranks the user's markers, and the whole range, for [sample].
+  void _rank(int? sample) {
+    if (sample == null) {
+      _matches = const <ColorDistanceMatch>[];
+      _rangeBest = null;
+      return;
+    }
+    _matches = findClosestMarkerMatches(
+      sample,
+      _pool,
+      limit: MatchPage.matchLimit,
+    );
+    final List<ColorDistanceMatch> range = findClosestMarkerMatches(
+      sample,
+      _range,
+      limit: 1,
+    );
+    _rangeBest = range.isEmpty ? null : range.first;
+  }
+
+  /// The closest marker of the whole range, when it is worth showing: the
+  /// user owns nothing close, or it is clearly better than the best owned
+  /// one. Null when it is owned or the suggestion is turned off.
+  ColorDistanceMatch? get _rangeSuggestion {
+    final ColorDistanceMatch? range = _rangeBest;
+    if (!_suggestUnowned || range == null) return null;
+    if (_pool.any((MarkerColor c) => c.colorId == range.color.colorId)) {
+      return null;
+    }
+    if (_matches.isEmpty) return range;
+    final double best = _matches.first.deltaE;
+    if (!MatchQuality.isUsable(best)) return range;
+    return MatchQuality.of(range.deltaE).index < MatchQuality.of(best).index
+        ? range
+        : null;
   }
 
   void _sampleAt(Offset local, Rect fitted) {
@@ -229,11 +281,7 @@ class _MatchPageState extends State<MatchPage> {
     setState(() {
       _pick = fraction;
       _sampledColorInt = colorInt;
-      _matches = findClosestMarkerMatches(
-        colorInt,
-        _available,
-        limit: MatchPage.matchLimit,
-      );
+      _rank(colorInt);
       _notice = null;
     });
   }
@@ -279,7 +327,15 @@ class _MatchPageState extends State<MatchPage> {
       ),
     );
     if (confirmed != true) return;
-    await scope.matchHistory.clear();
+    // Only the picks of the active brand are cleared.
+    final List<ColorMatchPick> others = scope.matchHistory.entries
+        .where((ColorMatchPick p) => p.brandId != _brand.id)
+        .toList(growable: false);
+    if (others.isEmpty) {
+      await scope.matchHistory.clear();
+    } else {
+      await scope.matchHistory.restore(others);
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -309,14 +365,20 @@ class _MatchPageState extends State<MatchPage> {
       );
     }
 
+    final ColorDistanceMatch? rangeSuggestion = _rangeSuggestion;
+    final bool closeMatch =
+        _matches.isNotEmpty && MatchQuality.isUsable(_matches.first.deltaE);
     return ListView(
       key: MatchPage.pageKey,
       padding: const EdgeInsets.only(bottom: InkSpacing.pageBottom),
       children: <Widget>[
         InkPageHeader(
           title: context.l10n.matchTitle,
-          subtitle: context.l10n.matchSubtitle(_available.length),
+          subtitle: _available.isEmpty
+              ? context.l10n.matchSubtitleEmpty
+              : context.l10n.matchSubtitle(_available.length),
         ),
+        if (_available.isEmpty) _buildWholeRangeNotice(),
         if (_picking)
           _StatusLine(
             icon: InkIcons.info,
@@ -337,16 +399,83 @@ class _MatchPageState extends State<MatchPage> {
             top: InkSpacing.block,
             child: _SecondaryText(context.l10n.matchPickToSample),
           ),
-        if (_sampled != null && _available.isEmpty)
-          _StatusLine(icon: InkIcons.info, message: context.l10n.matchNoMarkers)
-        else if (_matches.isNotEmpty) ...<Widget>[
+        if (_matches.isNotEmpty) ...<Widget>[
+          // Above the threshold the page says so first; the closest owned
+          // marker still shows, with its honest "Far off" label.
+          if (!closeMatch)
+            Padding(
+              padding: const EdgeInsets.only(top: InkSpacing.block),
+              child: _StatusLine(
+                key: const ValueKey<String>('match-no-close'),
+                icon: InkIcons.info,
+                message: context.l10n.matchNoCloseMatch,
+              ),
+            ),
           _buildBestMatch(),
-          if (_matches.length > 1) _buildAlternatives(),
+          if (_matches.length > 1)
+            _buildAlternatives(
+              _matches.skip(1).toList(),
+              context.l10n.matchAlternatesTitle,
+            ),
         ],
+        if (rangeSuggestion != null) _buildRangeSuggestion(rangeSuggestion),
         _buildActions(),
         _buildHistory(scope),
         const _Gutter(top: InkSpacing.section, child: _PrivacyLine()),
       ],
+    );
+  }
+
+  /// Shown while the collection is empty: matching uses the whole range,
+  /// with a way to set the collection up.
+  Widget _buildWholeRangeNotice() {
+    final InkColors ink = InkColors.of(context);
+    return _Gutter(
+      bottom: InkSpacing.block,
+      child: Container(
+        key: const ValueKey<String>('match-whole-range'),
+        padding: InkSpacing.card,
+        decoration: BoxDecoration(
+          color: ink.surface,
+          borderRadius: InkRadii.cardRadius,
+          border: Border.all(color: ink.line),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(
+              context.l10n.matchWholeRangeBody(_brand.label),
+              style: AppTypography.secondary.copyWith(color: ink.fg),
+            ),
+            const SizedBox(height: InkSpacing.group),
+            InkButton.secondary(
+              key: const ValueKey<String>('match-whole-range-setup'),
+              label: context.l10n.matchWholeRangeAction,
+              expand: true,
+              onPressed: () => CollectionPage.open(context),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRangeSuggestion(ColorDistanceMatch match) {
+    return _Gutter(
+      top: InkSpacing.section,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          InkSectionHeading(context.l10n.matchRangeTitle(_brand.label)),
+          const SizedBox(height: InkSpacing.headingGap),
+          BestMatchTile(
+            key: ValueKey<String>('match-range-${match.color.newCode}'),
+            match: match,
+            notOwned: true,
+            onRecord: () => _record(match),
+          ),
+        ],
+      ),
     );
   }
 
@@ -435,42 +564,44 @@ class _MatchPageState extends State<MatchPage> {
     final RgbColor rgb = colorIntToRgb(colorInt);
     return _Gutter(
       top: InkSpacing.block,
-      child: SizedBox(
-        height: 20,
-        child: Row(
-          children: <Widget>[
-            Text(
-              AppTypography.caps(context.l10n.matchSampledLabel),
-              style: AppTypography.capsStyle.copyWith(color: ink.fg2),
-            ),
-            const SizedBox(width: InkSpacing.s8),
-            Container(
-              width: InkGeometry.smallIcon,
-              height: InkGeometry.smallIcon,
-              decoration: BoxDecoration(
-                color: sample,
-                borderRadius: InkRadii.xsRadius,
-                border: Border.all(color: ink.swatchEdge(sample)),
+      // The hex and the RGB triple share a row while they fit; otherwise the
+      // RGB drops to its own line instead of being cut.
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: InkSpacing.s8,
+        runSpacing: InkSpacing.s4,
+        children: <Widget>[
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                AppTypography.caps(context.l10n.matchSampledLabel),
+                style: AppTypography.capsStyle.copyWith(color: ink.fg2),
               ),
-            ),
-            const SizedBox(width: InkSpacing.s8),
-            Text(
-              '#${colorIntToHex(colorInt)}',
-              key: const ValueKey<String>('match-sampled-hex'),
-              style: AppTypography.data.copyWith(color: ink.fg),
-            ),
-            const SizedBox(width: InkSpacing.s8),
-            Expanded(
-              child: Text(
-                context.l10n.commonRgb(rgb.r, rgb.g, rgb.b),
-                textAlign: TextAlign.right,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTypography.data.copyWith(color: ink.fg2),
+              const SizedBox(width: InkSpacing.s8),
+              Container(
+                width: InkGeometry.smallIcon,
+                height: InkGeometry.smallIcon,
+                decoration: BoxDecoration(
+                  color: sample,
+                  borderRadius: InkRadii.xsRadius,
+                  border: Border.all(color: ink.swatchEdge(sample)),
+                ),
               ),
-            ),
-          ],
-        ),
+              const SizedBox(width: InkSpacing.s8),
+              Text(
+                '#${colorIntToHex(colorInt)}',
+                key: const ValueKey<String>('match-sampled-hex'),
+                style: AppTypography.data.copyWith(color: ink.fg),
+              ),
+            ],
+          ),
+          Text(
+            context.l10n.commonRgb(rgb.r, rgb.g, rgb.b),
+            style: AppTypography.data.copyWith(color: ink.fg2),
+          ),
+        ],
       ),
     );
   }
@@ -487,20 +618,17 @@ class _MatchPageState extends State<MatchPage> {
     );
   }
 
-  Widget _buildAlternatives() {
-    final List<ColorDistanceMatch> alternates = _matches.skip(1).toList();
+  Widget _buildAlternatives(List<ColorDistanceMatch> alternates, String title) {
     return _Gutter(
       top: InkSpacing.section,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          InkSectionHeading(
-            context.l10n.matchAlternatesTitle,
-            trailing: context.l10n.matchDeltaMethod,
-          ),
+          InkSectionHeading(title, trailing: context.l10n.matchDeltaMethod),
           const SizedBox(height: InkSpacing.headingGap),
           _EqualColumns(
             columns: MatchPage.matchLimit - 1,
+            minCell: 52,
             gap: InkSpacing.buttonGap,
             children: <Widget>[
               for (final ColorDistanceMatch match in alternates)
@@ -587,8 +715,12 @@ class _MatchPageState extends State<MatchPage> {
       initialData: scope.matchHistory.entries,
       builder:
           (BuildContext context, AsyncSnapshot<List<ColorMatchPick>> snapshot) {
+            // Recent picks are per brand: the other brand's picks are kept
+            // but not shown.
             final List<ColorMatchPick> picks =
-                snapshot.data ?? scope.matchHistory.entries;
+                (snapshot.data ?? scope.matchHistory.entries)
+                    .where((ColorMatchPick p) => p.brandId == _brand.id)
+                    .toList(growable: false);
             return _Gutter(
               top: InkSpacing.section,
               child: Column(
@@ -613,6 +745,7 @@ class _MatchPageState extends State<MatchPage> {
                   else
                     _EqualColumns(
                       columns: 6,
+                      minCell: 44,
                       gap: InkSpacing.s8,
                       rowGap: InkSpacing.buttonGap,
                       children: <Widget>[
@@ -708,18 +841,35 @@ class _PrivacyLine extends StatelessWidget {
 class _EqualColumns extends StatelessWidget {
   const _EqualColumns({
     required this.columns,
+    required this.minCell,
     required this.gap,
     required this.children,
     this.rowGap = 0,
   });
 
+  /// The most cells in a row.
   final int columns;
+
+  /// Narrowest a cell may get at normal text; scaled with the system text
+  /// size, so large text gets fewer, wider cells instead of cut codes.
+  final double minCell;
   final double gap;
   final double rowGap;
   final List<Widget> children;
 
   @override
   Widget build(BuildContext context) {
+    final double scale = MediaQuery.textScalerOf(context).scale(1);
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final int fit = ((constraints.maxWidth + gap) / (minCell * scale + gap))
+            .floor();
+        return _rows(fit.clamp(2, columns));
+      },
+    );
+  }
+
+  Widget _rows(int columns) {
     final List<Widget> rows = <Widget>[];
     for (int start = 0; start < children.length; start += columns) {
       final List<Widget> cells = <Widget>[];
@@ -776,7 +926,7 @@ class _RecentPickTile extends StatelessWidget {
               Text(
                 pick.matchedCode,
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                softWrap: false,
                 style: AppTypography.data.copyWith(color: ink.fg2),
               ),
             ],
@@ -824,8 +974,6 @@ class _PickSheet extends StatelessWidget {
                     const SizedBox(height: InkSpacing.s4),
                     Text(
                       pick.matchedName,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       style: AppTypography.sheetTitle.copyWith(color: ink.fg),
                     ),
                     const SizedBox(height: InkSpacing.group),
@@ -934,6 +1082,7 @@ class _ReticlePainter extends CustomPainter {
 /// nothing is filled with red.
 class _StatusLine extends StatelessWidget {
   const _StatusLine({
+    super.key,
     required this.icon,
     required this.message,
     this.isError = false,

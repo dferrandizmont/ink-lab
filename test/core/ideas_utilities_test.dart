@@ -6,107 +6,274 @@ import 'package:ink_lab/core/ideas_engine.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/core/natural_sort.dart';
+import 'package:ink_lab/core/palette_advisor.dart';
 import 'package:ink_lab/core/swatch_card_location.dart';
 
 import 'fixtures.dart';
 
+/// The ladder roles, from the lightest to the darkest.
+const List<String> _ladder = <String>[
+  IdeaRoles.light,
+  IdeaRoles.lightMid,
+  IdeaRoles.base,
+  IdeaRoles.shadow,
+  IdeaRoles.deepShadow,
+];
+
+/// Lightness of the markers of [plan] that play ladder roles, in role order.
+List<double> _ladderLightness(IdeaPlan plan) {
+  final List<PaletteSuggestion> ladder =
+      plan.palette.where((s) => _ladder.contains(s.role)).toList()
+        ..sort((a, b) => _ladder.indexOf(a.role!) - _ladder.indexOf(b.role!));
+  return <double>[for (final s in ladder) ideaLightness(s.color.hex)];
+}
+
+IdeaPreset _preset(String id) => IdeasEngine.byId(id)!;
+
 void main() {
+  final ohuhu = paletteCandidateColors(
+    colors: parseColors(
+      File(MarkerBrand.ohuhuOahu.assetPath).readAsStringSync(),
+      brand: MarkerBrand.ohuhuOahu,
+    ),
+    brand: MarkerBrand.ohuhuOahu,
+    activeSetIds: <String>{'classic_160'},
+  );
   final deco = parseColors(
     File(MarkerBrand.decoTime.assetPath).readAsStringSync(),
     brand: MarkerBrand.decoTime,
   );
-  final owned = paletteCandidateColors(
+  final smallDeco = paletteCandidateColors(
     colors: deco,
     brand: MarkerBrand.decoTime,
     ownedMarkerCodes: deco.take(8).map((c) => c.colorId).toSet(),
   );
-  for (final preset in IdeasEngine.presets) {
-    test('${preset.id}: original guide text and owned collection palette', () {
-      for (final size in [1, 3, 4, 5, 10]) {
-        final plan = IdeasEngine.generatePlan(preset, owned, size);
-        expect(plan.preset, same(preset));
-        expect(plan.overview, isNotEmpty);
-        expect(plan.steps.length, 4);
-        expect(plan.embellishments, isNotEmpty);
+
+  group('catalog', () {
+    test('has 24-30 presets with unique ids and steps bound to real roles', () {
+      expect(IdeasEngine.presets.length, inInclusiveRange(24, 30));
+      expect(
+        IdeasEngine.presets.map((p) => p.id).toSet().length,
+        IdeasEngine.presets.length,
+      );
+      for (final IdeaPreset preset in IdeasEngine.presets) {
         expect(
-          plan.palette.length,
-          preset.outputMode == IdeaOutputMode.guideOnly ? 0 : size.clamp(3, 5),
+          preset.stepRoles.length,
+          inInclusiveRange(4, 6),
+          reason: preset.id,
         );
-        expect(plan.palette.every((s) => owned.contains(s.color)), isTrue);
+        expect(preset.minutes, greaterThan(0));
+        expect(preset.materials, isNotEmpty, reason: preset.id);
+        for (final String? role in preset.stepRoles) {
+          if (role != null) expect(IdeaRoles.all, contains(role));
+        }
+      }
+      for (final IdeaCategory category in IdeaCategory.values) {
         expect(
-          plan.palette.map((s) => s.color.colorId).toSet().length,
-          plan.palette.length,
-        );
-        expect(
-          plan.palette,
-          IdeasEngine.generatePlan(preset, owned, size).palette,
+          IdeasEngine.presets.where((p) => p.category == category),
+          isNotEmpty,
+          reason: category.name,
         );
       }
-      expect(IdeasEngine.generatePlan(preset, [], 5).palette, isEmpty);
     });
-  }
-  test('catalog has every Kotlin preset and signature guides keep their instructions', () {
-    expect(IdeasEngine.presets.length, 30);
-    expect(IdeasEngine.presets.map((p) => p.id).toSet().length, 30);
-    final sticker = IdeasEngine.generatePlan(
-      IdeasEngine.presets.first,
-      harmonyColors,
-      5,
-    );
-    expect(
-      sticker.steps[1],
-      'Add a clean white halo around the full silhouette.',
-    );
-    expect(sticker.palette, isEmpty);
-    final unknown = IdeasEngine.generatePlan(
-      const IdeaPreset(
-        id: 'unknown',
-        title: 'Unknown',
-        category: IdeaCategory.challenge,
-        outputMode: IdeaOutputMode.guideAndPalette,
-        summary: '',
-      ),
-      harmonyColors,
-      3,
-    );
-    expect(unknown.overview, 'Creative challenge');
-    expect(unknown.palette.map((s) => s.color), harmonyColors.take(3));
-  });
-  test(
-    'random preset reproduces JVM hash ordering independent of Dart hashCode',
-    () {
-      final preset = IdeasEngine.presets.firstWhere(
-        (p) => p.id == 'random_colors',
+
+    test('the idea of the day changes every day and stays all day', () {
+      final IdeaPreset morning = IdeasEngine.featuredFor(
+        DateTime(2026, 10, 29, 8),
       );
-      final candidates = [
-        'A',
-        'B',
-        'C',
-        'D',
-        'E',
-        'F',
-      ].map((code) => color(code, 'ff0000')).toList();
-      // JVM Int-overflow hash of random_colors|ohuhu_oahu:<code>.
-      final result = IdeasEngine.generatePlan(preset, candidates, 5);
-      expect(result.palette.map((s) => s.color.newCode), [
-        'D',
-        'E',
-        'F',
-        'A',
-        'B',
-      ]);
-    },
-  );
-  test('rainbow targets choose red, green and blue in role order', () {
-    final preset = IdeasEngine.presets.firstWhere((p) => p.id == 'rainbow');
-    final plan = IdeasEngine.generatePlan(preset, [
-      color('blue', '0000ff'),
-      color('green', '00ff00'),
-      color('red', 'ff0000'),
-    ], 3);
-    expect(plan.palette.map((s) => s.color.newCode), ['red', 'green', 'blue']);
-    expect(plan.palette.map((s) => s.reason), ['Hue 1', 'Hue 2', 'Hue 3']);
+      expect(IdeasEngine.featuredFor(DateTime(2026, 10, 29, 23)), morning);
+      expect(
+        IdeasEngine.featuredFor(DateTime(2026, 10, 30, 8)),
+        isNot(morning),
+      );
+    });
   });
+
+  group('palettes from the collection', () {
+    for (final IdeaPreset preset in IdeasEngine.presets) {
+      test('${preset.id}: owned, distinct, roled and reproducible', () {
+        for (final List<MarkerColor> collection in <List<MarkerColor>>[
+          ohuhu,
+          smallDeco,
+        ]) {
+          final IdeaPlan plan = IdeasEngine.generatePlan(preset, collection);
+          expect(plan.preset, same(preset));
+          if (!preset.hasPalette) {
+            expect(plan.palette, isEmpty);
+            continue;
+          }
+          expect(plan.palette.length + plan.missing, plan.wanted);
+          expect(
+            plan.palette.every((s) => collection.contains(s.color)),
+            isTrue,
+          );
+          expect(
+            plan.palette.map((s) => s.color.colorId).toSet().length,
+            plan.palette.length,
+          );
+          for (final PaletteSuggestion s in plan.palette) {
+            expect(IdeaRoles.all, contains(s.role), reason: preset.id);
+            expect(s.reason, IdeaRoles.reasonFor(s.role!));
+            expect(s.color.newName.toLowerCase(), isNot(contains('blender')));
+          }
+          // Light → dark ladders are really ordered by lightness.
+          final List<double> ls = _ladderLightness(plan);
+          for (var i = 1; i < ls.length; i++) {
+            expect(ls[i], lessThan(ls[i - 1]), reason: '${preset.id} $ls');
+          }
+          expect(
+            IdeasEngine.generatePlan(preset, collection).palette,
+            plan.palette,
+          );
+        }
+        expect(IdeasEngine.generatePlan(preset, const []).palette, isEmpty);
+      });
+    }
+
+    test('a full collection fills every palette', () {
+      for (final IdeaPreset preset in IdeasEngine.presets) {
+        final IdeaPlan plan = IdeasEngine.generatePlan(preset, ohuhu);
+        expect(plan.missing, 0, reason: preset.id);
+      }
+    });
+
+    test('shades of gray is a ladder of grays from light to dark', () {
+      final IdeaPlan plan = IdeasEngine.generatePlan(
+        _preset('grayscale'),
+        ohuhu,
+      );
+      expect(plan.palette.map((s) => s.role), _ladder);
+      final List<double> ls = <double>[
+        for (final s in plan.palette) ideaLightness(s.color.hex),
+      ];
+      // A real ladder, not five mid grays.
+      expect(ls.first - ls.last, greaterThan(40));
+      for (var i = 1; i < ls.length; i++) {
+        expect(ls[i], lessThan(ls[i - 1]));
+      }
+    });
+
+    test('one color family keeps one hue and spreads from light to dark', () {
+      final IdeaPlan plan = IdeasEngine.generatePlan(
+        _preset('one_color'),
+        ohuhu,
+      );
+      expect(plan.palette.map((s) => s.role), <String>[
+        IdeaRoles.light,
+        IdeaRoles.base,
+        IdeaRoles.shadow,
+        IdeaRoles.deepShadow,
+      ]);
+      final List<double> ls = _ladderLightness(plan);
+      expect(ls.first - ls.last, greaterThan(25));
+    });
+
+    test('ladders are ordered by lightness whatever the input order', () {
+      final List<MarkerColor> reds = <MarkerColor>[
+        color('R4', '5a0a0a'),
+        color('R1', 'f9c9c9'),
+        color('R3', 'b01818'),
+        color('R2', 'e86b6b'),
+      ];
+      for (final List<MarkerColor> input in <List<MarkerColor>>[
+        reds,
+        reds.reversed.toList(),
+      ]) {
+        final IdeaPlan plan = IdeasEngine.generatePlan(
+          _preset('one_color'),
+          input,
+        );
+        expect(plan.palette.map((s) => s.color.newCode), <String>[
+          'R1',
+          'R2',
+          'R3',
+          'R4',
+        ]);
+        expect(plan.palette.map((s) => s.role), <String>[
+          IdeaRoles.light,
+          IdeaRoles.base,
+          IdeaRoles.shadow,
+          IdeaRoles.deepShadow,
+        ]);
+      }
+    });
+  });
+
+  group('seeds', () {
+    test(
+      'random markers change with the seed and repeat with the same one',
+      () {
+        final IdeaPreset random = _preset('random_colors');
+        final Set<String> draws = <String>{
+          for (var seed = 1; seed <= 6; seed++)
+            IdeasEngine.generatePlan(
+              random,
+              ohuhu,
+              seed: seed,
+            ).palette.map((s) => s.color.colorId).join(','),
+        };
+        expect(draws.length, greaterThan(4));
+        expect(
+          IdeasEngine.generatePlan(random, ohuhu, seed: 7).palette,
+          IdeasEngine.generatePlan(random, ohuhu, seed: 7).palette,
+        );
+        // Still sorted and labelled from light to dark.
+        final IdeaPlan plan = IdeasEngine.generatePlan(random, ohuhu, seed: 3);
+        expect(plan.palette.map((s) => s.role), _ladder);
+        final List<double> ls = _ladderLightness(plan);
+        for (var i = 1; i < ls.length; i++) {
+          expect(ls[i], lessThanOrEqualTo(ls[i - 1]));
+        }
+      },
+    );
+
+    test('"Other markers" picks other markers for most ideas', () {
+      var changed = 0;
+      final List<IdeaPreset> withPalette = IdeasEngine.presets
+          .where((p) => p.hasPalette)
+          .toList();
+      for (final IdeaPreset preset in withPalette) {
+        final String first = IdeasEngine.generatePlan(
+          preset,
+          ohuhu,
+        ).palette.map((s) => s.color.colorId).join(',');
+        final bool differs = <int>[1, 2, 3].any(
+          (seed) =>
+              IdeasEngine.generatePlan(
+                preset,
+                ohuhu,
+                seed: seed,
+              ).palette.map((s) => s.color.colorId).join(',') !=
+              first,
+        );
+        if (differs) changed++;
+      }
+      expect(changed, greaterThanOrEqualTo(withPalette.length - 2));
+    });
+  });
+
+  group('roles', () {
+    test('every role has a reason and the ladders name real roles', () {
+      for (final String role in IdeaRoles.all) {
+        expect(IdeaRoles.reasonFor(role), isNot(role));
+      }
+      for (var n = 1; n <= 5; n++) {
+        expect(IdeaRoles.ladder(n).length, n);
+      }
+    });
+
+    test('a step with a role finds the marker that plays it', () {
+      final IdeaPlan plan = IdeasEngine.generatePlan(
+        _preset('three_marker_blend'),
+        ohuhu,
+      );
+      expect(plan.markerFor(IdeaRoles.light), plan.palette.first);
+      expect(plan.markerFor(IdeaRoles.shadow), plan.palette.last);
+      expect(plan.markerFor(null), isNull);
+      expect(plan.markerFor(IdeaRoles.blush), isNull);
+    });
+  });
+
   test('natural sort handles case, leading zeros, numeric runs, prefixes and decimals', () {
     final codes = ['R10', 'r2', 'R1', 'R1A', 'R1A10', 'R1A2', 'R'];
     codes.sort(naturalCodeComparator);

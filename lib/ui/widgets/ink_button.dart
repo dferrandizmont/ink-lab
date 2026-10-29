@@ -4,7 +4,8 @@ import '../icons/ink_icons.dart';
 import '../theme/app_typography.dart';
 import '../theme/tokens.dart';
 
-/// Button variants of design G (spec §4 "Buttons"). All are pills, 44 high.
+/// Button variants of design G (spec §4 "Buttons"). All are 8-radius
+/// rectangles (small radius family), 44 high.
 enum InkButtonVariant {
   /// `action` fill, `onAction` text.
   primary,
@@ -93,9 +94,7 @@ class InkButton extends StatelessWidget {
         InkIcon(icon!, size: InkGeometry.smallIcon),
         const SizedBox(width: 8),
       ],
-      Flexible(
-        child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-      ),
+      Flexible(child: Text(label, maxLines: 1, softWrap: false)),
       if (tag != null) ...<Widget>[
         const SizedBox(width: 8),
         Text(
@@ -145,7 +144,7 @@ class InkButton extends StatelessWidget {
   }
 }
 
-/// A 44×44 circular icon button: 1 px `strong` border when [outlined]
+/// A 44×44 icon button with the control radius: 1 px `strong` border when [outlined]
 /// (favourite), borderless otherwise (sheet close, icon 20).
 class InkIconButton extends StatelessWidget {
   const InkIconButton({
@@ -184,7 +183,8 @@ class InkIconButton extends StatelessWidget {
         foregroundColor: fg,
         fixedSize: const Size.square(InkGeometry.target),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        shape: CircleBorder(
+        shape: RoundedRectangleBorder(
+          borderRadius: InkRadii.controlRadius,
           side: outlined ? BorderSide(color: ink.strong) : BorderSide.none,
         ),
       ),

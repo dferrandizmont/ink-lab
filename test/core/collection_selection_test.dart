@@ -13,101 +13,144 @@ void main() {
   final decoOther = color('R2', '0000aa', brandId: 'decotime', sets: []);
   final catalog = [classic, otherPack, deco, classicFirst, addon, decoOther];
 
-  test(
-    'empty Ohuhu active sets fall back to classic160 for both candidate lists',
-    () {
-      expect(
-        swatchCandidateColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
-        [classicFirst, classic],
-      );
-      expect(
-        paletteCandidateColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
-        [classicFirst, classic],
-      );
-      final settings = AppSettings(
-        selectedCoreSetIds: {},
-        selectedAddonSetIds: {'skin_36'},
-      );
-      expect(
-        swatchCandidateColors(
-          colors: catalog,
-          brand: MarkerBrand.ohuhuOahu,
-          activeSetIds: settings.effectiveSetIds(),
-        ),
-        [addon],
-      );
-    },
-  );
+  test('swatches "All" is the whole range of the brand, owned or not', () {
+    expect(
+      swatchCandidateColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
+      [otherPack, classicFirst, addon, classic],
+    );
+    expect(
+      swatchCandidateColors(colors: catalog, brand: MarkerBrand.decoTime),
+      [decoOther, deco],
+    );
+  });
 
-  test('Ohuhu swatches ignore owned codes while palettes intersect them with packs', () {
+  test('owned = markers of the owned sets + extra markers (union)', () {
     final settings = AppSettings(
-      selectedCoreSetIds: {'classic_160'},
-      ownedMarkerCodes: {' r10 ', 'ohuhu_oahu:R1', 'decotime:R2'},
+      ownedSetIds: {'skin_36'},
+      extraMarkerIds: {' r10 ', 'ohuhu_oahu:R1', 'decotime:R2'},
     );
+    final List<MarkerColor> owned = ownedColors(
+      colors: catalog,
+      brand: MarkerBrand.ohuhuOahu,
+      ownedSetIds: settings.ownedSetIds,
+      ownedMarkerCodes: settings.extraMarkerIds,
+    );
+    expect(owned, [otherPack, addon, classic]);
+    // The palette engines read the same collection.
     expect(
-      swatchCandidateColors(
+      paletteCandidateColors(
         colors: catalog,
         brand: MarkerBrand.ohuhuOahu,
         activeSetIds: settings.effectiveSetIds(),
         ownedMarkerCodes: settings.ownedMarkerCodes,
       ),
-      [classicFirst, classic],
+      owned,
     );
     expect(
-      paletteCandidateColors(
+      ownedColors(
         colors: catalog,
-        brand: MarkerBrand.ohuhuOahu,
-        activeSetIds: settings.effectiveSetIds(),
-        ownedMarkerCodes: settings.ownedMarkerCodes,
+        brand: MarkerBrand.decoTime,
+        ownedSetIds: settings.ownedSetIds,
+        ownedMarkerCodes: settings.extraMarkerIds,
       ),
-      [classic],
-    );
-    expect(
-      paletteCandidateColors(
-        colors: catalog,
-        brand: MarkerBrand.ohuhuOahu,
-        ownedMarkerCodes: {'R1'},
-      ),
-      isEmpty,
-    );
-    expect(
-      swatchCandidateColors(
-        colors: catalog,
-        brand: MarkerBrand.ohuhuOahu,
-        activeSetIds: {'missing'},
-      ),
-      isEmpty,
+      [decoOther],
     );
   });
 
   test(
-    'DecoTime swatches and palettes require owned brand codes and ignore packs',
+    'an Ohuhu collection that is not set up yet palettes from the range',
     () {
-      for (final select in [swatchCandidateColors, paletteCandidateColors]) {
-        expect(select(colors: catalog, brand: MarkerBrand.decoTime), isEmpty);
-        expect(
-          select(
-            colors: catalog,
-            brand: MarkerBrand.decoTime,
-            activeSetIds: {'missing'},
-            ownedMarkerCodes: {
-              'decotime:r10',
-              'ohuhu_oahu:R2',
-              'R2',
-              'decotime:missing',
-            },
-          ),
-          [deco],
-        );
-        expect(
-          select(
-            colors: catalog,
-            brand: MarkerBrand.decoTime,
-            ownedMarkerCodes: {'R10', 'ohuhu_oahu:R2'},
-          ),
-          isEmpty,
-        );
-      }
+      expect(
+        paletteCandidateColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
+        [otherPack, classicFirst, addon, classic],
+      );
+      expect(
+        ownedColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
+        isEmpty,
+      );
+      expect(
+        paletteCandidateColors(
+          colors: catalog,
+          brand: MarkerBrand.ohuhuOahu,
+          activeSetIds: {'missing'},
+        ),
+        isEmpty,
+      );
     },
   );
+
+  test('DecoTime owns extra markers only: sets never apply', () {
+    // A DecoTime collection that is not set up yet palettes from the range,
+    // like Ohuhu.
+    expect(
+      paletteCandidateColors(colors: catalog, brand: MarkerBrand.decoTime),
+      [decoOther, deco],
+    );
+    expect(
+      paletteCandidateColors(
+        colors: catalog,
+        brand: MarkerBrand.decoTime,
+        activeSetIds: {'classic_160'},
+        ownedMarkerCodes: {
+          'decotime:r10',
+          'ohuhu_oahu:R2',
+          'R2',
+          'decotime:missing',
+        },
+      ),
+      [deco],
+    );
+    expect(
+      paletteCandidateColors(
+        colors: catalog,
+        brand: MarkerBrand.decoTime,
+        activeSetIds: {'classic_160'},
+        ownedMarkerCodes: {'R10', 'ohuhu_oahu:R2'},
+      ),
+      // Only Ohuhu codes and sets: DecoTime is still not set up.
+      [decoOther, deco],
+    );
+  });
+
+  group('migration of the old pack selection', () {
+    test('single pack mode keeps only the first core pack, plus add-ons', () {
+      final s = AppSettings.fromLegacy(
+        selectedCoreSetIds: {'classic_80', 'classic_40'},
+        selectedAddonSetIds: {'skin_36'},
+        ownedMarkerCodes: {' R1 ', 'decotime:01', ''},
+      );
+      expect(s.ownedSetIds, {'classic_40', 'skin_36'});
+      expect(s.extraMarkerIds, {'R1', 'decotime:01'});
+    });
+
+    test('compare mode meant "I own several packs": all of them', () {
+      final s = AppSettings.fromLegacy(
+        singlePackMode: false,
+        selectedCoreSetIds: {'classic_80', 'classic_40'},
+        selectedAddonSetIds: {'skin_36'},
+      );
+      expect(s.ownedSetIds, {'classic_80', 'classic_40', 'skin_36'});
+    });
+
+    test('an empty stored selection keeps what the user saw: Oahu 160', () {
+      expect(AppSettings.fromLegacy(selectedCoreSetIds: {}).ownedSetIds, {
+        'classic_160',
+      });
+    });
+
+    test('nothing stored means nothing owned', () {
+      expect(AppSettings.fromLegacy().ownedSetIds, isEmpty);
+      expect(AppSettings().ownedSetIds, isEmpty);
+      expect(AppSettings().extraMarkerIds, isEmpty);
+    });
+
+    test('collections are unmodifiable', () {
+      final sets = {'classic_40'};
+      final s = AppSettings(ownedSetIds: sets, extraMarkerIds: {'R1'});
+      sets.clear();
+      expect(s.ownedSetIds, {'classic_40'});
+      expect(() => s.ownedSetIds.clear(), throwsUnsupportedError);
+      expect(() => s.extraMarkerIds.clear(), throwsUnsupportedError);
+    });
+  });
 }

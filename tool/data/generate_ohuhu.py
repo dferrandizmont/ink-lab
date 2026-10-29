@@ -90,10 +90,13 @@ SET_DEFS = [
     ("skin_36", "oahu", 21, "36 s", "36 skin", 36, False),
     ("gray_36", "oahu", 22, "36 g", "36 grey", 36, False),
     ("pastel_48", "oahu", 23, "48 p", "48 pastels", 48, False),
-    # ---- Oahu: community-only sets (6 packs, white cases) ----
-    ("basic_6", "oahu", 24, "6 pr", "basic/primary 6", 6, False),
-    ("pastel_6", "oahu", 25, "6 pa", "pastels 6", 6, False),
-    ("skin_6", "oahu", 26, "6 po", "portrait/skin tones 6", 6, False),
+    # ---- Honolulu 6 packs: sold officially as "Honolulu 6 Colors"
+    # (ohuhu.com, 2024-08). The sheet lists them in its Oahu section; ids are
+    # persisted, so they keep their old names. Membership is the sheet's. ----
+    ("basic_6", "honolulu", 24, "6 pr", "basic/primary 6", 6, False),
+    ("pastel_6", "honolulu", 25, "6 pa", "pastels 6", 6, False),
+    ("skin_6", "honolulu", 26, "6 po", "portrait/skin tones 6", 6, False),
+    # ---- Oahu: community-only sets (white cases) ----
     ("white_24", "oahu", 27, "24", "white case 24", 24, False),
     ("white_48", "oahu", 28, "48", "white case 48", 48, False),
     ("white_72", "oahu", 29, "72", "white case 72", 72, False),

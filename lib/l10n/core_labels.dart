@@ -1,10 +1,11 @@
 import 'package:intl/intl.dart';
 
 import '../ai/palette_advisor.dart' as ai;
-import '../core/ideas_engine.dart';
+import '../core/match_quality.dart';
 import '../core/models.dart';
 import '../core/palette_generator.dart' show QuickPaletteVariation;
 import 'app_localizations.dart';
+import 'ideas_text.dart';
 import 'phrases.dart';
 
 /// Localised text for the values the core engines and the AI layer expose as
@@ -26,9 +27,6 @@ extension CoreLabelLocalizations on AppLocalizations {
 
   String scenarioLabel(DrawingScenario scenario) =>
       scenarioText(scenario.label) ?? scenario.label;
-
-  String packModeLabel(PackSelectionMode mode) =>
-      packModeText(mode.label) ?? mode.label;
 
   /// The pack name inside its line ("160", "White Case 24"), translated.
   String packSetLabel(OahuSet set) {
@@ -85,17 +83,8 @@ extension CoreLabelLocalizations on AppLocalizations {
     return set.id.startsWith('classic_') ? swatchesClassicPack(label) : label;
   }
 
-  String ideaCategoryLabel(IdeaCategory category) =>
-      ideaCategoryText(category.label) ?? category.label;
-
   String variationName(QuickPaletteVariation variation) =>
       variationLabelText(variation.label) ?? variation.label;
-
-  String ideaTitle(IdeaPreset preset) =>
-      ideaTitleText(preset.id) ?? preset.title;
-
-  String ideaSummary(IdeaPreset preset) =>
-      ideaSummaryText(preset.id) ?? preset.summary;
 
   /// Label of an AI result: the badge and the model that produced it. When the
   /// colour-theory engine completed a short AI answer, [aiCount] of [total]
@@ -123,14 +112,15 @@ extension CoreLabelLocalizations on AppLocalizations {
     return settingsAiOnDeviceProgressBytes(mb(bytes));
   }
 
-  /// A short quality label for a CIELAB76 distance.
-  String matchQualityLabel(double deltaE) {
-    if (deltaE <= 1.0) return matchQualityExcellent;
-    if (deltaE <= 2.5) return matchQualityVeryClose;
-    if (deltaE <= 5.0) return matchQualityClose;
-    if (deltaE <= 8.0) return matchQualityFair;
-    return matchQualityApproximate;
-  }
+  /// A short, honest quality label for a CIELAB76 distance (see
+  /// [MatchQuality]).
+  String matchQualityLabel(double deltaE) => switch (MatchQuality.of(deltaE)) {
+    MatchQuality.nearlyExact => matchQualityExcellent,
+    MatchQuality.veryClose => matchQualityVeryClose,
+    MatchQuality.close => matchQualityClose,
+    MatchQuality.rough => matchQualityFair,
+    MatchQuality.far => matchQualityApproximate,
+  };
 
   /// The swatch card location from the core label (`Card 4`).
   String cardLocationLabel(String coreLabel) {
@@ -146,6 +136,10 @@ extension CoreLabelLocalizations on AppLocalizations {
   /// sentences; known ones are translated, the rest (AI text) is kept.
   String reasonLabel(String reason) {
     final String value = reason.trim();
+    // Roles and reasons of the Ideas palettes come first: their English ids
+    // can match older engine phrases with another translation.
+    final String? idea = ideaRoleText(value) ?? ideaReasonText(value);
+    if (idea != null) return idea;
     final String? known = phrase(value);
     if (known != null) return known;
     final RegExpMatch? variation = _variationPattern.firstMatch(value);

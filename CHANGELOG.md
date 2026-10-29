@@ -10,6 +10,23 @@ so they can skip numbers.
 
 ## Unreleased
 
+## 0.5.0 · 2026-10-29
+
+- New app id `es.inklab.app` and new Ink Cross icon. Android sees this as a different app from the 0.4.0 test build:
+  export your data from the old build first (Settings → Your data), then uninstall it.
+- My markers: one collection per brand, built from the Ohuhu series you use (Oahu, Honolulu, Kaala), the sets you own
+  and any extra loose markers. A short first-run guide sets it up, and My collection lets you change it later.
+- Switching brand now updates every screen. DecoTime works without sets: you mark the markers you own.
+- Swatches opens on your own markers when you have a collection; "All" still shows the whole range.
+- Match is honest about distance: it says when nothing you own is close and can search the whole range instead.
+- Settings reorganised: My collection, Display, Match colours, AI, Your data and About.
+- Ideas redesigned, with technique-correct texts, an idea of the day and palettes that use real roles. Palette lets you
+  pick the base colour and undo a change.
+- New look: rectangular controls with small corners, Archivo titles, and texts that fit in Spanish and English without
+  being cut or wrapped.
+
+## 0.4.0 · 2026-10-29
+
 - On-device AI on Android: the optional AI can now run on the phone with Gemini Nano (ML Kit GenAI Prompt API, through
   Android's AICore). Your scenario and colour codes never leave the phone. If the model is not on the phone yet, the app
   asks Android to download it in the background and shows the progress. The prompt is trimmed to the model's small

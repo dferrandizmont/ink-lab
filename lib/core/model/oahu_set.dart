@@ -34,29 +34,28 @@ enum OahuSet {
   skin36('skin_36', '36 Skin', colorCount: 36, isCore: false),
   gray36('gray_36', '36 Gray', colorCount: 36, isCore: false),
   pastel48('pastel_48', '48 Pastel', colorCount: 48, isCore: false),
+  // Sold officially as "Honolulu 6 Colors" (ohuhu.com, 2024-08). The ids
+  // predate the line prefix and are persisted, so they stay as they are.
   basic6(
     'basic_6',
     '6 Basic',
     colorCount: 6,
+    line: MarkerLine.honolulu,
     isCore: false,
-    source: SetSource.community,
-    isLegacy: true,
   ),
   pastel6(
     'pastel_6',
     '6 Pastel',
     colorCount: 6,
+    line: MarkerLine.honolulu,
     isCore: false,
-    source: SetSource.community,
-    isLegacy: true,
   ),
   skin6(
     'skin_6',
     '6 Skin',
     colorCount: 6,
+    line: MarkerLine.honolulu,
     isCore: false,
-    source: SetSource.community,
-    isLegacy: true,
   ),
   white24(
     'white_24',
@@ -132,7 +131,6 @@ enum OahuSet {
     colorCount: 48,
     line: MarkerLine.honolulu,
     isCore: false,
-    source: SetSource.community,
   ),
   honoluluMidtones48(
     'honolulu_midtones_48',
@@ -147,7 +145,6 @@ enum OahuSet {
     colorCount: 48,
     line: MarkerLine.honolulu,
     isCore: false,
-    source: SetSource.community,
   ),
   honoluluPastel96(
     'honolulu_pastel_96',
@@ -303,7 +300,6 @@ enum OahuSet {
     '108 Basic',
     colorCount: 108,
     line: MarkerLine.kaala,
-    source: SetSource.community,
   );
 
   const OahuSet(

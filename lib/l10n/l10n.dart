@@ -4,6 +4,7 @@ import 'app_localizations.dart';
 
 export 'app_localizations.dart';
 export 'core_labels.dart';
+export 'ideas_text.dart';
 export 'phrases.dart';
 
 /// `context.l10n` gives the generated [AppLocalizations] of the current locale.

@@ -73,13 +73,41 @@ bundle their text or formatting. If an owner asks for removal, remove it.
   182 added colours could not be checked against Ohuhu and are unverified.
 * Upstream renamed `BV415` to "Antwerp"; the baseline name "Antwerp Blue" is
   kept.
-* Pack `source`: `official` = named on Ohuhu's index; `community` = only in
-  the community sheet (white cases, 6 packs, Japan sets, `V1/V2` editions,
-  Kaala 60 Pastels / 108). The two Honolulu 48 pastel sets could not be
-  matched to the official "48 Pastel" / "New 48 Pastel" and are community;
-  Honolulu 96 is matched to the official 96 by size only.
+* Pack `source`: `official` = sold on ohuhu.com or named on Ohuhu's index;
+  `community` = only in the community sheet (white cases, Japan sets,
+  `V1/V2` editions, Kaala 60 Pastels). Honolulu 96 is matched to the
+  official 96 Pastel by size only.
+* Fixes of 2026-10-29, from official sources only (brand research):
+  Honolulu 48 Pastel (Sweetness) and New 48 Pastel (Blossoming) are
+  official; the 6 packs (Basic / Pastel / Skin) are sold as "Honolulu 6
+  Colors" and belong to the Honolulu line (ids `basic_6`, `pastel_6`,
+  `skin_6` are kept because they are persisted; BV27, Y08 and E613 gain the
+  Honolulu line); Kaala 108 Basic is official (2025-09). DecoTime code 33 is
+  "Pineapple" on the official colour card (`decotime_colors.json`, which has
+  no generator).
 * Whether the community-only Oahu/Honolulu packs ship a colourless blender
   is unknown; they are modelled without one.
+
+## Open questions
+
+Left unchanged until an official source settles them:
+
+* **Blender in sets.** Ohuhu's texts say every Honolulu set and the Oahu
+  add-ons (36 Skin, 36 Gray, 48 Pastel) ship "plus a colourless blender";
+  here only the Oahu classic sets include code 0.
+* **Oahu 40 count.** The product text says "40 colors including a colorless
+  blender" (39 + blender); `classic_40` has 40 + blender. Check the oahu-40
+  PDF on the colour-codes index.
+* **Kaala 60 Pastels.** No official product exists; kept as community data.
+* **Honolulu 6 packs membership.** The sheet lists them in its Oahu section;
+  whether they equal the official Honolulu 6 Colors is unverified.
+* **Honolulu B / S / 2.** Ohuhu says Honolulu B has the same palette;
+  Honolulu S and Honolulu 2 reuse the set names and codes, but no membership
+  list is published. The app treats them as Honolulu (a note in My
+  collection), not as separate sets.
+* **DecoTime sets.** Action sells 100 / 150 / 160 / 200 / 300 sets; no source
+  lists their colours, so the app shows the sizes as a hint and offers
+  colour families, never auto-filled sets.
 
 ## Adding or changing a pack
 

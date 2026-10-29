@@ -11,6 +11,7 @@ import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/empty_state.dart';
+import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
 import '../../widgets/ink_search_field.dart';
@@ -19,21 +20,23 @@ import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/skeleton_block.dart';
 import '../../widgets/swatch_list_tile.dart';
+import '../collection/collection_page.dart';
+import '../collection/collection_summary.dart';
 import 'swatch_detail_sheet.dart';
 import '../../../l10n/l10n.dart';
 
 /// The swatch browser (design G, spec §6 "Swatches").
 ///
-/// The page shows the colours of the active brand that the user can actually
-/// use: for Ohuhu the colours of the selected packs, for DecoTime the colours
-/// of the markers the user owns (see
-/// `collection_selection.swatchCandidateColors`).
+/// "All" is the whole range of the active brand, browsable before the user
+/// owns anything; "Mine" is the user's collection (owned sets + extra
+/// markers, see `collection_selection.ownedColors`). The filters sheet only
+/// holds view-time filters (series, set, layout).
 ///
 /// The page is a plain stateful widget: it reads the services from
 /// [AppScope] and persists every change through the repositories, so no
 /// state-management package is needed.
 class SwatchesPage extends StatefulWidget {
-  const SwatchesPage({super.key, this.onAddToPalette, this.onOpenOwnedMarkers});
+  const SwatchesPage({super.key, this.onAddToPalette, this.onOpenCollection});
 
   /// Key of the page body, handy for tests and for state restoration.
   static const Key pageKey = Key('swatches-page');
@@ -44,12 +47,9 @@ class SwatchesPage extends StatefulWidget {
   /// base. Without it the code is copied to the clipboard instead.
   final ValueChanged<MarkerColor>? onAddToPalette;
 
-  /// Called when the user asks to add the markers they own (DecoTime empty
-  /// state).
-  ///
-  /// The shell can use it to open the owned markers manager in Settings.
-  /// Without it a snackbar says where the manager is.
-  final VoidCallback? onOpenOwnedMarkers;
+  /// Called when the user asks to set up their collection (empty "Mine").
+  /// Without it the page pushes the collection screen itself.
+  final VoidCallback? onOpenCollection;
 
   @override
   State<SwatchesPage> createState() => _SwatchesPageState();
@@ -65,6 +65,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
   String _query = '';
   bool _favoritesOnly = false;
   bool _ownedOnly = false;
+  MarkerBrand? _scopeBrand;
   String? _selectedPackId;
 
   /// Product lines the swatches are narrowed to; empty means every line.
@@ -152,8 +153,10 @@ class _SwatchesPageState extends State<SwatchesPage> {
     );
   }
 
+  /// Sets used to locate a marker on its swatch card: the set picked in the
+  /// filters, else the sets the user owns.
   Set<String> _activeSets(AppSettingsState state) => _selectedPackId == null
-      ? state.settings.effectiveSetIds()
+      ? state.settings.ownedSetIds
       : <String>{_selectedPackId!};
 
   Widget _buildContent(
@@ -166,21 +169,31 @@ class _SwatchesPageState extends State<SwatchesPage> {
     final List<MarkerColor> candidates = swatchCandidateColors(
       colors: colors,
       brand: state.brand,
-      activeSetIds: _activeSets(state),
-      ownedMarkerCodes: settings.ownedMarkerCodes,
     );
-    final Set<String> owned = scopedCodesForBrand(
-      settings.ownedMarkerCodes,
-      state.brand.id,
-    );
-    bool isOwned(MarkerColor color) =>
-        state.brand == MarkerBrand.decoTime ||
-        owned.contains(color.newCode.toUpperCase());
+    final int total = candidates.length;
+    final Set<String> owned = <String>{
+      for (final MarkerColor c in ownedColors(
+        colors: colors,
+        brand: state.brand,
+        ownedSetIds: settings.ownedSetIds,
+        ownedMarkerCodes: settings.extraMarkerIds,
+      ))
+        c.colorId,
+    };
+    bool isOwned(MarkerColor color) => owned.contains(color.colorId);
+    // Someone with a collection opens on their own markers; decided once per
+    // brand, so picking "All" afterwards sticks until the brand changes.
+    if (_scopeBrand != state.brand) {
+      _scopeBrand = state.brand;
+      _ownedOnly = owned.isNotEmpty;
+    }
     final List<MarkerColor> visible = candidates
         .where(
           (MarkerColor color) =>
               _matches(color, state) &&
               _inSelectedLines(color) &&
+              (_selectedPackId == null ||
+                  color.sets.contains(_selectedPackId)) &&
               (!_ownedOnly || isOwned(color)),
         )
         .toList();
@@ -191,9 +204,10 @@ class _SwatchesPageState extends State<SwatchesPage> {
       children: <Widget>[
         InkPageHeader(
           title: context.l10n.swatchesTitle,
-          trailing: context.l10n.swatchesCountOf(visible.length, colors.length),
-          subtitle: _subtitle(state, candidates),
+          trailing: context.l10n.swatchesCountOf(visible.length, total),
+          subtitle: CollectionSummary.of(state, colors).full(context.l10n),
         ),
+        if (owned.isEmpty) _wholeRangeNotice(context, state),
         Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: InkSpacing.pageMargin,
@@ -214,7 +228,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
               if (visible.isEmpty)
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: _emptyState(context, state),
+                  child: _emptyState(context, owned.isEmpty),
                 )
               else if (_listLayout)
                 SliverPadding(
@@ -272,11 +286,14 @@ class _SwatchesPageState extends State<SwatchesPage> {
                       return ColorSwatchTile(
                         hex: color.hex,
                         // The grid cell is too narrow for a "new / old"
-                        // pair: the pair stays in the list and the sheet.
+                        // pair: only one code and one name show here; the
+                        // pair stays in the list and the detail sheet.
                         code: state.nameDisplayMode == NameDisplayMode.oldOnly
                             ? color.oldCode
                             : color.newCode,
-                        name: color.displayName(state.nameDisplayMode),
+                        name: state.nameDisplayMode == NameDisplayMode.oldOnly
+                            ? color.oldName
+                            : color.newName,
                         owned: isOwned(color),
                         favorite: state.favorites.contains(color.colorId),
                         onTap: () =>
@@ -292,23 +309,49 @@ class _SwatchesPageState extends State<SwatchesPage> {
     );
   }
 
-  /// "Ohuhu Oahu · Classic 160" (Ohuhu) or "DecoTime · 12 owned".
-  String _subtitle(AppSettingsState state, List<MarkerColor> candidates) {
-    if (state.brand == MarkerBrand.decoTime) {
-      return context.l10n.swatchesOwnedSubtitle(
-        state.brand.label,
-        candidates.length,
-      );
-    }
-    final String packs = _activeSets(state).map(_packLabel).join(', ');
-    return '${state.brand.label} · $packs';
+  /// Slim notice under the header while no collection is set up: the page
+  /// lists the whole range, with a shortcut to set the collection up.
+  Widget _wholeRangeNotice(BuildContext context, AppSettingsState state) {
+    final InkColors ink = InkColors.of(context);
+    return Padding(
+      key: const ValueKey<String>('swatches-whole-range'),
+      padding: const EdgeInsets.only(
+        left: InkSpacing.pageMargin,
+        right: InkSpacing.s4,
+      ),
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            child: Text(
+              context.l10n.swatchesWholeRangeNotice(state.brand.label),
+              style: AppTypography.secondary.copyWith(color: ink.fg2),
+            ),
+          ),
+          const SizedBox(width: InkSpacing.s4),
+          InkButton.text(
+            key: const ValueKey<String>('swatches-whole-range-setup'),
+            label: context.l10n.swatchesWholeRangeAction,
+            onPressed: _openCollection,
+          ),
+        ],
+      ),
+    );
   }
 
-  /// Number of filters that differ from the defaults (pack, labels, layout).
+  void _openCollection() {
+    final VoidCallback? open = widget.onOpenCollection;
+    if (open != null) {
+      open();
+    } else {
+      CollectionPage.open(context);
+    }
+  }
+
+  /// Number of view filters that differ from the defaults (series, set,
+  /// layout).
   int _activeFilterCount(AppSettingsState state) =>
       (_selectedPackId != null ? 1 : 0) +
       (_selectedLines.isNotEmpty ? 1 : 0) +
-      (state.nameDisplayMode != NameDisplayMode.both ? 1 : 0) +
       (_listLayout ? 1 : 0);
 
   Widget _chipRow(
@@ -329,14 +372,15 @@ class _SwatchesPageState extends State<SwatchesPage> {
           }),
         ),
         InkChip(
-          label: context.l10n.swatchesFavoritesOnly,
-          selected: _favoritesOnly,
-          onSelected: (bool on) => setState(() => _favoritesOnly = on),
-        ),
-        InkChip(
+          key: const ValueKey<String>('swatches-mine'),
           label: context.l10n.swatchesOwnedOnly,
           selected: _ownedOnly,
           onSelected: (bool on) => setState(() => _ownedOnly = on),
+        ),
+        InkChip(
+          label: context.l10n.swatchesFavoritesOnly,
+          selected: _favoritesOnly,
+          onSelected: (bool on) => setState(() => _favoritesOnly = on),
         ),
         InkChip(
           label: active > 0
@@ -350,25 +394,15 @@ class _SwatchesPageState extends State<SwatchesPage> {
     );
   }
 
-  Widget _emptyState(BuildContext context, AppSettingsState state) {
-    if (state.brand == MarkerBrand.decoTime &&
-        state.settings.ownedMarkerCodes.isEmpty) {
+  Widget _emptyState(BuildContext context, bool noCollection) {
+    if (_ownedOnly && noCollection) {
       return EmptyState(
         title: context.l10n.swatchesEmptyNoOwnedTitle,
         message: context.l10n.swatchesEmptyNoOwnedBody,
         icon: InkIcons.grid,
         actionLabel: context.l10n.swatchesEmptyNoOwnedAction,
         primaryAction: true,
-        onAction: () {
-          final VoidCallback? open = widget.onOpenOwnedMarkers;
-          if (open != null) {
-            open();
-            return;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.swatchesEmptyNoOwnedHint)),
-          );
-        },
+        onAction: _openCollection,
       );
     }
     final bool searching = _query.isNotEmpty;
@@ -464,7 +498,10 @@ class _SwatchesPageState extends State<SwatchesPage> {
       children: <Widget>[
         for (final OahuSet set in sets)
           InkChip(
-            label: context.l10n.packSetFullLabel(set),
+            // Under its line caption a non-Oahu pack needs no line prefix.
+            label: set.line == MarkerLine.oahu
+                ? context.l10n.packSetFullLabel(set)
+                : context.l10n.packSetLabel(set),
             selected: _selectedPackId == set.id,
             onSelected: (bool on) => onPick(on ? set.id : null),
           ),
@@ -523,7 +560,8 @@ class _SwatchesPageState extends State<SwatchesPage> {
     );
   }
 
-  /// The filters sheet: line and pack (Ohuhu), label mode and layout.
+  /// The filters sheet: series and set (Ohuhu) and layout. Collection and
+  /// display settings live in Settings, not here.
   Future<void> _openFilters(
     BuildContext context,
     AppScope scope,
@@ -626,32 +664,6 @@ class _SwatchesPageState extends State<SwatchesPage> {
                   ],
                   SizedBox(height: InkSpacing.s24),
                   group(
-                    context.l10n.swatchesLabelMode,
-                    InkSegmented<NameDisplayMode>(
-                      expand: true,
-                      selected: state.nameDisplayMode,
-                      segments: <InkSegment<NameDisplayMode>>[
-                        InkSegment<NameDisplayMode>(
-                          value: NameDisplayMode.newOnly,
-                          label: context.l10n.swatchesNewLabels,
-                        ),
-                        InkSegment<NameDisplayMode>(
-                          value: NameDisplayMode.oldOnly,
-                          label: context.l10n.swatchesOldLabels,
-                        ),
-                        InkSegment<NameDisplayMode>(
-                          value: NameDisplayMode.both,
-                          label: context.l10n.swatchesBothLabels,
-                        ),
-                      ],
-                      onChanged: (NameDisplayMode mode) async {
-                        await scope.settings.setNameDisplayMode(mode);
-                        setSheetState(() {});
-                      },
-                    ),
-                  ),
-                  SizedBox(height: InkSpacing.s24),
-                  group(
                     context.l10n.swatchesLabelLayout,
                     InkSegmented<bool>(
                       expand: true,
@@ -717,8 +729,9 @@ class _SwatchesPageState extends State<SwatchesPage> {
                 for (final String id in current.lines)
                   ?MarkerLine.fromId(id)?.label,
               ],
+              // Human labels only: a raw id ("decotime_base") is never shown.
               packLabels: <String>[
-                for (final String id in current.sets) _packLabel(id),
+                for (final String id in current.sets) ?l10n.setLabel(id),
               ],
               cardLocation: cardLocationOf(current),
               alternatives: closestAlternatives(current, candidates),
@@ -776,7 +789,7 @@ class _LoadingBody extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: InkSpacing.pageMargin),
             child: SkeletonBlock(
               height: InkGeometry.fieldHeight,
-              radius: InkRadii.pill,
+              radius: InkRadii.input,
             ),
           ),
         ),

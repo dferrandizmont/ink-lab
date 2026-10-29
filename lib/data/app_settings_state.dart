@@ -40,7 +40,7 @@ enum AppLanguage {
 }
 
 /// Everything the Kotlin `AppSettingsStore` persisted: the collection settings
-/// (brand, scope, pack selection, owned markers) plus the UI-adjacent
+/// (brand, scope, owned sets and extra markers) plus the UI-adjacent
 /// preferences that the pure-Dart [AppSettings] intentionally leaves out
 /// (favourites, name display, onboarding).
 ///
@@ -52,10 +52,11 @@ final class AppSettingsState with JsonValue {
     this.scope = BrandScope.singleBrand,
     AppSettings? settings,
     Set<String> favorites = const {},
-    this.nameDisplayMode = NameDisplayMode.both,
+    this.nameDisplayMode = NameDisplayMode.newOnly,
     this.onboardingCompleted = false,
     this.themeMode = AppThemeMode.system,
     this.language = AppLanguage.system,
+    this.matchSuggestUnowned = true,
   }) : settings = settings ?? AppSettings(),
        favorites = Set.unmodifiable(favorites);
 
@@ -74,6 +75,10 @@ final class AppSettingsState with JsonValue {
   /// App language (backward compatible default: follow the device).
   final AppLanguage language;
 
+  /// Match also shows the closest marker of the whole range when none of the
+  /// user's markers is close (backward compatible default: on).
+  final bool matchSuggestUnowned;
+
   AppSettingsState copyWith({
     MarkerBrand? brand,
     BrandScope? scope,
@@ -83,6 +88,7 @@ final class AppSettingsState with JsonValue {
     bool? onboardingCompleted,
     AppThemeMode? themeMode,
     AppLanguage? language,
+    bool? matchSuggestUnowned,
   }) => AppSettingsState(
     brand: brand ?? this.brand,
     scope: scope ?? this.scope,
@@ -92,6 +98,7 @@ final class AppSettingsState with JsonValue {
     onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
     themeMode: themeMode ?? this.themeMode,
     language: language ?? this.language,
+    matchSuggestUnowned: matchSuggestUnowned ?? this.matchSuggestUnowned,
   );
 
   /// Adds or removes a favourite, returning a new state.
@@ -109,50 +116,69 @@ final class AppSettingsState with JsonValue {
       AppSettingsState(
         brand: MarkerBrand.fromId(_string(json['brand'])),
         scope: _enum(BrandScope.values, json['scope'], BrandScope.singleBrand),
-        settings: AppSettings(
-          packSelectionMode: _enum(
-            PackSelectionMode.values,
-            json['packSelectionMode'],
-            PackSelectionMode.single,
-          ),
-          selectedCoreSetIds:
-              _strings(json['selectedCoreSetIds']) ?? const {'classic_160'},
-          selectedAddonSetIds:
-              _strings(json['selectedAddonSetIds']) ?? const {},
-          ownedMarkerCodes: cleanCodes(
-            _strings(json['ownedMarkerCodes']) ?? const {},
-          ),
-        ),
+        settings: _settingsFromJson(json),
         favorites: scopedColorIds(_strings(json['favorites']) ?? const {}),
         nameDisplayMode: _enum(
           NameDisplayMode.values,
           json['nameDisplayMode'],
-          NameDisplayMode.both,
+          NameDisplayMode.newOnly,
         ),
-        onboardingCompleted: json['onboardingCompleted'] == true,
+        // A backup of an older version with a configured collection does not
+        // ask for the first-run setup again.
+        onboardingCompleted:
+            json['onboardingCompleted'] == true ||
+            (!json.containsKey('ownedSetIds') && _hasLegacyCollection(json)),
         themeMode: _enum(
           AppThemeMode.values,
           json['themeMode'],
           AppThemeMode.system,
         ),
         language: AppLanguage.fromJson(json['language']),
+        matchSuggestUnowned: json['matchSuggestUnowned'] != false,
       );
 
   @override
   Map<String, dynamic> toJson() => {
     'brand': brand.id,
     'scope': scope.toJson(),
-    'packSelectionMode': settings.packSelectionMode.toJson(),
-    'selectedCoreSetIds': sortedStrings(settings.selectedCoreSetIds),
-    'selectedAddonSetIds': sortedStrings(settings.selectedAddonSetIds),
-    'ownedMarkerCodes': sortedStrings(settings.ownedMarkerCodes),
+    'ownedSetIds': sortedStrings(settings.ownedSetIds),
+    'extraMarkerIds': sortedStrings(settings.extraMarkerIds),
+    'chosenSeriesIds': sortedStrings(settings.chosenSeriesIds),
     'favorites': sortedStrings(favorites),
     'nameDisplayMode': nameDisplayMode.toJson(),
     'onboardingCompleted': onboardingCompleted,
     'themeMode': themeMode.toJson(),
     'language': language.toJson(),
+    'matchSuggestUnowned': matchSuggestUnowned,
   };
 }
+
+/// The collection of a backup: the current fields, or the pack and owned
+/// marker fields older versions wrote (migrated, see [AppSettings.fromLegacy]).
+AppSettings _settingsFromJson(Map<String, dynamic> json) {
+  final ownedSets = _strings(json['ownedSetIds']);
+  final extras = _strings(json['extraMarkerIds']);
+  if (ownedSets != null || extras != null) {
+    return AppSettings(
+      ownedSetIds: ownedSets ?? const {},
+      extraMarkerIds: scopedColorIds(extras ?? const {}),
+      chosenSeriesIds: _strings(json['chosenSeriesIds']) ?? const {},
+    );
+  }
+  final legacy = AppSettings.fromLegacy(
+    singlePackMode: '${json['packSelectionMode']}'.toLowerCase() != 'compare',
+    selectedCoreSetIds: _strings(json['selectedCoreSetIds']),
+    selectedAddonSetIds: _strings(json['selectedAddonSetIds']) ?? const {},
+    ownedMarkerCodes: _strings(json['ownedMarkerCodes']) ?? const {},
+  );
+  return legacy.copyWith(extraMarkerIds: scopedColorIds(legacy.extraMarkerIds));
+}
+
+bool _hasLegacyCollection(Map<String, dynamic> json) =>
+    json['selectedCoreSetIds'] is List ||
+    json['selectedAddonSetIds'] is List ||
+    (json['ownedMarkerCodes'] is List &&
+        (json['ownedMarkerCodes'] as List).isNotEmpty);
 
 /// Deterministic, sorted string list for set-backed fields.
 List<String> sortedStrings(Iterable<String> values) => values.toList()..sort();

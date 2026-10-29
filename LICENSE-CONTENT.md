@@ -1,60 +1,61 @@
-# Licencias del contenido
+# Content licences
+English · [Español](LICENSE-CONTENT.es.md)
 
-Copyright (c) 2026 Daniel Mont Ferrandiz, para el contenido de redacción propia.
+Copyright (c) 2026 Daniel Mont Ferrandiz, for the content written by the author.
 
-English version: [LICENSE-CONTENT.en.md](LICENSE-CONTENT.en.md).
+Spanish version (authoritative): [LICENSE-CONTENT.es.md](LICENSE-CONTENT.es.md).
 
-## Contenido propio: CC BY-SA 4.0
+## Own content: CC BY-SA 4.0
 
-La documentación de `docs/` y los documentos de la raíz (README, CONTRIBUTING,
-SECURITY, CHANGELOG, NOTICE y las políticas de privacidad), los textos de la
-interfaz y sus traducciones (los archivos de `lib/l10n/` y los `strings.dart`),
-el catálogo de ideas y técnicas de `lib/core/ideas_catalog.dart`, las capturas
-y el material de tienda se ofrecen bajo Creative Commons
-Atribución-CompartirIgual 4.0 Internacional (CC BY-SA 4.0).
+The documentation in `docs/` and the root documents (README, CONTRIBUTING,
+SECURITY, CHANGELOG, NOTICE and the privacy policies), the interface texts and
+their translations (the files in `lib/l10n/` and the `strings.dart` files), the
+catalogue of ideas and techniques in `lib/core/ideas_catalog.dart`, the
+screenshots and the store material are offered under Creative Commons
+Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
 
-Puedes compartirlos y adaptarlos, también con fines comerciales, con atribución,
-indicando los cambios y compartiendo las adaptaciones bajo la misma licencia.
-La atribución debe identificar a Daniel Mont Ferrandiz y a Ink Lab e incluir un
-enlace a esta licencia. Rigen los términos del
-[texto de la licencia CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/legalcode.es).
+You may share and adapt them, including for commercial purposes, with
+attribution, indicating the changes and sharing adaptations under the same
+licence. The attribution must identify Daniel Mont Ferrandiz and Ink Lab and
+include a link to this licence. The
+[CC BY-SA 4.0 legal code](https://creativecommons.org/licenses/by-sa/4.0/legalcode)
+governs.
 
-Esta licencia se aplica solo al contenido propio. El nombre «Ink Lab» identifica
-esta app: si publicas una versión modificada, dale otro nombre y otro icono para
-que nadie la confunda con la original.
+This licence covers only the author's own content. The name "Ink Lab"
+identifies this app: if you publish a modified version, give it another name and
+icon so nobody mistakes it for the original.
 
-## Datos de los catálogos de rotuladores
+## Marker catalogue data
 
-Los catálogos de `assets/data/` (códigos, nombres, valores hex, pertenencia a
-sets y posición en la tarjeta de colores) son **datos factuales de referencia**
-recopilados de fuentes públicas, enumeradas en [NOTICE.md](NOTICE.md). Se usan
-solo para que cada persona identifique los rotuladores que ya tiene. **Quedan
-excluidos tanto de MIT como de CC BY-SA 4.0**: este proyecto no reclama derechos
-sobre los datos de terceros y su inclusión no concede ningún derecho sobre las
-marcas, los diseños ni los materiales de sus propietarios. Los valores hex son
-una aproximación en pantalla del color real del rotulador, no una medida del
-fabricante.
+The catalogues in `assets/data/` (codes, names, hex values, set membership and
+position on the colour card) are **factual reference data** compiled from public
+sources, listed in [NOTICE.md](NOTICE.md). They are used only so that each person
+can identify the markers they already own. **They are excluded from both MIT and
+CC BY-SA 4.0**: this project claims no rights over third-party data, and including
+them grants no right over the trademarks, designs or materials of their owners.
+The hex values are an on-screen approximation of the real marker colour, not a
+manufacturer measurement.
 
-## Marcas
+## Trademarks
 
-«Ohuhu», «Oahu» y «DecoTime» son marcas de sus respectivos propietarios. Este
-proyecto es independiente y no está afiliado, patrocinado ni respaldado por
-ellos. El repositorio no contiene logotipos, fotografías de producto, embalajes
-ni tarjetas de color de ninguna marca.
+"Ohuhu", "Oahu" and "DecoTime" are trademarks of their respective owners. This
+project is independent and is not affiliated with, sponsored by or endorsed by
+them. The repository contains no logos, product photographs, packaging or colour
+cards from any brand.
 
-## Código y otros materiales
+## Code and other materials
 
-El código se ofrece bajo [MIT](LICENSE). Los materiales de terceros conservan
-sus propias licencias; en particular:
+The code is offered under [MIT](LICENSE). Third-party materials keep their own
+licences; in particular:
 
-- **Fuentes tipográficas:** Inter, Archivo y JetBrains Mono, sin modificar y
-  empaquetadas en `assets/fonts/`, bajo SIL Open Font License 1.1. Los textos
-  completos están en `assets/fonts/LICENSE-OFL.md`, `assets/fonts/OFL-Archivo.txt`
-  y `assets/fonts/OFL-JetBrainsMono.txt`.
-- **Iconos:** los iconos de `lib/ui/icons/` están redibujados a partir de
+- **Typefaces:** Inter, Archivo and JetBrains Mono, unmodified and bundled in
+  `assets/fonts/`, under the SIL Open Font License 1.1. The full texts are in
+  `assets/fonts/LICENSE-OFL.md`, `assets/fonts/OFL-Archivo.txt` and
+  `assets/fonts/OFL-JetBrainsMono.txt`.
+- **Icons:** the icons in `lib/ui/icons/` are redrawn from
   [Feather](https://feathericons.com) (MIT, Copyright (c) 2013-2023 Cole Bemis);
-  el aviso completo está en [NOTICE.md](NOTICE.md).
-- **Dependencias:** Flutter y los paquetes de pub.dev conservan sus licencias; la
-  lista exacta está en `pubspec.lock`. La IA en el móvil de Android usa los
-  componentes ML Kit GenAI y AICore de Google, que se rigen por sus propias
-  condiciones y no se distribuyen en este repositorio.
+  the full notice is in [NOTICE.md](NOTICE.md).
+- **Dependencies:** Flutter and the pub.dev packages keep their own licences; the
+  exact list is in `pubspec.lock`. On-device AI on Android uses Google's ML Kit
+  GenAI and AICore components, which are governed by their own terms and are not
+  distributed in this repository.

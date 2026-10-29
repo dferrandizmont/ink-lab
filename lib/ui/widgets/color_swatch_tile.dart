@@ -43,7 +43,7 @@ class SwatchBlock extends StatelessWidget {
     this.size,
     this.width,
     this.height,
-    this.radius = InkRadii.cell,
+    this.radius = InkRadii.control,
     this.child,
   });
 
@@ -257,12 +257,19 @@ class ColorSwatchTile extends StatelessWidget {
                           if (nameLines > 0)
                             SizedBox(
                               height: _nameLine * nameLines,
-                              child: Text(
-                                name!,
-                                maxLines: nameLines,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTypography.secondary.copyWith(
-                                  color: ink.fg,
+                              // A name can be longer than the cell: the tile opens
+                              // the full detail on tap, and a long press shows
+                              // the whole name.
+                              child: Tooltip(
+                                message: name!,
+                                excludeFromSemantics: true,
+                                child: Text(
+                                  name!,
+                                  maxLines: nameLines,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.secondary.copyWith(
+                                    color: ink.fg,
+                                  ),
                                 ),
                               ),
                             ),

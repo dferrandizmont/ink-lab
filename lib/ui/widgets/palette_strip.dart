@@ -8,7 +8,7 @@ import '../../l10n/l10n.dart';
 
 /// A palette at a glance (spec §4 "Palette strip").
 ///
-/// One rounded, clipped bar of equal segments (radius 16 at 56 high), each
+/// One clipped bar of equal segments (control radius 8, never a pill), each
 /// with a 1 px top and bottom edge per the swatch edge rule. Optional labels
 /// (marker codes, `code` type) sit centred under every segment, 6 below. The
 /// [lockedIndex] segment shows a lock in `inkOn(colour)` inside a 44 hit area.
@@ -47,8 +47,8 @@ class PaletteStrip extends StatelessWidget {
   /// Called with the index of the tapped colour.
   final void Function(int index)? onColorTap;
 
-  /// Corner radius; defaults to 16 for bars of 56 and more, 10 for shorter
-  /// ones and 4 for mini strips under 20.
+  /// Corner radius; defaults to the control radius (8) and to 4 for mini
+  /// strips under 20.
   final double? radius;
 
   /// Index of the segment that shows a lock, if any.
@@ -69,12 +69,7 @@ class PaletteStrip extends StatelessWidget {
   final TextStyle? labelStyle;
 
   double get _radius =>
-      radius ??
-      (colorHeight >= InkGeometry.paletteStripHeight
-          ? InkRadii.card
-          : colorHeight < 20
-          ? InkRadii.xs
-          : InkRadii.cell);
+      radius ?? (colorHeight < 20 ? InkRadii.xs : InkRadii.control);
 
   @override
   Widget build(BuildContext context) {

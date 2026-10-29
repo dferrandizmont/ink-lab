@@ -10,12 +10,12 @@ void main() {
     final h = await harness();
     expect(h.appSettings.brand, MarkerBrand.ohuhuOahu);
     expect(h.appSettings.scope, BrandScope.singleBrand);
-    expect(h.appSettings.settings.packSelectionMode, PackSelectionMode.single);
-    expect(h.appSettings.settings.selectedCoreSetIds, {'classic_160'});
-    expect(h.appSettings.settings.selectedAddonSetIds, isEmpty);
-    expect(h.appSettings.settings.ownedMarkerCodes, isEmpty);
+    // A fresh install owns nothing until the first-run setup.
+    expect(h.appSettings.settings.ownedSetIds, isEmpty);
+    expect(h.appSettings.settings.extraMarkerIds, isEmpty);
+    expect(h.appSettings.state.matchSuggestUnowned, isTrue);
     expect(h.appSettings.favorites, isEmpty);
-    expect(h.appSettings.nameDisplayMode, NameDisplayMode.both);
+    expect(h.appSettings.nameDisplayMode, NameDisplayMode.newOnly);
     expect(h.appSettings.onboardingCompleted, isFalse);
     expect(h.appSettings.themeMode, AppThemeMode.system);
   });
@@ -24,10 +24,9 @@ void main() {
     final h = await harness();
     await h.appSettings.setBrand(MarkerBrand.decoTime);
     await h.appSettings.setScope(BrandScope.mixedBrands);
-    await h.appSettings.setPackSelectionMode(PackSelectionMode.compare);
-    await h.appSettings.setSelectedCoreSetIds({'classic_80', 'classic_40'});
-    await h.appSettings.setSelectedAddonSetIds({'skin_36'});
-    await h.appSettings.setOwnedMarkerCodes({'R1', 'decotime:02'});
+    await h.appSettings.setOwnedSetIds({'classic_80', 'skin_36'});
+    await h.appSettings.setExtraMarkerIds({'R1', 'decotime:02'});
+    await h.appSettings.setMatchSuggestUnowned(false);
     await h.appSettings.setNameDisplayMode(NameDisplayMode.newOnly);
     await h.appSettings.setOnboardingCompleted(true);
     await h.appSettings.setThemeMode(AppThemeMode.dark);
@@ -36,14 +35,42 @@ void main() {
     await reopened.load();
     expect(reopened.brand, MarkerBrand.decoTime);
     expect(reopened.scope, BrandScope.mixedBrands);
-    expect(reopened.settings.packSelectionMode, PackSelectionMode.compare);
-    expect(reopened.settings.selectedCoreSetIds, {'classic_80', 'classic_40'});
-    expect(reopened.settings.selectedAddonSetIds, {'skin_36'});
-    expect(reopened.settings.ownedMarkerCodes, {'R1', 'decotime:02'});
+    expect(reopened.settings.ownedSetIds, {'classic_80', 'skin_36'});
+    // Extra markers are stored brand-scoped.
+    expect(reopened.settings.extraMarkerIds, {'ohuhu_oahu:R1', 'decotime:02'});
+    expect(reopened.state.matchSuggestUnowned, isFalse);
     expect(reopened.nameDisplayMode, NameDisplayMode.newOnly);
     expect(reopened.themeMode, AppThemeMode.dark);
     expect(reopened.onboardingCompleted, isTrue);
     expect(reopened.state, h.appSettings.state);
+  });
+
+  test('the chosen series persist without any set, and in a backup', () async {
+    final h = await harness();
+    await h.appSettings.setCollection(
+      AppSettings(chosenSeriesIds: const {'honolulu', 'oahu', 'bogus'}),
+    );
+
+    final reopened = StoredAppSettingsRepository(h.store);
+    await reopened.load();
+    expect(reopened.settings.ownedSetIds, isEmpty);
+    // Unknown series ids are dropped.
+    expect(reopened.settings.chosenSeriesIds, {'honolulu', 'oahu'});
+    expect(reopened.settings.ownedSeries, {
+      MarkerLine.oahu,
+      MarkerLine.honolulu,
+    });
+
+    // A series that holds an owned set counts even if it was never stored.
+    final legacy = AppSettings(ownedSetIds: const {'kaala_basic_24'});
+    expect(legacy.ownedSeries, {MarkerLine.kaala});
+
+    final json = reopened.state.toJson();
+    expect(AppSettingsState.fromJson(json), reopened.state);
+    expect(AppSettingsState.fromJson(json).settings.chosenSeriesIds, {
+      'honolulu',
+      'oahu',
+    });
   });
 
   test('changes replays the current snapshot then emits updates', () async {
@@ -61,10 +88,10 @@ void main() {
     final settingsSeen = <AppSettings>[];
     final settingsSub = h.appSettings.settingsChanges.listen(settingsSeen.add);
     await pumpEventQueue();
-    await h.appSettings.setPackSelectionMode(PackSelectionMode.compare);
+    await h.appSettings.setOwnedSetIds({'classic_40'});
     await pumpEventQueue();
     expect(settingsSeen, hasLength(2));
-    expect(settingsSeen.last.packSelectionMode, PackSelectionMode.compare);
+    expect(settingsSeen.last.ownedSetIds, {'classic_40'});
 
     await subscription.cancel();
     await settingsSub.cancel();
@@ -145,9 +172,8 @@ void main() {
       brand: MarkerBrand.decoTime,
       scope: BrandScope.mixedBrands,
       settings: AppSettings(
-        packSelectionMode: PackSelectionMode.compare,
-        selectedCoreSetIds: const {'classic_40'},
-        ownedMarkerCodes: const {'decotime:01'},
+        ownedSetIds: const {'classic_40'},
+        extraMarkerIds: const {'decotime:01'},
       ),
       favorites: const {'decotime:01'},
       nameDisplayMode: NameDisplayMode.oldOnly,
@@ -158,5 +184,77 @@ void main() {
     final reopened = StoredAppSettingsRepository(h.store);
     await reopened.load();
     expect(reopened.state, restored);
+  });
+
+  group('migration from the pack selection of older versions', () {
+    test(
+      'single pack + add-ons + owned codes become sets and extras',
+      () async {
+        final h = await harness({
+          StoredAppSettingsRepository.keyPackSelectionMode: 'Single',
+          StoredAppSettingsRepository.keySelectedCoreSetIds: <String>[
+            'classic_80',
+          ],
+          StoredAppSettingsRepository.keySelectedAddonSetIds: <String>[
+            'skin_36',
+          ],
+          StoredAppSettingsRepository.keyOwnedMarkerCodes: <String>[
+            'R1',
+            'decotime:02',
+          ],
+        });
+        expect(h.appSettings.settings.ownedSetIds, {'classic_80', 'skin_36'});
+        expect(h.appSettings.settings.extraMarkerIds, {
+          'ohuhu_oahu:R1',
+          'decotime:02',
+        });
+        // A user who had set up a collection does not see the setup again.
+        expect(h.appSettings.onboardingCompleted, isTrue);
+        // The new keys are written once, so the migration does not run again.
+        expect(
+          await h.store.getStringList(
+            StoredAppSettingsRepository.keyOwnedSetIds,
+          ),
+          <String>['classic_80', 'skin_36'],
+        );
+        expect(
+          await h.store.getBool(
+            StoredAppSettingsRepository.keyOnboardingCompleted,
+          ),
+          isTrue,
+        );
+      },
+    );
+
+    test('compare mode keeps every selected pack', () async {
+      final h = await harness({
+        StoredAppSettingsRepository.keyPackSelectionMode: 'Compare',
+        StoredAppSettingsRepository.keySelectedCoreSetIds: <String>[
+          'classic_80',
+          'honolulu_120',
+        ],
+      });
+      expect(h.appSettings.settings.ownedSetIds, {
+        'classic_80',
+        'honolulu_120',
+      });
+    });
+
+    test('a fresh install migrates to an empty collection', () async {
+      final h = await harness();
+      expect(h.appSettings.settings.ownedSetIds, isEmpty);
+      expect(h.appSettings.onboardingCompleted, isFalse);
+    });
+
+    test('new keys win over legacy keys', () async {
+      final h = await harness({
+        StoredAppSettingsRepository.keySelectedCoreSetIds: <String>[
+          'classic_80',
+        ],
+        StoredAppSettingsRepository.keyOwnedSetIds: <String>['kaala_basic_24'],
+        StoredAppSettingsRepository.keyExtraMarkerIds: <String>[],
+      });
+      expect(h.appSettings.settings.ownedSetIds, {'kaala_basic_24'});
+    });
   });
 }

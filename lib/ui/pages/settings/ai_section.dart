@@ -9,7 +9,6 @@ import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
-import '../../widgets/ink_segmented.dart';
 import '../../widgets/section_card.dart';
 import 'ai_model_picker.dart';
 import 'constants.dart';
@@ -112,7 +111,10 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
       return;
     }
     final String disclosure = switch (_effectiveProvider) {
-      AiProvider.local => context.l10n.settingsAiDisclosureColourTheory,
+      AiProvider.local =>
+        _onDeviceOffered
+            ? context.l10n.settingsAiDisclosureColourTheory
+            : context.l10n.settingsAiDisclosureColourTheoryNoOnDevice,
       AiProvider.onDevice => context.l10n.settingsAiDisclosureOnDevice,
       AiProvider.openRouter => context.l10n.settingsAiDisclosure,
     };
@@ -176,13 +178,15 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
   /// back to colour theory while the model is missing; the section says so.
   AiProvider get _effectiveProvider => _controller.provider;
 
+  /// Offered where the phone has an on-device model, and always while it is
+  /// the stored choice so the selection stays visible.
+  bool get _onDeviceOffered =>
+      _controller.onDeviceSupported ||
+      _controller.provider == AiProvider.onDevice;
+
   @override
   Widget build(BuildContext context) {
-    // Offered where the phone has an on-device model, and always while it is
-    // the stored choice so the selection stays visible.
-    final bool onDeviceOffered =
-        _controller.onDeviceSupported ||
-        _controller.provider == AiProvider.onDevice;
+    final bool onDeviceOffered = _onDeviceOffered;
     final AiProvider selectedProvider = _effectiveProvider;
     final bool onDevice = selectedProvider == AiProvider.onDevice;
     final bool openRouter = selectedProvider == AiProvider.openRouter;
@@ -194,7 +198,11 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
           label: context.l10n.settingsAiEnabled,
           subtitle: switch (selectedProvider) {
             AiProvider.local =>
-              context.l10n.settingsAiEnabledSubtitleColourTheory,
+              onDeviceOffered
+                  ? context.l10n.settingsAiEnabledSubtitleColourTheory
+                  : context
+                        .l10n
+                        .settingsAiEnabledSubtitleColourTheoryNoOnDevice,
             AiProvider.onDevice =>
               context.l10n.settingsAiEnabledSubtitleOnDevice,
             AiProvider.openRouter =>
@@ -206,29 +214,34 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
         SettingsControlRow(
           label: context.l10n.settingsAiProvider,
           stacked: true,
-          control: InkSegmented<AiProvider>(
-            semanticLabel: context.l10n.settingsAiProvider,
-            expand: true,
-            segments: <InkSegment<AiProvider>>[
-              InkSegment<AiProvider>(
-                value: AiProvider.local,
-                label: context.l10n.settingsAiProviderColourTheory,
-              ),
-              // Offered only where the phone has an on-device model: there is
-              // no "not available" row on iOS or unsupported Android devices.
-              if (onDeviceOffered)
-                InkSegment<AiProvider>(
-                  value: AiProvider.onDevice,
-                  label: context.l10n.settingsAiProviderOnDevice,
-                  semantic: context.l10n.settingsAiOnDeviceName,
+          // Three long options: a radio list, not a segmented control.
+          control: Semantics(
+            container: true,
+            label: context.l10n.settingsAiProvider,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SettingsRadioRow(
+                  label: context.l10n.settingsAiProviderColourTheory,
+                  selected: selectedProvider == AiProvider.local,
+                  onTap: () => _controller.setProvider(AiProvider.local),
                 ),
-              InkSegment<AiProvider>(
-                value: AiProvider.openRouter,
-                label: context.l10n.settingsAiProviderOpenRouter,
-              ),
-            ],
-            selected: selectedProvider,
-            onChanged: _controller.setProvider,
+                // Offered only where the phone has an on-device model: there
+                // is no "not available" row on iOS or unsupported devices.
+                if (onDeviceOffered)
+                  SettingsRadioRow(
+                    label: context.l10n.settingsAiProviderOnDevice,
+                    semantic: context.l10n.settingsAiOnDeviceName,
+                    selected: selectedProvider == AiProvider.onDevice,
+                    onTap: () => _controller.setProvider(AiProvider.onDevice),
+                  ),
+                SettingsRadioRow(
+                  label: context.l10n.settingsAiProviderOpenRouter,
+                  selected: selectedProvider == AiProvider.openRouter,
+                  onTap: () => _controller.setProvider(AiProvider.openRouter),
+                ),
+              ],
+            ),
           ),
         ),
         SettingsCaption(switch (selectedProvider) {
@@ -533,7 +546,9 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
         InkListRow(
           key: const ValueKey<String>('ai-text-model-row'),
           label: context.l10n.settingsAiPrimaryModel,
-          value: _modelLabel(_controller.textModel),
+          // The model name and id can be long: they get their own lines
+          // under the label, in full.
+          subtitle: _modelLabel(_controller.textModel),
           chevron: true,
           onTap: () =>
               showAiModelPicker(context, controller: _controller, multi: false),

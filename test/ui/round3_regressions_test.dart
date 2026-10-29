@@ -8,6 +8,7 @@ import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/pages/settings/saved_palettes_section.dart';
+import 'package:ink_lab/ui/pages/collection/collection_page.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
 import 'package:ink_lab/ui/shell/app_shell.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
@@ -173,7 +174,7 @@ void main() {
     });
   });
 
-  testWidgets('Add my markers opens Settings at the owned markers manager', (
+  testWidgets('Set up my collection opens the collection screen', (
     WidgetTester tester,
   ) async {
     await _pumpApp(
@@ -181,13 +182,14 @@ void main() {
       setup: (AppScope scope) => scope.settings.setBrand(MarkerBrand.decoTime),
     );
 
+    // "All" shows the whole DecoTime range; "Mine" is empty.
+    await tester.tap(find.byKey(const ValueKey<String>('swatches-mine')));
+    await tester.pumpAndSettle();
     expect(find.text(l10n.swatchesEmptyNoOwnedAction), findsOneWidget);
-    expect(find.text('Where do I add my markers?'), findsNothing);
     await tester.tap(find.text(l10n.swatchesEmptyNoOwnedAction));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(SettingsPage.pageKey), findsOneWidget);
-    expect(find.text(l10n.settingsOwnedTitle).hitTestable(), findsOneWidget);
+    expect(find.byKey(CollectionPage.pageKey), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

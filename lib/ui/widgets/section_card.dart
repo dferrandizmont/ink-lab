@@ -180,9 +180,30 @@ class InkListRow extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      label,
-                      style: AppTypography.body.copyWith(color: ink.fg),
+                    // Label and value share the line while both fit; a long
+                    // value drops below the label rather than being cut.
+                    SizedBox(
+                      width: double.infinity,
+                      child: Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: InkSpacing.group,
+                        children: <Widget>[
+                          Text(
+                            label,
+                            style: AppTypography.body.copyWith(color: ink.fg),
+                          ),
+                          if (value != null)
+                            Text(
+                              value!,
+                              style:
+                                  (valueIsData
+                                          ? AppTypography.data
+                                          : AppTypography.secondary)
+                                      .copyWith(color: ink.fg2),
+                            ),
+                        ],
+                      ),
                     ),
                     if (subtitle != null) ...<Widget>[
                       const SizedBox(height: InkSpacing.s4),
@@ -194,27 +215,6 @@ class InkListRow extends StatelessWidget {
                   ],
                 ),
               ),
-              if (value != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: InkSpacing.group),
-                  child: ConstrainedBox(
-                    // A long value (a model id, say) must not push the row
-                    // past the screen edge.
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.sizeOf(context).width * 0.5,
-                    ),
-                    child: Text(
-                      value!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          (valueIsData
-                                  ? AppTypography.data
-                                  : AppTypography.secondary)
-                              .copyWith(color: ink.fg2),
-                    ),
-                  ),
-                ),
               ?trailing,
               if (chevron)
                 Padding(

@@ -46,10 +46,19 @@ abstract class AppSettingsRepository {
 
   Future<void> setBrand(MarkerBrand brand);
   Future<void> setScope(BrandScope scope);
-  Future<void> setPackSelectionMode(PackSelectionMode mode);
-  Future<void> setSelectedCoreSetIds(Set<String> ids);
-  Future<void> setSelectedAddonSetIds(Set<String> ids);
+
+  /// The Ohuhu sets the user owns.
+  Future<void> setOwnedSetIds(Set<String> ids);
+
+  /// The single markers the user added by hand (brand-scoped ids).
+  Future<void> setExtraMarkerIds(Set<String> ids);
+
+  /// Same as [setExtraMarkerIds] (the name older call sites use).
   Future<void> setOwnedMarkerCodes(Set<String> codes);
+
+  /// Replaces both parts of the collection in one change.
+  Future<void> setCollection(AppSettings settings);
+  Future<void> setMatchSuggestUnowned(bool value);
   Future<void> setFavorites(Set<String> colorIds);
   Future<void> setNameDisplayMode(NameDisplayMode mode);
   Future<void> setOnboardingCompleted(bool value);
@@ -73,13 +82,18 @@ abstract class AppSettingsRepository {
 /// were chosen and the legacy shapes the Kotlin store is known to have written
 /// — bare, unscoped favourite codes — are still read):
 ///
-/// * `active_brand`, `brand_scope`, `pack_selection_mode`
-/// * `selected_core_set_ids`, `selected_addon_set_ids`, `owned_marker_codes`
+/// * `active_brand`, `brand_scope`
+/// * `owned_set_ids`, `extra_marker_ids` (the collection). Older versions
+///   wrote `pack_selection_mode`, `selected_core_set_ids`,
+///   `selected_addon_set_ids` and `owned_marker_codes`: [load] migrates them
+///   once (see [AppSettings.fromLegacy]) and writes the new keys.
+/// * `match_suggest_unowned`
 /// * `favorite_marker_ids` (brand-scoped) with legacy fallback
 ///   `favorite_marker_codes`
 /// * `name_display_mode`, `onboarding_completed`, `theme_mode`, `language`
 final class StoredAppSettingsRepository implements AppSettingsRepository {
-  StoredAppSettingsRepository(this._store);
+  StoredAppSettingsRepository(this._store, {AppSettingsState? initial})
+    : _state = initial ?? AppSettingsState();
 
   /// Convenience: open the platform store and load it.
   static Future<StoredAppSettingsRepository> open() async {
@@ -96,6 +110,10 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   static const String keySelectedCoreSetIds = 'selected_core_set_ids';
   static const String keySelectedAddonSetIds = 'selected_addon_set_ids';
   static const String keyOwnedMarkerCodes = 'owned_marker_codes';
+  static const String keyOwnedSetIds = 'owned_set_ids';
+  static const String keyExtraMarkerIds = 'extra_marker_ids';
+  static const String keyChosenSeriesIds = 'chosen_series_ids';
+  static const String keyMatchSuggestUnowned = 'match_suggest_unowned';
   static const String keyFavorites = 'favorite_marker_ids';
   static const String keyLegacyFavorites = 'favorite_marker_codes';
   static const String keyNameDisplayMode = 'name_display_mode';
@@ -107,7 +125,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   final StreamController<AppSettingsState> _controller =
       StreamController<AppSettingsState>.broadcast();
 
-  AppSettingsState _state = AppSettingsState();
+  AppSettingsState _state;
 
   @override
   AppSettingsState get state => _state;
@@ -146,9 +164,38 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
 
   @override
   Future<void> load() async {
-    final rawCore = await _store.getStringList(keySelectedCoreSetIds);
-    final rawAddon = await _store.getStringList(keySelectedAddonSetIds);
-    final rawOwned = await _store.getStringList(keyOwnedMarkerCodes);
+    final rawSets = await _store.getStringList(keyOwnedSetIds);
+    final rawExtras = await _store.getStringList(keyExtraMarkerIds);
+    final rawSeries = await _store.getStringList(keyChosenSeriesIds);
+    final bool migrate = rawSets == null && rawExtras == null;
+    AppSettings collection;
+    var legacyConfigured = false;
+    if (migrate) {
+      final rawCore = await _store.getStringList(keySelectedCoreSetIds);
+      final rawAddon = await _store.getStringList(keySelectedAddonSetIds);
+      final rawOwned = await _store.getStringList(keyOwnedMarkerCodes);
+      legacyConfigured =
+          rawCore != null ||
+          rawAddon != null ||
+          (rawOwned != null && rawOwned.isNotEmpty);
+      final legacy = AppSettings.fromLegacy(
+        singlePackMode:
+            (await _store.getString(keyPackSelectionMode))?.toLowerCase() !=
+            'compare',
+        selectedCoreSetIds: rawCore?.toSet(),
+        selectedAddonSetIds: rawAddon?.toSet() ?? const {},
+        ownedMarkerCodes: rawOwned?.toSet() ?? const {},
+      );
+      collection = legacy.copyWith(
+        extraMarkerIds: scopedColorIds(legacy.extraMarkerIds),
+      );
+    } else {
+      collection = AppSettings(
+        ownedSetIds: rawSets?.toSet() ?? const {},
+        extraMarkerIds: scopedColorIds(rawExtras ?? const []),
+        chosenSeriesIds: rawSeries?.toSet() ?? const {},
+      );
+    }
     final rawFavorites = await _store.getStringList(keyFavorites);
     final legacyFavorites = rawFavorites == null
         ? await _store.getStringList(keyLegacyFavorites)
@@ -161,31 +208,37 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
         await _store.getString(keyScope),
         BrandScope.singleBrand,
       ),
-      settings: AppSettings(
-        packSelectionMode: _decode(
-          PackSelectionMode.values,
-          await _store.getString(keyPackSelectionMode),
-          PackSelectionMode.single,
-        ),
-        selectedCoreSetIds: rawCore?.toSet() ?? const {'classic_160'},
-        selectedAddonSetIds: rawAddon?.toSet() ?? const {},
-        ownedMarkerCodes: cleanCodes(rawOwned ?? const []),
-      ),
+      settings: collection,
       favorites: scopedColorIds(rawFavorites ?? legacyFavorites ?? const []),
       nameDisplayMode: _decode(
         NameDisplayMode.values,
         await _store.getString(keyNameDisplayMode),
-        NameDisplayMode.both,
+        NameDisplayMode.newOnly,
       ),
+      // Users of older versions who had set up a collection are not asked
+      // for the first-run setup again.
       onboardingCompleted:
-          await _store.getBool(keyOnboardingCompleted) ?? false,
+          (await _store.getBool(keyOnboardingCompleted) ?? false) ||
+          legacyConfigured,
       themeMode: _decode(
         AppThemeMode.values,
         await _store.getString(keyThemeMode),
         AppThemeMode.system,
       ),
       language: AppLanguage.fromJson(await _store.getString(keyLanguage)),
+      matchSuggestUnowned: await _store.getBool(keyMatchSuggestUnowned) ?? true,
     );
+    if (migrate) {
+      await _store.setStringList(
+        keyOwnedSetIds,
+        sortedStrings(collection.ownedSetIds),
+      );
+      await _store.setStringList(
+        keyExtraMarkerIds,
+        sortedStrings(collection.extraMarkerIds),
+      );
+      if (legacyConfigured) await _store.setBool(keyOnboardingCompleted, true);
+    }
     _controller.add(_state);
   }
 
@@ -198,33 +251,45 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
       _apply(_state.copyWith(scope: scope), keys: {keyScope: scope.toJson()});
 
   @override
-  Future<void> setPackSelectionMode(PackSelectionMode mode) => _apply(
-    _state.copyWith(
-      settings: _settingsCopy(state.settings, packSelectionMode: mode),
-    ),
-    keys: {keyPackSelectionMode: mode.toJson()},
-  );
+  Future<void> setOwnedSetIds(Set<String> ids) =>
+      setCollection(_state.settings.copyWith(ownedSetIds: ids));
 
   @override
-  Future<void> setSelectedCoreSetIds(Set<String> ids) => _apply(
-    _state.copyWith(settings: _settingsCopy(state.settings, core: ids)),
-    stringListKeys: {keySelectedCoreSetIds: sortedStrings(ids)},
-  );
+  Future<void> setExtraMarkerIds(Set<String> ids) =>
+      setCollection(_state.settings.copyWith(extraMarkerIds: ids));
 
   @override
-  Future<void> setSelectedAddonSetIds(Set<String> ids) => _apply(
-    _state.copyWith(settings: _settingsCopy(state.settings, addon: ids)),
-    stringListKeys: {keySelectedAddonSetIds: sortedStrings(ids)},
-  );
+  Future<void> setOwnedMarkerCodes(Set<String> codes) =>
+      setExtraMarkerIds(codes);
 
   @override
-  Future<void> setOwnedMarkerCodes(Set<String> codes) {
-    final cleaned = cleanCodes(codes);
+  Future<void> setCollection(AppSettings settings) {
+    final next = AppSettings(
+      ownedSetIds: {
+        for (final id in settings.ownedSetIds)
+          if (id.trim().isNotEmpty) id.trim(),
+      },
+      extraMarkerIds: scopedColorIds(settings.extraMarkerIds),
+      chosenSeriesIds: {
+        for (final id in settings.chosenSeriesIds)
+          if (MarkerLine.fromId(id) != null) id.trim(),
+      },
+    );
     return _apply(
-      _state.copyWith(settings: _settingsCopy(state.settings, owned: cleaned)),
-      stringListKeys: {keyOwnedMarkerCodes: sortedStrings(cleaned)},
+      _state.copyWith(settings: next),
+      stringListKeys: {
+        keyOwnedSetIds: sortedStrings(next.ownedSetIds),
+        keyExtraMarkerIds: sortedStrings(next.extraMarkerIds),
+        keyChosenSeriesIds: sortedStrings(next.chosenSeriesIds),
+      },
     );
   }
+
+  @override
+  Future<void> setMatchSuggestUnowned(bool value) => _apply(
+    _state.copyWith(matchSuggestUnowned: value),
+    boolKeys: {keyMatchSuggestUnowned: value},
+  );
 
   @override
   Future<void> setFavorites(Set<String> colorIds) {
@@ -265,16 +330,18 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
     keys: {
       keyBrand: state.brand.id,
       keyScope: state.scope.toJson(),
-      keyPackSelectionMode: state.settings.packSelectionMode.toJson(),
       keyNameDisplayMode: state.nameDisplayMode.toJson(),
       keyThemeMode: state.themeMode.toJson(),
       keyLanguage: state.language.toJson(),
     },
-    boolKeys: {keyOnboardingCompleted: state.onboardingCompleted},
+    boolKeys: {
+      keyOnboardingCompleted: state.onboardingCompleted,
+      keyMatchSuggestUnowned: state.matchSuggestUnowned,
+    },
     stringListKeys: {
-      keySelectedCoreSetIds: sortedStrings(state.settings.selectedCoreSetIds),
-      keySelectedAddonSetIds: sortedStrings(state.settings.selectedAddonSetIds),
-      keyOwnedMarkerCodes: sortedStrings(state.settings.ownedMarkerCodes),
+      keyOwnedSetIds: sortedStrings(state.settings.ownedSetIds),
+      keyExtraMarkerIds: sortedStrings(state.settings.extraMarkerIds),
+      keyChosenSeriesIds: sortedStrings(state.settings.chosenSeriesIds),
       keyFavorites: sortedStrings(state.favorites),
     },
   );
@@ -317,19 +384,6 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
     _controller.add(_state);
   }
 }
-
-AppSettings _settingsCopy(
-  AppSettings source, {
-  PackSelectionMode? packSelectionMode,
-  Set<String>? core,
-  Set<String>? addon,
-  Set<String>? owned,
-}) => AppSettings(
-  packSelectionMode: packSelectionMode ?? source.packSelectionMode,
-  selectedCoreSetIds: core ?? source.selectedCoreSetIds,
-  selectedAddonSetIds: addon ?? source.selectedAddonSetIds,
-  ownedMarkerCodes: owned ?? source.ownedMarkerCodes,
-);
 
 T _decode<T extends Enum>(List<T> values, String? json, T fallback) {
   try {

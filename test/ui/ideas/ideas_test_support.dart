@@ -18,29 +18,37 @@ MarkerRepository diskMarkerRepository() =>
     MarkerRepository(loadAsset: (String path) => File(path).readAsStringSync());
 
 /// The ideas page inside an in-memory scope and a minimal Material app.
-AppScope ideasScope() => AppScope.inMemory(
-  markers: diskMarkerRepository(),
-  child: MaterialApp(
-    locale: const Locale('en'),
-    localizationsDelegates: testLocalizationsDelegates,
-    supportedLocales: testSupportedLocales,
-    theme: AppTheme.light(),
-    darkTheme: AppTheme.dark(),
-    home: const Scaffold(body: IdeasPage()),
-  ),
-);
+AppScope ideasScope({DateTime? today, VoidCallback? onOpenPalette}) =>
+    AppScope.inMemory(
+      markers: diskMarkerRepository(),
+      child: MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: testSupportedLocales,
+        theme: AppTheme.light(),
+        darkTheme: AppTheme.dark(),
+        home: Scaffold(
+          body: IdeasPage(today: today, onOpenPalette: onOpenPalette),
+        ),
+      ),
+    );
 
 /// Pumps the ideas page inside a fresh in-memory scope.
 Future<AppScope> pumpIdeas(
   WidgetTester tester, {
   MarkerBrand brand = MarkerBrand.ohuhuOahu,
   Set<String>? ownedMarkerCodes,
+  DateTime? today,
+  VoidCallback? onOpenPalette,
 }) async {
   tester.view.physicalSize = const Size(800, 4000);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 
-  final AppScope scope = ideasScope();
+  final AppScope scope = ideasScope(
+    today: today ?? DateTime(2026, 10, 29),
+    onOpenPalette: onOpenPalette,
+  );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);
   }

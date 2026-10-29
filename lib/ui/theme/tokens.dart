@@ -50,7 +50,7 @@ class InkColors extends ThemeExtension<InkColors> {
   /// Text and icons on [action].
   final Color onAction;
 
-  /// Active chip fill and border, nav pill, quality badge.
+  /// Active chip fill and border, nav indicator, quality badge.
   final Color pale;
 
   /// Hairline drawn around light marker colours.
@@ -253,7 +253,8 @@ abstract final class InkSpacing {
   static const double page = gutter;
 }
 
-/// Corner radii (spec §3).
+/// Corner radii (spec §3): the one small radius scale of the app. No pills:
+/// only the switch track is fully rounded (test/ui/no_pill_test.dart).
 abstract final class InkRadii {
   /// Sampled chip, mini palette strip.
   static const double xs = 4;
@@ -264,28 +265,35 @@ abstract final class InkRadii {
   /// Swatch cell, small swatches, recent picks, Ideas strip.
   static const double cell = 10;
 
-  /// Base-marker field, other text inputs.
-  static const double input = 12;
+  /// Base-marker field, search field, other inputs.
+  static const double input = 10;
 
-  /// Cards, sheet top corners, photo, palette strip, hero swatch.
-  static const double card = 16;
+  /// Buttons, chips, icon buttons, segmented containers, hero swatch and
+  /// palette strips (small radius family: no pills on controls).
+  static const double control = 8;
 
-  /// Pills: search, chips, buttons, segmented, nav pill, switch.
-  static const double pill = 999;
+  /// Segments inside a segmented control (inset 3 from the 8 container).
+  static const double segment = 5;
+
+  /// Cards, sheet top corners, photo.
+  static const double card = 12;
 
   static const BorderRadius xsRadius = BorderRadius.all(Radius.circular(xs));
   static const BorderRadius smRadius = BorderRadius.all(Radius.circular(sm));
   static const BorderRadius cellRadius = BorderRadius.all(
     Radius.circular(cell),
   );
+  static const BorderRadius controlRadius = BorderRadius.all(
+    Radius.circular(control),
+  );
+  static const BorderRadius segmentRadius = BorderRadius.all(
+    Radius.circular(segment),
+  );
   static const BorderRadius inputRadius = BorderRadius.all(
     Radius.circular(input),
   );
   static const BorderRadius cardRadius = BorderRadius.all(
     Radius.circular(card),
-  );
-  static const BorderRadius pillRadius = BorderRadius.all(
-    Radius.circular(pill),
   );
   static const BorderRadius sheetRadius = BorderRadius.vertical(
     top: Radius.circular(card),

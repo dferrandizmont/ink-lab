@@ -253,8 +253,9 @@ void main() {
       paletteCandidateColors(
         colors: [...ohuhu, ...deco],
         brand: MarkerBrand.decoTime,
-      ),
-      isEmpty,
+      ).toSet(),
+      // Not set up yet: the whole DecoTime range, like Ohuhu.
+      deco.toSet(),
     );
     final owned = paletteCandidateColors(
       colors: [...ohuhu, ...deco],
@@ -264,13 +265,23 @@ void main() {
     );
     expect(owned.map((c) => c.newCode), ['01', '02']);
     expect(owned.every((c) => c.brandId == 'decotime'), isTrue);
+    // Ohuhu: owned = the owned sets + the extra markers (a union).
+    final extra = ohuhu.firstWhere((c) => !c.sets.contains('classic_40'));
     final selectedOhuhu = paletteCandidateColors(
       colors: ohuhu,
       brand: MarkerBrand.ohuhuOahu,
-      ownedMarkerCodes: {base.colorId},
+      ownedMarkerCodes: {extra.colorId},
       activeSetIds: {'classic_40'},
     );
-    expect(selectedOhuhu, [base]);
+    expect(selectedOhuhu.toSet(), {...collection, extra});
+    expect(
+      paletteCandidateColors(
+        colors: ohuhu,
+        brand: MarkerBrand.ohuhuOahu,
+        ownedMarkerCodes: {base.colorId},
+      ),
+      [base],
+    );
   });
   for (final mode in PaletteMode.values) {
     test(
@@ -322,12 +333,23 @@ void main() {
       expect(
         failure(
           PaletteAdvisorRequest(
-            availableColors: deco,
+            availableColors: <MarkerColor>[],
             brand: MarkerBrand.decoTime,
             baseColor: deco[1],
           ),
         ),
         PaletteFailureReason.noAvailableColors,
+      );
+      // A DecoTime collection that is not set up palettes from the range.
+      expect(
+        advisor.advise(
+          PaletteAdvisorRequest(
+            availableColors: deco,
+            brand: MarkerBrand.decoTime,
+            baseColor: deco[1],
+          ),
+        ),
+        isA<PaletteAdviceSuccess>(),
       );
       expect(
         failure(

@@ -15,10 +15,10 @@ class InkSegment<T> {
   final String? semantic;
 }
 
-/// The pill segmented control (spec §4 "Segmented control").
+/// The segmented control (spec §4 "Segmented control").
 ///
-/// Container 48 high, pill, 1 px `strong`, padding 3, gap 2, `surface`.
-/// Segments 40 high, min width 44, padding 0 10, pill. Selected: `action`
+/// Container 48 high, control radius, 1 px `strong`, padding 3, gap 2, `surface`.
+/// Segments 40 high, min width 44, padding 0 10, segment radius. Selected: `action`
 /// fill, `onAction` text; others transparent with `fg`. [numeric] segments
 /// use `code` type (Palette size 3/4/5), others `button`. Exposed to
 /// assistive technology as a radio group.
@@ -51,6 +51,23 @@ class InkSegmented<T> extends StatelessWidget {
     );
     final TextStyle base = numeric ? AppTypography.code : AppTypography.button;
 
+    // Natural (one-line) width of each label, so "expand" shares the width in
+    // proportion to the labels instead of equally: a long option is never cut
+    // or wrapped while a short one ("3", "List") does not hog space.
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    final TextDirection direction = Directionality.of(context);
+    double natural(InkSegment<T> s) {
+      final TextPainter painter = TextPainter(
+        text: TextSpan(text: s.label, style: base),
+        textDirection: direction,
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      final double width = painter.width;
+      painter.dispose();
+      return width;
+    }
+
     Widget segment(InkSegment<T> s) {
       final bool on = s.value == selected;
       final Widget child = Semantics(
@@ -62,28 +79,40 @@ class InkSegmented<T> extends StatelessWidget {
         excludeSemantics: true,
         child: InkWell(
           onTap: onChanged == null || on ? null : () => onChanged!(s.value),
-          customBorder: const StadiumBorder(),
-          child: AnimatedContainer(
-            duration: duration,
-            curve: InkMotion.crossFadeCurve,
-            height: InkGeometry.segmentHeight,
-            constraints: const BoxConstraints(minWidth: InkGeometry.target),
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            alignment: Alignment.center,
-            decoration: ShapeDecoration(
-              color: on ? ink.action : Colors.transparent,
-              shape: const StadiumBorder(),
-            ),
-            child: Text(
-              s.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: base.copyWith(color: on ? ink.onAction : ink.fg),
+          customBorder: const RoundedRectangleBorder(
+            borderRadius: InkRadii.segmentRadius,
+          ),
+          // The segment takes the full height of the control, so the hit
+          // area is 46 high around the 40-high visual segment.
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: AnimatedContainer(
+              duration: duration,
+              curve: InkMotion.crossFadeCurve,
+              height: InkGeometry.segmentHeight,
+              constraints: const BoxConstraints(minWidth: InkGeometry.target),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              alignment: Alignment.center,
+              decoration: ShapeDecoration(
+                color: on ? ink.action : Colors.transparent,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: InkRadii.segmentRadius,
+                ),
+              ),
+              child: Text(
+                s.label,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.visible,
+                style: base.copyWith(color: on ? ink.onAction : ink.fg),
+              ),
             ),
           ),
         ),
       );
-      return expand ? Expanded(child: child) : child;
+      return expand
+          ? Expanded(flex: (natural(s) + 20).round(), child: child)
+          : child;
     }
 
     return Semantics(
@@ -91,10 +120,13 @@ class InkSegmented<T> extends StatelessWidget {
       label: semanticLabel,
       child: Container(
         height: InkGeometry.segmentedHeight,
-        padding: const EdgeInsets.all(3),
+        padding: const EdgeInsets.symmetric(horizontal: 3),
         decoration: ShapeDecoration(
           color: ink.surface,
-          shape: StadiumBorder(side: BorderSide(color: ink.strong)),
+          shape: RoundedRectangleBorder(
+            borderRadius: InkRadii.controlRadius,
+            side: BorderSide(color: ink.strong),
+          ),
         ),
         child: Row(
           mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,

@@ -8,9 +8,14 @@ import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_chip.dart';
 import '../../../l10n/l10n.dart';
 
-String _semanticsOf(BuildContext context, ColorDistanceMatch match) {
+String _semanticsOf(
+  BuildContext context,
+  ColorDistanceMatch match, {
+  bool notOwned = false,
+}) {
   final MarkerColor color = match.color;
-  return '${color.newCode}, ${color.newName}, '
+  final String owned = notOwned ? '${context.l10n.matchNotOwnedBadge}, ' : '';
+  return '${color.newCode}, ${color.newName}, $owned'
       '${context.l10n.matchQualityLabel(match.deltaE)}, '
       '${context.l10n.commonDeltaE(match.deltaE)}. ${context.l10n.matchSaveButton}.';
 }
@@ -20,7 +25,15 @@ String _semanticsOf(BuildContext context, ColorDistanceMatch match) {
 /// Design G "Best match": an 88 hero swatch beside the code, the old code, the
 /// name in the sheet-title style, the distance and the quality badge.
 class BestMatchTile extends StatelessWidget {
-  const BestMatchTile({super.key, required this.match, required this.onRecord});
+  const BestMatchTile({
+    super.key,
+    required this.match,
+    required this.onRecord,
+    this.notOwned = false,
+  });
+
+  /// The marker is not in the user's collection ("You don't own it").
+  final bool notOwned;
 
   /// The winning match, with its marker and CIELAB76 distance.
   final ColorDistanceMatch match;
@@ -37,7 +50,7 @@ class BestMatchTile extends StatelessWidget {
         color.oldCode.toUpperCase() != color.newCode.toUpperCase();
     return Semantics(
       button: true,
-      label: _semanticsOf(context, match),
+      label: _semanticsOf(context, match, notOwned: notOwned),
       excludeSemantics: true,
       child: InkWell(
         onTap: onRecord,
@@ -55,47 +68,41 @@ class BestMatchTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
+                  Wrap(
+                    spacing: InkSpacing.s8,
+                    crossAxisAlignment: WrapCrossAlignment.end,
                     children: <Widget>[
                       Text(
                         color.newCode,
                         style: AppTypography.code.copyWith(color: ink.fg),
                       ),
-                      if (hasOldCode) ...<Widget>[
-                        const SizedBox(width: InkSpacing.s8),
-                        Flexible(
-                          child: Text(
-                            context.l10n.commonOldCode(color.oldCode),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.data.copyWith(color: ink.fg2),
-                          ),
+                      if (hasOldCode)
+                        Text(
+                          context.l10n.commonOldCode(color.oldCode),
+                          style: AppTypography.data.copyWith(color: ink.fg2),
                         ),
-                      ],
                     ],
                   ),
                   const SizedBox(height: InkSpacing.s4),
                   Text(
                     color.newName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                     style: AppTypography.sheetTitle.copyWith(color: ink.fg),
                   ),
                   const SizedBox(height: InkSpacing.group),
-                  Row(
+                  Wrap(
+                    spacing: InkSpacing.s8,
+                    runSpacing: InkSpacing.s4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: <Widget>[
                       Text(
                         context.l10n.commonDeltaE(match.deltaE),
                         style: AppTypography.data.copyWith(color: ink.fg),
                       ),
-                      const SizedBox(width: InkSpacing.s8),
-                      Flexible(
-                        child: QualityBadge(
-                          context.l10n.matchQualityLabel(match.deltaE),
-                        ),
+                      QualityBadge(
+                        context.l10n.matchQualityLabel(match.deltaE),
                       ),
+                      if (notOwned)
+                        QualityBadge(context.l10n.matchNotOwnedBadge),
                     ],
                   ),
                 ],
@@ -147,13 +154,13 @@ class MatchResultTile extends StatelessWidget {
               Text(
                 color.newCode,
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                softWrap: false,
                 style: AppTypography.code.copyWith(color: ink.fg),
               ),
               Text(
                 context.l10n.commonDeltaE(match.deltaE),
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                softWrap: false,
                 style: AppTypography.data.copyWith(color: ink.fg2),
               ),
             ],

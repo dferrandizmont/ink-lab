@@ -10,8 +10,8 @@ English version: [LEEME.en.md](LEEME.en.md).
 | `politica-privacidad.en.md` | Traducción de cortesía al inglés. Manda la española. | Mantenerla al día con la española. |
 | `../privacy.md` y `../privacy.en.md` | Inventario técnico de datos, permisos, copias, IA y exportaciones, comprobado contra el código. | Revisar cada vez que cambie el flujo de datos. |
 | `../../PRIVACY.md` | Puntero corto a los documentos anteriores. | — |
-| `../../SECURITY.md` y `SECURITY.en.md` | Cómo avisar de una vulnerabilidad sin mandar datos reales. | — |
-| `../../LICENSE` y `../../LICENSE-CONTENT.md` (`.en.md`) | MIT para el código; CC BY-SA 4.0 para el contenido propio; los datos de los catálogos y los materiales de terceros, aparte. | — |
+| `../../SECURITY.es.md` y `SECURITY.md` | Cómo avisar de una vulnerabilidad sin mandar datos reales. | — |
+| `../../LICENSE` y `../../LICENSE-CONTENT.es.md` (`.md`) | MIT para el código; CC BY-SA 4.0 para el contenido propio; los datos de los catálogos y los materiales de terceros, aparte. | — |
 
 Convención: el texto en español es el que vale; cada documento tiene su versión inglesa en `*.en.md` al lado.
 

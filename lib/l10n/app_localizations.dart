@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsCollectionGroup.
   ///
   /// In en, this message translates to:
-  /// **'Collection'**
+  /// **'My collection'**
   String get settingsCollectionGroup;
 
   /// No description provided for @settingsDisplayGroup.
@@ -146,107 +146,11 @@ abstract class AppLocalizations {
   /// **'Brand'**
   String get settingsBrandTitle;
 
-  /// No description provided for @settingsBrandDecoTimeHint.
-  ///
-  /// In en, this message translates to:
-  /// **'DecoTime shows only the markers you mark as owned.'**
-  String get settingsBrandDecoTimeHint;
-
   /// No description provided for @settingsBrandSubtitle.
   ///
   /// In en, this message translates to:
   /// **'The brand selects the catalogue of markers the app works with.'**
   String get settingsBrandSubtitle;
-
-  /// No description provided for @settingsPacksTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Ohuhu packs'**
-  String get settingsPacksTitle;
-
-  /// No description provided for @settingsPacksSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'The packs that make up your Ohuhu collection.'**
-  String get settingsPacksSubtitle;
-
-  /// No description provided for @settingsPackMode.
-  ///
-  /// In en, this message translates to:
-  /// **'Pack selection'**
-  String get settingsPackMode;
-
-  /// No description provided for @settingsSinglePackHint.
-  ///
-  /// In en, this message translates to:
-  /// **'With a single pack only the first selected pack is used.'**
-  String get settingsSinglePackHint;
-
-  /// No description provided for @settingsCorePacks.
-  ///
-  /// In en, this message translates to:
-  /// **'Core packs'**
-  String get settingsCorePacks;
-
-  /// No description provided for @settingsAddonPacks.
-  ///
-  /// In en, this message translates to:
-  /// **'Add-on packs'**
-  String get settingsAddonPacks;
-
-  /// No description provided for @settingsOwnedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Owned markers'**
-  String get settingsOwnedTitle;
-
-  /// No description provided for @settingsOwnedSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Tick the markers you own. DecoTime only shows the colors of the markers you own.'**
-  String get settingsOwnedSubtitle;
-
-  /// No description provided for @settingsOwnedSearchHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Search markers'**
-  String get settingsOwnedSearchHint;
-
-  /// No description provided for @settingsSelectAll.
-  ///
-  /// In en, this message translates to:
-  /// **'Select all'**
-  String get settingsSelectAll;
-
-  /// No description provided for @settingsSelectNone.
-  ///
-  /// In en, this message translates to:
-  /// **'Select none'**
-  String get settingsSelectNone;
-
-  /// No description provided for @settingsClearOwned.
-  ///
-  /// In en, this message translates to:
-  /// **'Clear all'**
-  String get settingsClearOwned;
-
-  /// No description provided for @settingsClearOwnedTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Remove every owned marker?'**
-  String get settingsClearOwnedTitle;
-
-  /// No description provided for @settingsClearOwnedBody.
-  ///
-  /// In en, this message translates to:
-  /// **'The markers you own will be forgotten. You can tick them again afterwards.'**
-  String get settingsClearOwnedBody;
-
-  /// No description provided for @settingsOwnedEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'No marker is owned yet. Tick the ones you have.'**
-  String get settingsOwnedEmpty;
 
   /// No description provided for @settingsPalettesTitle.
   ///
@@ -287,13 +191,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsFavoritesTitle.
   ///
   /// In en, this message translates to:
-  /// **'Favorites'**
+  /// **'Favourites'**
   String get settingsFavoritesTitle;
 
   /// No description provided for @settingsFavoritesEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No color is a favorite yet.'**
+  /// **'No colour is a favourite yet.'**
   String get settingsFavoritesEmpty;
 
   /// No description provided for @settingsClearFavorites.
@@ -305,37 +209,37 @@ abstract class AppLocalizations {
   /// No description provided for @settingsClearFavoritesTitle.
   ///
   /// In en, this message translates to:
-  /// **'Remove every favorite?'**
+  /// **'Remove every favourite?'**
   String get settingsClearFavoritesTitle;
 
   /// No description provided for @settingsClearFavoritesBody.
   ///
   /// In en, this message translates to:
-  /// **'The favorite colors of this brand will be removed. This cannot be undone.'**
+  /// **'The favourite colours of this brand will be removed. This cannot be undone.'**
   String get settingsClearFavoritesBody;
 
   /// No description provided for @settingsDeleteFavorite.
   ///
   /// In en, this message translates to:
-  /// **'Remove the favorite'**
+  /// **'Remove the favourite'**
   String get settingsDeleteFavorite;
 
   /// No description provided for @settingsLabelsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Name display'**
+  /// **'Ohuhu codes'**
   String get settingsLabelsTitle;
 
   /// No description provided for @settingsLabelsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'How the marker codes and names are shown in the app.'**
+  /// **'Ohuhu renamed its codes in 2023.'**
   String get settingsLabelsSubtitle;
 
   /// No description provided for @settingsNewLabels.
   ///
   /// In en, this message translates to:
-  /// **'New'**
+  /// **'Current'**
   String get settingsNewLabels;
 
   /// No description provided for @settingsOldLabels.
@@ -443,7 +347,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsImportConfirmBody.
   ///
   /// In en, this message translates to:
-  /// **'The backup replaces your settings, your saved palettes, your color match history and your AI settings.'**
+  /// **'The backup replaces your settings, your saved palettes, your colour match history and your AI settings.'**
   String get settingsImportConfirmBody;
 
   /// No description provided for @settingsImportInvalidJson.
@@ -481,6 +385,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick On-device or OpenRouter below to use an AI'**
   String get settingsAiEnabledSubtitleColourTheory;
+
+  /// No description provided for @settingsAiEnabledSubtitleColourTheoryNoOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick OpenRouter below to use an AI'**
+  String get settingsAiEnabledSubtitleColourTheoryNoOnDevice;
 
   /// No description provided for @settingsAiEnabledSubtitleOnDevice.
   ///
@@ -575,7 +485,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAiAutoFallback.
   ///
   /// In en, this message translates to:
-  /// **'Fall back to colour theory'**
+  /// **'Built-in fallback'**
   String get settingsAiAutoFallback;
 
   /// No description provided for @settingsAiAutoFallbackSubtitle.
@@ -667,6 +577,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'With Colour theory selected, palettes come from the built-in engine: no AI is used and nothing leaves your phone. Choose On-device or OpenRouter to use an AI.'**
   String get settingsAiDisclosureColourTheory;
+
+  /// No description provided for @settingsAiDisclosureColourTheoryNoOnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'With Colour theory selected, palettes come from the built-in engine: no AI is used and nothing leaves your phone. Choose OpenRouter to use an AI.'**
+  String get settingsAiDisclosureColourTheoryNoOnDevice;
 
   /// No description provided for @settingsAiDisclosureConfirm.
   ///
@@ -890,6 +806,12 @@ abstract class AppLocalizations {
   /// **'Source code'**
   String get settingsSourceCode;
 
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get settingsPrivacyPolicy;
+
   /// No description provided for @settingsCopyRepository.
   ///
   /// In en, this message translates to:
@@ -905,7 +827,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu or DecoTime, and it uses their marker codes, names and color values only as factual reference data.'**
+  /// **'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu or DecoTime, and it uses their marker codes, names and colour values only as factual reference data.'**
   String get settingsDisclaimer;
 
   /// No description provided for @paletteTitle.
@@ -941,7 +863,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteScenarioTitle.
   ///
   /// In en, this message translates to:
-  /// **'Scenarios'**
+  /// **'Scenes'**
   String get paletteScenarioTitle;
 
   /// No description provided for @paletteSizeTitle.
@@ -1025,7 +947,7 @@ abstract class AppLocalizations {
   /// No description provided for @palettePaintTipBase.
   ///
   /// In en, this message translates to:
-  /// **'Block the overall shape with the base color first.'**
+  /// **'Block the overall shape with the base colour first.'**
   String get palettePaintTipBase;
 
   /// No description provided for @palettePaintTipShadow.
@@ -1145,7 +1067,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteEmptyHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter a base marker code to build a palette, or turn on Scenario mode.'**
+  /// **'Pick a base marker to build a palette, or choose a scene with the Scenes chip.'**
   String get paletteEmptyHint;
 
   /// No description provided for @paletteCustomModeHint.
@@ -1160,6 +1082,48 @@ abstract class AppLocalizations {
   /// **'No palette could be built from your collection. Try another mode or add more markers.'**
   String get paletteNoSuggestions;
 
+  /// No description provided for @palettePickBaseTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from your markers'**
+  String get palettePickBaseTooltip;
+
+  /// No description provided for @palettePickerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a base marker'**
+  String get palettePickerTitle;
+
+  /// No description provided for @palettePickerSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Code or name'**
+  String get palettePickerSearchHint;
+
+  /// No description provided for @palettePickerEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No marker matches your search.'**
+  String get palettePickerEmpty;
+
+  /// No description provided for @paletteUndoButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get paletteUndoButton;
+
+  /// No description provided for @paletteBaseReplaced.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} is now the base. Your previous palette was replaced.'**
+  String paletteBaseReplaced(String code);
+
+  /// No description provided for @paletteIdeaApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'“{title}” palette applied ({count} markers).'**
+  String paletteIdeaApplied(String title, int count);
+
   /// No description provided for @swatchesTitle.
   ///
   /// In en, this message translates to:
@@ -1169,7 +1133,7 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesSearchHint.
   ///
   /// In en, this message translates to:
-  /// **'Code, name, hex or old code'**
+  /// **'Code, name or hex'**
   String get swatchesSearchHint;
 
   /// No description provided for @swatchesClearSearch.
@@ -1193,7 +1157,7 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesOwnedOnly.
   ///
   /// In en, this message translates to:
-  /// **'Owned'**
+  /// **'Mine'**
   String get swatchesOwnedOnly;
 
   /// No description provided for @swatchesFilters.
@@ -1211,7 +1175,7 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesLabelPack.
   ///
   /// In en, this message translates to:
-  /// **'Pack'**
+  /// **'Set'**
   String get swatchesLabelPack;
 
   /// No description provided for @swatchesLabelLayout.
@@ -1223,7 +1187,7 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesAllPacks.
   ///
   /// In en, this message translates to:
-  /// **'All packs'**
+  /// **'All sets'**
   String get swatchesAllPacks;
 
   /// No description provided for @swatchesClearFilters.
@@ -1253,7 +1217,7 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesInPacks.
   ///
   /// In en, this message translates to:
-  /// **'In packs'**
+  /// **'In sets'**
   String get swatchesInPacks;
 
   /// No description provided for @swatchesLocation.
@@ -1373,49 +1337,49 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesAddFavorite.
   ///
   /// In en, this message translates to:
-  /// **'Add to favorites'**
+  /// **'Add to favourites'**
   String get swatchesAddFavorite;
 
   /// No description provided for @swatchesRemoveFavorite.
   ///
   /// In en, this message translates to:
-  /// **'Remove from favorites'**
+  /// **'Remove from favourites'**
   String get swatchesRemoveFavorite;
 
   /// No description provided for @swatchesEmptyNoOwnedTitle.
   ///
   /// In en, this message translates to:
-  /// **'No markers added yet'**
+  /// **'No markers yet'**
   String get swatchesEmptyNoOwnedTitle;
 
   /// No description provided for @swatchesEmptyNoOwnedBody.
   ///
   /// In en, this message translates to:
-  /// **'DecoTime swatches only show the markers you own. Add the markers you have in Settings, in the owned markers manager, and their colours will show up here.'**
+  /// **'You haven\'t added any markers yet. Tell the app which sets and markers you have.'**
   String get swatchesEmptyNoOwnedBody;
 
   /// No description provided for @swatchesEmptyNoOwnedAction.
   ///
   /// In en, this message translates to:
-  /// **'Add my markers'**
+  /// **'Set up my collection'**
   String get swatchesEmptyNoOwnedAction;
 
   /// No description provided for @swatchesEmptyNoOwnedHint.
   ///
   /// In en, this message translates to:
-  /// **'Open the Settings tab and use the owned markers manager.'**
+  /// **'Open Settings, then My collection.'**
   String get swatchesEmptyNoOwnedHint;
 
   /// No description provided for @swatchesEmptySearchTitle.
   ///
   /// In en, this message translates to:
-  /// **'No colors found'**
+  /// **'No colours found'**
   String get swatchesEmptySearchTitle;
 
   /// No description provided for @swatchesEmptySearchBody.
   ///
   /// In en, this message translates to:
-  /// **'No color of this collection matches your search.'**
+  /// **'No colour of this collection matches your search.'**
   String get swatchesEmptySearchBody;
 
   /// No description provided for @swatchesEmptyFiltersTitle.
@@ -1427,25 +1391,25 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesEmptyFiltersBody.
   ///
   /// In en, this message translates to:
-  /// **'This brand has no colors for the selected packs and filters.'**
+  /// **'This brand has no colours for the selected sets and filters.'**
   String get swatchesEmptyFiltersBody;
 
   /// No description provided for @swatchesLoading.
   ///
   /// In en, this message translates to:
-  /// **'Loading colors…'**
+  /// **'Loading colours…'**
   String get swatchesLoading;
 
   /// No description provided for @swatchesLoadFailedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Colors unavailable'**
+  /// **'Colours unavailable'**
   String get swatchesLoadFailedTitle;
 
   /// No description provided for @swatchesLoadFailedBody.
   ///
   /// In en, this message translates to:
-  /// **'The marker catalogue could not be read, so no colors can be shown.'**
+  /// **'The marker catalogue could not be read, so no colours can be shown.'**
   String get swatchesLoadFailedBody;
 
   /// No description provided for @swatchesUnavailable.
@@ -1457,7 +1421,7 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesVisibleCount.
   ///
   /// In en, this message translates to:
-  /// **'Colors'**
+  /// **'Colours'**
   String get swatchesVisibleCount;
 
   /// No description provided for @swatchesScopeCollection.
@@ -1481,14 +1445,14 @@ abstract class AppLocalizations {
   /// No description provided for @ideasHeaderSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Guides and challenges for your markers'**
+  /// **'Exercises for your markers, with a palette from your collection'**
   String get ideasHeaderSubtitle;
 
-  /// No description provided for @ideasSelectedLabel.
+  /// No description provided for @ideasHeaderSubtitleWholeRange.
   ///
   /// In en, this message translates to:
-  /// **'Selected'**
-  String get ideasSelectedLabel;
+  /// **'Exercises with a palette from the whole range'**
+  String get ideasHeaderSubtitleWholeRange;
 
   /// No description provided for @ideasSearchHint.
   ///
@@ -1502,70 +1466,28 @@ abstract class AppLocalizations {
   /// **'All'**
   String get ideasCategoryAll;
 
-  /// No description provided for @ideasBadgeGuideOnly.
-  ///
-  /// In en, this message translates to:
-  /// **'Guide only'**
-  String get ideasBadgeGuideOnly;
-
-  /// No description provided for @ideasBadgeGuideAndPalette.
-  ///
-  /// In en, this message translates to:
-  /// **'Guide + palette'**
-  String get ideasBadgeGuideAndPalette;
-
-  /// No description provided for @ideasShowTechnique.
-  ///
-  /// In en, this message translates to:
-  /// **'Show technique'**
-  String get ideasShowTechnique;
-
-  /// No description provided for @ideasGenerateIdea.
-  ///
-  /// In en, this message translates to:
-  /// **'Generate idea'**
-  String get ideasGenerateIdea;
-
   /// No description provided for @ideasApplyButton.
   ///
   /// In en, this message translates to:
-  /// **'Apply to Palette'**
+  /// **'Use in Palette'**
   String get ideasApplyButton;
-
-  /// No description provided for @ideasHowToTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'How to execute'**
-  String get ideasHowToTitle;
-
-  /// No description provided for @ideasExtraTouchesTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Extra touches'**
-  String get ideasExtraTouchesTitle;
-
-  /// No description provided for @ideasSuggestedColorsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Suggested colors'**
-  String get ideasSuggestedColorsTitle;
 
   /// No description provided for @ideasGuideOnlyNote.
   ///
   /// In en, this message translates to:
-  /// **'This idea is intentionally technique-first. It does not enforce a fixed palette, so you can choose colors freely.'**
+  /// **'This exercise uses your whole collection, so it has no fixed palette.'**
   String get ideasGuideOnlyNote;
 
   /// No description provided for @ideasNoMarkersDecoTime.
   ///
   /// In en, this message translates to:
-  /// **'Select your owned DecoTime markers in Settings to generate color suggestions for this idea.'**
+  /// **'Add the DecoTime markers you own in My collection to get a palette for this idea.'**
   String get ideasNoMarkersDecoTime;
 
   /// No description provided for @ideasNoMarkersOther.
   ///
   /// In en, this message translates to:
-  /// **'No markers available for the current collection filters.'**
+  /// **'Add the markers you own in My collection to get a palette for this idea.'**
   String get ideasNoMarkersOther;
 
   /// No description provided for @ideasCategoriesLabel.
@@ -1592,17 +1514,2219 @@ abstract class AppLocalizations {
   /// **'No ideas match your search.'**
   String get ideasEmptySearch;
 
-  /// No description provided for @ideasSelectHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Pick an idea to see how to execute it.'**
-  String get ideasSelectHint;
-
   /// No description provided for @ideasNoMarkers.
   ///
   /// In en, this message translates to:
   /// **'No markers currently available'**
   String get ideasNoMarkers;
+
+  /// No description provided for @ideasCategoryTechnique.
+  ///
+  /// In en, this message translates to:
+  /// **'Techniques'**
+  String get ideasCategoryTechnique;
+
+  /// No description provided for @ideasCategoryColorChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour challenges'**
+  String get ideasCategoryColorChallenge;
+
+  /// No description provided for @ideasCategoryMood.
+  ///
+  /// In en, this message translates to:
+  /// **'Moods'**
+  String get ideasCategoryMood;
+
+  /// No description provided for @ideasCategorySeason.
+  ///
+  /// In en, this message translates to:
+  /// **'Seasons'**
+  String get ideasCategorySeason;
+
+  /// No description provided for @ideasDifficultyEasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Easy'**
+  String get ideasDifficultyEasy;
+
+  /// No description provided for @ideasDifficultyMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get ideasDifficultyMedium;
+
+  /// No description provided for @ideasDifficultyHard.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard'**
+  String get ideasDifficultyHard;
+
+  /// No description provided for @ideasFeaturedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Idea of the day'**
+  String get ideasFeaturedLabel;
+
+  /// No description provided for @ideasOpenButton.
+  ///
+  /// In en, this message translates to:
+  /// **'See steps'**
+  String get ideasOpenButton;
+
+  /// No description provided for @ideasOtherMarkersButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Other markers'**
+  String get ideasOtherMarkersButton;
+
+  /// No description provided for @ideasPracticeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What you practise'**
+  String get ideasPracticeTitle;
+
+  /// No description provided for @ideasSubjectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What to draw'**
+  String get ideasSubjectTitle;
+
+  /// No description provided for @ideasMarkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your markers'**
+  String get ideasMarkersTitle;
+
+  /// No description provided for @ideasStepsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get ideasStepsTitle;
+
+  /// No description provided for @ideasTipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip'**
+  String get ideasTipTitle;
+
+  /// No description provided for @ideasMaterialsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You need'**
+  String get ideasMaterialsTitle;
+
+  /// No description provided for @ideasMaterialPaper.
+  ///
+  /// In en, this message translates to:
+  /// **'marker paper with a sheet underneath'**
+  String get ideasMaterialPaper;
+
+  /// No description provided for @ideasMaterialBlender.
+  ///
+  /// In en, this message translates to:
+  /// **'colourless blender'**
+  String get ideasMaterialBlender;
+
+  /// No description provided for @ideasMaterialWhiteGel.
+  ///
+  /// In en, this message translates to:
+  /// **'white gel pen'**
+  String get ideasMaterialWhiteGel;
+
+  /// No description provided for @ideasMaterialPigmentLiner.
+  ///
+  /// In en, this message translates to:
+  /// **'black pigment liner'**
+  String get ideasMaterialPigmentLiner;
+
+  /// No description provided for @ideasMaterialPencil.
+  ///
+  /// In en, this message translates to:
+  /// **'pencil'**
+  String get ideasMaterialPencil;
+
+  /// No description provided for @ideasMaterialTape.
+  ///
+  /// In en, this message translates to:
+  /// **'masking tape'**
+  String get ideasMaterialTape;
+
+  /// No description provided for @ideasBackLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to ideas'**
+  String get ideasBackLabel;
+
+  /// No description provided for @ideasMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String ideasMinutes(int minutes);
+
+  /// No description provided for @ideasMissingMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Your collection is missing 1 marker for this idea.} other{Your collection is missing {count} markers for this idea.}}'**
+  String ideasMissingMarkers(int count);
+
+  /// No description provided for @ideasMarkerSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'{role}: {code} {name}'**
+  String ideasMarkerSemantic(String role, String code, String name);
+
+  /// No description provided for @ideasSmoothFillTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak-free fill'**
+  String get ideasSmoothFillTitle;
+
+  /// No description provided for @ideasSmoothFillSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill a square with one marker without visible streaks.'**
+  String get ideasSmoothFillSummary;
+
+  /// No description provided for @ideasSmoothFillPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Even, streak-free coverage, the base of every marker drawing.'**
+  String get ideasSmoothFillPractice;
+
+  /// No description provided for @ideasSmoothFillSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A 5 × 5 cm square framed with masking tape, then a simple flat shape such as a leaf.'**
+  String get ideasSmoothFillSubject;
+
+  /// No description provided for @ideasSmoothFillTip.
+  ///
+  /// In en, this message translates to:
+  /// **'If the paper starts to pill, stop: it is saturated. Let it dry completely before another layer.'**
+  String get ideasSmoothFillTip;
+
+  /// No description provided for @ideasSmoothFillStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Tape a 5 × 5 cm square on marker paper and slip a scrap sheet underneath.'**
+  String get ideasSmoothFillStep1;
+
+  /// No description provided for @ideasSmoothFillStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the square with the light marker in small overlapping circles, without stopping.'**
+  String get ideasSmoothFillStep2;
+
+  /// No description provided for @ideasSmoothFillStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a wet edge: always go back over ink that is still shiny, never over dry ink.'**
+  String get ideasSmoothFillStep3;
+
+  /// No description provided for @ideasSmoothFillStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Let it dry, then add a second layer with the same marker, at right angles to the first.'**
+  String get ideasSmoothFillStep4;
+
+  /// No description provided for @ideasSmoothFillStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat the square with the darker marker and compare: streaks show more in dark colours.'**
+  String get ideasSmoothFillStep5;
+
+  /// No description provided for @ideasSmoothFillStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Peel the tape off slowly to reveal a clean edge.'**
+  String get ideasSmoothFillStep6;
+
+  /// No description provided for @ideasThreeMarkerBlendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Three-marker blend'**
+  String get ideasThreeMarkerBlendTitle;
+
+  /// No description provided for @ideasThreeMarkerBlendSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend a light, a mid and a dark marker of one family on a ball.'**
+  String get ideasThreeMarkerBlendSummary;
+
+  /// No description provided for @ideasThreeMarkerBlendPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Smooth light-to-dark blending within one colour family.'**
+  String get ideasThreeMarkerBlendPractice;
+
+  /// No description provided for @ideasThreeMarkerBlendSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A ball lit from the top left, with its shadow on the table.'**
+  String get ideasThreeMarkerBlendSubject;
+
+  /// No description provided for @ideasThreeMarkerBlendTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick markers that are close in tone: if the jump between them is too big, a line will show.'**
+  String get ideasThreeMarkerBlendTip;
+
+  /// No description provided for @ideasThreeMarkerBlendStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a circle in light pencil and mark where the light comes from.'**
+  String get ideasThreeMarkerBlendStep1;
+
+  /// No description provided for @ideasThreeMarkerBlendStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the whole ball with the light marker, leaving a small spot of white paper for the highlight.'**
+  String get ideasThreeMarkerBlendStep2;
+
+  /// No description provided for @ideasThreeMarkerBlendStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'While it is still damp, add the mid marker on the shadow half, in curved strokes that follow the shape.'**
+  String get ideasThreeMarkerBlendStep3;
+
+  /// No description provided for @ideasThreeMarkerBlendStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the dark marker only along the edge furthest from the light.'**
+  String get ideasThreeMarkerBlendStep4;
+
+  /// No description provided for @ideasThreeMarkerBlendStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back over the joins with the mid marker and then with the light one to melt the steps together.'**
+  String get ideasThreeMarkerBlendStep5;
+
+  /// No description provided for @ideasThreeMarkerBlendStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Soften any hard edge around the highlight with the colourless blender.'**
+  String get ideasThreeMarkerBlendStep6;
+
+  /// No description provided for @ideasFlickingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Flicking strokes'**
+  String get ideasFlickingTitle;
+
+  /// No description provided for @ideasFlickingSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw hair or grass with quick strokes that fade out at the end.'**
+  String get ideasFlickingSummary;
+
+  /// No description provided for @ideasFlickingPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Flicking: fast strokes that taper off, to blend without hard edges.'**
+  String get ideasFlickingPractice;
+
+  /// No description provided for @ideasFlickingSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A ponytail or a tuft of grass.'**
+  String get ideasFlickingSubject;
+
+  /// No description provided for @ideasFlickingTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Try it on a scrap first: the faster you move, the thinner the tail of the stroke.'**
+  String get ideasFlickingTip;
+
+  /// No description provided for @ideasFlickingStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the main locks or blades as simple shapes, without detail.'**
+  String get ideasFlickingStep1;
+
+  /// No description provided for @ideasFlickingStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover each shape with the light marker in one flat layer and let it dry.'**
+  String get ideasFlickingStep2;
+
+  /// No description provided for @ideasFlickingStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Flick the mid marker from the roots outwards: press, move fast and lift before the end of the stroke.'**
+  String get ideasFlickingStep3;
+
+  /// No description provided for @ideasFlickingStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Do the same with the dark marker, only from the roots and shorter, where the locks overlap.'**
+  String get ideasFlickingStep4;
+
+  /// No description provided for @ideasFlickingStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Flick the light marker from the tips back towards the roots to soften the change of tone.'**
+  String get ideasFlickingStep5;
+
+  /// No description provided for @ideasFlickingStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave a band of the first layer where the hair catches the light.'**
+  String get ideasFlickingStep6;
+
+  /// No description provided for @ideasGrayscaleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shades of grey'**
+  String get ideasGrayscaleTitle;
+
+  /// No description provided for @ideasGrayscaleSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a simple object with one grey family to see how light and shadow build form.'**
+  String get ideasGrayscaleSummary;
+
+  /// No description provided for @ideasGrayscalePractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeing light and shadow as steps from light to dark.'**
+  String get ideasGrayscalePractice;
+
+  /// No description provided for @ideasGrayscaleSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A mug, an apple or an egg under a single lamp.'**
+  String get ideasGrayscaleSubject;
+
+  /// No description provided for @ideasGrayscaleTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not mix warm and cool greys in the same object: pick one family.'**
+  String get ideasGrayscaleTip;
+
+  /// No description provided for @ideasGrayscaleStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a simple object and mark in pencil where the light comes from.'**
+  String get ideasGrayscaleStep1;
+
+  /// No description provided for @ideasGrayscaleStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the highlight as white paper. Never colour over it.'**
+  String get ideasGrayscaleStep2;
+
+  /// No description provided for @ideasGrayscaleStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the whole object with the lightest grey and let it dry.'**
+  String get ideasGrayscaleStep3;
+
+  /// No description provided for @ideasGrayscaleStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the next grey on the shadow side, blending the edge while it is still wet.'**
+  String get ideasGrayscaleStep4;
+
+  /// No description provided for @ideasGrayscaleStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat with each darker grey, covering a smaller area each time.'**
+  String get ideasGrayscaleStep5;
+
+  /// No description provided for @ideasGrayscaleStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest grey only for the cast shadow and the contact line under the object.'**
+  String get ideasGrayscaleStep6;
+
+  /// No description provided for @ideasStickerEffectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sticker effect'**
+  String get ideasStickerEffectTitle;
+
+  /// No description provided for @ideasStickerEffectSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a character look like a cut-out sticker with a paper-white border and a coloured background.'**
+  String get ideasStickerEffectSummary;
+
+  /// No description provided for @ideasStickerEffectPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeping the white of the paper on purpose.'**
+  String get ideasStickerEffectPractice;
+
+  /// No description provided for @ideasStickerEffectSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A cat, a slice of pizza or a cartoon star.'**
+  String get ideasStickerEffectSubject;
+
+  /// No description provided for @ideasStickerEffectTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The white must be the paper. White gel over marker ink looks patchy.'**
+  String get ideasStickerEffectTip;
+
+  /// No description provided for @ideasStickerEffectStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw your subject, then pencil a second outline 3–5 mm outside it: that is the sticker border.'**
+  String get ideasStickerEffectStep1;
+
+  /// No description provided for @ideasStickerEffectStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the subject from light to dark without touching the border.'**
+  String get ideasStickerEffectStep2;
+
+  /// No description provided for @ideasStickerEffectStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the background around the border in one flat colour, so the white edge shows.'**
+  String get ideasStickerEffectStep3;
+
+  /// No description provided for @ideasStickerEffectStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'When it is dry, go over the outside of the border with a black liner or brush pen.'**
+  String get ideasStickerEffectStep4;
+
+  /// No description provided for @ideasStickerEffectStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a grey shadow along one side of the border to lift the sticker off the page.'**
+  String get ideasStickerEffectStep5;
+
+  /// No description provided for @ideasGlossyCherriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Glossy cherries'**
+  String get ideasGlossyCherriesTitle;
+
+  /// No description provided for @ideasGlossyCherriesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Make two cherries shine with a kept highlight and a reflected light.'**
+  String get ideasGlossyCherriesSummary;
+
+  /// No description provided for @ideasGlossyCherriesPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Crisp highlights and reflected light, the keys to a shiny surface.'**
+  String get ideasGlossyCherriesPractice;
+
+  /// No description provided for @ideasGlossyCherriesSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Two cherries on a stalk, lit from one side.'**
+  String get ideasGlossyCherriesSubject;
+
+  /// No description provided for @ideasGlossyCherriesTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Shiny surfaces have hard-edged highlights: do not blend them, keep the border crisp.'**
+  String get ideasGlossyCherriesTip;
+
+  /// No description provided for @ideasGlossyCherriesStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the cherries and the shape of each highlight: a crisp bean shape near the top.'**
+  String get ideasGlossyCherriesStep1;
+
+  /// No description provided for @ideasGlossyCherriesStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover each cherry with the light marker, going around the highlights so they stay white paper.'**
+  String get ideasGlossyCherriesStep2;
+
+  /// No description provided for @ideasGlossyCherriesStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the base everywhere except a thin crescent along the bottom edge: that is the reflected light.'**
+  String get ideasGlossyCherriesStep3;
+
+  /// No description provided for @ideasGlossyCherriesStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the shadow on the side away from the light and blend it into the base while it is wet.'**
+  String get ideasGlossyCherriesStep4;
+
+  /// No description provided for @ideasGlossyCherriesStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the darkest marker in a narrow band between the shadow and the reflected light.'**
+  String get ideasGlossyCherriesStep5;
+
+  /// No description provided for @ideasGlossyCherriesStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the shadow on the table with the grey and, once dry, add a white gel dot on each highlight.'**
+  String get ideasGlossyCherriesStep6;
+
+  /// No description provided for @ideasColoredShadowsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Coloured shadows'**
+  String get ideasColoredShadowsTitle;
+
+  /// No description provided for @ideasColoredShadowsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade the same lemon twice, once with grey and once with violet, and compare.'**
+  String get ideasColoredShadowsSummary;
+
+  /// No description provided for @ideasColoredShadowsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Choosing shadow colours that keep a drawing alive.'**
+  String get ideasColoredShadowsPractice;
+
+  /// No description provided for @ideasColoredShadowsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Two lemons side by side on a white table.'**
+  String get ideasColoredShadowsSubject;
+
+  /// No description provided for @ideasColoredShadowsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'A shadow often leans towards the opposite of the light: violet under yellow, blue under orange.'**
+  String get ideasColoredShadowsTip;
+
+  /// No description provided for @ideasColoredShadowsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw two identical lemons side by side, with the light coming from the same side.'**
+  String get ideasColoredShadowsStep1;
+
+  /// No description provided for @ideasColoredShadowsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour both with the yellow, leaving a small highlight of white paper.'**
+  String get ideasColoredShadowsStep2;
+
+  /// No description provided for @ideasColoredShadowsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'On the first lemon, shade the dark side and the shadow on the table with the grey.'**
+  String get ideasColoredShadowsStep3;
+
+  /// No description provided for @ideasColoredShadowsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'On the second, do the same with the violet, gently: one layer is enough.'**
+  String get ideasColoredShadowsStep4;
+
+  /// No description provided for @ideasColoredShadowsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Go over the edge of the second shadow with the yellow to blend it in.'**
+  String get ideasColoredShadowsStep5;
+
+  /// No description provided for @ideasColoredShadowsStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Look at them from a distance: the violet shadow looks brighter and more natural next to the yellow.'**
+  String get ideasColoredShadowsStep6;
+
+  /// No description provided for @ideasStainedGlassTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stained glass'**
+  String get ideasStainedGlassTitle;
+
+  /// No description provided for @ideasStainedGlassSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the glass panes with simple gradients and add the lead lines at the end.'**
+  String get ideasStainedGlassSummary;
+
+  /// No description provided for @ideasStainedGlassPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Clean gradients in small areas; the black lines hide uneven edges.'**
+  String get ideasStainedGlassPractice;
+
+  /// No description provided for @ideasStainedGlassSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A round window with a flower or a sun in the middle.'**
+  String get ideasStainedGlassSubject;
+
+  /// No description provided for @ideasStainedGlassTip.
+  ///
+  /// In en, this message translates to:
+  /// **'If you draw the black lines first, use pigment ink that resists alcohol: ordinary ink smears under the marker.'**
+  String get ideasStainedGlassTip;
+
+  /// No description provided for @ideasStainedGlassStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the window and divide it into panes of different sizes.'**
+  String get ideasStainedGlassStep1;
+
+  /// No description provided for @ideasStainedGlassStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the panes of the main colour first, each one as a gradient: darker at one edge, lighter in the middle.'**
+  String get ideasStainedGlassStep2;
+
+  /// No description provided for @ideasStainedGlassStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Do the same with the second and third colours, letting each pane dry before colouring the one next to it.'**
+  String get ideasStainedGlassStep3;
+
+  /// No description provided for @ideasStainedGlassStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the accent in just a few small panes so they stand out.'**
+  String get ideasStainedGlassStep4;
+
+  /// No description provided for @ideasStainedGlassStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'When everything is dry, go over the borders with thick lines of black liner or brush pen.'**
+  String get ideasStainedGlassStep5;
+
+  /// No description provided for @ideasStainedGlassStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a small stroke of white gel on a few panes to suggest the shine of the glass.'**
+  String get ideasStainedGlassStep6;
+
+  /// No description provided for @ideasSwatchChartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your own colour chart'**
+  String get ideasSwatchChartTitle;
+
+  /// No description provided for @ideasSwatchChartSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Test how each marker looks with one, two and three layers.'**
+  String get ideasSwatchChartSummary;
+
+  /// No description provided for @ideasSwatchChartPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Knowing how your markers really look on paper, not on the cap.'**
+  String get ideasSwatchChartPractice;
+
+  /// No description provided for @ideasSwatchChartSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A grid with one row per marker, grouped by colour family.'**
+  String get ideasSwatchChartSubject;
+
+  /// No description provided for @ideasSwatchChartTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Make the chart on the paper you really use: the same marker changes a lot from one paper to another.'**
+  String get ideasSwatchChartTip;
+
+  /// No description provided for @ideasSwatchChartStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a grid on the paper you usually use: one row per marker and four squares per row.'**
+  String get ideasSwatchChartStep1;
+
+  /// No description provided for @ideasSwatchChartStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the first square with one layer, the second with two and the third with three, letting each layer dry.'**
+  String get ideasSwatchChartStep2;
+
+  /// No description provided for @ideasSwatchChartStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'In the fourth square, lay one layer and lift part of the ink with the colourless blender.'**
+  String get ideasSwatchChartStep3;
+
+  /// No description provided for @ideasSwatchChartStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Write the code under each row in pencil or with a liner.'**
+  String get ideasSwatchChartStep4;
+
+  /// No description provided for @ideasSwatchChartStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the Swatches tab to mark the markers you own and compare them with your chart.'**
+  String get ideasSwatchChartStep5;
+
+  /// No description provided for @ideasOneColorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One colour family'**
+  String get ideasOneColorTitle;
+
+  /// No description provided for @ideasOneColorSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a whole scene with four markers of a single colour family.'**
+  String get ideasOneColorSummary;
+
+  /// No description provided for @ideasOneColorPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Building depth with layers and with lighter and darker markers.'**
+  String get ideasOneColorPractice;
+
+  /// No description provided for @ideasOneColorSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A steaming cup of tea, or a small plant in a pot.'**
+  String get ideasOneColorSubject;
+
+  /// No description provided for @ideasOneColorTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressing lightly does not make a marker paler. For light areas, use the lighter marker or the colourless blender.'**
+  String get ideasOneColorTip;
+
+  /// No description provided for @ideasOneColorStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a simple subject and mark in pencil where the light comes from.'**
+  String get ideasOneColorStep1;
+
+  /// No description provided for @ideasOneColorStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover everything except the highlights with the lightest marker.'**
+  String get ideasOneColorStep2;
+
+  /// No description provided for @ideasOneColorStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the base marker to the parts facing away from the light.'**
+  String get ideasOneColorStep3;
+
+  /// No description provided for @ideasOneColorStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the shadow marker in the darkest areas and blend the edges while they are wet.'**
+  String get ideasOneColorStep4;
+
+  /// No description provided for @ideasOneColorStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the darkest marker for contact shadows and a few small details.'**
+  String get ideasOneColorStep5;
+
+  /// No description provided for @ideasOneColorStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'To darken a tone without changing markers, add another layer of the same one once the first is dry.'**
+  String get ideasOneColorStep6;
+
+  /// No description provided for @ideasTwoMarkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Two-marker challenge'**
+  String get ideasTwoMarkersTitle;
+
+  /// No description provided for @ideasTwoMarkersSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Just one light and one dark marker, nothing else.'**
+  String get ideasTwoMarkersSummary;
+
+  /// No description provided for @ideasTwoMarkersPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Deciding what stays light and what goes dark before you start.'**
+  String get ideasTwoMarkersPractice;
+
+  /// No description provided for @ideasTwoMarkersSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A mushroom, a sitting cat or a house with a roof.'**
+  String get ideasTwoMarkersSubject;
+
+  /// No description provided for @ideasTwoMarkersTip.
+  ///
+  /// In en, this message translates to:
+  /// **'With only two markers, the white of the paper does a lot of the work: plan it from the start.'**
+  String get ideasTwoMarkersTip;
+
+  /// No description provided for @ideasTwoMarkersStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a small sketch first and decide which areas are light and which are dark.'**
+  String get ideasTwoMarkersStep1;
+
+  /// No description provided for @ideasTwoMarkersStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover everything except the highlights with the light marker.'**
+  String get ideasTwoMarkersStep2;
+
+  /// No description provided for @ideasTwoMarkersStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a second layer of the light marker on the half-shadows.'**
+  String get ideasTwoMarkersStep3;
+
+  /// No description provided for @ideasTwoMarkersStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the dark marker only for the deepest shadows and a few details.'**
+  String get ideasTwoMarkersStep4;
+
+  /// No description provided for @ideasTwoMarkersStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the white paper in the brightest spots: it is your third tone.'**
+  String get ideasTwoMarkersStep5;
+
+  /// No description provided for @ideasTwoColorsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Two opposite colours'**
+  String get ideasTwoColorsTitle;
+
+  /// No description provided for @ideasTwoColorsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Use two opposite colours and one grey, and keep them apart.'**
+  String get ideasTwoColorsSummary;
+
+  /// No description provided for @ideasTwoColorsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Handling opposite colours, which turn muddy when they overlap.'**
+  String get ideasTwoColorsPractice;
+
+  /// No description provided for @ideasTwoColorsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'An orange on a blue cloth, or a red flower with green leaves.'**
+  String get ideasTwoColorsSubject;
+
+  /// No description provided for @ideasTwoColorsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Two opposite colours layered on top of each other turn grey or brown. Use that only where you want a dull shadow.'**
+  String get ideasTwoColorsTip;
+
+  /// No description provided for @ideasTwoColorsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide which areas belong to each colour and keep them as separate shapes.'**
+  String get ideasTwoColorsStep1;
+
+  /// No description provided for @ideasTwoColorsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the shapes of the first colour, from light to dark.'**
+  String get ideasTwoColorsStep2;
+
+  /// No description provided for @ideasTwoColorsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add its shadow while the first layer is still damp.'**
+  String get ideasTwoColorsStep3;
+
+  /// No description provided for @ideasTwoColorsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Let it dry completely, then colour the shapes of the second colour, stopping at the border.'**
+  String get ideasTwoColorsStep4;
+
+  /// No description provided for @ideasTwoColorsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the shadow of the second colour in the same way.'**
+  String get ideasTwoColorsStep5;
+
+  /// No description provided for @ideasTwoColorsStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the grey for shadows that cross from one colour to the other.'**
+  String get ideasTwoColorsStep6;
+
+  /// No description provided for @ideasFiftyFiftyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Half warm, half cool'**
+  String get ideasFiftyFiftyTitle;
+
+  /// No description provided for @ideasFiftyFiftySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Split one drawing in two: warm colours on one side, cool ones on the other.'**
+  String get ideasFiftyFiftySummary;
+
+  /// No description provided for @ideasFiftyFiftyPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeing how warm and cool colours change the mood of the same subject.'**
+  String get ideasFiftyFiftyPractice;
+
+  /// No description provided for @ideasFiftyFiftySubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A face or a house split down the middle.'**
+  String get ideasFiftyFiftySubject;
+
+  /// No description provided for @ideasFiftyFiftyTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Wet edges run into each other: never let a wet warm area touch a wet cool one.'**
+  String get ideasFiftyFiftyTip;
+
+  /// No description provided for @ideasFiftyFiftyStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw your subject and a line that splits it in two.'**
+  String get ideasFiftyFiftyStep1;
+
+  /// No description provided for @ideasFiftyFiftyStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the warm half first, from light to dark.'**
+  String get ideasFiftyFiftyStep2;
+
+  /// No description provided for @ideasFiftyFiftyStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add its shadows and let the whole half dry completely.'**
+  String get ideasFiftyFiftyStep3;
+
+  /// No description provided for @ideasFiftyFiftyStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the cool half, stopping a millimetre short of the line, and close the gap once the other side is dry.'**
+  String get ideasFiftyFiftyStep4;
+
+  /// No description provided for @ideasFiftyFiftyStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the cool shadows in the same places as on the warm half.'**
+  String get ideasFiftyFiftyStep5;
+
+  /// No description provided for @ideasFiftyFiftyStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the grey only in the darkest spots, so both halves share it.'**
+  String get ideasFiftyFiftyStep6;
+
+  /// No description provided for @ideasRandomColorsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Five random markers'**
+  String get ideasRandomColorsTitle;
+
+  /// No description provided for @ideasRandomColorsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw anything with five markers picked at random from your collection.'**
+  String get ideasRandomColorsSummary;
+
+  /// No description provided for @ideasRandomColorsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Making any colours work together by controlling light and dark.'**
+  String get ideasRandomColorsPractice;
+
+  /// No description provided for @ideasRandomColorsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything you like: a bird, a teapot or a monster.'**
+  String get ideasRandomColorsSubject;
+
+  /// No description provided for @ideasRandomColorsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Light and dark matter more than colour: a drawing with clear contrast works with almost any colours.'**
+  String get ideasRandomColorsTip;
+
+  /// No description provided for @ideasRandomColorsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Look at the five markers above: they are sorted from lightest to darkest.'**
+  String get ideasRandomColorsStep1;
+
+  /// No description provided for @ideasRandomColorsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the lightest one for the large lit areas.'**
+  String get ideasRandomColorsStep2;
+
+  /// No description provided for @ideasRandomColorsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the middle ones for the main shapes.'**
+  String get ideasRandomColorsStep3;
+
+  /// No description provided for @ideasRandomColorsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the darkest one for shadows and outlines.'**
+  String get ideasRandomColorsStep4;
+
+  /// No description provided for @ideasRandomColorsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'If two colours clash, separate them with a thin line of white paper.'**
+  String get ideasRandomColorsStep5;
+
+  /// No description provided for @ideasRandomColorsStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Other markers for a new draw and try again.'**
+  String get ideasRandomColorsStep6;
+
+  /// No description provided for @ideasUnlikelyColorsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected colours'**
+  String get ideasUnlikelyColorsTitle;
+
+  /// No description provided for @ideasUnlikelyColorsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour a familiar object in colours that are not its own.'**
+  String get ideasUnlikelyColorsSummary;
+
+  /// No description provided for @ideasUnlikelyColorsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Keeping light and dark right so the object still reads, whatever its colour.'**
+  String get ideasUnlikelyColorsPractice;
+
+  /// No description provided for @ideasUnlikelyColorsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A banana, a dog or your own trainer.'**
+  String get ideasUnlikelyColorsSubject;
+
+  /// No description provided for @ideasUnlikelyColorsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'If you squint and the drawing still reads, the light and dark are right, whatever the colours.'**
+  String get ideasUnlikelyColorsTip;
+
+  /// No description provided for @ideasUnlikelyColorsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the object from life or from a photo and notice where its light and dark areas are.'**
+  String get ideasUnlikelyColorsStep1;
+
+  /// No description provided for @ideasUnlikelyColorsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the lightest marker where the real object is lightest.'**
+  String get ideasUnlikelyColorsStep2;
+
+  /// No description provided for @ideasUnlikelyColorsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the base where the real object has its middle tones.'**
+  String get ideasUnlikelyColorsStep3;
+
+  /// No description provided for @ideasUnlikelyColorsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the shadow marker where the real object is darkest.'**
+  String get ideasUnlikelyColorsStep4;
+
+  /// No description provided for @ideasUnlikelyColorsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the accent in one small area to catch the eye.'**
+  String get ideasUnlikelyColorsStep5;
+
+  /// No description provided for @ideasPastelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft pastels'**
+  String get ideasPastelTitle;
+
+  /// No description provided for @ideasPastelSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour a soft, airy drawing with light markers and plenty of white paper.'**
+  String get ideasPastelSummary;
+
+  /// No description provided for @ideasPastelPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Light, even layers and keeping the white of the paper.'**
+  String get ideasPastelPractice;
+
+  /// No description provided for @ideasPastelSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A cupcake, a bunny or a bunch of flowers.'**
+  String get ideasPastelSubject;
+
+  /// No description provided for @ideasPastelTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressing lightly does not make a marker paler: choose a lighter marker instead.'**
+  String get ideasPastelTip;
+
+  /// No description provided for @ideasPastelStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a gentle subject and keep the pencil lines very light.'**
+  String get ideasPastelStep1;
+
+  /// No description provided for @ideasPastelStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide where the paper stays white: the highlights and part of the background.'**
+  String get ideasPastelStep2;
+
+  /// No description provided for @ideasPastelStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour each area with one light marker in a single even layer, in small circles.'**
+  String get ideasPastelStep3;
+
+  /// No description provided for @ideasPastelStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Make the shadow with a second layer of the same marker, not with a darker colour.'**
+  String get ideasPastelStep4;
+
+  /// No description provided for @ideasPastelStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the slightly deeper marker only for the smallest shadows.'**
+  String get ideasPastelStep5;
+
+  /// No description provided for @ideasPastelStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Soften any hard edge with the colourless blender.'**
+  String get ideasPastelStep6;
+
+  /// No description provided for @ideasSkinTonesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Skin with four markers'**
+  String get ideasSkinTonesTitle;
+
+  /// No description provided for @ideasSkinTonesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour a face with a light tone, a base, a shadow and a blush.'**
+  String get ideasSkinTonesSummary;
+
+  /// No description provided for @ideasSkinTonesPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft skin blending and warm shadows on a face.'**
+  String get ideasSkinTonesPractice;
+
+  /// No description provided for @ideasSkinTonesSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A face in three-quarter view, lit from one side.'**
+  String get ideasSkinTonesSubject;
+
+  /// No description provided for @ideasSkinTonesTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skin shadows are warm: avoid greys, they make the face look dirty.'**
+  String get ideasSkinTonesTip;
+
+  /// No description provided for @ideasSkinTonesStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the face lightly and mark the shadow shapes: under the brow, beside the nose, under the lip and along the jaw.'**
+  String get ideasSkinTonesStep1;
+
+  /// No description provided for @ideasSkinTonesStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover all the skin with the light marker, leaving the brightest spots of the forehead, nose and cheek as white paper.'**
+  String get ideasSkinTonesStep2;
+
+  /// No description provided for @ideasSkinTonesStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'While it is damp, add the blush on the cheeks, the tip of the nose and the ears.'**
+  String get ideasSkinTonesStep3;
+
+  /// No description provided for @ideasSkinTonesStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the base on the shadow shapes and blend their edges with the light marker.'**
+  String get ideasSkinTonesStep4;
+
+  /// No description provided for @ideasSkinTonesStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the shadow marker only where shapes meet: under the chin, inside the ear and around the nostrils.'**
+  String get ideasSkinTonesStep5;
+
+  /// No description provided for @ideasSkinTonesStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Soften any hard line with the light marker rather than the colourless blender, so the skin does not go blotchy.'**
+  String get ideasSkinTonesStep6;
+
+  /// No description provided for @ideasMidnightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Moonlit night'**
+  String get ideasMidnightTitle;
+
+  /// No description provided for @ideasMidnightSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A small house at night, lit by the moon and one warm window.'**
+  String get ideasMidnightSummary;
+
+  /// No description provided for @ideasMidnightPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning a night scene: cool shadows and a few clean, warm lights.'**
+  String get ideasMidnightPractice;
+
+  /// No description provided for @ideasMidnightSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A small house at night with one lit window.'**
+  String get ideasMidnightSubject;
+
+  /// No description provided for @ideasMidnightTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not let the blue and the yellow touch while either is wet: together they turn green.'**
+  String get ideasMidnightTip;
+
+  /// No description provided for @ideasMidnightStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you start, decide where the lights are: the moon and the window stay white paper.'**
+  String get ideasMidnightStep1;
+
+  /// No description provided for @ideasMidnightStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the window and a soft glow around it with the yellow, and let it dry completely.'**
+  String get ideasMidnightStep2;
+
+  /// No description provided for @ideasMidnightStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the sky and the lit walls with the light blue, working away from the moon.'**
+  String get ideasMidnightStep3;
+
+  /// No description provided for @ideasMidnightStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the base blue to everything in shadow, a few millimetres away from the yellow glow.'**
+  String get ideasMidnightStep4;
+
+  /// No description provided for @ideasMidnightStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the sky towards the top and the shadows under the roof and the trees.'**
+  String get ideasMidnightStep5;
+
+  /// No description provided for @ideasMidnightStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest marker for the deepest shadows and, once dry, add a few stars with white gel.'**
+  String get ideasMidnightStep6;
+
+  /// No description provided for @ideasUnderwaterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Under the sea'**
+  String get ideasUnderwaterTitle;
+
+  /// No description provided for @ideasUnderwaterSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunbeams in blue water around a small fish.'**
+  String get ideasUnderwaterSummary;
+
+  /// No description provided for @ideasUnderwaterPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifting rays of light with the colourless blender.'**
+  String get ideasUnderwaterPractice;
+
+  /// No description provided for @ideasUnderwaterSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A small fish swimming above a coral.'**
+  String get ideasUnderwaterSubject;
+
+  /// No description provided for @ideasUnderwaterTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Try the blender rays on a scrap first: they only work while the ink is still slightly damp.'**
+  String get ideasUnderwaterTip;
+
+  /// No description provided for @ideasUnderwaterStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the fish and the coral first with the accent and let them dry.'**
+  String get ideasUnderwaterStep1;
+
+  /// No description provided for @ideasUnderwaterStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the water with the light blue, stopping just short of the fish.'**
+  String get ideasUnderwaterStep2;
+
+  /// No description provided for @ideasUnderwaterStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the base blue to the lower half and blend it upwards while it is wet.'**
+  String get ideasUnderwaterStep3;
+
+  /// No description provided for @ideasUnderwaterStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the bottom and the area behind the fish so it stands out.'**
+  String get ideasUnderwaterStep4;
+
+  /// No description provided for @ideasUnderwaterStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'While the blues are still damp, pull diagonal rays down from the surface with the colourless blender: it pushes the ink away.'**
+  String get ideasUnderwaterStep5;
+
+  /// No description provided for @ideasUnderwaterStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the darkest marker at the very bottom and, once dry, finish with tiny bubbles in white gel.'**
+  String get ideasUnderwaterStep6;
+
+  /// No description provided for @ideasGalaxyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Galaxy'**
+  String get ideasGalaxyTitle;
+
+  /// No description provided for @ideasGalaxySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend glowing nebula colours into a dark sky and finish with stars.'**
+  String get ideasGalaxySummary;
+
+  /// No description provided for @ideasGalaxyPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Blending wet into wet, and lifting ink to make stars.'**
+  String get ideasGalaxyPractice;
+
+  /// No description provided for @ideasGalaxySubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A nebula over the silhouette of a mountain.'**
+  String get ideasGalaxySubject;
+
+  /// No description provided for @ideasGalaxyTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the big stars to a handful: too many flatten the depth.'**
+  String get ideasGalaxyTip;
+
+  /// No description provided for @ideasGalaxyStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Use marker paper that does not bleed through and put a sheet underneath: this exercise takes a lot of ink.'**
+  String get ideasGalaxyStep1;
+
+  /// No description provided for @ideasGalaxyStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with the lightest nebula colours in soft, irregular clouds.'**
+  String get ideasGalaxyStep2;
+
+  /// No description provided for @ideasGalaxyStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'While they are still wet, blend the middle colour into their edges.'**
+  String get ideasGalaxyStep3;
+
+  /// No description provided for @ideasGalaxyStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the rest of the sky with the darkest markers, working towards the clouds, not over them.'**
+  String get ideasGalaxyStep4;
+
+  /// No description provided for @ideasGalaxyStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Dab the colourless blender on the dark areas to lift little dots of ink: they will be distant stars.'**
+  String get ideasGalaxyStep5;
+
+  /// No description provided for @ideasGalaxyStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Once dry, add a few bright stars and a cross-shaped sparkle with white gel.'**
+  String get ideasGalaxyStep6;
+
+  /// No description provided for @ideasNeonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Neon sign'**
+  String get ideasNeonTitle;
+
+  /// No description provided for @ideasNeonSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a sign glow with a white core and a dark background.'**
+  String get ideasNeonSummary;
+
+  /// No description provided for @ideasNeonPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Glow: a white core, a bright halo and a dark background.'**
+  String get ideasNeonPractice;
+
+  /// No description provided for @ideasNeonSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'The word OPEN, or a heart drawn as a neon tube.'**
+  String get ideasNeonSubject;
+
+  /// No description provided for @ideasNeonTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Fluorescent markers are see-through: use them on white, never over dark ink.'**
+  String get ideasNeonTip;
+
+  /// No description provided for @ideasNeonStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a simple word or shape in pencil with thick strokes.'**
+  String get ideasNeonStep1;
+
+  /// No description provided for @ideasNeonStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave a thin line of white paper in the middle of each stroke: that is the hot core.'**
+  String get ideasNeonStep2;
+
+  /// No description provided for @ideasNeonStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the rest of the stroke with the light version of your neon colour.'**
+  String get ideasNeonStep3;
+
+  /// No description provided for @ideasNeonStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Flick the bright colour outwards from the stroke to make a soft halo.'**
+  String get ideasNeonStep4;
+
+  /// No description provided for @ideasNeonStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'When the halo is dry, fill the background with the darkest marker, stopping a few millimetres from the halo.'**
+  String get ideasNeonStep5;
+
+  /// No description provided for @ideasNeonStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend that gap with the dark marker so the glow fades into the night.'**
+  String get ideasNeonStep6;
+
+  /// No description provided for @ideasSepiaPhotoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Old sepia photo'**
+  String get ideasSepiaPhotoTitle;
+
+  /// No description provided for @ideasSepiaPhotoSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a portrait or a building as if it were an old brown photograph.'**
+  String get ideasSepiaPhotoSummary;
+
+  /// No description provided for @ideasSepiaPhotoPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Working with one warm family of browns, like a light-and-dark study in colour.'**
+  String get ideasSepiaPhotoPractice;
+
+  /// No description provided for @ideasSepiaPhotoSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'An old house, a cowboy hat or a portrait of a grandparent.'**
+  String get ideasSepiaPhotoSubject;
+
+  /// No description provided for @ideasSepiaPhotoTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid black and cool greys: they break the warm sepia look.'**
+  String get ideasSepiaPhotoTip;
+
+  /// No description provided for @ideasSepiaPhotoStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the subject and frame it with a border that stays white paper.'**
+  String get ideasSepiaPhotoStep1;
+
+  /// No description provided for @ideasSepiaPhotoStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover everything except the brightest spots with the lightest brown.'**
+  String get ideasSepiaPhotoStep2;
+
+  /// No description provided for @ideasSepiaPhotoStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Build the middle tones with the base brown.'**
+  String get ideasSepiaPhotoStep3;
+
+  /// No description provided for @ideasSepiaPhotoStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the shadows with the shadow brown, blending the edges while they are wet.'**
+  String get ideasSepiaPhotoStep4;
+
+  /// No description provided for @ideasSepiaPhotoStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest brown instead of black for the deepest shadows.'**
+  String get ideasSepiaPhotoStep5;
+
+  /// No description provided for @ideasSepiaPhotoStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the corners of the picture slightly with the warm grey to make it look old.'**
+  String get ideasSepiaPhotoStep6;
+
+  /// No description provided for @ideasSunsetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunset sky'**
+  String get ideasSunsetTitle;
+
+  /// No description provided for @ideasSunsetSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend a sky from yellow to violet and add a dark silhouette.'**
+  String get ideasSunsetSummary;
+
+  /// No description provided for @ideasSunsetPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Blending neighbouring colours wet into wet over a large area.'**
+  String get ideasSunsetPractice;
+
+  /// No description provided for @ideasSunsetSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A sunset over the sea with a palm tree or a city skyline in silhouette.'**
+  String get ideasSunsetSubject;
+
+  /// No description provided for @ideasSunsetTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Only blend neighbouring colours: yellow next to violet turns brownish while wet.'**
+  String get ideasSunsetTip;
+
+  /// No description provided for @ideasSunsetStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the horizon and the silhouette; keep the sun as a circle of white paper.'**
+  String get ideasSunsetStep1;
+
+  /// No description provided for @ideasSunsetStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Start at the sun: colour a wide band of yellow around it.'**
+  String get ideasSunsetStep2;
+
+  /// No description provided for @ideasSunsetStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'While the yellow is wet, add the orange above it and blend the join.'**
+  String get ideasSunsetStep3;
+
+  /// No description provided for @ideasSunsetStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Carry on upwards with the pink, blending each band into the last while it is wet.'**
+  String get ideasSunsetStep4;
+
+  /// No description provided for @ideasSunsetStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish the top of the sky with the violet.'**
+  String get ideasSunsetStep5;
+
+  /// No description provided for @ideasSunsetStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'When the sky is dry, fill the silhouette with the darkest marker in flat, even strokes.'**
+  String get ideasSunsetStep6;
+
+  /// No description provided for @ideasSpringTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Spring blossom'**
+  String get ideasSpringTitle;
+
+  /// No description provided for @ideasSpringSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A branch of cherry blossom with soft pink petals.'**
+  String get ideasSpringSummary;
+
+  /// No description provided for @ideasSpringPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Delicate petals: light layers and soft edges.'**
+  String get ideasSpringPractice;
+
+  /// No description provided for @ideasSpringSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A branch with five or six blossoms and a few leaves.'**
+  String get ideasSpringSubject;
+
+  /// No description provided for @ideasSpringTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Petals are thin: two light layers look more delicate than one dark one.'**
+  String get ideasSpringTip;
+
+  /// No description provided for @ideasSpringStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the branch and the flowers lightly, with five petals each.'**
+  String get ideasSpringStep1;
+
+  /// No description provided for @ideasSpringStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour each petal with the light pink, leaving a thin white edge on some of them.'**
+  String get ideasSpringStep2;
+
+  /// No description provided for @ideasSpringStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the base pink near the centre of each flower, flicking outwards.'**
+  String get ideasSpringStep3;
+
+  /// No description provided for @ideasSpringStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch the deepest pink only in the centre and where petals overlap.'**
+  String get ideasSpringStep4;
+
+  /// No description provided for @ideasSpringStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the leaves and the young shoots with the green.'**
+  String get ideasSpringStep5;
+
+  /// No description provided for @ideasSpringStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade the underside of the leaves with the dark green.'**
+  String get ideasSpringStep6;
+
+  /// No description provided for @ideasAutumnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Autumn leaves'**
+  String get ideasAutumnTitle;
+
+  /// No description provided for @ideasAutumnSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A still life of fallen leaves in warm, glowing colours.'**
+  String get ideasAutumnSummary;
+
+  /// No description provided for @ideasAutumnPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Blending neighbouring warm colours and keeping the veins light.'**
+  String get ideasAutumnPractice;
+
+  /// No description provided for @ideasAutumnSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three fallen leaves on a table: oak, maple and chestnut.'**
+  String get ideasAutumnSubject;
+
+  /// No description provided for @ideasAutumnTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the veins as a lighter line: it is easier than drawing them on top later.'**
+  String get ideasAutumnTip;
+
+  /// No description provided for @ideasAutumnStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the leaves and their main veins in light pencil.'**
+  String get ideasAutumnStep1;
+
+  /// No description provided for @ideasAutumnStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the lightest leaf with the yellow, going around the veins so they stay light.'**
+  String get ideasAutumnStep2;
+
+  /// No description provided for @ideasAutumnStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the next leaf with the light orange and blend a little yellow into its edges while wet.'**
+  String get ideasAutumnStep3;
+
+  /// No description provided for @ideasAutumnStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the third leaf with the base and blend the light orange into its tip.'**
+  String get ideasAutumnStep4;
+
+  /// No description provided for @ideasAutumnStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the red along the edges and in a few patches, as if the leaf were changing colour.'**
+  String get ideasAutumnStep5;
+
+  /// No description provided for @ideasAutumnStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade where the leaves overlap and where they touch the table with the dark orange.'**
+  String get ideasAutumnStep6;
+
+  /// No description provided for @ideasWinterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Snowy cabin'**
+  String get ideasWinterTitle;
+
+  /// No description provided for @ideasWinterSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A cabin in the snow where the white is the paper itself.'**
+  String get ideasWinterSummary;
+
+  /// No description provided for @ideasWinterPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Drawing snow with blue-grey shadows and lots of white paper.'**
+  String get ideasWinterPractice;
+
+  /// No description provided for @ideasWinterSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A wooden cabin with snow on the roof and one lit window.'**
+  String get ideasWinterSubject;
+
+  /// No description provided for @ideasWinterTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not shade snow with warm grey: blue-greys make it look cold and clean.'**
+  String get ideasWinterTip;
+
+  /// No description provided for @ideasWinterStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the cabin and where the snow ends: the snow is white paper, so plan it first.'**
+  String get ideasWinterStep1;
+
+  /// No description provided for @ideasWinterStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the window with the yellow and let it dry.'**
+  String get ideasWinterStep2;
+
+  /// No description provided for @ideasWinterStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the wooden walls with the brown without touching the snow on the roof.'**
+  String get ideasWinterStep3;
+
+  /// No description provided for @ideasWinterStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade the snow with the light blue-grey only where the light does not reach.'**
+  String get ideasWinterStep4;
+
+  /// No description provided for @ideasWinterStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the darker blue-grey under the roof and in the footprints, blending it into the light one.'**
+  String get ideasWinterStep5;
+
+  /// No description provided for @ideasWinterStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest marker for the door and the deepest shadows and, once dry, add falling snow with white gel.'**
+  String get ideasWinterStep6;
+
+  /// No description provided for @ideasChristmasTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Christmas baubles'**
+  String get ideasChristmasTitle;
+
+  /// No description provided for @ideasChristmasSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Shiny red baubles hanging from a green fir branch.'**
+  String get ideasChristmasSummary;
+
+  /// No description provided for @ideasChristmasPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Round, shiny shapes with a kept highlight and reflections.'**
+  String get ideasChristmasPractice;
+
+  /// No description provided for @ideasChristmasSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Two red baubles hanging from a fir branch.'**
+  String get ideasChristmasSubject;
+
+  /// No description provided for @ideasChristmasTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the branch after the baubles, so the green never runs into the red.'**
+  String get ideasChristmasTip;
+
+  /// No description provided for @ideasChristmasStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the baubles and plan a window-shaped highlight on each one.'**
+  String get ideasChristmasStep1;
+
+  /// No description provided for @ideasChristmasStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover each bauble with the light red, going around the highlight.'**
+  String get ideasChristmasStep2;
+
+  /// No description provided for @ideasChristmasStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the base red in a ring that follows the round shape, leaving the middle lighter.'**
+  String get ideasChristmasStep3;
+
+  /// No description provided for @ideasChristmasStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the edge furthest from the light, keeping a thin lighter rim for the reflection.'**
+  String get ideasChristmasStep4;
+
+  /// No description provided for @ideasChristmasStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Flick the needles of the branch with the green, from the stem outwards.'**
+  String get ideasChristmasStep5;
+
+  /// No description provided for @ideasChristmasStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the dark green where the needles overlap and, once dry, a white gel sparkle on each bauble.'**
+  String get ideasChristmasStep6;
+
+  /// No description provided for @ideasHalloweenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Halloween pumpkin'**
+  String get ideasHalloweenTitle;
+
+  /// No description provided for @ideasHalloweenSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A glowing carved pumpkin in a dark violet night.'**
+  String get ideasHalloweenSummary;
+
+  /// No description provided for @ideasHalloweenPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Light coming from inside an object, against a dark background.'**
+  String get ideasHalloweenPractice;
+
+  /// No description provided for @ideasHalloweenSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A carved pumpkin with a candle inside, on a doorstep.'**
+  String get ideasHalloweenSubject;
+
+  /// No description provided for @ideasHalloweenTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the dark background last and slowly near the edge: dark ink runs into light areas.'**
+  String get ideasHalloweenTip;
+
+  /// No description provided for @ideasHalloweenStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the pumpkin and its carved face; the inside of the face will be the brightest part.'**
+  String get ideasHalloweenStep1;
+
+  /// No description provided for @ideasHalloweenStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the carved holes with the light orange, leaving a white core in the middle.'**
+  String get ideasHalloweenStep2;
+
+  /// No description provided for @ideasHalloweenStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the pumpkin with the base orange, following its ribs with curved strokes.'**
+  String get ideasHalloweenStep3;
+
+  /// No description provided for @ideasHalloweenStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade the grooves between the ribs and the side away from the glow.'**
+  String get ideasHalloweenStep4;
+
+  /// No description provided for @ideasHalloweenStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the stalk with the green.'**
+  String get ideasHalloweenStep5;
+
+  /// No description provided for @ideasHalloweenStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'When everything is dry, fill the night with the dark violet, starting a few millimetres away from the pumpkin.'**
+  String get ideasHalloweenStep6;
+
+  /// No description provided for @ideasRoleLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get ideasRoleLight;
+
+  /// No description provided for @ideasReasonLight.
+  ///
+  /// In en, this message translates to:
+  /// **'First layer, over almost everything'**
+  String get ideasReasonLight;
+
+  /// No description provided for @ideasRoleLightMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Light mid'**
+  String get ideasRoleLightMid;
+
+  /// No description provided for @ideasReasonLightMid.
+  ///
+  /// In en, this message translates to:
+  /// **'Second step, softens the jump to the base'**
+  String get ideasReasonLightMid;
+
+  /// No description provided for @ideasRoleBase.
+  ///
+  /// In en, this message translates to:
+  /// **'Base'**
+  String get ideasRoleBase;
+
+  /// No description provided for @ideasReasonBase.
+  ///
+  /// In en, this message translates to:
+  /// **'Main colour of the shapes'**
+  String get ideasReasonBase;
+
+  /// No description provided for @ideasRoleShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow'**
+  String get ideasRoleShadow;
+
+  /// No description provided for @ideasReasonShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Where the light does not reach'**
+  String get ideasReasonShadow;
+
+  /// No description provided for @ideasRoleDeepShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep shadow'**
+  String get ideasRoleDeepShadow;
+
+  /// No description provided for @ideasReasonDeepShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the darkest corners and contact lines'**
+  String get ideasReasonDeepShadow;
+
+  /// No description provided for @ideasRoleShadowGray.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow grey'**
+  String get ideasRoleShadowGray;
+
+  /// No description provided for @ideasReasonShadowGray.
+  ///
+  /// In en, this message translates to:
+  /// **'Neutral shadows and cast shadows'**
+  String get ideasReasonShadowGray;
+
+  /// No description provided for @ideasRoleAccent.
+  ///
+  /// In en, this message translates to:
+  /// **'Accent'**
+  String get ideasRoleAccent;
+
+  /// No description provided for @ideasReasonAccent.
+  ///
+  /// In en, this message translates to:
+  /// **'Small touches that draw the eye'**
+  String get ideasReasonAccent;
+
+  /// No description provided for @ideasRoleBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get ideasRoleBackground;
+
+  /// No description provided for @ideasReasonBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Around the subject, laid last'**
+  String get ideasReasonBackground;
+
+  /// No description provided for @ideasRoleMainColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Main colour'**
+  String get ideasRoleMainColor;
+
+  /// No description provided for @ideasReasonMainColor.
+  ///
+  /// In en, this message translates to:
+  /// **'First colour of the pair'**
+  String get ideasReasonMainColor;
+
+  /// No description provided for @ideasRoleMainShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Main shadow'**
+  String get ideasRoleMainShadow;
+
+  /// No description provided for @ideasReasonMainShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow of the first colour'**
+  String get ideasReasonMainShadow;
+
+  /// No description provided for @ideasRoleSecondColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Second colour'**
+  String get ideasRoleSecondColor;
+
+  /// No description provided for @ideasReasonSecondColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Second colour of the scheme'**
+  String get ideasReasonSecondColor;
+
+  /// No description provided for @ideasRoleSecondShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Second shadow'**
+  String get ideasRoleSecondShadow;
+
+  /// No description provided for @ideasReasonSecondShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow of the second colour'**
+  String get ideasReasonSecondShadow;
+
+  /// No description provided for @ideasRoleThirdColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Third colour'**
+  String get ideasRoleThirdColor;
+
+  /// No description provided for @ideasReasonThirdColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Third colour of the scheme'**
+  String get ideasReasonThirdColor;
+
+  /// No description provided for @ideasRoleBlush.
+  ///
+  /// In en, this message translates to:
+  /// **'Blush'**
+  String get ideasRoleBlush;
+
+  /// No description provided for @ideasReasonBlush.
+  ///
+  /// In en, this message translates to:
+  /// **'Cheeks, nose and ears, blended while wet'**
+  String get ideasReasonBlush;
+
+  /// No description provided for @ideasRoleWarmLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm light'**
+  String get ideasRoleWarmLight;
+
+  /// No description provided for @ideasReasonWarmLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Lit areas of the warm half'**
+  String get ideasReasonWarmLight;
+
+  /// No description provided for @ideasRoleWarmShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm shadow'**
+  String get ideasRoleWarmShadow;
+
+  /// No description provided for @ideasReasonWarmShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadows of the warm half'**
+  String get ideasReasonWarmShadow;
+
+  /// No description provided for @ideasRoleCoolLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Cool light'**
+  String get ideasRoleCoolLight;
+
+  /// No description provided for @ideasReasonCoolLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Lit areas of the cool half'**
+  String get ideasReasonCoolLight;
+
+  /// No description provided for @ideasRoleCoolShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Cool shadow'**
+  String get ideasRoleCoolShadow;
+
+  /// No description provided for @ideasReasonCoolShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadows of the cool half'**
+  String get ideasReasonCoolShadow;
+
+  /// No description provided for @ideasRoleColorShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour shadow'**
+  String get ideasRoleColorShadow;
+
+  /// No description provided for @ideasReasonColorShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'A coloured shadow to compare with the grey one'**
+  String get ideasReasonColorShadow;
 
   /// No description provided for @matchTitle.
   ///
@@ -1778,12 +3902,6 @@ abstract class AppLocalizations {
   /// **'The photo could not be opened. Try again.'**
   String get matchPickFailed;
 
-  /// No description provided for @matchNoMarkers.
-  ///
-  /// In en, this message translates to:
-  /// **'No markers are available for the current collection. Check the active brand and sets in Settings.'**
-  String get matchNoMarkers;
-
   /// No description provided for @matchOkButton.
   ///
   /// In en, this message translates to:
@@ -1871,7 +3989,7 @@ abstract class AppLocalizations {
   /// No description provided for @commonColorCount.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =1{1 color} other{{count} colors}}'**
+  /// **'{count, plural, =1{1 colour} other{{count} colours}}'**
   String commonColorCount(int count);
 
   /// No description provided for @commonCardLocation.
@@ -1995,7 +4113,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteSizeChip.
   ///
   /// In en, this message translates to:
-  /// **'{size} colors'**
+  /// **'{size} colours'**
   String paletteSizeChip(int size);
 
   /// No description provided for @paletteAiLabel.
@@ -2019,7 +4137,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteSavedSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'{mode} · {size} colors'**
+  /// **'{mode} · {size} colours'**
   String paletteSavedSubtitle(String mode, int size);
 
   /// No description provided for @paletteSubtitleFrom.
@@ -2061,7 +4179,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteDraftApplied.
   ///
   /// In en, this message translates to:
-  /// **'Ideas palette applied ({count} colors).'**
+  /// **'Ideas palette applied ({count} colours).'**
   String paletteDraftApplied(int count);
 
   /// No description provided for @paletteUsingDefaultBase.
@@ -2073,25 +4191,25 @@ abstract class AppLocalizations {
   /// No description provided for @paletteUnknownCode.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example} or check your owned markers in Settings.} other{{input} is not an Ink Lab marker code. Try {example}.}}'**
+  /// **'{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}'**
   String paletteUnknownCode(String brand, String input, String example);
 
   /// No description provided for @paletteNotAvailable.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{{input} is not in your owned DecoTime markers. Try {example} or update Owned markers in Settings.} other{{input} is not in your active collection. Try {example} or switch sets in Settings.}}'**
+  /// **'{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}'**
   String paletteNotAvailable(String brand, String input, String example);
 
   /// No description provided for @paletteNoAvailableColors.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{No DecoTime markers are selected. Go to Settings > Collection > Owned markers and select the markers you own.} other{No markers are available for the current collection filters.}}'**
+  /// **'{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}'**
   String paletteNoAvailableColors(String brand);
 
   /// No description provided for @paletteMissingBase.
   ///
   /// In en, this message translates to:
-  /// **'Enter a base marker code, like {example}, or turn on Scenario mode.'**
+  /// **'Pick a base marker, such as {example}, or choose a scene with the Scenes chip.'**
   String paletteMissingBase(String example);
 
   /// No description provided for @swatchesFiltersCount.
@@ -2127,13 +4245,13 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesFilteredColorCount.
   ///
   /// In en, this message translates to:
-  /// **'{visible} of {total} colors'**
+  /// **'{visible} of {total} colours'**
   String swatchesFilteredColorCount(int visible, int total);
 
   /// No description provided for @swatchesSwatchSemantics.
   ///
   /// In en, this message translates to:
-  /// **'{favorite, select, true{{code}, {name}, favorite} other{{code}, {name}}}'**
+  /// **'{favorite, select, true{{code}, {name}, favourite} other{{code}, {name}}}'**
   String swatchesSwatchSemantics(String code, String name, String favorite);
 
   /// No description provided for @swatchesClassicPack.
@@ -2145,7 +4263,7 @@ abstract class AppLocalizations {
   /// No description provided for @ideasPaletteSent.
   ///
   /// In en, this message translates to:
-  /// **'\"{title}\" palette sent to the Palette tab.'**
+  /// **'The “{title}” palette is ready in Palette.'**
   String ideasPaletteSent(String title);
 
   /// No description provided for @matchSubtitle.
@@ -2157,7 +4275,7 @@ abstract class AppLocalizations {
   /// No description provided for @matchQualityExcellent.
   ///
   /// In en, this message translates to:
-  /// **'Excellent'**
+  /// **'Nearly exact'**
   String get matchQualityExcellent;
 
   /// No description provided for @matchQualityVeryClose.
@@ -2175,13 +4293,13 @@ abstract class AppLocalizations {
   /// No description provided for @matchQualityFair.
   ///
   /// In en, this message translates to:
-  /// **'Fair'**
+  /// **'Rough'**
   String get matchQualityFair;
 
   /// No description provided for @matchQualityApproximate.
   ///
   /// In en, this message translates to:
-  /// **'Approximate'**
+  /// **'Far off'**
   String get matchQualityApproximate;
 
   /// No description provided for @matchRecorded.
@@ -2691,7 +4809,7 @@ abstract class AppLocalizations {
   /// No description provided for @roleContrastColor.
   ///
   /// In en, this message translates to:
-  /// **'Contrast color'**
+  /// **'Contrast colour'**
   String get roleContrastColor;
 
   /// No description provided for @rolePrimary1.
@@ -3786,18 +5904,6 @@ abstract class AppLocalizations {
   /// **'Winter Snow'**
   String get scenarioWinterSnow;
 
-  /// No description provided for @packModeSinglePack.
-  ///
-  /// In en, this message translates to:
-  /// **'Single pack'**
-  String get packModeSinglePack;
-
-  /// No description provided for @packModeComparePacks.
-  ///
-  /// In en, this message translates to:
-  /// **'Compare packs'**
-  String get packModeComparePacks;
-
   /// No description provided for @packLabel120New.
   ///
   /// In en, this message translates to:
@@ -3839,1038 +5945,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Atmosphere'**
   String get categoryAtmosphere;
-
-  /// No description provided for @ideaStickerEffectTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Sticker Effect'**
-  String get ideaStickerEffectTitle;
-
-  /// No description provided for @ideaStickerEffectSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Make subjects look like cut-out stickers using a white halo and black outer outline.'**
-  String get ideaStickerEffectSummary;
-
-  /// No description provided for @ideaStickerEffectOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Technique-first challenge. The illusion comes from edge treatment, not from a specific palette.'**
-  String get ideaStickerEffectOverview;
-
-  /// No description provided for @ideaStickerEffectStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Color the main subject normally first.'**
-  String get ideaStickerEffectStep1;
-
-  /// No description provided for @ideaStickerEffectStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a clean white halo around the full silhouette.'**
-  String get ideaStickerEffectStep2;
-
-  /// No description provided for @ideaStickerEffectStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Trace the outside edge of that white halo with a black line.'**
-  String get ideaStickerEffectStep3;
-
-  /// No description provided for @ideaStickerEffectStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Optional: add a tiny drop shadow under one side to make it pop.'**
-  String get ideaStickerEffectStep4;
-
-  /// No description provided for @ideaStickerEffectEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep halo width consistent for a cleaner cut-out look.'**
-  String get ideaStickerEffectEmbellishment1;
-
-  /// No description provided for @ideaStickerEffectEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'If edges feel noisy, smooth with white pen before black contour.'**
-  String get ideaStickerEffectEmbellishment2;
-
-  /// No description provided for @ideaPolaroidFrameTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Polaroid Frame'**
-  String get ideaPolaroidFrameTitle;
-
-  /// No description provided for @ideaPolaroidFrameSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Draw a Polaroid frame, color only inside it, and keep everything outside in grayscale.'**
-  String get ideaPolaroidFrameSummary;
-
-  /// No description provided for @ideaPolaroidFrameOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Build a fake instant-photo composition. The interior gets full color while the rest stays in controlled grayscale.'**
-  String get ideaPolaroidFrameOverview;
-
-  /// No description provided for @ideaPolaroidFrameStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Sketch a Polaroid frame with a wider bottom border.'**
-  String get ideaPolaroidFrameStep1;
-
-  /// No description provided for @ideaPolaroidFrameStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Block everything outside the frame using 2-3 grayscale values.'**
-  String get ideaPolaroidFrameStep2;
-
-  /// No description provided for @ideaPolaroidFrameStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Color only the interior photo window with your subject colors.'**
-  String get ideaPolaroidFrameStep3;
-
-  /// No description provided for @ideaPolaroidFrameStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Add a subtle frame shadow so the photo appears on top of the page.'**
-  String get ideaPolaroidFrameStep4;
-
-  /// No description provided for @ideaPolaroidFrameEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Write a tiny date caption on the bottom frame for realism.'**
-  String get ideaPolaroidFrameEmbellishment1;
-
-  /// No description provided for @ideaPolaroidFrameEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Make outside grayscale slightly cooler to boost interior warmth.'**
-  String get ideaPolaroidFrameEmbellishment2;
-
-  /// No description provided for @ideaSpotlightTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Spotlight'**
-  String get ideaSpotlightTitle;
-
-  /// No description provided for @ideaSpotlightSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Create a strong focal light with dark edges and smooth value falloff.'**
-  String get ideaSpotlightSummary;
-
-  /// No description provided for @ideaSpotlightOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Direct attention with value contrast: bright center, dark perimeter, and clear light falloff.'**
-  String get ideaSpotlightOverview;
-
-  /// No description provided for @ideaSpotlightStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Mark the spotlight center before laying color.'**
-  String get ideaSpotlightStep1;
-
-  /// No description provided for @ideaSpotlightStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep the focal zone bright and high-contrast.'**
-  String get ideaSpotlightStep2;
-
-  /// No description provided for @ideaSpotlightStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Darken values gradually as you move away from the center.'**
-  String get ideaSpotlightStep3;
-
-  /// No description provided for @ideaSpotlightStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Finish with a soft vignette around page edges.'**
-  String get ideaSpotlightStep4;
-
-  /// No description provided for @ideaSpotlightEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Use harder edges near the focal point, softer edges far away.'**
-  String get ideaSpotlightEmbellishment1;
-
-  /// No description provided for @ideaSpotlightEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Avoid bright accents in corners so focus stays centered.'**
-  String get ideaSpotlightEmbellishment2;
-
-  /// No description provided for @ideaOneColorTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'One Color'**
-  String get ideaOneColorTitle;
-
-  /// No description provided for @ideaOneColorSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Use a single hue family and control contrast only through value and saturation.'**
-  String get ideaOneColorSummary;
-
-  /// No description provided for @ideaOneColorOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'One hue, many values. Depth comes from shifts in lightness and saturation, not hue variety.'**
-  String get ideaOneColorOverview;
-
-  /// No description provided for @ideaOneColorStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose one dominant hue family for the full piece.'**
-  String get ideaOneColorStep1;
-
-  /// No description provided for @ideaOneColorStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Separate planes with value shifts, not hue shifts.'**
-  String get ideaOneColorStep2;
-
-  /// No description provided for @ideaOneColorStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Reserve highest contrast for your focal element.'**
-  String get ideaOneColorStep3;
-
-  /// No description provided for @ideaOneColorStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Use saturation variation to avoid flat areas.'**
-  String get ideaOneColorStep4;
-
-  /// No description provided for @ideaOneColorEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Use texture shifts to separate materials when hue variety is limited.'**
-  String get ideaOneColorEmbellishment1;
-
-  /// No description provided for @ideaOneColorEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep one micro-accent at the brightest value for focal clarity.'**
-  String get ideaOneColorEmbellishment2;
-
-  /// No description provided for @ideaTwoColorsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Two Colors'**
-  String get ideaTwoColorsTitle;
-
-  /// No description provided for @ideaTwoColorsSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Build the scene using only two dominant hue families plus subtle support tones.'**
-  String get ideaTwoColorsSummary;
-
-  /// No description provided for @ideaTwoColorsOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Restrict the scene to two hue families and let contrast come from value, not palette breadth.'**
-  String get ideaTwoColorsOverview;
-
-  /// No description provided for @ideaTwoColorsStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Assign each major area to one of the two hue families.'**
-  String get ideaTwoColorsStep1;
-
-  /// No description provided for @ideaTwoColorsStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep transitions clean to preserve the two-tone concept.'**
-  String get ideaTwoColorsStep2;
-
-  /// No description provided for @ideaTwoColorsStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Use one neutral bridge only where needed.'**
-  String get ideaTwoColorsStep3;
-
-  /// No description provided for @ideaTwoColorsStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep one hue dominant and one supporting.'**
-  String get ideaTwoColorsStep4;
-
-  /// No description provided for @ideaTwoColorsEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Let one hue occupy larger shapes and the second hue act as accent.'**
-  String get ideaTwoColorsEmbellishment1;
-
-  /// No description provided for @ideaTwoColorsEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'If harmony breaks, add a low-saturation bridge tone in transitions.'**
-  String get ideaTwoColorsEmbellishment2;
-
-  /// No description provided for @ideaFiftyFiftyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'50/50 Split'**
-  String get ideaFiftyFiftyTitle;
-
-  /// No description provided for @ideaFiftyFiftySummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Split the composition in two moods. One side warm, the other cool, with a bridge color.'**
-  String get ideaFiftyFiftySummary;
-
-  /// No description provided for @ideaFiftyFiftyOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Compose two distinct moods in one image. Keep each side coherent and blend with one bridge tone.'**
-  String get ideaFiftyFiftyOverview;
-
-  /// No description provided for @ideaFiftyFiftyStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Split the page vertically or horizontally.'**
-  String get ideaFiftyFiftyStep1;
-
-  /// No description provided for @ideaFiftyFiftyStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Assign warm hues to one side and cool hues to the other.'**
-  String get ideaFiftyFiftyStep2;
-
-  /// No description provided for @ideaFiftyFiftyStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Use one bridge tone at the boundary so the split feels intentional.'**
-  String get ideaFiftyFiftyStep3;
-
-  /// No description provided for @ideaFiftyFiftyStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep each half internally consistent in value and saturation.'**
-  String get ideaFiftyFiftyStep4;
-
-  /// No description provided for @ideaFiftyFiftyEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Mirror one small motif on both halves to tie the concept together.'**
-  String get ideaFiftyFiftyEmbellishment1;
-
-  /// No description provided for @ideaFiftyFiftyEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep one side slightly darker to avoid visual symmetry fatigue.'**
-  String get ideaFiftyFiftyEmbellishment2;
-
-  /// No description provided for @ideaWarmColorsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Warm Colors'**
-  String get ideaWarmColorsTitle;
-
-  /// No description provided for @ideaWarmColorsSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Use only warm hues for an energetic, cozy, sunlit scene.'**
-  String get ideaWarmColorsSummary;
-
-  /// No description provided for @ideaWarmColorsOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Warm hues carry energy and intimacy. Keep shadows warm instead of neutral gray.'**
-  String get ideaWarmColorsOverview;
-
-  /// No description provided for @ideaCoolColorsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Cool Colors'**
-  String get ideaCoolColorsTitle;
-
-  /// No description provided for @ideaCoolColorsSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Use cool hues for calm, depth, and atmospheric distance.'**
-  String get ideaCoolColorsSummary;
-
-  /// No description provided for @ideaCoolColorsOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Cool hues create depth and calm. Control value steps to avoid a flat finish.'**
-  String get ideaCoolColorsOverview;
-
-  /// No description provided for @ideaPastelTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Pastel'**
-  String get ideaPastelTitle;
-
-  /// No description provided for @ideaPastelSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Light value and low saturation for a soft, dreamy finish.'**
-  String get ideaPastelSummary;
-
-  /// No description provided for @ideaPastelOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Pastel scenes rely on value control and subtle contrast more than hue intensity.'**
-  String get ideaPastelOverview;
-
-  /// No description provided for @ideaNeonTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Neon'**
-  String get ideaNeonTitle;
-
-  /// No description provided for @ideaNeonSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'High-energy, vivid colors that pop against dark support tones.'**
-  String get ideaNeonSummary;
-
-  /// No description provided for @ideaNeonOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Neon needs contrast. Reserve at least one dark support area so bright accents can glow.'**
-  String get ideaNeonOverview;
-
-  /// No description provided for @ideaRainbowTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Rainbow'**
-  String get ideaRainbowTitle;
-
-  /// No description provided for @ideaRainbowSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Distribute hue families across the artwork while keeping values controlled.'**
-  String get ideaRainbowSummary;
-
-  /// No description provided for @ideaRainbowOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Use broad hue coverage but keep one dominant hue family so the piece still feels unified.'**
-  String get ideaRainbowOverview;
-
-  /// No description provided for @ideaUnlikelyColorsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Unlikely Colors'**
-  String get ideaUnlikelyColorsTitle;
-
-  /// No description provided for @ideaUnlikelyColorsSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Try unexpected color pairings to make ordinary subjects feel stylized.'**
-  String get ideaUnlikelyColorsSummary;
-
-  /// No description provided for @ideaUnlikelyColorsOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Unexpected combinations can feel intentional when value hierarchy stays clear.'**
-  String get ideaUnlikelyColorsOverview;
-
-  /// No description provided for @ideaRandomColorsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Random Colors'**
-  String get ideaRandomColorsTitle;
-
-  /// No description provided for @ideaRandomColorsSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Use a randomized palette and force cohesion through value planning.'**
-  String get ideaRandomColorsSummary;
-
-  /// No description provided for @ideaRandomColorsOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Random palettes look coherent if you keep one focal area and controlled contrast.'**
-  String get ideaRandomColorsOverview;
-
-  /// No description provided for @ideaGrayscaleTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Grayscale'**
-  String get ideaGrayscaleTitle;
-
-  /// No description provided for @ideaGrayscaleSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Work in values only to improve depth and contrast control.'**
-  String get ideaGrayscaleSummary;
-
-  /// No description provided for @ideaGrayscaleOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Limit color information and focus on depth, hierarchy, and material separation through value only.'**
-  String get ideaGrayscaleOverview;
-
-  /// No description provided for @ideaSeasonalTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Seasonal'**
-  String get ideaSeasonalTitle;
-
-  /// No description provided for @ideaSeasonalSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Blend spring, summer, autumn, or winter cues into a cohesive palette.'**
-  String get ideaSeasonalSummary;
-
-  /// No description provided for @ideaSeasonalOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Seasonal palettes work best when one season dominates and others support the mood.'**
-  String get ideaSeasonalOverview;
-
-  /// No description provided for @ideaChristmasTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Christmas'**
-  String get ideaChristmasTitle;
-
-  /// No description provided for @ideaChristmasSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Classic red-green-gold range for festive contrast and cozy highlights.'**
-  String get ideaChristmasSummary;
-
-  /// No description provided for @ideaChristmasOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Classic holiday balance: warm highlights, rich reds/greens, and selective bright accents.'**
-  String get ideaChristmasOverview;
-
-  /// No description provided for @ideaValentinesTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Valentine\'s Day'**
-  String get ideaValentinesTitle;
-
-  /// No description provided for @ideaValentinesSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Romantic reds and pinks with soft highlights and warm transitions.'**
-  String get ideaValentinesSummary;
-
-  /// No description provided for @ideaValentinesOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Romantic harmony comes from warm transitions and gentle highlight placement.'**
-  String get ideaValentinesOverview;
-
-  /// No description provided for @ideaWhiteEffectsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'White Effects'**
-  String get ideaWhiteEffectsTitle;
-
-  /// No description provided for @ideaWhiteEffectsSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan the palette to leave room for white-pen sparkles and shine accents.'**
-  String get ideaWhiteEffectsSummary;
-
-  /// No description provided for @ideaWhiteEffectsOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Reserve whitespace and bright value zones so white-ink effects read clearly.'**
-  String get ideaWhiteEffectsOverview;
-
-  /// No description provided for @ideaWhiteEffectsEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Use white pen for sparkles on metal, eyes, and water reflections.'**
-  String get ideaWhiteEffectsEmbellishment1;
-
-  /// No description provided for @ideaWhiteEffectsEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Dot highlights in clusters, not evenly, for natural shine.'**
-  String get ideaWhiteEffectsEmbellishment2;
-
-  /// No description provided for @ideaBlackEffectsTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Black Effects'**
-  String get ideaBlackEffectsTitle;
-
-  /// No description provided for @ideaBlackEffectsSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Use black line details, dots, and pattern overlays to enhance contrast.'**
-  String get ideaBlackEffectsSummary;
-
-  /// No description provided for @ideaBlackEffectsOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Plan midtone areas where black pen details can add texture and graphic punch.'**
-  String get ideaBlackEffectsOverview;
-
-  /// No description provided for @ideaBlackEffectsEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Use black dots/stripes to add texture after color layers dry.'**
-  String get ideaBlackEffectsEmbellishment1;
-
-  /// No description provided for @ideaBlackEffectsEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Concentrate black details near focal areas for stronger emphasis.'**
-  String get ideaBlackEffectsEmbellishment2;
-
-  /// No description provided for @ideaCrayonsOnlyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Crayons Only'**
-  String get ideaCrayonsOnlyTitle;
-
-  /// No description provided for @ideaCrayonsOnlySummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Simple bold palette that mimics classic crayon behavior and texture.'**
-  String get ideaCrayonsOnlySummary;
-
-  /// No description provided for @ideaCrayonsOnlyOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Crayon style favors simple blocks, bold primaries, and visible stroke texture.'**
-  String get ideaCrayonsOnlyOverview;
-
-  /// No description provided for @ideaOldWestTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Old West'**
-  String get ideaOldWestTitle;
-
-  /// No description provided for @ideaOldWestSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Dusty sepia range with muted warmth, like an aged Western print.'**
-  String get ideaOldWestSummary;
-
-  /// No description provided for @ideaOldWestOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Aged-photo atmosphere with dusty mids, muted warms, and restrained highlights.'**
-  String get ideaOldWestOverview;
-
-  /// No description provided for @ideaOldWestStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Lay a sepia-like base across major areas.'**
-  String get ideaOldWestStep1;
-
-  /// No description provided for @ideaOldWestStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Use dusty midtones and avoid highly saturated accents.'**
-  String get ideaOldWestStep2;
-
-  /// No description provided for @ideaOldWestStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Push shadows with muted browns instead of pure black.'**
-  String get ideaOldWestStep3;
-
-  /// No description provided for @ideaOldWestStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Reserve highlights for worn edges and sun hit points.'**
-  String get ideaOldWestStep4;
-
-  /// No description provided for @ideaOldWestEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Add subtle grain dots in empty regions for aged texture.'**
-  String get ideaOldWestEmbellishment1;
-
-  /// No description provided for @ideaOldWestEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Use broken edges on highlights to mimic worn print paper.'**
-  String get ideaOldWestEmbellishment2;
-
-  /// No description provided for @ideaHorrorHalloweenTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Horror/Halloween'**
-  String get ideaHorrorHalloweenTitle;
-
-  /// No description provided for @ideaHorrorHalloweenSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Dark values and eerie accents to transform normal scenes into spooky mood.'**
-  String get ideaHorrorHalloweenSummary;
-
-  /// No description provided for @ideaHorrorHalloweenOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Push darkness and selective eerie accents to convert normal scenes into unsettling ones.'**
-  String get ideaHorrorHalloweenOverview;
-
-  /// No description provided for @ideaHorrorHalloweenStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Drop overall value to establish darkness first.'**
-  String get ideaHorrorHalloweenStep1;
-
-  /// No description provided for @ideaHorrorHalloweenStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Place eerie accent hues only near focal shapes.'**
-  String get ideaHorrorHalloweenStep2;
-
-  /// No description provided for @ideaHorrorHalloweenStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Use harder edge shadows for tension.'**
-  String get ideaHorrorHalloweenStep3;
-
-  /// No description provided for @ideaHorrorHalloweenStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep bright highlights sparse and directional.'**
-  String get ideaHorrorHalloweenStep4;
-
-  /// No description provided for @ideaHorrorHalloweenEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Add subtle color noise in shadows for unsettling texture.'**
-  String get ideaHorrorHalloweenEmbellishment1;
-
-  /// No description provided for @ideaHorrorHalloweenEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Use one sharp high-contrast edge to create visual tension.'**
-  String get ideaHorrorHalloweenEmbellishment2;
-
-  /// No description provided for @ideaMidnightTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Midnight'**
-  String get ideaMidnightTitle;
-
-  /// No description provided for @ideaMidnightSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Turn daytime scenes into night by pushing cool shadows and selective highlights.'**
-  String get ideaMidnightSummary;
-
-  /// No description provided for @ideaMidnightOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Night conversion depends on cooler shadows, lower values, and sparse light accents.'**
-  String get ideaMidnightOverview;
-
-  /// No description provided for @ideaMidnightStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Convert warm daytime areas into cooler night tones.'**
-  String get ideaMidnightStep1;
-
-  /// No description provided for @ideaMidnightStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Push sky/background values darker than midground.'**
-  String get ideaMidnightStep2;
-
-  /// No description provided for @ideaMidnightStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Add moonlight accents on top-facing edges.'**
-  String get ideaMidnightStep3;
-
-  /// No description provided for @ideaMidnightStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Soften distant elements to increase nocturnal depth.'**
-  String get ideaMidnightStep4;
-
-  /// No description provided for @ideaMidnightEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep highlights cool and sparse to avoid reintroducing daytime feel.'**
-  String get ideaMidnightEmbellishment1;
-
-  /// No description provided for @ideaMidnightEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Darken corners more than center to create natural nighttime framing.'**
-  String get ideaMidnightEmbellishment2;
-
-  /// No description provided for @ideaUnderwaterTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Underwater'**
-  String get ideaUnderwaterTitle;
-
-  /// No description provided for @ideaUnderwaterSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Cool aquatic palette with depth haze, light rays, and bubble accents.'**
-  String get ideaUnderwaterSummary;
-
-  /// No description provided for @ideaUnderwaterOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Water depth appears through cool shifts, softened distance, suspended particles, and bubbles.'**
-  String get ideaUnderwaterOverview;
-
-  /// No description provided for @ideaUnderwaterStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Start with cool blue-green base layers.'**
-  String get ideaUnderwaterStep1;
-
-  /// No description provided for @ideaUnderwaterStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Fade distant elements by lowering contrast.'**
-  String get ideaUnderwaterStep2;
-
-  /// No description provided for @ideaUnderwaterStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Add directional light rays to suggest water depth.'**
-  String get ideaUnderwaterStep3;
-
-  /// No description provided for @ideaUnderwaterStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Use pale highlights sparingly on bubbles and reflective edges.'**
-  String get ideaUnderwaterStep4;
-
-  /// No description provided for @ideaUnderwaterEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Add bubble clusters of different sizes, denser near the light path.'**
-  String get ideaUnderwaterEmbellishment1;
-
-  /// No description provided for @ideaUnderwaterEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Paint tiny suspended particles for volume in the water.'**
-  String get ideaUnderwaterEmbellishment2;
-
-  /// No description provided for @ideaUnderwaterEmbellishment3.
-  ///
-  /// In en, this message translates to:
-  /// **'Curve light rays slightly for a natural underwater feel.'**
-  String get ideaUnderwaterEmbellishment3;
-
-  /// No description provided for @ideaSpookyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Spooky'**
-  String get ideaSpookyTitle;
-
-  /// No description provided for @ideaSpookySummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Haunted-place vibe using desaturated darks and chilling accent tones.'**
-  String get ideaSpookySummary;
-
-  /// No description provided for @ideaSpookyOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'A haunted look uses desaturated dark fields and isolated eerie accents.'**
-  String get ideaSpookyOverview;
-
-  /// No description provided for @ideaSpookyStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Start from a dim neutral base with low saturation.'**
-  String get ideaSpookyStep1;
-
-  /// No description provided for @ideaSpookyStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Introduce one eerie accent hue in key focal areas.'**
-  String get ideaSpookyStep2;
-
-  /// No description provided for @ideaSpookyStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Use uneven shadow edges for haunted atmosphere.'**
-  String get ideaSpookyStep3;
-
-  /// No description provided for @ideaSpookyStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep backgrounds subdued so the subject feels isolated.'**
-  String get ideaSpookyStep4;
-
-  /// No description provided for @ideaFantasyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Fantasy'**
-  String get ideaFantasyTitle;
-
-  /// No description provided for @ideaFantasySummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Magical tones with luminous accents and stylized contrast.'**
-  String get ideaFantasySummary;
-
-  /// No description provided for @ideaFantasyOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Push stylized hue choices and luminous accents while keeping shadows readable.'**
-  String get ideaFantasyOverview;
-
-  /// No description provided for @ideaInTheMoodTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'In the Mood'**
-  String get ideaInTheMoodTitle;
-
-  /// No description provided for @ideaInTheMoodSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Express one emotional tone through value rhythm and hue bias.'**
-  String get ideaInTheMoodSummary;
-
-  /// No description provided for @ideaInTheMoodOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose one emotional direction and keep every hue/value decision aligned with it.'**
-  String get ideaInTheMoodOverview;
-
-  /// No description provided for @ideaSculptureTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Sculpture'**
-  String get ideaSculptureTitle;
-
-  /// No description provided for @ideaSculptureSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Metallic or stone-like palette focused on material highlights and hard edges.'**
-  String get ideaSculptureSummary;
-
-  /// No description provided for @ideaSculptureOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Material realism comes from edge control, value planes, and restrained saturation.'**
-  String get ideaSculptureOverview;
-
-  /// No description provided for @ideaGalaxyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Galaxy'**
-  String get ideaGalaxyTitle;
-
-  /// No description provided for @ideaGalaxySummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Nebula-inspired range with deep space shadows and starlight accents.'**
-  String get ideaGalaxySummary;
-
-  /// No description provided for @ideaGalaxyOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Cosmic scenes need deep darks, vibrant nebula zones, and tiny high-contrast stars.'**
-  String get ideaGalaxyOverview;
-
-  /// No description provided for @ideaStainedGlassTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Stained Glass'**
-  String get ideaStainedGlassTitle;
-
-  /// No description provided for @ideaStainedGlassSummary.
-  ///
-  /// In en, this message translates to:
-  /// **'Jewel-tone palette with dark separators to mimic leaded glass pieces.'**
-  String get ideaStainedGlassSummary;
-
-  /// No description provided for @ideaStainedGlassOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Think in colored panels and dark separators rather than smooth painterly blending.'**
-  String get ideaStainedGlassOverview;
-
-  /// No description provided for @ideaStainedGlassStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Block separate color panels before any blending.'**
-  String get ideaStainedGlassStep1;
-
-  /// No description provided for @ideaStainedGlassStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Leave dark separators between major shapes.'**
-  String get ideaStainedGlassStep2;
-
-  /// No description provided for @ideaStainedGlassStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Increase saturation in center panels for luminosity.'**
-  String get ideaStainedGlassStep3;
-
-  /// No description provided for @ideaStainedGlassStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Use highlights as reflected light, not smooth gradients.'**
-  String get ideaStainedGlassStep4;
-
-  /// No description provided for @ideaStainedGlassEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Use thin black separators to mimic lead came lines.'**
-  String get ideaStainedGlassEmbellishment1;
-
-  /// No description provided for @ideaStainedGlassEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Keep each panel hue clean and avoid muddy mixes.'**
-  String get ideaStainedGlassEmbellishment2;
-
-  /// No description provided for @ideaDefaultOverview.
-  ///
-  /// In en, this message translates to:
-  /// **'Creative challenge'**
-  String get ideaDefaultOverview;
-
-  /// No description provided for @ideaDefaultStep1.
-  ///
-  /// In en, this message translates to:
-  /// **'Block large shapes with your dominant tones.'**
-  String get ideaDefaultStep1;
-
-  /// No description provided for @ideaDefaultStep2.
-  ///
-  /// In en, this message translates to:
-  /// **'Build depth using one lighter and one darker support color.'**
-  String get ideaDefaultStep2;
-
-  /// No description provided for @ideaDefaultStep3.
-  ///
-  /// In en, this message translates to:
-  /// **'Use your accent color only on focal areas.'**
-  String get ideaDefaultStep3;
-
-  /// No description provided for @ideaDefaultStep4.
-  ///
-  /// In en, this message translates to:
-  /// **'Finish with line cleanup and controlled highlights.'**
-  String get ideaDefaultStep4;
-
-  /// No description provided for @ideaDefaultEmbellishment1.
-  ///
-  /// In en, this message translates to:
-  /// **'Run a final pass to simplify accents and keep one clear focal area.'**
-  String get ideaDefaultEmbellishment1;
-
-  /// No description provided for @ideaDefaultEmbellishment2.
-  ///
-  /// In en, this message translates to:
-  /// **'Reserve your brightest highlight for the subject you want first attention on.'**
-  String get ideaDefaultEmbellishment2;
 
   /// No description provided for @settingsLinesTitle.
   ///
@@ -4935,7 +6009,7 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesLegacyPacks.
   ///
   /// In en, this message translates to:
-  /// **'Older / community'**
+  /// **'Older sets'**
   String get swatchesLegacyPacks;
 
   /// No description provided for @packLabelSkin.
@@ -5021,6 +6095,444 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'+{count} more'**
   String swatchesMorePacks(int count);
+
+  /// No description provided for @settingsMatchingGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour matching'**
+  String get settingsMatchingGroup;
+
+  /// No description provided for @settingsMatchSuggestUnowned.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the whole range'**
+  String get settingsMatchSuggestUnowned;
+
+  /// No description provided for @settingsMatchSuggestUnownedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'When none of your markers is close, Match also shows the closest one of the whole range.'**
+  String get settingsMatchSuggestUnownedSubtitle;
+
+  /// No description provided for @settingsSetupAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Run the setup again'**
+  String get settingsSetupAgain;
+
+  /// No description provided for @matchNoCloseMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No close match in your markers.'**
+  String get matchNoCloseMatch;
+
+  /// No description provided for @matchRangeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole {brand} range'**
+  String matchRangeTitle(String brand);
+
+  /// No description provided for @matchNotOwnedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t own it'**
+  String get matchNotOwnedBadge;
+
+  /// No description provided for @matchSubtitleEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No markers in your collection yet'**
+  String get matchSubtitleEmpty;
+
+  /// No description provided for @swatchesWholeRangeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing the whole {brand} range'**
+  String swatchesWholeRangeNotice(String brand);
+
+  /// No description provided for @swatchesWholeRangeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up'**
+  String get swatchesWholeRangeAction;
+
+  /// No description provided for @matchWholeRangeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Until you set up your collection, matching uses the whole {brand} range.'**
+  String matchWholeRangeBody(String brand);
+
+  /// No description provided for @matchWholeRangeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to My collection'**
+  String get matchWholeRangeAction;
+
+  /// No description provided for @collectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My collection'**
+  String get collectionTitle;
+
+  /// No description provided for @collectionMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No markers} =1{1 marker} other{{count} markers}}'**
+  String collectionMarkers(int count);
+
+  /// No description provided for @collectionSets.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 set} other{{count} sets}}'**
+  String collectionSets(int count);
+
+  /// No description provided for @collectionNotSetUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set up yet'**
+  String get collectionNotSetUp;
+
+  /// No description provided for @collectionSeriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Series you own'**
+  String get collectionSeriesTitle;
+
+  /// No description provided for @collectionHonoluluNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Honolulu B, Honolulu S and Honolulu² use the same colour codes as Honolulu; only the tips differ.'**
+  String get collectionHonoluluNote;
+
+  /// No description provided for @collectionSetsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets you own'**
+  String get collectionSetsTitle;
+
+  /// No description provided for @collectionSetsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a series to see its sets.'**
+  String get collectionSetsEmpty;
+
+  /// No description provided for @collectionOlderSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Older sets ({count})'**
+  String collectionOlderSets(int count);
+
+  /// No description provided for @collectionOlderSetsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Discontinued or regional editions, from community data.'**
+  String get collectionOlderSetsNote;
+
+  /// No description provided for @collectionExtrasTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra markers'**
+  String get collectionExtrasTitle;
+
+  /// No description provided for @collectionExtrasHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Bought single markers? Tick them here. Markers in your sets already count.'**
+  String get collectionExtrasHint;
+
+  /// No description provided for @collectionDecoMarkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your markers'**
+  String get collectionDecoMarkersTitle;
+
+  /// No description provided for @collectionDecoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'DecoTime does not publish which colours each set holds, so tick the ones you own or add a whole family.'**
+  String get collectionDecoHint;
+
+  /// No description provided for @collectionDecoSizesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Action sells DecoTime sets of 100, 150, 160, 200 and 300 markers.'**
+  String get collectionDecoSizesHint;
+
+  /// No description provided for @collectionFamiliesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add by family'**
+  String get collectionFamiliesTitle;
+
+  /// No description provided for @collectionFamilyChip.
+  ///
+  /// In en, this message translates to:
+  /// **'{family} {owned}/{total}'**
+  String collectionFamilyChip(String family, int owned, int total);
+
+  /// No description provided for @collectionFamilyColours.
+  ///
+  /// In en, this message translates to:
+  /// **'Colours'**
+  String get collectionFamilyColours;
+
+  /// No description provided for @collectionFamilyWarmGrey.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm greys'**
+  String get collectionFamilyWarmGrey;
+
+  /// No description provided for @collectionFamilyCoolGrey.
+  ///
+  /// In en, this message translates to:
+  /// **'Cool greys'**
+  String get collectionFamilyCoolGrey;
+
+  /// No description provided for @collectionFamilyBlueGrey.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue greys'**
+  String get collectionFamilyBlueGrey;
+
+  /// No description provided for @collectionFamilyGreenGrey.
+  ///
+  /// In en, this message translates to:
+  /// **'Green greys'**
+  String get collectionFamilyGreenGrey;
+
+  /// No description provided for @collectionDecoRange.
+  ///
+  /// In en, this message translates to:
+  /// **'DecoTime range'**
+  String get collectionDecoRange;
+
+  /// No description provided for @collectionWholeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole range'**
+  String get collectionWholeRange;
+
+  /// No description provided for @collectionSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search code or name'**
+  String get collectionSearchHint;
+
+  /// No description provided for @collectionTickVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick all'**
+  String get collectionTickVisible;
+
+  /// No description provided for @collectionUntickVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Untick all'**
+  String get collectionUntickVisible;
+
+  /// No description provided for @collectionInYourSets.
+  ///
+  /// In en, this message translates to:
+  /// **'In your set'**
+  String get collectionInYourSets;
+
+  /// No description provided for @collectionNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No marker matches the search.'**
+  String get collectionNoResults;
+
+  /// No description provided for @collectionReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset collection'**
+  String get collectionReset;
+
+  /// No description provided for @collectionResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your {brand} collection?'**
+  String collectionResetTitle(String brand);
+
+  /// No description provided for @collectionResetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sets and extra markers of this brand are removed. Favourites and palettes stay.'**
+  String get collectionResetBody;
+
+  /// No description provided for @collectionOwnedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{owned} of {total}'**
+  String collectionOwnedCount(int owned, int total);
+
+  /// No description provided for @onboardingWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Ink Lab'**
+  String get onboardingWelcomeTitle;
+
+  /// No description provided for @onboardingWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse your markers, match colours from photos and build palettes. First, tell us which markers you have.'**
+  String get onboardingWelcomeBody;
+
+  /// No description provided for @onboardingOhuhuLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets by series: Oahu, Honolulu, Kaala'**
+  String get onboardingOhuhuLine;
+
+  /// No description provided for @onboardingDecoLine.
+  ///
+  /// In en, this message translates to:
+  /// **'One range of 313 colours, sets at Action'**
+  String get onboardingDecoLine;
+
+  /// No description provided for @onboardingSeriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which series do you have?'**
+  String get onboardingSeriesTitle;
+
+  /// No description provided for @onboardingSeriesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick every series you have markers from.'**
+  String get onboardingSeriesBody;
+
+  /// No description provided for @onboardingSetsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which sets do you have?'**
+  String get onboardingSetsTitle;
+
+  /// No description provided for @onboardingSetsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the boxes you bought. Extra markers can be added later.'**
+  String get onboardingSetsBody;
+
+  /// No description provided for @onboardingDecoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your DecoTime markers'**
+  String get onboardingDecoTitle;
+
+  /// No description provided for @onboardingDoneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'All set'**
+  String get onboardingDoneTitle;
+
+  /// No description provided for @onboardingLaterNote.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this later in My collection.'**
+  String get onboardingLaterNote;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get onboardingBack;
+
+  /// No description provided for @onboardingFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get onboardingFinish;
+
+  /// No description provided for @onboardingStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String onboardingStep(int step, int total);
+
+  /// No description provided for @collectionSeriesOahuTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Fine and chisel tips'**
+  String get collectionSeriesOahuTips;
+
+  /// No description provided for @collectionSeriesHonoluluTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Brush and chisel tips'**
+  String get collectionSeriesHonoluluTips;
+
+  /// No description provided for @collectionSeriesKaalaTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Brush tip'**
+  String get collectionSeriesKaalaTips;
+
+  /// No description provided for @collectionSummaryNoSets.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not picked any sets yet: the whole range is used'**
+  String get collectionSummaryNoSets;
+
+  /// No description provided for @collectionSummaryNoMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not ticked any markers yet'**
+  String get collectionSummaryNoMarkers;
+
+  /// No description provided for @collectionExtrasAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add loose markers'**
+  String get collectionExtrasAddTitle;
+
+  /// No description provided for @collectionDecoMarkersButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick your markers'**
+  String get collectionDecoMarkersButton;
+
+  /// No description provided for @collectionExtrasCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No loose markers} =1{1 loose marker} other{{count} loose markers}}'**
+  String collectionExtrasCount(int count);
+
+  /// No description provided for @onboardingDoneWholeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Until you pick sets, the app shows the whole {brand} range.'**
+  String onboardingDoneWholeRange(String brand);
+
+  /// No description provided for @onboardingDoneNoMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not ticked any DecoTime markers yet: tick them in My collection.'**
+  String get onboardingDoneNoMarkers;
+
+  /// No description provided for @onboardingDoneNext.
+  ///
+  /// In en, this message translates to:
+  /// **'What next: browse colours in Swatches, match a photo in Match or build a palette in Palette.'**
+  String get onboardingDoneNext;
+
+  /// No description provided for @collectionVisibleScope.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies to the markers that match your search.'**
+  String get collectionVisibleScope;
 }
 
 class _AppLocalizationsDelegate

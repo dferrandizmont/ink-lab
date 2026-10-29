@@ -49,7 +49,7 @@ Se incluyen el código Flutter, los nativos de Android e iOS, las pruebas, los
 catálogos y fuentes de `assets/`, la CI, los README, las licencias, los avisos de
 seguridad y privacidad, la web legal y los contratos técnicos de colaboración
 (`docs/ARCHITECTURE.md`, `docs/RELEASING.md`, `docs/privacy*.md`, `docs/legal/`).
-Las reglas públicas están en `CONTRIBUTING.md` y `CONTRIBUTING.en.md`.
+Las reglas públicas están en `CONTRIBUTING.md` y `CONTRIBUTING.es.md`.
 
 Exclusiones revisadas:
 
@@ -126,6 +126,7 @@ revisar el árbol, las imágenes y la identidad final. Publicar es otro paso.
 
 ```sh
 python -B tool/publish/test_export_public.py
+python -B tool/publish/test_update_public.py
 sh tool/publish/export_public.sh HEAD /ruta/vacia/ink-lab-publico
 cd /ruta/vacia/ink-lab-publico
 python -B web/legal/test_legal.py
@@ -151,15 +152,26 @@ publicación de `dferrandizmont/ink-lab`:
    vacío en GitHub (con el «sí» del dueño), añade el remoto y haz `git push -u origin main`.
 3. Activa GitHub Pages con el contenido de `web/legal/dist/` (`web/legal/LEEME.md`).
 
-Para publicar cambios después sin perder el historial público:
+Para publicar cambios después sin perder el historial público, usa el modo de
+actualización (no usa la red ni hace push):
 
-1. Exporta `HEAD` a una carpeta vacía: `sh tool/publish/export_public.sh HEAD ../il-public-export`.
-2. En el clon del público (`../ink-lab-public`, al día con `origin/main`), sustituye el árbol entero:
-   `git rm -r -q --cached .`, borra todo menos `.git`, y extrae la exportación con
-   `(cd ../il-public-export && git archive HEAD) | tar -x -C .`; luego `git add -A`.
-3. Commit **en inglés** con la identidad pública:
-   `git -c user.name="Daniel Mont Ferrandiz" -c user.email="dev@mainshai.com" commit -m "<resumen>"`.
-4. `git push origin main` (con el «sí» del dueño) y borra `../il-public-export`.
+1. Prepara el `CHANGELOG.md` del commit: una sección `## X.Y.Z · fecha` con las viñetas
+   de la versión (la sección «Unreleased» se renombra al publicar). Sus viñetas son el
+   cuerpo del commit público.
+2. Clona (o actualiza con `git pull --ff-only`) el repositorio público en una carpeta
+   fuera de este repositorio: `git clone https://github.com/dferrandizmont/ink-lab.git ../ink-lab-public`.
+3. Ejecuta, con el candidato ya confirmado (`HEAD` o un commit concreto):
+   `sh tool/publish/update_public.sh HEAD ../ink-lab-public "0.4.0"`.
+   El script exporta el árbol permitido del commit con **los mismos escáneres** que
+   `export_public.sh`, sustituye el árbol del clon (conserva `.git`) y crea **un solo
+   commit** `Ink Lab 0.4.0` con la identidad pública (`PUBLIC_AUTHOR_NAME` y
+   `PUBLIC_AUTHOR_EMAIL` la cambian, como en la exportación) y las viñetas del changelog
+   como cuerpo. Se niega si el clon tiene cambios locales o ficheros ignorados, si
+   `origin` (o cualquier remoto) no es `github.com/dferrandizmont/ink-lab`, si está
+   detrás de `origin/main`, si el HEAD está desacoplado, si el changelog no tiene esa
+   versión o si nada ha cambiado. Si algo falla, el clon queda como estaba.
+4. Revisa `git show --stat HEAD` en el clon y, con el «sí» del dueño,
+   `git push origin main`.
 
 Las releases públicas llevan los APK firmados con la upload key (`docs/RELEASING.md`), con
 `SHA256SUMS.txt` y la huella SHA-256 del certificado en las notas, en español e inglés.

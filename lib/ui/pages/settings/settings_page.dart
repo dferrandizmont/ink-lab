@@ -6,18 +6,18 @@ import '../../../data/data.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/page_header.dart';
+import '../../widgets/section_card.dart';
+import '../collection/collection_page.dart';
+import '../collection/collection_summary.dart';
+import '../onboarding/onboarding_page.dart';
 import 'about_section.dart';
 import 'ai_section.dart';
 import 'appearance_section.dart';
 import 'backup_section.dart';
-import 'brand_section.dart';
 import 'favorites_section.dart';
 import 'labels_section.dart';
 import 'language_section.dart';
-import 'owned_markers_section.dart';
-import 'packs_section.dart';
 import 'saved_palettes_section.dart';
-import 'settings_target.dart';
 import 'constants.dart';
 import 'settings_widgets.dart';
 import '../../../l10n/l10n.dart';
@@ -43,44 +43,6 @@ class _SettingsPageState extends State<SettingsPage> {
   Stream<AiSettings>? _aiChanges;
   final Map<MarkerBrand, Stream<List<SavedPalette>>> _paletteStreams =
       <MarkerBrand, Stream<List<SavedPalette>>>{};
-  final GlobalKey _ownedKey = GlobalKey(debugLabel: 'settings-owned-markers');
-
-  @override
-  void initState() {
-    super.initState();
-    settingsTarget.addListener(_scheduleTarget);
-    _scheduleTarget();
-  }
-
-  @override
-  void dispose() {
-    settingsTarget.removeListener(_scheduleTarget);
-    super.dispose();
-  }
-
-  void _scheduleTarget() {
-    if (settingsTarget.value == null) return;
-    // After the frame: the tab may be built in the same frame it is opened.
-    WidgetsBinding.instance.addPostFrameCallback((_) => _onTarget());
-  }
-
-  /// Scrolls to the part of the page another tab asked for, then consumes the
-  /// request.
-  void _onTarget() {
-    final SettingsTarget? target = settingsTarget.value;
-    if (target == null || !mounted) return;
-    final BuildContext? targetContext = switch (target) {
-      SettingsTarget.ownedMarkers => _ownedKey.currentContext,
-    };
-    if (targetContext == null) return;
-    settingsTarget.value = null;
-    Scrollable.ensureVisible(
-      targetContext,
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.easeOut,
-    );
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -162,12 +124,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       SettingsGroup(
                         title: context.l10n.settingsCollectionGroup,
                         children: <Widget>[
-                          BrandSection(scope: scope, state: state),
-                          PacksSection(scope: scope, state: state),
-                          OwnedMarkersSection(
-                            key: _ownedKey,
-                            scope: scope,
-                            state: state,
+                          _CollectionRow(scope: scope, state: state),
+                          InkListRow(
+                            key: const ValueKey<String>('settings-setup-again'),
+                            label: context.l10n.settingsSetupAgain,
+                            chevron: true,
+                            onTap: () => OnboardingPage.open(context),
                           ),
                         ],
                       ),
@@ -175,26 +137,45 @@ class _SettingsPageState extends State<SettingsPage> {
                       SettingsGroup(
                         title: context.l10n.settingsDisplayGroup,
                         children: <Widget>[
-                          LabelsSection(scope: scope, state: state),
+                          // New / old names only exist for Ohuhu.
+                          if (state.brand == MarkerBrand.ohuhuOahu)
+                            LabelsSection(scope: scope, state: state),
                           AppearanceSection(scope: scope, state: state),
                           LanguageSection(scope: scope, state: state),
                         ],
                       ),
                       const SizedBox(height: InkSpacing.section),
                       SettingsGroup(
+                        title: context.l10n.settingsMatchingGroup,
+                        children: <Widget>[
+                          SettingsSwitchRow(
+                            key: const ValueKey<String>(
+                              'settings-match-unowned',
+                            ),
+                            label: context.l10n.settingsMatchSuggestUnowned,
+                            subtitle: context
+                                .l10n
+                                .settingsMatchSuggestUnownedSubtitle,
+                            value: state.matchSuggestUnowned,
+                            onChanged: scope.settings.setMatchSuggestUnowned,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: InkSpacing.section),
+                      AiSettingsSection(scope: scope, changes: _aiChanges!),
+                      const SizedBox(height: InkSpacing.section),
+                      SettingsGroup(
                         title: context.l10n.settingsDataGroup,
                         children: <Widget>[
+                          BackupSection(scope: scope),
                           SavedPalettesSection(
                             scope: scope,
                             state: state,
                             palettes: _palettesOf(scope, state.brand),
                           ),
                           FavoritesSection(scope: scope, state: state),
-                          BackupSection(scope: scope),
                         ],
                       ),
-                      const SizedBox(height: InkSpacing.section),
-                      AiSettingsSection(scope: scope, changes: _aiChanges!),
                       const SizedBox(height: InkSpacing.section),
                       SettingsGroup(
                         title: context.l10n.settingsAboutTitle,
@@ -206,6 +187,35 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             );
           },
+    );
+  }
+}
+
+/// The "My collection" row: the active brand and what the user owns of it;
+/// opens the collection screen.
+class _CollectionRow extends StatelessWidget {
+  const _CollectionRow({required this.scope, required this.state});
+
+  final AppScope scope;
+  final AppSettingsState state;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<MarkerColor>>(
+      future: scope.markers.loadColors(state.brand),
+      builder: (BuildContext context, AsyncSnapshot<List<MarkerColor>> s) {
+        final String? detail = s.hasData
+            ? CollectionSummary.of(state, s.data!).detail(context.l10n)
+            : null;
+        return InkListRow(
+          key: const ValueKey<String>('settings-collection-row'),
+          label: state.brand.label,
+          subtitle: detail,
+          tall: true,
+          chevron: true,
+          onTap: () => CollectionPage.open(context),
+        );
+      },
     );
   }
 }

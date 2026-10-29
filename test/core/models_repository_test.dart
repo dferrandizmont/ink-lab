@@ -101,60 +101,6 @@ void main() {
     expect(deco.brandId, MarkerBrand.decoTime.id);
   });
   test(
-    'AppSettings effective packs match single, compare, addons and fallback',
-    () {
-      expect(AppSettings().effectiveSetIds(), {'classic_160'});
-      expect(AppSettings(selectedCoreSetIds: {}).effectiveSetIds(), {
-        'classic_160',
-      });
-      for (final mode in PackSelectionMode.values) {
-        expect(PackSelectionMode.fromJson(mode.toJson()), mode);
-        expect(
-          AppSettings(
-            packSelectionMode: mode,
-            selectedCoreSetIds: {},
-          ).effectiveSetIds(),
-          {'classic_160'},
-        );
-        expect(
-          AppSettings(
-            packSelectionMode: mode,
-            selectedCoreSetIds: {},
-            selectedAddonSetIds: {'skin_36'},
-          ).effectiveSetIds(),
-          {'skin_36'},
-        );
-      }
-      final cores = {'classic_80', 'classic_40'};
-      final addons = {'skin_36', 'classic_80'};
-      final owned = {'R1', 'decotime:01'};
-      final single = AppSettings(
-        selectedCoreSetIds: cores,
-        selectedAddonSetIds: addons,
-        ownedMarkerCodes: owned,
-      );
-      final compare = AppSettings(
-        packSelectionMode: PackSelectionMode.compare,
-        selectedCoreSetIds: cores,
-        selectedAddonSetIds: addons,
-      );
-      cores.clear();
-      addons.clear();
-      owned.clear();
-      expect(single.effectiveSetIds(), {'classic_80', 'skin_36'});
-      expect(compare.effectiveSetIds(), {
-        'classic_80',
-        'classic_40',
-        'skin_36',
-      });
-      expect(single.ownedMarkerCodes, {'R1', 'decotime:01'});
-      expect(AppSettings().ownedMarkerCodes, isEmpty);
-      expect(() => single.selectedCoreSetIds.clear(), throwsUnsupportedError);
-      expect(() => single.selectedAddonSetIds.clear(), throwsUnsupportedError);
-      expect(() => single.ownedMarkerCodes.clear(), throwsUnsupportedError);
-    },
-  );
-  test(
     'ColorMatchPick preserves Kotlin JSON, numeric deltaE and brand default',
     () {
       const pick = ColorMatchPick(
@@ -279,7 +225,7 @@ void main() {
   test('all AiPalette.kt data-only types round trip without provider code', () {
     final request = AiPaletteRequest(
       brandId: 'ohuhu_oahu',
-      brandLabel: 'Ohuhu Oahu',
+      brandLabel: 'Ohuhu',
       baseColor: harmonyColors.first,
       candidates: harmonyColors,
       scenario: DrawingScenario.forestScene,

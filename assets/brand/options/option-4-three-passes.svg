@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Ink Lab option 4: Three Passes</title>
+  <rect width="1024" height="1024" fill="#181A18"/>
+  <polygon points="282,206 744,206 658,506 196,506" fill="#ECB3D2"/>
+  <polygon points="324,318 786,318 700,618 238,618" fill="#ECB3D2"/>
+  <polygon points="366,430 828,430 742,730 280,730" fill="#ECB3D2"/>
+  <polygon points="324,318 711.89,318 658,506 270.11,506" fill="#DA7EAD"/>
+  <polygon points="366,430 753.89,430 700,618 312.11,618" fill="#DA7EAD"/>
+  <polygon points="366,430 679.79,430 658,506 344.21,506" fill="#DA7EAD"/>
+  <polygon points="366,430 679.79,430 658,506 344.21,506" fill="#CA588E"/>
+</svg>

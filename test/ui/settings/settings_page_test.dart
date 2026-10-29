@@ -8,6 +8,8 @@ import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
+import 'package:ink_lab/ui/pages/collection/collection_page.dart';
+import 'package:ink_lab/ui/pages/onboarding/onboarding_page.dart';
 import 'package:ink_lab/ui/pages/settings/constants.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
@@ -107,43 +109,111 @@ Finder labelledField(String label) => find.byWidgetPredicate(
 );
 
 void main() {
-  testWidgets('the page shows its sections', (WidgetTester tester) async {
+  testWidgets('the sections come in the agreed order', (
+    WidgetTester tester,
+  ) async {
     await pumpSettings(tester);
 
     expect(find.byKey(SettingsPage.pageKey), findsOneWidget);
-    expect(find.text(l10n.settingsBrandTitle), findsOneWidget);
-    expect(find.text(l10n.settingsPacksTitle), findsOneWidget);
-
-    // Group heads are drawn in capitals.
-    final Finder aboutHead = find.text(
-      AppTypography.caps(l10n.settingsAboutTitle),
-    );
-    await scrollTo(tester, aboutHead);
-    expect(aboutHead, findsOneWidget);
+    final List<String> heads = <String>[
+      l10n.settingsCollectionGroup,
+      l10n.settingsDisplayGroup,
+      l10n.settingsMatchingGroup,
+      l10n.settingsAiGroup,
+      l10n.settingsDataGroup,
+      l10n.settingsAboutTitle,
+    ].map(AppTypography.caps).toList();
+    double last = -1;
+    for (final String head in heads) {
+      final Finder f = find.text(head);
+      await scrollTo(tester, f);
+      final ScrollableState s = tester.state<ScrollableState>(_pageScrollable);
+      final double y = tester.getTopLeft(f.first).dy + s.position.pixels;
+      expect(y, greaterThan(last), reason: head);
+      last = y;
+    }
     expect(find.text(SettingsConstants.appVersion), findsOneWidget);
     expect(find.text(l10n.settingsDisclaimer), findsOneWidget);
   });
 
-  testWidgets('the brand control hints that DecoTime shows owned markers', (
+  testWidgets('My collection is one summary row', (WidgetTester tester) async {
+    await pumpSettings(tester);
+
+    final Finder row = find.byKey(
+      const ValueKey<String>('settings-collection-row'),
+    );
+    expect(row, findsOneWidget);
+    // The preview collection is Oahu 160 (161 markers with the blender).
+    expect(
+      find.descendant(of: row, matching: find.text('Ohuhu')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: row,
+        matching: find.text('Oahu · 1 set · 161 markers'),
+      ),
+      findsOneWidget,
+    );
+    // The old collection controls are gone from Settings.
+    expect(find.byType(InkChip), findsNothing);
+    expect(find.byType(CheckboxListTile), findsNothing);
+  });
+
+  testWidgets('the collection row opens the collection screen', (
     WidgetTester tester,
   ) async {
     await pumpSettings(tester);
 
-    expect(
-      find.text('DecoTime shows only the markers you mark as owned.'),
-      findsOneWidget,
+    await tester.tap(
+      find.byKey(const ValueKey<String>('settings-collection-row')),
     );
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(CollectionPage.pageKey), findsOneWidget);
   });
 
-  testWidgets('the brand switch stores the active brand', (
+  testWidgets('the setup can be run again from Settings', (
+    WidgetTester tester,
+  ) async {
+    await pumpSettings(tester);
+
+    await tester.tap(
+      find.byKey(const ValueKey<String>('settings-setup-again')),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(OnboardingPage.pageKey), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey<String>('onboarding-skip')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(OnboardingPage.pageKey), findsNothing);
+    expect(find.byKey(SettingsPage.pageKey), findsOneWidget);
+  });
+
+  testWidgets('name display is only offered for Ohuhu', (
     WidgetTester tester,
   ) async {
     final AppScope scope = await pumpSettings(tester);
+    await scrollTo(tester, find.text(l10n.settingsLabelsTitle));
+    expect(find.text(l10n.settingsLabelsTitle), findsOneWidget);
 
-    await tester.tap(find.text(MarkerBrand.decoTime.label));
+    await scope.settings.setBrand(MarkerBrand.decoTime);
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.settingsLabelsTitle), findsNothing);
+  });
+
+  testWidgets('the colour matching switch is stored', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSettings(tester);
+    final Finder row = find.byKey(
+      const ValueKey<String>('settings-match-unowned'),
+    );
+    await scrollTo(tester, row);
+    await tester.tap(row);
     await tester.pumpAndSettle();
 
-    expect(scope.settings.brand, MarkerBrand.decoTime);
+    expect(scope.settings.state.matchSuggestUnowned, isFalse);
   });
 
   testWidgets('the first-run flag is not shown to users', (
@@ -152,80 +222,6 @@ void main() {
     await pumpSettings(tester);
 
     expect(find.text('First-run setup completed'), findsNothing);
-  });
-
-  testWidgets('a pack can be selected', (WidgetTester tester) async {
-    final AppScope scope = await pumpSettings(tester);
-
-    await scrollTo(tester, find.widgetWithText(InkChip, '120 New'));
-    await tester.tap(find.widgetWithText(InkChip, '120 New'));
-    await tester.pumpAndSettle();
-
-    expect(scope.settings.settings.selectedCoreSetIds, contains('new_120'));
-  });
-
-  testWidgets('the pack selection mode is stored', (WidgetTester tester) async {
-    final AppScope scope = await pumpSettings(tester);
-
-    await scrollTo(tester, find.text(PackSelectionMode.compare.label));
-    await tester.tap(find.text(PackSelectionMode.compare.label));
-    await tester.pumpAndSettle();
-
-    expect(
-      scope.settings.settings.packSelectionMode,
-      PackSelectionMode.compare,
-    );
-  });
-
-  testWidgets('an owned marker can be ticked', (WidgetTester tester) async {
-    final AppScope scope = await pumpSettings(tester);
-
-    await scrollTo(tester, find.widgetWithText(CheckboxListTile, 'BV04'));
-    await tester.tap(find.widgetWithText(CheckboxListTile, 'BV04'));
-    await tester.pumpAndSettle();
-
-    expect(
-      scope.settings.settings.ownedMarkerCodes,
-      contains('ohuhu_oahu:BV04'),
-    );
-  });
-
-  testWidgets('the owned markers can be selected and unselected at once', (
-    WidgetTester tester,
-  ) async {
-    final AppScope scope = await pumpSettings(tester);
-
-    await scrollTo(tester, find.text(l10n.settingsSelectAll));
-    await tester.tap(find.text(l10n.settingsSelectAll));
-    await tester.pumpAndSettle();
-    expect(scope.settings.settings.ownedMarkerCodes, isNotEmpty);
-
-    await tester.tap(find.text(l10n.settingsSelectNone));
-    await tester.pumpAndSettle();
-    expect(scope.settings.settings.ownedMarkerCodes, isEmpty);
-  });
-
-  testWidgets('clearing the owned markers asks for a confirmation', (
-    WidgetTester tester,
-  ) async {
-    final AppScope scope = await pumpSettings(tester);
-    await scope.settings.setOwnedMarkerCodes(<String>{'ohuhu_oahu:BV04'});
-    await tester.pumpAndSettle();
-
-    await scrollTo(tester, find.text(l10n.settingsClearOwned));
-    await tester.tap(find.text(l10n.settingsClearOwned));
-    await tester.pumpAndSettle();
-
-    expect(find.text(l10n.settingsClearOwnedTitle), findsOneWidget);
-    // The markers are still owned while the dialog is open.
-    expect(scope.settings.settings.ownedMarkerCodes, isNotEmpty);
-
-    await tester.tap(
-      find.widgetWithText(FilledButton, l10n.settingsClearOwned),
-    );
-    await tester.pumpAndSettle();
-
-    expect(scope.settings.settings.ownedMarkerCodes, isEmpty);
   });
 
   testWidgets('a saved palette can be deleted', (WidgetTester tester) async {
@@ -374,6 +370,30 @@ void main() {
     expect(find.text(l10n.settingsBackupImported), findsOneWidget);
   });
 
+  testWidgets('About lists the privacy policy link in English', (
+    WidgetTester tester,
+  ) async {
+    await pumpSettings(tester);
+
+    await scrollTo(tester, find.text(l10n.settingsPrivacyPolicy));
+    expect(find.text(l10n.settingsPrivacyPolicy), findsOneWidget);
+    expect(find.text(SettingsConstants.privacyUrlEn), findsOneWidget);
+  });
+
+  testWidgets('the AI helper text only names On-device when it is offered', (
+    WidgetTester tester,
+  ) async {
+    await pumpSettings(tester);
+
+    await scrollTo(tester, find.text(l10n.settingsAiEnabled));
+    // No on-device model in the test environment.
+    expect(
+      find.text(l10n.settingsAiEnabledSubtitleColourTheoryNoOnDevice),
+      findsOneWidget,
+    );
+    expect(find.text(l10n.settingsAiEnabledSubtitleColourTheory), findsNothing);
+  });
+
   testWidgets('the AI settings are stored', (WidgetTester tester) async {
     final AppScope scope = await pumpSettings(tester);
 
@@ -381,7 +401,10 @@ void main() {
     await tester.tap(find.text(l10n.settingsAiEnabled));
     await tester.pumpAndSettle();
     // Turning it on is gated behind the disclosure.
-    expect(find.text(l10n.settingsAiDisclosureColourTheory), findsOneWidget);
+    expect(
+      find.text(l10n.settingsAiDisclosureColourTheoryNoOnDevice),
+      findsOneWidget,
+    );
     await tester.tap(
       find.byKey(const ValueKey<String>('ai-disclosure-confirm')),
     );

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Ink Lab option 4: Three Passes (monochrome, adaptive scale)</title>
+  <mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+    <rect width="1024" height="1024" fill="#000000"/>
+    <polygon points="341.8,285.56 683.68,285.56 620.04,507.56 278.16,507.56" fill="#FFFFFF"/>
+    <polygon points="372.88,349.2 714.76,349.2 651.12,571.2 309.24,571.2" fill="#000000"/>
+    <polygon points="372.88,368.44 714.76,368.44 651.12,590.44 309.24,590.44" fill="#FFFFFF"/>
+    <polygon points="403.96,432.08 745.84,432.08 682.2,654.08 340.32,654.08" fill="#000000"/>
+    <polygon points="403.96,451.32 745.84,451.32 682.2,673.32 340.32,673.32" fill="#FFFFFF"/>
+  </mask>
+  <rect width="1024" height="1024" fill="#FFFFFF" mask="url(#m)"/>
+</svg>

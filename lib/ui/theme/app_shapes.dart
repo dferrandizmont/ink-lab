@@ -29,5 +29,4 @@ abstract final class AppShapes {
     borderRadius: largeRadius,
   );
   static const RoundedRectangleBorder extraLargeBorder = largeBorder;
-  static const StadiumBorder pill = StadiumBorder();
 }

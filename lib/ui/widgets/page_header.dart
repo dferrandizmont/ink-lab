@@ -50,11 +50,16 @@ class InkPageHeader extends StatelessWidget {
               Expanded(
                 child: Semantics(
                   header: true,
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.title.copyWith(color: ink.fg),
+                  // The 40 px display title is already large text: it keeps its
+                  // size at any system scale so it stays on one line.
+                  child: MediaQuery.withClampedTextScaling(
+                    maxScaleFactor: 1,
+                    child: Text(
+                      title,
+                      maxLines: 1,
+                      softWrap: false,
+                      style: AppTypography.title.copyWith(color: ink.fg),
+                    ),
                   ),
                 ),
               ),
@@ -86,22 +91,25 @@ class InkSectionHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: <Widget>[
-        Expanded(
-          child: Semantics(
+    // The note shares the line while both fit, else it drops below.
+    return SizedBox(
+      width: double.infinity,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.end,
+        spacing: InkSpacing.group,
+        children: <Widget>[
+          Semantics(
             header: true,
             child: Text(
               title,
               style: AppTypography.section.copyWith(color: ink.fg),
             ),
           ),
-        ),
-        if (trailing != null)
-          Text(trailing!, style: AppTypography.data.copyWith(color: ink.fg2)),
-      ],
+          if (trailing != null)
+            Text(trailing!, style: AppTypography.data.copyWith(color: ink.fg2)),
+        ],
+      ),
     );
   }
 }

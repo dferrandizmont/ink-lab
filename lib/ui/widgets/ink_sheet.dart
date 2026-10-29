@@ -128,32 +128,84 @@ class InkDefinitionRow extends StatelessWidget {
   final String value;
   final double labelWidth;
 
+  /// The label column width that fits the widest of [labels] (never below
+  /// [minWidth]), so the rows of one list align in every language and at
+  /// every text scale. Capped at [maxWidth]: a wider label stacks above its
+  /// value instead.
+  static double labelWidthFor(
+    BuildContext context,
+    Iterable<String> labels, {
+    double minWidth = 96,
+    double maxWidth = 136,
+  }) {
+    final InkColors ink = InkColors.of(context);
+    final TextStyle? style = Theme.of(context).textTheme.labelSmall
+        ?.copyWith(color: ink.fg2);
+    final TextDirection direction = Directionality.of(context);
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    double widest = minWidth;
+    for (final String label in labels) {
+      final TextPainter painter = TextPainter(
+        text: TextSpan(text: label.toUpperCase(), style: style),
+        textDirection: direction,
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      if (painter.width + 1 > widest) widest = painter.width + 1;
+      painter.dispose();
+    }
+    return widest > maxWidth ? maxWidth : widest;
+  }
+
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
     final TextTheme text = Theme.of(context).textTheme;
+    final TextStyle? labelStyle = text.labelSmall?.copyWith(color: ink.fg2);
+    final Text labelText = Text(
+      label.toUpperCase(),
+      maxLines: 1,
+      softWrap: false,
+      style: labelStyle,
+    );
+    final Text valueText = Text(
+      value,
+      style: text.bodyMedium?.copyWith(color: ink.fg),
+    );
+    // The label column is fixed; a label that is wider than it (a long
+    // translation, or large text) goes on its own line above the value
+    // instead of being cut or wrapped.
+    final TextPainter painter = TextPainter(
+      text: TextSpan(text: label.toUpperCase(), style: labelStyle),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final bool stacked = painter.width > labelWidth;
+    painter.dispose();
     return Container(
       padding: const EdgeInsets.symmetric(vertical: InkSpacing.s12),
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: ink.line)),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
-        children: <Widget>[
-          SizedBox(
-            width: labelWidth,
-            child: Text(
-              label.toUpperCase(),
-              style: text.labelSmall?.copyWith(color: ink.fg2),
+      child: stacked
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                labelText,
+                const SizedBox(height: InkSpacing.s4),
+                valueText,
+              ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: <Widget>[
+                SizedBox(width: labelWidth, child: labelText),
+                const SizedBox(width: InkSpacing.block),
+                Expanded(child: valueText),
+              ],
             ),
-          ),
-          const SizedBox(width: InkSpacing.block),
-          Expanded(
-            child: Text(value, style: text.bodyMedium?.copyWith(color: ink.fg)),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -1,38 +1,37 @@
-# Avisos de seguridad
+# Security notices
+English · [Español](SECURITY.es.md)
 
-Si encuentras una vulnerabilidad, escribe a **dev@mainshai.com** o abre un
-[aviso privado de seguridad](https://github.com/dferrandizmont/ink-lab/security/advisories/new)
-en GitHub.
+If you find a vulnerability, write to **dev@mainshai.com** or open a
+[private security advisory](https://github.com/dferrandizmont/ink-lab/security/advisories/new)
+on GitHub.
 
-Incluye la versión afectada (Ajustes), la plataforma, los pasos para reproducir
-el problema y su posible impacto. Comunica los detalles por ese canal antes de
-abrir una incidencia pública, para permitir que se revise y prepare una
-corrección. Solo recibe correcciones la última versión publicada.
+Include the affected version (Settings), the platform, the steps to reproduce the
+problem and its possible impact. Send the details through that channel before
+opening a public issue, so the problem can be reviewed and a fix prepared. Only
+the latest published version receives fixes.
 
-## Qué se considera vulnerabilidad
+## What counts as a vulnerability
 
-- Una forma de que la app envíe datos a un destino que el usuario no activó.
-- Una forma de leer o extraer datos locales, copias de seguridad o la clave de
-  API de otra persona.
-- Una forma de ejecutar código a través de una entrada controlada por un
-  atacante, por ejemplo una copia de seguridad manipulada o la respuesta de un
-  proveedor de IA.
-- Un almacenamiento local inseguro de credenciales o datos personales.
+- A way to make the app send data to a destination the user did not turn on.
+- A way to read or extract another person's local data, backups or API key.
+- A way to execute code through attacker-controlled input, for example a
+  tampered backup or the response of an AI provider.
+- An insecure local storage of credentials or personal data.
 
-No lo son los cierres inesperados sin impacto de seguridad, los colores que
-difieren de la web del fabricante (eso es una
-[corrección de datos](https://github.com/dferrandizmont/ink-lab/issues/new)), lo que exige acceso
-físico a un móvil desbloqueado ni los hallazgos de escáneres sin impacto
-demostrado.
+Not in scope: crashes without a security impact, colours that differ from the
+manufacturer's website (that is a
+[data fix](https://github.com/dferrandizmont/ink-lab/issues/new)), anything that requires
+physical access to an unlocked phone, and scanner findings without a
+demonstrated impact.
 
-## No adjuntes datos reales
+## Do not attach real data
 
-- No mandes tu clave de OpenRouter ni ninguna otra clave, keystore o archivo
-  `.env`. Si la has pegado por error, revócala y crea otra.
-- Reproduce el problema con datos de prueba. Si necesitas mandar una copia de
-  seguridad real, quita antes lo que te identifique.
-- En las capturas, tapa lo que no sea de prueba.
+- Do not send your OpenRouter key or any other key, keystore or `.env` file. If
+  you pasted one by mistake, revoke it and create a new one.
+- Reproduce the problem with test data. If you must send a real backup, first
+  remove whatever identifies you.
+- In screenshots, cover anything that is not test data.
 
-Lo mismo vale para las incidencias y las solicitudes de cambio públicas.
+The same applies to public issues and pull requests.
 
-English version: [SECURITY.en.md](SECURITY.en.md).
+Spanish version (authoritative): [SECURITY.es.md](SECURITY.es.md).

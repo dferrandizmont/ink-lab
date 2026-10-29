@@ -44,7 +44,7 @@ void main() {
       matching: find.byWidgetPredicate(
         (Widget w) =>
             w is Container &&
-            w.constraints?.maxHeight == InkGeometry.fieldHeight,
+            w.constraints?.minHeight == InkGeometry.fieldHeight,
       ),
     );
     final Finder strip = find.byType(PaletteStrip).first;
@@ -141,33 +141,22 @@ void main() {
     await pumpIdeas(tester);
 
     final Finder chips = find.byType(InkChipRow);
-    final Finder hint = find.text(l10n.ideasSelectHint);
-    expect(
-      _gapBelow(tester, chips, hint),
-      greaterThanOrEqualTo(InkSpacing.block),
-    );
-    final Finder firstRow = find.text('Sticker Effect');
-    expect(
-      _gapBelow(tester, hint, firstRow),
-      greaterThanOrEqualTo(InkSpacing.block),
-    );
-
-    await tester.tap(firstRow);
-    await tester.pumpAndSettle();
-    final Finder card = find.ancestor(
-      of: find.text(AppTypography.caps(l10n.ideasSelectedLabel)),
-      matching: find.byType(Card),
-    );
+    final Finder label = find.text(AppTypography.caps(l10n.ideasFeaturedLabel));
+    final Finder card = find.ancestor(of: label, matching: find.byType(Card));
     expect(
       _gapBelow(tester, chips, card),
       greaterThanOrEqualTo(InkSpacing.block),
     );
     expect(
-      tester
-              .getRect(find.text(AppTypography.caps(l10n.ideasSelectedLabel)))
-              .left -
-          tester.getRect(card).left,
+      tester.getRect(label).left - tester.getRect(card).left,
       greaterThanOrEqualTo(InkSpacing.cardH),
+    );
+    final Finder firstRow = find.byKey(
+      const ValueKey<String>('ideas-preset-smooth_fill'),
+    );
+    expect(
+      _gapBelow(tester, card, firstRow),
+      greaterThanOrEqualTo(InkSpacing.block),
     );
   });
 
@@ -212,7 +201,7 @@ void main() {
     expect(tester.getRect(title).left, greaterThanOrEqualTo(InkSpacing.sheet));
     // Groups of the sheet are 24 apart (control -> next caps label).
     final Finder labelCaps = find.text(
-      AppTypography.caps(l10n.swatchesLabelMode),
+      AppTypography.caps(l10n.swatchesLabelLayout),
     );
     expect(
       _gapBelow(tester, find.byType(Wrap).last, labelCaps),
@@ -233,7 +222,13 @@ void main() {
     final Rect add = tester.getRect(
       find.widgetWithText(FilledButton, l10n.swatchesAddToPalette),
     );
-    expect(add.left - copy.right, greaterThanOrEqualTo(InkSpacing.s8));
+    // The buttons share the row while they fit, else the second one wraps
+    // below the first: 8 apart either way.
+    final bool sameRow = add.top < copy.bottom;
+    expect(
+      sameRow ? add.left - copy.right : add.top - copy.bottom,
+      greaterThanOrEqualTo(InkSpacing.s8),
+    );
     expect(add.right, lessThanOrEqualTo(390 - InkSpacing.sheet));
     expect(
       _gapBelow(
@@ -254,7 +249,7 @@ void main() {
 
     final Finder collectionCard = find
         .ancestor(
-          of: find.text(l10n.settingsBrandTitle),
+          of: find.byKey(const ValueKey<String>('settings-collection-row')),
           matching: find.byType(Card),
         )
         .first;

@@ -69,11 +69,15 @@ class SettingsControlRow extends StatelessWidget {
     required this.label,
     required this.control,
     this.stacked = false,
+    this.caption,
   });
 
   final String label;
   final Widget control;
   final bool stacked;
+
+  /// One line of explanation below the control (stacked rows only).
+  final String? caption;
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +95,13 @@ class SettingsControlRow extends StatelessWidget {
             text,
             const SizedBox(height: InkSpacing.group),
             control,
+            if (caption != null) ...<Widget>[
+              const SizedBox(height: InkSpacing.group),
+              Text(
+                caption!,
+                style: AppTypography.secondary.copyWith(color: ink.fg2),
+              ),
+            ],
           ],
         ),
       );
@@ -115,6 +126,81 @@ class SettingsControlRow extends StatelessWidget {
             spacing: InkSpacing.block,
             runSpacing: InkSpacing.group,
             children: <Widget>[text, control],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// One option of a list of mutually exclusive choices (a radio list): the
+/// radio, then the label on a single line. Use it instead of a segmented
+/// control when the options are too long to sit side by side.
+class SettingsRadioRow extends StatelessWidget {
+  const SettingsRadioRow({
+    super.key,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.semantic,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  /// Spoken label when [label] alone is unclear.
+  final String? semantic;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    return Semantics(
+      inMutuallyExclusiveGroup: true,
+      checked: selected,
+      button: true,
+      enabled: onTap != null,
+      label: semantic ?? label,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap == null || selected ? null : onTap,
+        borderRadius: InkRadii.cellRadius,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: InkGeometry.target),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 20,
+                height: 20,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: selected ? ink.action : ink.strong,
+                    width: selected ? 2 : 1,
+                  ),
+                ),
+                child: selected
+                    ? Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: ink.action,
+                        ),
+                      )
+                    : null,
+              ),
+              const SizedBox(width: InkSpacing.s12),
+              Expanded(
+                child: Text(
+                  label,
+                  maxLines: 1,
+                  softWrap: false,
+                  style: AppTypography.body.copyWith(color: ink.fg),
+                ),
+              ),
+            ],
           ),
         ),
       ),

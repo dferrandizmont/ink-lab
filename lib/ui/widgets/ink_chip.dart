@@ -54,10 +54,15 @@ class InkChip extends StatelessWidget {
       excludeSemantics: semanticLabel != null,
       child: InkWell(
         onTap: onSelected == null ? null : () => onSelected!(!selected),
-        customBorder: const StadiumBorder(),
-        child: SizedBox(
-          height: InkGeometry.target,
-          width: expand ? double.infinity : null,
+        customBorder: const RoundedRectangleBorder(
+          borderRadius: InkRadii.controlRadius,
+        ),
+        // The hit area is at least 44 x 44 even for a short label.
+        child: ConstrainedBox(
+          constraints: BoxConstraints.tightFor(
+            height: InkGeometry.target,
+            width: expand ? double.infinity : null,
+          ).copyWith(minWidth: expand ? null : InkGeometry.target),
           child: Center(
             widthFactor: 1,
             child: AnimatedContainer(
@@ -65,10 +70,13 @@ class InkChip extends StatelessWidget {
               curve: InkMotion.crossFadeCurve,
               height: InkGeometry.chipHeight,
               width: expand ? double.infinity : null,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: ShapeDecoration(
                 color: fill,
-                shape: StadiumBorder(side: BorderSide(color: border)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: InkRadii.controlRadius,
+                  side: BorderSide(color: border),
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -82,7 +90,7 @@ class InkChip extends StatelessWidget {
                     child: Text(
                       label,
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
                       style: AppTypography.button.copyWith(color: fg),
                     ),
                   ),
@@ -147,7 +155,7 @@ class QualityBadge extends StatelessWidget {
       alignment: Alignment.center,
       decoration: ShapeDecoration(
         color: ink.pale,
-        shape: const StadiumBorder(),
+        shape: const RoundedRectangleBorder(borderRadius: InkRadii.xsRadius),
       ),
       child: Text(
         AppTypography.caps(label),

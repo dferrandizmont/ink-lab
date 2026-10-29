@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'app_scope.dart';
 import 'data/data.dart';
 import 'l10n/l10n.dart';
+import 'ui/pages/onboarding/onboarding_page.dart';
 import 'ui/shell/app_shell.dart';
 import 'ui/theme/app_theme.dart';
 
@@ -50,7 +51,7 @@ class _InkLabAppState extends State<InkLabApp> {
   @override
   Widget build(BuildContext context) {
     final AppScope? scope = _scope;
-    if (scope == null) return _app(ThemeMode.system, null);
+    if (scope == null) return _app(ThemeMode.system, null, const AppShell());
     return StreamBuilder<AppSettingsState>(
       stream: _changes,
       initialData: scope.settings.state,
@@ -58,7 +59,15 @@ class _InkLabAppState extends State<InkLabApp> {
           (BuildContext context, AsyncSnapshot<AppSettingsState> snapshot) {
             final AppSettingsState state =
                 snapshot.data ?? scope.settings.state;
-            return _app(themeModeOf(state.themeMode), localeOf(state.language));
+            // The first-run setup comes before the app until it is done or
+            // skipped.
+            return _app(
+              themeModeOf(state.themeMode),
+              localeOf(state.language),
+              state.onboardingCompleted
+                  ? const AppShell()
+                  : const OnboardingPage(),
+            );
           },
     );
   }
@@ -70,7 +79,7 @@ class _InkLabAppState extends State<InkLabApp> {
     return code == null ? null : Locale(code);
   }
 
-  Widget _app(ThemeMode mode, Locale? locale) => MaterialApp(
+  Widget _app(ThemeMode mode, Locale? locale, Widget home) => MaterialApp(
     onGenerateTitle: (BuildContext context) => context.l10n.appTitle,
     locale: locale,
     localizationsDelegates: const <LocalizationsDelegate<Object?>>[
@@ -85,6 +94,6 @@ class _InkLabAppState extends State<InkLabApp> {
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),
     themeMode: mode,
-    home: const AppShell(),
+    home: home,
   );
 }

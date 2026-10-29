@@ -24,7 +24,7 @@ Spanish version (authoritative): [`privacy.md`](privacy.md).
   between apps; the system (Google services) performs that download, not the app. iOS has no on-device model yet.
 - **No telemetry or tracking dependencies:** `pubspec.yaml` includes no analytics, advertising or crash-reporting SDK.
   The app does not use the advertising identifier.
-- **Free and open source app:** MIT code, CC BY-SA 4.0 own content (`LICENSE`, `LICENSE-CONTENT.en.md`).
+- **Free and open source app:** MIT code, CC BY-SA 4.0 own content (`LICENSE`, `LICENSE-CONTENT.md`).
 - Everything works without asking for a name, email, phone number or age.
 
 ## What is stored on the phone

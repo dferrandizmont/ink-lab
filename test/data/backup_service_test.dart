@@ -77,10 +77,9 @@ Future<Harness> populated() async {
   final h = await harness();
   await h.appSettings.setBrand(MarkerBrand.decoTime);
   await h.appSettings.setScope(BrandScope.mixedBrands);
-  await h.appSettings.setPackSelectionMode(PackSelectionMode.compare);
-  await h.appSettings.setSelectedCoreSetIds({'classic_80', 'classic_40'});
-  await h.appSettings.setSelectedAddonSetIds({'skin_36'});
-  await h.appSettings.setOwnedMarkerCodes({'R1', 'decotime:02'});
+  await h.appSettings.setOwnedSetIds({'classic_80', 'classic_40', 'skin_36'});
+  await h.appSettings.setExtraMarkerIds({'R1', 'decotime:02'});
+  await h.appSettings.setMatchSuggestUnowned(false);
   await h.appSettings.setFavorites({'decotime:01', 'ohuhu_oahu:R3'});
   await h.appSettings.setNameDisplayMode(NameDisplayMode.newOnly);
   await h.appSettings.setOnboardingCompleted(true);
@@ -128,13 +127,14 @@ void main() {
 
     expect(h.appSettings.brand, MarkerBrand.ohuhuOahu);
     expect(h.appSettings.scope, BrandScope.mixedBrands);
-    expect(h.appSettings.settings.packSelectionMode, PackSelectionMode.compare);
-    expect(h.appSettings.settings.selectedCoreSetIds, {
+    // Older backups are migrated: compare mode = every pack is owned.
+    expect(h.appSettings.settings.ownedSetIds, {
       'classic_160',
       'classic_80',
+      'skin_36',
     });
-    expect(h.appSettings.settings.selectedAddonSetIds, {'skin_36'});
-    expect(h.appSettings.settings.ownedMarkerCodes, {'R1'});
+    expect(h.appSettings.settings.extraMarkerIds, {'ohuhu_oahu:R1'});
+    expect(h.appSettings.state.matchSuggestUnowned, isTrue);
     expect(h.appSettings.favorites, {'ohuhu_oahu:R1', 'decotime:01'});
     expect(h.appSettings.nameDisplayMode, NameDisplayMode.both);
     expect(h.appSettings.onboardingCompleted, isTrue);

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollDirection;
@@ -17,7 +18,9 @@ import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
+import '../../widgets/ink_search_field.dart';
 import '../../widgets/ink_segmented.dart';
+import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
 import 'palette_draft.dart';
@@ -52,7 +55,7 @@ class PalettePage extends StatefulWidget {
   State<PalettePage> createState() => _PalettePageState();
 }
 
-class _PalettePageState extends State<PalettePage> {
+class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
   StreamSubscription<AiSettings>? _aiSubscription;
@@ -107,9 +110,13 @@ class _PalettePageState extends State<PalettePage> {
 
   String? _notice;
 
+  /// Keyboard height at the last metrics change, to notice it closing.
+  double _keyboardInset = 0;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _baseController = TextEditingController();
     paletteDraft.addListener(_onDraftChanged);
     paletteBaseDraft.addListener(_onBaseDraftChanged);
@@ -137,8 +144,22 @@ class _PalettePageState extends State<PalettePage> {
     unawaited(_reload());
   }
 
+  /// Dismissing the keyboard (back gesture, "done") leaves the field focused,
+  /// so the suggestions would keep floating over the page: drop the focus
+  /// as soon as the keyboard closes.
+  @override
+  void didChangeMetrics() {
+    final Iterable<ui.FlutterView> views =
+        WidgetsBinding.instance.platformDispatcher.views;
+    final double inset = views.isEmpty ? 0 : views.first.viewInsets.bottom;
+    final bool closed = inset == 0 && _keyboardInset > 0;
+    _keyboardInset = inset;
+    if (closed && _baseFocus.hasFocus) _baseFocus.unfocus();
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     paletteDraft.removeListener(_onDraftChanged);
     paletteBaseDraft.removeListener(_onBaseDraftChanged);
     _settingsSubscription?.cancel();
@@ -204,20 +225,38 @@ class _PalettePageState extends State<PalettePage> {
 
   void _onDraftChanged() {
     final draft = paletteDraft.value;
-    if (draft == null || draft.isEmpty) return;
+    if (draft == null || draft.suggestions.isEmpty) return;
     paletteDraft.value = null;
+    // Keep the role and the reason the idea gave each marker; only a bare
+    // suggestion falls back to the generic "Applied from Ideas".
     final suggestions = <PaletteSuggestion>[
-      for (final color in draft)
-        PaletteSuggestion(color: color, reason: PaletteReasons.draft),
+      for (final suggestion in draft.suggestions)
+        suggestion.reason.trim().isEmpty
+            ? PaletteSuggestion(
+                color: suggestion.color,
+                reason: PaletteReasons.draft,
+                role: suggestion.role,
+              )
+            : suggestion,
     ];
-    _applyDraft(draft.length, suggestions);
+    _applyDraft(suggestions.length, suggestions, title: draft.title);
   }
 
   /// Uses the marker handed over by the Swatches page as the base colour.
+  ///
+  /// When that replaces a palette already on screen, a snackbar offers to
+  /// undo it, so nothing is lost silently.
   void _onBaseDraftChanged() {
     final color = paletteBaseDraft.value;
     if (color == null || !mounted) return;
     paletteBaseDraft.value = null;
+    final bool sameBase =
+        _baseInput.trim().toUpperCase() == color.newCode.toUpperCase() &&
+        _mode != PaletteMode.customPalette &&
+        !_useScenario;
+    final _PaletteSnapshot? previous = _suggestions.isEmpty || sameBase
+        ? null
+        : _PaletteSnapshot.of(this);
     setState(() {
       if (_mode == PaletteMode.customPalette) _mode = PaletteMode.recommended;
       _useScenario = false;
@@ -229,9 +268,71 @@ class _PalettePageState extends State<PalettePage> {
       _notice = null;
     });
     _recompute();
+    if (previous != null) _offerUndo(color, previous);
   }
 
-  void _applyDraft(int count, List<PaletteSuggestion> suggestions) {
+  /// Shows "E08 is now the base" with an Undo action that brings back the
+  /// palette [previous].
+  void _offerUndo(MarkerColor color, _PaletteSnapshot previous) {
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    if (messenger == null) return;
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
+      SnackBar(
+        key: const ValueKey<String>('palette-base-replaced'),
+        // The Undo button is drawn here, not as a SnackBarAction: the snack
+        // bar forces the Material default pill shape on its action.
+        padding: const EdgeInsetsDirectional.only(start: 16, end: 4),
+        content: Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(context.l10n.paletteBaseReplaced(color.newCode)),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: InkColors.of(context).pale,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: InkRadii.controlRadius,
+                ),
+              ),
+              onPressed: () {
+                messenger.hideCurrentSnackBar();
+                if (!mounted) return;
+                setState(() => previous.restore(this));
+              },
+              child: Text(context.l10n.paletteUndoButton),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Opens the searchable list of markers and uses the chosen one as base.
+  Future<void> _pickBase() async {
+    _baseFocus.unfocus();
+    final List<MarkerColor> markers = _available.isNotEmpty
+        ? _available
+        : _catalog;
+    final MarkerColor? picked = await showInkSheet<MarkerColor>(
+      context: context,
+      builder: (BuildContext context) => _BasePickerSheet(markers: markers),
+    );
+    if (picked == null || !mounted) return;
+    _baseController.text = picked.newCode;
+    if (_mode == PaletteMode.customPalette) {
+      setState(() => _mode = PaletteMode.recommended);
+    }
+    _onBaseInputChanged(picked.newCode);
+  }
+
+  void _applyDraft(
+    int count,
+    List<PaletteSuggestion> suggestions, {
+    String? title,
+  }) {
     void apply() {
       _mode = PaletteMode.customPalette;
       _useScenario = false;
@@ -243,7 +344,9 @@ class _PalettePageState extends State<PalettePage> {
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
       _aiUsed = false;
-      _notice = context.l10n.paletteDraftApplied(count);
+      _notice = title == null
+          ? context.l10n.paletteDraftApplied(count)
+          : context.l10n.paletteIdeaApplied(title, count);
     }
 
     if (!mounted) {
@@ -772,9 +875,12 @@ class _PalettePageState extends State<PalettePage> {
       <String>[],
       <String>[],
     ];
+    final bool keepOrder = _mode == PaletteMode.customPalette;
     for (final suggestion in _suggestions) {
       final role = _roleFor(suggestion);
-      final group = _roleGroup(role);
+      // A custom palette (an idea, a loaded palette) is already in painting
+      // order, light to dark: keep it instead of regrouping by role.
+      final group = keepOrder ? 3 : _roleGroup(role);
       groups[group].add(suggestion);
       grouped[group].add(role);
     }
@@ -974,19 +1080,23 @@ class _PalettePageState extends State<PalettePage> {
     return InkChipRow(
       semanticLabel: context.l10n.paletteHarmonyLabel,
       children: <Widget>[
-        for (final mode in PaletteMode.values)
+        for (final mode in PaletteMode.values) ...<Widget>[
           InkChip(
             key: ValueKey<String>('palette-mode-${mode.name}'),
             label: context.l10n.modeLabel(mode),
             selected: !_useScenario && _mode == mode,
             onSelected: (_) => _selectMode(mode),
           ),
-        InkChip(
-          key: const ValueKey<String>('palette-scenario-toggle'),
-          label: context.l10n.paletteScenarioToggle,
-          selected: _useScenario,
-          onSelected: (_) => _toggleScenario(),
-        ),
+          // Scenes sit right after Recommended, where the empty-state hint
+          // can point to them, not at the end of the scroller.
+          if (mode == PaletteMode.recommended)
+            InkChip(
+              key: const ValueKey<String>('palette-scenario-toggle'),
+              label: context.l10n.paletteScenarioToggle,
+              selected: _useScenario,
+              onSelected: (_) => _toggleScenario(),
+            ),
+        ],
       ],
     );
   }
@@ -1040,15 +1150,32 @@ class _PalettePageState extends State<PalettePage> {
       ],
     );
     return _inset(
-      Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          if (!customMode) ...<Widget>[
-            Expanded(child: _buildBaseInput()),
-            const SizedBox(width: InkSpacing.buttonGap),
-          ],
-          size,
-        ],
+      LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (customMode) return size;
+          // The base field takes the full width so the code and the whole
+          // marker name stay readable; the size control sits below it and
+          // only goes beside it on wide screens.
+          final double scale = MediaQuery.textScalerOf(context).scale(1);
+          if (constraints.maxWidth < 440 + 120 * scale) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildBaseInput(),
+                const SizedBox(height: InkSpacing.block),
+                size,
+              ],
+            );
+          }
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Expanded(child: _buildBaseInput()),
+              const SizedBox(width: InkSpacing.buttonGap),
+              size,
+            ],
+          );
+        },
       ),
       top: InkSpacing.block,
     );
@@ -1062,13 +1189,22 @@ class _PalettePageState extends State<PalettePage> {
       optionsBuilder: (TextEditingValue value) {
         final query = value.text.trim().toUpperCase();
         if (query.isEmpty) return const Iterable<MarkerColor>.empty();
-        return _catalog
+        final List<MarkerColor> matches = _catalog
             .where(
               (color) =>
                   color.newCode.toUpperCase().contains(query) ||
                   color.oldCode.toUpperCase().contains(query),
             )
-            .take(8);
+            .take(8)
+            .toList();
+        // A complete code that already produced its result has nothing left
+        // to suggest: the list would only hover over the strip.
+        if (matches.length == 1 &&
+            (matches.first.newCode.toUpperCase() == query ||
+                matches.first.oldCode.toUpperCase() == query)) {
+          return const Iterable<MarkerColor>.empty();
+        }
+        return matches;
       },
       onSelected: (MarkerColor option) {
         _onBaseInputChanged(option.newCode);
@@ -1108,8 +1244,15 @@ class _PalettePageState extends State<PalettePage> {
         ListenableBuilder(
           listenable: focusNode,
           builder: (BuildContext context, Widget? child) => Container(
-            height: InkGeometry.fieldHeight,
-            padding: const EdgeInsets.symmetric(horizontal: InkSpacing.s12),
+            constraints: const BoxConstraints(
+              minHeight: InkGeometry.fieldHeight,
+            ),
+            padding: const EdgeInsets.only(
+              left: InkSpacing.s12,
+              right: InkSpacing.s2,
+              top: InkSpacing.s4,
+              bottom: InkSpacing.s4,
+            ),
             decoration: BoxDecoration(
               color: ink.surface,
               borderRadius: InkRadii.inputRadius,
@@ -1135,53 +1278,64 @@ class _PalettePageState extends State<PalettePage> {
                 ),
               ),
               const SizedBox(width: InkSpacing.s10),
-              Flexible(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: base == null ? double.infinity : 64,
-                  ),
-                  child: Semantics(
-                    label: context.l10n.paletteBaseCodeLabel,
-                    child: TextField(
-                      key: const ValueKey<String>('palette-base-input'),
-                      controller: controller,
-                      focusNode: focusNode,
-                      textCapitalization: TextCapitalization.characters,
-                      onChanged: _onBaseInputChanged,
-                      onSubmitted: (_) => onFieldSubmitted(),
-                      onTapOutside: (_) => focusNode.unfocus(),
-                      style: AppTypography.code.copyWith(color: ink.fg),
-                      cursorColor: ink.action,
-                      decoration: InputDecoration(
-                        hintText: context.l10n.paletteBaseCodeHint,
-                        hintStyle: AppTypography.secondary.copyWith(
-                          color: ink.fg2,
+              Expanded(
+                // The code on top and, once a marker is resolved, its whole
+                // name on a second line: nothing is cut to fit one row.
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Semantics(
+                      label: context.l10n.paletteBaseCodeLabel,
+                      child: TextField(
+                        key: const ValueKey<String>('palette-base-input'),
+                        controller: controller,
+                        focusNode: focusNode,
+                        textCapitalization: TextCapitalization.characters,
+                        onChanged: _onBaseInputChanged,
+                        onSubmitted: (_) => onFieldSubmitted(),
+                        onTapOutside: (_) => focusNode.unfocus(),
+                        style: AppTypography.code.copyWith(color: ink.fg),
+                        cursorColor: ink.action,
+                        decoration: InputDecoration(
+                          hintText: context.l10n.paletteBaseCodeHint,
+                          hintStyle: AppTypography.secondary.copyWith(
+                            color: ink.fg2,
+                          ),
+                          filled: false,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                          border: none,
+                          enabledBorder: none,
+                          focusedBorder: none,
+                          disabledBorder: none,
+                          errorBorder: none,
+                          focusedErrorBorder: none,
                         ),
-                        filled: false,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        border: none,
-                        enabledBorder: none,
-                        focusedBorder: none,
-                        disabledBorder: none,
-                        errorBorder: none,
-                        focusedErrorBorder: none,
                       ),
                     ),
-                  ),
+                    if (base != null)
+                      Tooltip(
+                        message: base.newName,
+                        excludeFromSemantics: true,
+                        child: Text(
+                          base.newName,
+                          key: const ValueKey<String>('palette-base-name'),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.caption.copyWith(color: ink.fg2),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-              if (base != null) ...<Widget>[
-                const SizedBox(width: InkSpacing.s10),
-                Flexible(
-                  child: Text(
-                    base.newName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTypography.secondary.copyWith(color: ink.fg2),
-                  ),
-                ),
-              ],
+              InkIconButton(
+                key: const ValueKey<String>('palette-pick-base'),
+                icon: InkIcons.search,
+                iconSize: InkGeometry.smallIcon + 2,
+                tooltip: context.l10n.palettePickBaseTooltip,
+                onPressed: _pickBase,
+              ),
             ],
           ),
         ),
@@ -1209,7 +1363,13 @@ class _PalettePageState extends State<PalettePage> {
             side: BorderSide(color: ink.line),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 240, maxWidth: 320),
+            constraints: BoxConstraints(
+              maxHeight: 280,
+              maxWidth: math.min(
+                MediaQuery.sizeOf(context).width - 2 * InkSpacing.pageMargin,
+                420,
+              ),
+            ),
             child: ListView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.zero,
@@ -1228,38 +1388,53 @@ class _PalettePageState extends State<PalettePage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: InkSpacing.cardH,
-                        vertical: InkSpacing.s4,
+                        vertical: InkSpacing.s6,
                       ),
                       child: Row(
                         children: <Widget>[
                           SwatchBlock(
                             hex: option.hex,
-                            size: 20,
+                            size: 24,
                             radius: InkRadii.xs,
                           ),
                           const SizedBox(width: InkSpacing.s10),
-                          Text(
-                            option.newCode,
-                            style: AppTypography.code.copyWith(color: ink.fg),
-                          ),
-                          if (hasOld) ...<Widget>[
-                            const SizedBox(width: InkSpacing.s8),
-                            Text(
-                              option.oldCode,
-                              style: AppTypography.data.copyWith(
-                                color: ink.fg2,
-                              ),
-                            ),
-                          ],
-                          const SizedBox(width: InkSpacing.s10),
                           Expanded(
-                            child: Text(
-                              option.newName,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTypography.secondary.copyWith(
-                                color: ink.fg2,
-                              ),
+                            // Code (and former code) on the first line, the
+                            // whole name below it.
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: <Widget>[
+                                    Text(
+                                      option.newCode,
+                                      style: AppTypography.code.copyWith(
+                                        color: ink.fg,
+                                      ),
+                                    ),
+                                    if (hasOld) ...<Widget>[
+                                      const SizedBox(width: InkSpacing.s8),
+                                      Text(
+                                        option.oldCode,
+                                        style: AppTypography.data.copyWith(
+                                          color: ink.fg2,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                                Text(
+                                  option.newName,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTypography.secondary.copyWith(
+                                    color: ink.fg2,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -1341,17 +1516,25 @@ class _PalettePageState extends State<PalettePage> {
                         horizontal: InkSpacing.s8,
                         vertical: InkSpacing.s2,
                       ),
-                      child: Text(
-                        context.l10n.aiResultLabel(
+                      child: Tooltip(
+                        message: context.l10n.aiResultLabel(
                           _aiModel,
                           aiCount: _aiCount,
                           total: _aiTotal,
                         ),
-                        key: const ValueKey<String>('palette-ai-badge'),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTypography.secondary.copyWith(
-                          color: ink.action,
+                        excludeFromSemantics: true,
+                        child: Text(
+                          context.l10n.aiResultLabel(
+                            _aiModel,
+                            aiCount: _aiCount,
+                            total: _aiTotal,
+                          ),
+                          key: const ValueKey<String>('palette-ai-badge'),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.secondary.copyWith(
+                            color: ink.action,
+                          ),
                         ),
                       ),
                     ),
@@ -1467,7 +1650,10 @@ class _PalettePageState extends State<PalettePage> {
                 variant: InkButtonVariant.smallSecondary,
                 label: context.l10n.paletteGenerateButton,
                 icon: InkIcons.shuffle,
-                onPressed: customMode ? null : _recompute,
+                onPressed:
+                    customMode || (_baseInput.trim().isEmpty && !_useScenario)
+                    ? null
+                    : _recompute,
               ),
               if (_useScenario)
                 InkButton(
@@ -1491,7 +1677,9 @@ class _PalettePageState extends State<PalettePage> {
         ),
         if (showAi || hasResult)
           _inset(
-            Row(
+            Wrap(
+              spacing: InkSpacing.buttonGap,
+              runSpacing: InkSpacing.s8,
               children: <Widget>[
                 if (showAi)
                   InkButton.secondary(
@@ -1502,16 +1690,11 @@ class _PalettePageState extends State<PalettePage> {
                     loading: _aiLoading,
                     onPressed: _suggestWithAi,
                   ),
-                if (showAi && hasResult)
-                  const SizedBox(width: InkSpacing.buttonGap),
                 if (hasResult)
-                  Expanded(
-                    child: InkButton(
-                      key: const ValueKey<String>('palette-save'),
-                      label: context.l10n.paletteSaveButton,
-                      expand: true,
-                      onPressed: _save,
-                    ),
+                  InkButton(
+                    key: const ValueKey<String>('palette-save'),
+                    label: context.l10n.paletteSaveButton,
+                    onPressed: _save,
                   ),
               ],
             ),
@@ -1636,8 +1819,6 @@ class _PaintStepRow extends StatelessWidget {
               Expanded(
                 child: Text(
                   '${step.zone} · ${step.name}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                   style: AppTypography.secondary.copyWith(color: ink.fg),
                 ),
               ),
@@ -1998,6 +2179,164 @@ class _ErrorNote extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The palette on screen, kept to undo a base handed over from Swatches.
+final class _PaletteSnapshot {
+  _PaletteSnapshot.of(_PalettePageState s)
+    : mode = s._mode,
+      useScenario = s._useScenario,
+      scenario = s._scenario,
+      baseInput = s._baseInput,
+      paletteSize = s._paletteSize,
+      suggestions = s._suggestions,
+      lockedCodes = s._lockedCodes,
+      lockedSuggestions = Map<String, PaletteSuggestion>.of(
+        s._lockedSuggestions,
+      ),
+      aiUsed = s._aiUsed;
+
+  final PaletteMode mode;
+  final bool useScenario;
+  final DrawingScenario scenario;
+  final String baseInput;
+  final int paletteSize;
+  final List<PaletteSuggestion> suggestions;
+  final List<String> lockedCodes;
+  final Map<String, PaletteSuggestion> lockedSuggestions;
+  final bool aiUsed;
+
+  /// Puts the palette back (call inside setState).
+  void restore(_PalettePageState s) {
+    s._mode = mode;
+    s._useScenario = useScenario;
+    s._scenario = scenario;
+    s._baseInput = baseInput;
+    s._baseController.text = baseInput;
+    s._paletteSize = paletteSize;
+    s._suggestions = suggestions;
+    s._lockedCodes = lockedCodes;
+    s._lockedSuggestions
+      ..clear()
+      ..addAll(lockedSuggestions);
+    s._aiUsed = aiUsed;
+    s._failure = null;
+    s._unknownInput = false;
+    s._notice = null;
+  }
+}
+
+/// A searchable list of markers to pick the base from: code, old code or
+/// name, with the colour.
+class _BasePickerSheet extends StatefulWidget {
+  const _BasePickerSheet({required this.markers});
+
+  final List<MarkerColor> markers;
+
+  @override
+  State<_BasePickerSheet> createState() => _BasePickerSheetState();
+}
+
+class _BasePickerSheetState extends State<_BasePickerSheet> {
+  String _query = '';
+
+  List<MarkerColor> get _filtered {
+    final String q = _query.trim().toLowerCase();
+    if (q.isEmpty) return widget.markers;
+    return widget.markers
+        .where(
+          (MarkerColor c) =>
+              c.newCode.toLowerCase().contains(q) ||
+              c.oldCode.toLowerCase().contains(q) ||
+              c.newName.toLowerCase().contains(q) ||
+              c.oldName.toLowerCase().contains(q),
+        )
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    final List<MarkerColor> markers = _filtered;
+    final double height = MediaQuery.sizeOf(context).height * 0.55;
+    return Column(
+      key: const ValueKey<String>('palette-base-picker'),
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(right: InkGeometry.target),
+          child: Semantics(
+            header: true,
+            child: Text(
+              context.l10n.palettePickerTitle,
+              style: AppTypography.section.copyWith(color: ink.fg),
+            ),
+          ),
+        ),
+        const SizedBox(height: InkSpacing.block),
+        InkSearchField(
+          key: const ValueKey<String>('palette-picker-search'),
+          hintText: context.l10n.palettePickerSearchHint,
+          semanticLabel: context.l10n.palettePickerSearchHint,
+          onChanged: (String value) => setState(() => _query = value),
+        ),
+        const SizedBox(height: InkSpacing.s8),
+        SizedBox(
+          height: height,
+          child: markers.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.only(top: InkSpacing.block),
+                  child: Text(
+                    context.l10n.palettePickerEmpty,
+                    style: AppTypography.secondary.copyWith(color: ink.fg2),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: markers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final MarkerColor marker = markers[index];
+                    return InkWell(
+                      key: ValueKey<String>('palette-picker-${marker.newCode}'),
+                      onTap: () => Navigator.of(context).pop(marker),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minHeight: InkGeometry.target + 8,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: InkSpacing.s6,
+                          ),
+                          child: Row(
+                            children: <Widget>[
+                              SwatchBlock(hex: marker.hex, size: 32),
+                              const SizedBox(width: InkSpacing.s12),
+                              Text(
+                                marker.newCode,
+                                style: AppTypography.code.copyWith(
+                                  color: ink.fg,
+                                ),
+                              ),
+                              const SizedBox(width: InkSpacing.s10),
+                              Expanded(
+                                child: Text(
+                                  marker.newName,
+                                  style: AppTypography.secondary.copyWith(
+                                    color: ink.fg2,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
     );
   }
 }

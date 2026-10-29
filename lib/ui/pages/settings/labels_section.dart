@@ -7,7 +7,7 @@ import '../../widgets/ink_segmented.dart';
 import 'settings_widgets.dart';
 import '../../../l10n/l10n.dart';
 
-/// How the marker codes and names are shown in the app.
+/// Which Ohuhu codes (current, old or both) the app shows.
 ///
 /// Renders the row of the "Display" card; the page owns the group.
 class LabelsSection extends StatelessWidget {
@@ -23,8 +23,11 @@ class LabelsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SettingsControlRow(
       label: context.l10n.settingsLabelsTitle,
+      stacked: true,
+      caption: context.l10n.settingsLabelsSubtitle,
       control: InkSegmented<NameDisplayMode>(
         semanticLabel: context.l10n.settingsLabelsTitle,
+        expand: true,
         segments: <InkSegment<NameDisplayMode>>[
           InkSegment<NameDisplayMode>(
             value: NameDisplayMode.newOnly,

@@ -64,13 +64,13 @@ void main() {
       await SharedPreferencesStore.open(),
     );
     await first.load();
-    await first.setPackSelectionMode(PackSelectionMode.compare);
+    await first.setOwnedSetIds({'honolulu_120'});
 
     final second = StoredAppSettingsRepository(
       await SharedPreferencesStore.open(),
     );
     await second.load();
-    expect(second.settings.packSelectionMode, PackSelectionMode.compare);
+    expect(second.settings.ownedSetIds, {'honolulu_120'});
   });
 }
 

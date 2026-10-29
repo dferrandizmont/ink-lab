@@ -108,7 +108,7 @@ void main() {
       );
       expect(find.textContaining('OpenRouter key'), findsNothing);
       expect(find.text('Local'), findsNothing);
-      expect(find.text('Fall back to colour theory'), findsOneWidget);
+      expect(find.text('Built-in fallback'), findsOneWidget);
       expect(
         find.text('If the AI fails, the built-in engine answers instead.'),
         findsOneWidget,

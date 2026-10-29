@@ -10,8 +10,8 @@ Spanish version (authoritative): [LEEME.md](LEEME.md).
 | `politica-privacidad.en.md` | Courtesy English translation. The Spanish one applies. | Keep in step with the Spanish one. |
 | `../privacy.md` and `../privacy.en.md` | Technical inventory of data, permissions, backups, AI and exports, checked against the code. | Review whenever the data flow changes. |
 | `../../PRIVACY.md` | Short pointer to the documents above. | — |
-| `../../SECURITY.md` and `SECURITY.en.md` | How to report a vulnerability without sending real data. | — |
-| `../../LICENSE` and `../../LICENSE-CONTENT.md` (`.en.md`) | MIT for the code; CC BY-SA 4.0 for own content; the catalogue data and third-party materials set apart. | — |
+| `../../SECURITY.md` and `SECURITY.es.md` | How to report a vulnerability without sending real data. | — |
+| `../../LICENSE` and `../../LICENSE-CONTENT.md` (`.es.md`) | MIT for the code; CC BY-SA 4.0 for own content; the catalogue data and third-party materials set apart. | — |
 
 Convention: the Spanish text is the one that applies; each document has its English version in `*.en.md` next to it.
 

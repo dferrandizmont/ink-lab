@@ -327,8 +327,6 @@ class _ModelRow extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
                         style: AppTypography.body.copyWith(
                           color: enabled ? ink.fg : ink.fg2,
                         ),
@@ -337,8 +335,6 @@ class _ModelRow extends StatelessWidget {
                         const SizedBox(height: InkSpacing.s4),
                         Text(
                           subtitle!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                           style: AppTypography.data.copyWith(color: ink.fg2),
                         ),
                       ],

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <title>Ink Lab option 6: il Strokes (monochrome, adaptive scale)</title>
+  <mask id="m" maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
+    <rect width="1024" height="1024" fill="#000000"/>
+    <polygon points="304.8,328.48 420.24,295.92 420.24,695.52 304.8,728.08" fill="#FFFFFF"/>
+    <polygon points="467.6,328.48 583.04,295.92 583.04,695.52 467.6,728.08" fill="#FFFFFF"/>
+    <polygon points="477.96,625.96 734,625.96 699.96,710.32 443.92,710.32" fill="#000000"/>
+    <polygon points="477.96,643.72 734,643.72 699.96,728.08 443.92,728.08" fill="#FFFFFF"/>
+  </mask>
+  <rect width="1024" height="1024" fill="#FFFFFF" mask="url(#m)"/>
+</svg>

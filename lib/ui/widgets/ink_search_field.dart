@@ -61,7 +61,7 @@ class _InkSearchFieldState extends State<InkSearchField> {
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
     OutlineInputBorder border(Color color) => OutlineInputBorder(
-      borderRadius: InkRadii.pillRadius,
+      borderRadius: InkRadii.inputRadius,
       borderSide: BorderSide(color: color),
     );
     return Semantics(

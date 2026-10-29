@@ -31,9 +31,6 @@ void main() {
       for (final DrawingScenario s in DrawingScenario.values) {
         expect(l10n.scenarioLabel(s), s.label);
       }
-      for (final PackSelectionMode m in PackSelectionMode.values) {
-        expect(l10n.packModeLabel(m), m.label);
-      }
       for (final OahuSet s in OahuSet.values) {
         expect(l10n.packSetLabel(s), s.label);
       }
@@ -51,9 +48,6 @@ void main() {
       }
       for (final DrawingScenario s in DrawingScenario.values) {
         expect(l10nEs.scenarioLabel(s), isNot(s.label), reason: s.name);
-      }
-      for (final PackSelectionMode m in PackSelectionMode.values) {
-        expect(l10nEs.packModeLabel(m), isNot(m.label), reason: m.name);
       }
       for (final IdeaCategory c in IdeaCategory.values) {
         expect(l10nEs.ideaCategoryLabel(c), isNot(c.label), reason: c.name);
@@ -144,39 +138,47 @@ void main() {
   });
 
   group('ideas', () {
-    final List<MarkerColor> candidates = collection.take(120).toList();
-
-    test('English texts match the engine, Spanish ones are translated', () {
-      expect(IdeasEngine.presets.length, 30);
+    test('every idea has its texts, steps and translation', () {
       for (final IdeaPreset preset in IdeasEngine.presets) {
-        final IdeaPlan plan = IdeasEngine.generatePlan(preset, candidates, 5);
         expect(l10n.ideaTitle(preset), preset.title);
         expect(l10n.ideaSummary(preset), preset.summary);
-        expect(l10n.ideaOverviewText(preset.id), plan.overview);
-        expect(l10n.ideaStepsText(preset.id), plan.steps, reason: preset.id);
-        expect(
-          l10n.ideaEmbellishmentsText(preset.id),
-          plan.embellishments,
-          reason: preset.id,
-        );
-        for (final PaletteSuggestion s in plan.palette) {
-          expect(l10n.reasonLabel(s.reason), s.reason);
-          // "Base" is the same word in both languages.
-          if (s.reason != 'Base') {
-            expect(
-              l10nEs.reasonLabel(s.reason),
-              isNot(s.reason),
-              reason: '${preset.id}: ${s.reason}',
-            );
-          }
+        for (final AppLocalizations t in <AppLocalizations>[l10n, l10nEs]) {
+          expect(
+            t.ideaStepsText(preset.id).length,
+            preset.stepRoles.length,
+            reason: '${t.localeName} ${preset.id}',
+          );
+          expect(t.ideaPracticeText(preset.id), isNotEmpty);
+          expect(t.ideaSubjectText(preset.id), isNotEmpty);
+          expect(t.ideaTipText(preset.id), isNotEmpty);
+          expect(t.ideaMaterialsText(preset.materials), endsWith('.'));
         }
-        if (preset.id != 'pastel') {
-          expect(l10nEs.ideaTitle(preset), isNot(preset.title));
-        }
+        expect(l10nEs.ideaTitle(preset), isNot(preset.title));
         expect(l10nEs.ideaSummary(preset), isNot(preset.summary));
-        expect(l10nEs.ideaOverviewText(preset.id), isNot(plan.overview));
-        expect(l10nEs.ideaStepsText(preset.id), isNot(plan.steps));
+        expect(
+          l10nEs.ideaStepsText(preset.id),
+          isNot(l10n.ideaStepsText(preset.id)),
+        );
       }
+      // No two ideas share the same steps.
+      final Set<String> steps = <String>{
+        for (final IdeaPreset p in IdeasEngine.presets)
+          l10n.ideaStepsText(p.id).join('|'),
+      };
+      expect(steps.length, IdeasEngine.presets.length);
+    });
+
+    test('roles and reasons of idea palettes are translated', () {
+      for (final String role in IdeaRoles.all) {
+        final String reason = IdeaRoles.reasonFor(role);
+        expect(l10n.roleLabel(role), role);
+        expect(l10n.reasonLabel(reason), reason);
+        if (role != IdeaRoles.base) {
+          expect(l10nEs.roleLabel(role), isNot(role), reason: role);
+        }
+        expect(l10nEs.reasonLabel(reason), isNot(reason), reason: reason);
+      }
+      expect(l10nEs.roleLabel(IdeaRoles.shadowGray), 'Gris de sombra');
     });
   });
 
@@ -206,9 +208,14 @@ void main() {
   });
 
   test('match quality and card locations follow the locale', () {
-    expect(l10n.matchQualityLabel(0.5), 'Excellent');
-    expect(l10nEs.matchQualityLabel(0.5), 'Excelente');
-    expect(l10nEs.matchQualityLabel(9), 'Aproximado');
+    expect(l10n.matchQualityLabel(0.5), 'Nearly exact');
+    expect(l10nEs.matchQualityLabel(0.5), 'Casi exacto');
+    expect(l10n.matchQualityLabel(4), 'Very close');
+    expect(l10n.matchQualityLabel(9), 'Close');
+    expect(l10nEs.matchQualityLabel(15), 'Aproximado');
+    expect(l10n.matchQualityLabel(20), 'Rough');
+    expect(l10n.matchQualityLabel(20.1), 'Far off');
+    expect(l10nEs.matchQualityLabel(65), 'Lejano');
     expect(l10n.cardLocationLabel('Card 4'), 'Swatch card 4');
     expect(l10nEs.cardLocationLabel('Card 4'), 'Carta de colores 4');
     expect(l10nEs.cardLocationLabel('Anything'), 'Anything');

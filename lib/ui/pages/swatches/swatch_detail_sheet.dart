@@ -151,6 +151,12 @@ class SwatchDetailSheet extends StatelessWidget {
       if (hasOldName) (context.l10n.swatchesOldName, color.oldName),
     ];
 
+    // One label column for all rows, as wide as the widest label.
+    final double definitionLabelWidth = InkDefinitionRow.labelWidthFor(
+      context,
+      <String>[for (final (String, String) row in definitions) row.$1],
+    );
+
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -169,7 +175,7 @@ class SwatchDetailSheet extends StatelessWidget {
                 SwatchBlock(
                   hex: color.hex,
                   size: InkGeometry.heroSwatch,
-                  radius: InkRadii.card,
+                  radius: InkRadii.control,
                 ),
                 const SizedBox(width: InkSpacing.block),
                 Expanded(
@@ -180,34 +186,26 @@ class SwatchDetailSheet extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
+                        Wrap(
+                          spacing: InkSpacing.s8,
+                          crossAxisAlignment: WrapCrossAlignment.end,
                           children: <Widget>[
                             Text(
                               color.newCode,
                               style: AppTypography.code.copyWith(color: ink.fg),
                             ),
-                            if (hasOldCode) ...<Widget>[
-                              const SizedBox(width: InkSpacing.s8),
-                              Flexible(
-                                child: Text(
-                                  context.l10n.commonOldCode(color.oldCode),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTypography.data.copyWith(
-                                    color: ink.fg2,
-                                  ),
+                            if (hasOldCode)
+                              Text(
+                                context.l10n.commonOldCode(color.oldCode),
+                                style: AppTypography.data.copyWith(
+                                  color: ink.fg2,
                                 ),
                               ),
-                            ],
                           ],
                         ),
                         const SizedBox(height: InkSpacing.s4),
                         Text(
                           color.newName,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                           style: AppTypography.sheetTitle.copyWith(
                             color: ink.fg,
                           ),
@@ -238,13 +236,20 @@ class SwatchDetailSheet extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   for (final (String, String) row in definitions)
-                    InkDefinitionRow(label: row.$1, value: row.$2),
+                    InkDefinitionRow(
+                      label: row.$1,
+                      value: row.$2,
+                      labelWidth: definitionLabelWidth,
+                    ),
                 ],
               ),
             ),
           ],
           const SizedBox(height: InkSpacing.block),
-          Row(
+          Wrap(
+            spacing: InkSpacing.s8,
+            runSpacing: InkSpacing.s8,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: <Widget>[
               InkIconButton(
                 icon: InkIcons.star,
@@ -255,20 +260,15 @@ class SwatchDetailSheet extends StatelessWidget {
                     : context.l10n.swatchesAddFavorite,
                 onPressed: onToggleFavorite,
               ),
-              const SizedBox(width: InkSpacing.s8),
               InkButton.secondary(
                 label: context.l10n.swatchesCopyHex,
                 icon: InkIcons.copy,
                 onPressed: onCopyHex,
               ),
-              const SizedBox(width: InkSpacing.s8),
-              Expanded(
-                child: InkButton(
-                  label: context.l10n.swatchesAddToPalette,
-                  icon: InkIcons.plus,
-                  onPressed: onAddToPalette,
-                  expand: true,
-                ),
+              InkButton(
+                label: context.l10n.swatchesAddToPalette,
+                icon: InkIcons.plus,
+                onPressed: onAddToPalette,
               ),
             ],
           ),
@@ -279,26 +279,41 @@ class SwatchDetailSheet extends StatelessWidget {
               trailing: context.l10n.swatchesDeltaEUnit,
             ),
             const SizedBox(height: InkSpacing.group),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                for (int i = 0; i < 3; i++) ...<Widget>[
-                  if (i > 0) const SizedBox(width: InkSpacing.s8),
-                  Expanded(
-                    child: i < alternatives.length
-                        ? _AlternativeTile(
-                            alternative: alternatives[i],
-                            onTap: onSelectAlternative == null
-                                ? null
-                                : () => onSelectAlternative!(
-                                    alternatives[i].color,
-                                  ),
-                          )
-                        : const SizedBox.shrink(),
-                  ),
+            // Three across; with large text the codes need a full row each.
+            if (MediaQuery.textScalerOf(context).scale(1) > 1.15)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  for (int i = 0; i < alternatives.length && i < 3; i++)
+                    _AlternativeTile(
+                      alternative: alternatives[i],
+                      onTap: onSelectAlternative == null
+                          ? null
+                          : () => onSelectAlternative!(alternatives[i].color),
+                    ),
                 ],
-              ],
-            ),
+              )
+            else
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  for (int i = 0; i < 3; i++) ...<Widget>[
+                    if (i > 0) const SizedBox(width: InkSpacing.s8),
+                    Expanded(
+                      child: i < alternatives.length
+                          ? _AlternativeTile(
+                              alternative: alternatives[i],
+                              onTap: onSelectAlternative == null
+                                  ? null
+                                  : () => onSelectAlternative!(
+                                      alternatives[i].color,
+                                    ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
+                ],
+              ),
           ],
         ],
       ),
@@ -342,7 +357,7 @@ class _AlternativeTile extends StatelessWidget {
                     Text(
                       color.newCode,
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
                       style: AppTypography.code.copyWith(color: ink.fg),
                     ),
                     Text(

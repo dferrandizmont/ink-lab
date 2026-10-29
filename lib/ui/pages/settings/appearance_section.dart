@@ -26,8 +26,10 @@ class AppearanceSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SettingsControlRow(
       label: context.l10n.settingsAppearanceTitle,
+      stacked: true,
       control: InkSegmented<AppThemeMode>(
         semanticLabel: context.l10n.settingsAppearanceTitle,
+        expand: true,
         segments: <InkSegment<AppThemeMode>>[
           InkSegment<AppThemeMode>(
             value: AppThemeMode.system,

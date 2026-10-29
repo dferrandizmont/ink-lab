@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
+import 'package:ink_lab/core/collection_selection.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
@@ -28,6 +29,7 @@ Future<AppScope> pumpSwatches(
   ThemeData? theme,
   Size size = const Size(390, 844),
   Locale locale = const Locale('en'),
+  bool showAll = true,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -48,6 +50,14 @@ Future<AppScope> pumpSwatches(
     ),
   );
   await tester.pumpAndSettle();
+  // The preview collection opens the page on "Mine"; most tests browse the
+  // whole range.
+  if (showAll) {
+    await tester.tap(
+      find.text(lookupAppLocalizations(locale).swatchesAllFilter),
+    );
+    await tester.pumpAndSettle();
+  }
   return scope;
 }
 
@@ -84,7 +94,8 @@ void main() {
     // B08 belongs to the classic 160 pack, the default selection.
     expect(find.text('B08'), findsOneWidget);
     expect(find.byType(ColorSwatchTile), findsWidgets);
-    expect(find.text('Ohuhu Oahu · Classic 160'), findsOneWidget);
+    // The brand is Ohuhu (Oahu is a series), then the collection summary.
+    expect(find.text('Ohuhu · Oahu · 1 set · 161 markers'), findsOneWidget);
   });
 
   testWidgets('the search filters the collection by code', (
@@ -166,25 +177,15 @@ void main() {
     expect(find.byType(ColorSwatchTile), findsWidgets);
   });
 
-  testWidgets('the label mode of the filters sheet switches the code', (
+  testWidgets('the filters sheet holds view filters only', (
     WidgetTester tester,
   ) async {
-    final AppScope scope = await pumpSwatches(tester);
-
-    expect(find.text('B08'), findsOneWidget);
-    expect(find.text('B289'), findsNothing);
+    await pumpSwatches(tester);
 
     await openFilters(tester);
-    await tester.tap(find.text(l10n.swatchesOldLabels));
-    await tester.pumpAndSettle();
-    expect(find.text('B289'), findsOneWidget);
-    expect(find.text('B08'), findsNothing);
-    expect(scope.settings.nameDisplayMode, NameDisplayMode.oldOnly);
-
-    await tester.tap(find.text(l10n.swatchesNewLabels));
-    await tester.pumpAndSettle();
-    expect(find.text('B08'), findsOneWidget);
-    expect(scope.settings.nameDisplayMode, NameDisplayMode.newOnly);
+    // Name display lives in Settings only.
+    expect(find.text(l10n.swatchesOldLabels), findsNothing);
+    expect(find.text(l10n.swatchesLayoutList), findsOneWidget);
   });
 
   testWidgets('a swatch opens a detail sheet with its values', (
@@ -251,17 +252,20 @@ void main() {
     expect(find.text('B010'), findsNothing);
   });
 
-  testWidgets('the owned chip only shows owned markers and can be cleared', (
+  testWidgets('"Mine" shows the owned sets plus the extra markers', (
     WidgetTester tester,
   ) async {
     final AppScope scope = await pumpSwatches(tester);
-    await scope.settings.setOwnedMarkerCodes(<String>{'B08'});
+    await scope.settings.setCollection(
+      AppSettings(extraMarkerIds: <String>{'B08'}),
+    );
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(l10n.swatchesOwnedOnly));
     await tester.pumpAndSettle();
     expect(find.byType(ColorSwatchTile), findsOneWidget);
     expect(find.text('B08'), findsOneWidget);
+    expect(find.text('1 of 503'), findsOneWidget);
 
     await tester.tap(find.text(l10n.swatchesAllFilter));
     await tester.pumpAndSettle();
@@ -326,8 +330,9 @@ void main() {
     await tester.pumpAndSettle();
     await openPackSection(tester, l10n);
 
-    expect(find.text('Kaala 60 Illustration'), findsOneWidget);
-    expect(find.text('Honolulu 48'), findsNothing);
+    // Under its line caption a pack needs no line prefix.
+    expect(find.text('60 Illustration'), findsOneWidget);
+    expect(find.text(AppTypography.caps('Honolulu')), findsNothing);
     expect(find.text('Classic 160'), findsNothing);
   });
 
@@ -340,8 +345,8 @@ void main() {
     await openPackSection(tester, l10n);
 
     expect(find.text(l10n.swatchesLegacyPacks), findsWidgets);
-    await tester.ensureVisible(find.text('Honolulu White Case 24 (V1)'));
-    expect(find.text('Honolulu White Case 24 (V1)'), findsOneWidget);
+    await tester.ensureVisible(find.text('White Case 24 (V1)'));
+    expect(find.text('White Case 24 (V1)'), findsOneWidget);
   });
 
   for (final Locale locale in const <Locale>[Locale('en'), Locale('es')]) {
@@ -383,14 +388,18 @@ void main() {
     expect(find.textContaining('more'), findsOneWidget);
   });
 
-  testWidgets('DecoTime without owned markers explains what to do', (
+  testWidgets('DecoTime without owned markers: All browses, Mine explains', (
     WidgetTester tester,
   ) async {
     final AppScope scope = await pumpSwatches(tester);
 
     await scope.settings.setBrand(MarkerBrand.decoTime);
     await tester.pumpAndSettle();
+    // The whole range is browsable before owning anything.
+    expect(find.byType(ColorSwatchTile), findsWidgets);
 
+    await tester.tap(find.byKey(const ValueKey<String>('swatches-mine')));
+    await tester.pumpAndSettle();
     expect(find.text(l10n.swatchesEmptyNoOwnedTitle), findsOneWidget);
     expect(find.text(l10n.swatchesEmptyNoOwnedBody), findsOneWidget);
     expect(find.byType(ColorSwatchTile), findsNothing);
@@ -405,6 +414,7 @@ void main() {
     await scope.settings.setOwnedMarkerCodes(<String>{'decotime:GG9'});
     await tester.pumpAndSettle();
 
+    // A brand with owned markers opens on "Mine".
     expect(find.text('GG9'), findsOneWidget);
     expect(find.byType(ColorSwatchTile), findsOneWidget);
   });
@@ -412,7 +422,9 @@ void main() {
   testWidgets('the list layout shows one row per color', (
     WidgetTester tester,
   ) async {
-    await pumpSwatches(tester);
+    final AppScope scope = await pumpSwatches(tester);
+    await scope.settings.setNameDisplayMode(NameDisplayMode.both);
+    await tester.pumpAndSettle();
 
     await openFilters(tester);
     await tester.tap(find.text(l10n.swatchesLayoutList));
@@ -421,6 +433,34 @@ void main() {
     expect(find.byType(ColorSwatchTile), findsNothing);
     expect(find.byType(SwatchListTile), findsWidgets);
     expect(find.text('B08 / B289'), findsOneWidget);
+  });
+
+  testWidgets('the grid shows only the current name, never "new / old"', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSwatches(tester);
+    await scope.settings.setNameDisplayMode(NameDisplayMode.both);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ColorSwatchTile), findsWidgets);
+    expect(find.textContaining(' / '), findsNothing);
+  });
+
+  testWidgets('with no collection a slim notice offers to set it up', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSwatches(tester);
+    final Finder notice = find.text(l10n.swatchesWholeRangeNotice('DecoTime'));
+    expect(notice, findsNothing);
+
+    await scope.settings.setBrand(MarkerBrand.decoTime);
+    await tester.pumpAndSettle();
+    expect(notice, findsOneWidget);
+    expect(find.text(l10n.swatchesWholeRangeAction), findsOneWidget);
+
+    await scope.settings.setOwnedMarkerCodes(<String>{'decotime:GG9'});
+    await tester.pumpAndSettle();
+    expect(notice, findsNothing);
   });
 
   testWidgets('the page and its sheet render in the dark theme', (
@@ -456,4 +496,50 @@ void main() {
         .loadCardLocations();
     expect(catalog['classic_160'], isNotEmpty);
   });
+
+  for (final Locale locale in const <Locale>[Locale('en'), Locale('es')]) {
+    testWidgets('the header total counts the brand range, not every '
+        'dataset (${locale.languageCode})', (WidgetTester tester) async {
+      final AppLocalizations t = lookupAppLocalizations(locale);
+      final MarkerRepository repo = diskMarkers();
+      final List<MarkerColor> all = (await tester.runAsync(
+        () => repo.loadColors(MarkerBrand.ohuhuOahu),
+      ))!;
+      final int range = swatchCandidateColors(
+        colors: all,
+        brand: MarkerBrand.ohuhuOahu,
+      ).length;
+
+      final AppScope scope = await pumpSwatches(tester, locale: locale);
+
+      // "All" is the whole Ohuhu range.
+      expect(find.text(t.swatchesCountOf(range, range)), findsOneWidget);
+
+      // The search narrows the visible count; the total stays put.
+      await tester.enterText(find.byType(TextField), 'B08');
+      await tester.pumpAndSettle();
+      expect(find.text(t.swatchesCountOf(1, range)), findsOneWidget);
+
+      // DecoTime: the whole DecoTime range, even with a single owned marker.
+      await tester.enterText(find.byType(TextField), '');
+      await scope.settings.setBrand(MarkerBrand.decoTime);
+      await scope.settings.setOwnedMarkerCodes(<String>{'decotime:GG9'});
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(t.swatchesAllFilter));
+      await tester.pumpAndSettle();
+      final List<MarkerColor> deco = (await tester.runAsync(
+        () => repo.loadColors(MarkerBrand.decoTime),
+      ))!;
+      final int decoTotal = deco
+          .where((MarkerColor c) => c.brandId == MarkerBrand.decoTime.id)
+          .length;
+      expect(
+        find.text(t.swatchesCountOf(decoTotal, decoTotal)),
+        findsOneWidget,
+      );
+      await tester.tap(find.byKey(const ValueKey<String>('swatches-mine')));
+      await tester.pumpAndSettle();
+      expect(find.text(t.swatchesCountOf(1, decoTotal)), findsOneWidget);
+    });
+  }
 }

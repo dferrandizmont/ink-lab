@@ -69,13 +69,14 @@ void main() {
       await _pumpSpanish(tester, const SettingsPage());
 
       expect(find.text('Ajustes'), findsOneWidget);
-      expect(find.text(AppTypography.caps('Colección')), findsOneWidget);
-      expect(find.text('Marca'), findsOneWidget);
-      expect(find.text('Packs de Ohuhu'), findsOneWidget);
+      expect(find.text(AppTypography.caps('Mi colección')), findsOneWidget);
+      expect(find.text('Ohuhu'), findsWidgets);
+      expect(find.text('Oahu · 1 set · 161 rotuladores'), findsOneWidget);
+      expect(find.text('Repetir la configuración'), findsOneWidget);
       expect(find.text(AppTypography.caps('Pantalla')), findsOneWidget);
       expect(find.text('Aspecto'), findsOneWidget);
       expect(find.text('Idioma'), findsOneWidget);
-      expect(find.text('Nombres en pantalla'), findsOneWidget);
+      expect(find.text('Códigos de Ohuhu'), findsOneWidget);
       expect(find.text('Sistema'), findsWidgets);
       expect(find.text('Español'), findsOneWidget);
       expect(find.text('English'), findsOneWidget);

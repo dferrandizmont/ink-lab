@@ -2505,6 +2505,7 @@
     "hex": "99655f",
     "lines": [
       "oahu",
+      "honolulu",
       "kaala"
     ],
     "sets": [
@@ -6107,7 +6108,8 @@
     "oldName": "Light Purple",
     "hex": "8b9ace",
     "lines": [
-      "oahu"
+      "oahu",
+      "honolulu"
     ],
     "sets": [
       "new_120",
@@ -6829,6 +6831,7 @@
     "hex": "ecd384",
     "lines": [
       "oahu",
+      "honolulu",
       "kaala"
     ],
     "sets": [
