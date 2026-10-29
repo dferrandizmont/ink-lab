@@ -204,9 +204,15 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _collectionSignature = _signatureOf(scope.settings.state);
     _settingsSubscription = scope.settings.changes.listen(_onSettingsChanged);
     _aiSubscription?.cancel();
-    _aiSubscription = scope.aiSettings.changes.listen(
-      (_) => unawaited(_refreshAiAvailability()),
-    );
+    // Only an on/off or provider change can alter availability; other edits
+    // (temperature, toggles) must not make ML Kit answer another status call.
+    AiSettings seen = scope.aiSettings.value;
+    _aiSubscription = scope.aiSettings.changes.listen((AiSettings next) {
+      final bool relevant =
+          next.enabled != seen.enabled || next.provider != seen.provider;
+      seen = next;
+      if (relevant) unawaited(_refreshAiAvailability());
+    });
     unawaited(_refreshAiAvailability());
     unawaited(_reload());
   }

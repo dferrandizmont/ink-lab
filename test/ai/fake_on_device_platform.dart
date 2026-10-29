@@ -36,6 +36,7 @@ final class FakeOnDevicePlatform implements OnDeviceAiPlatform {
   final List<String> prompts = <String>[];
   int downloads = 0;
   int statusCalls = 0;
+  int cancelDownloads = 0;
 
   @override
   Future<OnDeviceStatus> status() async {
@@ -63,6 +64,11 @@ final class FakeOnDevicePlatform implements OnDeviceAiPlatform {
     )) {
       currentStatus = statusAfterDownload;
     }
+  }
+
+  @override
+  Future<void> cancelDownload() async {
+    cancelDownloads++;
   }
 
   @override

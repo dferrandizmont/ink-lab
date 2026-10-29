@@ -94,16 +94,19 @@ Pulsa una captura para ampliarla.
   y el antiguo) y DecoTime (313 colores, con selección de rotuladores propios,
   porque se vende en sets cerrados).
 - **IA opcional:** o bien **en el móvil** (Gemini Nano, en Android compatible), o
-  bien con **tu propia clave de OpenRouter**. Si no la activas, la app nunca usa
-  la red.
+  bien con **tu propia clave de OpenRouter**. La IA en el móvil usa ML Kit de
+  Google, que envía a Google diagnósticos de uso, nunca tus peticiones, colores
+  ni fotos. Si no la activas, la app nunca usa la red.
 - **Copia de seguridad:** exporta e importa tus colecciones, favoritos, paletas y
   ajustes como texto JSON, sin cuenta.
 
 ## Privacidad
 
-Todo se guarda en el móvil. No hay cuentas, servidor propio, analítica, anuncios
-ni rastreo. La cámara y la galería solo se usan al emparejar una foto o al crear
-una escena desde ella, y la foto nunca sale del dispositivo.
+Todo se guarda en el móvil. No hay cuentas, servidor propio, analítica propia,
+anuncios ni rastreo. Si no activas la IA, la app nunca usa la red. La IA en el
+móvil usa ML Kit de Google, que envía a Google diagnósticos de uso, nunca tus
+peticiones, colores ni fotos. La cámara y la galería solo se usan al emparejar
+una foto o al crear una escena desde ella, y la foto nunca sale del dispositivo.
 
 [Política de privacidad](https://dferrandizmont.github.io/ink-lab/privacidad/) ·
 [Detalle técnico](docs/privacy.md) · Soporte: **dev@mainshai.com**.

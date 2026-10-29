@@ -93,19 +93,23 @@ void main() {
     testWidgets('colour theory is not presented as an AI', (
       WidgetTester tester,
     ) async {
-      await pumpSection(
-        tester,
-        onDevice: FakeOnDevicePlatform(currentStatus: OnDeviceStatus.available),
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.available,
       );
+      await pumpSection(tester, onDevice: platform);
 
       expect(
         _text(tester, 'ai-provider-explanation'),
         l10n.settingsAiExplainColourTheory,
       );
+      // With the AI off the phone has not been asked about its model, so the
+      // on-device option is not listed yet; the copy still mentions it
+      // because this platform can have one.
       expect(
         find.text(l10n.settingsAiEnabledSubtitleColourTheory),
         findsOneWidget,
       );
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsNothing);
       expect(find.textContaining('OpenRouter key'), findsNothing);
       expect(find.text('Local'), findsNothing);
       expect(find.text('Built-in fallback'), findsOneWidget);
@@ -117,9 +121,22 @@ void main() {
       await tester.tap(find.text(l10n.settingsAiEnabled));
       await tester.pumpAndSettle();
       expect(find.text(l10n.settingsAiDisclosureColourTheory), findsOneWidget);
+      expect(platform.statusCalls, 0);
+
+      // Once the user agrees, the phone is asked and the option appears.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('ai-disclosure-confirm')),
+      );
+      await tester.pumpAndSettle();
+      expect(platform.statusCalls, 1);
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsOneWidget);
+      expect(
+        find.text(l10n.settingsAiEnabledSubtitleColourTheory),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('on-device says nothing leaves the phone', (
+    testWidgets('on-device says requests stay and ML Kit sends diagnostics', (
       WidgetTester tester,
     ) async {
       await pumpSection(
@@ -130,7 +147,8 @@ void main() {
 
       expect(
         _text(tester, 'ai-provider-explanation'),
-        'Gemini Nano runs on this phone. Nothing leaves your phone.',
+        'Gemini Nano runs on this phone and your requests stay on it. '
+        "Google's ML Kit sends Google usage diagnostics.",
       );
       expect(find.text(l10n.settingsAiEnabledSubtitleOnDevice), findsOneWidget);
       expect(find.textContaining('OpenRouter key'), findsNothing);
@@ -182,6 +200,7 @@ void main() {
       await pumpSection(
         tester,
         provider: AiProvider.onDevice,
+        enabled: true,
         onDevice: platform,
       );
 
@@ -213,6 +232,7 @@ void main() {
       await pumpSection(
         tester,
         provider: AiProvider.onDevice,
+        enabled: true,
         onDevice: platform,
       );
 
@@ -253,6 +273,7 @@ void main() {
       await pumpSection(
         tester,
         provider: AiProvider.onDevice,
+        enabled: true,
         onDevice: platform,
         settle: false,
       );
@@ -277,6 +298,7 @@ void main() {
       final AppScope scope = await pumpSection(
         tester,
         provider: AiProvider.onDevice,
+        enabled: true,
         onDevice: platform,
       );
       await tester.tap(find.byKey(downloadKey));
@@ -313,6 +335,97 @@ void main() {
       await tester.pumpAndSettle();
       expect(tracker.active, isFalse);
       expect(find.text(l10n.settingsAiOnDeviceReady), findsOneWidget);
+    });
+  });
+
+  group('AI off: the on-device model is never asked', () {
+    testWidgets('opening the section, resuming and Check again make no call', (
+      WidgetTester tester,
+    ) async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.downloadable,
+      );
+      // The stored provider is on-device, so "Check again" is on screen.
+      await pumpSection(
+        tester,
+        provider: AiProvider.onDevice,
+        onDevice: platform,
+      );
+      expect(platform.statusCalls, 0);
+
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(platform.statusCalls, 0);
+
+      final Finder again = find.byKey(
+        const ValueKey<String>('ai-on-device-check-again'),
+      );
+      await tester.ensureVisible(again);
+      await tester.tap(again);
+      await tester.pumpAndSettle();
+      expect(platform.statusCalls, 0);
+      expect(platform.downloads, 0);
+      expect(platform.prompts, isEmpty);
+    });
+
+    testWidgets('a platform without an on-device model never mentions it', (
+      WidgetTester tester,
+    ) async {
+      // The default scope uses UnsupportedOnDeviceAi (iOS, web, desktop).
+      await pumpSection(tester);
+
+      expect(
+        find.text(l10n.settingsAiEnabledSubtitleColourTheoryNoOnDevice),
+        findsOneWidget,
+      );
+      await tester.tap(find.text(l10n.settingsAiEnabled));
+      await tester.pumpAndSettle();
+      expect(
+        find.text(l10n.settingsAiDisclosureColourTheoryNoOnDevice),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('a platform that can have a model mentions it, no calls', (
+      WidgetTester tester,
+    ) async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.unavailable,
+      );
+      await pumpSection(tester, onDevice: platform);
+
+      expect(
+        find.text(l10n.settingsAiEnabledSubtitleColourTheory),
+        findsOneWidget,
+      );
+      await tester.tap(find.text(l10n.settingsAiEnabled));
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.settingsAiDisclosureColourTheory), findsOneWidget);
+      expect(platform.statusCalls, 0);
+      expect(platform.downloads, 0);
+    });
+
+    testWidgets('turning the AI on checks the phone; off again stops checks', (
+      WidgetTester tester,
+    ) async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.available,
+      );
+      final AppScope scope = await pumpSection(tester, onDevice: platform);
+      expect(platform.statusCalls, 0);
+
+      await scope.aiSettings.setEnabled(true);
+      await tester.pumpAndSettle();
+      expect(platform.statusCalls, 1);
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsOneWidget);
+
+      await scope.aiSettings.setEnabled(false);
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsNothing);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(platform.statusCalls, 1);
     });
   });
 
@@ -369,6 +482,7 @@ void main() {
       await pumpSection(
         tester,
         provider: AiProvider.onDevice,
+        enabled: true,
         onDevice: platform,
       );
 
@@ -400,6 +514,7 @@ void main() {
     ) async {
       await pumpSection(
         tester,
+        enabled: true,
         onDevice: FakeOnDevicePlatform(currentStatus: OnDeviceStatus.available),
       );
 
@@ -530,6 +645,59 @@ void main() {
     expect(scope.aiSettings.value.enabled, isTrue);
   });
 
+  testWidgets('with the AI off, test connection and load models are disabled', (
+    WidgetTester tester,
+  ) async {
+    int requests = 0;
+    await pumpSection(
+      tester,
+      provider: AiProvider.openRouter,
+      secrets: InMemorySecretStore({openRouterApiKeyName: _key}),
+      client: MockClient((_) async {
+        requests++;
+        return jsonResponse({'data': <Object>[]});
+      }),
+    );
+
+    for (final String key in <String>['ai-test-connection', 'ai-load-models']) {
+      final Finder button = find.byKey(ValueKey<String>(key));
+      await tester.ensureVisible(button);
+      await tester.tap(button, warnIfMissed: false);
+      await tester.pumpAndSettle();
+    }
+
+    expect(requests, 0);
+  });
+
+  testWidgets('with the AI on, test connection reaches the provider', (
+    WidgetTester tester,
+  ) async {
+    int requests = 0;
+    await pumpSection(
+      tester,
+      provider: AiProvider.openRouter,
+      enabled: true,
+      secrets: InMemorySecretStore({openRouterApiKeyName: _key}),
+      client: MockClient((_) async {
+        requests++;
+        return jsonResponse({'data': <Object>[]});
+      }),
+    );
+
+    final Finder button = find.byKey(
+      const ValueKey<String>('ai-test-connection'),
+    );
+    await tester.ensureVisible(button);
+    await tester.tap(button);
+    await tester.pumpAndSettle();
+
+    expect(requests, 1);
+    expect(
+      find.byKey(const ValueKey<String>('ai-connection-ok')),
+      findsOneWidget,
+    );
+  });
+
   /// A catalog with free, paid and router entries (variable pricing).
   http.Client catalogClient() => MockClient(
     (_) async => jsonResponse({
@@ -563,6 +731,7 @@ void main() {
     final scope = await pumpSection(
       tester,
       provider: AiProvider.openRouter,
+      enabled: true,
       secrets: InMemorySecretStore({openRouterApiKeyName: _key}),
       client: catalogClient(),
     );

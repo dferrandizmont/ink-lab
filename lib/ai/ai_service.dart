@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:http/http.dart' as http;
 
 import '../core/palette_advisor.dart' as core;
@@ -116,11 +118,37 @@ final class AiService {
     _secrets = secrets;
     _local = localAdvisor ?? const PaletteGenerator();
     _clientFactory = clientFactory ?? _defaultClientFactory;
-    _onDevice = onDevice ?? defaultOnDeviceAiPlatform();
+    // Whatever platform is used, nothing reaches it while the AI is off: on
+    // Android every call into ML Kit stores diagnostics and schedules an
+    // upload, and the app promises not to use the network unless asked.
+    final OnDeviceAiPlatform platform = onDevice ?? defaultOnDeviceAiPlatform();
+    onDevicePossible = platform is! UnsupportedOnDeviceAi;
+    _onDevice = _GatedOnDevicePlatform(
+      platform,
+      () => _aiSettings.value.enabled,
+    );
     onDeviceDownload = OnDeviceDownloadTracker(
       _onDevice,
       noProgressAfter: onDeviceNoProgressAfter,
     );
+    // Turning the AI off stops a download already under way: the gate only
+    // refuses new calls, and ML Kit would otherwise keep fetching the model.
+    _enabledWas = _aiSettings.value.enabled;
+    _settingsSubscription = _aiSettings.changes.listen((AiSettings settings) {
+      final bool was = _enabledWas;
+      _enabledWas = settings.enabled;
+      if (was && !settings.enabled) onDeviceDownload.cancel();
+    });
+  }
+
+  late bool _enabledWas;
+  StreamSubscription<AiSettings>? _settingsSubscription;
+
+  /// Stops listening to the settings. Tests and owners that discard the
+  /// service call it; the app keeps one service for its whole life.
+  void dispose() {
+    unawaited(_settingsSubscription?.cancel());
+    _settingsSubscription = null;
   }
 
   late final AiSettingsRepository _aiSettings;
@@ -129,8 +157,15 @@ final class AiService {
   late final AiHttpClientFactory _clientFactory;
   late final OnDeviceAiPlatform _onDevice;
 
-  /// The state of the on-device model on this phone. Never throws, and never
-  /// touches the network: the platform answers locally.
+  /// Whether this build has an on-device model path at all (Android), decided
+  /// from the platform alone: it never asks the operating system, so it is
+  /// safe to read while the AI is off. Whether the phone really supports it is
+  /// only known from [onDeviceStatus], once the AI is on.
+  late final bool onDevicePossible;
+
+  /// The state of the on-device model on this phone. Never throws. While the
+  /// AI is off it answers [OnDeviceStatus.unavailable] without asking the
+  /// platform.
   Future<OnDeviceStatus> onDeviceStatus() => _onDevice.status();
 
   /// The on-device model download, owned by the app rather than by a screen,
@@ -193,6 +228,10 @@ final class AiService {
   /// The returned result carries no key: failures are mapped to a typed
   /// [PaletteFailureReason] and a key-free message.
   Future<AiConnectionResult> testConnection() async {
+    // With the AI off nothing leaves the phone: no key read, no request.
+    if (!_aiSettings.value.enabled) {
+      return AiConnectionFailure(PaletteFailureReason.disabled);
+    }
     final String? key = await _readKey();
     if (key == null) {
       return AiConnectionFailure(PaletteFailureReason.missingKey);
@@ -211,10 +250,14 @@ final class AiService {
   /// Loads the provider catalog, filtered by [filter], for the model picker.
   ///
   /// Runs with the stored key; when none is stored it reports
-  /// [PaletteFailureReason.missingKey] without touching the network.
+  /// [PaletteFailureReason.missingKey] without touching the network. While the
+  /// AI is off it reports [PaletteFailureReason.disabled] and does nothing.
   Future<AiModelsResult> loadModels([
     AiModelFilter filter = AiModelFilter.free,
   ]) async {
+    if (!_aiSettings.value.enabled) {
+      return AiModelsFailure(PaletteFailureReason.disabled);
+    }
     final String? key = await _readKey();
     if (key == null) return AiModelsFailure(PaletteFailureReason.missingKey);
     try {
@@ -270,3 +313,39 @@ PaletteFailureReason _mapCoreReason(core.PaletteFailureReason reason) =>
       core.PaletteFailureReason.invalidBaseColor =>
         PaletteFailureReason.noSuggestions,
     };
+
+/// Lets calls through to [_inner] only while the AI is enabled.
+///
+/// While it is off, [status] reports [OnDeviceStatus.unavailable], [download]
+/// fails at once and [generate] throws, all without touching the platform.
+final class _GatedOnDevicePlatform implements OnDeviceAiPlatform {
+  const _GatedOnDevicePlatform(this._inner, this._enabled);
+
+  final OnDeviceAiPlatform _inner;
+  final bool Function() _enabled;
+
+  @override
+  Future<OnDeviceStatus> status() async =>
+      _enabled() ? _inner.status() : OnDeviceStatus.unavailable;
+
+  @override
+  Stream<OnDeviceDownloadEvent> download() => _enabled()
+      ? _inner.download()
+      : Stream<OnDeviceDownloadEvent>.value(
+          const OnDeviceDownloadFailed('AI is off.'),
+        );
+
+  /// Never gated: stopping a download must work precisely while the AI is off.
+  @override
+  Future<void> cancelDownload() => _inner.cancelDownload();
+
+  @override
+  Future<String> generate(
+    String prompt, {
+    Duration timeout = defaultOnDeviceTimeout,
+  }) => _enabled()
+      ? _inner.generate(prompt, timeout: timeout)
+      : Future<String>.error(
+          const OnDeviceAiException(OnDeviceGenerateFailure.unavailable),
+        );
+}

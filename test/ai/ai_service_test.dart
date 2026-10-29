@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -9,6 +10,7 @@ import 'package:ink_lab/core/palette_advisor.dart' show PaletteAdvisorRequest;
 import 'package:ink_lab/data/data.dart';
 
 import 'ai_test_support.dart';
+import 'fake_on_device_platform.dart';
 
 const String _key = 'sk-or-v1-abcdef0123456789abcdef0123456789';
 
@@ -282,6 +284,119 @@ void main() {
     });
   });
 
+  group('with the AI off', () {
+    test('testConnection and loadModels make no request', () async {
+      var requests = 0;
+      final service = serviceFor(
+        repository(value: settings(enabled: false)),
+        InMemorySecretStore({openRouterApiKeyName: _key}),
+        MockClient((_) async {
+          requests++;
+          return jsonResponse({'data': <Object>[]});
+        }),
+      );
+
+      final connection = await service.testConnection();
+      final models = await service.loadModels();
+
+      expect(
+        (connection as AiConnectionFailure).reason,
+        PaletteFailureReason.disabled,
+      );
+      expect((models as AiModelsFailure).reason, PaletteFailureReason.disabled);
+      expect(requests, 0);
+    });
+
+    test('they read no key either', () async {
+      final service = serviceFor(
+        repository(value: settings(enabled: false)),
+        _CountingSecretStore(),
+        MockClient((_) async => jsonResponse({'data': <Object>[]})),
+      );
+
+      await service.testConnection();
+      await service.loadModels();
+
+      expect(_CountingSecretStore.reads, 0);
+    });
+
+    test('they work again once the AI is turned on', () async {
+      final repo = repository(value: settings(enabled: false));
+      var requests = 0;
+      final service = serviceFor(
+        repo,
+        InMemorySecretStore({openRouterApiKeyName: _key}),
+        MockClient((_) async {
+          requests++;
+          return jsonResponse({'data': <Object>[]});
+        }),
+      );
+      await service.testConnection();
+      expect(requests, 0);
+
+      await repo.replace(settings(enabled: true));
+
+      expect(await service.testConnection(), isA<AiConnectionOk>());
+      expect(requests, 1);
+    });
+  });
+
+  group('turning the AI off during a model download', () {
+    test('cancels the tracker and tells the platform', () async {
+      final repo = repository(value: settings(provider: AiProvider.onDevice));
+      final live = StreamController<OnDeviceDownloadEvent>();
+      addTearDown(live.close);
+      final platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.downloadable,
+      )..downloadController = live;
+      final service = AiService(
+        aiSettings: repo,
+        secrets: InMemorySecretStore(),
+        onDevice: platform,
+      );
+      addTearDown(service.dispose);
+
+      service.onDeviceDownload.start();
+      await Future<void>.delayed(Duration.zero);
+      expect(service.onDeviceDownload.active, isTrue);
+
+      // An unrelated edit while on leaves the download alone.
+      await repo.replace(settings(provider: AiProvider.onDevice));
+      await Future<void>.delayed(Duration.zero);
+      expect(service.onDeviceDownload.active, isTrue);
+      expect(platform.cancelDownloads, 0);
+
+      await repo.replace(
+        settings(enabled: false, provider: AiProvider.onDevice),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(service.onDeviceDownload.active, isFalse);
+      expect(platform.cancelDownloads, 1);
+      expect(live.hasListener, isFalse);
+    });
+
+    test('cancelling with no download asks ML Kit nothing', () async {
+      final repo = repository(value: settings(provider: AiProvider.onDevice));
+      final platform = FakeOnDevicePlatform();
+      final service = AiService(
+        aiSettings: repo,
+        secrets: InMemorySecretStore(),
+        onDevice: platform,
+      );
+      addTearDown(service.dispose);
+
+      await repo.replace(
+        settings(enabled: false, provider: AiProvider.onDevice),
+      );
+      await Future<void>.delayed(Duration.zero);
+
+      expect(platform.cancelDownloads, 0);
+      expect(platform.statusCalls, 0);
+      expect(platform.downloads, 0);
+    });
+  });
+
   group('loadModels', () {
     test('returns the filtered catalog', () async {
       final service = serviceFor(
@@ -345,4 +460,21 @@ void main() {
       );
     });
   });
+}
+
+/// A secret store that counts reads, to prove the key is never touched.
+final class _CountingSecretStore implements SecretStore {
+  static int reads = 0;
+
+  @override
+  Future<String?> read(String name) async {
+    reads++;
+    return _key;
+  }
+
+  @override
+  Future<void> write(String name, String value) async {}
+
+  @override
+  Future<void> delete(String name) async {}
 }

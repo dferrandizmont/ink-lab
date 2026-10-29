@@ -1,20 +1,22 @@
 <!--
-No es asesoramiento jurídico. Texto redactado el 29-oct-2026 contra el código de esa fecha (docs/privacy.md es la
+No es asesoramiento jurídico. Texto redactado el 29-oct-2026 y actualizado el 30-oct-2026 contra el código de esa fecha (docs/privacy.md es la
 fuente de verdad técnica); conviene que lo revise un profesional antes del lanzamiento en las tiendas.
 El generador HTML (web/legal/md2html.py) omite este comentario.
 -->
 
 # Política de privacidad de Ink Lab
 
-Última actualización: 29 de octubre de 2026
+Última actualización: 30 de octubre de 2026
 
 Ink Lab es una app para quien dibuja con rotuladores de alcohol: consulta las muestras de color, empareja el color de
 una foto con un rotulador de tu colección y construye paletas con teoría del color. Es una app independiente: no está
 creada, revisada ni respaldada por Ohuhu, DecoTime ni ninguna otra marca.
 
-Resumen: **no tienes cuenta, no hay servidor propio y todo se queda en tu móvil.** La app es totalmente gratuita y de
-código abierto, y no incluye analítica, anuncios ni rastreo. Solo envía datos fuera del móvil si **tú** activas la IA
-con tu propia clave de OpenRouter, y entonces se envía justo lo que se explica más abajo.
+Resumen: **no tienes cuenta, no hay servidor propio y tus datos se quedan en tu móvil.** La app es totalmente gratuita
+y de código abierto, y no incluye analítica propia, anuncios ni rastreo. **Si no activas la IA, la app no usa la red.**
+Si la activas, en Android la IA en el móvil usa ML Kit de Google, que envía a Google datos de diagnóstico y de uso
+(nunca tus peticiones, tus colores ni tus fotos); y si eliges OpenRouter con tu propia clave, se envía justo lo que se
+explica más abajo.
 
 ## 1. Responsable del tratamiento
 
@@ -49,35 +51,51 @@ mensaje...) queda fuera de la app. Ten en cuenta que, según tu sistema, el port
 teclado o para otras apps.
 
 ### IA opcional
-Está **apagada de serie**. Con ella apagada, la app no abre ninguna conexión de red. Si la activas, antes te enseña qué
-saldría del móvil y puedes elegir entre:
+Está **apagada de serie** (Ajustes → Asistente de IA → Sugerir con IA). Con ella apagada, la app no abre ninguna
+conexión de red y no llama a ML Kit. Si la activas, antes te enseña qué saldría del móvil y puedes elegir entre:
 
 - **Teoría del color (motor local):** sin IA y sin red.
-- **En el móvil (Gemini Nano, en Android compatible):** tu escenario y los códigos de color se procesan en tu teléfono y
-  Ink Lab no los envía a ningún sitio. Si el modelo no está en el móvil, Android lo descarga una vez a través de los
-  servicios de Google; esa descarga y el modelo se rigen por las condiciones de Google.
-- **OpenRouter con tu clave:** al pulsar «Sugerir con IA», la app envía, **desde tu móvil directamente a
-  `openrouter.ai`, por HTTPS y con tu propia clave y tu propia cuenta**: la marca y el escenario o modo que has elegido,
-  el código, el nombre y el color hex del rotulador base, los códigos, nombres y colores hex de los rotuladores
-  candidatos de tu colección, el tamaño de la paleta y los ajustes de generación (modelo, temperatura y límite de
-  longitud). Para mostrarte los modelos disponibles, la app consulta el catálogo de OpenRouter (con tu clave, si la has
-  guardado). **Nunca** se envían fotos, tus favoritos, tus paletas guardadas ni identificadores tuyos. OpenRouter y el
-  proveedor del modelo que elijas reciben esa petición y aplican **sus propias** condiciones y políticas de privacidad,
-  que puedes leer en https://openrouter.ai/privacy. El desarrollador no la ve, no pasa por ningún servidor suyo y no se
-  guarda.
+- **En el móvil (Gemini Nano, en Android compatible, mediante ML Kit de Google):** tu escenario y los códigos de color
+  se procesan en tu teléfono y no se envían a ningún sitio. Al activar la IA, la app usa ML Kit para comprobar si Gemini
+  Nano está disponible y, si eliges esta opción, para descargarlo y generar las sugerencias. Al usarse, **ML Kit envía a
+  Google**, por HTTPS y en lotes (más o menos una vez al día), datos de diagnóstico y de uso: información del
+  dispositivo (fabricante, modelo, versión y compilación del sistema), de la app (nombre del paquete y versión),
+  identificadores del dispositivo y otros, incluidos identificadores por instalación, métricas de rendimiento, la
+  configuración de la API, el tamaño de la entrada y de la salida, la versión de la función, el tipo de evento, códigos
+  de error y los idiomas configurados. Google indica que los usa para diagnóstico y analítica de uso y que no los
+  transfiere a terceros (https://developers.google.com/ml-kit/android-data-disclosure). Ese envío no incluye el
+  contenido de tus peticiones, tus colores ni tus fotos, solo su tamaño. El desarrollador no recibe esos datos: los trata
+  Google según sus propias condiciones y su política de privacidad (https://policies.google.com/privacy). Si el modelo
+  no está en el móvil, Android lo descarga una vez a través de los servicios de Google; esa descarga y el modelo se
+  rigen por las condiciones de Google. En iPhone no hay IA en el móvil ni ML Kit.
+- **OpenRouter con tu clave:** solo si eliges OpenRouter, guardas tu clave y pulsas «Sugerir con IA» en Paleta, la app
+  envía, **desde tu móvil directamente a `openrouter.ai`, por HTTPS y con tu propia clave y tu propia cuenta**: la marca
+  (identificador y nombre), el modo de paleta, el nombre de la escena (en inglés), el código y el nombre del rotulador
+  base (si lo hay) y si está fijado, el tamaño de la paleta, los códigos y colores hex de los rotuladores candidatos de
+  tu colección (no sus nombres), los ajustes de generación (modelo, temperatura y límite de longitud), unas
+  instrucciones fijas de la app y la cabecera `X-Title: Ink Lab`. Para mostrarte los modelos disponibles, la app
+  consulta el catálogo de OpenRouter (con tu clave, si la has guardado). **Nunca** se envían fotos (la petición indica
+  que no lleva imagen y la app no tiene forma de adjuntarla), tus favoritos, tus paletas guardadas ni identificadores
+  tuyos. Como en cualquier conexión a internet, OpenRouter y el proveedor del modelo ven la dirección IP de tu
+  dispositivo. Reciben esa petición y aplican **sus propias** condiciones y políticas de privacidad, también sobre cuánto
+  tiempo la conservan, que puedes leer en https://openrouter.ai/privacy. El desarrollador no la ve, no pasa por ningún
+  servidor suyo y la app no la guarda.
 
 Tu clave de OpenRouter se guarda en el almacén seguro del sistema (Android Keystore o Keychain de iOS, solo en este
 dispositivo). No se sube al desarrollador, no se incluye en las copias de seguridad y puedes borrarla en Ajustes cuando
 quieras. Si la IA falla, la app vuelve a la teoría del color.
 
 ### Permisos
-La app pide el permiso de **cámara o fotos** solo cuando usas «Emparejar» o «Escena desde una foto», y declara el acceso a **red** solo para la IA
-opcional con OpenRouter. No pide ubicación, contactos, calendario, micrófono ni notificaciones, y no usa el
-identificador publicitario.
+La app pide el permiso de **cámara o fotos** solo cuando usas «Emparejar» o «Escena desde una foto». En Android declara
+el acceso a **internet** y al **estado de la red** (`INTERNET` y `ACCESS_NETWORK_STATE`), que solo se usan con la IA
+activada: para la IA opcional con OpenRouter y para los diagnósticos que ML Kit envía a Google cuando se usa la IA en el
+móvil. No pide ubicación, contactos, calendario, micrófono ni notificaciones, y no usa el identificador publicitario.
 
 ### Datos que NO se tratan
 - No pedimos ni guardamos nombre, correo, teléfono, edad ni ningún dato de cuenta: no hay cuentas.
-- No hay analítica, ni anuncios, ni publicidad personalizada, ni rastreo entre apps, ni informes de errores.
+- El desarrollador no usa analítica ni informes de errores, y no hay anuncios, publicidad personalizada ni rastreo
+  entre apps. La única excepción son los datos de diagnóstico y de uso que ML Kit envía a Google cuando usas la IA en
+  el móvil (ver «IA opcional»); el desarrollador no los recibe.
 - No recibimos tus fotos, tus colecciones, tus paletas ni tu clave.
 
 ### Si nos escribes
@@ -91,19 +109,22 @@ datos de prueba.
 |---|---|---|
 | Colecciones, favoritos, paletas y ajustes en tu móvil | Que uses la app y conserves tu trabajo | No los recibimos: se quedan en tu dispositivo, bajo tu control |
 | Foto de «Emparejar» o de «Escena desde una foto» | Hallar los rotuladores más parecidos | Se procesa solo en tu móvil, a petición tuya; no la recibimos |
+| Diagnósticos de ML Kit (solo con la IA en el móvil, en Android) | Diagnóstico y analítica de uso del SDK, según Google | Se envían solo si decides activar la IA opcional; los trata Google como proveedor de ML Kit, bajo sus propias condiciones y su política de privacidad; no los recibimos |
 | IA con OpenRouter (opcional) | Generar sugerencias de paleta | Tu consentimiento al activarla y usar tu propia clave; el tratamiento lo hace OpenRouter bajo sus condiciones |
 | Correos de soporte | Responder a tu consulta | Tu solicitud y nuestro interés legítimo en atenderla (art. 6.1.f) |
 
 No tomamos decisiones automatizadas ni elaboramos perfiles sobre ti.
 
 ## 4. Quién recibe los datos
-La app no transmite datos al desarrollador ni a terceros por su cuenta. Si activas la IA con OpenRouter, la petición
-descrita arriba la reciben OpenRouter y el proveedor del modelo que elijas, en tu nombre y con tu clave. Si envías un
+La app no transmite datos al desarrollador. Si activas la IA, en Android **Google** recibe los datos de diagnóstico y
+de uso que envía ML Kit al usarse la IA en el móvil. Si usas la IA con OpenRouter, la petición descrita arriba la
+reciben **OpenRouter** y el **proveedor del modelo** que elijas, en tu nombre y con tu clave. Si envías un
 correo de soporte, lo recibe el titular en dev@mainshai.com mediante el servicio de correo que elijas.
 
 ## 5. Transferencias internacionales
 El desarrollador no realiza transferencias de datos. Si usas la IA con OpenRouter, la petición va al proveedor que
-elijas, que puede tratarla en otras regiones y bajo sus propias condiciones. Los demás servicios que decidas utilizar
+elijas, que puede tratarla en otras regiones y bajo sus propias condiciones. Google puede tratar los diagnósticos de ML Kit en
+otros países, según sus propias condiciones. Los demás servicios que decidas utilizar
 (correo, nube, destino de un texto copiado) se rigen por sus propias condiciones.
 
 ## 6. Cuánto tiempo se conservan
@@ -120,7 +141,8 @@ portabilidad** escribiendo a dev@mainshai.com. Te responderemos en el plazo de u
 
 No recibimos los datos guardados en tu móvil, así que no podemos verlos ni borrarlos por ti. Puedes borrarlos
 desinstalando la app o borrando sus datos desde los ajustes del sistema, y llevártelos con «Exportar copia». Para lo que
-hayas enviado a OpenRouter, ejerce tus derechos ante OpenRouter y el proveedor del modelo.
+hayas enviado a OpenRouter, ejerce tus derechos ante OpenRouter y el proveedor del modelo; para los diagnósticos de
+ML Kit, ante Google.
 
 Si crees que no hemos tratado bien tus datos, puedes reclamar ante la Agencia Española de Protección de Datos:
 https://www.aepd.es
@@ -128,11 +150,11 @@ https://www.aepd.es
 ## 8. Menores
 
 La app no está dirigida a menores de 13 años (o la edad mínima equivalente en tu país). No pide la edad ni recoge datos
-personales de nadie, tampoco de menores: no hay cuentas y todo se queda en el dispositivo. La IA con OpenRouter exige
+personales de nadie, tampoco de menores: no hay cuentas y tus datos se quedan en el dispositivo. La IA con OpenRouter exige
 una cuenta propia en un tercero, que los menores no deben crear sin permiso de sus padres o tutores.
 
 ## 9. Seguridad
-No hay servidor del desarrollador ni transmisión de datos desde la app salvo la IA opcional. Tus datos están en el
+No hay servidor del desarrollador ni transmisión de datos desde la app salvo con la IA opcional activada. Tus datos están en el
 espacio privado de la app; tu clave, en el Keystore o el Keychain; las conexiones a OpenRouter usan HTTPS y no siguen
 redirecciones. Proteger tu móvil (bloqueo de pantalla, cifrado, sin root ni jailbreak) es cosa tuya. El código es
 público y cualquiera puede comprobar lo que hace.
@@ -153,6 +175,6 @@ dev@mainshai.com
 Borra esta sección antes de publicar (el generador HTML la omite). Decisiones ya tomadas en este texto, por si quieres
 cambiarlas: titular Daniel Mont Ferrandiz y correo `dev@mainshai.com`; conservación de correos «un año desde la última
 respuesta»; la fecha de última actualización es la de la redacción; la IA en el móvil se describe como Gemini Nano en Android
-(iOS aún no la tiene, véase `docs/privacy.md`). Publica la URL (`docs/legal/LEEME.md`) y ponla en las
+mediante ML Kit, con sus diagnósticos a Google (iOS aún no la tiene, véase `docs/privacy.md`). Publica la URL (`docs/legal/LEEME.md`) y ponla en las
 fichas de las tiendas; comprueba que coincide con «Seguridad de los datos» (Play) y «Privacidad de la app» (Apple). La
 versión inglesa (`politica-privacidad.en.md`) es una traducción de cortesía; manda la española.

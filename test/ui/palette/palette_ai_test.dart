@@ -75,20 +75,23 @@ MockClient _echoCandidateClient({
 });
 
 /// Pumps the palette page with the on-device provider and no key at all.
-Future<void> pumpOnDevice(
+Future<AppScope> pumpOnDevice(
   WidgetTester tester, {
   required FakeOnDevicePlatform platform,
+  bool enabled = true,
 }) async {
   final secrets = InMemorySecretStore();
   final repo = StoredAiSettingsRepository(InMemoryKeyValueStore());
-  await repo.replace(AiSettings(enabled: true, provider: AiProvider.onDevice));
+  await repo.replace(
+    AiSettings(enabled: enabled, provider: AiProvider.onDevice),
+  );
   final service = AiService(
     aiSettings: repo,
     secrets: secrets,
     clientFactory: () => throw StateError('on-device must not use HTTP'),
     onDevice: platform,
   );
-  await pumpPalette(
+  return pumpPalette(
     tester,
     secrets: secrets,
     aiSettings: repo,
@@ -97,6 +100,45 @@ Future<void> pumpOnDevice(
 }
 
 void main() {
+  testWidgets('AI off: opening the palette never reaches the on-device model', (
+    WidgetTester tester,
+  ) async {
+    final FakeOnDevicePlatform platform = FakeOnDevicePlatform();
+    await pumpOnDevice(tester, platform: platform, enabled: false);
+    await tester.pumpAndSettle();
+
+    expect(_aiButton, findsNothing);
+    expect(platform.statusCalls, 0);
+    expect(platform.downloads, 0);
+    expect(platform.prompts, isEmpty);
+  });
+
+  testWidgets('settings edits other than on/off or provider do not re-probe', (
+    WidgetTester tester,
+  ) async {
+    final FakeOnDevicePlatform platform = FakeOnDevicePlatform();
+    final AppScope scope = await pumpOnDevice(tester, platform: platform);
+    await tester.pumpAndSettle();
+    final int initial = platform.statusCalls;
+    expect(initial, greaterThan(0));
+
+    await scope.aiSettings.replace(
+      scope.aiSettings.value.copyWith(temperature: 0.2),
+    );
+    await tester.pumpAndSettle();
+    expect(platform.statusCalls, initial);
+
+    await scope.aiSettings.replace(
+      scope.aiSettings.value.copyWith(provider: AiProvider.local),
+    );
+    await tester.pumpAndSettle();
+    await scope.aiSettings.replace(
+      scope.aiSettings.value.copyWith(provider: AiProvider.onDevice),
+    );
+    await tester.pumpAndSettle();
+    expect(platform.statusCalls, greaterThan(initial));
+  });
+
   testWidgets('on-device: the button needs a ready model, not a key', (
     WidgetTester tester,
   ) async {

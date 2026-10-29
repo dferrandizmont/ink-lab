@@ -181,7 +181,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiExplainOnDevice =>
-      'Gemini Nano se ejecuta en este teléfono. Nada sale de tu teléfono.';
+      'Gemini Nano funciona en este teléfono y tus peticiones no salen de él. ML Kit de Google envía a Google diagnósticos de uso.';
 
   @override
   String get settingsAiExplainOpenRouter =>
@@ -269,15 +269,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiDisclosure =>
-      'Con esto activado, cuando uses una sugerencia con OpenRouter, la app envía tu escenario, el código, el nombre y el valor hex del color base y la lista de colores candidatos a openrouter.ai y al proveedor del modelo, con tu propia clave de API. Las fotos nunca se envían: esta función no sube imágenes. No se envía nada mientras este interruptor esté desactivado.';
+      'Con esto activado, cuando pidas una sugerencia a OpenRouter, la app envía a openrouter.ai y al proveedor del modelo, con tu propia clave de API: la marca, el modo de paleta y la escena, el código y el nombre del rotulador base y si está fijado, el tamaño de la paleta, los códigos y colores hex de los rotuladores candidatos, los ajustes del modelo y las instrucciones fijas de la app. Las fotos nunca se envían: esta función no sube imágenes. En Android, la app también puede preguntar a ML Kit de Google si Gemini Nano está disponible; ML Kit envía a Google diagnósticos de uso. No se envía nada mientras este interruptor esté desactivado.';
 
   @override
   String get settingsAiDisclosureColourTheory =>
-      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y nada sale de tu teléfono. Elige En el dispositivo u OpenRouter para usar una IA.';
+      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu teléfono. En Android, la app puede preguntar a ML Kit de Google si Gemini Nano está disponible; ML Kit envía a Google diagnósticos de uso, nunca tus colores ni fotos. Elige En el dispositivo u OpenRouter para usar una IA.';
 
   @override
   String get settingsAiDisclosureColourTheoryNoOnDevice =>
-      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y nada sale de tu teléfono. Elige OpenRouter para usar una IA.';
+      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu teléfono. En Android, la app puede preguntar a ML Kit de Google si Gemini Nano está disponible; ML Kit envía a Google diagnósticos de uso, nunca tus colores ni fotos. Elige OpenRouter para usar una IA.';
 
   @override
   String get settingsAiDisclosureConfirm => 'Activar';
@@ -287,14 +287,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiDisclosureOnDevice =>
-      'Las peticiones En el dispositivo (Gemini Nano) las responde el modelo de este teléfono. Tu escenario y los códigos de color nunca salen de él y no hace falta clave.';
+      'Las peticiones En el dispositivo (Gemini Nano) las responde el modelo de este teléfono: tu escenario y los códigos de color nunca salen de él y no hace falta clave. Para comprobar, descargar y usar el modelo, la app usa ML Kit de Google, que envía a Google diagnósticos de uso (modelo del móvil, versión de la app, identificadores de instalación, errores y tamaños), nunca tus peticiones, colores ni fotos. No se envía nada mientras este interruptor esté desactivado.';
 
   @override
   String get settingsAiOnDeviceName => 'IA en el dispositivo (Gemini Nano)';
 
   @override
   String get settingsAiOnDevicePrivacy =>
-      'Las peticiones en el dispositivo nunca salen de tu teléfono.';
+      'Tus peticiones no salen de este teléfono. ML Kit envía a Google diagnósticos de uso, nunca tus peticiones, colores ni fotos.';
 
   @override
   String get settingsAiOnDeviceDownloadable =>

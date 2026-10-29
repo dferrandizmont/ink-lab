@@ -91,16 +91,20 @@ Tap a screenshot to enlarge it.
   and legacy codes) and DecoTime (313 colours, with an owned-markers
   selection, as it is sold in fixed sets).
 - **Optional AI:** either **on the device** (Gemini Nano, on compatible Android
-  phones) or with **your own OpenRouter key**. If you do not turn it on, the app
-  never uses the network.
+  phones, through Google's ML Kit, which sends Google usage diagnostics but never
+  your prompts, colours or photos) or with **your own OpenRouter key**. If you
+  do not turn it on, the app never uses the network.
 - **Backup:** export and import your collections, favourites, palettes and
   settings as JSON text, with no account.
 
 ## Privacy
 
 Everything is stored on the phone. There are no accounts, no server of ours, no
-analytics, no ads and no tracking. The camera and the gallery are only used to
-match a photo or to make a scene from one, and the photo never leaves the device.
+analytics of ours, no ads and no tracking. If you do not turn on AI, the app
+never uses the network. On-device AI uses Google's ML Kit, which sends Google
+usage diagnostics, never your prompts, colours or photos. The camera and the
+gallery are only used to match a photo or to make a scene from one, and the
+photo never leaves the device.
 
 [Privacy policy](https://dferrandizmont.github.io/ink-lab/privacidad/en/) ·
 [Technical details](docs/privacy.en.md) · Support: **dev@mainshai.com**.

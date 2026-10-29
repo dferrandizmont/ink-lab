@@ -112,7 +112,7 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
     }
     final String disclosure = switch (_effectiveProvider) {
       AiProvider.local =>
-        _onDeviceOffered
+        _onDeviceMentioned
             ? context.l10n.settingsAiDisclosureColourTheory
             : context.l10n.settingsAiDisclosureColourTheoryNoOnDevice,
       AiProvider.onDevice => context.l10n.settingsAiDisclosureOnDevice,
@@ -184,6 +184,13 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
       _controller.onDeviceSupported ||
       _controller.provider == AiProvider.onDevice;
 
+  /// Whether the copy should mention the on-device option. With the AI off
+  /// the phone is not asked, so the platform's capability decides; with it on,
+  /// the probed status does.
+  bool get _onDeviceMentioned => _controller.enabled
+      ? _onDeviceOffered
+      : widget.scope.aiService.onDevicePossible || _onDeviceOffered;
+
   @override
   Widget build(BuildContext context) {
     final bool onDeviceOffered = _onDeviceOffered;
@@ -198,7 +205,7 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
           label: context.l10n.settingsAiEnabled,
           subtitle: switch (selectedProvider) {
             AiProvider.local =>
-              onDeviceOffered
+              _onDeviceMentioned
                   ? context.l10n.settingsAiEnabledSubtitleColourTheory
                   : context
                         .l10n
@@ -466,7 +473,9 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
                   ? context.l10n.settingsAiTestingConnection
                   : context.l10n.settingsAiTestConnection,
               onPressed:
-                  _controller.testingConnection || !_controller.hasStoredKey
+                  !_controller.enabled ||
+                      _controller.testingConnection ||
+                      !_controller.hasStoredKey
                   ? null
                   : _controller.testConnection,
             ),
@@ -515,7 +524,9 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
                   label: context.l10n.settingsAiModelsLoad,
                   icon: InkIcons.download,
                   onPressed:
-                      _controller.loadingModels || !_controller.hasStoredKey
+                      !_controller.enabled ||
+                          _controller.loadingModels ||
+                          !_controller.hasStoredKey
                       ? null
                       : _controller.loadModels,
                 ),

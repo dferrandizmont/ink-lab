@@ -118,6 +118,26 @@ final class OnDeviceDownloadTracker extends ChangeNotifier {
     }
   }
 
+  /// Stops the running download (for example when the AI is turned off): the
+  /// subscription goes, the platform is told to stop and the state is cleared.
+  /// Does nothing when no download runs.
+  void cancel() {
+    if (!_active) return;
+    _active = false;
+    _failed = false;
+    _stalled = false;
+    _timer?.cancel();
+    _timer = null;
+    final StreamSubscription<OnDeviceDownloadEvent>? subscription =
+        _subscription;
+    _subscription = null;
+    unawaited(subscription?.cancel());
+    unawaited(_platform.cancelDownload());
+    final Completer<void>? done = _done;
+    if (done != null && !done.isCompleted) done.complete();
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _timer?.cancel();

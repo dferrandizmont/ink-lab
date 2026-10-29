@@ -83,6 +83,21 @@ void main() {
       expect(text, '{"palette":[]}');
     });
 
+    test('cancelDownload sends only cancelDownload and never throws', () async {
+      final List<String> calls = <String>[];
+      messenger.setMockMethodCallHandler(_methods, (MethodCall call) async {
+        calls.add(call.method);
+        return null;
+      });
+      await MethodChannelOnDeviceAi().cancelDownload();
+      expect(calls, <String>['cancelDownload']);
+
+      messenger.setMockMethodCallHandler(_methods, (MethodCall call) async {
+        throw PlatformException(code: 'boom');
+      });
+      await MethodChannelOnDeviceAi().cancelDownload();
+    });
+
     test('generate maps native error codes to typed failures', () async {
       for (final MapEntry<String, OnDeviceGenerateFailure> entry
           in <String, OnDeviceGenerateFailure>{
@@ -471,10 +486,15 @@ void main() {
   });
 
   group('AiSettingsController on-device state', () {
-    AiSettingsController controllerOver(FakeOnDevicePlatform platform) {
+    AiSettingsController controllerOver(
+      FakeOnDevicePlatform platform, {
+      bool enabled = true,
+    }) {
       final StoredAiSettingsRepository repo = StoredAiSettingsRepository(
         InMemoryKeyValueStore(),
       );
+      // The platform is only asked while the AI is on.
+      if (enabled) unawaited(repo.setEnabled(true));
       final InMemorySecretStore secrets = InMemorySecretStore();
       final AiService service = AiService(
         aiSettings: repo,
@@ -541,5 +561,175 @@ void main() {
         expect(controller.onDeviceStatus, OnDeviceStatus.downloadable);
       },
     );
+
+    test(
+      'AI off: initialize makes no call and reports it unavailable',
+      () async {
+        final FakeOnDevicePlatform platform = FakeOnDevicePlatform();
+        final AiSettingsController controller = controllerOver(
+          platform,
+          enabled: false,
+        );
+        addTearDown(controller.dispose);
+
+        await controller.initialize();
+        await controller.refreshOnDevice();
+        await controller.downloadOnDevice();
+
+        expect(platform.statusCalls, 0);
+        expect(platform.downloads, 0);
+        expect(controller.onDeviceStatus, OnDeviceStatus.unavailable);
+        expect(controller.onDeviceSupported, isFalse);
+      },
+    );
+
+    test(
+      'turning the AI on checks the phone, off forgets the answer',
+      () async {
+        final FakeOnDevicePlatform platform = FakeOnDevicePlatform();
+        final StoredAiSettingsRepository repo = StoredAiSettingsRepository(
+          InMemoryKeyValueStore(),
+        );
+        final AiSettingsController controller = AiSettingsController(
+          settings: repo,
+          secrets: InMemorySecretStore(),
+          service: AiService(
+            aiSettings: repo,
+            secrets: InMemorySecretStore(),
+            clientFactory: () => throw StateError('no HTTP'),
+            onDevice: platform,
+          ),
+        );
+        addTearDown(controller.dispose);
+        await controller.initialize();
+        expect(platform.statusCalls, 0);
+
+        await controller.setEnabled(true);
+        await pumpEventQueue();
+        expect(platform.statusCalls, 1);
+        expect(controller.onDeviceStatus, OnDeviceStatus.available);
+
+        await controller.setEnabled(false);
+        await pumpEventQueue();
+        expect(controller.onDeviceStatus, OnDeviceStatus.unavailable);
+        expect(controller.onDeviceSupported, isFalse);
+        await controller.refreshOnDevice();
+        expect(platform.statusCalls, 1);
+      },
+    );
+
+    test(
+      'a status that lands after the AI was turned off is ignored',
+      () async {
+        final Completer<OnDeviceStatus> gate = Completer<OnDeviceStatus>();
+        final _SlowStatusPlatform platform = _SlowStatusPlatform(gate.future);
+        final StoredAiSettingsRepository repo = StoredAiSettingsRepository(
+          InMemoryKeyValueStore(),
+        );
+        await repo.setEnabled(true);
+        final AiSettingsController controller = AiSettingsController(
+          settings: repo,
+          secrets: InMemorySecretStore(),
+          service: AiService(
+            aiSettings: repo,
+            secrets: InMemorySecretStore(),
+            clientFactory: () => throw StateError('no HTTP'),
+            onDevice: platform,
+          ),
+        );
+        addTearDown(controller.dispose);
+
+        final Future<void> init = controller.initialize();
+        await pumpEventQueue();
+        expect(platform.statusCalls, 1);
+
+        await controller.setEnabled(false);
+        await pumpEventQueue();
+        gate.complete(OnDeviceStatus.available);
+        await init;
+
+        expect(controller.onDeviceStatus, OnDeviceStatus.unavailable);
+        expect(controller.onDeviceSupported, isFalse);
+      },
+    );
   });
+
+  group('AiService gates the platform on the AI switch', () {
+    test('onDevicePossible follows the platform, not the status', () async {
+      AiService over(OnDeviceAiPlatform? platform) => AiService(
+        aiSettings: StoredAiSettingsRepository(InMemoryKeyValueStore()),
+        secrets: InMemorySecretStore(),
+        clientFactory: () => throw StateError('no HTTP'),
+        onDevice: platform,
+      );
+      final FakeOnDevicePlatform fake = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.unavailable,
+      );
+
+      expect(over(fake).onDevicePossible, isTrue);
+      expect(over(const UnsupportedOnDeviceAi()).onDevicePossible, isFalse);
+      expect(fake.statusCalls, 0);
+    });
+
+    test('status, download and generate never reach it while off', () async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform();
+      final StoredAiSettingsRepository repo = StoredAiSettingsRepository(
+        InMemoryKeyValueStore(),
+      );
+      await repo.replace(AiSettings(provider: AiProvider.onDevice));
+      final AiService service = AiService(
+        aiSettings: repo,
+        secrets: InMemorySecretStore(),
+        clientFactory: () => throw StateError('no HTTP'),
+        onDevice: platform,
+      );
+
+      expect(await service.onDeviceStatus(), OnDeviceStatus.unavailable);
+      expect(await service.isAiAvailable(), isFalse);
+      final List<OnDeviceDownloadEvent> events = await service
+          .downloadOnDeviceModel()
+          .toList();
+      expect(events.single, isA<OnDeviceDownloadFailed>());
+      service.onDeviceDownload.start();
+      await service.onDeviceDownload.done;
+      final PaletteAdvisor advisor = await service.buildAdvisor();
+      await advisor.advise(_request(base: collection.first));
+
+      expect(platform.statusCalls, 0);
+      expect(platform.downloads, 0);
+      expect(platform.prompts, isEmpty);
+
+      await repo.setEnabled(true);
+      expect(await service.onDeviceStatus(), OnDeviceStatus.available);
+      expect(platform.statusCalls, 1);
+    });
+  });
+}
+
+/// A platform whose status answers only when the test lets it.
+final class _SlowStatusPlatform implements OnDeviceAiPlatform {
+  _SlowStatusPlatform(this._status);
+
+  final Future<OnDeviceStatus> _status;
+  int statusCalls = 0;
+
+  @override
+  Future<OnDeviceStatus> status() {
+    statusCalls++;
+    return _status;
+  }
+
+  @override
+  Stream<OnDeviceDownloadEvent> download() => const Stream.empty();
+
+  @override
+  Future<void> cancelDownload() async {}
+
+  @override
+  Future<String> generate(
+    String prompt, {
+    Duration timeout = defaultOnDeviceTimeout,
+  }) => Future<String>.error(
+    const OnDeviceAiException(OnDeviceGenerateFailure.unavailable),
+  );
 }

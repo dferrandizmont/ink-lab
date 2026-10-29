@@ -413,7 +413,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAiExplainOnDevice.
   ///
   /// In en, this message translates to:
-  /// **'Gemini Nano runs on this phone. Nothing leaves your phone.'**
+  /// **'Gemini Nano runs on this phone and your requests stay on it. Google\'s ML Kit sends Google usage diagnostics.'**
   String get settingsAiExplainOnDevice;
 
   /// No description provided for @settingsAiExplainOpenRouter.
@@ -569,19 +569,19 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAiDisclosure.
   ///
   /// In en, this message translates to:
-  /// **'When this is on and you use a suggestion with OpenRouter, the app sends your scenario, the base colour code, name and hex value, and the list of candidate colours to openrouter.ai and to the model provider, using your own API key. Photos are never sent: this feature has no image upload. Nothing at all is sent while this switch is off.'**
+  /// **'When this is on and you ask OpenRouter for a suggestion, the app sends openrouter.ai and the model provider, with your own API key: the brand, palette mode and scene, the base marker\'s code and name and whether it is locked, the palette size, the codes and hex colours of the candidate markers, the model settings and the app\'s fixed instructions. Photos are never sent: this feature has no image upload. On Android, the app may also ask Google\'s ML Kit whether Gemini Nano is available; ML Kit sends Google usage diagnostics. Nothing at all is sent while this switch is off.'**
   String get settingsAiDisclosure;
 
   /// No description provided for @settingsAiDisclosureColourTheory.
   ///
   /// In en, this message translates to:
-  /// **'With Colour theory selected, palettes come from the built-in engine: no AI is used and nothing leaves your phone. Choose On-device or OpenRouter to use an AI.'**
+  /// **'With Colour theory selected, palettes come from the built-in engine: no AI is used and they stay on your phone. On Android, the app may ask Google\'s ML Kit whether Gemini Nano is available; ML Kit sends Google usage diagnostics, never your colours or photos. Choose On-device or OpenRouter to use an AI.'**
   String get settingsAiDisclosureColourTheory;
 
   /// No description provided for @settingsAiDisclosureColourTheoryNoOnDevice.
   ///
   /// In en, this message translates to:
-  /// **'With Colour theory selected, palettes come from the built-in engine: no AI is used and nothing leaves your phone. Choose OpenRouter to use an AI.'**
+  /// **'With Colour theory selected, palettes come from the built-in engine: no AI is used and they stay on your phone. On Android, the app may ask Google\'s ML Kit whether Gemini Nano is available; ML Kit sends Google usage diagnostics, never your colours or photos. Choose OpenRouter to use an AI.'**
   String get settingsAiDisclosureColourTheoryNoOnDevice;
 
   /// No description provided for @settingsAiDisclosureConfirm.
@@ -599,7 +599,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAiDisclosureOnDevice.
   ///
   /// In en, this message translates to:
-  /// **'On-device (Gemini Nano) requests are answered by the model on this phone. Your scenario and colour codes never leave it, and no key is needed.'**
+  /// **'On-device (Gemini Nano) requests are answered by the model on this phone: your scenario and colour codes never leave it, and no key is needed. To check, download and run the model, the app uses Google\'s ML Kit, which sends Google usage diagnostics (phone model, app version, per-install identifiers, errors and sizes), never your prompts, colours or photos. Nothing is sent while this switch is off.'**
   String get settingsAiDisclosureOnDevice;
 
   /// No description provided for @settingsAiOnDeviceName.
@@ -611,7 +611,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsAiOnDevicePrivacy.
   ///
   /// In en, this message translates to:
-  /// **'On-device requests never leave your phone.'**
+  /// **'Your requests stay on this phone. ML Kit sends Google usage diagnostics, never your prompts, colours or photos.'**
   String get settingsAiOnDevicePrivacy;
 
   /// No description provided for @settingsAiOnDeviceDownloadable.

@@ -187,6 +187,13 @@ void main() {
   });
 
   group('connection and catalog', () {
+    // These calls only go out while the AI is on.
+    StoredAiSettingsRepository enabledRepo() {
+      final repo = StoredAiSettingsRepository(InMemoryKeyValueStore());
+      repo.replace(AiSettings(enabled: true));
+      return repo;
+    }
+
     test('testConnection exposes the typed result', () async {
       final client = MockClient(
         (_) async => jsonResponse({
@@ -199,6 +206,7 @@ void main() {
         }),
       );
       final controller = buildController(
+        repo: enabledRepo(),
         secrets: InMemorySecretStore({openRouterApiKeyName: _key}),
         client: client,
       );
@@ -226,6 +234,7 @@ void main() {
         }),
       );
       final controller = buildController(
+        repo: enabledRepo(),
         secrets: InMemorySecretStore({openRouterApiKeyName: _key}),
         client: client,
       );
@@ -240,6 +249,7 @@ void main() {
 
     test('loadModels records a typed failure', () async {
       final controller = buildController(
+        repo: enabledRepo(),
         secrets: InMemorySecretStore({openRouterApiKeyName: _key}),
         client: MockClient((_) async => errorResponse('nope', 401)),
       );

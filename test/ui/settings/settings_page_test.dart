@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ink_lab/ai/ai.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
@@ -27,13 +28,31 @@ MarkerRepository diskMarkers() =>
 
 /// Pumps the settings page over an in-memory scope and returns the scope, so
 /// the test can drive the repositories directly.
-Future<AppScope> pumpSettings(WidgetTester tester) async {
+Future<AppScope> pumpSettings(
+  WidgetTester tester, {
+  bool noOnDevice = false,
+}) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 
+  final StoredAiSettingsRepository aiSettings = StoredAiSettingsRepository(
+    InMemoryKeyValueStore(),
+  );
+  final InMemorySecretStore secrets = InMemorySecretStore();
   final AppScope scope = AppScope.inMemory(
     markers: diskMarkers(),
+    aiSettings: aiSettings,
+    secrets: secrets,
+    // Tests run as Android, which has an on-device path; the iOS/desktop case
+    // is a platform without one.
+    aiService: noOnDevice
+        ? AiService(
+            aiSettings: aiSettings,
+            secrets: secrets,
+            onDevice: const UnsupportedOnDeviceAi(),
+          )
+        : null,
     child: const SettingsPage(),
   );
   await tester.pumpWidget(
@@ -383,10 +402,10 @@ void main() {
   testWidgets('the AI helper text only names On-device when it is offered', (
     WidgetTester tester,
   ) async {
-    await pumpSettings(tester);
+    // A platform with no on-device model path (iOS, web, desktop).
+    await pumpSettings(tester, noOnDevice: true);
 
     await scrollTo(tester, find.text(l10n.settingsAiEnabled));
-    // No on-device model in the test environment.
     expect(
       find.text(l10n.settingsAiEnabledSubtitleColourTheoryNoOnDevice),
       findsOneWidget,
@@ -395,7 +414,7 @@ void main() {
   });
 
   testWidgets('the AI settings are stored', (WidgetTester tester) async {
-    final AppScope scope = await pumpSettings(tester);
+    final AppScope scope = await pumpSettings(tester, noOnDevice: true);
 
     await scrollTo(tester, find.text(l10n.settingsAiEnabled));
     await tester.tap(find.text(l10n.settingsAiEnabled));

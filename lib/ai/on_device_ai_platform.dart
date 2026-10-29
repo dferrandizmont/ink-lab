@@ -88,6 +88,10 @@ abstract interface class OnDeviceAiPlatform {
   /// [OnDeviceDownloadCompleted] or [OnDeviceDownloadFailed].
   Stream<OnDeviceDownloadEvent> download();
 
+  /// Stops a running model download, if any. Never throws and does nothing
+  /// (not even asking the model for its status) when no download is running.
+  Future<void> cancelDownload();
+
   /// Generates text for [prompt]. Throws [OnDeviceAiException] on failure.
   Future<String> generate(
     String prompt, {
@@ -110,6 +114,9 @@ final class UnsupportedOnDeviceAi implements OnDeviceAiPlatform {
   Stream<OnDeviceDownloadEvent> download() => Stream.value(
     const OnDeviceDownloadFailed('On-device AI is not available.'),
   );
+
+  @override
+  Future<void> cancelDownload() async {}
 
   @override
   Future<String> generate(
@@ -189,6 +196,15 @@ final class MethodChannelOnDeviceAi implements OnDeviceAiPlatform {
     };
     controller.onCancel = () => subscription?.cancel();
     return controller.stream;
+  }
+
+  @override
+  Future<void> cancelDownload() async {
+    try {
+      await _methods.invokeMethod<void>('cancelDownload');
+    } catch (_) {
+      // Best effort: nothing to stop, or no native side.
+    }
   }
 
   @override

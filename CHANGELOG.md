@@ -10,6 +10,16 @@ so they can skip numbers.
 
 ## Unreleased
 
+## 0.6.1 · 2026-10-30
+
+- Privacy: with AI off, the app no longer asks Android's ML Kit whether Gemini Nano is available (opening Settings
+  used to), so nothing leaves the phone until you turn on AI.
+- With AI off, OpenRouter "Test connection" and "Load models" are disabled too, turning AI off stops a Gemini Nano
+  download in progress, and Palette no longer re-checks the on-device model on every AI setting change.
+- Privacy policy and in-app texts: they now say that on-device AI uses Google's ML Kit, which sends Google usage
+  diagnostics (never your prompts, colours or photos), and list exactly what goes to OpenRouter (no marker names, base
+  hex or photos).
+
 ## 0.6.0 · 2026-10-29
 
 - Palette: the palette type and the scene are chosen from fields that open a list, instead of rows of chips. The scene

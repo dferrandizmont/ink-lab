@@ -32,6 +32,8 @@ import kotlinx.coroutines.withTimeout
  *                  not tied to this channel, the Activity or the call, so it
  *                  survives leaving the screen and recreating the Activity.
  *  - `generate` -> the generated text (argument: the prompt string)
+ *  - `cancelDownload` -> cancels the running download, if any (never creates
+ *                  the ML Kit client)
  *  - `cancel`   -> cancels the running `generate`, if any
  */
 class OnDeviceAiChannel(messenger: BinaryMessenger) :
@@ -67,6 +69,11 @@ class OnDeviceAiChannel(messenger: BinaryMessenger) :
             "status" -> status(result)
             "download" -> download(result)
             "generate" -> generate(call.arguments as? String, result)
+            "cancelDownload" -> {
+                // Touches no ML Kit client: it only cancels a running job.
+                OnDeviceDownloads.cancel()
+                result.success(null)
+            }
             "cancel" -> {
                 generateJob?.cancel()
                 result.success(null)
@@ -183,6 +190,12 @@ internal object OnDeviceDownloads {
             owner = null
             sink = null
         }
+    }
+
+    fun cancel() {
+        job?.cancel()
+        job = null
+        last = null
     }
 
     fun start(nano: GeminiNanoClient) {

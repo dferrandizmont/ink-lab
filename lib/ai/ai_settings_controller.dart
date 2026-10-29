@@ -78,6 +78,10 @@ final class AiSettingsController extends ChangeNotifier {
   PaletteFailureReason? _modelsError;
 
   OnDeviceStatus _onDeviceStatus = OnDeviceStatus.unavailable;
+
+  /// Bumped whenever the AI is switched off, so a status read that was
+  /// already in flight is ignored when it lands.
+  int _onDeviceEpoch = 0;
   late final OnDeviceDownloadTracker _download = _service.onDeviceDownload;
 
   // Non-secret settings, mirrored for convenient reads.
@@ -141,11 +145,14 @@ final class AiSettingsController extends ChangeNotifier {
   PaletteFailureReason? get modelsError => _modelsError;
 
   /// State of the on-device model. The provider is offered in the UI only
-  /// while this is not [OnDeviceStatus.unavailable].
-  OnDeviceStatus get onDeviceStatus => _onDeviceStatus;
+  /// while this is not [OnDeviceStatus.unavailable]. It is unknown, so
+  /// [OnDeviceStatus.unavailable], while the AI is off: the platform is not
+  /// asked until the user turns the AI on.
+  OnDeviceStatus get onDeviceStatus =>
+      enabled ? _onDeviceStatus : OnDeviceStatus.unavailable;
 
   /// Whether the on-device provider should be shown at all.
-  bool get onDeviceSupported => _onDeviceStatus.supported;
+  bool get onDeviceSupported => onDeviceStatus.supported;
 
   /// Bytes of the on-device model downloaded so far.
   int get onDeviceBytes => _download.bytes;
@@ -167,27 +174,36 @@ final class AiSettingsController extends ChangeNotifier {
   /// Whether the last on-device model download failed.
   bool get onDeviceDownloadFailed => _download.failed;
 
-  /// Reads the stored key so the masked form can be shown, and asks the
-  /// platform whether an on-device model exists.
+  /// Reads the stored key so the masked form can be shown, and, only when the
+  /// AI is on, asks the platform whether an on-device model exists.
   Future<void> initialize() async {
-    await Future.wait(<Future<void>>[refreshKey(), refreshOnDevice()]);
+    await Future.wait(<Future<void>>[refreshKey(), _probeOnDevice()]);
+  }
+
+  Future<void> _probeOnDevice() async {
+    if (!enabled) return;
+    await refreshOnDevice();
     // A download requested before this screen was built is still running.
-    if (!_disposed && _download.active) {
+    if (!_disposed && enabled && _download.active) {
       _onDeviceStatus = OnDeviceStatus.downloading;
       _notify();
       unawaited(_download.done.then((_) => refreshOnDevice()));
     }
   }
 
-  /// Re-reads the on-device model state. Never throws.
+  /// Re-reads the on-device model state. Never throws. Does nothing while the
+  /// AI is off: no call reaches the platform, and a result that arrives after
+  /// the AI was switched off is dropped.
   Future<void> refreshOnDevice() async {
+    if (!enabled) return;
+    final int epoch = _onDeviceEpoch;
     OnDeviceStatus status;
     try {
       status = await _service.onDeviceStatus();
     } catch (_) {
       status = OnDeviceStatus.unavailable;
     }
-    if (_disposed) return;
+    if (_disposed || epoch != _onDeviceEpoch || !enabled) return;
     _onDeviceStatus = status;
     _notify();
   }
@@ -196,7 +212,7 @@ final class AiSettingsController extends ChangeNotifier {
   /// controller: leaving the screen does not cancel it. Progress is read from
   /// the tracker; the state is re-read when it finishes either way.
   Future<void> downloadOnDevice() async {
-    if (_download.active) return;
+    if (!enabled || _download.active) return;
     _onDeviceStatus = OnDeviceStatus.downloading;
     _download.start();
     _notify();
@@ -353,8 +369,15 @@ final class AiSettingsController extends ChangeNotifier {
   }
 
   void _onSettings(AiSettings value) {
+    final bool wasEnabled = _value.enabled;
     _value = value;
+    if (wasEnabled && !value.enabled) {
+      // Off again: forget the status and drop any read still in flight.
+      _onDeviceEpoch++;
+      _onDeviceStatus = OnDeviceStatus.unavailable;
+    }
     _notify();
+    if (!wasEnabled && value.enabled) unawaited(_probeOnDevice());
   }
 
   void _notify() {
