@@ -52,7 +52,10 @@ enum InkIcons {
   arrowRight,
   crosshair,
   alertCircle,
-  list;
+  list,
+
+  /// Feather flag (report).
+  flag;
 
   static const InkIcons edit_3 = edit3;
   static const InkIcons trash_2 = trash2;
@@ -372,6 +375,20 @@ class InkIconPainter extends CustomPainter {
         line(3, 6, 3.01, 6);
         line(3, 12, 3.01, 12);
         line(3, 18, 3.01, 18);
+      case InkIcons.flag:
+        draw(
+          Path()
+            ..moveTo(4, 15)
+            ..cubicTo(4, 15, 5, 14, 8, 14)
+            ..cubicTo(11, 14, 13, 16, 16, 16)
+            ..cubicTo(19, 16, 20, 15, 20, 15)
+            ..lineTo(20, 3)
+            ..cubicTo(20, 3, 19, 4, 16, 4)
+            ..cubicTo(13, 4, 11, 2, 8, 2)
+            ..cubicTo(5, 2, 4, 3, 4, 3)
+            ..close(),
+        );
+        line(4, 22, 4, 15);
     }
     canvas.restore();
   }

@@ -13,6 +13,9 @@ abstract final class SettingsConstants {
   static const String repositoryUrl =
       'https://github.com/dferrandizmont/ink-lab';
 
+  /// Address that receives the reports of AI suggestions.
+  static const String contactEmail = 'dev@mainshai.com';
+
   /// Privacy policy page (Spanish; English lives under `en/`).
   static const String privacyUrlEs =
       'https://dferrandizmont.github.io/ink-lab/privacidad/';

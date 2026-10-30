@@ -1274,6 +1274,60 @@ abstract class AppLocalizations {
   /// **'This action cannot be undone.'**
   String get paletteDeleteDialogBody;
 
+  /// Quiet button under an AI palette suggestion that lets the user report it to the developer.
+  ///
+  /// In en, this message translates to:
+  /// **'Report this suggestion'**
+  String get paletteAiReportButton;
+
+  /// Title of the dialog to report an AI palette suggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Report this suggestion'**
+  String get paletteAiReportTitle;
+
+  /// Explanation in the report dialog: what is sent and that the user decides.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us if the AI wrote something offensive, inappropriate or wrong. Your email app will open with the suggestion\'s text; you decide whether to send it. Your API key is never included.'**
+  String get paletteAiReportBody;
+
+  /// Reason option in the AI report dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Offensive or inappropriate'**
+  String get paletteAiReportOffensive;
+
+  /// Reason option in the AI report dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong or makes no sense'**
+  String get paletteAiReportWrong;
+
+  /// Reason option in the AI report dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get paletteAiReportOther;
+
+  /// Confirm button of the AI report dialog; opens the email app.
+  ///
+  /// In en, this message translates to:
+  /// **'Send by email'**
+  String get paletteAiReportSend;
+
+  /// Snack bar after the email app was opened for an AI report.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks, this helps us improve the suggestions'**
+  String get paletteAiReportThanks;
+
+  /// Snack bar when no email app opens; the report was copied to the clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'No email app found. The report was copied: paste it in an email to dev@mainshai.com'**
+  String get paletteAiReportCopied;
+
   /// No description provided for @paletteAiFellBack.
   ///
   /// In en, this message translates to:

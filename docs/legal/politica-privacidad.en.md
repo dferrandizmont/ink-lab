@@ -104,6 +104,12 @@ advertising identifier.
 You can write to dev@mainshai.com. We will process your email address and what you tell us only to reply to you. Do not
 send your API key or backups containing data you do not want to share: test data is enough to fix a bug.
 
+If you report an AI suggestion ("Report this suggestion", in Palette), the app opens your email app with a message
+already written to dev@mainshai.com: the reason you choose, the app version, the AI provider and model, the brand, the
+mode or scene, the base marker's code and that suggestion's codes, roles and reasons. It never includes your API key or photos. It only
+reaches us if you send it, and we use it to review the reported content and improve the suggestions. If there is no
+email app, the report is copied to the clipboard for you to paste.
+
 ## 3. Purposes and legal basis
 
 | Processing | Purpose | Legal basis (GDPR) |
@@ -112,7 +118,7 @@ send your API key or backups containing data you do not want to share: test data
 | "Match" or "Scene from a photo" photo | Finding the closest markers | Processed only on your phone, at your request; we do not receive it |
 | ML Kit diagnostics (only with the on-device AI, on Android) | Diagnostics and usage analytics of the SDK, according to Google | Sent only if you choose to turn on the optional AI; Google processes them as the provider of ML Kit, under its own terms and privacy policy; we do not receive them |
 | AI with OpenRouter (optional) | Generating palette suggestions | Your consent when you turn it on and use your own key; OpenRouter performs the processing under its own terms |
-| Support emails | Replying to your query | Your request and our legitimate interest in handling it (art. 6.1.f) |
+| Support emails and AI suggestion reports | Replying to your query and reviewing the reported content | Your request and our legitimate interest in handling it (art. 6.1.f) |
 
 We make no automated decisions and build no profiles about you.
 
@@ -120,7 +126,7 @@ We make no automated decisions and build no profiles about you.
 The app does not transmit data to the developer. If you turn on AI, on Android **Google** receives the diagnostics and
 usage data ML Kit sends when the on-device AI is used. If you use AI with OpenRouter, the request described above is
 received by **OpenRouter** and the **model provider** you choose, on your behalf and with your key.
-If you send a support email, the holder receives it at dev@mainshai.com through the email service you choose.
+If you send a support email or a suggestion report, the holder receives it at dev@mainshai.com through the email service you choose.
 
 ## 5. International transfers
 The developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose,

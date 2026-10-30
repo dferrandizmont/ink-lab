@@ -103,6 +103,12 @@ Puedes escribirnos a dev@mainshai.com. Trataremos tu dirección de correo y lo q
 No nos mandes tu clave de API ni copias de seguridad con datos que no quieras compartir: para un fallo nos basta con
 datos de prueba.
 
+Si reportas una sugerencia de la IA («Reportar esta sugerencia», en Paleta), la app abre tu app de correo con un
+mensaje ya escrito para dev@mainshai.com: el motivo que elijas, la versión de la app, el proveedor y el modelo de IA,
+la marca, el modo o la escena, el código del rotulador base y los códigos, papeles y motivos de esa sugerencia. Nunca incluye tu clave de
+API ni fotos. Solo nos llega si tú lo envías, y lo usamos para revisar el contenido reportado y mejorar las
+sugerencias. Si no hay app de correo, el informe se copia al portapapeles para que lo pegues tú.
+
 ## 3. Para qué y con qué base jurídica
 
 | Tratamiento | Finalidad | Base jurídica (RGPD) |
@@ -111,7 +117,7 @@ datos de prueba.
 | Foto de «Emparejar» o de «Escena desde una foto» | Hallar los rotuladores más parecidos | Se procesa solo en tu móvil, a petición tuya; no la recibimos |
 | Diagnósticos de ML Kit (solo con la IA en el móvil, en Android) | Diagnóstico y analítica de uso del SDK, según Google | Se envían solo si decides activar la IA opcional; los trata Google como proveedor de ML Kit, bajo sus propias condiciones y su política de privacidad; no los recibimos |
 | IA con OpenRouter (opcional) | Generar sugerencias de paleta | Tu consentimiento al activarla y usar tu propia clave; el tratamiento lo hace OpenRouter bajo sus condiciones |
-| Correos de soporte | Responder a tu consulta | Tu solicitud y nuestro interés legítimo en atenderla (art. 6.1.f) |
+| Correos de soporte y reportes de sugerencias de IA | Responder a tu consulta y revisar el contenido reportado | Tu solicitud y nuestro interés legítimo en atenderla (art. 6.1.f) |
 
 No tomamos decisiones automatizadas ni elaboramos perfiles sobre ti.
 
@@ -119,7 +125,7 @@ No tomamos decisiones automatizadas ni elaboramos perfiles sobre ti.
 La app no transmite datos al desarrollador. Si activas la IA, en Android **Google** recibe los datos de diagnóstico y
 de uso que envía ML Kit al usarse la IA en el móvil. Si usas la IA con OpenRouter, la petición descrita arriba la
 reciben **OpenRouter** y el **proveedor del modelo** que elijas, en tu nombre y con tu clave. Si envías un
-correo de soporte, lo recibe el titular en dev@mainshai.com mediante el servicio de correo que elijas.
+correo de soporte o un reporte de una sugerencia, lo recibe el titular en dev@mainshai.com mediante el servicio de correo que elijas.
 
 ## 5. Transferencias internacionales
 El desarrollador no realiza transferencias de datos. Si usas la IA con OpenRouter, la petición va al proveedor que

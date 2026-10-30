@@ -421,3 +421,6 @@ lib/core/photo_palette.dart
 test/core/photo_palette_test.dart
 lib/ui/pages/palette/palette_photo_scene.dart
 test/ui/palette/palette_photo_scene_test.dart
+lib/ui/pages/palette/ai_report.dart
+test/ui/palette/ai_report_test.dart
+test/ui/palette/palette_ai_report_test.dart

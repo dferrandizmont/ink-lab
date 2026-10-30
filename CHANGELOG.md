@@ -10,6 +10,12 @@ so they can skip numbers.
 
 ## Unreleased
 
+## 0.6.2 · 2026-10-30
+
+- Palette: AI results have a "Report this suggestion" button. You pick a reason and your email app opens with the
+  suggestion's codes and texts (never your API key or photos), ready to send to the developer; without an email app
+  the report is copied. The privacy policy explains it.
+
 ## 0.6.1 · 2026-10-30
 
 - Privacy: with AI off, the app no longer asks Android's ML Kit whether Gemini Nano is available (opening Settings

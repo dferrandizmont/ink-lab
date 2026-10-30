@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -638,6 +639,111 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           });
           expect(seen, greaterThan(0), reason: '$_tag $id has rows');
         }
+      },
+  'palette: AI result, report button and dialog':
+      (WidgetTester tester, _Env env) async {
+        final StoredAiSettingsRepository repo = StoredAiSettingsRepository(
+          InMemoryKeyValueStore(),
+        );
+        await repo.replace(
+          AiSettings(
+            enabled: true,
+            provider: AiProvider.openRouter,
+            textModel: 'model-a',
+          ),
+        );
+        final InMemorySecretStore secrets = InMemorySecretStore(
+          <String, String>{openRouterApiKeyName: _apiKey},
+        );
+        final AiService service = AiService(
+          aiSettings: repo,
+          secrets: secrets,
+          // Echoes back the first candidates of the prompt as an AI palette.
+          clientFactory: () => MockClient((http.Request request) async {
+            final Map<String, dynamic> body =
+                jsonDecode(request.body) as Map<String, dynamic>;
+            final String prompt =
+                ((body['messages'] as List).last as Map)['content'] as String;
+            final Iterable<String> codes = prompt
+                .split('AVAILABLE_COLORS=')
+                .last
+                .split(',')
+                .take(3)
+                .map((String entry) => entry.split('#').first);
+            return completionResponse(
+              paletteJson(<Map<String, String>>[
+                for (final String code in codes)
+                  <String, String>{
+                    'code': code,
+                    'role': 'Shadow',
+                    'reason': 'deep',
+                  },
+              ]),
+            );
+          }),
+        );
+        await _pump(
+          tester,
+          env,
+          const PalettePage(),
+          aiSettings: repo,
+          secrets: secrets,
+          aiService: service,
+        );
+        await tester.enterText(
+          find.byKey(const ValueKey<String>('palette-base-input')),
+          'B08',
+        );
+        await tester.pumpAndSettle();
+        FocusManager.instance.primaryFocus?.unfocus();
+        await tester.pumpAndSettle();
+        await tester.scrollUntilVisible(
+          find.byKey(const ValueKey<String>('palette-suggest-ai')),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.pumpAndSettle();
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-suggest-ai')),
+        );
+        final Finder report = find.byKey(
+          const ValueKey<String>('palette-ai-report'),
+        );
+        // The button sits above the action buttons: look upwards first.
+        await tester.scrollUntilVisible(
+          report,
+          -200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        expect(report, findsOneWidget, reason: '$_tag report button');
+        await tester.pumpAndSettle();
+        _check(tester, 'palette with AI result');
+        final RenderParagraph label = tester.renderObject(
+          find.descendant(of: report, matching: find.byType(RichText)).first,
+        );
+        expect(_lineCount(label), 1, reason: '$_tag report button label');
+        expect(label.didExceedMaxLines, isFalse);
+        await _tap(tester, report);
+        _check(tester, 'AI report dialog');
+        expect(
+          find.text(env.t.paletteAiReportTitle),
+          findsWidgets,
+          reason: '$_tag report dialog title',
+        );
+        for (final String reason in <String>['offensive', 'wrong', 'other']) {
+          final Finder row = find.byKey(
+            ValueKey<String>('palette-ai-report-$reason'),
+          );
+          await _tap(tester, row);
+          _check(tester, 'AI report dialog, $reason chosen');
+          final RenderParagraph text = tester.renderObject(
+            find.descendant(of: row, matching: find.byType(RichText)).first,
+          );
+          expect(_lineCount(text), 1, reason: '$_tag $reason label');
+          expect(text.didExceedMaxLines, isFalse);
+        }
+        await _close(tester);
       },
   'palette: from a photo, close markers': (WidgetTester tester, _Env env) =>
       _fromPhotoScenario(

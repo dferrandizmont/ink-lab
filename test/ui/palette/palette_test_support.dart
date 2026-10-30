@@ -27,6 +27,7 @@ AppScope paletteScope({
   SecretStore? secrets,
   AiSettingsRepository? aiSettings,
   AiService? aiService,
+  Future<bool> Function(Uri uri)? launchEmail,
 }) => AppScope.inMemory(
   markers: diskMarkerRepository(),
   secrets: secrets,
@@ -38,7 +39,7 @@ AppScope paletteScope({
     supportedLocales: testSupportedLocales,
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),
-    home: const Scaffold(body: PalettePage()),
+    home: Scaffold(body: PalettePage(launchEmail: launchEmail)),
   ),
 );
 
@@ -55,6 +56,7 @@ Future<AppScope> pumpPalette(
   SecretStore? secrets,
   AiSettingsRepository? aiSettings,
   AiService? aiService,
+  Future<bool> Function(Uri uri)? launchEmail,
 }) async {
   tester.view.physicalSize = const Size(600, 3000);
   tester.view.devicePixelRatio = 1.0;
@@ -64,6 +66,7 @@ Future<AppScope> pumpPalette(
     secrets: secrets,
     aiSettings: aiSettings,
     aiService: aiService,
+    launchEmail: launchEmail,
   );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);

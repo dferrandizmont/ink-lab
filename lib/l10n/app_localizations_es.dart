@@ -651,6 +651,36 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paletteDeleteDialogBody => 'Esta acción no se puede deshacer.';
 
   @override
+  String get paletteAiReportButton => 'Reportar esta sugerencia';
+
+  @override
+  String get paletteAiReportTitle => 'Reportar esta sugerencia';
+
+  @override
+  String get paletteAiReportBody =>
+      'Avísanos si la IA ha escrito algo ofensivo, inapropiado o erróneo. Se abrirá tu app de correo con el texto de la sugerencia; tú decides si lo envías. Tu clave de API nunca se incluye.';
+
+  @override
+  String get paletteAiReportOffensive => 'Ofensiva o inapropiada';
+
+  @override
+  String get paletteAiReportWrong => 'Errónea o sin sentido';
+
+  @override
+  String get paletteAiReportOther => 'Otra cosa';
+
+  @override
+  String get paletteAiReportSend => 'Enviar por correo';
+
+  @override
+  String get paletteAiReportThanks =>
+      'Gracias, nos ayuda a mejorar las sugerencias';
+
+  @override
+  String get paletteAiReportCopied =>
+      'No hay app de correo. Se ha copiado el informe: pégalo en un correo a dev@mainshai.com';
+
+  @override
   String get paletteAiFellBack =>
       'IA no disponible. Se muestran sugerencias locales.';
 

@@ -5,9 +5,12 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollDirection;
+import 'package:flutter/services.dart' show Clipboard, ClipboardData;
+import 'package:url_launcher/url_launcher.dart' as launcher;
 
 import '../../../ai/palette_advisor.dart' as ai;
 import '../../../app_scope.dart';
+import '../../../core/app_version.dart' as app_version;
 import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
 import '../../../core/palette_advisor.dart';
@@ -30,6 +33,7 @@ import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
 import '../match/color_sampling.dart';
 import '../match/image_picker_service.dart';
+import 'ai_report.dart';
 import 'palette_draft.dart';
 import 'palette_photo_scene.dart';
 import 'palette_reasons.dart';
@@ -57,6 +61,7 @@ class PalettePage extends StatefulWidget {
     this.picker,
     this.decoder,
     this.photoExtractor,
+    this.launchEmail,
   });
 
   /// Key of the page body, handy for tests and for state restoration.
@@ -77,6 +82,10 @@ class PalettePage extends StatefulWidget {
   /// the UI thread; tests inject a synchronous one.
   final PhotoColorExtractor? photoExtractor;
 
+  /// Opens the email app with a prepared `mailto:` address and says whether it
+  /// opened. Production uses `url_launcher`; tests inject a fake.
+  final Future<bool> Function(Uri uri)? launchEmail;
+
   @override
   State<PalettePage> createState() => _PalettePageState();
 }
@@ -90,6 +99,13 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
           decodePhoto(bytes, maxDimension: PhotoScene.maxDimension);
   late final PhotoColorExtractor _extract =
       widget.photoExtractor ?? extractPhotoColors;
+
+  late final Future<bool> Function(Uri uri) _launchEmail =
+      widget.launchEmail ??
+      (Uri uri) => launcher.launchUrl(
+        uri,
+        mode: launcher.LaunchMode.externalApplication,
+      );
 
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
@@ -106,6 +122,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   /// Id of the model that produced the AI result on screen.
   String _aiModel = '';
+
+  /// The provider that produced the current AI result, for its report.
+  AiProvider? _aiProvider;
 
   /// How many colours of the AI result on screen came from the model, and how
   /// many there are in all (the rest were completed by colour theory).
@@ -588,6 +607,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
               _suggestions = _mergeLocked(suggestions);
               _aiUsed = true;
               _aiModel = modelUsed;
+              _aiProvider = _scope?.aiSettings.value.provider;
               _aiCount = aiCount;
               _aiTotal = suggestions.length;
             } else {
@@ -1028,6 +1048,66 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     context: context,
     builder: (BuildContext context) => _SaveNameDialog(initial: initial),
   );
+
+  /// Asks why, then opens the email app with the suggestion's text. The
+  /// message holds no key, no photo and no setting but the fields of
+  /// [AiReport.body]; the user reviews and sends it from the email app.
+  Future<void> _reportAi() async {
+    final scope = _scope;
+    if (scope == null || !_aiUsed) return;
+    final AiReportReason? reason = await showDialog<AiReportReason>(
+      context: context,
+      builder: (BuildContext context) => const _AiReportDialog(),
+    );
+    if (reason == null || !mounted) return;
+    final MarkerColor? base = _stripBase;
+    final AiProvider provider = _aiProvider ?? scope.aiSettings.value.provider;
+    final String subject = AiReport.subject(reason);
+    final String body = AiReport.body(
+      appVersion: app_version.appVersion,
+      provider: provider == AiProvider.onDevice ? 'on-device' : 'OpenRouter',
+      model: _aiModel,
+      brand: _brand.label,
+      context: _useScenario ? _scenario.id : _mode.name,
+      baseCode: base?.newCode ?? '-',
+      items: <AiReportItem>[
+        for (final PaletteSuggestion suggestion in _suggestions)
+          AiReportItem(
+            code: suggestion.color.newCode,
+            role: _roleFor(suggestion),
+            reason: suggestion.reason,
+          ),
+      ],
+    );
+    final Uri uri = AiReport.mailto(subject: subject, body: body);
+    final l10n = context.l10n;
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    bool opened;
+    try {
+      opened = await _launchEmail(uri);
+    } catch (_) {
+      opened = false;
+    }
+    if (!opened) {
+      await Clipboard.setData(
+        ClipboardData(
+          text: AiReport.plainText(subject: subject, body: body),
+        ),
+      );
+    }
+    messenger
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          key: const ValueKey<String>('palette-ai-report-result'),
+          content: Text(
+            opened ? l10n.paletteAiReportThanks : l10n.paletteAiReportCopied,
+          ),
+        ),
+      );
+  }
 
   void _loadSaved(SavedPalette palette) {
     final byCode = <String, MarkerColor>{
@@ -1957,6 +2037,19 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         ),
         top: InkSpacing.block,
       ),
+      if (_aiUsed)
+        _inset(
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: InkButton.text(
+              key: const ValueKey<String>('palette-ai-report'),
+              label: context.l10n.paletteAiReportButton,
+              icon: InkIcons.flag,
+              onPressed: _reportAi,
+            ),
+          ),
+          top: InkSpacing.s8,
+        ),
       if (!photo)
         Padding(
           padding: const EdgeInsets.only(top: InkSpacing.block),
@@ -2629,6 +2722,93 @@ class _SaveNameDialogState extends State<_SaveNameDialog> {
           key: const ValueKey<String>('palette-save-confirm'),
           onPressed: () => Navigator.of(context).pop(_controller.text.trim()),
           child: Text(context.l10n.paletteSaveDialogConfirm),
+        ),
+      ],
+    );
+  }
+}
+
+/// Asks why an AI suggestion is reported. Pops the chosen [AiReportReason], or
+/// `null` on cancel; Send stays disabled until one is chosen.
+class _AiReportDialog extends StatefulWidget {
+  const _AiReportDialog();
+
+  @override
+  State<_AiReportDialog> createState() => _AiReportDialogState();
+}
+
+class _AiReportDialogState extends State<_AiReportDialog> {
+  AiReportReason? _reason;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final InkColors ink = InkColors.of(context);
+    final Map<AiReportReason, String> labels = <AiReportReason, String>{
+      AiReportReason.offensive: l10n.paletteAiReportOffensive,
+      AiReportReason.wrong: l10n.paletteAiReportWrong,
+      AiReportReason.other: l10n.paletteAiReportOther,
+    };
+    return AlertDialog(
+      key: const ValueKey<String>('palette-ai-report-dialog'),
+      title: Text(l10n.paletteAiReportTitle),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              l10n.paletteAiReportBody,
+              style: AppTypography.secondary.copyWith(color: ink.fg2),
+            ),
+            const SizedBox(height: InkSpacing.s8),
+            RadioGroup<AiReportReason>(
+              groupValue: _reason,
+              onChanged: (AiReportReason? value) =>
+                  setState(() => _reason = value),
+              child: Column(
+                children: <Widget>[
+                  for (final MapEntry<AiReportReason, String> entry
+                      in labels.entries)
+                    RadioListTile<AiReportReason>(
+                      key: ValueKey<String>(
+                        'palette-ai-report-${entry.key.key}',
+                      ),
+                      value: entry.key,
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      // A FittedBox, not _OneLine: the dialog measures its
+                      // content with intrinsics, which a LayoutBuilder lacks.
+                      title: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            entry.value,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: AppTypography.body.copyWith(color: ink.fg),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.paletteSaveDialogCancel),
+        ),
+        FilledButton(
+          key: const ValueKey<String>('palette-ai-report-send'),
+          onPressed: _reason == null
+              ? null
+              : () => Navigator.of(context).pop(_reason),
+          child: Text(l10n.paletteAiReportSend),
         ),
       ],
     );

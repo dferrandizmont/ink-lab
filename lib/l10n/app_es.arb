@@ -233,6 +233,42 @@
   "paletteDeleteButton": "Borrar",
   "paletteDeleteDialogTitle": "¿Borrar la paleta?",
   "paletteDeleteDialogBody": "Esta acción no se puede deshacer.",
+  "paletteAiReportButton": "Reportar esta sugerencia",
+  "@paletteAiReportButton": {
+    "description": "Quiet button under an AI palette suggestion that lets the user report it to the developer."
+  },
+  "paletteAiReportTitle": "Reportar esta sugerencia",
+  "@paletteAiReportTitle": {
+    "description": "Title of the dialog to report an AI palette suggestion."
+  },
+  "paletteAiReportBody": "Avísanos si la IA ha escrito algo ofensivo, inapropiado o erróneo. Se abrirá tu app de correo con el texto de la sugerencia; tú decides si lo envías. Tu clave de API nunca se incluye.",
+  "@paletteAiReportBody": {
+    "description": "Explanation in the report dialog: what is sent and that the user decides."
+  },
+  "paletteAiReportOffensive": "Ofensiva o inapropiada",
+  "@paletteAiReportOffensive": {
+    "description": "Reason option in the AI report dialog."
+  },
+  "paletteAiReportWrong": "Errónea o sin sentido",
+  "@paletteAiReportWrong": {
+    "description": "Reason option in the AI report dialog."
+  },
+  "paletteAiReportOther": "Otra cosa",
+  "@paletteAiReportOther": {
+    "description": "Reason option in the AI report dialog."
+  },
+  "paletteAiReportSend": "Enviar por correo",
+  "@paletteAiReportSend": {
+    "description": "Confirm button of the AI report dialog; opens the email app."
+  },
+  "paletteAiReportThanks": "Gracias, nos ayuda a mejorar las sugerencias",
+  "@paletteAiReportThanks": {
+    "description": "Snack bar after the email app was opened for an AI report."
+  },
+  "paletteAiReportCopied": "No hay app de correo. Se ha copiado el informe: pégalo en un correo a dev@mainshai.com",
+  "@paletteAiReportCopied": {
+    "description": "Snack bar when no email app opens; the report was copied to the clipboard."
+  },
   "paletteAiFellBack": "IA no disponible. Se muestran sugerencias locales.",
   "paletteEmptyHint": "Elige un rotulador base para crear una paleta, o elige Escenas como tipo de paleta.",
   "paletteCustomModeHint": "El modo de paleta personalizada es manual: carga una paleta guardada o aplica una desde Ideas.",

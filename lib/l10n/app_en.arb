@@ -233,6 +233,42 @@
   "paletteDeleteButton": "Delete",
   "paletteDeleteDialogTitle": "Delete palette?",
   "paletteDeleteDialogBody": "This action cannot be undone.",
+  "paletteAiReportButton": "Report this suggestion",
+  "@paletteAiReportButton": {
+    "description": "Quiet button under an AI palette suggestion that lets the user report it to the developer."
+  },
+  "paletteAiReportTitle": "Report this suggestion",
+  "@paletteAiReportTitle": {
+    "description": "Title of the dialog to report an AI palette suggestion."
+  },
+  "paletteAiReportBody": "Tell us if the AI wrote something offensive, inappropriate or wrong. Your email app will open with the suggestion's text; you decide whether to send it. Your API key is never included.",
+  "@paletteAiReportBody": {
+    "description": "Explanation in the report dialog: what is sent and that the user decides."
+  },
+  "paletteAiReportOffensive": "Offensive or inappropriate",
+  "@paletteAiReportOffensive": {
+    "description": "Reason option in the AI report dialog."
+  },
+  "paletteAiReportWrong": "Wrong or makes no sense",
+  "@paletteAiReportWrong": {
+    "description": "Reason option in the AI report dialog."
+  },
+  "paletteAiReportOther": "Something else",
+  "@paletteAiReportOther": {
+    "description": "Reason option in the AI report dialog."
+  },
+  "paletteAiReportSend": "Send by email",
+  "@paletteAiReportSend": {
+    "description": "Confirm button of the AI report dialog; opens the email app."
+  },
+  "paletteAiReportThanks": "Thanks, this helps us improve the suggestions",
+  "@paletteAiReportThanks": {
+    "description": "Snack bar after the email app was opened for an AI report."
+  },
+  "paletteAiReportCopied": "No email app found. The report was copied: paste it in an email to dev@mainshai.com",
+  "@paletteAiReportCopied": {
+    "description": "Snack bar when no email app opens; the report was copied to the clipboard."
+  },
   "paletteAiFellBack": "AI unavailable. Showing local suggestions.",
   "paletteEmptyHint": "Pick a base marker to build a palette, or choose Scenes as the palette type.",
   "paletteCustomModeHint": "Custom palette mode is manual: load a saved palette or apply one from Ideas.",

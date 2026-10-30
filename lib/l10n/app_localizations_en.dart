@@ -645,6 +645,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paletteDeleteDialogBody => 'This action cannot be undone.';
 
   @override
+  String get paletteAiReportButton => 'Report this suggestion';
+
+  @override
+  String get paletteAiReportTitle => 'Report this suggestion';
+
+  @override
+  String get paletteAiReportBody =>
+      'Tell us if the AI wrote something offensive, inappropriate or wrong. Your email app will open with the suggestion\'s text; you decide whether to send it. Your API key is never included.';
+
+  @override
+  String get paletteAiReportOffensive => 'Offensive or inappropriate';
+
+  @override
+  String get paletteAiReportWrong => 'Wrong or makes no sense';
+
+  @override
+  String get paletteAiReportOther => 'Something else';
+
+  @override
+  String get paletteAiReportSend => 'Send by email';
+
+  @override
+  String get paletteAiReportThanks =>
+      'Thanks, this helps us improve the suggestions';
+
+  @override
+  String get paletteAiReportCopied =>
+      'No email app found. The report was copied: paste it in an email to dev@mainshai.com';
+
+  @override
   String get paletteAiFellBack => 'AI unavailable. Showing local suggestions.';
 
   @override
