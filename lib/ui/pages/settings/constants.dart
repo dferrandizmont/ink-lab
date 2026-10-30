@@ -14,13 +14,13 @@ abstract final class SettingsConstants {
       'https://github.com/dferrandizmont/ink-lab';
 
   /// Address that receives the reports of AI suggestions.
-  static const String contactEmail = 'dev@mainshai.com';
+  static const String contactEmail = 'inklab@mainshai.com';
 
   /// Privacy policy page (Spanish; English lives under `en/`).
   static const String privacyUrlEs =
-      'https://dferrandizmont.github.io/ink-lab/privacidad/';
+      'https://inklab.mainshai.com/es/privacy/';
   static const String privacyUrlEn =
-      'https://dferrandizmont.github.io/ink-lab/privacidad/en/';
+      'https://inklab.mainshai.com/privacy/';
 
   /// Placeholder of the maximum tokens field.
   static const String aiMaxTokensHint = '1200';

@@ -25,9 +25,9 @@ La IA es opcional y está apagada de serie.
 ## Descargas
 
 <p>
+  <a href="https://play.google.com/apps/testing/es.inklab.app"><img src="https://img.shields.io/badge/Google_Play-Beta-414141?logo=googleplay&amp;style=for-the-badge" alt="Beta en Google Play"></a>
   <a href="https://github.com/dferrandizmont/ink-lab/releases/latest"><img src="https://img.shields.io/badge/Disponible_en-GitHub-181717?logo=github&amp;style=for-the-badge" alt="Disponible en GitHub"></a>
   <!--
-  <a href="[ENLACE_GOOGLE_PLAY]"><img src="https://img.shields.io/badge/Google_Play-Descargar-414141?logo=googleplay&amp;style=for-the-badge" alt="Disponible en Google Play"></a>
   <a href="[ENLACE_APP_STORE]"><img src="https://img.shields.io/badge/App_Store-Descargar-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Disponible en App Store"></a>
   -->
 </p>
@@ -37,14 +37,13 @@ Android en GitHub y en prueba cerrada en Google Play. iOS, más adelante.
 <details>
 <summary>Únete a la beta de Google Play</summary>
 
-Ink Lab está en prueba cerrada en Google Play antes de salir para todos, y nos vienen bien testers:
+Ink Lab está en prueba cerrada en Google Play y cualquiera puede apuntarse:
 
-1. Únete al grupo de Google [ink-lab-testers](https://groups.google.com/g/ink-lab-testers)
-   (`ink-lab-testers@googlegroups.com`) con la cuenta de Google que usas en Google Play.
-2. Abre la [invitación a la prueba](https://play.google.com/apps/testing/es.inklab.app), acéptala e instala
-   Ink Lab desde Google Play. La invitación funciona cuando la prueba ya está en marcha; si dice que la app
-   no está disponible, vuelve a probar en unos días.
-3. Mantenla instalada al menos 14 días. Lo que encuentres, mándalo a dev@mainshai.com.
+1. Únete al grupo de testers: [ink-lab-testers](https://groups.google.com/g/ink-lab-testers). Con tu cuenta de Google, pulsa «Unirse al grupo».
+2. Acepta la prueba desde el móvil o el ordenador: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
+3. Instala la app desde Google Play. Se actualizará sola.
+
+Si puedes, quédate en la prueba al menos 14 días y úsala de vez en cuando (por ejemplo, busca el color de una foto): Google exige 12 testers durante 14 días para publicarla para todo el mundo. Los comentarios, a inklab@mainshai.com.
 
 </details>
 
@@ -129,8 +128,8 @@ móvil usa ML Kit de Google, que envía a Google diagnósticos de uso, nunca tus
 peticiones, colores ni fotos. La cámara y la galería solo se usan al emparejar
 una foto o al crear una escena desde ella, y la foto nunca sale del dispositivo.
 
-[Política de privacidad](https://dferrandizmont.github.io/ink-lab/privacidad/) ·
-[Detalle técnico](docs/privacy.md) · Soporte: **dev@mainshai.com**.
+[Web](https://inklab.mainshai.com/es/) · [Política de privacidad](https://inklab.mainshai.com/es/privacy/) ·
+[Detalle técnico](docs/privacy.md) · Soporte: **inklab@mainshai.com**.
 
 ## Novedades
 

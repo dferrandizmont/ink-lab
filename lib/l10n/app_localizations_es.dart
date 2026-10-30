@@ -678,7 +678,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get paletteAiReportCopied =>
-      'No hay app de correo. Se ha copiado el informe: pégalo en un correo a dev@mainshai.com';
+      'No hay app de correo. Se ha copiado el informe: pégalo en un correo a inklab@mainshai.com';
 
   @override
   String get paletteAiFellBack =>

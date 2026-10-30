@@ -25,9 +25,9 @@ AI is optional and off by default.
 ## Download
 
 <p>
+  <a href="https://play.google.com/apps/testing/es.inklab.app"><img src="https://img.shields.io/badge/Google_Play-Beta-414141?logo=googleplay&amp;style=for-the-badge" alt="Beta on Google Play"></a>
   <a href="https://github.com/dferrandizmont/ink-lab/releases/latest"><img src="https://img.shields.io/badge/Available_on-GitHub-181717?logo=github&amp;style=for-the-badge" alt="Available on GitHub"></a>
   <!--
-  <a href="[GOOGLE_PLAY_LINK]"><img src="https://img.shields.io/badge/Google_Play-Download-414141?logo=googleplay&amp;style=for-the-badge" alt="Available on Google Play"></a>
   <a href="[APP_STORE_LINK]"><img src="https://img.shields.io/badge/App_Store-Download-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Available on the App Store"></a>
   -->
 </p>
@@ -37,14 +37,13 @@ Android on GitHub, and in closed testing on Google Play. iOS is coming.
 <details>
 <summary>Join the beta on Google Play</summary>
 
-Ink Lab is in closed testing on Google Play before its public launch, and testers are welcome:
+Ink Lab is in closed testing on Google Play and anyone can join:
 
-1. Join the [ink-lab-testers](https://groups.google.com/g/ink-lab-testers) Google Group
-   (`ink-lab-testers@googlegroups.com`) with the Google account you use on Google Play.
-2. Open the [testing invitation](https://play.google.com/apps/testing/es.inklab.app), accept it and install
-   Ink Lab from Google Play. The invitation works once the test is live; if it says the app isn't
-   available, try again in a few days.
-3. Keep it installed for at least 14 days. Send what you find to dev@mainshai.com.
+1. Join the testers group: [ink-lab-testers](https://groups.google.com/g/ink-lab-testers). Sign in with your Google account and press «Join group».
+2. Accept the test from your phone or computer: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
+3. Install the app from Google Play. It updates itself.
+
+If you can, stay in the test for at least 14 days and use it from time to time (for example, match a colour from a photo): Google requires 12 testers for 14 days to publish it for everyone. Send comments to inklab@mainshai.com.
 
 </details>
 
@@ -127,8 +126,8 @@ usage diagnostics, never your prompts, colours or photos. The camera and the
 gallery are only used to match a photo or to make a scene from one, and the
 photo never leaves the device.
 
-[Privacy policy](https://dferrandizmont.github.io/ink-lab/privacidad/en/) ·
-[Technical details](docs/privacy.en.md) · Support: **dev@mainshai.com**.
+[Website](https://inklab.mainshai.com) · [Privacy policy](https://inklab.mainshai.com/privacy/) ·
+[Technical details](docs/privacy.en.md) · Support: **inklab@mainshai.com**.
 
 ## What's new
 

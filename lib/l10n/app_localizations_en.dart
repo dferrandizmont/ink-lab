@@ -672,7 +672,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paletteAiReportCopied =>
-      'No email app found. The report was copied: paste it in an email to dev@mainshai.com';
+      'No email app found. The report was copied: paste it in an email to inklab@mainshai.com';
 
   @override
   String get paletteAiFellBack => 'AI unavailable. Showing local suggestions.';

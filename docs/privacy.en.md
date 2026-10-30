@@ -92,12 +92,12 @@ clipboard may be visible to the keyboard or to other apps depending on the opera
 pasted around. The API key is never part of the backup.
 
 ## Support and links
-The support address is **dev@mainshai.com**. "About" offers to **copy** the repository URL to the clipboard; the app
+The support address is **inklab@mainshai.com**. "About" offers to **copy** the repository URL to the clipboard; the app
 never opens the browser. It opens the email client only when you tap "Report this suggestion" on an AI result
-(Palette), with a message already written to dev@mainshai.com that you decide whether to send: reason, version,
+(Palette), with a message already written to inklab@mainshai.com that you decide whether to send: reason, version,
 provider and model, brand, mode or scene and the suggestion's codes and texts; never the API key or photos. Without
 an email app, the report is copied to the clipboard. The privacy policy is published at
-`https://dferrandizmont.github.io/ink-lab/privacidad/` (English: `.../privacidad/en/`), generated from
+`https://inklab.mainshai.com/privacy/` (Spanish: `https://inklab.mainshai.com/es/privacy/`), generated from
 `docs/legal/politica-privacidad.md` (`docs/legal/LEEME.en.md`).
 
 ## Store declarations

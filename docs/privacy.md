@@ -93,12 +93,12 @@ del sistema puede ser visible para el teclado o para otras apps según el sistem
 la copia pegada. La clave de API nunca forma parte de la copia.
 
 ## Soporte y enlaces
-La dirección de soporte es **dev@mainshai.com**. «Acerca de» ofrece **copiar** la URL del repositorio al portapapeles;
+La dirección de soporte es **inklab@mainshai.com**. «Acerca de» ofrece **copiar** la URL del repositorio al portapapeles;
 la app no abre el navegador. Solo abre el correo cuando tocas «Reportar esta sugerencia» en un resultado de IA
-(Paleta), con un mensaje ya escrito para dev@mainshai.com que tú decides si envías: motivo, versión, proveedor y
+(Paleta), con un mensaje ya escrito para inklab@mainshai.com que tú decides si envías: motivo, versión, proveedor y
 modelo, marca, modo o escena y los códigos y textos de la sugerencia; nunca la clave de API ni fotos. Sin app de
 correo, el informe se copia al portapapeles. La política de privacidad se publica en
-`https://dferrandizmont.github.io/ink-lab/privacidad/` (inglés: `.../privacidad/en/`), generada desde
+`https://inklab.mainshai.com/es/privacy/` (inglés: `https://inklab.mainshai.com/privacy/`), generada desde
 `docs/legal/politica-privacidad.md` (`docs/legal/LEEME.md`).
 
 ## Declaraciones en tiendas

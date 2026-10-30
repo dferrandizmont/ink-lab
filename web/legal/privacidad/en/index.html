@@ -1,87 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
 <title>Ink Lab privacy policy</title>
-<meta name="description" content="Ink Lab privacy policy">
-<link rel="canonical" href="https://dferrandizmont.github.io/ink-lab/privacidad/en/">
-<link rel="stylesheet" href="../../styles.css">
+<link rel="canonical" href="https://inklab.mainshai.com/privacy/">
+<meta http-equiv="refresh" content="0; url=https://inklab.mainshai.com/privacy/">
 </head>
 <body>
-<main id="contenido">
-<nav aria-label="Language"><a href="../" lang="es" hreflang="es">Español</a></nav>
-<h1>Ink Lab privacy policy</h1>
-<p>Last updated: 30 October 2026</p>
-<p>Courtesy translation. The Spanish version (<a href="../">politica-privacidad.md</a>) is the one that applies.</p>
-<p>Ink Lab is an app for people who draw with alcohol markers: browse colour swatches, match the colour of a photo to a marker in your collection, and build palettes with colour theory. It is an independent app: not created, reviewed or endorsed by Ohuhu, DecoTime or any other brand.</p>
-<p>Summary: <strong>you have no account, there is no server of ours and your data stays on your phone.</strong> The app is entirely free and open source, and includes no analytics of ours, ads or tracking. <strong>If you do not turn on AI, the app does not use the network.</strong> If you turn it on, on Android the on-device AI uses Google&#x27;s ML Kit, which sends Google diagnostics and usage data (never your prompts, your colours or your photos); and if you choose OpenRouter with your own key, it sends exactly what is explained below.</p>
-<h2>1. Controller</h2>
-<ul>
-<li>Holder: Daniel Mont Ferrandiz</li>
-<li>Contact email: <a href="mailto:dev@mainshai.com">dev@mainshai.com</a></li>
-</ul>
-<h2>2. What data is processed</h2>
-<h3>Data that stays on your phone (we do not receive it)</h3>
-<p>Your active brand, the packs and markers you own, your favourites, your saved palettes, the history of your latest colour matches and your settings are stored only in the app&#x27;s private storage, on your device. The marker catalogues ship inside the app and everything works offline. There is no synchronisation or copy on any server of ours.</p>
-<p>Android&#x27;s system backup is <strong>switched off</strong> for this app, so neither your settings nor your key leave the phone that way. On iPhone, the preferences are part of the device backup that you manage with your Apple account.</p>
-<h3>Camera and gallery</h3>
-<p>Only when you use &quot;Match&quot; or &quot;Scene from a photo&quot; (in Palette) and choose to take a photo or pick one from the gallery, the app asks for the permission or opens the system picker. The photo is decoded and analysed <strong>on your phone</strong>: it is not uploaded anywhere, it is not stored and it is never sent to an AI provider. In &quot;Match&quot;, only the sampled colour and the matched marker are kept, in your local history. In &quot;Scene from a photo&quot;, its main colours are found to suggest markers from your collection; the photo is only kept in memory while you look at the result, and if you save the palette, the marker codes are saved, never the photo.</p>
-<h3>Backup</h3>
-<p>&quot;Export backup&quot; (Settings) produces a JSON text with your collections, favourites, palettes and history, and <strong>copies it to the clipboard</strong> for you to paste wherever you like; &quot;Import backup&quot; receives it by pasting. It is not encrypted, carries no identifier and never includes your API key. What you do with it afterwards (saving it in your cloud, sending it in a message...) is outside the app. Note that, depending on your system, the clipboard may be visible to your keyboard or to other apps.</p>
-<h3>Optional AI</h3>
-<p>It is <strong>off by default</strong> (Settings → AI assistant → Suggest with AI). With it off, the app opens no network connection and does not call ML Kit. If you turn it on, the app first shows you what would leave the phone, and you can choose between:</p>
-<ul>
-<li><strong>Colour theory (local engine):</strong> no AI and no network.</li>
-<li><strong>On the device (Gemini Nano, on compatible Android phones, through Google&#x27;s ML Kit):</strong> your scenario and the colour codes are processed on your phone and sent nowhere. When you turn AI on, the app uses ML Kit to check whether Gemini Nano is available and, if you choose this option, to download it and generate the suggestions. When it is used, <strong>ML Kit sends Google</strong>, over HTTPS and in batches (roughly once a day), diagnostics and usage data: device information (manufacturer, model, system version and build), app information (package name and version), device or other identifiers, including per-installation identifiers, performance metrics, the API configuration, the input and output size, the feature version, the event type, error codes and the configured languages. Google says it uses them for diagnostics and usage analytics and does not transfer them to third parties (<a href="https://developers.google.com/ml-kit/android-data-disclosure).">https://developers.google.com/ml-kit/android-data-disclosure).</a> That data does not include the content of your prompts, your colours or your photos, only their size. The developer does not receive it: Google processes it under its own terms and privacy policy (<a href="https://policies.google.com/privacy).">https://policies.google.com/privacy).</a> If the model is not on the phone, Android downloads it once through Google services; that download and the model are governed by Google&#x27;s terms. On iPhone there is no on-device AI and no ML Kit.</li>
-<li><strong>OpenRouter with your key:</strong> only if you choose OpenRouter, save your key and tap &quot;Suggest with AI&quot; in Palette, the app sends, <strong>from your phone straight to <code>openrouter.ai</code>, over HTTPS and with your own key and your own account</strong>: the brand (id and name), the palette mode, the scene name (in English), the code and name of the base marker (if any) and whether it is locked, the palette size, the codes and hex colours of the candidate markers from your collection (not their names), the generation settings (model, temperature and length limit), fixed instructions from the app and an <code>X-Title: Ink Lab</code> header. To show you the available models, the app queries the OpenRouter catalogue (with your key, if you saved one). Photos (the request states that no image is attached and the app has no way to attach one), your favourites, your saved palettes and identifiers of yours are <strong>never</strong> sent. As with any internet connection, OpenRouter and the model provider see your device&#x27;s IP address. They receive that request and apply <strong>their own</strong> terms and privacy policies, including how long they keep it, which you can read at <a href="https://openrouter.ai/privacy.">https://openrouter.ai/privacy.</a> The developer does not see it, it does not pass through any server of the developer and the app does not store it.</li>
-</ul>
-<p>Your OpenRouter key is stored in the system&#x27;s secure storage (Android Keystore or iOS Keychain, on this device only). It is not uploaded to the developer, it is not included in backups, and you can delete it in Settings at any time. If the AI fails, the app goes back to colour theory.</p>
-<h3>Permissions</h3>
-<p>The app asks for the <strong>camera or photos</strong> permission only when you use &quot;Match&quot; or &quot;Scene from a photo&quot;. On Android it declares <strong>internet</strong> and <strong>network state</strong> access (<code>INTERNET</code> and <code>ACCESS_NETWORK_STATE</code>), which are only used with AI turned on: for the optional AI with OpenRouter and for the diagnostics ML Kit sends Google when the on-device AI is used. It does not ask for location, contacts, calendar, microphone or notifications, and it does not use the advertising identifier.</p>
-<h3>Data that is NOT processed</h3>
-<ul>
-<li>We do not ask for or keep your name, email, phone, age or any account data: there are no accounts.</li>
-<li>The developer uses no analytics and no crash reports, and there are no ads, no personalised advertising and no cross-app tracking. The only exception is the diagnostics and usage data ML Kit sends Google when you use the on-device AI (see &quot;Optional AI&quot;); the developer does not receive it.</li>
-<li>We do not receive your photos, your collections, your palettes or your key.</li>
-</ul>
-<h3>If you write to us</h3>
-<p>You can write to <a href="mailto:dev@mainshai.com">dev@mainshai.com</a>. We will process your email address and what you tell us only to reply to you. Do not send your API key or backups containing data you do not want to share: test data is enough to fix a bug.</p>
-<p>If you report an AI suggestion (&quot;Report this suggestion&quot;, in Palette), the app opens your email app with a message already written to <a href="mailto:dev@mainshai.com">dev@mainshai.com</a>: the reason you choose, the app version, the AI provider and model, the brand, the mode or scene, the base marker&#x27;s code and that suggestion&#x27;s codes, roles and reasons. It never includes your API key or photos. It only reaches us if you send it, and we use it to review the reported content and improve the suggestions. If there is no email app, the report is copied to the clipboard for you to paste.</p>
-<h2>3. Purposes and legal basis</h2>
-<div class="tabla" role="region" aria-label="Purposes and legal basis" tabindex="0"><table><thead><tr>
-<th scope="col">Processing</th><th scope="col">Purpose</th><th scope="col">Legal basis (GDPR)</th>
-</tr></thead><tbody>
-<tr><td>Collections, favourites, palettes and settings on your phone</td><td>So that you can use the app and keep your work</td><td>We do not receive them: they stay on your device, under your control</td></tr>
-<tr><td>&quot;Match&quot; or &quot;Scene from a photo&quot; photo</td><td>Finding the closest markers</td><td>Processed only on your phone, at your request; we do not receive it</td></tr>
-<tr><td>ML Kit diagnostics (only with the on-device AI, on Android)</td><td>Diagnostics and usage analytics of the SDK, according to Google</td><td>Sent only if you choose to turn on the optional AI; Google processes them as the provider of ML Kit, under its own terms and privacy policy; we do not receive them</td></tr>
-<tr><td>AI with OpenRouter (optional)</td><td>Generating palette suggestions</td><td>Your consent when you turn it on and use your own key; OpenRouter performs the processing under its own terms</td></tr>
-<tr><td>Support emails and AI suggestion reports</td><td>Replying to your query and reviewing the reported content</td><td>Your request and our legitimate interest in handling it (art. 6.1.f)</td></tr>
-</tbody></table></div>
-<p>We make no automated decisions and build no profiles about you.</p>
-<h2>4. Who receives the data</h2>
-<p>The app does not transmit data to the developer. If you turn on AI, on Android <strong>Google</strong> receives the diagnostics and usage data ML Kit sends when the on-device AI is used. If you use AI with OpenRouter, the request described above is received by <strong>OpenRouter</strong> and the <strong>model provider</strong> you choose, on your behalf and with your key. If you send a support email or a suggestion report, the holder receives it at <a href="mailto:dev@mainshai.com">dev@mainshai.com</a> through the email service you choose.</p>
-<h2>5. International transfers</h2>
-<p>The developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose, which may process it in other regions and under its own terms. Google may process the ML Kit diagnostics in other countries, under its own terms. Any other service you decide to use (email, cloud, the destination of copied text) is governed by its own terms.</p>
-<h2>6. How long it is kept</h2>
-<ul>
-<li><strong>Data on your phone:</strong> until you uninstall the app or clear its data from the system settings (and, where applicable, from the backup texts you saved).</li>
-<li><strong>Support emails:</strong> as long as needed to handle your query and, at most, one year after the last reply.</li>
-</ul>
-<h2>7. Your rights</h2>
-<p>You can exercise your rights of <strong>access, rectification, erasure, objection, restriction of processing and portability</strong> by writing to <a href="mailto:dev@mainshai.com">dev@mainshai.com</a>. We will reply within one month.</p>
-<p>We do not receive the data stored on your phone, so we cannot see or delete it for you. You can delete it by uninstalling the app or clearing its data from the system settings, and take it with you with &quot;Export backup&quot;. For anything sent to OpenRouter, exercise your rights with OpenRouter and the model provider; for the ML Kit diagnostics, with Google.</p>
-<p>If you believe we have not handled your data properly, you can complain to the Spanish Data Protection Agency: <a href="https://www.aepd.es">https://www.aepd.es</a></p>
-<h2>8. Children</h2>
-<p>The app is not directed at children under 13 (or the equivalent minimum age in your country). It does not ask for age or collect personal data from anyone, including children: there are no accounts and your data stays on the device. AI with OpenRouter requires your own account with a third party, which minors should not create without the permission of a parent or guardian.</p>
-<h2>9. Security</h2>
-<p>There is no developer server and no data transmission from the app, except with the optional AI turned on. Your data is in the app&#x27;s private space; your key, in the Keystore or the Keychain; connections to OpenRouter use HTTPS and follow no redirects. Protecting your phone (screen lock, encryption, no root or jailbreak) is up to you. The code is public and anyone can check what it does.</p>
-<h2>10. Changes to this policy</h2>
-<p>If what the app does with data changes, we will update this page and the date above. If the change is important (for example, if a feature were to send data off the phone), we will also tell you inside the app and it would only be turned on with your consent.</p>
-<h2>11. Contact</h2>
-<p><a href="mailto:dev@mainshai.com">dev@mainshai.com</a></p>
-<footer><a href="../../">Ink Lab</a></footer>
-</main>
+<p>The Ink Lab privacy policy is now at <a href="https://inklab.mainshai.com/privacy/">https://inklab.mainshai.com/privacy/</a>.</p>
 </body>
 </html>

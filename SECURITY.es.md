@@ -1,7 +1,7 @@
 # Avisos de seguridad
 [English](SECURITY.md) · Español
 
-Si encuentras una vulnerabilidad, escribe a **dev@mainshai.com** o abre un
+Si encuentras una vulnerabilidad, escribe a **inklab@mainshai.com** o abre un
 [aviso privado de seguridad](https://github.com/dferrandizmont/ink-lab/security/advisories/new)
 en GitHub.
 

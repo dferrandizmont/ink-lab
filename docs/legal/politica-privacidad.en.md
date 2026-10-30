@@ -1,13 +1,8 @@
-<!--
-Not legal advice. Courtesy translation of the Spanish policy, written on 29 Oct 2026 and updated on 30 Oct 2026 against the code of that date;
-have a professional review it before the store launch. The HTML generator (web/legal/md2html.py) omits this comment.
--->
-
 # Ink Lab privacy policy
 
-Last updated: 30 October 2026
+Last updated: 2026-10-30
 
-Courtesy translation. The Spanish version ([politica-privacidad.md](politica-privacidad.md)) is the one that
+Courtesy translation. The [Spanish version](https://inklab.mainshai.com/es/privacy/) is the one that
 applies.
 
 Ink Lab is an app for people who draw with alcohol markers: browse colour swatches, match the colour of a photo to a
@@ -23,7 +18,7 @@ sends exactly what is explained below.
 ## 1. Controller
 
 - Holder: Daniel Mont Ferrandiz
-- Contact email: dev@mainshai.com
+- Contact email: inklab@mainshai.com
 
 ## 2. What data is processed
 
@@ -101,11 +96,11 @@ advertising identifier.
 - We do not receive your photos, your collections, your palettes or your key.
 
 ### If you write to us
-You can write to dev@mainshai.com. We will process your email address and what you tell us only to reply to you. Do not
+You can write to inklab@mainshai.com. We will process your email address and what you tell us only to reply to you. Do not
 send your API key or backups containing data you do not want to share: test data is enough to fix a bug.
 
 If you report an AI suggestion ("Report this suggestion", in Palette), the app opens your email app with a message
-already written to dev@mainshai.com: the reason you choose, the app version, the AI provider and model, the brand, the
+already written to inklab@mainshai.com: the reason you choose, the app version, the AI provider and model, the brand, the
 mode or scene, the base marker's code and that suggestion's codes, roles and reasons. It never includes your API key or photos. It only
 reaches us if you send it, and we use it to review the reported content and improve the suggestions. If there is no
 email app, the report is copied to the clipboard for you to paste.
@@ -126,7 +121,7 @@ We make no automated decisions and build no profiles about you.
 The app does not transmit data to the developer. If you turn on AI, on Android **Google** receives the diagnostics and
 usage data ML Kit sends when the on-device AI is used. If you use AI with OpenRouter, the request described above is
 received by **OpenRouter** and the **model provider** you choose, on your behalf and with your key.
-If you send a support email or a suggestion report, the holder receives it at dev@mainshai.com through the email service you choose.
+If you send a support email or a suggestion report, the holder receives it at inklab@mainshai.com (or at dev@mainshai.com, the address the app used up to version 0.6.2) through the email service you choose.
 
 ## 5. International transfers
 The developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose,
@@ -143,7 +138,7 @@ destination of copied text) is governed by its own terms.
 ## 7. Your rights
 
 You can exercise your rights of **access, rectification, erasure, objection, restriction of processing and
-portability** by writing to dev@mainshai.com. We will reply within one month.
+portability** by writing to inklab@mainshai.com. We will reply within one month.
 
 We do not receive the data stored on your phone, so we cannot see or delete it for you. You can delete it by
 uninstalling the app or clearing its data from the system settings, and take it with you with "Export backup". For
@@ -174,4 +169,4 @@ turned on with your consent.
 
 ## 11. Contact
 
-dev@mainshai.com
+inklab@mainshai.com

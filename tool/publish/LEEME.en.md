@@ -148,7 +148,8 @@ publication of `dferrandizmont/ink-lab`:
 2. Review the tree, the images and the identity. Create the empty public
    repository on GitHub (with the owner's go-ahead), add the remote and run
    `git push -u origin main`.
-3. Enable GitHub Pages with the contents of `web/legal/dist/` (`web/legal/LEEME.md`).
+3. The website and policy are published at https://inklab.mainshai.com from `web/`; the `gh-pages` branch only
+   redirects (`web/legal/LEEME.md`).
 
 To publish later changes while keeping the public history, use the update mode
 (it uses no network and does not push):

@@ -1,7 +1,7 @@
 # Security notices
 English · [Español](SECURITY.es.md)
 
-If you find a vulnerability, write to **dev@mainshai.com** or open a
+If you find a vulnerability, write to **inklab@mainshai.com** or open a
 [private security advisory](https://github.com/dferrandizmont/ink-lab/security/advisories/new)
 on GitHub.
 

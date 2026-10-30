@@ -1325,7 +1325,7 @@ abstract class AppLocalizations {
   /// Snack bar when no email app opens; the report was copied to the clipboard.
   ///
   /// In en, this message translates to:
-  /// **'No email app found. The report was copied: paste it in an email to dev@mainshai.com'**
+  /// **'No email app found. The report was copied: paste it in an email to inklab@mainshai.com'**
   String get paletteAiReportCopied;
 
   /// No description provided for @paletteAiFellBack.

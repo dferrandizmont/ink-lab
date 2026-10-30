@@ -50,8 +50,8 @@ flutter run
 CI runs `flutter pub get`, `flutter analyze` and `flutter test` on every pull
 request. Include the commands and results in your PR, and a screenshot for UI
 changes. If you change the privacy policy, update `docs/privacy.md`,
-`docs/legal/politica-privacidad.md` (and the English versions) together and
-regenerate the web page with `python -B web/legal/md2html.py`.
+`docs/legal/politica-privacidad.md` (and the English versions) together; the website
+(`web/`, published at https://inklab.mainshai.com) shows the policy as written.
 
 A local test APK, signed with the debug key (never for stores):
 
@@ -61,7 +61,8 @@ flutter build apk --release --android-project-arg=allowDebugSigning=true
 
 Public APKs are signed with the owner's key, which is not in the repository.
 The public selection is prepared with the [exporter](tool/publish/LEEME.en.md)
-and the privacy page is generated with [web/legal](web/legal/LEEME.md).
+and the website lives in `web/` (the old GitHub Pages site only redirects, see
+[web/legal](web/legal/LEEME.md)).
 
 By contributing, you agree that your code is offered under the
 [MIT License](LICENSE) and that your documentation and texts are offered under

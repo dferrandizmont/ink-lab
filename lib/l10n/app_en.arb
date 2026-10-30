@@ -265,7 +265,7 @@
   "@paletteAiReportThanks": {
     "description": "Snack bar after the email app was opened for an AI report."
   },
-  "paletteAiReportCopied": "No email app found. The report was copied: paste it in an email to dev@mainshai.com",
+  "paletteAiReportCopied": "No email app found. The report was copied: paste it in an email to inklab@mainshai.com",
   "@paletteAiReportCopied": {
     "description": "Snack bar when no email app opens; the report was copied to the clipboard."
   },

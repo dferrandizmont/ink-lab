@@ -140,7 +140,7 @@ void main() {
 
     expect(launched, hasLength(1));
     expect(launched.single.scheme, 'mailto');
-    expect(launched.single.path, 'dev@mainshai.com');
+    expect(launched.single.path, 'inklab@mainshai.com');
     final String text = launched.single.toString();
     expect(text, contains('(offensive)'));
     expect(text, contains('model-a'));
@@ -179,7 +179,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(copied, isNotNull);
-    expect(copied, contains('To: dev@mainshai.com'));
+    expect(copied, contains('To: inklab@mainshai.com'));
     expect(copied, contains('Subject: Ink Lab: AI suggestion report (other)'));
     expect(copied, isNot(contains(_key)));
     expect(

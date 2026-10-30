@@ -51,7 +51,8 @@ La CI ejecuta `flutter pub get`, `flutter analyze` y `flutter test` en cada
 solicitud de cambio. Incluye en tu PR los comandos ejecutados y su resultado, y
 una captura si cambias la interfaz. Si cambias la política de privacidad,
 actualiza a la vez `docs/privacy.md`, `docs/legal/politica-privacidad.md` (y las
-versiones inglesas) y regenera la web con `python -B web/legal/md2html.py`.
+versiones inglesas); la web (`web/`, publicada en https://inklab.mainshai.com)
+muestra la política tal cual.
 
 Un APK de pruebas locales, firmado con la clave de depuración (nunca para
 tiendas):
@@ -62,8 +63,8 @@ flutter build apk --release --android-project-arg=allowDebugSigning=true
 
 Los APK públicos se firman con una clave del dueño que no está en el
 repositorio. La selección pública se prepara con el
-[exportador](tool/publish/LEEME.md) y la página de privacidad se genera con
-[web/legal](web/legal/LEEME.md).
+[exportador](tool/publish/LEEME.md) y la web vive en `web/` (la antigua de
+GitHub Pages solo redirige, véase [web/legal](web/legal/LEEME.md)).
 
 Al contribuir aceptas que tu código se ofrezca bajo [MIT](LICENSE) y que tu
 documentación y tus textos se ofrezcan bajo [CC BY-SA 4.0](LICENSE-CONTENT.es.md).

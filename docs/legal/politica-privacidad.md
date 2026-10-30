@@ -1,12 +1,6 @@
-<!--
-No es asesoramiento jurídico. Texto redactado el 29-oct-2026 y actualizado el 30-oct-2026 contra el código de esa fecha (docs/privacy.md es la
-fuente de verdad técnica); conviene que lo revise un profesional antes del lanzamiento en las tiendas.
-El generador HTML (web/legal/md2html.py) omite este comentario.
--->
-
 # Política de privacidad de Ink Lab
 
-Última actualización: 30 de octubre de 2026
+Última actualización: 2026-10-30
 
 Ink Lab es una app para quien dibuja con rotuladores de alcohol: consulta las muestras de color, empareja el color de
 una foto con un rotulador de tu colección y construye paletas con teoría del color. Es una app independiente: no está
@@ -21,7 +15,7 @@ explica más abajo.
 ## 1. Responsable del tratamiento
 
 - Titular: Daniel Mont Ferrandiz
-- Correo de contacto: dev@mainshai.com
+- Correo de contacto: inklab@mainshai.com
 
 ## 2. Qué datos se tratan
 
@@ -99,12 +93,12 @@ móvil. No pide ubicación, contactos, calendario, micrófono ni notificaciones,
 - No recibimos tus fotos, tus colecciones, tus paletas ni tu clave.
 
 ### Si nos escribes
-Puedes escribirnos a dev@mainshai.com. Trataremos tu dirección de correo y lo que nos cuentes solo para responderte.
+Puedes escribirnos a inklab@mainshai.com. Trataremos tu dirección de correo y lo que nos cuentes solo para responderte.
 No nos mandes tu clave de API ni copias de seguridad con datos que no quieras compartir: para un fallo nos basta con
 datos de prueba.
 
 Si reportas una sugerencia de la IA («Reportar esta sugerencia», en Paleta), la app abre tu app de correo con un
-mensaje ya escrito para dev@mainshai.com: el motivo que elijas, la versión de la app, el proveedor y el modelo de IA,
+mensaje ya escrito para inklab@mainshai.com: el motivo que elijas, la versión de la app, el proveedor y el modelo de IA,
 la marca, el modo o la escena, el código del rotulador base y los códigos, papeles y motivos de esa sugerencia. Nunca incluye tu clave de
 API ni fotos. Solo nos llega si tú lo envías, y lo usamos para revisar el contenido reportado y mejorar las
 sugerencias. Si no hay app de correo, el informe se copia al portapapeles para que lo pegues tú.
@@ -125,7 +119,7 @@ No tomamos decisiones automatizadas ni elaboramos perfiles sobre ti.
 La app no transmite datos al desarrollador. Si activas la IA, en Android **Google** recibe los datos de diagnóstico y
 de uso que envía ML Kit al usarse la IA en el móvil. Si usas la IA con OpenRouter, la petición descrita arriba la
 reciben **OpenRouter** y el **proveedor del modelo** que elijas, en tu nombre y con tu clave. Si envías un
-correo de soporte o un reporte de una sugerencia, lo recibe el titular en dev@mainshai.com mediante el servicio de correo que elijas.
+correo de soporte o un reporte de una sugerencia, lo recibe el titular en inklab@mainshai.com (o en dev@mainshai.com, el buzón que usaba la app hasta la versión 0.6.2) mediante el servicio de correo que elijas.
 
 ## 5. Transferencias internacionales
 El desarrollador no realiza transferencias de datos. Si usas la IA con OpenRouter, la petición va al proveedor que
@@ -143,7 +137,7 @@ otros países, según sus propias condiciones. Los demás servicios que decidas 
 ## 7. Tus derechos
 
 Puedes ejercer tus derechos de **acceso, rectificación, supresión, oposición, limitación del tratamiento y
-portabilidad** escribiendo a dev@mainshai.com. Te responderemos en el plazo de un mes.
+portabilidad** escribiendo a inklab@mainshai.com. Te responderemos en el plazo de un mes.
 
 No recibimos los datos guardados en tu móvil, así que no podemos verlos ni borrarlos por ti. Puedes borrarlos
 desinstalando la app o borrando sus datos desde los ajustes del sistema, y llevártelos con «Exportar copia». Para lo que
@@ -173,14 +167,4 @@ solo se activaría con tu consentimiento.
 
 ## 11. Contacto
 
-dev@mainshai.com
-
----
-
-## Notas para el titular (no publicar)
-Borra esta sección antes de publicar (el generador HTML la omite). Decisiones ya tomadas en este texto, por si quieres
-cambiarlas: titular Daniel Mont Ferrandiz y correo `dev@mainshai.com`; conservación de correos «un año desde la última
-respuesta»; la fecha de última actualización es la de la redacción; la IA en el móvil se describe como Gemini Nano en Android
-mediante ML Kit, con sus diagnósticos a Google (iOS aún no la tiene, véase `docs/privacy.md`). Publica la URL (`docs/legal/LEEME.md`) y ponla en las
-fichas de las tiendas; comprueba que coincide con «Seguridad de los datos» (Play) y «Privacidad de la app» (Apple). La
-versión inglesa (`politica-privacidad.en.md`) es una traducción de cortesía; manda la española.
+inklab@mainshai.com

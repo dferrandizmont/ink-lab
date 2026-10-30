@@ -26,7 +26,7 @@ void main() {
       body: _body(),
     );
     final String text = uri.toString();
-    expect(text, startsWith('mailto:dev@mainshai.com?subject='));
+    expect(text, startsWith('mailto:inklab@mainshai.com?subject='));
     expect(text, contains('Ink%20Lab%3A%20AI%20suggestion%20report%20(wrong)'));
     expect(text, isNot(contains('+')));
     expect(uri.queryParameters['subject'], contains('(wrong)'));

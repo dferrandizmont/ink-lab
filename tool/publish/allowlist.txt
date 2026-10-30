@@ -385,12 +385,9 @@ web/legal/.gitignore
 web/legal/.nojekyll
 web/legal/LEEME.md
 web/legal/index.html
-web/legal/md2html.py
 web/legal/privacidad/en/index.html
 web/legal/privacidad/index.html
-web/legal/rellenar.py
 web/legal/robots.txt
-web/legal/styles.css
 web/legal/test_legal.py
 lib/core/match_quality.dart
 lib/l10n/ideas_text.dart

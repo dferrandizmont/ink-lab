@@ -16,7 +16,7 @@ with your own OpenRouter key, the request (brand, scene and the markers' codes a
 
 | | Español | English |
 |---|---|---|
-| Política de privacidad / Privacy policy | [politica-privacidad.md](docs/legal/politica-privacidad.md) · [web](https://dferrandizmont.github.io/ink-lab/privacidad/) | [politica-privacidad.en.md](docs/legal/politica-privacidad.en.md) · [web](https://dferrandizmont.github.io/ink-lab/privacidad/en/) |
+| Política de privacidad / Privacy policy | [politica-privacidad.md](docs/legal/politica-privacidad.md) · [web](https://inklab.mainshai.com/es/privacy/) | [politica-privacidad.en.md](docs/legal/politica-privacidad.en.md) · [web](https://inklab.mainshai.com/privacy/) |
 | Detalle técnico / Technical details | [privacy.md](docs/privacy.md) | [privacy.en.md](docs/privacy.en.md) |
 
-Contacto / Contact: **dev@mainshai.com**
+Contacto / Contact: **inklab@mainshai.com**

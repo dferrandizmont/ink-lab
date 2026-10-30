@@ -10,6 +10,13 @@ so they can skip numbers.
 
 ## Unreleased
 
+## 0.6.3 · 2026-10-31
+
+- Support address is now inklab@mainshai.com (in About, AI suggestion reports and the privacy policy). Mail to
+  dev@mainshai.com still arrives.
+- About links to the privacy policy on the new website, https://inklab.mainshai.com (the old GitHub Pages
+  addresses redirect there).
+
 ## 0.6.2 · 2026-10-30
 
 - Palette: AI results have a "Report this suggestion" button. You pick a reason and your email app opens with the
