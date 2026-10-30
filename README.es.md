@@ -10,6 +10,7 @@
 [![Contenido: CC BY-SA 4.0](https://img.shields.io/badge/Contenido-CC_BY--SA_4.0-30382F)](LICENSE-CONTENT.es.md)
 [![Versión](https://img.shields.io/github/v/release/dferrandizmont/ink-lab?include_prereleases&label=versi%C3%B3n&color=30382F)](https://github.com/dferrandizmont/ink-lab/releases)
 [![Descargas](https://img.shields.io/github/downloads/dferrandizmont/ink-lab/total?label=descargas&color=30382F)](https://github.com/dferrandizmont/ink-lab/releases)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Inv%C3%ADtame_a_un_caf%C3%A9-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/danielmfdev)
 
 Compañero de muestras y paletas para quien dibuja con rotuladores de alcohol.
 Busca el código de un color, descubre qué rotulador de tu colección se parece más
