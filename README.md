@@ -46,6 +46,17 @@ Android now; iOS and Google Play coming soon.
 
 </details>
 
+### Test it on Google Play
+
+Ink Lab is in closed testing on Google Play before its public launch, and testers are welcome:
+
+1. Join the [ink-lab-testers](https://groups.google.com/g/ink-lab-testers) Google Group
+   (`ink-lab-testers@googlegroups.com`) with the Google account you use on Google Play.
+2. Open the [testing invitation](https://play.google.com/apps/testing/es.inklab.app), accept it and install
+   Ink Lab from Google Play. The invitation works once the test is live; if it says the app isn't
+   available, try again in a few days.
+3. Keep it installed for at least 14 days. Send what you find to dev@mainshai.com.
+
 ## Screenshots
 
 <p>
