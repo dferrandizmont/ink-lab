@@ -177,11 +177,19 @@ def update(revision, clone_path, version):
             wipe(clone)
             exporter.git('reset', '--hard', '--quiet', before, cwd=clone, env=env)
             raise
+    # The version tag carries the public identity too, never the git config of this machine.
+    tag = f'v{version}'
+    if exporter.git('tag', '--list', tag, cwd=clone, env=env).strip():
+        tagged = f'la etiqueta {tag} ya existía y no se mueve'
+    else:
+        exporter.git('-c', 'tag.gpgSign=false', 'tag', '--annotate', '--message', f'Ink Lab {version}', tag,
+                     cwd=clone, env=identity)
+        tagged = f'etiqueta {tag} con la identidad pública'
     print(f'OK: {count} ficheros; rutas, secretos, prohibidos y binarios comprobados.')
-    print(f'OK: un commit nuevo "Ink Lab {version}", identidad pública, sin push.')
+    print(f'OK: un commit nuevo "Ink Lab {version}", identidad pública, {tagged}, sin push.')
     print(f'Origen: {commit}')
     print(f'Clon: {clone}')
-    print('Siguiente paso: revisa git show --stat HEAD y haz git push origin main (con el sí del dueño).')
+    print(f'Siguiente paso: revisa git show --stat HEAD y haz git push origin main {tag} (con el sí del dueño).')
 
 
 if __name__ == '__main__':

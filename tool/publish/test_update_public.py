@@ -97,6 +97,10 @@ class UpdateTest(unittest.TestCase):
             'Ink Lab 0.4.0\n\n- First change that is long\n  and wraps onto a second line.\n- Second change.')
         identity = self.git('show', '-s', '--format=%an <%ae>|%cn <%ce>', cwd=self.clone).decode().strip()
         self.assertEqual(identity, 'Daniel Mont Ferrandiz <dev@mainshai.com>|Daniel Mont Ferrandiz <dev@mainshai.com>')
+        tag = self.git('for-each-ref', 'refs/tags/v0.4.0',
+                       '--format=%(objecttype)|%(taggername) %(taggeremail)|%(contents:subject)|%(*objectname)',
+                       cwd=self.clone).decode().strip()
+        self.assertEqual(tag, f'tag|Daniel Mont Ferrandiz <dev@mainshai.com>|Ink Lab 0.4.0|{self.head().decode()}')
         self.assertEqual((self.clone / 'lib/a.txt').read_text(), 'alpha two\n')
         self.assertEqual((self.clone / 'lib/new.txt').read_text(), 'brand new\n')
         self.assertFalse((self.clone / 'lib/old.txt').exists())
@@ -105,6 +109,15 @@ class UpdateTest(unittest.TestCase):
         self.assertEqual(self.git('status', '--porcelain', '--ignored', cwd=self.clone), b'')
         self.assertEqual(self.git('remote', cwd=self.clone).strip(), b'origin')
         self.assertIn(b'lib/new.txt', self.git('ls-files', cwd=self.clone))
+
+    def test_an_existing_tag_is_not_moved(self):
+        self.git('tag', 'v0.4.0', cwd=self.clone)
+        tagged = self.git('rev-parse', 'v0.4.0', cwd=self.clone)
+        self.change_source()
+        result = self.run_update()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(b'ya exist', result.stdout)
+        self.assertEqual(self.git('rev-parse', 'v0.4.0', cwd=self.clone), tagged)
 
     def test_public_history_is_preserved(self):
         self.change_source()

@@ -168,8 +168,12 @@ To publish later changes while keeping the public history, use the update mode
    remote) is not `github.com/dferrandizmont/ink-lab`, if it is behind `origin/main`, if
    HEAD is detached, if the changelog has no such version, or if nothing changed. On any
    failure the clone is left as it was.
-4. Review `git show --stat HEAD` in the clone and, with the owner's go-ahead,
-   `git push origin main`.
+4. The script also creates the annotated tag `vX.Y.Z` with the public identity (an existing
+   tag is left where it is). Review `git show --stat HEAD` in the clone and, with the owner's
+   go-ahead, `git push origin main vX.Y.Z`.
+
+Tags in the private repository carry the public identity too, never the Gmail address:
+`git -c user.name="Daniel Mont Ferrandiz" -c user.email=dev@mainshai.com tag -a vX.Y.Z -m "Ink Lab X.Y.Z"`.
 
 Public releases carry the APKs signed with the upload key (`docs/RELEASING.md`), with
 `SHA256SUMS.txt` and the certificate SHA-256 fingerprint in the notes, in Spanish and English.

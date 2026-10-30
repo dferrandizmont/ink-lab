@@ -32,7 +32,21 @@ AI is optional and off by default.
   -->
 </p>
 
-Android now; iOS and Google Play coming soon.
+Android on GitHub, and in closed testing on Google Play. iOS is coming.
+
+<details>
+<summary>Join the beta on Google Play</summary>
+
+Ink Lab is in closed testing on Google Play before its public launch, and testers are welcome:
+
+1. Join the [ink-lab-testers](https://groups.google.com/g/ink-lab-testers) Google Group
+   (`ink-lab-testers@googlegroups.com`) with the Google account you use on Google Play.
+2. Open the [testing invitation](https://play.google.com/apps/testing/es.inklab.app), accept it and install
+   Ink Lab from Google Play. The invitation works once the test is live; if it says the app isn't
+   available, try again in a few days.
+3. Keep it installed for at least 14 days. Send what you find to dev@mainshai.com.
+
+</details>
 
 <details>
 <summary>Install the APK from GitHub</summary>
@@ -45,17 +59,6 @@ Android now; iOS and Google Play coming soon.
    the APK.
 
 </details>
-
-### Test it on Google Play
-
-Ink Lab is in closed testing on Google Play before its public launch, and testers are welcome:
-
-1. Join the [ink-lab-testers](https://groups.google.com/g/ink-lab-testers) Google Group
-   (`ink-lab-testers@googlegroups.com`) with the Google account you use on Google Play.
-2. Open the [testing invitation](https://play.google.com/apps/testing/es.inklab.app), accept it and install
-   Ink Lab from Google Play. The invitation works once the test is live; if it says the app isn't
-   available, try again in a few days.
-3. Keep it installed for at least 14 days. Send what you find to dev@mainshai.com.
 
 ## Screenshots
 
@@ -82,32 +85,38 @@ Tap a screenshot to enlarge it.
 
 ## Features
 
-- **My markers:** one collection per brand, built from the series you use, the
+- **My markers.** One collection per brand, built from the series you use, the
   sets you own and any loose markers. A short first-run guide sets it up.
-- **Swatches:** the catalogue by code and name, with the hex of each marker,
+- **Swatches.** The catalogue by code and name, with the hex of each marker,
   search, filters, your own markers and favourites. On Ohuhu Oahu it also shows where each
   marker sits on the colour card.
-- **Match from a photo:** take a photo or pick one from the gallery, tap a point
+- **Match from a photo.** Take a photo or pick one from the gallery, tap a point
   and the app tells you which marker in your collection is closest, or says so
   when none is close.
-- **Colour-theory palettes:** pick a base colour and get harmonies
+- **Colour-theory palettes.** Pick a base colour and get harmonies
   (complementary, analogous, split complementary, triad, square, rectangle,
   monochrome and shadow), always resolved with the markers you own.
-- **Scenes:** 67 ready-made recipes in 11 categories (skin, sky and water,
+- **Scenes.** 67 ready-made recipes in 11 categories (skin, sky and water,
   nature, animals, food, fantasy…), searchable, each with its colour roles.
-- **Scene from a photo:** the app finds the main colours of a photo and turns
+- **Scene from a photo.** The app finds the main colours of a photo and turns
   them into the closest markers you own.
-- **Ideas:** challenges and techniques with a palette from your active
-  collection.
-- **Two brands:** Ohuhu (Oahu, Honolulu and Kaala, 503 colours, with the new
+- **Two brands.** Ohuhu (Oahu, Honolulu and Kaala, 503 colours, with the new
   and legacy codes) and DecoTime (313 colours, with an owned-markers
   selection, as it is sold in fixed sets).
-- **Optional AI:** either **on the device** (Gemini Nano, on compatible Android
+
+<details>
+<summary>More features</summary>
+
+- **Ideas.** Challenges and techniques with a palette from your active
+  collection.
+- **Optional AI.** Either **on the device** (Gemini Nano, on compatible Android
   phones, through Google's ML Kit, which sends Google usage diagnostics but never
   your prompts, colours or photos) or with **your own OpenRouter key**. If you
   do not turn it on, the app never uses the network.
-- **Backup:** export and import your collections, favourites, palettes and
+- **Backup.** Export and import your collections, favourites, palettes and
   settings as JSON text, with no account.
+
+</details>
 
 ## Privacy
 

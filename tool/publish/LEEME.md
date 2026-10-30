@@ -170,8 +170,12 @@ actualización (no usa la red ni hace push):
    `origin` (o cualquier remoto) no es `github.com/dferrandizmont/ink-lab`, si está
    detrás de `origin/main`, si el HEAD está desacoplado, si el changelog no tiene esa
    versión o si nada ha cambiado. Si algo falla, el clon queda como estaba.
-4. Revisa `git show --stat HEAD` en el clon y, con el «sí» del dueño,
-   `git push origin main`.
+4. El script crea también la etiqueta anotada `vX.Y.Z` con la identidad pública (si ya
+   existe, no la mueve). Revisa `git show --stat HEAD` en el clon y, con el «sí» del dueño,
+   `git push origin main vX.Y.Z`.
+
+Las etiquetas del repositorio privado también llevan la identidad pública, nunca el Gmail:
+`git -c user.name="Daniel Mont Ferrandiz" -c user.email=dev@mainshai.com tag -a vX.Y.Z -m "Ink Lab X.Y.Z"`.
 
 Las releases públicas llevan los APK firmados con la upload key (`docs/RELEASING.md`), con
 `SHA256SUMS.txt` y la huella SHA-256 del certificado en las notas, en español e inglés.

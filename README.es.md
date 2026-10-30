@@ -32,21 +32,10 @@ La IA es opcional y está apagada de serie.
   -->
 </p>
 
-Android ya; iOS y Google Play próximamente.
+Android en GitHub y en prueba cerrada en Google Play. iOS, más adelante.
 
 <details>
-<summary>Instalar el APK desde GitHub</summary>
-
-1. Descarga el APK y `SHA256SUMS.txt` de la [última
-   versión](https://github.com/dferrandizmont/ink-lab/releases/latest). Cada
-   versión lleva los dos, así que puedes comprobar la descarga con
-   `sha256sum -c SHA256SUMS.txt`.
-2. Permite «instalar aplicaciones de origen desconocido» cuando el móvil lo
-   pida y abre el APK.
-
-</details>
-
-### Pruébala en Google Play
+<summary>Únete a la beta de Google Play</summary>
 
 Ink Lab está en prueba cerrada en Google Play antes de salir para todos, y nos vienen bien testers:
 
@@ -56,6 +45,20 @@ Ink Lab está en prueba cerrada en Google Play antes de salir para todos, y nos 
    Ink Lab desde Google Play. La invitación funciona cuando la prueba ya está en marcha; si dice que la app
    no está disponible, vuelve a probar en unos días.
 3. Mantenla instalada al menos 14 días. Lo que encuentres, mándalo a dev@mainshai.com.
+
+</details>
+
+<details>
+<summary>Instala el APK desde GitHub</summary>
+
+1. Descarga el APK y `SHA256SUMS.txt` de la [última
+   versión](https://github.com/dferrandizmont/ink-lab/releases/latest). Cada
+   versión lleva los dos, así que puedes comprobar la descarga con
+   `sha256sum -c SHA256SUMS.txt`.
+2. Permite «instalar aplicaciones de origen desconocido» cuando el móvil lo
+   pida y abre el APK.
+
+</details>
 
 ## Capturas
 
@@ -82,35 +85,41 @@ Pulsa una captura para ampliarla.
 
 ## Funciones
 
-- **Mis rotuladores:** una colección por marca, hecha con las series que usas,
+- **Mis rotuladores.** Una colección por marca, hecha con las series que usas,
   los sets que tienes y los rotuladores sueltos. Una guía corta la prepara al
   empezar.
-- **Muestras:** el catálogo por código y nombre, con el hex de cada rotulador,
+- **Muestras.** El catálogo por código y nombre, con el hex de cada rotulador,
   búsqueda, filtros, tus rotuladores y favoritos. En Ohuhu Oahu indica además dónde
   está cada rotulador en la tarjeta de colores.
-- **Emparejar con una foto:** haz una foto o elige una de la galería, toca un
+- **Emparejar con una foto.** Haz una foto o elige una de la galería, toca un
   punto y la app te dice qué rotulador de tu colección se le parece más, o te
   avisa si ninguno se parece.
-- **Paletas con teoría del color:** elige un color base y obtén armonías
+- **Paletas con teoría del color.** Elige un color base y obtén armonías
   (complementarios, análogos, complementarios divididos, tríada, cuadrado,
   rectángulo, monocromo y sombra), resueltas siempre con los rotuladores que
   tienes.
-- **Escenas:** 67 recetas listas en 11 categorías (pieles, cielo y agua,
+- **Escenas.** 67 recetas listas en 11 categorías (pieles, cielo y agua,
   naturaleza, animales, comida, fantasía…), con buscador y los papeles de cada
   color.
-- **Escena desde una foto:** la app saca los colores principales de una foto y
+- **Escena desde una foto.** La app saca los colores principales de una foto y
   los convierte en los rotuladores más parecidos que tienes.
-- **Ideas:** retos y técnicas con una paleta que tiene en cuenta tu colección
-  activa.
-- **Dos marcas:** Ohuhu (Oahu, Honolulu y Kaala, 503 colores, con el código nuevo
+- **Dos marcas.** Ohuhu (Oahu, Honolulu y Kaala, 503 colores, con el código nuevo
   y el antiguo) y DecoTime (313 colores, con selección de rotuladores propios,
   porque se vende en sets cerrados).
-- **IA opcional:** o bien **en el móvil** (Gemini Nano, en Android compatible), o
+
+<details>
+<summary>Más funciones</summary>
+
+- **Ideas.** Retos y técnicas con una paleta que tiene en cuenta tu colección
+  activa.
+- **IA opcional.** O bien **en el móvil** (Gemini Nano, en Android compatible), o
   bien con **tu propia clave de OpenRouter**. La IA en el móvil usa ML Kit de
   Google, que envía a Google diagnósticos de uso, nunca tus peticiones, colores
   ni fotos. Si no la activas, la app nunca usa la red.
-- **Copia de seguridad:** exporta e importa tus colecciones, favoritos, paletas y
+- **Copia de seguridad.** Exporta e importa tus colecciones, favoritos, paletas y
   ajustes como texto JSON, sin cuenta.
+
+</details>
 
 ## Privacidad
 
