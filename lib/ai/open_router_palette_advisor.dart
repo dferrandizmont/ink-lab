@@ -442,7 +442,10 @@ final class _PaletteLookup {
     MarkerColor? best;
     var bestDistance = double.infinity;
     for (final color in byCode.values) {
-      final lab = _labs.putIfAbsent(color.colorId, () => _safeLab(color.hex));
+      final lab = _labs.putIfAbsent(
+        color.colorId,
+        () => _safeLab(color.originalHex),
+      );
       if (lab == null) continue;
       final distance = deltaE76(target, lab);
       if (distance < bestDistance) {
@@ -798,7 +801,10 @@ String buildPaletteUserPrompt(AiPaletteRequest request) {
   final baseName = _oneLine(request.baseColor?.newName ?? 'None');
   final available = request.candidates
       .map(
-        (color) => '${color.newCode.toUpperCase()}#${color.hex.toUpperCase()}',
+        // The catalogue's hex, never a colour the user read from their own
+        // photo: those stay on the phone.
+        (color) =>
+            '${color.newCode.toUpperCase()}#${color.originalHex.toUpperCase()}',
       )
       .join(',');
   return 'BRAND_ID=${request.brandId}'

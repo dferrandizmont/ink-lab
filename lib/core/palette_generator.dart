@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'blending_chain.dart';
 import 'collection_selection.dart';
 import 'collection_utils.dart';
 import 'color_utils.dart';
@@ -114,6 +115,22 @@ List<PaletteSuggestion> buildPalette(
 }) {
   if (mode == PaletteMode.customPalette) return [];
   final wanted = size.clamp(3, 5);
+  if (mode == PaletteMode.blendingChain) {
+    // Size counts the companions; the chain counts the base too. The chain
+    // can be shorter than asked: it never invents a marker to fill it.
+    final chain = buildBlendingChains(
+      baseColor,
+      candidates,
+      length: wanted + 1,
+    ).best;
+    if (chain == null) return [];
+    final roles = blendingChainRoles(chain);
+    return [
+      for (var i = 0; i < chain.colors.length; i++)
+        if (i != chain.baseIndex)
+          PaletteSuggestion(color: chain.colors[i], reason: roles[i]),
+    ];
+  }
   final base = hexToHsv(baseColor.hex);
   final options = candidates
       .where((c) => c.newCode != baseColor.newCode)
@@ -334,6 +351,7 @@ double _scoreForMode(
           (0.18 - valueDelta).abs() * 0.45 +
           penalty;
     case PaletteMode.customPalette:
+    case PaletteMode.blendingChain:
       return 10;
     case PaletteMode.shadow:
       if (candidate[2] >= base[2]) return 2 + candidate[2] - base[2];
@@ -362,6 +380,7 @@ String _reasonForMode(
     PaletteMode.monochrome =>
       valueDiff > 0 ? 'Same family, deeper tone' : 'Same family, lighter tone',
     PaletteMode.customPalette => 'Manual palette',
+    PaletteMode.blendingChain => 'Blending chain step',
     PaletteMode.shadow =>
       valueDiff > 0
           ? 'Shadow tone (${(valueDiff * 100).toInt()}% darker)'
@@ -378,6 +397,7 @@ List<_ScoredColor> _diversify(
     PaletteMode.monochrome,
     PaletteMode.shadow,
     PaletteMode.customPalette,
+    PaletteMode.blendingChain,
   ].contains(mode)) {
     return scored.take(size).toList();
   }

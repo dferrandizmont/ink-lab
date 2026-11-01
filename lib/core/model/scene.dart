@@ -43,7 +43,8 @@ final class Scene {
   /// Id of the [SceneCatalog.categories] entry the scene belongs to.
   final String category;
 
-  /// Display names by language code; always has `en` and `es`.
+  /// Display names by language code; always has `en`, `es`, `de`, `fr`, `pt`
+  /// and `it`.
   final Map<String, String> names;
 
   /// The (hue, saturation, value) the default base marker is chosen near.

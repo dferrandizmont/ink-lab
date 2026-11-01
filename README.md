@@ -1,4 +1,4 @@
-**English** · [Español](README.es.md)
+**English** · [Español](README.es.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [Português](README.pt.md) · [Italiano](README.it.md)
 
 <p align="center">
   <img src="docs/readme/en/header.png" alt="Ink Lab — Your markers, your palettes. Free and offline." width="1024">
@@ -13,10 +13,9 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Buy_me_a_coffee-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/danielmfdev)
 
 A swatch and palette companion for people who draw with alcohol markers. Look up
-the code of a colour, find out which marker in your collection is closest to a
-photo, and build palettes with colour theory using only the markers you own.
-For Android, with light and dark themes, a side rail on tablets and Spanish and
-English texts.
+a colour code, find the marker you own closest to a photo and build colour-theory
+palettes with only your markers. Android app with light and dark themes, a tablet
+side rail and six languages.
 
 **Free · No ads · No account · Works offline · Open source**
 
@@ -37,13 +36,14 @@ Android on GitHub, and in closed testing on Google Play. iOS is coming.
 <details>
 <summary>Join the beta on Google Play</summary>
 
-Ink Lab is in closed testing on Google Play and anyone can join:
+Anyone can join the closed test:
 
-1. Join the testers group: [ink-lab-testers](https://groups.google.com/g/ink-lab-testers). Sign in with your Google account and press «Join group».
-2. Accept the test from your phone or computer: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
+1. Join [ink-lab-testers](https://groups.google.com/g/ink-lab-testers). Sign in to Google and press «Join group».
+2. Accept the test: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
 3. Install the app from Google Play. It updates itself.
 
-If you can, stay in the test for at least 14 days and use it from time to time (for example, match a colour from a photo): Google requires 12 testers for 14 days to publish it for everyone. Send comments to inklab@mainshai.com.
+Stay for 14 days: Google requires 12 testers for 14 days before public release.
+Feedback: inklab@mainshai.com.
 
 </details>
 
@@ -51,8 +51,7 @@ If you can, stay in the test for at least 14 days and use it from time to time (
 <summary>Install the APK from GitHub</summary>
 
 1. Download the APK and `SHA256SUMS.txt` of the [latest
-   release](https://github.com/dferrandizmont/ink-lab/releases/latest). Every
-   release ships both, so you can verify the download with
+   release](https://github.com/dferrandizmont/ink-lab/releases/latest). Verify with
    `sha256sum -c SHA256SUMS.txt`.
 2. Allow installing apps from unknown sources when your phone asks, then open
    the APK.
@@ -84,54 +83,53 @@ Tap a screenshot to enlarge it.
 
 ## Features
 
-- **My markers.** One collection per brand, built from the series you use, the
-  sets you own and any loose markers. A short first-run guide sets it up.
-- **Swatches.** The catalogue by code and name, with the hex of each marker,
-  search, filters, your own markers and favourites. On Ohuhu Oahu it also shows where each
-  marker sits on the colour card.
-- **Match from a photo.** Take a photo or pick one from the gallery, tap a point
-  and the app tells you which marker in your collection is closest, or says so
-  when none is close.
-- **Colour-theory palettes.** Pick a base colour and get harmonies
-  (complementary, analogous, split complementary, triad, square, rectangle,
-  monochrome and shadow), always resolved with the markers you own.
-- **Scenes.** 67 ready-made recipes in 11 categories (skin, sky and water,
-  nature, animals, food, fantasy…), searchable, each with its colour roles.
-- **Scene from a photo.** The app finds the main colours of a photo and turns
-  them into the closest markers you own.
-- **Two brands.** Ohuhu (Oahu, Honolulu and Kaala, 503 colours, with the new
-  and legacy codes) and DecoTime (313 colours, with an owned-markers
-  selection, as it is sold in fixed sets).
+- **My markers.** A first-run guide builds each brand’s collection from your
+  series, sets and loose markers.
+- **Match from a photo.** Tap a point to find your closest marker; fix the white
+  balance so the colours you sample are true.
+- **Your own colour.** The catalogue colour is an estimate; set the colour your
+  marker really gives, by hex or a photo.
+- **Palettes and blending chains.** Colour-theory harmonies, and blending chains
+  of three to five markers, lightest first.
+- **Scenes.** 67 recipes across 11 categories, each with its colour roles.
+- **Artwork diary.** A log of what you paint: date, paper, markers, notes and up
+  to four photos.
+- **Three brands.** Ohuhu (503 colours), DecoTime (313) and Copic (358), with
+  individual marker selection.
 
 <details>
 <summary>More features</summary>
 
-- **Ideas.** Challenges and techniques with a palette from your active
-  collection.
-- **Optional AI.** Either **on the device** (Gemini Nano, on compatible Android
-  phones, through Google's ML Kit, which sends Google usage diagnostics but never
-  your prompts, colours or photos) or with **your own OpenRouter key**. If you
-  do not turn it on, the app never uses the network.
-- **Backup.** Export and import your collections, favourites, palettes and
-  settings as JSON text, with no account.
+- **Swatches.** Codes, names and hex values, with search, filters and favourites.
+- **Scene from a photo.** Turn a photo’s main colours into your markers.
+- **Share and print.** Share a palette as an image, or make a printable A4
+  swatch chart.
+- **Wishlist and dried markers.** Keep the markers to buy, and mark worn-out
+  ones as dried so the app skips them.
+- **Ideas and AI.** Challenges and techniques, plus optional Gemini Nano on
+  compatible Android devices or OpenRouter with your own API key.
+- **Backup.** Export and import your data as JSON text, without photos.
 
 </details>
 
 ## Privacy
 
-Everything is stored on the phone. There are no accounts, no server of ours, no
-analytics of ours, no ads and no tracking. If you do not turn on AI, the app
-never uses the network. On-device AI uses Google's ML Kit, which sends Google
-usage diagnostics, never your prompts, colours or photos. The camera and the
-gallery are only used to match a photo or to make a scene from one, and the
-photo never leaves the device.
+Data stays on your phone: no accounts, no server of ours, no analytics of ours,
+no ads or tracking, and without AI no network use. On-device AI’s ML Kit sends
+Google usage diagnostics, never prompts, colours or photos. Camera and gallery
+access is only for photo matching, scenes, your own marker colours and the
+diary; match and scene photos are processed on the device, and diary photos stay
+in the app’s private folder, never uploaded. Sharing a palette or a chart only
+hands it to the app you pick.
 
 [Website](https://inklab.mainshai.com) · [Privacy policy](https://inklab.mainshai.com/privacy/) ·
 [Technical details](docs/privacy.en.md) · Support: **inklab@mainshai.com**.
 
 ## What's new
 
-See [CHANGELOG.md](CHANGELOG.md).
+0.7.0 adds the artwork diary, blending chains, your own colours with the
+white-balance fix, the wishlist, dried markers, printable swatch charts and
+sharing. Full list in [CHANGELOG.md](CHANGELOG.md).
 
 ## Contributing
 
@@ -141,13 +139,13 @@ contribute: [CONTRIBUTING.md](CONTRIBUTING.md).
 ## License
 
 Code under [MIT](LICENSE), Copyright (c) 2026 Daniel Mont Ferrandiz. Own
-documentation and texts: [CC BY-SA 4.0](LICENSE-CONTENT.md). The catalogue
-data are third-party factual references and fall outside both MIT and CC BY-SA
-4.0; the typefaces (SIL OFL 1.1) and other third-party material keep their own
-licences, listed in [NOTICE.md](NOTICE.md).
+documentation and texts: [CC BY-SA 4.0](LICENSE-CONTENT.md). The catalogue data
+are third-party factual references outside both licences; the typefaces (SIL
+OFL 1.1) and other third-party material keep their own terms, listed in
+[NOTICE.md](NOTICE.md).
 
-An independent project: **not affiliated with, sponsored by or endorsed by Ohuhu
-or DecoTime**. "Ohuhu", "Oahu" and "DecoTime" are trademarks of their owners.
+An independent project: **not affiliated with, sponsored by or endorsed by Ohuhu,
+DecoTime or Copic**. "Ohuhu", "Oahu", "DecoTime" and "Copic" are trademarks of their owners.
 Sources and full notices are in [NOTICE.md](NOTICE.md).
 
 To report a vulnerability: [SECURITY.md](SECURITY.md).

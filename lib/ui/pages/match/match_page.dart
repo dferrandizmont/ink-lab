@@ -8,6 +8,7 @@ import '../../../core/collection_selection.dart';
 import '../../../core/color_utils.dart';
 import '../../../core/match_quality.dart';
 import '../../../core/models.dart';
+import '../../../core/white_balance.dart';
 import '../../../data/data.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
@@ -21,6 +22,7 @@ import '../collection/collection_page.dart';
 import 'color_sampling.dart';
 import 'image_picker_service.dart';
 import 'match_result_tile.dart';
+import 'photo_sampling.dart';
 import '../../../l10n/l10n.dart';
 
 /// Composition root above the page, or `null` in isolated previews/tests.
@@ -67,6 +69,8 @@ class _MatchPageState extends State<MatchPage> {
 
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
+  StreamSubscription<Map<String, String>>? _ownColorsSubscription;
+  StreamSubscription<Set<String>>? _driedSubscription;
   Stream<List<ColorMatchPick>>? _historyChanges;
   String _collectionSignature = '';
 
@@ -89,6 +93,13 @@ class _MatchPageState extends State<MatchPage> {
   SampledImage? _sampled;
   Offset? _pick;
   int? _sampledColorInt;
+
+  /// The white balance of the photo on screen (per photo, never stored).
+  WhiteBalance? _balance;
+
+  /// Whether the next tap on the photo chooses its white.
+  bool _choosingWhite = false;
+  WhiteBalanceRejection? _whiteRejection;
   List<ColorDistanceMatch> _matches = const <ColorDistanceMatch>[];
   String? _error;
   String? _notice;
@@ -109,12 +120,24 @@ class _MatchPageState extends State<MatchPage> {
     _settingsSubscription?.cancel();
     _collectionSignature = _signatureOf(scope.settings.state);
     _settingsSubscription = scope.settings.changes.listen(_onSettingsChanged);
+    // The colours of the markers changed (an own colour was set or reset).
+    _ownColorsSubscription?.cancel();
+    _driedSubscription?.cancel();
+    _ownColorsSubscription = scope.ownColors.changes.listen(
+      (_) => _onSettingsChanged(scope.settings.state),
+    );
+    // A marker was marked as dried out, or usable again.
+    _driedSubscription?.cancel();
+    _driedSubscription = scope.dried.changes.listen(
+      (_) => _onSettingsChanged(scope.settings.state),
+    );
     unawaited(_reload());
   }
 
   @override
   void dispose() {
     _settingsSubscription?.cancel();
+    _ownColorsSubscription?.cancel();
     super.dispose();
   }
 
@@ -122,7 +145,8 @@ class _MatchPageState extends State<MatchPage> {
     final List<String> sets = state.settings.ownedSetIds.toList()..sort();
     final List<String> owned = state.settings.extraMarkerIds.toList()..sort();
     return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}|'
-        '${state.matchSuggestUnowned}';
+        '${state.matchSuggestUnowned}|${_scope?.markers.colorRevision}|'
+        '${_scope?.dried.revision}';
   }
 
   void _onSettingsChanged(AppSettingsState state) {
@@ -146,16 +170,25 @@ class _MatchPageState extends State<MatchPage> {
       catalog = const <MarkerColor>[];
     }
     if (!mounted) return;
+    final Set<String> dried = scope.dried.ids;
     final List<MarkerColor> available = ownedColors(
       colors: catalog,
       brand: brand,
       ownedSetIds: settings.ownedSetIds,
       ownedMarkerCodes: settings.extraMarkerIds,
+      driedColorIds: dried,
     );
     setState(() {
       _brand = brand;
       _available = available;
-      _range = brandRangeColors(colors: catalog, brand: brand);
+      // A dried-out marker is not offered as a "could buy" match either.
+      _range = <MarkerColor>[
+        for (final MarkerColor c in brandRangeColors(
+          colors: catalog,
+          brand: brand,
+        ))
+          if (!dried.contains(c.colorId)) c,
+      ];
       _suggestUnowned = suggest;
       _loading = false;
       // A new collection or brand re-ranks the current sample.
@@ -224,6 +257,9 @@ class _MatchPageState extends State<MatchPage> {
       _sampled = sampled;
       _pick = null;
       _sampledColorInt = null;
+      _balance = null;
+      _choosingWhite = false;
+      _whiteRejection = null;
       _matches = const <ColorDistanceMatch>[];
       _rangeBest = null;
       _picking = false;
@@ -269,15 +305,30 @@ class _MatchPageState extends State<MatchPage> {
         : null;
   }
 
-  void _sampleAt(Offset local, Rect fitted) {
-    final SampledImage? sampled = _sampled;
-    if (sampled == null) return;
-    final Offset fraction = fractionForPoint(local, fitted);
-    final int colorInt = averageColorOfRegion(
+  /// The photo was touched at [fraction] (of the photo): chooses its white
+  /// while that is being asked for, samples a colour otherwise.
+  void _onPhotoPoint(Offset fraction) {
+    if (_choosingWhite) {
+      _chooseWhite(fraction);
+    } else {
+      _sampleAt(fraction);
+    }
+  }
+
+  /// The colour under [fraction], as seen with the current white balance.
+  int _colorAt(SampledImage sampled, Offset fraction) {
+    final int raw = averageColorOfRegion(
       sampled,
       fraction,
       radiusFraction: _radiusFraction,
     );
+    return _balance?.apply(raw) ?? raw;
+  }
+
+  void _sampleAt(Offset fraction) {
+    final SampledImage? sampled = _sampled;
+    if (sampled == null) return;
+    final int colorInt = _colorAt(sampled, fraction);
     setState(() {
       _pick = fraction;
       _sampledColorInt = colorInt;
@@ -285,6 +336,46 @@ class _MatchPageState extends State<MatchPage> {
       _notice = null;
     });
   }
+
+  /// Makes the point at [fraction] the white of the photo, unless it cannot
+  /// be paper: then it says so and the photo stays as it was.
+  void _chooseWhite(Offset fraction) {
+    final SampledImage? sampled = _sampled;
+    if (sampled == null) return;
+    final int reference = averageColorOfRegion(
+      sampled,
+      fraction,
+      radiusFraction: _radiusFraction,
+    );
+    switch (WhiteBalanceFit.fromReference(reference)) {
+      case WhiteBalanceApplied(:final WhiteBalance balance):
+        setState(() {
+          _balance = balance;
+          _choosingWhite = false;
+          _whiteRejection = null;
+          _notice = null;
+          _resample();
+        });
+      case WhiteBalanceRejected(:final WhiteBalanceRejection reason):
+        setState(() => _whiteRejection = reason);
+    }
+  }
+
+  /// Takes the sample again after the white balance changed.
+  void _resample() {
+    final SampledImage? sampled = _sampled;
+    final Offset? pick = _pick;
+    if (sampled == null || pick == null) return;
+    final int colorInt = _colorAt(sampled, pick);
+    _sampledColorInt = colorInt;
+    _rank(colorInt);
+  }
+
+  void _resetWhite() => setState(() {
+    _balance = null;
+    _whiteRejection = null;
+    _resample();
+  });
 
   Future<void> _record(ColorDistanceMatch match) async {
     final AppScope? scope = _scope;
@@ -392,6 +483,24 @@ class _MatchPageState extends State<MatchPage> {
           ),
         if (_notice != null) _buildNotice(),
         _buildPhoto(),
+        if (_bytes != null && _sampled != null)
+          _Gutter(
+            top: InkSpacing.group,
+            child: WhiteBalanceBar(
+              balance: _balance,
+              choosing: _choosingWhite,
+              rejection: _whiteRejection,
+              onStart: () => setState(() {
+                _choosingWhite = true;
+                _whiteRejection = null;
+              }),
+              onCancel: () => setState(() {
+                _choosingWhite = false;
+                _whiteRejection = null;
+              }),
+              onReset: _resetWhite,
+            ),
+          ),
         if (_sampledColorInt != null)
           _buildSampled(_sampledColorInt!)
         else if (_sampled != null)
@@ -507,54 +616,18 @@ class _MatchPageState extends State<MatchPage> {
   }
 
   Widget _buildCanvas() {
-    final SampledImage sampled = _sampled!;
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final Size container = Size(
-          constraints.maxWidth,
-          constraints.maxHeight,
-        );
-        final Rect fitted = containRect(container, sampled.aspectRatio);
-        final Offset? pick = _pick;
-        final Offset? pickLocal = pick == null || fitted.isEmpty
-            ? null
-            : Offset(
-                fitted.left + pick.dx * fitted.width,
-                fitted.top + pick.dy * fitted.height,
-              );
-        return GestureDetector(
-          key: const ValueKey<String>('match-canvas'),
-          behavior: HitTestBehavior.opaque,
-          onTapDown: (TapDownDetails details) =>
-              _sampleAt(details.localPosition, fitted),
-          onPanStart: (DragStartDetails details) =>
-              _sampleAt(details.localPosition, fitted),
-          onPanUpdate: (DragUpdateDetails details) =>
-              _sampleAt(details.localPosition, fitted),
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              Image.memory(
-                _bytes!,
-                fit: BoxFit.contain,
-                gaplessPlayback: true,
-                errorBuilder: (
-                  BuildContext context,
-                  Object error,
-                  StackTrace? stack,
-                ) => ColoredBox(color: InkColors.of(context).surface),
-              ),
-              if (pickLocal != null && _sampledColorInt != null)
-                CustomPaint(
-                  painter: _ReticlePainter(
-                    centre: pickLocal,
-                    sampleColor: Color(0xFF000000 | _sampledColorInt!),
-                  ),
-                ),
-            ],
-          ),
-        );
-      },
+    final int? sampledColor = _sampledColorInt;
+    return PhotoSampleCanvas(
+      gestureKey: const ValueKey<String>('match-canvas'),
+      bytes: _bytes!,
+      image: _sampled!,
+      onPoint: _onPhotoPoint,
+      tapOnly: _choosingWhite,
+      balance: _balance,
+      pick: _choosingWhite ? null : _pick,
+      sampleColor: sampledColor == null
+          ? null
+          : Color(0xFF000000 | sampledColor),
     );
   }
 
@@ -1023,57 +1096,6 @@ class _PickSheet extends StatelessWidget {
       ],
     );
   }
-}
-
-/// Draws the reticle (design G): a 60 circle filled with the sampled colour,
-/// a white 3 px ring, a 1 px dark outer ring and a dark crosshair. The ring
-/// colours are fixed, not themed, so the reticle reads on any photo.
-class _ReticlePainter extends CustomPainter {
-  _ReticlePainter({required this.centre, required this.sampleColor});
-
-  final Offset centre;
-  final Color sampleColor;
-
-  static const double _outerRadius = 30;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(centre, _outerRadius - 1, Paint()..color = sampleColor);
-    canvas.drawCircle(
-      centre,
-      _outerRadius - 2.5,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3
-        ..color = InkColors.reticleRing,
-    );
-    canvas.drawCircle(
-      centre,
-      _outerRadius - 0.5,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1
-        ..color = InkColors.reticleOuter,
-    );
-    // The 20 px crosshair: four ticks around an open centre.
-    final Paint cross = Paint()
-      ..color = InkColors.reticleOuter
-      ..strokeWidth = 1.7
-      ..strokeCap = StrokeCap.round;
-    const double inner = 3.3, outer = 8.3;
-    for (final Offset dir in const <Offset>[
-      Offset(1, 0),
-      Offset(-1, 0),
-      Offset(0, 1),
-      Offset(0, -1),
-    ]) {
-      canvas.drawLine(centre + dir * inner, centre + dir * outer, cross);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_ReticlePainter oldDelegate) =>
-      oldDelegate.centre != centre || oldDelegate.sampleColor != sampleColor;
 }
 
 /// A one-line status (loading, error, empty collection) in a bordered card.

@@ -55,7 +55,19 @@ enum InkIcons {
   list,
 
   /// Feather flag (report).
-  flag;
+  flag,
+
+  /// Feather share-2: three nodes joined by two lines.
+  share,
+
+  /// Feather droplet: ink.
+  droplet,
+
+  /// A droplet struck through: a marker that ran dry.
+  dropletOff,
+
+  /// Feather bookmark: the wishlist.
+  bookmark;
 
   static const InkIcons edit_3 = edit3;
   static const InkIcons trash_2 = trash2;
@@ -389,6 +401,39 @@ class InkIconPainter extends CustomPainter {
             ..close(),
         );
         line(4, 22, 4, 15);
+      case InkIcons.share:
+        circle(18, 5, 3);
+        circle(6, 12, 3);
+        circle(18, 19, 3);
+        line(8.59, 13.51, 15.42, 17.49);
+        line(15.41, 6.51, 8.59, 10.49);
+      case InkIcons.droplet:
+      case InkIcons.dropletOff:
+        draw(
+          Path()
+            ..moveTo(12, 2.69)
+            ..lineTo(17.66, 8.35)
+            ..arcToPoint(
+              const Offset(6.34, 8.35),
+              radius: const Radius.circular(8),
+              largeArc: true,
+            )
+            ..close(),
+        );
+        if (icon == InkIcons.dropletOff) line(3, 3, 21, 21);
+      case InkIcons.bookmark:
+        draw(
+          Path()
+            ..moveTo(19, 21)
+            ..lineTo(12, 16)
+            ..lineTo(5, 21)
+            ..lineTo(5, 5)
+            ..arcToPoint(const Offset(7, 3), radius: const Radius.circular(2))
+            ..lineTo(17, 3)
+            ..arcToPoint(const Offset(19, 5), radius: const Radius.circular(2))
+            ..close(),
+          fillable: true,
+        );
     }
     canvas.restore();
   }

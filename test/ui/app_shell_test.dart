@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/marker_repository.dart';
+import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
 import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
@@ -218,6 +219,54 @@ void main() {
         find.byKey(const ValueKey<String>('palette-base-input')),
       );
       expect(base.controller?.text, 'B08');
+    },
+  );
+
+  testWidgets(
+    'Blending chain on a swatch opens the Palette tab with the chain type',
+    (WidgetTester tester) async {
+      addTearDown(() {
+        paletteBaseDraft.value = null;
+        paletteBaseMode.value = null;
+      });
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      useEnglishDevice(tester);
+      await tester.pumpWidget(
+        AppScope.inMemory(
+          markers: MarkerRepository(
+            loadAsset: (String path) => File(path).readAsStringSync(),
+          ),
+          child: const InkLabApp(),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('B08'));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text(l10n.swatchesBlendingChain));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.swatchesBlendingChain));
+      await tester.pumpAndSettle();
+
+      expect(paletteBaseDraft.value, isNull);
+      expect(paletteBaseMode.value, isNull);
+      expect(find.byKey(SwatchesPage.pageKey).hitTestable(), findsNothing);
+      final TextField base = tester.widget(
+        find.byKey(const ValueKey<String>('palette-base-input')),
+      );
+      expect(base.controller?.text, 'B08');
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(const ValueKey<String>('palette-type-value')),
+            )
+            .data,
+        l10n.modeLabel(PaletteMode.blendingChain),
+      );
+      // The chain itself: a title and a strip of five markers.
+      expect(find.text(l10n.paletteChainResultTitle(5)), findsOneWidget);
     },
   );
 

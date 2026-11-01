@@ -11,21 +11,31 @@ import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_segmented.dart';
 import '../../widgets/section_card.dart';
+import '../../share/share_sink.dart';
 import '../settings/dialogs.dart';
 import 'collection_pickers.dart';
 import 'collection_summary.dart';
 import 'collection_summary_card.dart';
+import 'dried_card.dart';
+import 'purchase_card.dart';
+import 'swatch_chart_card.dart';
 import 'loose_markers_page.dart';
+import 'wishlist_card.dart';
 
 /// "My collection": the one place where the user says which markers they
 /// own (see `AppSettings`).
 ///
 /// Brand switch at the top, a summary card, then for Ohuhu the series, the
 /// sets and a line that opens the loose markers on their own screen; for
-/// DecoTime (which publishes no set contents) quick "add by family" chips and
-/// the same line. "Reset collection" closes the page.
+/// individually collected brands the same line, plus quick "add by family"
+/// chips when the catalogue has families (DecoTime). "Reset collection" closes
+/// the page.
 class CollectionPage extends StatefulWidget {
-  const CollectionPage({super.key});
+  const CollectionPage({super.key, this.shareSink});
+
+  /// Where the printable swatch chart goes. Production opens the system share
+  /// sheet; tests inject a fake.
+  final ShareSink? shareSink;
 
   /// Key of the page body.
   static const Key pageKey = Key('collection-page');
@@ -85,7 +95,7 @@ class _CollectionPageState extends State<CollectionPage> {
   ) {
     final InkColors ink = InkColors.of(context);
     final MarkerBrand brand = state.brand;
-    final bool ohuhu = brand == MarkerBrand.ohuhuOahu;
+    final bool ohuhu = brand.hasRetailSets;
     final AppSettings settings = state.settings;
     final Set<MarkerLine> series = settings.ownedSeries;
     final List<MarkerColor> range = brandRangeColors(
@@ -170,10 +180,12 @@ class _CollectionPageState extends State<CollectionPage> {
             ),
           ] else ...<Widget>[
             const SizedBox(height: InkSpacing.block),
-            caption(context.l10n.collectionDecoHint),
-            caption(context.l10n.collectionDecoSizesHint),
-            head(context.l10n.collectionFamiliesTitle),
-            _familyChips(context, scope, settings, range, extras),
+            caption(context.l10n.individualMarkersHint(brand)),
+            if (brand == MarkerBrand.decoTime) ...<Widget>[
+              caption(context.l10n.collectionDecoSizesHint),
+              head(context.l10n.collectionFamiliesTitle),
+              _familyChips(context, scope, settings, range, extras),
+            ],
             head(context.l10n.collectionDecoMarkersTitle),
             _MarkersRow(
               countLabel: context.l10n.collectionMarkers(extras.length),
@@ -181,6 +193,41 @@ class _CollectionPageState extends State<CollectionPage> {
               buttonLabel: context.l10n.collectionDecoMarkersButton,
             ),
           ],
+          head(context.l10n.buyNextTitle),
+          PurchaseCard(
+            key: const ValueKey<String>('collection-buy-next'),
+            brand: brand,
+            catalog: catalog,
+            settings: settings,
+            nameDisplayMode: state.nameDisplayMode,
+          ),
+          head(context.l10n.wishlistTitle),
+          WishlistCard(
+            key: const ValueKey<String>('collection-wishlist'),
+            brand: brand,
+            catalog: catalog,
+            nameDisplayMode: state.nameDisplayMode,
+          ),
+          head(context.l10n.driedTitle),
+          DriedCard(
+            key: const ValueKey<String>('collection-dried'),
+            brand: brand,
+            catalog: catalog,
+            nameDisplayMode: state.nameDisplayMode,
+          ),
+          head(context.l10n.collectionChartTitle),
+          SwatchChartCard(
+            key: const ValueKey<String>('collection-chart'),
+            brand: brand,
+            markers: ownedColors(
+              colors: catalog,
+              brand: brand,
+              ownedSetIds: settings.ownedSetIds,
+              ownedMarkerCodes: settings.extraMarkerIds,
+            ),
+            nameDisplay: state.nameDisplayMode,
+            shareSink: widget.shareSink,
+          ),
           const SizedBox(height: InkSpacing.section),
           _DestructiveButton(
             key: const ValueKey<String>('collection-reset'),
@@ -294,7 +341,7 @@ class _CollectionPageState extends State<CollectionPage> {
       confirmLabel: context.l10n.collectionReset,
     );
     if (!ok) return;
-    final bool ohuhu = brand == MarkerBrand.ohuhuOahu;
+    final bool ohuhu = brand.hasRetailSets;
     await scope.settings.setCollection(
       AppSettings(
         ownedSetIds: ohuhu ? const <String>{} : settings.ownedSetIds,

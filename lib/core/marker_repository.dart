@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'json_value.dart';
 import 'models.dart';
+import 'own_colors.dart';
 import 'scene_catalog.dart';
 import 'swatch_card_location.dart';
 
@@ -87,15 +88,85 @@ final class MarkerRepository {
     }
   }
 
-  Future<List<MarkerColor>> loadColors(MarkerBrand brand) =>
-      _cache.putIfAbsent(brand, () => _load(brand));
+  /// Where the user's own colours come from, if the app has them.
+  ///
+  /// The composition root sets it once. With it, [loadColors] is the single
+  /// point where own colours replace the catalogue ones, so every screen
+  /// (Match, Palette, Ideas, Swatches) sees the same effective colours.
+  OwnColorSource? get ownColors => _ownColors;
+  set ownColors(OwnColorSource? source) {
+    _ownColors = source;
+    _effectiveFutures.clear();
+    _effectiveValues.clear();
+  }
+
+  OwnColorSource? _ownColors;
+
+  /// Changes whenever the colours [loadColors] returns would change.
+  int get colorRevision => ownColors?.revision ?? 0;
+
+  final _loaded = <MarkerBrand, List<MarkerColor>>{};
+  final _effectiveFutures =
+      <MarkerBrand, ({int revision, Future<List<MarkerColor>> future})>{};
+  final _effectiveValues =
+      <MarkerBrand, ({int revision, List<MarkerColor> value})>{};
+
+  /// The colours of [brand]: the catalogue's, with the user's own colours
+  /// in place of the ones they set (see [ownColors]).
+  ///
+  /// The same future comes back until the own colours change, so a
+  /// `FutureBuilder` does not restart on every rebuild.
+  Future<List<MarkerColor>> loadColors(MarkerBrand brand) {
+    final Future<List<MarkerColor>> catalogue = _cache.putIfAbsent(
+      brand,
+      () => _load(brand),
+    );
+    final OwnColorSource? source = ownColors;
+    final Map<String, String> own = source?.activeOwnColors ?? const {};
+    if (source == null || own.isEmpty) return catalogue;
+    final int revision = source.revision;
+    final cached = _effectiveFutures[brand];
+    if (cached != null && cached.revision == revision) return cached.future;
+    final Future<List<MarkerColor>> future = catalogue.then(
+      (List<MarkerColor> all) => _applied(brand, revision, all, own),
+    );
+    _effectiveFutures[brand] = (revision: revision, future: future);
+    return future;
+  }
+
+  /// The colours of [brand] when they are already in memory, else `null`.
+  ///
+  /// Same colours as [loadColors], without waiting: a screen can start from
+  /// them instead of blinking when an own colour is saved.
+  List<MarkerColor>? peekColors(MarkerBrand brand) {
+    final List<MarkerColor>? all = _loaded[brand];
+    final OwnColorSource? source = ownColors;
+    final Map<String, String> own = source?.activeOwnColors ?? const {};
+    if (all == null || source == null || own.isEmpty) return all;
+    return _applied(brand, source.revision, all, own);
+  }
+
+  List<MarkerColor> _applied(
+    MarkerBrand brand,
+    int revision,
+    List<MarkerColor> all,
+    Map<String, String> own,
+  ) {
+    final cached = _effectiveValues[brand];
+    if (cached != null && cached.revision == revision) return cached.value;
+    final List<MarkerColor> value = applyOwnColors(all, own);
+    _effectiveValues[brand] = (revision: revision, value: value);
+    return value;
+  }
 
   Future<List<MarkerColor>> _load(MarkerBrand brand) async {
     try {
-      return parseColors(
+      final List<MarkerColor> parsed = parseColors(
         await Future<String>.sync(() => loadAsset(brand.assetPath)),
         brand: brand,
       );
+      _loaded[brand] = parsed;
+      return parsed;
     } catch (_) {
       _cache.remove(brand);
       rethrow;

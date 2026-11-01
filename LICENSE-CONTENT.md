@@ -27,19 +27,22 @@ icon so nobody mistakes it for the original.
 
 ## Marker catalogue data
 
-The catalogues in `assets/data/` (codes, names, hex values, set membership and
-position on the colour card) are **factual reference data** compiled from public
-sources, listed in [NOTICE.md](NOTICE.md). They are used only so that each person
-can identify the markers they already own. **They are excluded from both MIT and
-CC BY-SA 4.0**: this project claims no rights over third-party data, and including
-them grants no right over the trademarks, designs or materials of their owners.
+The Ohuhu, DecoTime and Copic catalogues in `assets/data/` (codes, names, hex
+values, set membership and position on the colour card) are **factual reference
+data** compiled from public sources, listed in [NOTICE.md](NOTICE.md). They are
+used only so that each person
+can identify the markers they already own. **They are excluded from this project's
+MIT and CC BY-SA 4.0**: this project claims no rights over third-party data, and
+including them grants no right over the trademarks, designs or materials of their owners.
+The Copic source catalogue retains its MIT licence; the full copyright and
+permission notice are reproduced in [NOTICE.md](NOTICE.md).
 The hex values are an on-screen approximation of the real marker colour, not a
 manufacturer measurement.
 
 ## Trademarks
 
-"Ohuhu", "Oahu" and "DecoTime" are trademarks of their respective owners. This
-project is independent and is not affiliated with, sponsored by or endorsed by
+"Ohuhu", "Oahu", "DecoTime" and "Copic" are trademarks of their respective owners.
+This project is independent and is not affiliated with, sponsored by or endorsed by
 them. The repository contains no logos, product photographs, packaging or colour
 cards from any brand.
 

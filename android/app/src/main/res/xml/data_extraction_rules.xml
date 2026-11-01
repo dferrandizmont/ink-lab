@@ -8,10 +8,14 @@
         <exclude domain="sharedpref" path="." />
         <exclude domain="database" path="." />
         <exclude domain="file" path="." />
+        <!-- getApplicationDocumentsDirectory() is app_flutter/ in the root domain: the diary photos. -->
+        <exclude domain="root" path="app_flutter/" />
     </cloud-backup>
     <device-transfer>
         <exclude domain="sharedpref" path="." />
         <exclude domain="database" path="." />
         <exclude domain="file" path="." />
+        <!-- getApplicationDocumentsDirectory() is app_flutter/ in the root domain: the diary photos. -->
+        <exclude domain="root" path="app_flutter/" />
     </device-transfer>
 </data-extraction-rules>

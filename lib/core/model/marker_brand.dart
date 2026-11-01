@@ -8,7 +8,8 @@ enum MarkerBrand {
   /// covers the [MarkerLine]s Oahu, Honolulu and Kaala (`ohuhu_colors.json`).
   /// Its label is "Ohuhu": Oahu is one of its series, never the brand.
   ohuhuOahu('ohuhu_oahu', 'Ohuhu', 'ohuhu_colors.json', MarkerLine.values),
-  decoTime('decotime', 'DecoTime', 'decotime_colors.json');
+  decoTime('decotime', 'DecoTime', 'decotime_colors.json'),
+  copic('copic', 'Copic', 'copic_colors.json');
 
   const MarkerBrand(
     this.id,
@@ -22,6 +23,10 @@ enum MarkerBrand {
 
   /// Product lines sold under this brand. Empty for single-line brands.
   final List<MarkerLine> lines;
+
+  /// Whether ownership can be selected through the catalogue's retail sets.
+  /// Brands without these sets are collected one marker at a time.
+  bool get hasRetailSets => this == ohuhuOahu;
   String get assetPath => 'assets/data/$assetFile';
   static final Map<String, MarkerBrand> byId = {
     for (final value in values) value.id: value,

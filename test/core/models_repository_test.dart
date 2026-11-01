@@ -18,7 +18,11 @@ void main() {
       () async {
         final raw = await File(brand.assetPath).readAsString();
         final parsed = parseColors(raw, brand: brand);
-        expect(parsed.length, brand == MarkerBrand.ohuhuOahu ? 503 : 313);
+        expect(parsed.length, switch (brand) {
+          MarkerBrand.ohuhuOahu => 503,
+          MarkerBrand.decoTime => 313,
+          MarkerBrand.copic => 358,
+        });
         expect(parsed.every((c) => c.brandId == brand.id), isTrue);
         expect(parsed.map((c) => c.colorId).toSet().length, parsed.length);
         for (final c in parsed) {
@@ -27,12 +31,13 @@ void main() {
         }
         expect(
           parsed.first.newCode,
-          brand == MarkerBrand.ohuhuOahu ? '0' : '0.5',
+          brand == MarkerBrand.decoTime ? '0.5' : '0',
         );
-        expect(
-          parsed.last.newCode,
-          brand == MarkerBrand.ohuhuOahu ? 'YR513' : 'GG9',
-        );
+        expect(parsed.last.newCode, switch (brand) {
+          MarkerBrand.ohuhuOahu => 'YR513',
+          MarkerBrand.decoTime => 'GG9',
+          MarkerBrand.copic => 'YR82',
+        });
       },
     );
   }
@@ -82,11 +87,12 @@ void main() {
       repository.loadColors(MarkerBrand.ohuhuOahu),
       repository.loadColors(MarkerBrand.ohuhuOahu),
       repository.loadColors(MarkerBrand.decoTime),
+      repository.loadColors(MarkerBrand.copic),
     ]);
     expect(paths, MarkerBrand.values.map((b) => b.assetPath));
     expect(identical(result[0], result[1]), isTrue);
     expect(await repository.loadColors(MarkerBrand.decoTime), result[2]);
-    expect(paths.length, 2);
+    expect(paths.length, 3);
     expect(() => result[0].clear(), throwsUnsupportedError);
   });
   test('explicit parser brand chooses format even with misleading keys', () {

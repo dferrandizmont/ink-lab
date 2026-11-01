@@ -8,12 +8,23 @@ Spanish version (authoritative): [LEEME.md](LEEME.md).
 |---|---|---|
 | `politica-privacidad.md` | Privacy policy to publish (GDPR and Spanish LOPDGDD), informal register. Mirrors [`docs/privacy.md`](../privacy.md), the technical source of truth. | No placeholders: holder, email and date are filled in. The drafting notes are at the end of this file; the policy carries no comments or internal notes. |
 | `politica-privacidad.en.md` | Courtesy English translation. The Spanish one applies. | Keep in step with the Spanish one. |
+| `politica-privacidad.de.md`, `.fr.md`, `.pt.md`, `.it.md` | Courtesy German, French, Portuguese and Italian translations (de, fr and pt in formal address; it informal). The Spanish one applies. Each quotes the UI labels in its own language (`lib/l10n/app_<language>.arb`). | Keep in step with the Spanish one; same "Last updated" date in all six. |
 | `../privacy.md` and `../privacy.en.md` | Technical inventory of data, permissions, backups, AI and exports, checked against the code. | Review whenever the data flow changes. |
 | `../../PRIVACY.md` | Short pointer to the documents above. | — |
 | `../../SECURITY.md` and `SECURITY.es.md` | How to report a vulnerability without sending real data. | — |
 | `../../LICENSE` and `../../LICENSE-CONTENT.md` (`.es.md`) | MIT for the code; CC BY-SA 4.0 for own content; the catalogue data and third-party materials set apart. | — |
 
-Convention: the Spanish text is the one that applies; each document has its English version in `*.en.md` next to it.
+Convention: the Spanish text is the one that applies; each document has its English version in `*.en.md` next to it,
+and the policy also in `*.de.md`, `*.fr.md`, `*.pt.md` and `*.it.md`.
+
+| Policy | Language | Address | Last updated |
+|---|---|---|---|
+| `politica-privacidad.md` | Spanish (original) | Informal | 2026-10-31 |
+| `politica-privacidad.en.md` | English | — | 2026-10-31 |
+| `politica-privacidad.de.md` | German | Formal (Sie) | 2026-10-31 |
+| `politica-privacidad.fr.md` | French | Formal (vous) | 2026-10-31 |
+| `politica-privacidad.pt.md` | Portuguese | Formal (você) | 2026-10-31 |
+| `politica-privacidad.it.md` | Italian | Informal | 2026-10-31 |
 
 ## How they are kept in sync with the website
 The policy is published on the app's website, **generated from this markdown**, never hand-edited HTML:
@@ -26,7 +37,7 @@ The policy is published on the app's website, **generated from this markdown**, 
    it.
 3. Those URLs go in both store listings and in the app (`lib/ui/pages/settings/constants.dart`).
 4. **If the data flow changes**, these are updated together and in the same commit: `docs/privacy.md`, this policy
-   (and both English versions), the "Last updated" date, `privacy_date` and the store declarations. Then rebuild and
+   (and its five translations), the "Last updated" date, `privacy_date` and the store declarations. Then rebuild and
    redeploy the website.
 
 The old GitHub Pages site (`web/legal/`) is retired once its pages redirect to the new one.
@@ -38,7 +49,8 @@ The old GitHub Pages site (`web/legal/`) is retired once its pages redirect to t
    (Apple).
 
 ## Drafting notes
-Not legal advice. The policy was written on 29 Oct 2026 and updated on 30 Oct 2026 against the code of that date
+Not legal advice. The policy was written on 29 Oct 2026 and updated on 30 Oct 2026 and 31 Oct 2026 (artwork diary with
+photos, clipboard backup and exclusion from Android backups, version 0.7) against the code of that date
 (`docs/privacy.md` is the technical source of truth); have a professional review it before the store launch. These
 notes used to live inside the policy and moved out when it was published on `inklab.mainshai.com`, whose generator
 converts the Markdown as is.
@@ -47,5 +59,5 @@ Decisions already taken in the text, in case you want to change them: holder Dan
 `inklab@mainshai.com`; emails kept "one year from the last reply"; the last-updated date (in `YYYY-MM-DD`, which the
 website reads) is the drafting date; on-device AI is described as Gemini Nano on Android through ML Kit, with its
 diagnostics to Google (iOS does not have it yet, see `docs/privacy.md`). The published URL goes in both store listings;
-check it matches "Data safety" (Play) and "App privacy" (Apple). The English version (`politica-privacidad.en.md`) is a
-courtesy translation; the Spanish one prevails.
+check it matches "Data safety" (Play) and "App privacy" (Apple). The English, German, French, Portuguese and Italian
+versions are courtesy translations; the Spanish one prevails.

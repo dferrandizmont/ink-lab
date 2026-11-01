@@ -10,11 +10,35 @@ python tool/data/generate_ohuhu.py --from-cache /tmp/csv # offline rebuild
 python tool/data/generate_ohuhu.py --check               # exit 1 if the file would change
 ```
 
-The only network access is HTTPS to `docs.google.com` (redirects to
+The Ohuhu generator's only network access is HTTPS to `docs.google.com` (redirects to
 `*.googleusercontent.com`, Google's own CSV mirror, are followed; anything
 else is refused).
 
 ## Sources
+
+### Copic
+
+`generate_copic.py` rebuilds `assets/data/copic_colors.json` using only the
+Python 3.9+ standard library. The source is `colors.json` from
+<https://github.com/meodai/copic-colors>, pinned to commit
+`b495dad1e26202534d48587bf271aa3c0247f215` in the script. The default download
+is HTTPS from `raw.githubusercontent.com`; it does not scrape Copic's sites.
+
+```
+python tool/data/generate_copic.py
+python tool/data/generate_copic.py --from-file /tmp/colors.json
+python tool/data/generate_copic.py --from-file /tmp/colors.json --check
+python -B -m unittest discover -s tool/data -p test_generate_copic.py
+```
+
+The output keeps source order and imports only `number` as `code`, `name`
+and the official `hex` field (never `extractedColor`). Every record has
+`sets: []`: ownership is selected per marker. Validation requires exactly
+358 unique codes, non-empty names, six lowercase hex digits and the
+colourless blender `0`. The source is MIT, Copyright (c) 2023 David Aerne;
+the full notice is reproduced in [NOTICE.md](../../NOTICE.md).
+
+### Ohuhu
 
 | What | Source |
 |---|---|

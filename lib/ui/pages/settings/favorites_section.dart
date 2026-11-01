@@ -134,7 +134,7 @@ class _FavoriteTile extends StatelessWidget {
                 border: Border.all(color: ink.line),
               ),
             )
-          : SwatchBlock(hex: known.hex, size: 36),
+          : SwatchBlock(hex: known.hex, size: 36, own: known.hasOwnColor),
       title: Text(code, style: AppTypography.code.copyWith(color: ink.fg)),
       subtitle: known == null ? null : Text(known.newName),
       trailing: InkIconButton(

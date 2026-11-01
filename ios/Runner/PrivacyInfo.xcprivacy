@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
   App privacy manifest. It must be added to the Runner target in Xcode
-  (in the Xcode project settings). Keep it in sync with PRIVACY.md and the
+  (in the Xcode project settings). Keep it in sync with docs/privacy.md and the
   App Store privacy answers.
 -->
 <plist version="1.0">

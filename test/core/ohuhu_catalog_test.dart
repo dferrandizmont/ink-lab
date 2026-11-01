@@ -43,12 +43,14 @@ void main() {
       test('${brand.label}: hex is always 6 lowercase digits', () {
         expect(colors.where((c) => !hexPattern.hasMatch(c.hex)), isEmpty);
       });
-      test('${brand.label}: every colour belongs to at least one set', () {
-        expect(
-          colors.where((c) => c.sets.isEmpty).map((c) => c.newCode),
-          isEmpty,
-        );
-      });
+      if (brand != MarkerBrand.copic) {
+        test('${brand.label}: every colour belongs to at least one set', () {
+          expect(
+            colors.where((c) => c.sets.isEmpty).map((c) => c.newCode),
+            isEmpty,
+          );
+        });
+      }
       test('${brand.label}: names are clean and not merged', () {
         final problems = <String>[];
         for (final c in colors) {

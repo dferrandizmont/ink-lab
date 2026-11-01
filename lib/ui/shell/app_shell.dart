@@ -59,6 +59,12 @@ Widget _buildSwatches(BuildContext context) => SwatchesPage(
     paletteBaseDraft.value = color;
     context.findAncestorStateOfType<_AppShellState>()?._goTo(_paletteIndex);
   },
+  onBlendingChain: (MarkerColor color) {
+    // Same hand-off, with the Blending Chain type asked for first.
+    paletteBaseMode.value = PaletteMode.blendingChain;
+    paletteBaseDraft.value = color;
+    context.findAncestorStateOfType<_AppShellState>()?._goTo(_paletteIndex);
+  },
   onOpenCollection: () => CollectionPage.open(context),
 );
 
@@ -168,6 +174,7 @@ class _AppShellState extends State<AppShell> {
       final MarkerColor? base = paletteBaseDraft.value;
       if (base != null && base.brandId != s.brand.id) {
         paletteBaseDraft.value = null;
+        paletteBaseMode.value = null;
       }
       final PaletteDraft? draft = paletteDraft.value;
       if (draft != null &&

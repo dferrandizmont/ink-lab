@@ -10,15 +10,19 @@ import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_search_field.dart';
+import 'collection_summary.dart';
 
 /// "Add loose markers": every marker of the active brand with a search, a
 /// tick per marker and "tick / untick what is in view". A marker that comes
 /// with an owned set says "In your set" and cannot be ticked one by one.
 ///
-/// For DecoTime (no sets) it is the list of the markers the user has. The
+/// For DecoTime and Copic (no sets) it is the list of the markers the user has. The
 /// list is the page's own scroll, never a scroll inside a card.
 class LooseMarkersPage extends StatefulWidget {
-  const LooseMarkersPage({super.key});
+  const LooseMarkersPage({super.key, this.settings});
+
+  /// Optional draft repository: onboarding only saves it when setup finishes.
+  final AppSettingsRepository? settings;
 
   /// Key of the page body.
   static const Key pageKey = Key('loose-markers-page');
@@ -44,7 +48,7 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
     final AppScope scope = AppScope.of(context);
     if (!identical(scope, _scope)) {
       _scope = scope;
-      _changes = scope.settings.changes;
+      _changes = (widget.settings ?? scope.settings).changes;
     }
   }
 
@@ -59,13 +63,14 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
     final AppScope scope = _scope!;
     return StreamBuilder<AppSettingsState>(
       stream: _changes,
-      initialData: scope.settings.state,
+      initialData: (widget.settings ?? scope.settings).state,
       builder: (BuildContext context, AsyncSnapshot<AppSettingsState> s) {
-        final AppSettingsState state = s.data ?? scope.settings.state;
+        final AppSettingsState state =
+            s.data ?? (widget.settings ?? scope.settings).state;
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              state.brand == MarkerBrand.ohuhuOahu
+              state.brand.hasRetailSets
                   ? context.l10n.collectionExtrasAddTitle
                   : context.l10n.collectionDecoMarkersTitle,
             ),
@@ -102,7 +107,7 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
       settings.extraMarkerIds,
       brand.id,
     );
-    final Set<String> setIds = brand == MarkerBrand.ohuhuOahu
+    final Set<String> setIds = brand.hasRetailSets
         ? settings.ownedSetIds
         : const <String>{};
     bool viaSet(MarkerColor c) => c.sets.any(setIds.contains);
@@ -117,9 +122,9 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
 
     final List<Widget> top = <Widget>[
       Text(
-        brand == MarkerBrand.ohuhuOahu
+        brand.hasRetailSets
             ? context.l10n.collectionExtrasHint
-            : context.l10n.collectionDecoHint,
+            : context.l10n.individualMarkersHint(brand),
         style: AppTypography.secondary.copyWith(color: ink.fg2),
       ),
       const SizedBox(height: InkSpacing.block),
@@ -240,7 +245,7 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
     for (final MarkerColor color in colors) {
       add ? next.add(color.colorId) : next.remove(color.colorId);
     }
-    return scope.settings.setExtraMarkerIds(next);
+    return (widget.settings ?? scope.settings).setExtraMarkerIds(next);
   }
 }
 
@@ -276,7 +281,12 @@ class _MarkerRow extends StatelessWidget {
           ),
           child: Row(
             children: <Widget>[
-              SwatchBlock(hex: color.hex, size: 32, radius: InkRadii.xs),
+              SwatchBlock(
+                hex: color.hex,
+                size: 32,
+                radius: InkRadii.xs,
+                own: color.hasOwnColor,
+              ),
               const SizedBox(width: InkSpacing.s12),
               Expanded(
                 child: Column(

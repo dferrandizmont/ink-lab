@@ -42,6 +42,20 @@ void main() {
       expect(AppLanguage.fromJson('ES'), AppLanguage.spanish);
       expect(AppLanguage.fromJson('English'), AppLanguage.english);
       expect(AppLanguage.fromJson('en'), AppLanguage.english);
+      expect(AppLanguage.fromJson('de'), AppLanguage.german);
+      expect(AppLanguage.fromJson('Deutsch'), AppLanguage.german);
+      expect(AppLanguage.fromJson('fr'), AppLanguage.french);
+      expect(AppLanguage.fromJson('Français'), AppLanguage.french);
+      expect(AppLanguage.fromJson('pt'), AppLanguage.portuguese);
+      expect(AppLanguage.fromJson('PT-PT'), AppLanguage.portuguese);
+      expect(AppLanguage.fromJson('it'), AppLanguage.italian);
+      expect(AppLanguage.fromJson('Italiano'), AppLanguage.italian);
+      for (final AppLanguage language in AppLanguage.values) {
+        expect(AppLanguage.fromJson(language.toJson()), language);
+      }
+      expect(AppLanguage.system.toJson(), 'system');
+      expect(AppLanguage.spanish.toJson(), 'es');
+      expect(AppLanguage.english.toJson(), 'en');
       expect(AppLanguage.fromJson('system'), AppLanguage.system);
       expect(AppLanguage.fromJson('klingon'), AppLanguage.system);
       expect(AppLanguage.fromJson(null), AppLanguage.system);

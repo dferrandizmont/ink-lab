@@ -6,6 +6,7 @@ import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/collection_selection.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
+import 'package:ink_lab/ui/pages/swatches/swatch_detail_sheet.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
@@ -30,6 +31,7 @@ Future<AppScope> pumpSwatches(
   Size size = const Size(390, 844),
   Locale locale = const Locale('en'),
   bool showAll = true,
+  ValueChanged<MarkerColor>? onBlendingChain,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -37,7 +39,7 @@ Future<AppScope> pumpSwatches(
 
   final AppScope scope = AppScope.inMemory(
     markers: diskMarkers(),
-    child: const SwatchesPage(),
+    child: SwatchesPage(onBlendingChain: onBlendingChain),
   );
   await tester.pumpWidget(
     MaterialApp(
@@ -204,6 +206,32 @@ void main() {
     expect(find.text(l10n.commonRgb(130, 220, 250)), findsOneWidget);
     expect(find.text(l10n.swatchesClosestAlternatives), findsOneWidget);
     expect(find.textContaining('ΔE '), findsWidgets);
+  });
+
+  testWidgets('the detail sheet offers a blending chain when the shell can '
+      'open one', (WidgetTester tester) async {
+    // Standalone, without the shell, there is nowhere to send it.
+    await pumpSwatches(tester);
+    await tester.tap(find.text('B08'));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.swatchesBlendingChain), findsNothing);
+  });
+
+  testWidgets('the blending chain action closes the sheet and hands the '
+      'marker over', (WidgetTester tester) async {
+    final List<MarkerColor> asked = <MarkerColor>[];
+    await pumpSwatches(tester, onBlendingChain: asked.add);
+
+    await tester.tap(find.text('B08'));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.swatchesBlendingChain), findsOneWidget);
+    await tester.tap(
+      find.byKey(const ValueKey<String>('swatch-blending-chain')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(asked.map((MarkerColor c) => c.newCode), <String>['B08']);
+    expect(find.text(l10n.swatchesCopyHex), findsNothing);
   });
 
   testWidgets('a closest alternative opens its own detail', (
@@ -388,36 +416,44 @@ void main() {
     expect(find.textContaining('more'), findsOneWidget);
   });
 
-  testWidgets('DecoTime without owned markers: All browses, Mine explains', (
-    WidgetTester tester,
-  ) async {
-    final AppScope scope = await pumpSwatches(tester);
+  for (final brand in [MarkerBrand.decoTime, MarkerBrand.copic]) {
+    testWidgets(
+      '${brand.label} without owned markers: All browses, Mine explains',
+      (WidgetTester tester) async {
+        final AppScope scope = await pumpSwatches(tester);
 
-    await scope.settings.setBrand(MarkerBrand.decoTime);
-    await tester.pumpAndSettle();
-    // The whole range is browsable before owning anything.
-    expect(find.byType(ColorSwatchTile), findsWidgets);
+        await scope.settings.setBrand(brand);
+        await tester.pumpAndSettle();
+        // The whole range is browsable before owning anything.
+        expect(find.byType(ColorSwatchTile), findsWidgets);
 
-    await tester.tap(find.byKey(const ValueKey<String>('swatches-mine')));
-    await tester.pumpAndSettle();
-    expect(find.text(l10n.swatchesEmptyNoOwnedTitle), findsOneWidget);
-    expect(find.text(l10n.swatchesEmptyNoOwnedBody), findsOneWidget);
-    expect(find.byType(ColorSwatchTile), findsNothing);
-  });
+        await tester.tap(find.byKey(const ValueKey<String>('swatches-mine')));
+        await tester.pumpAndSettle();
+        expect(find.text(l10n.swatchesEmptyNoOwnedTitle), findsOneWidget);
+        expect(find.text(l10n.swatchesEmptyNoOwnedBody), findsOneWidget);
+        expect(find.byType(ColorSwatchTile), findsNothing);
+      },
+    );
 
-  testWidgets('the owned DecoTime markers show up as swatches', (
-    WidgetTester tester,
-  ) async {
-    final AppScope scope = await pumpSwatches(tester);
+    testWidgets('the owned ${brand.label} markers show up as swatches', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSwatches(tester);
 
-    await scope.settings.setBrand(MarkerBrand.decoTime);
-    await scope.settings.setOwnedMarkerCodes(<String>{'decotime:GG9'});
-    await tester.pumpAndSettle();
+      await scope.settings.setBrand(brand);
+      await scope.settings.setOwnedMarkerCodes(<String>{
+        brand == MarkerBrand.copic ? 'copic:BV04' : 'decotime:GG9',
+      });
+      await tester.pumpAndSettle();
 
-    // A brand with owned markers opens on "Mine".
-    expect(find.text('GG9'), findsOneWidget);
-    expect(find.byType(ColorSwatchTile), findsOneWidget);
-  });
+      // A brand with owned markers opens on "Mine".
+      expect(
+        find.text(brand == MarkerBrand.copic ? 'BV04' : 'GG9'),
+        findsOneWidget,
+      );
+      expect(find.byType(ColorSwatchTile), findsOneWidget);
+    });
+  }
 
   testWidgets('the list layout shows one row per color', (
     WidgetTester tester,
@@ -495,6 +531,184 @@ void main() {
     final Map<String, Map<String, int>> catalog = await diskMarkers()
         .loadCardLocations();
     expect(catalog['classic_160'], isNotEmpty);
+  });
+
+  group('my colour', () {
+    Finder tileWithOwnColor() => find.byWidgetPredicate(
+      (Widget w) => w is ColorSwatchTile && w.ownColor,
+    );
+
+    Future<void> openDetail(WidgetTester tester) async {
+      await tester.tap(find.text('B08'));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> saveOwnColor(WidgetTester tester, String hex) async {
+      await tester.tap(find.byKey(const ValueKey<String>('swatch-own-set')));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byKey(const ValueKey<String>('own-color-hex')),
+        hex,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey<String>('own-color-save')));
+      await tester.pumpAndSettle();
+    }
+
+    SwatchDetailSheet sheetOf(WidgetTester tester) =>
+        tester.widget<SwatchDetailSheet>(find.byType(SwatchDetailSheet));
+
+    testWidgets('the detail sets, shows both colours and resets', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSwatches(tester);
+      await openDetail(tester);
+
+      expect(find.text(l10n.swatchesMyColourTitle), findsOneWidget);
+      expect(find.text(l10n.swatchesMyColourHelp), findsOneWidget);
+      expect(find.text(l10n.swatchesMyColourSet), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('swatch-own-compare')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('swatch-own-reset')),
+        findsNothing,
+      );
+
+      await saveOwnColor(tester, '0a0b0c');
+
+      expect(scope.ownColors.colors, <String, String>{
+        'ohuhu_oahu:B08': '0a0b0c',
+      });
+      expect(find.byType(SwatchDetailSheet), findsOneWidget);
+      expect(find.text(l10n.swatchesMyColourSaved), findsOneWidget);
+      // Both colours, side by side; the sheet now shows the own one.
+      expect(
+        find.byKey(const ValueKey<String>('swatch-own-compare')),
+        findsOneWidget,
+      );
+      expect(
+        find.text(l10n.swatchesCatalogueLabel.toUpperCase()),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.swatchesMineLabel.toUpperCase()), findsOneWidget);
+      expect(find.text('#0A0B0C'), findsWidgets);
+      expect(find.text(l10n.swatchesMyColourChange), findsOneWidget);
+      expect(sheetOf(tester).color.hex, '0a0b0c');
+      expect(sheetOf(tester).color.hasOwnColor, isTrue);
+
+      await tester.tap(find.byKey(const ValueKey<String>('swatch-own-reset')));
+      await tester.pumpAndSettle();
+      expect(scope.ownColors.colors, isEmpty);
+      expect(find.text(l10n.swatchesMyColourWasReset), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('swatch-own-compare')),
+        findsNothing,
+      );
+      expect(sheetOf(tester).color.hasOwnColor, isFalse);
+    });
+
+    testWidgets('leaving the editor without saving changes nothing', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSwatches(tester);
+      await openDetail(tester);
+      await tester.tap(find.byKey(const ValueKey<String>('swatch-own-set')));
+      await tester.pumpAndSettle();
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(scope.ownColors.colors, isEmpty);
+      expect(find.byType(SwatchDetailSheet), findsOneWidget);
+    });
+
+    testWidgets('the grid and the list mark the user own colours', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSwatches(tester);
+      expect(tileWithOwnColor(), findsNothing);
+
+      await scope.ownColors.set('B08', '0a0b0c');
+      await tester.pumpAndSettle();
+      expect(tileWithOwnColor(), findsOneWidget);
+      expect(tester.widget<ColorSwatchTile>(tileWithOwnColor()).hex, '0a0b0c');
+      expect(find.byType(OwnColorMark), findsOneWidget);
+
+      // Switched off, the catalogue colour is shown and nothing is marked.
+      await scope.settings.setUseOwnColors(false);
+      await tester.pumpAndSettle();
+      expect(tileWithOwnColor(), findsNothing);
+      expect(find.byType(OwnColorMark), findsNothing);
+      await scope.settings.setUseOwnColors(true);
+      await tester.pumpAndSettle();
+
+      // The list marks it too.
+      await openFilters(tester);
+      await tester.tap(find.text(l10n.swatchesLayoutList));
+      await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      expect(
+        find.byWidgetPredicate((Widget w) => w is SwatchListTile && w.ownColor),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('saving the catalogue colour goes back to the catalogue', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSwatches(tester);
+      final String catalogue = scope.markers
+          .peekColors(MarkerBrand.ohuhuOahu)!
+          .firstWhere((MarkerColor c) => c.newCode == 'B08')
+          .hex;
+      await scope.ownColors.set('B08', '0a0b0c');
+      await tester.pumpAndSettle();
+      await openDetail(tester);
+
+      await saveOwnColor(tester, catalogue.toUpperCase());
+
+      expect(scope.ownColors.colors, isEmpty);
+      expect(
+        find.byKey(const ValueKey<String>('swatch-own-compare')),
+        findsNothing,
+      );
+    });
+
+    testWidgets('saving one switches "Use my colours" on', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSwatches(tester);
+      await scope.settings.setUseOwnColors(false);
+      await tester.pumpAndSettle();
+      await openDetail(tester);
+
+      await saveOwnColor(tester, '0a0b0c');
+
+      expect(scope.settings.state.useOwnColors, isTrue);
+      expect(sheetOf(tester).color.hex, '0a0b0c');
+    });
+
+    testWidgets('the alternatives are measured with the own colours', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSwatches(tester);
+      await openDetail(tester);
+      final MarkerColor first = sheetOf(tester).alternatives.first.color;
+      expect(first.hasOwnColor, isFalse);
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+
+      // The user's colour for that neighbour is far from B08: it drops out.
+      await scope.ownColors.set(first.newCode, '001122');
+      await tester.pumpAndSettle();
+      await openDetail(tester);
+      expect(
+        sheetOf(tester).alternatives
+            .map((SwatchAlternative a) => a.color.newCode),
+        isNot(contains(first.newCode)),
+      );
+    });
   });
 
   for (final Locale locale in const <Locale>[Locale('en'), Locale('es')]) {

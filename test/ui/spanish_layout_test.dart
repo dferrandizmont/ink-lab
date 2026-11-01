@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/marker_repository.dart';
+import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
@@ -52,14 +53,29 @@ Future<AppScope> _pumpSpanish(
   return scope;
 }
 
-/// The Spanish text of every `role...` message of the ARB.
-List<String> _spanishRoles() {
+/// Every language of the app.
+const List<String> _languages = <String>['en', 'es', 'de', 'fr', 'pt', 'it'];
+
+/// The text of every `role...` message of the ARB of [locale].
+List<String> _roles(String locale) {
   final Map<String, dynamic> arb = jsonDecode(
-    File('lib/l10n/app_es.arb').readAsStringSync(),
+    File('lib/l10n/app_$locale.arb').readAsStringSync(),
   ) as Map<String, dynamic>;
   return <String>[
     for (final MapEntry<String, dynamic> e in arb.entries)
       if (e.key.startsWith('role')) e.value as String,
+  ];
+}
+
+/// The text of every scene role that scenes.json translates into [locale].
+List<String> _sceneRoles(String locale) {
+  final Map<String, dynamic> roles =
+      (jsonDecode(File('assets/data/scenes.json').readAsStringSync())
+              as Map<String, dynamic>)['roles']
+          as Map<String, dynamic>;
+  return <String>[
+    for (final dynamic names in roles.values)
+      (names as Map<String, dynamic>)[locale] as String,
   ];
 }
 
@@ -114,6 +130,35 @@ void main() {
       expect(find.text('OpenRouter'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
+  });
+
+  group('Diary in Spanish', () {
+    for (final double scale in <double>[1.0, 1.3]) {
+      testWidgets('the list and the form fit at 360 dp, text x$scale', (
+        WidgetTester tester,
+      ) async {
+        await _pumpSpanish(tester, const IdeasPage(), textScale: scale);
+        await tester.tap(find.text('Diario'));
+        await tester.pumpAndSettle();
+        expect(find.text('Tu diario está vacío'), findsOneWidget);
+        expect(find.text('Añadir al diario'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+
+        await tester.tap(find.text('Añadir al diario'));
+        await tester.pumpAndSettle();
+        expect(find.text('Nueva entrada'), findsOneWidget);
+        expect(find.text('Terminada'), findsOneWidget);
+        expect(find.text('En curso'), findsOneWidget);
+        expect(find.text('Guardar entrada'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        final Finder list = find.byType(Scrollable).first;
+        for (var i = 0; i < 6; i++) {
+          await tester.drag(list, const Offset(0, -500));
+          await tester.pump();
+          expect(tester.takeException(), isNull, reason: 'after scroll $i');
+        }
+      });
+    }
   });
 
   group('Palette in Spanish', () {
@@ -185,11 +230,12 @@ void main() {
       WidgetTester tester,
       String role, {
       double textScale = 1.0,
+      String locale = 'es',
     }) async {
       _phone360(tester);
       await tester.pumpWidget(
         MaterialApp(
-          locale: const Locale('es'),
+          locale: Locale(locale),
           localizationsDelegates: testLocalizationsDelegates,
           supportedLocales: testSupportedLocales,
           theme: AppTheme.light(),
@@ -230,36 +276,43 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets(
-      'every Spanish role fits its column, at normal and large text',
-      (WidgetTester tester) async {
-        final List<String> roles = _spanishRoles();
-        expect(roles.length, greaterThan(150));
-        for (final double scale in <double>[1.0, 1.4]) {
-          for (final String role in roles) {
-            await pumpRole(tester, role, textScale: scale);
-            final RenderParagraph paragraph = tester.renderObject(
-              find.byType(Text),
-            );
-            expect(
-              paragraph.didExceedMaxLines,
-              isFalse,
-              reason: '"$role" at x$scale',
-            );
-            expect(
-              paragraph.size.width,
-              lessThanOrEqualTo(_roleWidth),
-              reason: '"$role" at x$scale',
-            );
-            expect(
-              tester.takeException(),
-              isNull,
-              reason: '"$role" at x$scale',
-            );
+    for (final String locale in _languages) {
+      testWidgets(
+        'every $locale role fits its column, at normal and large text',
+        (WidgetTester tester) async {
+          final List<String> roles = <String>[
+            ..._roles(locale),
+            // English scene roles are the role ids themselves, which the
+            // palette shows untranslated.
+            if (locale != 'en') ..._sceneRoles(locale),
+          ];
+          expect(roles.length, greaterThan(150));
+          for (final double scale in <double>[1.0, 1.4]) {
+            for (final String role in roles) {
+              await pumpRole(tester, role, textScale: scale, locale: locale);
+              final RenderParagraph paragraph = tester.renderObject(
+                find.byType(Text),
+              );
+              expect(
+                paragraph.didExceedMaxLines,
+                isFalse,
+                reason: '$locale "$role" at x$scale',
+              );
+              expect(
+                paragraph.size.width,
+                lessThanOrEqualTo(_roleWidth),
+                reason: '$locale "$role" at x$scale',
+              );
+              expect(
+                tester.takeException(),
+                isNull,
+                reason: '$locale "$role" at x$scale',
+              );
+            }
           }
-        }
-      },
-    );
+        },
+      );
+    }
 
     testWidgets('the word is not shrunk when it already fits', (
       WidgetTester tester,

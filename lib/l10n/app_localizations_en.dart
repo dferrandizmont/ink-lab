@@ -108,7 +108,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsBackupSubtitle =>
-      'Your settings, palettes, history and AI settings can be exported as a JSON file and imported back.';
+      'Copies your data (collection, palettes, diary, history and settings) to the clipboard as text, so you can import it later. Photos and the API key are not included.';
 
   @override
   String get settingsExportBackup => 'Export';
@@ -117,7 +117,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsImportBackup => 'Import';
 
   @override
-  String get settingsBackupExported => 'Backup copied to the clipboard';
+  String get settingsBackupExported =>
+      'Backup copied to the clipboard, without the photos';
 
   @override
   String get settingsBackupImported => 'Backup imported';
@@ -139,7 +140,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsImportConfirmBody =>
-      'The backup replaces your settings, your saved palettes, your colour match history and your AI settings.';
+      'The backup replaces your current data: collection, palettes, diary, history and settings. Diary entries that are not in it are deleted along with their photos; photos are never part of a backup.';
 
   @override
   String get settingsImportInvalidJson => 'The text is not valid JSON.';
@@ -406,7 +407,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsDisclaimer =>
-      'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu or DecoTime, and it uses their marker codes, names and colour values only as factual reference data.';
+      'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime or Copic, and it uses their marker codes, names and colour values only as factual reference data.';
 
   @override
   String get paletteTitle => 'Palette';
@@ -465,6 +466,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paletteTypeDescCustomPalette => 'Build it by hand';
+
+  @override
+  String get modeBlendingChain => 'Blending Chain';
+
+  @override
+  String get paletteTypeDescBlendingChain => 'Light to dark, ready to blend';
+
+  @override
+  String paletteChainResultTitle(int count) {
+    return 'Blending chain ($count)';
+  }
+
+  @override
+  String paletteChainStep(int step, String role) {
+    return 'Step $step · $role';
+  }
+
+  @override
+  String get roleLightest => 'Lightest';
+
+  @override
+  String get roleLighter => 'Lighter';
+
+  @override
+  String get roleDarker => 'Darker';
+
+  @override
+  String get roleDarkest => 'Darkest';
+
+  @override
+  String get paletteChainHint =>
+      'Work light to dark and overlap each step while the ink is still wet. Soften the joins with the colourless blender if you have one.';
+
+  @override
+  String paletteChainShort(int count, int wanted) {
+    return 'Only $count of your markers blend well with this base, fewer than the $wanted you asked for.';
+  }
+
+  @override
+  String get paletteChainNeedLighter =>
+      'No chain yet: you need a lighter marker in this family.';
+
+  @override
+  String get paletteChainNeedDarker =>
+      'No chain yet: you need a darker marker in this family.';
+
+  @override
+  String get paletteChainNeedBoth =>
+      'No chain yet: you need a lighter and a darker marker in this family.';
+
+  @override
+  String get paletteChainBaseLightest =>
+      'You have nothing lighter in this family, so the chain starts at your base.';
+
+  @override
+  String get paletteChainBaseDarkest =>
+      'You have nothing darker in this family, so the chain ends at your base.';
+
+  @override
+  String get paletteChainOptionsLabel => 'Other chains';
+
+  @override
+  String paletteChainOption(int number) {
+    return 'Option $number';
+  }
+
+  @override
+  String get paletteChainWholeRange => 'Search the whole range';
+
+  @override
+  String paletteChainWholeRangeNote(String brand) {
+    return 'Showing the whole $brand range, markers you don\'t own included.';
+  }
+
+  @override
+  String get paletteChainMyMarkers => 'Back to my markers';
+
+  @override
+  String get palettePaintTipChainFirst =>
+      'Lay the lightest colour over the whole area first.';
+
+  @override
+  String get palettePaintTipChainMiddle =>
+      'Overlap the previous step while it is still wet.';
+
+  @override
+  String get palettePaintTipChainLast =>
+      'Finish with the darkest only where the shadow falls.';
+
+  @override
+  String get swatchesBlendingChain => 'Blending chain';
 
   @override
   String paletteTypeSemantic(String value) {
@@ -568,6 +660,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paletteSaveButton => 'Save palette';
+
+  @override
+  String get paletteShareButton => 'Share';
+
+  @override
+  String get shareFailed => 'Could not share the image.';
 
   @override
   String get paletteOkButton => 'OK';
@@ -898,10 +996,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ideasGuideOnlyNote =>
       'This exercise uses your whole collection, so it has no fixed palette.';
-
-  @override
-  String get ideasNoMarkersDecoTime =>
-      'Add the DecoTime markers you own in My collection to get a palette for this idea.';
 
   @override
   String get ideasNoMarkersOther =>
@@ -2502,6 +2596,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsLanguageEnglish => 'English';
 
   @override
+  String get settingsLanguageGerman => 'Deutsch';
+
+  @override
+  String get settingsLanguageFrench => 'Français';
+
+  @override
+  String get settingsLanguagePortuguese => 'Português';
+
+  @override
+  String get settingsLanguageItalian => 'Italiano';
+
+  @override
   String settingsOwnedCount(int owned, int total) {
     return '$owned of $total markers';
   }
@@ -2646,6 +2752,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String paletteUnknownCode(String brand, String input, String example) {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime': '$input is not a DecoTime marker code. Try $example.',
+      'copic': '$input is not a Copic marker code. Try $example.',
       'other': '$input is not an Ink Lab marker code. Try $example.',
     });
     return '$_temp0';
@@ -2655,6 +2762,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String paletteNotAvailable(String brand, String input, String example) {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime':
+          '$input is not in your collection. Try $example or add it in My collection.',
+      'copic':
           '$input is not in your collection. Try $example or add it in My collection.',
       'other':
           '$input is not in your collection. Try $example or add it in My collection.',
@@ -2666,6 +2775,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String paletteNoAvailableColors(String brand) {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime': 'There are no DecoTime markers in your collection yet. Add them in My collection.',
+      'copic': 'There are no Copic markers in your collection yet. Add them in My collection.',
       'other': 'There are no markers in your collection yet. Add them in My collection.',
     });
     return '$_temp0';
@@ -3795,6 +3905,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get collectionReset => 'Reset collection';
 
   @override
+  String get collectionChartTitle => 'Printable swatch chart';
+
+  @override
+  String get collectionChartHint =>
+      'Empty boxes labelled with the code and name of each marker you own, to swatch your real markers. Shared as A4 images to print or save.';
+
+  @override
+  String get collectionChartShowColour => 'Catalogue colour';
+
+  @override
+  String get collectionChartShowColourHint =>
+      'Show it as a thin strip in each box, to compare.';
+
+  @override
+  String get collectionChartCreate => 'Create and share';
+
+  @override
+  String get collectionChartPreparing => 'Preparing…';
+
+  @override
+  String get collectionChartEmpty => 'Choose your sets or markers first.';
+
+  @override
+  String collectionChartPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages',
+      one: '1 page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chartImageTitle => 'Swatch chart';
+
+  @override
+  String chartImagePage(int page, int total) {
+    return 'Page $page of $total';
+  }
+
+  @override
   String collectionResetTitle(String brand) {
     return 'Reset your $brand collection?';
   }
@@ -3833,9 +3985,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get onboardingSetsBody =>
       'Pick the boxes you bought. Extra markers can be added later.';
-
-  @override
-  String get onboardingDecoTitle => 'Your DecoTime markers';
 
   @override
   String get onboardingDoneTitle => 'All set';
@@ -3897,13 +4046,116 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String onboardingDoneWholeRange(String brand) {
-    return 'Until you pick sets, the app shows the whole $brand range.';
+  String get wishlistTitle => 'Wishlist';
+
+  @override
+  String wishlistCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count markers to buy',
+      one: '1 marker to buy',
+      zero: 'Nothing on your wishlist yet',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get onboardingDoneNoMarkers =>
-      'You have not ticked any DecoTime markers yet: tick them in My collection.';
+  String get wishlistEmpty =>
+      'Add the markers you want to buy from the detail of any marker.';
+
+  @override
+  String get wishlistAdd => 'Add to wishlist';
+
+  @override
+  String get wishlistRemove => 'Remove from wishlist';
+
+  @override
+  String get wishlistCopy => 'Copy list';
+
+  @override
+  String get wishlistCopied => 'Shopping list copied';
+
+  @override
+  String get wishlistOfferTitle => 'Add to your wishlist?';
+
+  @override
+  String wishlistOfferBody(String code) {
+    return '$code is dried out. Add it to your wishlist to buy a refill or a replacement.';
+  }
+
+  @override
+  String get driedTitle => 'Dried out';
+
+  @override
+  String driedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dried out markers',
+      one: '1 dried out marker',
+      zero: 'No dried out markers',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get driedHint =>
+      'They stay in your collection, but Match, Palette and Ideas do not suggest them.';
+
+  @override
+  String get driedEmpty =>
+      'When a marker stops working, mark it as dried out from its detail.';
+
+  @override
+  String get driedMark => 'Mark as dried out';
+
+  @override
+  String get driedUnmark => 'Mark as usable';
+
+  @override
+  String get driedNote =>
+      'Dried out: Match, Palette and Ideas skip it until you mark it as usable.';
+
+  @override
+  String get commonDried => 'Dried out';
+
+  @override
+  String get buyNextTitle => 'What to buy next';
+
+  @override
+  String get buyNextIntro =>
+      'Markers you do not have that would bring your colours closest to the most scenes.';
+
+  @override
+  String buyNextReasonScenes(int count, String scenes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Improves $count scenes: $scenes',
+      one: 'Improves 1 scene: $scenes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get buyNextReasonGap => 'Fills a gap in your range of colours';
+
+  @override
+  String get buyNextNoCollection =>
+      'Tick the markers you own to see what to buy next.';
+
+  @override
+  String get buyNextComplete =>
+      'Nothing to suggest: your markers already cover every scene well.';
+
+  @override
+  String get buyNextRefill => 'Dried out: a refill brings it back.';
+
+  @override
+  String onboardingDoneWholeRange(String brand) {
+    return 'Until you pick sets, the app shows the whole $brand range.';
+  }
 
   @override
   String get onboardingDoneNext =>
@@ -3912,4 +4164,244 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get collectionVisibleScope =>
       'Applies to the markers that match your search.';
+
+  @override
+  String get matchWhiteBalanceButton => 'Fix white balance';
+
+  @override
+  String get matchWhiteBalanceHint =>
+      'Tap a point of the photo that should be white paper.';
+
+  @override
+  String get matchWhiteBalanceOn => 'White balance on';
+
+  @override
+  String get matchWhiteBalanceReset => 'Undo';
+
+  @override
+  String get matchWhiteBalanceTooDark =>
+      'That point is too dark to be paper. Pick a lighter one.';
+
+  @override
+  String get matchWhiteBalanceTooColourful =>
+      'That point has too much colour to be paper. Pick a white area.';
+
+  @override
+  String get commonOwnColour => 'My colour';
+
+  @override
+  String get swatchesMyColourTitle => 'My colour';
+
+  @override
+  String get swatchesMyColourHelp =>
+      'Catalogue colours are estimates. Store the colour your marker really gives on paper.';
+
+  @override
+  String get swatchesMyColourSet => 'Set my colour';
+
+  @override
+  String get swatchesMyColourChange => 'Change';
+
+  @override
+  String get swatchesMyColourReset => 'Back to catalogue';
+
+  @override
+  String get swatchesMyColourSaved => 'Your colour was saved';
+
+  @override
+  String get swatchesMyColourWasReset => 'Back to the catalogue colour';
+
+  @override
+  String get swatchesCatalogueLabel => 'Catalogue';
+
+  @override
+  String get swatchesMineLabel => 'Mine';
+
+  @override
+  String ownColorTitle(String code) {
+    return 'My colour for $code';
+  }
+
+  @override
+  String get ownColorHexLabel => 'Hex colour';
+
+  @override
+  String get ownColorHexInvalid => 'Type 3 or 6 hex digits, like 3A7F9C.';
+
+  @override
+  String get ownColorPhotoTitle => 'From a photo';
+
+  @override
+  String get ownColorPhotoHelp =>
+      'Paint the marker on white paper, take a photo and tap the painted area.';
+
+  @override
+  String get ownColorPhotoTap => 'Tap the painted area.';
+
+  @override
+  String get ownColorSave => 'Save my colour';
+
+  @override
+  String get settingsOwnColors => 'Use my colours';
+
+  @override
+  String get settingsOwnColorsSubtitle =>
+      'Match, Palette and Ideas use the colour you stored for a marker instead of the catalogue one.';
+
+  @override
+  String settingsOwnColorsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count colours of your own',
+      one: '1 colour of your own',
+      zero: 'No colours of your own yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsOwnColorsReset => 'Reset';
+
+  @override
+  String get settingsOwnColorsResetTitle => 'Reset your colours?';
+
+  @override
+  String get settingsOwnColorsResetBody =>
+      'Every marker goes back to its catalogue colour. This cannot be undone.';
+
+  @override
+  String get settingsJoinBeta => 'Join the Google Play beta';
+
+  @override
+  String get collectionCopicHint =>
+      'Copic markers are bought one by one. Tick the markers you own.';
+
+  @override
+  String get onboardingCopicLine => '358 colours · Mark the markers you own';
+
+  @override
+  String onboardingMarkersTitle(String brand) {
+    return 'Your $brand markers';
+  }
+
+  @override
+  String onboardingNoMarkers(String brand) {
+    return 'You have not ticked any $brand markers yet: tick them in My collection.';
+  }
+
+  @override
+  String ideasNoMarkersBrand(String brand) {
+    return 'Add the $brand markers you own in My collection to get a palette for this idea.';
+  }
+
+  @override
+  String get ideasDiarySegment => 'Diary';
+
+  @override
+  String get ideasDiarySubtitle => 'Your artworks, newest first';
+
+  @override
+  String get diaryEmptyTitle => 'Your diary is empty';
+
+  @override
+  String get diaryEmptyMessage =>
+      'Log the pages and sheets you paint, with their markers, notes and photos.';
+
+  @override
+  String get diaryAdd => 'Add to diary';
+
+  @override
+  String get diaryStatusLabel => 'Status';
+
+  @override
+  String get diaryStatusInProgress => 'In progress';
+
+  @override
+  String get diaryStatusFinished => 'Finished';
+
+  @override
+  String get diaryNewTitle => 'New entry';
+
+  @override
+  String get diaryEditTitle => 'Edit entry';
+
+  @override
+  String get diaryTitleLabel => 'Title';
+
+  @override
+  String get diaryDateLabel => 'Date';
+
+  @override
+  String get diaryOnWhatLabel => 'Painted on';
+
+  @override
+  String get diaryOnWhatHint => 'e.g. a colouring book or a sketchbook';
+
+  @override
+  String get diaryMarkersTitle => 'Markers used';
+
+  @override
+  String get diaryMarkersChoose => 'Choose markers';
+
+  @override
+  String diaryMarkerRemove(String code) {
+    return 'Remove $code';
+  }
+
+  @override
+  String get diaryPaletteTitle => 'Palette';
+
+  @override
+  String get diaryPaletteNone => 'No palette';
+
+  @override
+  String get diaryPaletteChoose => 'Link a saved palette';
+
+  @override
+  String get diaryPaletteMissing => 'This palette is no longer saved.';
+
+  @override
+  String get diaryPaletteEmpty => 'You have no saved palettes yet.';
+
+  @override
+  String get diaryNotesLabel => 'Notes';
+
+  @override
+  String get diaryNotesHint => 'Technique, paper, blending...';
+
+  @override
+  String get diaryPhotosTitle => 'Photos';
+
+  @override
+  String diaryPhotosHelp(int count) {
+    return 'Up to $count photos. They stay on this phone.';
+  }
+
+  @override
+  String get diaryPhotoRemove => 'Remove photo';
+
+  @override
+  String diaryPhotoSemantic(int number, int total) {
+    return 'Photo $number of $total';
+  }
+
+  @override
+  String get diarySave => 'Save entry';
+
+  @override
+  String get diaryDelete => 'Delete entry';
+
+  @override
+  String get diaryDeleteTitle => 'Delete this entry?';
+
+  @override
+  String get diaryDeleteBody =>
+      'The entry and its photos are removed from this phone. This cannot be undone.';
+
+  @override
+  String get diaryDeleteConfirm => 'Delete';
+
+  @override
+  String get diaryAddedNotice => 'Added to the diary';
 }

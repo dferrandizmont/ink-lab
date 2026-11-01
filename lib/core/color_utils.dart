@@ -125,6 +125,9 @@ int _byte(double value) => (value * 255).round().clamp(0, 255);
 double linearizeSrgbChannel(double channel) => channel <= 0.04045
     ? channel / 12.92
     : math.pow((channel + 0.055) / 1.055, 2.4).toDouble();
+
+/// Inverse of [linearizeSrgbChannel]: a linear channel in [0, 1] back to sRGB.
+double encodeSrgbChannel(double channel) => _encodeSrgb(channel);
 double _encodeSrgb(double channel) => channel <= 0.0031308
     ? channel * 12.92
     : 1.055 * math.pow(channel, 1 / 2.4) - 0.055;

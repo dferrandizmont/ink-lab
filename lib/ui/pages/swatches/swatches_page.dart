@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../../app_scope.dart';
 import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
+import '../../../core/own_colors.dart';
 import '../../../core/swatch_card_location.dart';
 import '../../../data/data.dart';
 import '../../icons/ink_icons.dart';
@@ -22,6 +23,10 @@ import '../../widgets/skeleton_block.dart';
 import '../../widgets/swatch_list_tile.dart';
 import '../collection/collection_page.dart';
 import '../collection/collection_summary.dart';
+import '../match/color_sampling.dart';
+import '../match/image_picker_service.dart';
+import '../settings/dialogs.dart';
+import 'own_color_page.dart';
 import 'swatch_detail_sheet.dart';
 import '../../../l10n/l10n.dart';
 
@@ -36,7 +41,14 @@ import '../../../l10n/l10n.dart';
 /// [AppScope] and persists every change through the repositories, so no
 /// state-management package is needed.
 class SwatchesPage extends StatefulWidget {
-  const SwatchesPage({super.key, this.onAddToPalette, this.onOpenCollection});
+  const SwatchesPage({
+    super.key,
+    this.onAddToPalette,
+    this.onBlendingChain,
+    this.onOpenCollection,
+    this.picker,
+    this.decoder,
+  });
 
   /// Key of the page body, handy for tests and for state restoration.
   static const Key pageKey = Key('swatches-page');
@@ -47,9 +59,21 @@ class SwatchesPage extends StatefulWidget {
   /// base. Without it the code is copied to the clipboard instead.
   final ValueChanged<MarkerColor>? onAddToPalette;
 
+  /// Called when the user asks for a blending chain around a colour from the
+  /// detail sheet. The shell opens the Palette tab with the colour as its
+  /// base and the Blending Chain type. Without it the action is not shown.
+  final ValueChanged<MarkerColor>? onBlendingChain;
+
   /// Called when the user asks to set up their collection (empty "Mine").
   /// Without it the page pushes the collection screen itself.
   final VoidCallback? onOpenCollection;
+
+  /// Photo picker of the "my colour" editor. Production wraps `image_picker`;
+  /// tests inject a fake.
+  final ImagePickerService? picker;
+
+  /// Decoder of the "my colour" editor's photo. Tests inject a fake.
+  final PhotoDecoder? decoder;
 
   @override
   State<SwatchesPage> createState() => _SwatchesPageState();
@@ -74,6 +98,8 @@ class _SwatchesPageState extends State<SwatchesPage> {
 
   AppScope? _scope;
   Stream<AppSettingsState>? _settingsChanges;
+  Stream<Map<String, String>>? _ownColorChanges;
+  Stream<Set<String>>? _driedChanges;
 
   @override
   void didChangeDependencies() {
@@ -88,6 +114,8 @@ class _SwatchesPageState extends State<SwatchesPage> {
       // The stream is captured once: a new stream object on every build
       // would make the StreamBuilder resubscribe on every frame.
       _settingsChanges = scope.settings.changes;
+      _ownColorChanges = scope.ownColors.changes;
+      _driedChanges = scope.dried.changes;
     }
   }
 
@@ -118,38 +146,60 @@ class _SwatchesPageState extends State<SwatchesPage> {
     return StreamBuilder<AppSettingsState>(
       stream: _settingsChanges,
       initialData: scope.settings.state,
-      builder:
-          (BuildContext context, AsyncSnapshot<AppSettingsState> snapshot) {
-            final AppSettingsState state =
-                snapshot.data ?? scope.settings.state;
-            return FutureBuilder<List<MarkerColor>>(
-              future: scope.markers.loadColors(state.brand),
-              builder:
-                  (
-                    BuildContext context,
-                    AsyncSnapshot<List<MarkerColor>> colors,
-                  ) {
-                    if (colors.connectionState == ConnectionState.waiting) {
-                      return const _LoadingBody();
-                    }
-                    if (colors.hasError) {
-                      return KeyedSubtree(
-                        key: SwatchesPage.pageKey,
-                        child: EmptyState.error(
-                          title: context.l10n.swatchesLoadFailedTitle,
-                          message: context.l10n.swatchesLoadFailedBody,
-                        ),
-                      );
-                    }
-                    return _buildContent(
-                      context,
-                      scope,
-                      state,
-                      colors.data ?? const <MarkerColor>[],
-                    );
-                  },
-            );
-          },
+      builder: (BuildContext context, AsyncSnapshot<AppSettingsState> snapshot) {
+        final AppSettingsState state = snapshot.data ?? scope.settings.state;
+        // An own colour set or reset rebuilds the page with the new colours.
+        return StreamBuilder<Map<String, String>>(
+          stream: _ownColorChanges,
+          initialData: scope.ownColors.colors,
+          // Marking a marker as dried out (or usable) redraws its mark.
+          builder:
+              (BuildContext context, AsyncSnapshot<Map<String, String>> _) =>
+                  StreamBuilder<Set<String>>(
+                    stream: _driedChanges,
+                    initialData: scope.dried.ids,
+                    builder: (
+                      BuildContext context,
+                      AsyncSnapshot<Set<String>> _,
+                    ) => _buildCatalogue(context, scope, state),
+                  ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCatalogue(
+    BuildContext context,
+    AppScope scope,
+    AppSettingsState state,
+  ) {
+    // Keyed by brand so another brand starts from scratch, while new own
+    // colours of the same brand keep the page on screen until they arrive.
+    return FutureBuilder<List<MarkerColor>>(
+      key: ValueKey<String>(state.brand.id),
+      future: scope.markers.loadColors(state.brand),
+      initialData: scope.markers.peekColors(state.brand),
+      builder: (BuildContext context, AsyncSnapshot<List<MarkerColor>> colors) {
+        if (!colors.hasData &&
+            colors.connectionState == ConnectionState.waiting) {
+          return const _LoadingBody();
+        }
+        if (colors.hasError) {
+          return KeyedSubtree(
+            key: SwatchesPage.pageKey,
+            child: EmptyState.error(
+              title: context.l10n.swatchesLoadFailedTitle,
+              message: context.l10n.swatchesLoadFailedBody,
+            ),
+          );
+        }
+        return _buildContent(
+          context,
+          scope,
+          state,
+          colors.data ?? const <MarkerColor>[],
+        );
+      },
     );
   }
 
@@ -248,6 +298,8 @@ class _SwatchesPageState extends State<SwatchesPage> {
                             name: color.displayName(state.nameDisplayMode),
                             owned: isOwned(color),
                             favorite: state.favorites.contains(color.colorId),
+                            ownColor: color.hasOwnColor,
+                            dried: scope.dried.contains(color.colorId),
                             onTap: () =>
                                 _openDetail(context, scope, color, candidates),
                           ),
@@ -296,6 +348,8 @@ class _SwatchesPageState extends State<SwatchesPage> {
                             : color.newName,
                         owned: isOwned(color),
                         favorite: state.favorites.contains(color.colorId),
+                        ownColor: color.hasOwnColor,
+                        dried: scope.dried.contains(color.colorId),
                         onTap: () =>
                             _openDetail(context, scope, color, candidates),
                       );
@@ -452,9 +506,10 @@ class _SwatchesPageState extends State<SwatchesPage> {
 
   /// The packs that hold at least one colour of the loaded catalogue.
   ///
-  /// Only Ohuhu has packs; DecoTime is organised by ownership instead.
+  /// Only Ohuhu has packs; DecoTime and Copic are organised by ownership
+  /// instead.
   List<String> _availablePacks(List<MarkerColor> colors, MarkerBrand brand) {
-    if (brand != MarkerBrand.ohuhuOahu) return const <String>[];
+    if (!brand.hasRetailSets) return const <String>[];
     final Set<String> ids = <String>{};
     for (final MarkerColor color in colors) {
       ids.addAll(color.sets);
@@ -693,6 +748,37 @@ class _SwatchesPageState extends State<SwatchesPage> {
     );
   }
 
+  /// Stores [hex] as the own colour of [color], or forgets it when it is the
+  /// catalogue's own colour. An own colour is only seen while "Use my colours"
+  /// is on, so saving one switches it on.
+  Future<void> _storeOwnColor(
+    AppScope scope,
+    MarkerColor color,
+    String hex,
+  ) async {
+    if (hex == normalizeOwnHex(color.originalHex)) {
+      await scope.ownColors.remove(color.colorId);
+      return;
+    }
+    await scope.ownColors.set(color.colorId, hex);
+    if (!scope.settings.state.useOwnColors) {
+      await scope.settings.setUseOwnColors(true);
+    }
+  }
+
+  /// Whether [color] is in the collection right now (sets or loose markers).
+  bool _isOwnedNow(AppScope scope, MarkerColor color) {
+    final AppSettings settings = scope.settings.settings;
+    final MarkerBrand brand = MarkerBrand.fromId(color.brandId);
+    return isOwnedColor(
+      color,
+      ownedSetIds: brand.hasRetailSets
+          ? settings.ownedSetIds
+          : const <String>{},
+      extraCodes: scopedCodesForBrand(settings.extraMarkerIds, brand.id),
+    );
+  }
+
   Future<void> _openDetail(
     BuildContext context,
     AppScope scope,
@@ -702,6 +788,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     final AppLocalizations l10n = context.l10n;
     MarkerColor current = color;
+    List<MarkerColor> pool = candidates;
     // The card catalogue only exists for Oahu; an empty one hides the row.
     final Map<String, Map<String, int>> cardCatalog = await scope.markers
         .loadCardLocations();
@@ -734,9 +821,87 @@ class _SwatchesPageState extends State<SwatchesPage> {
                 for (final String id in current.sets) ?l10n.setLabel(id),
               ],
               cardLocation: cardLocationOf(current),
-              alternatives: closestAlternatives(current, candidates),
+              alternatives: closestAlternatives(current, pool),
               onSelectAlternative: (MarkerColor other) =>
                   setSheetState(() => current = other),
+              onSetOwnColor: () async {
+                final String? hex = await OwnColorPage.open(
+                  context,
+                  current,
+                  picker: widget.picker,
+                  decoder: widget.decoder,
+                );
+                if (hex == null) return;
+                await _storeOwnColor(scope, current, hex);
+                final List<MarkerColor> all = await scope.markers.loadColors(
+                  scope.settings.brand,
+                );
+                current =
+                    <MarkerColor>[
+                      for (final MarkerColor c in all)
+                        if (c.colorId == current.colorId) c,
+                    ].firstOrNull ??
+                    current;
+                pool = swatchCandidateColors(
+                  colors: all,
+                  brand: scope.settings.brand,
+                );
+                if (!context.mounted) return;
+                setSheetState(() {});
+                messenger
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(content: Text(l10n.swatchesMyColourSaved)),
+                  );
+              },
+              onResetOwnColor: () async {
+                await scope.ownColors.remove(current.colorId);
+                final List<MarkerColor> all = await scope.markers.loadColors(
+                  scope.settings.brand,
+                );
+                current =
+                    <MarkerColor>[
+                      for (final MarkerColor c in all)
+                        if (c.colorId == current.colorId) c,
+                    ].firstOrNull ??
+                    current;
+                pool = swatchCandidateColors(
+                  colors: all,
+                  brand: scope.settings.brand,
+                );
+                if (!context.mounted) return;
+                setSheetState(() {});
+                messenger
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(content: Text(l10n.swatchesMyColourWasReset)),
+                  );
+              },
+              wished: scope.wishlist.contains(current.colorId),
+              dried: scope.dried.contains(current.colorId),
+              owned: _isOwnedNow(scope, current),
+              onToggleWishlist: () async {
+                await scope.wishlist.toggle(current.colorId);
+                if (context.mounted) setSheetState(() {});
+              },
+              onToggleDried: () async {
+                final MarkerColor marker = current;
+                final bool wasDried = scope.dried.contains(marker.colorId);
+                await scope.dried.toggle(marker.colorId);
+                if (!context.mounted) return;
+                setSheetState(() {});
+                // A marker that ran dry is one to buy again: offer the list.
+                if (wasDried || scope.wishlist.contains(marker.colorId)) return;
+                final bool add = await confirmAction(
+                  context,
+                  title: l10n.wishlistOfferTitle,
+                  body: l10n.wishlistOfferBody(marker.newCode),
+                  confirmLabel: l10n.wishlistAdd,
+                );
+                if (!add) return;
+                await scope.wishlist.add(marker.colorId);
+                if (context.mounted) setSheetState(() {});
+              },
               onToggleFavorite: () {
                 scope.settings.toggleFavorite(current.colorId);
                 setSheetState(() {});
@@ -749,6 +914,12 @@ class _SwatchesPageState extends State<SwatchesPage> {
                   SnackBar(content: Text(l10n.swatchesHexCopied)),
                 );
               },
+              onBlendingChain: widget.onBlendingChain == null
+                  ? null
+                  : () {
+                      Navigator.of(sheetContext).maybePop();
+                      widget.onBlendingChain!(current);
+                    },
               onAddToPalette: () async {
                 final ValueChanged<MarkerColor>? hook = widget.onAddToPalette;
                 if (hook != null) {

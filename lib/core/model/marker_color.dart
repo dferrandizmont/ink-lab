@@ -21,14 +21,27 @@ final class MarkerColor with JsonValue {
     required this.hex,
     required List<String> sets,
     List<String> lines = const [],
+    this.catalogHex,
   }) : sets = List.unmodifiable(sets),
        lines = List.unmodifiable(lines);
 
   final String brandId, newCode, newName, oldCode, oldName, hex;
   final List<String> sets;
 
+  /// The catalogue's hex when [hex] was replaced by the user's own colour for
+  /// this marker (see `applyOwnColors`); `null` for a plain catalogue colour.
+  ///
+  /// It is runtime state: it is never written to JSON.
+  final String? catalogHex;
+
+  /// Whether [hex] is the user's own colour rather than the catalogue's.
+  bool get hasOwnColor => catalogHex != null;
+
+  /// The hex the catalogue gives this marker, whatever the user stored.
+  String get originalHex => catalogHex ?? hex;
+
   /// Ids of the [MarkerLine]s this colour is sold in (`oahu`, `honolulu`,
-  /// `kaala`). Empty for brands without lines (DecoTime) and for payloads
+  /// `kaala`). Empty for brands without lines (DecoTime, Copic) and for payloads
   /// written before lines existed.
   final List<String> lines;
   bool inLine(MarkerLine line) => lines.contains(line.id);
@@ -54,6 +67,7 @@ final class MarkerColor with JsonValue {
     String? hex,
     List<String>? sets,
     List<String>? lines,
+    String? catalogHex,
   }) => MarkerColor(
     brandId: brandId ?? this.brandId,
     newCode: newCode ?? this.newCode,
@@ -63,7 +77,13 @@ final class MarkerColor with JsonValue {
     hex: hex ?? this.hex,
     sets: sets ?? this.sets,
     lines: lines ?? this.lines,
+    catalogHex: catalogHex ?? this.catalogHex,
   );
+
+  /// This colour with the user's [ownHex] as its colour; the catalogue's hex
+  /// moves to [catalogHex].
+  MarkerColor withOwnHex(String ownHex) =>
+      copyWith(hex: ownHex, catalogHex: originalHex);
   factory MarkerColor.fromJson(Map<String, dynamic> json) => MarkerColor(
     brandId: jsonDefault(json, 'brandId', MarkerBrand.ohuhuOahu.id),
     newCode: json['newCode'] as String,

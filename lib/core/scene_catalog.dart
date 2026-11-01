@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'model/scene.dart';
 
 /// The bundled drawing scenes (`assets/data/scenes.json`): a list of
-/// categories, the scenes that belong to each and the Spanish text of the
-/// roles that the ARB phrases do not cover.
+/// categories, the scenes that belong to each and the translated text of
+/// the roles that the ARB phrases do not cover (`roles`: English role →
+/// {language code → text}, for es, de, fr, pt and it).
 ///
 /// The catalogue is installed once at start-up ([install]); saved palettes
 /// and AI requests resolve their scene through [Scene.fromJson], which reads
@@ -23,7 +24,7 @@ final class SceneCatalog {
   final List<Scene> scenes;
 
   final Map<String, Scene> _byId;
-  final Map<String, String> _roleNames;
+  final Map<String, Map<String, String>> _roleNames;
 
   static SceneCatalog? _current;
 
@@ -51,13 +52,18 @@ final class SceneCatalog {
       for (final Object? id in decoded['categories'] as List<dynamic>)
         id as String,
     ];
-    final Map<String, String> roles = <String, String>{
-      for (final MapEntry<String, dynamic> e
-          in (decoded['roles'] as Map<String, dynamic>? ??
-                  const <String, dynamic>{})
-              .entries)
-        e.key: e.value as String,
-    };
+    final Map<String, Map<String, String>> roles =
+        <String, Map<String, String>>{
+          for (final MapEntry<String, dynamic> e
+              in (decoded['roles'] as Map<String, dynamic>? ??
+                      const <String, dynamic>{})
+                  .entries)
+            e.key: Map<String, String>.unmodifiable(<String, String>{
+              for (final MapEntry<String, dynamic> t
+                  in (e.value as Map<String, dynamic>).entries)
+                t.key: t.value as String,
+            }),
+        };
     final List<Scene> scenes = <Scene>[];
     final Set<String> ids = <String>{};
     for (final Object? raw in decoded['scenes'] as List<dynamic>) {
@@ -75,7 +81,7 @@ final class SceneCatalog {
     return SceneCatalog._(
       List<String>.unmodifiable(categories),
       List<Scene>.unmodifiable(scenes),
-      Map<String, String>.unmodifiable(roles),
+      Map<String, Map<String, String>>.unmodifiable(roles),
     );
   }
 
@@ -122,10 +128,11 @@ final class SceneCatalog {
       if (s.category == category) s,
   ];
 
-  /// The Spanish text of [role] when the catalogue has it.
+  /// The text of [role] in [languageCode] when the catalogue has it (English
+  /// is the role itself, so it has none).
   String? roleName(String role, String languageCode) =>
-      languageCode == 'es' ? _roleNames[role] : null;
+      _roleNames[role]?[languageCode];
 
-  /// Every role the catalogue translates (Spanish).
+  /// Every role the catalogue translates.
   Iterable<String> get translatedRoles => _roleNames.keys;
 }

@@ -60,10 +60,15 @@ abstract interface class ImagePickerService {
 /// Photos are read into memory on the device and never leave it: this service
 /// performs no network access.
 final class PlatformImagePickerService implements ImagePickerService {
-  PlatformImagePickerService([ImagePicker? picker])
-    : _picker = picker ?? ImagePicker();
+  /// [imageQuality] is the JPEG quality (1 to 100) of what is picked: Match
+  /// keeps 100 so colours stay true, the artwork diary lowers it to keep its
+  /// private copies small.
+  PlatformImagePickerService([ImagePicker? picker, int imageQuality = 100])
+    : _picker = picker ?? ImagePicker(),
+      _imageQuality = imageQuality;
 
   final ImagePicker _picker;
+  final int _imageQuality;
 
   @override
   Future<PhotoPickResult> pick(PhotoSource source) async {
@@ -76,7 +81,7 @@ final class PlatformImagePickerService implements ImagePickerService {
         // before sampling, so this only keeps the intermediate file sane.
         maxWidth: 2048,
         maxHeight: 2048,
-        imageQuality: 100,
+        imageQuality: _imageQuality,
       );
       if (file == null) return const PhotoPickCancelled();
       final Uint8List bytes = await file.readAsBytes();

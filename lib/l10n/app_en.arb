@@ -31,17 +31,17 @@
   "settingsAppearanceLight": "Light",
   "settingsAppearanceDark": "Dark",
   "settingsBackupTitle": "Backup",
-  "settingsBackupSubtitle": "Your settings, palettes, history and AI settings can be exported as a JSON file and imported back.",
+  "settingsBackupSubtitle": "Copies your data (collection, palettes, diary, history and settings) to the clipboard as text, so you can import it later. Photos and the API key are not included.",
   "settingsExportBackup": "Export",
   "settingsImportBackup": "Import",
-  "settingsBackupExported": "Backup copied to the clipboard",
+  "settingsBackupExported": "Backup copied to the clipboard, without the photos",
   "settingsBackupImported": "Backup imported",
   "settingsImportTitle": "Import a backup",
   "settingsImportHint": "Paste the exported JSON here",
   "settingsImportConfirm": "Import",
   "settingsCancel": "Cancel",
   "settingsImportConfirmTitle": "Replace your current data?",
-  "settingsImportConfirmBody": "The backup replaces your settings, your saved palettes, your colour match history and your AI settings.",
+  "settingsImportConfirmBody": "The backup replaces your current data: collection, palettes, diary, history and settings. Diary entries that are not in it are deleted along with their photos; photos are never part of a backup.",
   "settingsImportInvalidJson": "The text is not valid JSON.",
   "settingsImportInvalidDocument": "The text is not a backup document.",
   "settingsAiTitle": "AI assistant",
@@ -121,7 +121,7 @@
   "settingsPrivacyPolicy": "Privacy policy",
   "settingsCopyRepository": "Copy the link",
   "settingsRepositoryCopied": "The link was copied",
-  "settingsDisclaimer": "Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu or DecoTime, and it uses their marker codes, names and colour values only as factual reference data.",
+  "settingsDisclaimer": "Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime or Copic, and it uses their marker codes, names and colour values only as factual reference data.",
   "paletteTitle": "Palette",
   "paletteBaseCodeLabel": "Base marker code",
   "paletteBaseCodeHint": "E08 or B271",
@@ -141,6 +141,71 @@
   "paletteTypeDescMonochrome": "One hue, light to dark",
   "paletteTypeDescShadow": "Deeper tones for shading",
   "paletteTypeDescCustomPalette": "Build it by hand",
+  "modeBlendingChain": "Blending Chain",
+  "paletteTypeDescBlendingChain": "Light to dark, ready to blend",
+  "paletteChainResultTitle": "Blending chain ({count})",
+  "@paletteChainResultTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteChainStep": "Step {step} · {role}",
+  "@paletteChainStep": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "roleLightest": "Lightest",
+  "roleLighter": "Lighter",
+  "roleDarker": "Darker",
+  "roleDarkest": "Darkest",
+  "paletteChainHint": "Work light to dark and overlap each step while the ink is still wet. Soften the joins with the colourless blender if you have one.",
+  "paletteChainShort": "Only {count} of your markers blend well with this base, fewer than the {wanted} you asked for.",
+  "@paletteChainShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "wanted": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteChainNeedLighter": "No chain yet: you need a lighter marker in this family.",
+  "paletteChainNeedDarker": "No chain yet: you need a darker marker in this family.",
+  "paletteChainNeedBoth": "No chain yet: you need a lighter and a darker marker in this family.",
+  "paletteChainBaseLightest": "You have nothing lighter in this family, so the chain starts at your base.",
+  "paletteChainBaseDarkest": "You have nothing darker in this family, so the chain ends at your base.",
+  "paletteChainOptionsLabel": "Other chains",
+  "paletteChainOption": "Option {number}",
+  "@paletteChainOption": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteChainWholeRange": "Search the whole range",
+  "paletteChainWholeRangeNote": "Showing the whole {brand} range, markers you don't own included.",
+  "@paletteChainWholeRangeNote": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteChainMyMarkers": "Back to my markers",
+  "palettePaintTipChainFirst": "Lay the lightest colour over the whole area first.",
+  "palettePaintTipChainMiddle": "Overlap the previous step while it is still wet.",
+  "palettePaintTipChainLast": "Finish with the darkest only where the shadow falls.",
+  "swatchesBlendingChain": "Blending chain",
   "paletteTypeSemantic": "Palette type, {value}",
   "@paletteTypeSemantic": {
     "placeholders": {
@@ -210,6 +275,14 @@
   "paletteSuggestAiLoading": "Suggesting…",
   "paletteAiBadge": "AI",
   "paletteSaveButton": "Save palette",
+  "paletteShareButton": "Share",
+  "@paletteShareButton": {
+    "description": "Button that renders the palette on screen as an image and opens the system share sheet."
+  },
+  "shareFailed": "Could not share the image.",
+  "@shareFailed": {
+    "description": "Notice when rendering or sharing an image (palette or swatch chart) fails."
+  },
   "paletteOkButton": "OK",
   "paletteBaseMarkerTitle": "Base marker",
   "paletteVariationsLabel": "Variations",
@@ -356,7 +429,6 @@
   "ideasCategoryAll": "All",
   "ideasApplyButton": "Use in Palette",
   "ideasGuideOnlyNote": "This exercise uses your whole collection, so it has no fixed palette.",
-  "ideasNoMarkersDecoTime": "Add the DecoTime markers you own in My collection to get a palette for this idea.",
   "ideasNoMarkersOther": "Add the markers you own in My collection to get a palette for this idea.",
   "ideasCategoriesLabel": "Categories",
   "ideasEmptyTitle": "No ideas found",
@@ -870,6 +942,10 @@
   "settingsLanguageSystem": "System",
   "settingsLanguageSpanish": "Español",
   "settingsLanguageEnglish": "English",
+  "settingsLanguageGerman": "Deutsch",
+  "settingsLanguageFrench": "Français",
+  "settingsLanguagePortuguese": "Português",
+  "settingsLanguageItalian": "Italiano",
   "settingsOwnedCount": "{owned} of {total} markers",
   "@settingsOwnedCount": {
     "placeholders": {
@@ -1082,7 +1158,7 @@
       }
     }
   },
-  "paletteUnknownCode": "{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}",
+  "paletteUnknownCode": "{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}",
   "@paletteUnknownCode": {
     "placeholders": {
       "brand": {
@@ -1096,7 +1172,7 @@
       }
     }
   },
-  "paletteNotAvailable": "{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}",
+  "paletteNotAvailable": "{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} copic{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}",
   "@paletteNotAvailable": {
     "placeholders": {
       "brand": {
@@ -1110,7 +1186,7 @@
       }
     }
   },
-  "paletteNoAvailableColors": "{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}",
+  "paletteNoAvailableColors": "{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}",
   "@paletteNoAvailableColors": {
     "placeholders": {
       "brand": {
@@ -1784,6 +1860,37 @@
   "collectionInYourSets": "In your set",
   "collectionNoResults": "No marker matches the search.",
   "collectionReset": "Reset collection",
+  "collectionChartTitle": "Printable swatch chart",
+  "collectionChartHint": "Empty boxes labelled with the code and name of each marker you own, to swatch your real markers. Shared as A4 images to print or save.",
+  "collectionChartShowColour": "Catalogue colour",
+  "collectionChartShowColourHint": "Show it as a thin strip in each box, to compare.",
+  "collectionChartCreate": "Create and share",
+  "collectionChartPreparing": "Preparing…",
+  "collectionChartEmpty": "Choose your sets or markers first.",
+  "collectionChartPages": "{count, plural, =1{1 page} other{{count} pages}}",
+  "@collectionChartPages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chartImageTitle": "Swatch chart",
+  "@chartImageTitle": {
+    "description": "Subtitle drawn inside each page of the printable swatch chart image."
+  },
+  "chartImagePage": "Page {page} of {total}",
+  "@chartImagePage": {
+    "description": "Page number drawn inside each page of the printable swatch chart image.",
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "collectionResetTitle": "Reset your {brand} collection?",
   "@collectionResetTitle": {
     "placeholders": {
@@ -1812,7 +1919,6 @@
   "onboardingSeriesBody": "Pick every series you have markers from.",
   "onboardingSetsTitle": "Which sets do you have?",
   "onboardingSetsBody": "Pick the boxes you bought. Extra markers can be added later.",
-  "onboardingDecoTitle": "Your DecoTime markers",
   "onboardingDoneTitle": "All set",
   "onboardingLaterNote": "You can change this later in My collection.",
   "onboardingSkip": "Skip",
@@ -1845,6 +1951,61 @@
       }
     }
   },
+  "wishlistTitle": "Wishlist",
+  "wishlistCount": "{count, plural, =0{Nothing on your wishlist yet} =1{1 marker to buy} other{{count} markers to buy}}",
+  "@wishlistCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wishlistEmpty": "Add the markers you want to buy from the detail of any marker.",
+  "wishlistAdd": "Add to wishlist",
+  "wishlistRemove": "Remove from wishlist",
+  "wishlistCopy": "Copy list",
+  "wishlistCopied": "Shopping list copied",
+  "wishlistOfferTitle": "Add to your wishlist?",
+  "wishlistOfferBody": "{code} is dried out. Add it to your wishlist to buy a refill or a replacement.",
+  "@wishlistOfferBody": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "driedTitle": "Dried out",
+  "driedCount": "{count, plural, =0{No dried out markers} =1{1 dried out marker} other{{count} dried out markers}}",
+  "@driedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "driedHint": "They stay in your collection, but Match, Palette and Ideas do not suggest them.",
+  "driedEmpty": "When a marker stops working, mark it as dried out from its detail.",
+  "driedMark": "Mark as dried out",
+  "driedUnmark": "Mark as usable",
+  "driedNote": "Dried out: Match, Palette and Ideas skip it until you mark it as usable.",
+  "commonDried": "Dried out",
+  "buyNextTitle": "What to buy next",
+  "buyNextIntro": "Markers you do not have that would bring your colours closest to the most scenes.",
+  "buyNextReasonScenes": "{count, plural, =1{Improves 1 scene: {scenes}} other{Improves {count} scenes: {scenes}}}",
+  "@buyNextReasonScenes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "scenes": {
+        "type": "String"
+      }
+    }
+  },
+  "buyNextReasonGap": "Fills a gap in your range of colours",
+  "buyNextNoCollection": "Tick the markers you own to see what to buy next.",
+  "buyNextComplete": "Nothing to suggest: your markers already cover every scene well.",
+  "buyNextRefill": "Dried out: a refill brings it back.",
   "onboardingDoneWholeRange": "Until you pick sets, the app shows the whole {brand} range.",
   "@onboardingDoneWholeRange": {
     "placeholders": {
@@ -1853,7 +2014,116 @@
       }
     }
   },
-  "onboardingDoneNoMarkers": "You have not ticked any DecoTime markers yet: tick them in My collection.",
   "onboardingDoneNext": "What next: browse colours in Swatches, match a photo in Match or build a palette in Palette.",
-  "collectionVisibleScope": "Applies to the markers that match your search."
+  "collectionVisibleScope": "Applies to the markers that match your search.",
+  "matchWhiteBalanceButton": "Fix white balance",
+  "matchWhiteBalanceHint": "Tap a point of the photo that should be white paper.",
+  "matchWhiteBalanceOn": "White balance on",
+  "matchWhiteBalanceReset": "Undo",
+  "matchWhiteBalanceTooDark": "That point is too dark to be paper. Pick a lighter one.",
+  "matchWhiteBalanceTooColourful": "That point has too much colour to be paper. Pick a white area.",
+  "commonOwnColour": "My colour",
+  "swatchesMyColourTitle": "My colour",
+  "swatchesMyColourHelp": "Catalogue colours are estimates. Store the colour your marker really gives on paper.",
+  "swatchesMyColourSet": "Set my colour",
+  "swatchesMyColourChange": "Change",
+  "swatchesMyColourReset": "Back to catalogue",
+  "swatchesMyColourSaved": "Your colour was saved",
+  "swatchesMyColourWasReset": "Back to the catalogue colour",
+  "swatchesCatalogueLabel": "Catalogue",
+  "swatchesMineLabel": "Mine",
+  "ownColorTitle": "My colour for {code}",
+  "@ownColorTitle": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "ownColorHexLabel": "Hex colour",
+  "ownColorHexInvalid": "Type 3 or 6 hex digits, like 3A7F9C.",
+  "ownColorPhotoTitle": "From a photo",
+  "ownColorPhotoHelp": "Paint the marker on white paper, take a photo and tap the painted area.",
+  "ownColorPhotoTap": "Tap the painted area.",
+  "ownColorSave": "Save my colour",
+  "settingsOwnColors": "Use my colours",
+  "settingsOwnColorsSubtitle": "Match, Palette and Ideas use the colour you stored for a marker instead of the catalogue one.",
+  "settingsOwnColorsCount": "{count, plural, =0{No colours of your own yet} =1{1 colour of your own} other{{count} colours of your own}}",
+  "@settingsOwnColorsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsOwnColorsReset": "Reset",
+  "settingsOwnColorsResetTitle": "Reset your colours?",
+  "settingsOwnColorsResetBody": "Every marker goes back to its catalogue colour. This cannot be undone.",
+  "settingsJoinBeta": "Join the Google Play beta",
+  "collectionCopicHint": "Copic markers are bought one by one. Tick the markers you own.",
+  "onboardingCopicLine": "358 colours · Mark the markers you own",
+  "onboardingMarkersTitle": "Your {brand} markers",
+  "@onboardingMarkersTitle": {"placeholders": {"brand": {"type": "String"}}},
+  "onboardingNoMarkers": "You have not ticked any {brand} markers yet: tick them in My collection.",
+  "@onboardingNoMarkers": {"placeholders": {"brand": {"type": "String"}}},
+  "ideasNoMarkersBrand": "Add the {brand} markers you own in My collection to get a palette for this idea.",
+  "@ideasNoMarkersBrand": {"placeholders": {"brand": {"type": "String"}}},
+  "ideasDiarySegment": "Diary",
+  "ideasDiarySubtitle": "Your artworks, newest first",
+  "diaryEmptyTitle": "Your diary is empty",
+  "diaryEmptyMessage": "Log the pages and sheets you paint, with their markers, notes and photos.",
+  "diaryAdd": "Add to diary",
+  "diaryStatusLabel": "Status",
+  "diaryStatusInProgress": "In progress",
+  "diaryStatusFinished": "Finished",
+  "diaryNewTitle": "New entry",
+  "diaryEditTitle": "Edit entry",
+  "diaryTitleLabel": "Title",
+  "diaryDateLabel": "Date",
+  "diaryOnWhatLabel": "Painted on",
+  "diaryOnWhatHint": "e.g. a colouring book or a sketchbook",
+  "diaryMarkersTitle": "Markers used",
+  "diaryMarkersChoose": "Choose markers",
+  "diaryMarkerRemove": "Remove {code}",
+  "@diaryMarkerRemove": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "diaryPaletteTitle": "Palette",
+  "diaryPaletteNone": "No palette",
+  "diaryPaletteChoose": "Link a saved palette",
+  "diaryPaletteMissing": "This palette is no longer saved.",
+  "diaryPaletteEmpty": "You have no saved palettes yet.",
+  "diaryNotesLabel": "Notes",
+  "diaryNotesHint": "Technique, paper, blending...",
+  "diaryPhotosTitle": "Photos",
+  "diaryPhotosHelp": "Up to {count} photos. They stay on this phone.",
+  "@diaryPhotosHelp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "diaryPhotoRemove": "Remove photo",
+  "diaryPhotoSemantic": "Photo {number} of {total}",
+  "@diaryPhotoSemantic": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "diarySave": "Save entry",
+  "diaryDelete": "Delete entry",
+  "diaryDeleteTitle": "Delete this entry?",
+  "diaryDeleteBody": "The entry and its photos are removed from this phone. This cannot be undone.",
+  "diaryDeleteConfirm": "Delete",
+  "diaryAddedNotice": "Added to the diary"
 }

@@ -1,6 +1,7 @@
 # Política de privacidad de Ink Lab
 
-Última actualización: 2026-10-30
+
+Última actualización: 2026-10-31
 
 Ink Lab es una app para quien dibuja con rotuladores de alcohol: consulta las muestras de color, empareja el color de
 una foto con un rotulador de tu colección y construye paletas con teoría del color. Es una app independiente: no está
@@ -14,35 +15,54 @@ explica más abajo.
 
 ## 1. Responsable del tratamiento
 
+
 - Titular: Daniel Mont Ferrandiz
 - Correo de contacto: inklab@mainshai.com
 
 ## 2. Qué datos se tratan
 
-### Datos que se quedan en tu móvil (no los recibimos)
-Tu marca activa, los packs y rotuladores que tienes, tus favoritos, tus paletas guardadas, el historial de tus últimas
-elecciones al emparejar colores y tus ajustes se guardan solo en el almacenamiento privado de la app, en tu
-dispositivo. Los catálogos de rotuladores van dentro de la app y todo funciona sin conexión. No hay sincronización ni
-copia en ningún servidor nuestro.
 
-La copia de seguridad del sistema de Android está **desactivada** para esta app, de modo que ni tus ajustes ni tu clave
-salen del móvil por esa vía. En iPhone, las preferencias entran en la copia del dispositivo que gestionas con tu cuenta
-de Apple.
+### Datos que se quedan en tu móvil (no los recibimos)
+Tu marca activa, los packs y rotuladores que tienes, tus favoritos, tu lista de deseos, los rotuladores que marcas
+como secos, los colores propios que guardas para tus rotuladores, tus paletas guardadas, el historial de tus últimas
+elecciones al emparejar colores, las entradas y las fotos de tu diario y tus ajustes se guardan solo en el
+almacenamiento privado de la app, en tu dispositivo. De cada color propio solo se guarda su código hex, nunca la foto
+de la que lo sacaste. Los catálogos de rotuladores van dentro de la app y todo funciona sin conexión. No hay
+sincronización ni copia en ningún servidor nuestro.
+
+La copia de seguridad del sistema de Android está **desactivada** para esta app: excluye todos sus ficheros de la
+copia en la nube y de la transferencia entre dispositivos, de modo que ni tus ajustes, ni tu clave, ni tus datos ni
+las fotos del diario salen del móvil por esa vía. En iPhone, las preferencias y las fotos del diario pueden entrar en
+la copia del dispositivo o de iCloud que gestionas con tu cuenta de Apple: es un mecanismo de Apple bajo tu control,
+no un envío del desarrollador.
 
 ### Cámara y galería
-Solo cuando usas «Emparejar» o «Escena desde una foto» (en Paleta) y eliges hacer una foto o elegir una de la galería,
-la app pide el permiso o abre el selector del sistema. La foto se decodifica y se analiza **en tu móvil**: no se sube a
-ningún sitio, no se guarda y nunca se envía a un proveedor de IA. En «Emparejar», de la elección solo se conserva el
-color muestreado y el rotulador emparejado, en tu historial local. En «Escena desde una foto» se sacan sus colores
-principales para proponerte rotuladores de tu colección; la foto solo se mantiene en memoria mientras ves el resultado,
-y si guardas la paleta se guardan los códigos de los rotuladores, nunca la foto.
+Solo cuando usas «Emparejar», «Desde una foto» (en Paleta) o «Mi color» (en el detalle de un rotulador), o añades una
+foto a una entrada del «Diario» (en Ideas), y eliges hacer una foto o elegir una de la galería, la app pide el permiso
+o abre el selector del sistema. La foto se decodifica y se analiza **en tu móvil**: no se sube a ningún sitio y nunca
+se envía a un proveedor de IA; salvo en el diario (ver más abajo), tampoco se guarda. En «Emparejar», de la elección
+solo se conserva el color muestreado y el rotulador emparejado, en tu historial local. En «Desde una foto» se sacan
+sus colores principales para proponerte rotuladores de tu colección; la foto solo se mantiene en memoria mientras ves
+el resultado, y si guardas la paleta se guardan los códigos de los rotuladores, nunca la foto. En «Mi color», tocas la
+muestra pintada en la foto y solo se guarda su color como código hex, nunca la foto.
+
+### Diario
+En la pestaña Ideas, «Diario» te deja anotar las obras que pintas: título, fecha, sobre qué la pintaste, estado,
+rotuladores usados, paleta enlazada y notas. Las entradas se guardan en tu móvil como el resto de tus datos. Cada
+entrada admite hasta 4 fotos, hechas con la cámara o elegidas de la galería, que la app copia reducidas (como máximo
+2048 píxeles de lado) a su carpeta privada; la foto original de tu galería no se modifica. Esas fotos no se suben a
+ningún sitio ni se envían a las funciones de IA (ni a OpenRouter, ni a Gemini Nano, ni a ML Kit), y se borran cuando
+quitas la foto o la entrada, y con la app al desinstalarla.
 
 ### Copia de seguridad
-«Exportar copia» (Ajustes) genera un texto JSON con tus colecciones, favoritos, paletas e historial, y lo **copia al
-portapapeles** para que lo pegues donde quieras; «Importar copia» lo recibe pegándolo. No está cifrado, no lleva ningún
-identificador y nunca incluye tu clave de API. Lo que hagas con él después (guardarlo en tu nube, mandarlo por un
-mensaje...) queda fuera de la app. Ten en cuenta que, según tu sistema, el portapapeles puede ser visible para tu
-teclado o para otras apps.
+«Exportar» (Ajustes → Copia de seguridad) genera un texto JSON, no un fichero, con tus ajustes, los ajustes de la IA
+que no son secretos, tu colección, favoritos, lista de deseos, rotuladores secos, colores propios, paletas, historial
+y las entradas del diario (con los nombres internos de los ficheros de sus fotos, no las fotos), y lo **copia al
+portapapeles** para que lo pegues donde quieras; «Importar» lo recibe pegándolo. Al importar, la copia reemplaza tus
+datos actuales, también el diario: las entradas que no estén en ella se borran junto con sus fotos, y la app te lo
+avisa antes. La copia no está cifrada, no lleva ningún identificador y nunca incluye tu clave de API ni las fotos del
+diario. Lo que hagas con él después (guardarlo en tu nube, mandarlo por un mensaje...) queda fuera de la app. Ten en
+cuenta que, según tu sistema, el portapapeles puede ser visible para tu teclado o para otras apps.
 
 ### IA opcional
 Está **apagada de serie** (Ajustes → Asistente de IA → Sugerir con IA). Con ella apagada, la app no abre ninguna
@@ -65,25 +85,28 @@ conexión de red y no llama a ML Kit. Si la activas, antes te enseña qué saldr
 - **OpenRouter con tu clave:** solo si eliges OpenRouter, guardas tu clave y pulsas «Sugerir con IA» en Paleta, la app
   envía, **desde tu móvil directamente a `openrouter.ai`, por HTTPS y con tu propia clave y tu propia cuenta**: la marca
   (identificador y nombre), el modo de paleta, el nombre de la escena (en inglés), el código y el nombre del rotulador
-  base (si lo hay) y si está fijado, el tamaño de la paleta, los códigos y colores hex de los rotuladores candidatos de
-  tu colección (no sus nombres), los ajustes de generación (modelo, temperatura y límite de longitud), unas
-  instrucciones fijas de la app y la cabecera `X-Title: Ink Lab`. Para mostrarte los modelos disponibles, la app
+  base (si lo hay) y si está fijado, el tamaño de la paleta, los códigos y colores hex del catálogo de los rotuladores
+  candidatos de tu colección (no sus nombres), los ajustes de generación (modelo, temperatura y límite de longitud),
+  unas instrucciones fijas de la app y la cabecera `X-Title: Ink Lab`. Para mostrarte los modelos disponibles, la app
   consulta el catálogo de OpenRouter (con tu clave, si la has guardado). **Nunca** se envían fotos (la petición indica
-  que no lleva imagen y la app no tiene forma de adjuntarla), tus favoritos, tus paletas guardadas ni identificadores
-  tuyos. Como en cualquier conexión a internet, OpenRouter y el proveedor del modelo ven la dirección IP de tu
-  dispositivo. Reciben esa petición y aplican **sus propias** condiciones y políticas de privacidad, también sobre cuánto
-  tiempo la conservan, que puedes leer en https://openrouter.ai/privacy. El desarrollador no la ve, no pasa por ningún
-  servidor suyo y la app no la guarda.
+  que no lleva imagen y la app no tiene forma de adjuntarla), tus colores propios, tus favoritos, tus paletas guardadas
+  ni identificadores tuyos. Como en cualquier conexión a internet, OpenRouter y el proveedor del modelo ven la dirección
+  IP de tu dispositivo. Reciben esa petición y aplican **sus propias** condiciones y políticas de privacidad, también
+  sobre cuánto tiempo la conservan, que puedes leer en https://openrouter.ai/privacy. El desarrollador no la ve, no pasa
+  por ningún servidor suyo y la app no la guarda.
 
 Tu clave de OpenRouter se guarda en el almacén seguro del sistema (Android Keystore o Keychain de iOS, solo en este
 dispositivo). No se sube al desarrollador, no se incluye en las copias de seguridad y puedes borrarla en Ajustes cuando
 quieras. Si la IA falla, la app vuelve a la teoría del color.
 
 ### Permisos
-La app pide el permiso de **cámara o fotos** solo cuando usas «Emparejar» o «Escena desde una foto». En Android declara
-el acceso a **internet** y al **estado de la red** (`INTERNET` y `ACCESS_NETWORK_STATE`), que solo se usan con la IA
-activada: para la IA opcional con OpenRouter y para los diagnósticos que ML Kit envía a Google cuando se usa la IA en el
-móvil. No pide ubicación, contactos, calendario, micrófono ni notificaciones, y no usa el identificador publicitario.
+La app pide el permiso de **cámara o fotos** solo cuando usas «Emparejar», «Desde una foto» o «Mi color», o añades una
+foto al «Diario». En Android declara el acceso a **internet** y al **estado de la red** (`INTERNET` y
+`ACCESS_NETWORK_STATE`), que solo se usan con la IA activada: para la IA opcional con OpenRouter y para los
+diagnósticos que ML Kit envía a Google cuando se usa la IA en el móvil. No pide ubicación, contactos, calendario,
+micrófono ni notificaciones, y no usa el identificador publicitario. Si compartes una paleta o una carta de muestras
+como imagen, solo se entrega a la app que elijas en el menú de compartir del sistema; la app no necesita ningún
+permiso para ello.
 
 ### Datos que NO se tratan
 - No pedimos ni guardamos nombre, correo, teléfono, edad ni ningún dato de cuenta: no hay cuentas.
@@ -105,10 +128,11 @@ sugerencias. Si no hay app de correo, el informe se copia al portapapeles para q
 
 ## 3. Para qué y con qué base jurídica
 
+
 | Tratamiento | Finalidad | Base jurídica (RGPD) |
 |---|---|---|
-| Colecciones, favoritos, paletas y ajustes en tu móvil | Que uses la app y conserves tu trabajo | No los recibimos: se quedan en tu dispositivo, bajo tu control |
-| Foto de «Emparejar» o de «Escena desde una foto» | Hallar los rotuladores más parecidos | Se procesa solo en tu móvil, a petición tuya; no la recibimos |
+| Colecciones, lista de deseos, colores propios, favoritos, paletas, diario y ajustes en tu móvil | Que uses la app y conserves tu trabajo | No los recibimos: se quedan en tu dispositivo, bajo tu control |
+| Foto de «Emparejar», de «Desde una foto», de «Mi color» o del «Diario» | Hallar los rotuladores más parecidos, leer el color de tu muestra o guardar la foto de una obra en tu diario | Se procesa (y, en el diario, se guarda) solo en tu móvil, a petición tuya; no la recibimos |
 | Diagnósticos de ML Kit (solo con la IA en el móvil, en Android) | Diagnóstico y analítica de uso del SDK, según Google | Se envían solo si decides activar la IA opcional; los trata Google como proveedor de ML Kit, bajo sus propias condiciones y su política de privacidad; no los recibimos |
 | IA con OpenRouter (opcional) | Generar sugerencias de paleta | Tu consentimiento al activarla y usar tu propia clave; el tratamiento lo hace OpenRouter bajo sus condiciones |
 | Correos de soporte y reportes de sugerencias de IA | Responder a tu consulta y revisar el contenido reportado | Tu solicitud y nuestro interés legítimo en atenderla (art. 6.1.f) |
@@ -129,25 +153,29 @@ otros países, según sus propias condiciones. Los demás servicios que decidas 
 
 ## 6. Cuánto tiempo se conservan
 
+
 - **Datos en tu móvil:** hasta que desinstales la app o borres sus datos desde los ajustes del sistema (y, en su caso,
-  de los textos de copia que hayas guardado).
+  de los textos de copia que hayas guardado). Las fotos del diario, además, se borran en cuanto quitas la foto o la
+  entrada.
 - **Correos de soporte:** el tiempo necesario para atender tu consulta y, como máximo, un año desde la última
   respuesta.
 
 ## 7. Tus derechos
 
+
 Puedes ejercer tus derechos de **acceso, rectificación, supresión, oposición, limitación del tratamiento y
 portabilidad** escribiendo a inklab@mainshai.com. Te responderemos en el plazo de un mes.
 
 No recibimos los datos guardados en tu móvil, así que no podemos verlos ni borrarlos por ti. Puedes borrarlos
-desinstalando la app o borrando sus datos desde los ajustes del sistema, y llevártelos con «Exportar copia». Para lo que
-hayas enviado a OpenRouter, ejerce tus derechos ante OpenRouter y el proveedor del modelo; para los diagnósticos de
-ML Kit, ante Google.
+desinstalando la app o borrando sus datos desde los ajustes del sistema, y llevártelos con «Exportar» (Ajustes → Copia
+de seguridad); las fotos del diario no van en ese texto. Para lo que hayas enviado a OpenRouter, ejerce tus derechos
+ante OpenRouter y el proveedor del modelo; para los diagnósticos de ML Kit, ante Google.
 
 Si crees que no hemos tratado bien tus datos, puedes reclamar ante la Agencia Española de Protección de Datos:
 https://www.aepd.es
 
 ## 8. Menores
+
 
 La app no está dirigida a menores de 13 años (o la edad mínima equivalente en tu país). No pide la edad ni recoge datos
 personales de nadie, tampoco de menores: no hay cuentas y tus datos se quedan en el dispositivo. La IA con OpenRouter exige
@@ -161,10 +189,12 @@ público y cualquiera puede comprobar lo que hace.
 
 ## 10. Cambios en esta política
 
+
 Si cambia lo que hace la app con los datos, actualizaremos esta página y la fecha de arriba. Si el cambio es
 importante (por ejemplo, si alguna función enviara datos fuera del móvil), te lo indicaremos también dentro de la app y
 solo se activaría con tu consentimiento.
 
 ## 11. Contacto
+
 
 inklab@mainshai.com

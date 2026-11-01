@@ -42,3 +42,11 @@ final ValueNotifier<PaletteDraft?> paletteDraft = ValueNotifier<PaletteDraft?>(
 /// on screen, the Palette page offers to undo it.
 final ValueNotifier<MarkerColor?> paletteBaseDraft =
     ValueNotifier<MarkerColor?>(null);
+
+/// The palette type to use together with a [paletteBaseDraft] (Swatches detail
+/// sheet "Blending chain"). The shell sets it just before the base; the
+/// Palette page reads it and consumes it by setting the value back to `null`.
+/// Without it the base keeps the type already chosen.
+final ValueNotifier<PaletteMode?> paletteBaseMode = ValueNotifier<PaletteMode?>(
+  null,
+);

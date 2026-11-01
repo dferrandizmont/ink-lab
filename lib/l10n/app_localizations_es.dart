@@ -109,7 +109,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsBackupSubtitle =>
-      'Tus ajustes, paletas, historial y ajustes de IA se pueden exportar como archivo JSON e importar de nuevo.';
+      'Copia tus datos (colección, paletas, diario, historial y ajustes) al portapapeles como texto para importarlos más tarde. No incluye las fotos ni la clave de la API.';
 
   @override
   String get settingsExportBackup => 'Exportar';
@@ -118,7 +118,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsImportBackup => 'Importar';
 
   @override
-  String get settingsBackupExported => 'Copia copiada al portapapeles';
+  String get settingsBackupExported =>
+      'Copia copiada al portapapeles, sin las fotos';
 
   @override
   String get settingsBackupImported => 'Copia importada';
@@ -140,7 +141,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsImportConfirmBody =>
-      'La copia reemplaza tus ajustes, tus paletas guardadas, tu historial de colores emparejados y tus ajustes de IA.';
+      'La copia reemplaza tus datos actuales: colección, paletas, diario, historial y ajustes. Las entradas del diario que no estén en ella se borran junto con sus fotos; las fotos nunca van en la copia.';
 
   @override
   String get settingsImportInvalidJson => 'El texto no es un JSON válido.';
@@ -411,7 +412,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsDisclaimer =>
-      'Ink Lab es un proyecto comunitario independiente: no está afiliado, respaldado ni patrocinado por Ohuhu ni DecoTime, y usa los códigos, nombres y valores de color de sus rotuladores solo como datos factuales de referencia.';
+      'Ink Lab es un proyecto comunitario independiente: no está afiliado, respaldado ni patrocinado por Ohuhu, DecoTime ni Copic, y usa los códigos, nombres y valores de color de sus rotuladores solo como datos factuales de referencia.';
 
   @override
   String get paletteTitle => 'Paleta';
@@ -470,6 +471,97 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get paletteTypeDescCustomPalette => 'Constrúyela a mano';
+
+  @override
+  String get modeBlendingChain => 'Degradado para fundir';
+
+  @override
+  String get paletteTypeDescBlendingChain => 'Claro a oscuro, para fundir';
+
+  @override
+  String paletteChainResultTitle(int count) {
+    return 'Degradado ($count)';
+  }
+
+  @override
+  String paletteChainStep(int step, String role) {
+    return 'Paso $step · $role';
+  }
+
+  @override
+  String get roleLightest => 'Más claro';
+
+  @override
+  String get roleLighter => 'Claro';
+
+  @override
+  String get roleDarker => 'Oscuro';
+
+  @override
+  String get roleDarkest => 'Más oscuro';
+
+  @override
+  String get paletteChainHint =>
+      'Trabaja de claro a oscuro y solapa cada paso mientras la tinta sigue húmeda. Suaviza las uniones con el difuminador incoloro si lo tienes.';
+
+  @override
+  String paletteChainShort(int count, int wanted) {
+    return 'Solo $count de tus rotuladores funden bien con esta base, menos de los $wanted que pediste.';
+  }
+
+  @override
+  String get paletteChainNeedLighter =>
+      'Aún no hay degradado: te falta un rotulador más claro de esta familia.';
+
+  @override
+  String get paletteChainNeedDarker =>
+      'Aún no hay degradado: te falta un rotulador más oscuro de esta familia.';
+
+  @override
+  String get paletteChainNeedBoth =>
+      'Aún no hay degradado: te faltan un rotulador más claro y otro más oscuro de esta familia.';
+
+  @override
+  String get paletteChainBaseLightest =>
+      'No tienes nada más claro en esta familia, así que el degradado empieza en tu base.';
+
+  @override
+  String get paletteChainBaseDarkest =>
+      'No tienes nada más oscuro en esta familia, así que el degradado termina en tu base.';
+
+  @override
+  String get paletteChainOptionsLabel => 'Otros degradados';
+
+  @override
+  String paletteChainOption(int number) {
+    return 'Opción $number';
+  }
+
+  @override
+  String get paletteChainWholeRange => 'Buscar en toda la gama';
+
+  @override
+  String paletteChainWholeRangeNote(String brand) {
+    return 'Se muestra toda la gama $brand, también rotuladores que no tienes.';
+  }
+
+  @override
+  String get paletteChainMyMarkers => 'Volver a mis rotuladores';
+
+  @override
+  String get palettePaintTipChainFirst =>
+      'Cubre primero toda la zona con el color más claro.';
+
+  @override
+  String get palettePaintTipChainMiddle =>
+      'Solapa el paso anterior mientras sigue húmedo.';
+
+  @override
+  String get palettePaintTipChainLast =>
+      'Termina con el más oscuro solo donde cae la sombra.';
+
+  @override
+  String get swatchesBlendingChain => 'Degradado';
 
   @override
   String paletteTypeSemantic(String value) {
@@ -574,6 +666,12 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get paletteSaveButton => 'Guardar paleta';
+
+  @override
+  String get paletteShareButton => 'Compartir';
+
+  @override
+  String get shareFailed => 'No se pudo compartir la imagen.';
 
   @override
   String get paletteOkButton => 'OK';
@@ -905,10 +1003,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get ideasGuideOnlyNote =>
       'Este ejercicio usa toda tu colección, así que no tiene una paleta fija.';
-
-  @override
-  String get ideasNoMarkersDecoTime =>
-      'Añade en Mi colección los rotuladores DecoTime que tienes para ver una paleta para esta idea.';
 
   @override
   String get ideasNoMarkersOther =>
@@ -2511,6 +2605,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsLanguageEnglish => 'English';
 
   @override
+  String get settingsLanguageGerman => 'Deutsch';
+
+  @override
+  String get settingsLanguageFrench => 'Français';
+
+  @override
+  String get settingsLanguagePortuguese => 'Português';
+
+  @override
+  String get settingsLanguageItalian => 'Italiano';
+
+  @override
   String settingsOwnedCount(int owned, int total) {
     return '$owned de $total rotuladores';
   }
@@ -2656,6 +2762,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime':
           '$input no es un código de rotulador de DecoTime. Prueba con $example.',
+      'copic':
+          '$input no es un código de rotulador de Copic. Prueba con $example.',
       'other':
           '$input no es un código de rotulador de Ink Lab. Prueba con $example.',
     });
@@ -2667,6 +2775,8 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime':
           '$input no está en tu colección. Prueba con $example o añádelo en Mi colección.',
+      'copic':
+          '$input no está en tu colección. Prueba con $example o añádelo en Mi colección.',
       'other':
           '$input no está en tu colección. Prueba con $example o añádelo en Mi colección.',
     });
@@ -2677,6 +2787,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String paletteNoAvailableColors(String brand) {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime': 'Aún no hay rotuladores DecoTime en tu colección. Añádelos en Mi colección.',
+      'copic': 'Aún no hay rotuladores Copic en tu colección. Añádelos en Mi colección.',
       'other':
           'Aún no hay rotuladores en tu colección. Añádelos en Mi colección.',
     });
@@ -3818,6 +3929,48 @@ class AppLocalizationsEs extends AppLocalizations {
   String get collectionReset => 'Vaciar colección';
 
   @override
+  String get collectionChartTitle => 'Carta de muestras para imprimir';
+
+  @override
+  String get collectionChartHint =>
+      'Cajas vacías con el código y el nombre de cada rotulador que tienes, para pintar tus muestras reales. Se comparten como imágenes A4 para imprimir o guardar.';
+
+  @override
+  String get collectionChartShowColour => 'Color del catálogo';
+
+  @override
+  String get collectionChartShowColourHint =>
+      'Muéstralo como una franja fina en cada caja, para comparar.';
+
+  @override
+  String get collectionChartCreate => 'Crear y compartir';
+
+  @override
+  String get collectionChartPreparing => 'Preparando…';
+
+  @override
+  String get collectionChartEmpty => 'Elige antes tus sets o rotuladores.';
+
+  @override
+  String collectionChartPages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count páginas',
+      one: '1 página',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chartImageTitle => 'Carta de muestras';
+
+  @override
+  String chartImagePage(int page, int total) {
+    return 'Página $page de $total';
+  }
+
+  @override
   String collectionResetTitle(String brand) {
     return '¿Vaciar tu colección de $brand?';
   }
@@ -3857,9 +4010,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get onboardingSetsBody =>
       'Elige las cajas que compraste. Los rotuladores sueltos se añaden después.';
-
-  @override
-  String get onboardingDecoTitle => 'Tus rotuladores DecoTime';
 
   @override
   String get onboardingDoneTitle => 'Todo listo';
@@ -3919,13 +4069,116 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String onboardingDoneWholeRange(String brand) {
-    return 'Hasta que elijas sets, la app muestra toda la gama de $brand.';
+  String get wishlistTitle => 'Lista de deseos';
+
+  @override
+  String wishlistCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rotuladores por comprar',
+      one: '1 rotulador por comprar',
+      zero: 'Tu lista de deseos está vacía',
+    );
+    return '$_temp0';
   }
 
   @override
-  String get onboardingDoneNoMarkers =>
-      'Todavía no has marcado rotuladores DecoTime: márcalos en Mi colección.';
+  String get wishlistEmpty =>
+      'Añade los rotuladores que quieres comprar desde el detalle de cualquiera.';
+
+  @override
+  String get wishlistAdd => 'A la lista de deseos';
+
+  @override
+  String get wishlistRemove => 'Quitar de la lista';
+
+  @override
+  String get wishlistCopy => 'Copiar lista';
+
+  @override
+  String get wishlistCopied => 'Lista de la compra copiada';
+
+  @override
+  String get wishlistOfferTitle => '¿Añadir a tu lista de deseos?';
+
+  @override
+  String wishlistOfferBody(String code) {
+    return '$code se ha secado. Añádelo a tu lista de deseos para comprar una recarga o un repuesto.';
+  }
+
+  @override
+  String get driedTitle => 'Secos';
+
+  @override
+  String driedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rotuladores secos',
+      one: '1 rotulador seco',
+      zero: 'Ningún rotulador seco',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get driedHint =>
+      'Siguen en tu colección, pero Emparejar, Paleta e Ideas no los sugieren.';
+
+  @override
+  String get driedEmpty =>
+      'Cuando un rotulador deje de pintar, márcalo como seco desde su detalle.';
+
+  @override
+  String get driedMark => 'Marcar como seco';
+
+  @override
+  String get driedUnmark => 'Marcar como usable';
+
+  @override
+  String get driedNote =>
+      'Seco: Emparejar, Paleta e Ideas lo omiten hasta que lo marques como usable.';
+
+  @override
+  String get commonDried => 'Seco';
+
+  @override
+  String get buyNextTitle => 'Qué comprar ahora';
+
+  @override
+  String get buyNextIntro =>
+      'Rotuladores que no tienes y que acercarían tus colores a los de más escenas.';
+
+  @override
+  String buyNextReasonScenes(int count, String scenes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mejora $count escenas: $scenes',
+      one: 'Mejora 1 escena: $scenes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get buyNextReasonGap => 'Rellena un hueco en tu gama de colores';
+
+  @override
+  String get buyNextNoCollection =>
+      'Marca los rotuladores que tienes para ver qué comprar.';
+
+  @override
+  String get buyNextComplete =>
+      'Nada que sugerir: tus rotuladores ya cubren bien todas las escenas.';
+
+  @override
+  String get buyNextRefill => 'Seco: una recarga lo recupera.';
+
+  @override
+  String onboardingDoneWholeRange(String brand) {
+    return 'Hasta que elijas sets, la app muestra toda la gama de $brand.';
+  }
 
   @override
   String get onboardingDoneNext =>
@@ -3934,4 +4187,245 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get collectionVisibleScope =>
       'Afecta a los rotuladores que coinciden con la búsqueda.';
+
+  @override
+  String get matchWhiteBalanceButton => 'Corregir blancos';
+
+  @override
+  String get matchWhiteBalanceHint =>
+      'Toca un punto de la foto que debería ser papel blanco.';
+
+  @override
+  String get matchWhiteBalanceOn => 'Blancos corregidos';
+
+  @override
+  String get matchWhiteBalanceReset => 'Quitar';
+
+  @override
+  String get matchWhiteBalanceTooDark =>
+      'Ese punto es demasiado oscuro para ser papel. Elige uno más claro.';
+
+  @override
+  String get matchWhiteBalanceTooColourful =>
+      'Ese punto tiene demasiado color para ser papel. Elige una zona blanca.';
+
+  @override
+  String get commonOwnColour => 'Mi color';
+
+  @override
+  String get swatchesMyColourTitle => 'Mi color';
+
+  @override
+  String get swatchesMyColourHelp =>
+      'Los colores del catálogo son aproximados. Guarda el que da de verdad tu rotulador sobre el papel.';
+
+  @override
+  String get swatchesMyColourSet => 'Poner mi color';
+
+  @override
+  String get swatchesMyColourChange => 'Cambiar';
+
+  @override
+  String get swatchesMyColourReset => 'Volver al catálogo';
+
+  @override
+  String get swatchesMyColourSaved => 'Tu color se ha guardado';
+
+  @override
+  String get swatchesMyColourWasReset => 'Vuelve el color del catálogo';
+
+  @override
+  String get swatchesCatalogueLabel => 'Catálogo';
+
+  @override
+  String get swatchesMineLabel => 'Mío';
+
+  @override
+  String ownColorTitle(String code) {
+    return 'Mi color de $code';
+  }
+
+  @override
+  String get ownColorHexLabel => 'Color hex';
+
+  @override
+  String get ownColorHexInvalid => 'Escribe 3 o 6 dígitos hex, como 3A7F9C.';
+
+  @override
+  String get ownColorPhotoTitle => 'Desde una foto';
+
+  @override
+  String get ownColorPhotoHelp =>
+      'Pinta con el rotulador sobre papel blanco, haz una foto y toca la zona pintada.';
+
+  @override
+  String get ownColorPhotoTap => 'Toca la zona pintada.';
+
+  @override
+  String get ownColorSave => 'Guardar mi color';
+
+  @override
+  String get settingsOwnColors => 'Usar mis colores';
+
+  @override
+  String get settingsOwnColorsSubtitle =>
+      'Emparejar, Paleta e Ideas usan el color que guardaste de un rotulador en vez del del catálogo.';
+
+  @override
+  String settingsOwnColorsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count colores propios',
+      one: '1 color propio',
+      zero: 'Aún no tienes colores propios',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get settingsOwnColorsReset => 'Restablecer';
+
+  @override
+  String get settingsOwnColorsResetTitle => '¿Restablecer tus colores?';
+
+  @override
+  String get settingsOwnColorsResetBody =>
+      'Todos los rotuladores vuelven al color del catálogo. No se puede deshacer.';
+
+  @override
+  String get settingsJoinBeta => 'Únete a la beta de Google Play';
+
+  @override
+  String get collectionCopicHint =>
+      'Los rotuladores Copic se compran uno a uno. Marca los que tienes.';
+
+  @override
+  String get onboardingCopicLine =>
+      '358 colores · Marca los rotuladores que tienes';
+
+  @override
+  String onboardingMarkersTitle(String brand) {
+    return 'Tus rotuladores $brand';
+  }
+
+  @override
+  String onboardingNoMarkers(String brand) {
+    return 'Todavía no has marcado rotuladores $brand: márcalos en Mi colección.';
+  }
+
+  @override
+  String ideasNoMarkersBrand(String brand) {
+    return 'Añade en Mi colección los rotuladores $brand que tienes para ver una paleta para esta idea.';
+  }
+
+  @override
+  String get ideasDiarySegment => 'Diario';
+
+  @override
+  String get ideasDiarySubtitle => 'Tus obras, las más recientes primero';
+
+  @override
+  String get diaryEmptyTitle => 'Tu diario está vacío';
+
+  @override
+  String get diaryEmptyMessage =>
+      'Apunta las páginas y hojas que pintas, con sus rotuladores, notas y fotos.';
+
+  @override
+  String get diaryAdd => 'Añadir al diario';
+
+  @override
+  String get diaryStatusLabel => 'Estado';
+
+  @override
+  String get diaryStatusInProgress => 'En curso';
+
+  @override
+  String get diaryStatusFinished => 'Terminada';
+
+  @override
+  String get diaryNewTitle => 'Nueva entrada';
+
+  @override
+  String get diaryEditTitle => 'Editar entrada';
+
+  @override
+  String get diaryTitleLabel => 'Título';
+
+  @override
+  String get diaryDateLabel => 'Fecha';
+
+  @override
+  String get diaryOnWhatLabel => 'Pintado en';
+
+  @override
+  String get diaryOnWhatHint => 'p. ej., un libro de colorear o un cuaderno';
+
+  @override
+  String get diaryMarkersTitle => 'Rotuladores usados';
+
+  @override
+  String get diaryMarkersChoose => 'Elegir rotuladores';
+
+  @override
+  String diaryMarkerRemove(String code) {
+    return 'Quitar $code';
+  }
+
+  @override
+  String get diaryPaletteTitle => 'Paleta';
+
+  @override
+  String get diaryPaletteNone => 'Sin paleta';
+
+  @override
+  String get diaryPaletteChoose => 'Vincular una paleta guardada';
+
+  @override
+  String get diaryPaletteMissing => 'Esta paleta ya no está guardada.';
+
+  @override
+  String get diaryPaletteEmpty => 'Aún no tienes paletas guardadas.';
+
+  @override
+  String get diaryNotesLabel => 'Notas';
+
+  @override
+  String get diaryNotesHint => 'Técnica, papel, mezclas...';
+
+  @override
+  String get diaryPhotosTitle => 'Fotos';
+
+  @override
+  String diaryPhotosHelp(int count) {
+    return 'Hasta $count fotos. Se quedan en este teléfono.';
+  }
+
+  @override
+  String get diaryPhotoRemove => 'Quitar foto';
+
+  @override
+  String diaryPhotoSemantic(int number, int total) {
+    return 'Foto $number de $total';
+  }
+
+  @override
+  String get diarySave => 'Guardar entrada';
+
+  @override
+  String get diaryDelete => 'Borrar entrada';
+
+  @override
+  String get diaryDeleteTitle => '¿Borrar esta entrada?';
+
+  @override
+  String get diaryDeleteBody =>
+      'La entrada y sus fotos se borran de este teléfono. No se puede deshacer.';
+
+  @override
+  String get diaryDeleteConfirm => 'Borrar';
+
+  @override
+  String get diaryAddedNotice => 'Añadido al diario';
 }

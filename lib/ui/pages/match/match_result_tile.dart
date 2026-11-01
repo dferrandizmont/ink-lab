@@ -62,6 +62,7 @@ class BestMatchTile extends StatelessWidget {
               hex: color.hex,
               size: InkGeometry.heroSwatch,
               radius: InkRadii.card,
+              own: color.hasOwnColor,
             ),
             const SizedBox(width: InkSpacing.s16),
             Expanded(
@@ -149,7 +150,7 @@ class MatchResultTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              SwatchBlock(hex: color.hex, height: 32),
+              SwatchBlock(hex: color.hex, height: 32, own: color.hasOwnColor),
               const SizedBox(height: InkSpacing.group),
               Text(
                 color.newCode,

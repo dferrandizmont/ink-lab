@@ -31,6 +31,7 @@ MarkerRepository diskMarkers() =>
 Future<AppScope> pumpSettings(
   WidgetTester tester, {
   bool noOnDevice = false,
+  String language = 'en',
 }) async {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1.0;
@@ -57,7 +58,7 @@ Future<AppScope> pumpSettings(
   );
   await tester.pumpWidget(
     MaterialApp(
-      locale: const Locale('en'),
+      locale: Locale(language),
       localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: testSupportedLocales,
       theme: AppTheme.light(),
@@ -399,6 +400,32 @@ void main() {
     expect(find.text(SettingsConstants.privacyUrlEn), findsOneWidget);
   });
 
+  group('About links the privacy policy page in the language of the app', () {
+    const Map<String, String> pages = <String, String>{
+      'en': 'https://inklab.mainshai.com/privacy/',
+      'es': 'https://inklab.mainshai.com/es/privacy/',
+      'de': 'https://inklab.mainshai.com/de/privacy/',
+      'fr': 'https://inklab.mainshai.com/fr/privacy/',
+      'pt': 'https://inklab.mainshai.com/pt/privacy/',
+      'it': 'https://inklab.mainshai.com/it/privacy/',
+    };
+    for (final MapEntry<String, String> page in pages.entries) {
+      testWidgets(page.key, (WidgetTester tester) async {
+        await pumpSettings(tester, language: page.key);
+        final AppLocalizations t = lookupAppLocalizations(Locale(page.key));
+        await scrollTo(tester, find.text(t.settingsPrivacyPolicy));
+        expect(find.text(page.value), findsOneWidget);
+      });
+    }
+
+    test('a language without a page gets the English one', () {
+      expect(SettingsConstants.privacyUrlFor('ja'), pages['en']);
+      for (final MapEntry<String, String> page in pages.entries) {
+        expect(SettingsConstants.privacyUrlFor(page.key), page.value);
+      }
+    });
+  });
+
   testWidgets('the AI helper text only names On-device when it is offered', (
     WidgetTester tester,
   ) async {
@@ -491,5 +518,109 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(scope.settings.themeMode, AppThemeMode.dark);
+  });
+
+  testWidgets('"Use my colours" is on by default and stored', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSettings(tester);
+    final Finder row = find.byKey(
+      const ValueKey<String>('settings-own-colors'),
+    );
+    await scrollTo(tester, row);
+    expect(find.text(l10n.settingsOwnColors), findsOneWidget);
+    expect(find.text(l10n.settingsOwnColorsSubtitle), findsOneWidget);
+    expect(scope.settings.state.useOwnColors, isTrue);
+
+    await tester.tap(row);
+    await tester.pumpAndSettle();
+    expect(scope.settings.state.useOwnColors, isFalse);
+
+    await tester.tap(row);
+    await tester.pumpAndSettle();
+    expect(scope.settings.state.useOwnColors, isTrue);
+  });
+
+  testWidgets('the colours of their own are counted and can be reset', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSettings(tester);
+    final Finder count = find.byKey(
+      const ValueKey<String>('settings-own-colors-count'),
+    );
+    final Finder reset = find.byKey(
+      const ValueKey<String>('settings-own-colors-reset'),
+    );
+    await scrollTo(tester, count);
+    expect(find.text(l10n.settingsOwnColorsCount(0)), findsOneWidget);
+    expect(reset, findsNothing);
+
+    await scope.ownColors.set('R1', 'aabbcc');
+    await scope.ownColors.set('decotime:01', '112233');
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.settingsOwnColorsCount(2)), findsOneWidget);
+    await scope.ownColors.remove('decotime:01');
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.settingsOwnColorsCount(1)), findsOneWidget);
+
+    // Cancelling keeps them.
+    await tester.tap(reset);
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.settingsOwnColorsResetTitle), findsOneWidget);
+    await tester.tap(find.widgetWithText(TextButton, l10n.settingsCancel));
+    await tester.pumpAndSettle();
+    expect(scope.ownColors.colors, isNotEmpty);
+
+    // Confirming brings every marker back to its catalogue colour.
+    await tester.tap(reset);
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.widgetWithText(FilledButton, l10n.settingsOwnColorsReset),
+    );
+    await tester.pumpAndSettle();
+    expect(scope.ownColors.colors, isEmpty);
+    expect(find.text(l10n.settingsOwnColorsCount(0)), findsOneWidget);
+    expect(reset, findsNothing);
+  });
+
+  testWidgets('the beta row shows the group and copies the link', (
+    WidgetTester tester,
+  ) async {
+    String? copied;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (MethodCall call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied = (call.arguments as Map<Object?, Object?>)['text'] as String;
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+
+    await pumpSettings(tester);
+    final Finder row = find.byKey(const ValueKey<String>('settings-beta'));
+    await scrollTo(tester, row);
+    expect(find.text(l10n.settingsJoinBeta), findsOneWidget);
+    expect(find.text(SettingsConstants.betaGroupUrl), findsOneWidget);
+    expect(
+      SettingsConstants.betaGroupUrl,
+      'https://groups.google.com/g/ink-lab-testers',
+    );
+
+    await tester.tap(
+      find.descendant(
+        of: row,
+        matching: find.byTooltip(l10n.settingsCopyRepository),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(copied, SettingsConstants.betaGroupUrl);
+    expect(find.text(l10n.settingsRepositoryCopied), findsOneWidget);
   });
 }

@@ -13,12 +13,13 @@ import '../../widgets/select_card.dart';
 import '../collection/collection_pickers.dart';
 import '../collection/collection_summary.dart';
 import '../collection/collection_summary_card.dart';
+import '../collection/loose_markers_page.dart';
 
-enum _Step { brand, series, sets, deco, done }
+enum _Step { brand, series, sets, markers, done }
 
-/// The first-run setup: brand, then (Ohuhu) series and sets, or (DecoTime)
-/// the colour families, then a summary. Every step can be skipped; the
-/// choices only reach the settings with "Start".
+/// The first-run setup: brand, then series and sets for retail-set brands
+/// or individual markers (and available colour families), then a summary.
+/// Every step can be skipped; the choices only reach the settings with "Start".
 ///
 /// Shown by the app while `onboardingCompleted` is false, and again from
 /// Settings (then [onDone] closes it).
@@ -45,7 +46,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   late MarkerBrand _brand;
   late Set<MarkerLine> _series;
   late Set<String> _sets;
-  late Set<String> _decoExtras;
+  late Set<String> _extras;
   bool _ready = false;
   _Step _step = _Step.brand;
 
@@ -59,30 +60,22 @@ class _OnboardingPageState extends State<OnboardingPage> {
     _brand = state.brand;
     _sets = <String>{...state.settings.ownedSetIds};
     _series = <MarkerLine>{...state.settings.ownedSeries};
-    _decoExtras = state.settings.extraMarkerIds
-        .where((String id) => colorIdBelongsToBrand(id, MarkerBrand.decoTime))
-        .toSet();
+    _extras = <String>{...state.settings.extraMarkerIds};
   }
 
-  List<_Step> get _steps => _brand == MarkerBrand.ohuhuOahu
+  List<_Step> get _steps => _brand.hasRetailSets
       ? const <_Step>[_Step.brand, _Step.series, _Step.sets, _Step.done]
-      : const <_Step>[_Step.brand, _Step.deco, _Step.done];
+      : const <_Step>[_Step.brand, _Step.markers, _Step.done];
 
   int get _index => _steps.indexOf(_step);
 
   void _go(int delta) => setState(() => _step = _steps[_index + delta]);
 
   AppSettings _chosen() {
-    final AppSettings current = _scope.settings.settings;
     return AppSettings(
       ownedSetIds: _sets,
       chosenSeriesIds: <String>{for (final MarkerLine line in _series) line.id},
-      extraMarkerIds: <String>{
-        ...current.extraMarkerIds.where(
-          (String id) => !colorIdBelongsToBrand(id, MarkerBrand.decoTime),
-        ),
-        ..._decoExtras,
-      },
+      extraMarkerIds: _extras,
     );
   }
 
@@ -220,6 +213,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
             selected: _brand == MarkerBrand.decoTime,
             onTap: () => setState(() => _brand = MarkerBrand.decoTime),
           ),
+          const SizedBox(height: InkSpacing.s12),
+          SelectCard(
+            key: const ValueKey<String>('onboarding-brand-copic'),
+            title: MarkerBrand.copic.label,
+            line: context.l10n.onboardingCopicLine,
+            selected: _brand == MarkerBrand.copic,
+            onTap: () => setState(() => _brand = MarkerBrand.copic),
+          ),
         ];
       case _Step.series:
         return <Widget>[
@@ -260,12 +261,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   setState(() => on ? _sets.add(set.id) : _sets.remove(set.id)),
             ),
         ];
-      case _Step.deco:
+      case _Step.markers:
         return <Widget>[
-          title(context.l10n.onboardingDecoTitle),
-          body(context.l10n.collectionDecoHint),
-          body(context.l10n.collectionDecoSizesHint),
-          _decoFamilies(context),
+          title(context.l10n.onboardingMarkersTitle(_brand.label)),
+          body(context.l10n.individualMarkersHint(_brand)),
+          if (_brand == MarkerBrand.decoTime) ...<Widget>[
+            body(context.l10n.collectionDecoSizesHint),
+            _decoFamilies(context),
+          ],
+          InkButton.secondary(
+            key: const ValueKey<String>('onboarding-pick-markers'),
+            label: context.l10n.collectionDecoMarkersButton,
+            onPressed: _pickMarkers,
+          ),
         ];
       case _Step.done:
         return <Widget>[
@@ -291,11 +299,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       const SizedBox(height: InkSpacing.block),
                       if (summary.isEmpty)
                         body(
-                          _brand == MarkerBrand.ohuhuOahu
+                          _brand.hasRetailSets
                               ? context.l10n.onboardingDoneWholeRange(
                                   _brand.label,
                                 )
-                              : context.l10n.onboardingDoneNoMarkers,
+                              : context.l10n.onboardingNoMarkers(_brand.label),
                         ),
                     ],
                   );
@@ -316,11 +324,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
         );
         bool all(List<MarkerColor> colors) =>
             colors.isNotEmpty &&
-            colors.every((MarkerColor c) => _decoExtras.contains(c.colorId));
+            colors.every((MarkerColor c) => _extras.contains(c.colorId));
         void toggle(List<MarkerColor> colors) => setState(() {
           final bool remove = all(colors);
           for (final MarkerColor c in colors) {
-            remove ? _decoExtras.remove(c.colorId) : _decoExtras.add(c.colorId);
+            remove ? _extras.remove(c.colorId) : _extras.add(c.colorId);
           }
         });
         return Wrap(
@@ -352,5 +360,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
         );
       },
     );
+  }
+
+  Future<void> _pickMarkers() async {
+    final draft = StoredAppSettingsRepository(
+      InMemoryKeyValueStore(),
+      initial: _scope.settings.state.copyWith(
+        brand: _brand,
+        settings: _chosen(),
+      ),
+    );
+    await AppScope.push(context, LooseMarkersPage(settings: draft));
+    if (!mounted) return;
+    setState(() => _extras = <String>{...draft.settings.extraMarkerIds});
   }
 }

@@ -17,6 +17,7 @@ import 'backup_section.dart';
 import 'favorites_section.dart';
 import 'labels_section.dart';
 import 'language_section.dart';
+import 'own_colors_section.dart';
 import 'saved_palettes_section.dart';
 import 'constants.dart';
 import 'settings_widgets.dart';
@@ -159,6 +160,14 @@ class _SettingsPageState extends State<SettingsPage> {
                             value: state.matchSuggestUnowned,
                             onChanged: scope.settings.setMatchSuggestUnowned,
                           ),
+                          SettingsSwitchRow(
+                            key: const ValueKey<String>('settings-own-colors'),
+                            label: context.l10n.settingsOwnColors,
+                            subtitle: context.l10n.settingsOwnColorsSubtitle,
+                            value: state.useOwnColors,
+                            onChanged: scope.settings.setUseOwnColors,
+                          ),
+                          OwnColorsSection(scope: scope),
                         ],
                       ),
                       const SizedBox(height: InkSpacing.section),

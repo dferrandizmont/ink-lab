@@ -29,26 +29,32 @@ bool isOwnedColor(
   required Set<String> ownedSetIds,
   required Set<String> extraCodes,
 }) =>
-    (color.brandId == MarkerBrand.ohuhuOahu.id &&
+    ((MarkerBrand.byId[color.brandId]?.hasRetailSets ?? false) &&
         color.sets.any(ownedSetIds.contains)) ||
     extraCodes.contains(color.newCode.toUpperCase());
 
 /// The markers of [brand] the user owns, in natural code order.
 ///
-/// [ownedSetIds] only applies to Ohuhu (DecoTime publishes no set
-/// membership); [ownedMarkerCodes] are the extra markers, brand-scoped.
+/// [ownedSetIds] only applies to brands with retail set membership;
+/// [ownedMarkerCodes] are the extra markers, brand-scoped.
+/// [driedColorIds] (`brandId:CODE`) are owned markers that ran dry: they stay
+/// in the collection but are left out of the result, so Match, Palette and
+/// Ideas never suggest them. Screens that list the collection itself (Swatches
+/// "Mine", the counts) leave it empty.
 List<MarkerColor> ownedColors({
   required List<MarkerColor> colors,
   required MarkerBrand brand,
   Set<String> ownedSetIds = const {},
   Set<String> ownedMarkerCodes = const {},
+  Set<String> driedColorIds = const {},
 }) {
   final extras = scopedCodesForBrand(ownedMarkerCodes, brand.id);
-  final sets = brand == MarkerBrand.ohuhuOahu ? ownedSetIds : const <String>{};
+  final sets = brand.hasRetailSets ? ownedSetIds : const <String>{};
   return _sorted(
     colors.where(
       (color) =>
           color.brandId == brand.id &&
+          !driedColorIds.contains(color.colorId) &&
           isOwnedColor(color, ownedSetIds: sets, extraCodes: extras),
     ),
   );
@@ -71,12 +77,17 @@ List<MarkerColor> swatchCandidateColors({
 ///
 /// A collection that is not set up yet (no owned set, no extra marker) uses
 /// the whole range of the brand so palettes and ideas still work; this holds
-/// for Ohuhu and DecoTime alike.
+/// for every brand.
+///
+/// [driedColorIds] are never offered (see [ownedColors]). A collection whose
+/// markers are all dried is still a configured collection: the result is then
+/// empty rather than the whole range.
 List<MarkerColor> paletteCandidateColors({
   required List<MarkerColor> colors,
   required MarkerBrand brand,
   Set<String> activeSetIds = const {},
   Set<String> ownedMarkerCodes = const {},
+  Set<String> driedColorIds = const {},
 }) {
   final owned = ownedColors(
     colors: colors,
@@ -84,12 +95,17 @@ List<MarkerColor> paletteCandidateColors({
     ownedSetIds: activeSetIds,
     ownedMarkerCodes: ownedMarkerCodes,
   );
-  if (owned.isNotEmpty) return owned;
-  // DecoTime has no sets: leftover Ohuhu set ids do not configure it.
+  List<MarkerColor> usable(List<MarkerColor> list) => driedColorIds.isEmpty
+      ? list
+      : list.where((color) => !driedColorIds.contains(color.colorId)).toList();
+  if (owned.isNotEmpty) return usable(owned);
+  // Leftover retail set ids do not configure individually collected brands.
   final configured =
-      (brand == MarkerBrand.ohuhuOahu && activeSetIds.isNotEmpty) ||
+      (brand.hasRetailSets && activeSetIds.isNotEmpty) ||
       scopedCodesForBrand(ownedMarkerCodes, brand.id).isNotEmpty;
-  return configured ? owned : brandRangeColors(colors: colors, brand: brand);
+  return configured
+      ? owned
+      : usable(brandRangeColors(colors: colors, brand: brand));
 }
 
 List<MarkerColor> _sorted(Iterable<MarkerColor> colors) =>

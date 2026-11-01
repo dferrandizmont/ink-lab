@@ -21,6 +21,8 @@ class SwatchListTile extends StatelessWidget {
     this.selected = false,
     this.onTap,
     this.trailing,
+    this.ownColor = false,
+    this.dried = false,
   });
 
   final String hex;
@@ -31,6 +33,14 @@ class SwatchListTile extends StatelessWidget {
   final bool selected;
   final VoidCallback? onTap;
 
+  /// Whether the colour is the user's own colour for the marker (a small
+  /// mark on the swatch).
+  final bool ownColor;
+
+  /// Whether the marker is dried out: a struck-through drop replaces the owned
+  /// check.
+  final bool dried;
+
   /// Replaces the hex + owned trailing.
   final Widget? trailing;
 
@@ -40,7 +50,10 @@ class SwatchListTile extends StatelessWidget {
     return Semantics(
       button: onTap != null,
       selected: selected,
-      label: name == null ? code : '$code, $name',
+      label:
+          (name == null ? code : '$code, $name') +
+          (ownColor ? ', ${context.l10n.commonOwnColour}' : '') +
+          (dried ? ', ${context.l10n.commonDried}' : ''),
       child: InkWell(
         onTap: onTap,
         child: SizedBox(
@@ -52,6 +65,7 @@ class SwatchListTile extends StatelessWidget {
                 SwatchBlock(
                   hex: hex,
                   size: InkGeometry.target,
+                  own: ownColor,
                   child: favorite
                       ? Center(
                           child: InkIcon(
@@ -95,13 +109,15 @@ class SwatchListTile extends StatelessWidget {
                     displayHex(hex),
                     style: AppTypography.data.copyWith(color: ink.fg2),
                   ),
-                  if (owned) ...<Widget>[
+                  if (dried || owned) ...<Widget>[
                     const SizedBox(width: 8),
                     InkIcon(
-                      InkIcons.check,
+                      dried ? InkIcons.dropletOff : InkIcons.check,
                       size: InkGeometry.smallIcon,
                       color: ink.fg2,
-                      semanticLabel: context.l10n.commonOwned,
+                      semanticLabel: dried
+                          ? context.l10n.commonDried
+                          : context.l10n.commonOwned,
                     ),
                   ],
                 ],

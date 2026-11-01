@@ -926,7 +926,6 @@ export const ui = {
   ideasMaterialPencil: ['pencil', 'lápiz'],
   ideasMaterialTape: ['masking tape', 'cinta de carrocero'],
   ideasGuideOnlyNote: ['This exercise uses your whole collection, so it has no fixed palette.', 'Este ejercicio usa toda tu colección, así que no tiene una paleta fija.'],
-  ideasNoMarkersDecoTime: ['Mark the DecoTime markers you own in Settings to get a palette for this idea.', 'Marca en Ajustes los rotuladores DecoTime que tienes para ver una paleta para esta idea.'],
   ideasNoMarkersOther: ['No markers available for the current collection filters.', 'No hay rotuladores disponibles con los filtros actuales de la colección.'],
   ideasBackLabel: ['Back to ideas', 'Volver a las ideas'],
   // Removed: inline card and "Generate" flow.

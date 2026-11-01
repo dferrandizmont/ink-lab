@@ -12,6 +12,21 @@ final AppLocalizations l10n = lookupAppLocalizations(const Locale('en'));
 /// The Spanish messages, for the Spanish-locale tests.
 final AppLocalizations l10nEs = lookupAppLocalizations(const Locale('es'));
 
+/// The German, French, Portuguese and Italian messages.
+final AppLocalizations l10nDe = lookupAppLocalizations(const Locale('de'));
+final AppLocalizations l10nFr = lookupAppLocalizations(const Locale('fr'));
+final AppLocalizations l10nPt = lookupAppLocalizations(const Locale('pt'));
+final AppLocalizations l10nIt = lookupAppLocalizations(const Locale('it'));
+
+/// Every language but English, for tests that check a translation exists.
+final List<AppLocalizations> l10nTranslated = <AppLocalizations>[
+  l10nEs,
+  l10nDe,
+  l10nFr,
+  l10nPt,
+  l10nIt,
+];
+
 /// Localization delegates for a bare `MaterialApp` in a test.
 const Iterable<LocalizationsDelegate<dynamic>> testLocalizationsDelegates =
     AppLocalizations.localizationsDelegates;

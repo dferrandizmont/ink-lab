@@ -16,6 +16,9 @@ const List<String> decoTimeFamilyIds = <String>[
 
 /// Human labels of the collection concepts.
 extension CollectionLabels on AppLocalizations {
+  String individualMarkersHint(MarkerBrand brand) =>
+      brand == MarkerBrand.copic ? collectionCopicHint : collectionDecoHint;
+
   /// What the tips of an Ohuhu series are ("Fine and chisel tips").
   String seriesTips(MarkerLine line) => switch (line) {
     MarkerLine.oahu => collectionSeriesOahuTips,
@@ -61,7 +64,7 @@ final class CollectionSummary {
     List<MarkerColor> colors,
   ) {
     final MarkerBrand brand = state.brand;
-    final List<OahuSet> sets = brand == MarkerBrand.ohuhuOahu
+    final List<OahuSet> sets = brand.hasRetailSets
         ? <OahuSet>[
             for (final OahuSet set in OahuSet.values)
               if (state.settings.ownedSetIds.contains(set.id)) set,
@@ -69,7 +72,7 @@ final class CollectionSummary {
         : const <OahuSet>[];
     return CollectionSummary(
       brand: brand,
-      series: brand == MarkerBrand.ohuhuOahu
+      series: brand.hasRetailSets
           ? <MarkerLine>[
               for (final MarkerLine line in MarkerLine.values)
                 if (state.settings.ownedSeries.contains(line)) line,
@@ -120,7 +123,7 @@ final class CollectionSummary {
       if (markerCount > 0) l10n.collectionMarkers(markerCount),
     ];
     if (parts.isNotEmpty) return parts.join(' · ');
-    return brand == MarkerBrand.ohuhuOahu
+    return brand.hasRetailSets
         ? l10n.collectionSummaryNoSets
         : l10n.collectionSummaryNoMarkers;
   }

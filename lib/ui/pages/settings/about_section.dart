@@ -64,19 +64,44 @@ class AboutSection extends StatelessWidget {
           ),
         ),
         const Divider(),
+        ListTile(
+          key: const ValueKey<String>('settings-beta'),
+          contentPadding: const EdgeInsets.only(
+            left: InkSpacing.cardH,
+            right: 4,
+          ),
+          title: Text(context.l10n.settingsJoinBeta),
+          subtitle: Text(
+            SettingsConstants.betaGroupUrl,
+            style: AppTypography.data.copyWith(color: ink.fg2),
+          ),
+          trailing: InkIconButton(
+            icon: InkIcons.copy,
+            tooltip: context.l10n.settingsCopyRepository,
+            onPressed: () => _copyBetaLink(context),
+          ),
+        ),
+        const Divider(),
         SettingsCaption(context.l10n.settingsDisclaimer),
       ],
     );
   }
 
   /// The policy page in the language of the app.
-  String _privacyUrl(BuildContext context) =>
-      Localizations.localeOf(context).languageCode == 'es'
-      ? SettingsConstants.privacyUrlEs
-      : SettingsConstants.privacyUrlEn;
+  String _privacyUrl(BuildContext context) => SettingsConstants.privacyUrlFor(
+    Localizations.localeOf(context).languageCode,
+  );
 
   Future<void> _copyPrivacyLink(BuildContext context) async {
     await Clipboard.setData(ClipboardData(text: _privacyUrl(context)));
+    if (!context.mounted) return;
+    showMessage(context, context.l10n.settingsRepositoryCopied);
+  }
+
+  Future<void> _copyBetaLink(BuildContext context) async {
+    await Clipboard.setData(
+      const ClipboardData(text: SettingsConstants.betaGroupUrl),
+    );
     if (!context.mounted) return;
     showMessage(context, context.l10n.settingsRepositoryCopied);
   }

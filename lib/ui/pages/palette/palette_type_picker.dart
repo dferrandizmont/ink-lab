@@ -44,6 +44,7 @@ const List<PaletteMode> paletteTypeModes = <PaletteMode>[
   PaletteMode.square,
   PaletteMode.rectangle,
   PaletteMode.monochrome,
+  PaletteMode.blendingChain,
   PaletteMode.shadow,
   PaletteMode.customPalette,
 ];
@@ -59,6 +60,7 @@ String paletteModeDescription(AppLocalizations t, PaletteMode mode) =>
       PaletteMode.square => t.paletteTypeDescSquare,
       PaletteMode.rectangle => t.paletteTypeDescRectangle,
       PaletteMode.monochrome => t.paletteTypeDescMonochrome,
+      PaletteMode.blendingChain => t.paletteTypeDescBlendingChain,
       PaletteMode.shadow => t.paletteTypeDescShadow,
       PaletteMode.customPalette => t.paletteTypeDescCustomPalette,
     };
@@ -374,6 +376,14 @@ class _ModeGlyphPainter extends CustomPainter {
         _hsv(_baseHue, 0.6, 0.68),
         _hsv(_baseHue, 0.75, 0.46),
       ],
+      // Five steps of one hue with the base (the tall bar) in the middle.
+      PaletteMode.blendingChain => <Color?>[
+        _hsv(_baseHue, 0.2, 0.96),
+        _hsv(_baseHue, 0.36, 0.88),
+        _hsv(_baseHue, 0.52, 0.78),
+        _hsv(_baseHue, 0.66, 0.64),
+        _hsv(_baseHue, 0.78, 0.48),
+      ],
       PaletteMode.shadow => <Color?>[
         _hsv(_baseHue, 0.55, 0.85),
         _hsv(_baseHue, 0.62, 0.62),
@@ -384,12 +394,13 @@ class _ModeGlyphPainter extends CustomPainter {
     };
     final double barWidth = size.width / bars.length;
     final double top = size.height * 0.2, bottom = size.height * 0.8;
+    final bool chain = mode == PaletteMode.blendingChain;
     for (int i = 0; i < bars.length; i++) {
       final Rect rect = Rect.fromLTRB(
         i * barWidth + 1,
-        top,
+        chain && i == bars.length ~/ 2 ? size.height * 0.08 : top,
         (i + 1) * barWidth - 1,
-        bottom,
+        chain && i == bars.length ~/ 2 ? size.height * 0.92 : bottom,
       );
       final RRect rrect = RRect.fromRectAndRadius(
         rect,
@@ -719,23 +730,25 @@ class _SceneSheet extends StatefulWidget {
 class _SceneSheetState extends State<_SceneSheet> {
   String _query = '';
 
-  /// Search text of every scene: both names and both category names.
+  /// Search text of every scene: its name and its category name in every
+  /// language of the app, so a scene is found whatever language is typed.
   late final Map<String, String> _haystack = _buildHaystack();
 
   Map<String, String> _buildHaystack() {
-    final AppLocalizations en = lookupAppLocalizations(const Locale('en'));
-    final AppLocalizations es = lookupAppLocalizations(const Locale('es'));
+    final List<AppLocalizations> all = <AppLocalizations>[
+      for (final Locale locale in AppLocalizations.supportedLocales)
+        lookupAppLocalizations(locale),
+    ];
     return <String, String>{
       for (final Scene s in SceneCatalog.current.scenes)
         s.id: foldForSearch(
-          '${s.nameFor('en')} ${s.nameFor('es')} '
-          '${en.sceneCategoryLabel(s.category)} '
-          '${es.sceneCategoryLabel(s.category)}',
+          '${s.names.values.join(' ')} '
+          '${all.map((AppLocalizations l) => l.sceneCategoryLabel(s.category)).join(' ')}',
         ),
     };
   }
 
-  /// Search text of the photo entry (both languages).
+  /// Search text of the photo entry (English, "foto" in the other languages).
   static final String _photoHaystack = foldForSearch('photo foto');
 
   bool _matches(Scene scene, List<String> tokens) {

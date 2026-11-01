@@ -5,8 +5,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_pt.dart';
 
 // ignore_for_file: type=lint
 
@@ -94,8 +98,12 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
     Locale('es'),
+    Locale('fr'),
+    Locale('it'),
+    Locale('pt'),
   ];
 
   /// No description provided for @settingsTitle.
@@ -287,7 +295,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Your settings, palettes, history and AI settings can be exported as a JSON file and imported back.'**
+  /// **'Copies your data (collection, palettes, diary, history and settings) to the clipboard as text, so you can import it later. Photos and the API key are not included.'**
   String get settingsBackupSubtitle;
 
   /// No description provided for @settingsExportBackup.
@@ -305,7 +313,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupExported.
   ///
   /// In en, this message translates to:
-  /// **'Backup copied to the clipboard'**
+  /// **'Backup copied to the clipboard, without the photos'**
   String get settingsBackupExported;
 
   /// No description provided for @settingsBackupImported.
@@ -347,7 +355,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsImportConfirmBody.
   ///
   /// In en, this message translates to:
-  /// **'The backup replaces your settings, your saved palettes, your colour match history and your AI settings.'**
+  /// **'The backup replaces your current data: collection, palettes, diary, history and settings. Diary entries that are not in it are deleted along with their photos; photos are never part of a backup.'**
   String get settingsImportConfirmBody;
 
   /// No description provided for @settingsImportInvalidJson.
@@ -827,7 +835,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu or DecoTime, and it uses their marker codes, names and colour values only as factual reference data.'**
+  /// **'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime or Copic, and it uses their marker codes, names and colour values only as factual reference data.'**
   String get settingsDisclaimer;
 
   /// No description provided for @paletteTitle.
@@ -943,6 +951,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Build it by hand'**
   String get paletteTypeDescCustomPalette;
+
+  /// No description provided for @modeBlendingChain.
+  ///
+  /// In en, this message translates to:
+  /// **'Blending Chain'**
+  String get modeBlendingChain;
+
+  /// No description provided for @paletteTypeDescBlendingChain.
+  ///
+  /// In en, this message translates to:
+  /// **'Light to dark, ready to blend'**
+  String get paletteTypeDescBlendingChain;
+
+  /// No description provided for @paletteChainResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blending chain ({count})'**
+  String paletteChainResultTitle(int count);
+
+  /// No description provided for @paletteChainStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} · {role}'**
+  String paletteChainStep(int step, String role);
+
+  /// No description provided for @roleLightest.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightest'**
+  String get roleLightest;
+
+  /// No description provided for @roleLighter.
+  ///
+  /// In en, this message translates to:
+  /// **'Lighter'**
+  String get roleLighter;
+
+  /// No description provided for @roleDarker.
+  ///
+  /// In en, this message translates to:
+  /// **'Darker'**
+  String get roleDarker;
+
+  /// No description provided for @roleDarkest.
+  ///
+  /// In en, this message translates to:
+  /// **'Darkest'**
+  String get roleDarkest;
+
+  /// No description provided for @paletteChainHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Work light to dark and overlap each step while the ink is still wet. Soften the joins with the colourless blender if you have one.'**
+  String get paletteChainHint;
+
+  /// No description provided for @paletteChainShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Only {count} of your markers blend well with this base, fewer than the {wanted} you asked for.'**
+  String paletteChainShort(int count, int wanted);
+
+  /// No description provided for @paletteChainNeedLighter.
+  ///
+  /// In en, this message translates to:
+  /// **'No chain yet: you need a lighter marker in this family.'**
+  String get paletteChainNeedLighter;
+
+  /// No description provided for @paletteChainNeedDarker.
+  ///
+  /// In en, this message translates to:
+  /// **'No chain yet: you need a darker marker in this family.'**
+  String get paletteChainNeedDarker;
+
+  /// No description provided for @paletteChainNeedBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'No chain yet: you need a lighter and a darker marker in this family.'**
+  String get paletteChainNeedBoth;
+
+  /// No description provided for @paletteChainBaseLightest.
+  ///
+  /// In en, this message translates to:
+  /// **'You have nothing lighter in this family, so the chain starts at your base.'**
+  String get paletteChainBaseLightest;
+
+  /// No description provided for @paletteChainBaseDarkest.
+  ///
+  /// In en, this message translates to:
+  /// **'You have nothing darker in this family, so the chain ends at your base.'**
+  String get paletteChainBaseDarkest;
+
+  /// No description provided for @paletteChainOptionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Other chains'**
+  String get paletteChainOptionsLabel;
+
+  /// No description provided for @paletteChainOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Option {number}'**
+  String paletteChainOption(int number);
+
+  /// No description provided for @paletteChainWholeRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Search the whole range'**
+  String get paletteChainWholeRange;
+
+  /// No description provided for @paletteChainWholeRangeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing the whole {brand} range, markers you don\'t own included.'**
+  String paletteChainWholeRangeNote(String brand);
+
+  /// No description provided for @paletteChainMyMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to my markers'**
+  String get paletteChainMyMarkers;
+
+  /// No description provided for @palettePaintTipChainFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the lightest colour over the whole area first.'**
+  String get palettePaintTipChainFirst;
+
+  /// No description provided for @palettePaintTipChainMiddle.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlap the previous step while it is still wet.'**
+  String get palettePaintTipChainMiddle;
+
+  /// No description provided for @palettePaintTipChainLast.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish with the darkest only where the shadow falls.'**
+  String get palettePaintTipChainLast;
+
+  /// No description provided for @swatchesBlendingChain.
+  ///
+  /// In en, this message translates to:
+  /// **'Blending chain'**
+  String get swatchesBlendingChain;
 
   /// No description provided for @paletteTypeSemantic.
   ///
@@ -1135,6 +1287,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save palette'**
   String get paletteSaveButton;
+
+  /// Button that renders the palette on screen as an image and opens the system share sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get paletteShareButton;
+
+  /// Notice when rendering or sharing an image (palette or swatch chart) fails.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not share the image.'**
+  String get shareFailed;
 
   /// No description provided for @paletteOkButton.
   ///
@@ -1747,12 +1911,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This exercise uses your whole collection, so it has no fixed palette.'**
   String get ideasGuideOnlyNote;
-
-  /// No description provided for @ideasNoMarkersDecoTime.
-  ///
-  /// In en, this message translates to:
-  /// **'Add the DecoTime markers you own in My collection to get a palette for this idea.'**
-  String get ideasNoMarkersDecoTime;
 
   /// No description provided for @ideasNoMarkersOther.
   ///
@@ -4298,6 +4456,30 @@ abstract class AppLocalizations {
   /// **'English'**
   String get settingsLanguageEnglish;
 
+  /// No description provided for @settingsLanguageGerman.
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch'**
+  String get settingsLanguageGerman;
+
+  /// No description provided for @settingsLanguageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'Français'**
+  String get settingsLanguageFrench;
+
+  /// No description provided for @settingsLanguagePortuguese.
+  ///
+  /// In en, this message translates to:
+  /// **'Português'**
+  String get settingsLanguagePortuguese;
+
+  /// No description provided for @settingsLanguageItalian.
+  ///
+  /// In en, this message translates to:
+  /// **'Italiano'**
+  String get settingsLanguageItalian;
+
   /// No description provided for @settingsOwnedCount.
   ///
   /// In en, this message translates to:
@@ -4449,19 +4631,19 @@ abstract class AppLocalizations {
   /// No description provided for @paletteUnknownCode.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}'**
+  /// **'{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}'**
   String paletteUnknownCode(String brand, String input, String example);
 
   /// No description provided for @paletteNotAvailable.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}'**
+  /// **'{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} copic{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}'**
   String paletteNotAvailable(String brand, String input, String example);
 
   /// No description provided for @paletteNoAvailableColors.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}'**
+  /// **'{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}'**
   String paletteNoAvailableColors(String brand);
 
   /// No description provided for @paletteMissingBase.
@@ -6444,6 +6626,66 @@ abstract class AppLocalizations {
   /// **'Reset collection'**
   String get collectionReset;
 
+  /// No description provided for @collectionChartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Printable swatch chart'**
+  String get collectionChartTitle;
+
+  /// No description provided for @collectionChartHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty boxes labelled with the code and name of each marker you own, to swatch your real markers. Shared as A4 images to print or save.'**
+  String get collectionChartHint;
+
+  /// No description provided for @collectionChartShowColour.
+  ///
+  /// In en, this message translates to:
+  /// **'Catalogue colour'**
+  String get collectionChartShowColour;
+
+  /// No description provided for @collectionChartShowColourHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show it as a thin strip in each box, to compare.'**
+  String get collectionChartShowColourHint;
+
+  /// No description provided for @collectionChartCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create and share'**
+  String get collectionChartCreate;
+
+  /// No description provided for @collectionChartPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing…'**
+  String get collectionChartPreparing;
+
+  /// No description provided for @collectionChartEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your sets or markers first.'**
+  String get collectionChartEmpty;
+
+  /// No description provided for @collectionChartPages.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 page} other{{count} pages}}'**
+  String collectionChartPages(int count);
+
+  /// Subtitle drawn inside each page of the printable swatch chart image.
+  ///
+  /// In en, this message translates to:
+  /// **'Swatch chart'**
+  String get chartImageTitle;
+
+  /// Page number drawn inside each page of the printable swatch chart image.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {total}'**
+  String chartImagePage(int page, int total);
+
   /// No description provided for @collectionResetTitle.
   ///
   /// In en, this message translates to:
@@ -6509,12 +6751,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pick the boxes you bought. Extra markers can be added later.'**
   String get onboardingSetsBody;
-
-  /// No description provided for @onboardingDecoTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Your DecoTime markers'**
-  String get onboardingDecoTitle;
 
   /// No description provided for @onboardingDoneTitle.
   ///
@@ -6606,17 +6842,155 @@ abstract class AppLocalizations {
   /// **'{count, plural, =0{No loose markers} =1{1 loose marker} other{{count} loose markers}}'**
   String collectionExtrasCount(int count);
 
+  /// No description provided for @wishlistTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist'**
+  String get wishlistTitle;
+
+  /// No description provided for @wishlistCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing on your wishlist yet} =1{1 marker to buy} other{{count} markers to buy}}'**
+  String wishlistCount(int count);
+
+  /// No description provided for @wishlistEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the markers you want to buy from the detail of any marker.'**
+  String get wishlistEmpty;
+
+  /// No description provided for @wishlistAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to wishlist'**
+  String get wishlistAdd;
+
+  /// No description provided for @wishlistRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from wishlist'**
+  String get wishlistRemove;
+
+  /// No description provided for @wishlistCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy list'**
+  String get wishlistCopy;
+
+  /// No description provided for @wishlistCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping list copied'**
+  String get wishlistCopied;
+
+  /// No description provided for @wishlistOfferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to your wishlist?'**
+  String get wishlistOfferTitle;
+
+  /// No description provided for @wishlistOfferBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} is dried out. Add it to your wishlist to buy a refill or a replacement.'**
+  String wishlistOfferBody(String code);
+
+  /// No description provided for @driedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dried out'**
+  String get driedTitle;
+
+  /// No description provided for @driedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No dried out markers} =1{1 dried out marker} other{{count} dried out markers}}'**
+  String driedCount(int count);
+
+  /// No description provided for @driedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'They stay in your collection, but Match, Palette and Ideas do not suggest them.'**
+  String get driedHint;
+
+  /// No description provided for @driedEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'When a marker stops working, mark it as dried out from its detail.'**
+  String get driedEmpty;
+
+  /// No description provided for @driedMark.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as dried out'**
+  String get driedMark;
+
+  /// No description provided for @driedUnmark.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as usable'**
+  String get driedUnmark;
+
+  /// No description provided for @driedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Dried out: Match, Palette and Ideas skip it until you mark it as usable.'**
+  String get driedNote;
+
+  /// No description provided for @commonDried.
+  ///
+  /// In en, this message translates to:
+  /// **'Dried out'**
+  String get commonDried;
+
+  /// No description provided for @buyNextTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What to buy next'**
+  String get buyNextTitle;
+
+  /// No description provided for @buyNextIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Markers you do not have that would bring your colours closest to the most scenes.'**
+  String get buyNextIntro;
+
+  /// No description provided for @buyNextReasonScenes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Improves 1 scene: {scenes}} other{Improves {count} scenes: {scenes}}}'**
+  String buyNextReasonScenes(int count, String scenes);
+
+  /// No description provided for @buyNextReasonGap.
+  ///
+  /// In en, this message translates to:
+  /// **'Fills a gap in your range of colours'**
+  String get buyNextReasonGap;
+
+  /// No description provided for @buyNextNoCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick the markers you own to see what to buy next.'**
+  String get buyNextNoCollection;
+
+  /// No description provided for @buyNextComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to suggest: your markers already cover every scene well.'**
+  String get buyNextComplete;
+
+  /// No description provided for @buyNextRefill.
+  ///
+  /// In en, this message translates to:
+  /// **'Dried out: a refill brings it back.'**
+  String get buyNextRefill;
+
   /// No description provided for @onboardingDoneWholeRange.
   ///
   /// In en, this message translates to:
   /// **'Until you pick sets, the app shows the whole {brand} range.'**
   String onboardingDoneWholeRange(String brand);
-
-  /// No description provided for @onboardingDoneNoMarkers.
-  ///
-  /// In en, this message translates to:
-  /// **'You have not ticked any DecoTime markers yet: tick them in My collection.'**
-  String get onboardingDoneNoMarkers;
 
   /// No description provided for @onboardingDoneNext.
   ///
@@ -6629,6 +7003,420 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Applies to the markers that match your search.'**
   String get collectionVisibleScope;
+
+  /// No description provided for @matchWhiteBalanceButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Fix white balance'**
+  String get matchWhiteBalanceButton;
+
+  /// No description provided for @matchWhiteBalanceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a point of the photo that should be white paper.'**
+  String get matchWhiteBalanceHint;
+
+  /// No description provided for @matchWhiteBalanceOn.
+  ///
+  /// In en, this message translates to:
+  /// **'White balance on'**
+  String get matchWhiteBalanceOn;
+
+  /// No description provided for @matchWhiteBalanceReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get matchWhiteBalanceReset;
+
+  /// No description provided for @matchWhiteBalanceTooDark.
+  ///
+  /// In en, this message translates to:
+  /// **'That point is too dark to be paper. Pick a lighter one.'**
+  String get matchWhiteBalanceTooDark;
+
+  /// No description provided for @matchWhiteBalanceTooColourful.
+  ///
+  /// In en, this message translates to:
+  /// **'That point has too much colour to be paper. Pick a white area.'**
+  String get matchWhiteBalanceTooColourful;
+
+  /// No description provided for @commonOwnColour.
+  ///
+  /// In en, this message translates to:
+  /// **'My colour'**
+  String get commonOwnColour;
+
+  /// No description provided for @swatchesMyColourTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My colour'**
+  String get swatchesMyColourTitle;
+
+  /// No description provided for @swatchesMyColourHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Catalogue colours are estimates. Store the colour your marker really gives on paper.'**
+  String get swatchesMyColourHelp;
+
+  /// No description provided for @swatchesMyColourSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Set my colour'**
+  String get swatchesMyColourSet;
+
+  /// No description provided for @swatchesMyColourChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get swatchesMyColourChange;
+
+  /// No description provided for @swatchesMyColourReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to catalogue'**
+  String get swatchesMyColourReset;
+
+  /// No description provided for @swatchesMyColourSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your colour was saved'**
+  String get swatchesMyColourSaved;
+
+  /// No description provided for @swatchesMyColourWasReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to the catalogue colour'**
+  String get swatchesMyColourWasReset;
+
+  /// No description provided for @swatchesCatalogueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Catalogue'**
+  String get swatchesCatalogueLabel;
+
+  /// No description provided for @swatchesMineLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mine'**
+  String get swatchesMineLabel;
+
+  /// No description provided for @ownColorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My colour for {code}'**
+  String ownColorTitle(String code);
+
+  /// No description provided for @ownColorHexLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hex colour'**
+  String get ownColorHexLabel;
+
+  /// No description provided for @ownColorHexInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Type 3 or 6 hex digits, like 3A7F9C.'**
+  String get ownColorHexInvalid;
+
+  /// No description provided for @ownColorPhotoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'From a photo'**
+  String get ownColorPhotoTitle;
+
+  /// No description provided for @ownColorPhotoHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Paint the marker on white paper, take a photo and tap the painted area.'**
+  String get ownColorPhotoHelp;
+
+  /// No description provided for @ownColorPhotoTap.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the painted area.'**
+  String get ownColorPhotoTap;
+
+  /// No description provided for @ownColorSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save my colour'**
+  String get ownColorSave;
+
+  /// No description provided for @settingsOwnColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Use my colours'**
+  String get settingsOwnColors;
+
+  /// No description provided for @settingsOwnColorsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Match, Palette and Ideas use the colour you stored for a marker instead of the catalogue one.'**
+  String get settingsOwnColorsSubtitle;
+
+  /// No description provided for @settingsOwnColorsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No colours of your own yet} =1{1 colour of your own} other{{count} colours of your own}}'**
+  String settingsOwnColorsCount(int count);
+
+  /// No description provided for @settingsOwnColorsReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get settingsOwnColorsReset;
+
+  /// No description provided for @settingsOwnColorsResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset your colours?'**
+  String get settingsOwnColorsResetTitle;
+
+  /// No description provided for @settingsOwnColorsResetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every marker goes back to its catalogue colour. This cannot be undone.'**
+  String get settingsOwnColorsResetBody;
+
+  /// No description provided for @settingsJoinBeta.
+  ///
+  /// In en, this message translates to:
+  /// **'Join the Google Play beta'**
+  String get settingsJoinBeta;
+
+  /// No description provided for @collectionCopicHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Copic markers are bought one by one. Tick the markers you own.'**
+  String get collectionCopicHint;
+
+  /// No description provided for @onboardingCopicLine.
+  ///
+  /// In en, this message translates to:
+  /// **'358 colours · Mark the markers you own'**
+  String get onboardingCopicLine;
+
+  /// No description provided for @onboardingMarkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {brand} markers'**
+  String onboardingMarkersTitle(String brand);
+
+  /// No description provided for @onboardingNoMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not ticked any {brand} markers yet: tick them in My collection.'**
+  String onboardingNoMarkers(String brand);
+
+  /// No description provided for @ideasNoMarkersBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the {brand} markers you own in My collection to get a palette for this idea.'**
+  String ideasNoMarkersBrand(String brand);
+
+  /// No description provided for @ideasDiarySegment.
+  ///
+  /// In en, this message translates to:
+  /// **'Diary'**
+  String get ideasDiarySegment;
+
+  /// No description provided for @ideasDiarySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your artworks, newest first'**
+  String get ideasDiarySubtitle;
+
+  /// No description provided for @diaryEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your diary is empty'**
+  String get diaryEmptyTitle;
+
+  /// No description provided for @diaryEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Log the pages and sheets you paint, with their markers, notes and photos.'**
+  String get diaryEmptyMessage;
+
+  /// No description provided for @diaryAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to diary'**
+  String get diaryAdd;
+
+  /// No description provided for @diaryStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get diaryStatusLabel;
+
+  /// No description provided for @diaryStatusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get diaryStatusInProgress;
+
+  /// No description provided for @diaryStatusFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get diaryStatusFinished;
+
+  /// No description provided for @diaryNewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New entry'**
+  String get diaryNewTitle;
+
+  /// No description provided for @diaryEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit entry'**
+  String get diaryEditTitle;
+
+  /// No description provided for @diaryTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get diaryTitleLabel;
+
+  /// No description provided for @diaryDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get diaryDateLabel;
+
+  /// No description provided for @diaryOnWhatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Painted on'**
+  String get diaryOnWhatLabel;
+
+  /// No description provided for @diaryOnWhatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. a colouring book or a sketchbook'**
+  String get diaryOnWhatHint;
+
+  /// No description provided for @diaryMarkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Markers used'**
+  String get diaryMarkersTitle;
+
+  /// No description provided for @diaryMarkersChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose markers'**
+  String get diaryMarkersChoose;
+
+  /// No description provided for @diaryMarkerRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {code}'**
+  String diaryMarkerRemove(String code);
+
+  /// No description provided for @diaryPaletteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Palette'**
+  String get diaryPaletteTitle;
+
+  /// No description provided for @diaryPaletteNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No palette'**
+  String get diaryPaletteNone;
+
+  /// No description provided for @diaryPaletteChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Link a saved palette'**
+  String get diaryPaletteChoose;
+
+  /// No description provided for @diaryPaletteMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This palette is no longer saved.'**
+  String get diaryPaletteMissing;
+
+  /// No description provided for @diaryPaletteEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no saved palettes yet.'**
+  String get diaryPaletteEmpty;
+
+  /// No description provided for @diaryNotesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get diaryNotesLabel;
+
+  /// No description provided for @diaryNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Technique, paper, blending...'**
+  String get diaryNotesHint;
+
+  /// No description provided for @diaryPhotosTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get diaryPhotosTitle;
+
+  /// No description provided for @diaryPhotosHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to {count} photos. They stay on this phone.'**
+  String diaryPhotosHelp(int count);
+
+  /// No description provided for @diaryPhotoRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get diaryPhotoRemove;
+
+  /// No description provided for @diaryPhotoSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo {number} of {total}'**
+  String diaryPhotoSemantic(int number, int total);
+
+  /// No description provided for @diarySave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save entry'**
+  String get diarySave;
+
+  /// No description provided for @diaryDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete entry'**
+  String get diaryDelete;
+
+  /// No description provided for @diaryDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this entry?'**
+  String get diaryDeleteTitle;
+
+  /// No description provided for @diaryDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The entry and its photos are removed from this phone. This cannot be undone.'**
+  String get diaryDeleteBody;
+
+  /// No description provided for @diaryDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get diaryDeleteConfirm;
+
+  /// No description provided for @diaryAddedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to the diary'**
+  String get diaryAddedNotice;
 }
 
 class _AppLocalizationsDelegate
@@ -6641,8 +7429,14 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+    'de',
+    'en',
+    'es',
+    'fr',
+    'it',
+    'pt',
+  ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -6651,10 +7445,18 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
     case 'es':
       return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'pt':
+      return AppLocalizationsPt();
   }
 
   throw FlutterError(

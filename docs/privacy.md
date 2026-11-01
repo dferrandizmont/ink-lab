@@ -1,11 +1,11 @@
 <!--
-No es asesoramiento jurídico. Resume qué hace la app con los datos, comprobado contra el código el 30-oct-2026;
+No es asesoramiento jurídico. Resume qué hace la app con los datos, comprobado contra el código el 31-oct-2026;
 conviene que lo revise un profesional antes del lanzamiento en las tiendas.
 -->
 
 # Privacidad y cumplimiento
 
-Resume qué hace la app con los datos, comprobado contra el código el 30-oct-2026. La política para el usuario está en
+Resume qué hace la app con los datos, comprobado contra el código el 31-oct-2026. La política para el usuario está en
 [`docs/legal/politica-privacidad.md`](legal/politica-privacidad.md) y tiene que decir lo mismo que este documento.
 English version: [`privacy.en.md`](privacy.en.md).
 
@@ -14,6 +14,10 @@ English version: [`privacy.en.md`](privacy.en.md).
   propias, anuncios, compras ni informes de errores. Con la IA apagada no hay tráfico de red (medido en emulador) y la
   app no llama a ML Kit. Los catálogos de rotuladores van incluidos en la app (`assets/data/`) y el
   motor de paletas es Dart local (`lib/core/`): todo funciona sin conexión.
+- **El diario de obras se queda en el móvil:** las fotos que el usuario añade a una entrada del «Diario» (Ideas →
+  Diario) se copian reducidas a la carpeta privada de la app y no se suben a ningún sitio: ni a un servidor propio, ni
+  a las funciones de IA (OpenRouter, Gemini Nano o ML Kit). El resto del diario (título, fecha, rotuladores usados,
+  notas) es texto en el almacenamiento privado de la app.
 - **Solo hay red si el usuario activa la IA** (Ajustes → Asistente de IA → Sugerir con IA): con OpenRouter y su propia
   clave, y en Android por los diagnósticos que ML Kit envía a Google al usar la IA en el móvil (ver abajo). El manifiesto
   de Android declara `INTERNET`; el manifiesto fusionado añade `ACCESS_NETWORK_STATE` y el componente
@@ -42,29 +46,41 @@ English version: [`privacy.en.md`](privacy.en.md).
 - Todo funciona sin pedir nombre, correo, teléfono ni edad.
 
 ## Qué se guarda en el móvil
-En `shared_preferences` (almacenamiento privado de la app): marca activa, packs y rotuladores propios, favoritos,
-paletas guardadas, historial de las últimas elecciones de Match (color muestreado, rotulador emparejado y distancia;
-nunca la foto), preferencias de apariencia y los ajustes de IA **sin la clave**. Sin identificadores de
-dispositivo ni de usuario. La clave de OpenRouter, si el usuario la guarda, va aparte: Android Keystore
-(`flutter_secure_storage`) o Keychain de iOS «solo este dispositivo» (`lib/data/secure_secret_store.dart`).
+En `shared_preferences` (almacenamiento privado de la app): marca activa, packs y rotuladores propios, favoritos
+(`favorite_marker_ids`), lista de deseos (`wishlist_marker_ids`, ids de rotulador con marca), rotuladores marcados
+como secos (`dried_marker_ids`), colores propios por rotulador (`own_marker_colors`, `brandId:CODE` → hex: solo el hex
+derivado, nunca la foto), paletas guardadas (`saved_palettes:<brandId>`), historial de las últimas elecciones de Match
+(`color_match_history`: color muestreado, rotulador emparejado y distancia; nunca la foto), el diario de obras
+(`artwork_diary`: título, fecha, sobre qué se pintó, estado, rotuladores usados, paleta enlazada y notas),
+preferencias de apariencia y los ajustes de IA **sin la clave** (`ai_settings`). Sin identificadores de dispositivo ni
+de usuario. La clave de OpenRouter, si el usuario la guarda, va aparte: Android Keystore (`flutter_secure_storage`) o
+Keychain de iOS «solo este dispositivo» (`lib/data/secure_secret_store.dart`).
+
+Las fotos del diario no están en `shared_preferences`: son ficheros en `getApplicationDocumentsDirectory()/artworks/` (la
+carpeta `artworks/` del directorio de documentos de la app), como máximo 4 por entrada, y se copian reducidas a 2048
+píxeles de lado al añadirlas (`lib/main.dart`, `lib/data/artwork_photo_store.dart`). El diario guarda solo el **nombre**
+del fichero, nunca una ruta (`lib/data/artwork_diary_repository.dart`). Las fotos se borran al quitar la foto o la
+entrada, y con la app al desinstalarla.
 
 | Dónde | Qué pasa |
 |---|---|
-| Copia del sistema de Android | **Desactivada:** `allowBackup="false"` y reglas explícitas que excluyen todo (`backup_rules.xml`, `data_extraction_rules.xml`), también la transferencia entre móviles. Ni los ajustes ni la clave salen por esa vía. |
-| Copia del sistema de iOS | La clave está en el Keychain «solo este dispositivo» y no pasa a otro iPhone. Las preferencias entran en la copia del iPhone que gestiona el usuario con su Apple ID. |
-| Copia `Exportar` de la app | Ver «Copia de seguridad». Nunca incluye la clave. |
+| Copia del sistema de Android | **Desactivada:** `allowBackup="false"` y reglas explícitas que excluyen las preferencias (`sharedpref`), la base de datos (`database`), los ficheros de la app (`file`) y `root/app_flutter/`, que es `getApplicationDocumentsDirectory()` (las fotos del diario), tanto en la copia en la nube como en la transferencia entre móviles (`android/app/src/main/res/xml/backup_rules.xml`, `android/app/src/main/res/xml/data_extraction_rules.xml`). Ni los ajustes, ni la clave, ni las fotos salen por esa vía. |
+| Copia del sistema de iOS | **Sin banderas de exclusión:** la app no declara ninguna. La clave está en el Keychain «solo este dispositivo» y no pasa a otro iPhone; las preferencias y las fotos del diario sí entran en la copia del iPhone o de iCloud que gestiona el usuario con su Apple ID. |
+| Copia `Exportar` de la app | Ver «Copia de seguridad». Nunca incluye la clave ni las fotos: solo el nombre interno de los ficheros de las fotos del diario. |
 
 ## Permisos
 Se piden cuando el usuario toca la función, nunca al arrancar.
 
 | Permiso | Para qué | Dónde |
 |---|---|---|
-| Cámara y fotos (`NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription` en iOS; selector del sistema en Android) | Emparejar el color de una foto con un rotulador, y sacar los colores principales de una foto para una paleta («Escena desde una foto»). La foto se decodifica y se analiza **en el móvil**; no se sube, no se guarda y no se envía a ningún proveedor de IA. | `ios/Runner/Info.plist`, `lib/ui/pages/match/`, `lib/ui/pages/palette/palette_photo_scene.dart` |
+| Cámara y fotos (`NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription` en iOS; selector del sistema en Android) | Emparejar el color de una foto con un rotulador, sacar los colores principales de una foto para una paleta («Escena desde una foto»), leer el color propio de un rotulador en la foto de una muestra pintada («Mi color»; solo se guarda el hex) y añadir fotos a una entrada del «Diario» (Ideas → Diario). La foto se decodifica y se analiza **en el móvil** y nunca se envía a ningún proveedor de IA. En «Emparejar», «Escena desde una foto» y «Mi color» no se guarda; en el «Diario» se guarda una copia reducida en la carpeta privada de la app (ver «Qué se guarda en el móvil»). | `ios/Runner/Info.plist`, `lib/ui/pages/match/`, `lib/ui/pages/palette/palette_photo_scene.dart`, `lib/ui/pages/swatches/own_color_page.dart`, `lib/ui/pages/diary/` |
 | Red (`INTERNET`, y `ACCESS_NETWORK_STATE` vía ML Kit, Android) | Solo con la IA activada: la IA opcional con OpenRouter y los diagnósticos de ML Kit a Google al usar la IA en el móvil. Con la IA apagada, la app no abre ningún socket. | `AndroidManifest.xml`, manifiesto fusionado |
 
 Sin permisos de ubicación, contactos, calendario, micrófono, almacenamiento general, notificaciones ni
 identificador publicitario. `ios/Runner/PrivacyInfo.xcprivacy` declara sin seguimiento y sin datos recogidos; solo
 usa la API de `UserDefaults` con el motivo `CA92.1`.
+Compartir una paleta o una carta de muestras como imagen no necesita permiso: la imagen solo se entrega a la app que el
+usuario elige en el menú de compartir del sistema (`share_plus`, `lib/ui/share/`).
 
 ## IA opcional
 Apagada por defecto. Antes de activarla, la app muestra qué saldría del móvil.
@@ -77,20 +93,29 @@ Apagada por defecto. Antes de activarla, la app muestra qué saldría del móvil
   usuario en la cabecera `Authorization` (`lib/ai/open_router_client.dart`, `lib/ai/open_router_palette_advisor.dart`):
   marca (`BRAND_ID`, `BRAND_LABEL`), modo de paleta (`MODE`), nombre de la escena en inglés (`SCENARIO`), código y
   nombre del rotulador base si lo hay (`BASE_CODE`, `BASE_NAME`), si está fijado (`BASE_LOCKED`), tamaño de la paleta
-  (`PALETTE_SIZE`), códigos y hex de los candidatos sin sus nombres (`AVAILABLE_COLORS`), ajustes de generación
-  (modelo, temperatura, límite de tokens), un prompt de sistema fijo y la cabecera `X-Title: Ink Lab`. La consulta del
-  catálogo de modelos envía la clave. **Nunca** se envían fotos (`IMAGE_ATTACHED=false`; ningún camino del código
-  adjunta una imagen), favoritos, paletas guardadas ni identificadores. OpenRouter y el proveedor del modelo ven la IP
-  del dispositivo, como en cualquier conexión, y aplican sus propias condiciones y su conservación
-  (https://openrouter.ai/privacy); el desarrollador no ve nada.
+  (`PALETTE_SIZE`), códigos y hex del catálogo de los candidatos sin sus nombres (`AVAILABLE_COLORS`; nunca los colores
+  propios, `test/ai/own_color_privacy_test.dart`), ajustes de generación (modelo, temperatura, límite de tokens), un
+  prompt de sistema fijo y la cabecera `X-Title: Ink Lab`. La consulta del catálogo de modelos envía la clave. **Nunca**
+  se envían fotos (`IMAGE_ATTACHED=false`; ningún camino del código adjunta una imagen), colores propios, favoritos,
+  paletas guardadas ni identificadores. OpenRouter y el proveedor del modelo ven la IP del dispositivo, como en
+  cualquier conexión, y aplican sus propias condiciones y su conservación (https://openrouter.ai/privacy); el
+  desarrollador no ve nada.
 - Si la IA falla, la app vuelve al motor local. Importar una copia de seguridad nunca activa la IA.
 
 ## Copia de seguridad
-«Exportar copia» (Ajustes) genera un JSON con versión, **sin cifrar**, con las colecciones, favoritos, paletas
-guardadas, historial de Match y los ajustes no secretos (`lib/data/backup_service.dart`). Lo entrega **copiándolo al
-portapapeles**; «Importar copia» lo recibe pegándolo. Dónde acabe ese texto es decisión del usuario. El portapapeles
-del sistema puede ser visible para el teclado o para otras apps según el sistema operativo, así que conviene no dejar
-la copia pegada. La clave de API nunca forma parte de la copia.
+«Exportar copia» (Ajustes) genera un **texto JSON** (no un fichero), con versión (`version`) y **sin cifrar**, con estas
+secciones: ajustes de la app (`appSettings`), paletas guardadas (`savedPalettes`), historial de Match
+(`colorMatchHistory`), colores propios (`ownColors`), lista de deseos (`wishlist`), rotuladores secos (`driedMarkers`),
+entradas del diario (`artworkDiary`) y los ajustes de IA no secretos (`aiSettings`)
+(`lib/data/backup_service.dart`). Lo entrega **copiándolo al portapapeles**; «Importar copia» lo recibe pegándolo.
+Dónde acabe ese texto es decisión del usuario. El portapapeles del sistema puede ser visible para el teclado o para
+otras apps según el sistema operativo, así que conviene no dejar la copia pegada. La clave de API nunca forma parte de
+la copia, y las fotos del diario tampoco: las entradas viajan con el **nombre interno** del fichero de cada foto, nunca
+con la foto.
+
+Al importar, la copia **reemplaza** los datos que trae; las secciones que no estén en ella se dejan como están. Como el
+diario va completo, las entradas que no estén en la copia se **borran junto con sus fotos**, y la app lo avisa antes de
+importar («¿Reemplazar tus datos actuales?»).
 
 ## Soporte y enlaces
 La dirección de soporte es **inklab@mainshai.com**. «Acerca de» ofrece **copiar** la URL del repositorio al portapapeles;
@@ -108,6 +133,8 @@ correo, el informe se copia al portapapeles. La política de privacidad se publi
 - Google Play, Seguridad de los datos: hay que declarar los datos que recoge el SDK ML Kit (identificadores del
   dispositivo, diagnósticos y otros datos de rendimiento; opcionales, solo con la IA activada; para analítica; cifrados
   en tránsito) y la petición opcional a OpenRouter. Respuestas finales en `docs/tienda/google-play.md`.
+- Las fotos del diario nunca salen del móvil, así que los formularios no cambian: ni en Google Play (Seguridad de los
+  datos) ni en Apple (etiquetas de privacidad) hay datos nuevos que recoger ni que compartir.
 - No hay cuentas que borrar; los datos se eliminan desinstalando la app o borrando sus datos desde el sistema.
 - Revisar los formularios con el AAB/IPA definitivo y publicar una URL de política coherente con estos hechos.
 

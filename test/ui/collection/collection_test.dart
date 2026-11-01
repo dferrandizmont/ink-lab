@@ -197,6 +197,72 @@ void main() {
       expect(scope.settings.settings.extraMarkerIds, hasLength(313));
     });
 
+    testWidgets(
+      'Copic selects individual markers, switches and resets only its own collection',
+      (tester) async {
+        final scope = await _pumpCollection(
+          tester,
+          state: AppSettingsState(
+            brand: MarkerBrand.copic,
+            onboardingCompleted: true,
+            settings: AppSettings(
+              ownedSetIds: const {'classic_160'},
+              chosenSeriesIds: const {'oahu'},
+              extraMarkerIds: const {
+                'copic:0',
+                'decotime:01',
+                'ohuhu_oahu:BV04',
+              },
+            ),
+          ),
+        );
+        expect(find.text(l10n.collectionCopicHint), findsOneWidget);
+        expect(find.text(l10n.collectionDecoHint), findsNothing);
+        expect(_key('collection-series-oahu'), findsNothing);
+        expect(_key('collection-family-all'), findsNothing);
+        await tester.ensureVisible(_key('collection-add-loose'));
+        await tester.tap(_key('collection-add-loose'));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(TextField), 'BV04');
+        await tester.pumpAndSettle();
+        await tester.tap(_key('collection-marker-BV04'));
+        await tester.pumpAndSettle();
+        expect(scope.settings.settings.extraMarkerIds, contains('copic:BV04'));
+        expect(
+          tester.widget<Text>(_key('collection-owned-count')).data,
+          l10n.collectionOwnedCount(2, 358),
+        );
+        await tester.tap(_key('collection-untick-visible'));
+        await tester.pumpAndSettle();
+        expect(
+          scope.settings.settings.extraMarkerIds,
+          isNot(contains('copic:BV04')),
+        );
+        await tester.tap(_key('collection-tick-visible'));
+        await tester.pumpAndSettle();
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+        await scope.settings.setBrand(MarkerBrand.decoTime);
+        await tester.pumpAndSettle();
+        expect(find.text(l10n.collectionDecoHint), findsOneWidget);
+        await scope.settings.setBrand(MarkerBrand.copic);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(_key('collection-reset'));
+        await tester.tap(_key('collection-reset'));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.widgetWithText(FilledButton, l10n.collectionReset),
+        );
+        await tester.pumpAndSettle();
+        expect(scope.settings.settings.extraMarkerIds, {
+          'decotime:01',
+          'ohuhu_oahu:BV04',
+        });
+        expect(scope.settings.settings.ownedSetIds, {'classic_160'});
+        expect(scope.settings.settings.chosenSeriesIds, {'oahu'});
+      },
+    );
+
     testWidgets('reset asks first and only clears the active brand', (
       WidgetTester tester,
     ) async {
@@ -411,6 +477,70 @@ void main() {
       expect(scope.settings.settings.extraMarkerIds, hasLength(9));
     });
 
+    for (final bool finish in [true, false]) {
+      testWidgets(
+        'Copic setup stages individual markers until finish ($finish)',
+        (tester) async {
+          final scope = await _pumpApp(
+            tester,
+            state: AppSettingsState(
+              settings: AppSettings(
+                extraMarkerIds: const {'decotime:01', 'ohuhu_oahu:BV04'},
+              ),
+            ),
+          );
+          await tester.ensureVisible(_key('onboarding-brand-copic'));
+          await tester.tap(_key('onboarding-brand-copic'));
+          await tester.pumpAndSettle();
+          expect(find.text(l10n.onboardingStep(1, 3)), findsOneWidget);
+          await tester.tap(_key('onboarding-next'));
+          await tester.pumpAndSettle();
+          expect(
+            find.text(l10n.onboardingMarkersTitle('Copic')),
+            findsOneWidget,
+          );
+          expect(find.text(l10n.collectionDecoSizesHint), findsNothing);
+          await tester.tap(_key('onboarding-pick-markers'));
+          await tester.pumpAndSettle();
+          await tester.enterText(find.byType(TextField), 'BV04');
+          await tester.pumpAndSettle();
+          await tester.tap(_key('collection-marker-BV04'));
+          await tester.pumpAndSettle();
+          await tester.pageBack();
+          await tester.pumpAndSettle();
+          expect(scope.settings.brand, MarkerBrand.ohuhuOahu);
+          expect(scope.settings.settings.extraMarkerIds, {
+            'decotime:01',
+            'ohuhu_oahu:BV04',
+          });
+          if (finish) {
+            await tester.tap(_key('onboarding-next'));
+            await tester.pumpAndSettle();
+            expect(find.text('Copic'), findsOneWidget);
+            expect(find.text('1 marker'), findsOneWidget);
+            await tester.tap(_key('onboarding-next'));
+            await tester.pumpAndSettle();
+            expect(scope.settings.brand, MarkerBrand.copic);
+            expect(scope.settings.settings.extraMarkerIds, {
+              'copic:BV04',
+              'decotime:01',
+              'ohuhu_oahu:BV04',
+            });
+          } else {
+            await tester.tap(_key('onboarding-skip'));
+            await tester.pumpAndSettle();
+            expect(scope.settings.brand, MarkerBrand.ohuhuOahu);
+            expect(scope.settings.settings.extraMarkerIds, {
+              'decotime:01',
+              'ohuhu_oahu:BV04',
+            });
+          }
+          expect(scope.settings.onboardingCompleted, isTrue);
+          expect(find.byType(AppShell), findsOneWidget);
+        },
+      );
+    }
+
     testWidgets('skip keeps the defaults and never asks again', (
       WidgetTester tester,
     ) async {
@@ -426,58 +556,61 @@ void main() {
   });
 
   group('switching brand reaches every tab', () {
-    testWidgets('Swatches, Match, Palette and Ideas follow the new brand', (
-      WidgetTester tester,
-    ) async {
-      final AppScope scope = await _pumpApp(tester);
-      for (final String tab in <String>['Match', 'Palette', 'Ideas']) {
-        await tester.tap(_nav(tab));
-        await tester.pumpAndSettle();
-      }
-      final State<StatefulWidget> palette = tester.state(
-        find.byType(PalettePage, skipOffstage: false),
-      );
-      final State<StatefulWidget> ideas = tester.state(
-        find.byType(IdeasPage, skipOffstage: false),
-      );
-      // A base colour of the old brand waiting for the Palette tab.
-      paletteBaseDraft.value = MarkerColor(
-        brandId: 'ohuhu_oahu',
-        newCode: 'B08',
-        newName: 'Cotton Candy Blue',
-        oldCode: 'B289',
-        oldName: 'Pastel Blue',
-        hex: '82dcfa',
-        sets: const <String>['classic_160'],
-      );
+    for (final brand in [MarkerBrand.decoTime, MarkerBrand.copic]) {
+      testWidgets(
+        '${brand.label}: Swatches, Match, Palette and Ideas follow the new brand',
+        (WidgetTester tester) async {
+          final AppScope scope = await _pumpApp(tester);
+          for (final String tab in <String>['Match', 'Palette', 'Ideas']) {
+            await tester.tap(_nav(tab));
+            await tester.pumpAndSettle();
+          }
+          final State<StatefulWidget> palette = tester.state(
+            find.byType(PalettePage, skipOffstage: false),
+          );
+          final State<StatefulWidget> ideas = tester.state(
+            find.byType(IdeasPage, skipOffstage: false),
+          );
+          // A base colour of the old brand waiting for the Palette tab.
+          paletteBaseDraft.value = MarkerColor(
+            brandId: 'ohuhu_oahu',
+            newCode: 'B08',
+            newName: 'Cotton Candy Blue',
+            oldCode: 'B289',
+            oldName: 'Pastel Blue',
+            hex: '82dcfa',
+            sets: const <String>['classic_160'],
+          );
 
-      await scope.settings.setBrand(MarkerBrand.decoTime);
-      await tester.pumpAndSettle();
+          await scope.settings.setBrand(brand);
+          await tester.pumpAndSettle();
 
-      // Pages that hold colours of one brand start fresh.
-      expect(
-        tester.state(find.byType(PalettePage, skipOffstage: false)),
-        isNot(same(palette)),
-      );
-      expect(
-        tester.state(find.byType(IdeasPage, skipOffstage: false)),
-        isNot(same(ideas)),
-      );
-      expect(paletteBaseDraft.value, isNull);
+          // Pages that hold colours of one brand start fresh.
+          expect(
+            tester.state(find.byType(PalettePage, skipOffstage: false)),
+            isNot(same(palette)),
+          );
+          expect(
+            tester.state(find.byType(IdeasPage, skipOffstage: false)),
+            isNot(same(ideas)),
+          );
+          expect(paletteBaseDraft.value, isNull);
 
-      await tester.tap(_nav('Match'));
-      await tester.pumpAndSettle();
-      expect(find.byKey(MatchPage.pageKey), findsOneWidget);
-      expect(find.text(l10n.matchSubtitleEmpty), findsOneWidget);
+          await tester.tap(_nav('Match'));
+          await tester.pumpAndSettle();
+          expect(find.byKey(MatchPage.pageKey), findsOneWidget);
+          expect(find.text(l10n.matchSubtitleEmpty), findsOneWidget);
 
-      await tester.tap(_nav('Swatches'));
-      await tester.pumpAndSettle();
-      expect(find.byKey(SwatchesPage.pageKey), findsOneWidget);
-      expect(
-        find.text('DecoTime · ${l10n.collectionNotSetUp}'),
-        findsOneWidget,
+          await tester.tap(_nav('Swatches'));
+          await tester.pumpAndSettle();
+          expect(find.byKey(SwatchesPage.pageKey), findsOneWidget);
+          expect(
+            find.text('${brand.label} · ${l10n.collectionNotSetUp}'),
+            findsOneWidget,
+          );
+          expect(find.text('B08'), findsNothing);
+        },
       );
-      expect(find.text('B08'), findsNothing);
-    });
+    }
   });
 }

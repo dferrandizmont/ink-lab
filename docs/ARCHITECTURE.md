@@ -63,8 +63,15 @@ platform channel. Anything that needs one of those belongs to a layer above.
 - **repositories**: read-only access to markers, per brand, with an in-memory
   cache;
 - **local persistence**: preferences and user state (active brand, owned
-  markers, favourites, saved palettes, AI settings) in the platform's private
+  markers, favourites, saved palettes, wishlist, dried-out markers, the artwork
+  diary, AI settings) in the platform's private
   storage;
+- **artwork diary**: `artwork_diary_repository.dart` keeps the entries (text,
+  date, marker ids, palette id, photo file names) as one JSON list in the
+  key-value store, newest first. The photos are files in the app's private
+  documents folder (`artworks/`) behind `ArtworkPhotoStore`, addressed by bare
+  file name; they are deleted with their entry and never uploaded, shared or
+  sent to the AI features. The backup carries the entries, never the photos;
 - **backup codec**: export/import of user data as a versioned, plain JSON
   text. It never contains the API key or any other secret, which live behind a
   separate secret store (Android Keystore / iOS Keychain).
@@ -138,14 +145,18 @@ user picks a base colour
 ## Data flow and the datasets
 
 - Datasets live in `assets/data/` and are **generated** by the scripts in
-  `tools/` (to be published).
+  `tool/data/`: `generate_ohuhu.py` and `generate_copic.py`. The DecoTime
+  extraction generator has not yet been ported from the private codebase.
 - The Ohuhu dataset stores the current and the legacy code/name for each
   colour plus the sets it belongs to; the DecoTime dataset stores the code,
-  name, hex and set membership.
+  name, hex and set membership. Copic stores 358 codes, names and official
+  hex values imported from a pinned meodai/copic-colors revision, with empty
+  set lists. Only Ohuhu supports retail set selection (`hasRetailSets`);
+  DecoTime and Copic ownership is tracked marker by marker.
 - Manual calibration of extracted colours lives with the generator, so a
   regeneration never silently reverts a correction.
 - A stable, brand-scoped colour id (`<brandId>:<code>`) is used for
-  favourites and saved palettes, so the two brands never collide.
+  favourites and saved palettes, so the brands never collide.
 
 ## Testing strategy
 

@@ -8,6 +8,7 @@ import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
+import 'package:ink_lab/ui/share/share_sink.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 
 import '../../support/l10n.dart';
@@ -28,6 +29,7 @@ AppScope paletteScope({
   AiSettingsRepository? aiSettings,
   AiService? aiService,
   Future<bool> Function(Uri uri)? launchEmail,
+  ShareSink? shareSink,
 }) => AppScope.inMemory(
   markers: diskMarkerRepository(),
   secrets: secrets,
@@ -39,7 +41,9 @@ AppScope paletteScope({
     supportedLocales: testSupportedLocales,
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),
-    home: Scaffold(body: PalettePage(launchEmail: launchEmail)),
+    home: Scaffold(
+      body: PalettePage(launchEmail: launchEmail, shareSink: shareSink),
+    ),
   ),
 );
 
@@ -57,6 +61,7 @@ Future<AppScope> pumpPalette(
   AiSettingsRepository? aiSettings,
   AiService? aiService,
   Future<bool> Function(Uri uri)? launchEmail,
+  ShareSink? shareSink,
 }) async {
   tester.view.physicalSize = const Size(600, 3000);
   tester.view.devicePixelRatio = 1.0;
@@ -67,6 +72,7 @@ Future<AppScope> pumpPalette(
     aiSettings: aiSettings,
     aiService: aiService,
     launchEmail: launchEmail,
+    shareSink: shareSink,
   );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);

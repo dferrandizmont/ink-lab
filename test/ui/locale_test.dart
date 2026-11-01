@@ -60,13 +60,62 @@ void main() {
       expect(find.text('Swatches'), findsWidgets);
     });
 
+    testWidgets('an unsupported first language falls to the next one', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        device: const <Locale>[Locale('ca', 'ES'), Locale('es', 'ES')],
+      );
+      expect(_current(tester).localeName, 'es');
+    });
+
     testWidgets('a device in another language falls back to English', (
       tester,
     ) async {
-      await _pump(tester, device: const <Locale>[Locale('fr', 'FR')]);
+      await _pump(tester, device: const <Locale>[Locale('ja', 'JP')]);
       expect(_current(tester).localeName, 'en');
       expect(find.text('Settings'), findsWidgets);
     });
+
+    for (final (Locale device, String code) in <(Locale, String)>[
+      (const Locale('de', 'DE'), 'de'),
+      (const Locale('de', 'AT'), 'de'),
+      (const Locale('fr', 'FR'), 'fr'),
+      (const Locale('fr', 'CA'), 'fr'),
+      (const Locale('pt', 'PT'), 'pt'),
+      // A Brazilian device gets European Portuguese: the only one shipped.
+      (const Locale('pt', 'BR'), 'pt'),
+      (const Locale('it', 'IT'), 'it'),
+    ]) {
+      testWidgets('a $device device shows $code', (tester) async {
+        await _pump(tester, device: <Locale>[device]);
+        expect(_current(tester).localeName, code);
+        expect(
+          find.text(lookupAppLocalizations(Locale(code)).settingsTitle),
+          findsWidgets,
+        );
+      });
+    }
+  });
+
+  testWidgets('the resolver keeps the language and drops the region', (
+    tester,
+  ) async {
+    await _pump(tester, device: const <Locale>[Locale('en', 'US')]);
+    final LocaleListResolutionCallback resolve = tester
+        .widget<MaterialApp>(find.byType(MaterialApp))
+        .localeListResolutionCallback!;
+    const List<Locale> supported = AppLocalizations.supportedLocales;
+    for (final String code in <String>['en', 'es', 'de', 'fr', 'pt', 'it']) {
+      expect(resolve(<Locale>[Locale(code, 'XX')], supported), Locale(code));
+    }
+    expect(
+      resolve(const <Locale>[Locale('nl')], supported),
+      const Locale('en'),
+    );
+    expect(resolve(const <Locale>[], supported), const Locale('en'));
+    expect(resolve(null, supported), const Locale('en'));
   });
 
   group('the language setting overrides the device', () {
@@ -108,6 +157,25 @@ void main() {
     });
   });
 
+  group('each language can be forced on a device in another one', () {
+    for (final AppLanguage language in AppLanguage.values) {
+      final String? code = language.languageCode;
+      if (code == null) continue;
+      testWidgets(language.name, (tester) async {
+        await _pump(
+          tester,
+          device: const <Locale>[Locale('ja', 'JP')],
+          language: language,
+        );
+        expect(_current(tester).localeName, code);
+        expect(
+          find.text(lookupAppLocalizations(Locale(code)).settingsTitle),
+          findsWidgets,
+        );
+      });
+    }
+  });
+
   testWidgets('the Language control in Settings > Display drives it', (
     tester,
   ) async {
@@ -135,5 +203,22 @@ void main() {
     await tester.pumpAndSettle();
     expect(scope.settings.language, AppLanguage.english);
     expect(find.text('Language'), findsOneWidget);
+
+    // The four new languages, each named in itself.
+    for (final (String label, AppLanguage language, String title)
+        in <(String, AppLanguage, String)>[
+          ('Deutsch', AppLanguage.german, 'Sprache'),
+          ('Français', AppLanguage.french, 'Langue'),
+          ('Português', AppLanguage.portuguese, 'Idioma'),
+          ('Italiano', AppLanguage.italian, 'Lingua'),
+        ]) {
+      await tester.ensureVisible(find.text(label));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(label));
+      await tester.pumpAndSettle();
+      expect(scope.settings.language, language);
+      expect(find.text(title), findsOneWidget, reason: label);
+      expect(find.text(label), findsOneWidget, reason: label);
+    }
   });
 }

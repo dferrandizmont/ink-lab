@@ -90,32 +90,32 @@ void main() {
     expect(find.textContaining('Combinations ('), findsOneWidget);
   });
 
-  testWidgets('a DecoTime marker outside the owned set is rejected', (
-    WidgetTester tester,
-  ) async {
-    await pumpPalette(
-      tester,
-      brand: MarkerBrand.decoTime,
-      // Ownership is brand-scoped for non-Ohuhu brands (`brandId:code`).
-      ownedMarkerCodes: const <String>{
-        'decotime:01',
-        'decotime:02',
-        'decotime:03',
-      },
-    );
+  for (final brand in [MarkerBrand.decoTime, MarkerBrand.copic]) {
+    testWidgets('${brand.label}: codes and ownership are validated', (
+      WidgetTester tester,
+    ) async {
+      await pumpPalette(
+        tester,
+        brand: brand,
+        // Ownership is brand-scoped for non-Ohuhu brands (`brandId:code`).
+        ownedMarkerCodes: brand == MarkerBrand.copic
+            ? {'copic:BV04', 'copic:R29', 'copic:B05', 'copic:Y08', 'copic:G17'}
+            : {'decotime:01', 'decotime:02', 'decotime:03'},
+      );
 
-    await enterBaseCode(tester, 'ZZZ');
-    expect(
-      find.textContaining('is not a DecoTime marker code'),
-      findsOneWidget,
-    );
+      await enterBaseCode(tester, 'ZZZ');
+      expect(
+        find.textContaining('is not a ${brand.label} marker code'),
+        findsOneWidget,
+      );
 
-    await enterBaseCode(tester, '05');
-    expect(find.textContaining('is not in your collection'), findsOneWidget);
+      await enterBaseCode(tester, brand == MarkerBrand.copic ? 'E00' : '05');
+      expect(find.textContaining('is not in your collection'), findsOneWidget);
 
-    await enterBaseCode(tester, '02');
-    expect(find.textContaining('Combinations ('), findsOneWidget);
-  });
+      await enterBaseCode(tester, brand == MarkerBrand.copic ? 'BV04' : '02');
+      expect(find.textContaining('Combinations ('), findsOneWidget);
+    });
+  }
 
   testWidgets('saves the result to the brand repository', (
     WidgetTester tester,

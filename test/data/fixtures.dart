@@ -49,7 +49,7 @@ ColorMatchPick pick({
   createdAtEpochMs: createdAtEpochMs,
 );
 
-/// The four repositories plus the shared store, all loaded, over an
+/// The repositories plus the shared store, all loaded, over an
 /// [InMemoryKeyValueStore].
 final class Harness {
   Harness({
@@ -58,6 +58,11 @@ final class Harness {
     required this.savedPalettes,
     required this.history,
     required this.aiSettings,
+    required this.ownColors,
+    required this.wishlist,
+    required this.dried,
+    required this.artworkDiary,
+    required this.photos,
   });
 
   final KeyValueStore store;
@@ -65,12 +70,23 @@ final class Harness {
   final StoredSavedPaletteRepository savedPalettes;
   final StoredColorMatchHistoryRepository history;
   final StoredAiSettingsRepository aiSettings;
+  final StoredOwnColorRepository ownColors;
+  final StoredWishlistRepository wishlist;
+  final StoredDriedMarkerRepository dried;
+  final StoredArtworkDiaryRepository artworkDiary;
+
+  /// The photo files behind [artworkDiary].
+  final InMemoryArtworkPhotoStore photos;
 
   BackupService backup() => BackupService(
     appSettings: appSettings,
     savedPalettes: savedPalettes,
     history: history,
     aiSettings: aiSettings,
+    ownColors: ownColors,
+    wishlist: wishlist,
+    dried: dried,
+    artworkDiary: artworkDiary,
   );
 }
 
@@ -80,15 +96,29 @@ Future<Harness> harness([Map<String, Object>? initial]) async {
   final savedPalettes = StoredSavedPaletteRepository(store);
   final history = StoredColorMatchHistoryRepository(store);
   final aiSettings = StoredAiSettingsRepository(store);
+  final ownColors = StoredOwnColorRepository(store);
+  final wishlist = StoredWishlistRepository(store);
+  final dried = StoredDriedMarkerRepository(store);
+  final photos = InMemoryArtworkPhotoStore();
+  final artworkDiary = StoredArtworkDiaryRepository(store, photos: photos);
   await appSettings.load();
   await savedPalettes.load();
   await history.load();
   await aiSettings.load();
+  await ownColors.load();
+  await wishlist.load();
+  await dried.load();
+  await artworkDiary.load();
   return Harness(
     store: store,
     appSettings: appSettings,
     savedPalettes: savedPalettes,
     history: history,
     aiSettings: aiSettings,
+    ownColors: ownColors,
+    wishlist: wishlist,
+    dried: dried,
+    artworkDiary: artworkDiary,
+    photos: photos,
   );
 }

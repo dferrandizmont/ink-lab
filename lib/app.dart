@@ -35,11 +35,22 @@ class _InkLabAppState extends State<InkLabApp> {
     }
   }
 
-  /// Spanish for any Spanish locale (es, es-MX, es-419...), English otherwise.
-  static Locale resolveLocale(
-    Locale? locale,
+  /// The first of the device's preferred languages that the app has
+  /// (English, Spanish, German, French, Portuguese or Italian, whatever the
+  /// region: es-MX, pt-BR...), English when none is. A Catalan phone with
+  /// Spanish as its second language gets Spanish.
+  static Locale resolveLocales(
+    List<Locale>? locales,
     Iterable<Locale> supportedLocales,
-  ) => locale?.languageCode == 'es' ? const Locale('es') : const Locale('en');
+  ) {
+    for (final Locale locale in locales ?? const <Locale>[]) {
+      final String code = locale.languageCode;
+      if (supportedLocales.any((l) => l.languageCode == code)) {
+        return Locale(code);
+      }
+    }
+    return const Locale('en');
+  }
 
   /// Maps the stored appearance to the framework's [ThemeMode].
   static ThemeMode themeModeOf(AppThemeMode mode) => switch (mode) {
@@ -72,8 +83,9 @@ class _InkLabAppState extends State<InkLabApp> {
     );
   }
 
-  /// The forced locale, or `null` to follow the device. A device in any
-  /// Spanish locale resolves to Spanish; every other device gets English.
+  /// The forced locale, or `null` to follow the device. A device in a
+  /// supported language resolves to it ([resolveLocales]); every other device
+  /// gets English.
   static Locale? localeOf(AppLanguage language) {
     final String? code = language.languageCode;
     return code == null ? null : Locale(code);
@@ -89,7 +101,7 @@ class _InkLabAppState extends State<InkLabApp> {
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: AppLocalizations.supportedLocales,
-    localeResolutionCallback: resolveLocale,
+    localeListResolutionCallback: resolveLocales,
     debugShowCheckedModeBanner: false,
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),

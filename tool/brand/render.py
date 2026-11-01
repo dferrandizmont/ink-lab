@@ -11,9 +11,9 @@ Outputs
     assets/brand/icon.svg, icon-foreground.svg, icon-monochrome.svg
     assets/brand/options/*.svg are static round-2 concept references
     assets/brand/png/*.png           inputs for flutter_launcher_icons / splash
-    docs/readme/es/header.png, docs/readme/en/header.png
-    docs/release/store/feature-graphic.png (en), feature-graphic-es.png,
-    docs/release/store/icon-512.png
+    docs/readme/<lang>/header.png for en, es, de, fr, pt, it
+    docs/release/store/feature-graphic.png (en), feature-graphic-<lang>.png
+    (es, de, fr, pt, it), docs/release/store/icon-512.png
 
 Colours are real Ohuhu Oahu markers (code and hex from
 assets/data/ohuhu_colors.json) on the Design G neutrals (docs/DESIGN_SPEC.md).
@@ -451,8 +451,16 @@ def main():
     # ---- banners
     banner(ROOT / "docs" / "readme" / "es" / "header.png", "Tus rotuladores, tus paletas.", dark=False)
     banner(ROOT / "docs" / "readme" / "en" / "header.png", "Your markers, your palettes.", dark=False)
+    banner(ROOT / "docs" / "readme" / "de" / "header.png", "Deine Marker, deine Paletten.", dark=False)
+    banner(ROOT / "docs" / "readme" / "fr" / "header.png", "Tes marqueurs, tes palettes.", dark=False)
+    banner(ROOT / "docs" / "readme" / "pt" / "header.png", "Os teus marcadores, as tuas paletas.", dark=False)
+    banner(ROOT / "docs" / "readme" / "it" / "header.png", "I tuoi pennarelli, le tue palette.", dark=False)
     banner(store / "feature-graphic.png", "Your markers, your palettes.", dark=True)
     banner(store / "feature-graphic-es.png", "Tus rotuladores, tus paletas.", dark=True)
+    banner(store / "feature-graphic-de.png", "Deine Marker, deine Paletten.", dark=True)
+    banner(store / "feature-graphic-fr.png", "Tes marqueurs, tes palettes.", dark=True)
+    banner(store / "feature-graphic-pt.png", "Os teus marcadores, as tuas paletas.", dark=True)
+    banner(store / "feature-graphic-it.png", "I tuoi pennarelli, le tue palette.", dark=True)
     print("ok", round(FG_SCALE, 3))
 
 

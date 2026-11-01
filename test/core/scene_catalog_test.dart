@@ -41,6 +41,9 @@ const List<String> legacyIds = <String>[
   'winterSnow',
 ];
 
+/// The languages every scene name is written in.
+const List<String> languages = <String>['en', 'es', 'de', 'fr', 'pt', 'it'];
+
 void main() {
   final String source = File(SceneCatalog.assetPath).readAsStringSync();
   final SceneCatalog catalog = SceneCatalog.parse(source);
@@ -101,9 +104,10 @@ void main() {
       );
     });
 
-    test('every scene has a name in both languages', () {
+    test('every scene has a name in all six languages', () {
       for (final Scene s in catalog.scenes) {
-        for (final String lang in <String>['en', 'es']) {
+        expect(s.names.keys.toSet(), languages.toSet(), reason: s.id);
+        for (final String lang in languages) {
           final String? name = s.names[lang];
           expect(name, isNotNull, reason: '${s.id} $lang');
           expect(name, name!.trim(), reason: '${s.id} $lang');
@@ -118,13 +122,52 @@ void main() {
       expect(english.length, catalog.scenes.length, reason: 'unique names');
     });
 
-    test('every category is known, used and named in both languages', () {
+    test('every role a scene shows reads in every language', () {
+      final Set<String> used = <String>{
+        for (final Scene s in catalog.scenes)
+          for (final ScenarioTarget t in s.targets) t.role,
+      };
+      final Map<String, dynamic> roles = raw['roles'] as Map<String, dynamic>;
+      for (final String role in used) {
+        final bool inCatalog = roles.containsKey(role);
+        final bool inArb =
+            l10n.phrase(role) != null || l10n.ideaRoleText(role) != null;
+        expect(inCatalog || inArb, isTrue, reason: 'no text for "$role"');
+        // Never both: one source per role.
+        expect(inCatalog && inArb, isFalse, reason: 'twice: "$role"');
+      }
+      for (final MapEntry<String, dynamic> e in roles.entries) {
+        expect(used, contains(e.key), reason: 'unused role "${e.key}"');
+        final Map<String, dynamic> texts = e.value as Map<String, dynamic>;
+        expect(
+          texts.keys.toSet(),
+          languages.where((l) => l != 'en').toSet(),
+          reason: e.key,
+        );
+        for (final MapEntry<String, dynamic> text in texts.entries) {
+          final String value = text.value as String;
+          expect(value, value.trim(), reason: '${e.key} ${text.key}');
+          expect(value, isNotEmpty, reason: '${e.key} ${text.key}');
+          expect(catalog.roleName(e.key, text.key), value);
+        }
+        expect(catalog.roleName(e.key, 'en'), isNull);
+      }
+      expect(catalog.translatedRoles.toSet(), roles.keys.toSet());
+    });
+
+    test('every category is known, used and named in every language', () {
       final Set<String> used = catalog.scenes.map((s) => s.category).toSet();
       expect(used, catalog.categories.toSet());
       for (final String id in catalog.categories) {
         expect(catalog.inCategory(id), isNotEmpty, reason: id);
         expect(l10n.sceneCategoryLabel(id), isNot(id), reason: 'en $id');
-        expect(l10nEs.sceneCategoryLabel(id), isNot(id), reason: 'es $id');
+        for (final AppLocalizations t in l10nTranslated) {
+          expect(
+            t.sceneCategoryLabel(id),
+            isNot(id),
+            reason: '${t.localeName} $id',
+          );
+        }
         expect(
           l10nEs.sceneCategoryLabel(id),
           isNot(l10n.sceneCategoryLabel(id)),
@@ -179,6 +222,7 @@ void main() {
   for (final MarkerBrand brand in <MarkerBrand>[
     MarkerBrand.ohuhuOahu,
     MarkerBrand.decoTime,
+    MarkerBrand.copic,
   ]) {
     group('every scene on the full ${brand.id} range', () {
       final List<MarkerColor> colors = range(brand);

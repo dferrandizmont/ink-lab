@@ -1,4 +1,4 @@
-[English](README.md) · **Español**
+[English](README.md) · **Español** · [Deutsch](README.de.md) · [Français](README.fr.md) · [Português](README.pt.md) · [Italiano](README.it.md)
 
 <p align="center">
   <img src="docs/readme/es/header.png" alt="Ink Lab — Tus rotuladores, tus paletas. Gratis y sin conexión." width="1024">
@@ -13,10 +13,9 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Inv%C3%ADtame_a_un_caf%C3%A9-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/danielmfdev)
 
 Compañero de muestras y paletas para quien dibuja con rotuladores de alcohol.
-Busca el código de un color, descubre qué rotulador de tu colección se parece más
-a una foto y construye paletas con teoría del color usando solo los rotuladores
-que tienes. Para Android, con modo claro y oscuro, raíl lateral en tablets y
-textos en español e inglés.
+Busca el código de un color, descubre qué rotulador tuyo se parece más a una foto
+y crea paletas con teoría del color usando solo tus rotuladores. App para Android,
+con modo claro y oscuro, raíl lateral en tablets y seis idiomas.
 
 **Gratis · Sin anuncios · Sin cuenta · Sin conexión · Código abierto**
 
@@ -37,13 +36,14 @@ Android en GitHub y en prueba cerrada en Google Play. iOS, más adelante.
 <details>
 <summary>Únete a la beta de Google Play</summary>
 
-Ink Lab está en prueba cerrada en Google Play y cualquiera puede apuntarse:
+Cualquiera puede apuntarse a la prueba cerrada:
 
 1. Únete al grupo de testers: [ink-lab-testers](https://groups.google.com/g/ink-lab-testers). Con tu cuenta de Google, pulsa «Unirse al grupo».
-2. Acepta la prueba desde el móvil o el ordenador: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
+2. Acepta la prueba: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
 3. Instala la app desde Google Play. Se actualizará sola.
 
-Si puedes, quédate en la prueba al menos 14 días y úsala de vez en cuando (por ejemplo, busca el color de una foto): Google exige 12 testers durante 14 días para publicarla para todo el mundo. Los comentarios, a inklab@mainshai.com.
+Quédate 14 días: Google exige 12 testers durante 14 días antes de publicarla.
+Comentarios: inklab@mainshai.com.
 
 </details>
 
@@ -51,8 +51,7 @@ Si puedes, quédate en la prueba al menos 14 días y úsala de vez en cuando (po
 <summary>Instala el APK desde GitHub</summary>
 
 1. Descarga el APK y `SHA256SUMS.txt` de la [última
-   versión](https://github.com/dferrandizmont/ink-lab/releases/latest). Cada
-   versión lleva los dos, así que puedes comprobar la descarga con
+   versión](https://github.com/dferrandizmont/ink-lab/releases/latest). Comprueba la descarga con
    `sha256sum -c SHA256SUMS.txt`.
 2. Permite «instalar aplicaciones de origen desconocido» cuando el móvil lo
    pida y abre el APK.
@@ -84,56 +83,55 @@ Pulsa una captura para ampliarla.
 
 ## Funciones
 
-- **Mis rotuladores.** Una colección por marca, hecha con las series que usas,
-  los sets que tienes y los rotuladores sueltos. Una guía corta la prepara al
-  empezar.
-- **Muestras.** El catálogo por código y nombre, con el hex de cada rotulador,
-  búsqueda, filtros, tus rotuladores y favoritos. En Ohuhu Oahu indica además dónde
-  está cada rotulador en la tarjeta de colores.
-- **Emparejar con una foto.** Haz una foto o elige una de la galería, toca un
-  punto y la app te dice qué rotulador de tu colección se le parece más, o te
-  avisa si ninguno se parece.
-- **Paletas con teoría del color.** Elige un color base y obtén armonías
-  (complementarios, análogos, complementarios divididos, tríada, cuadrado,
-  rectángulo, monocromo y sombra), resueltas siempre con los rotuladores que
-  tienes.
-- **Escenas.** 67 recetas listas en 11 categorías (pieles, cielo y agua,
-  naturaleza, animales, comida, fantasía…), con buscador y los papeles de cada
-  color.
-- **Escena desde una foto.** La app saca los colores principales de una foto y
-  los convierte en los rotuladores más parecidos que tienes.
-- **Dos marcas.** Ohuhu (Oahu, Honolulu y Kaala, 503 colores, con el código nuevo
-  y el antiguo) y DecoTime (313 colores, con selección de rotuladores propios,
-  porque se vende en sets cerrados).
+- **Mis rotuladores.** Una guía inicial prepara la colección de cada marca con tus
+  series, sets y rotuladores sueltos.
+- **Emparejar con una foto.** Toca un punto para encontrar tu rotulador más
+  cercano; corrige los blancos para que los colores que muestreas sean fieles.
+- **Tu propio color.** El color del catálogo es una estimación; define el color
+  que tu rotulador da de verdad, con su hex o una foto.
+- **Paletas y cadenas de mezcla.** Armonías de teoría del color y cadenas de
+  mezcla de tres a cinco rotuladores, del más claro al más oscuro.
+- **Escenas.** 67 recetas en 11 categorías, cada una con los papeles de sus colores.
+- **Diario de dibujos.** Un registro de lo que pintas: fecha, papel, rotuladores,
+  notas y hasta cuatro fotos.
+- **Tres marcas.** Ohuhu (503 colores), DecoTime (313) y Copic (358), con
+  selección individual de rotuladores.
 
 <details>
 <summary>Más funciones</summary>
 
-- **Ideas.** Retos y técnicas con una paleta que tiene en cuenta tu colección
-  activa.
-- **IA opcional.** O bien **en el móvil** (Gemini Nano, en Android compatible), o
-  bien con **tu propia clave de OpenRouter**. La IA en el móvil usa ML Kit de
-  Google, que envía a Google diagnósticos de uso, nunca tus peticiones, colores
-  ni fotos. Si no la activas, la app nunca usa la red.
-- **Copia de seguridad.** Exporta e importa tus colecciones, favoritos, paletas y
-  ajustes como texto JSON, sin cuenta.
+- **Muestras.** Códigos, nombres y valores hex, con búsqueda, filtros y favoritos.
+- **Escena desde una foto.** Convierte los colores principales de una foto en tus
+  rotuladores más cercanos.
+- **Compartir e imprimir.** Comparte una paleta como imagen o crea una carta de
+  muestras imprimible en A4.
+- **Lista de deseos y secos.** Guarda los rotuladores que quieres comprar y marca
+  los gastados como secos para que la app los omita.
+- **Ideas e IA.** Retos y técnicas, con IA opcional: Gemini Nano en dispositivos
+  Android compatibles u OpenRouter con tu propia clave de API.
+- **Copia de seguridad.** Exporta e importa tus datos como texto JSON, sin fotos.
 
 </details>
 
 ## Privacidad
 
-Todo se guarda en el móvil. No hay cuentas, servidor propio, analítica propia,
-anuncios ni rastreo. Si no activas la IA, la app nunca usa la red. La IA en el
-móvil usa ML Kit de Google, que envía a Google diagnósticos de uso, nunca tus
-peticiones, colores ni fotos. La cámara y la galería solo se usan al emparejar
-una foto o al crear una escena desde ella, y la foto nunca sale del dispositivo.
+Los datos se guardan en el móvil: sin cuentas, servidor propio, analítica propia,
+anuncios ni rastreo; sin IA, no se usa la red. ML Kit de la IA en el móvil envía
+a Google diagnósticos de uso, nunca peticiones, colores ni fotos. La cámara y la
+galería solo sirven para emparejar colores, crear escenas, definir tu propio color
+y añadir fotos al diario; las fotos de emparejar y escenas se procesan en el
+dispositivo, y las del diario se guardan en la carpeta privada de la app y nunca
+se suben. Al compartir una paleta o una carta, la imagen solo se entrega a la
+app que elijas.
 
 [Web](https://inklab.mainshai.com/es/) · [Política de privacidad](https://inklab.mainshai.com/es/privacy/) ·
 [Detalle técnico](docs/privacy.md) · Soporte: **inklab@mainshai.com**.
 
 ## Novedades
 
-Consulta el [CHANGELOG.md](CHANGELOG.md).
+La 0.7.0 añade el diario de dibujos, las cadenas de mezcla, tus propios colores
+con la corrección de blancos, la lista de deseos, los rotuladores secos, las
+cartas imprimibles y el compartir. Lista completa en [CHANGELOG.md](CHANGELOG.md).
 
 ## Contribuir
 
@@ -144,12 +142,12 @@ colaborar: [CONTRIBUTING.es.md](CONTRIBUTING.es.md).
 
 Código [MIT](LICENSE), Copyright (c) 2026 Daniel Mont Ferrandiz. Documentación y
 textos propios: [CC BY-SA 4.0](LICENSE-CONTENT.es.md). Los datos de los catálogos
-son referencias factuales de terceros y quedan fuera de MIT y de CC BY-SA 4.0;
-las fuentes tipográficas (SIL OFL 1.1) y los materiales de terceros conservan
-sus licencias, detalladas en [NOTICE.md](NOTICE.md).
+son referencias factuales de terceros y quedan fuera de ambas licencias; las
+fuentes tipográficas (SIL OFL 1.1) y los materiales de terceros conservan sus
+licencias, detalladas en [NOTICE.md](NOTICE.md).
 
 Proyecto independiente: **no está afiliado, patrocinado ni respaldado por Ohuhu
-ni por DecoTime**. «Ohuhu», «Oahu» y «DecoTime» son marcas de sus propietarios.
+ni por DecoTime ni por Copic**. «Ohuhu», «Oahu», «DecoTime» y «Copic» son marcas de sus propietarios.
 Las fuentes públicas y los avisos completos están en [NOTICE.md](NOTICE.md).
 
 Para comunicar una vulnerabilidad: [SECURITY.es.md](SECURITY.es.md).

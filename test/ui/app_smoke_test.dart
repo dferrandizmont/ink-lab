@@ -19,7 +19,14 @@ void main() {
 
     final MaterialApp app = tester.widget(find.byType(MaterialApp));
     expect(tester.element(find.byType(AppShell)).l10n.appTitle, 'Ink Lab');
-    expect(app.supportedLocales, const <Locale>[Locale('en'), Locale('es')]);
+    expect(app.supportedLocales.map((l) => l.languageCode).toSet(), <String>{
+      'en',
+      'es',
+      'de',
+      'fr',
+      'pt',
+      'it',
+    });
     expect(app.themeMode, ThemeMode.system);
     expect(app.theme, isNotNull);
     expect(app.darkTheme, isNotNull);

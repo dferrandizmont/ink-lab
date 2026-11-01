@@ -9,6 +9,7 @@ import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
+import 'swatch_status_section.dart';
 import '../../../l10n/l10n.dart';
 
 /// A colour close to the one a [SwatchDetailSheet] describes.
@@ -71,11 +72,19 @@ class SwatchDetailSheet extends StatelessWidget {
     required this.onToggleFavorite,
     this.onCopyHex,
     this.onAddToPalette,
+    this.onBlendingChain,
     this.alternatives = const <SwatchAlternative>[],
     this.onSelectAlternative,
     this.lineLabels = const <String>[],
     this.packLabels = const <String>[],
     this.cardLocation,
+    this.onSetOwnColor,
+    this.onResetOwnColor,
+    this.onToggleWishlist,
+    this.onToggleDried,
+    this.wished = false,
+    this.dried = false,
+    this.owned = false,
   });
 
   /// The colour the sheet describes.
@@ -93,6 +102,10 @@ class SwatchDetailSheet extends StatelessWidget {
   /// Called when the user adds the colour to a palette.
   final VoidCallback? onAddToPalette;
 
+  /// Called when the user asks for a blending chain around the colour. Without
+  /// it the action is not shown.
+  final VoidCallback? onBlendingChain;
+
   /// The closest colours, nearest first.
   final List<SwatchAlternative> alternatives;
 
@@ -107,6 +120,30 @@ class SwatchDetailSheet extends StatelessWidget {
 
   /// Where the colour sits on the swatch card, when known.
   final String? cardLocation;
+
+  /// Called when the user wants to set (or change) their own colour for the
+  /// marker. Without it the "My colour" section is not shown.
+  final VoidCallback? onSetOwnColor;
+
+  /// Called when the user drops their own colour and goes back to the
+  /// catalogue's. Only offered while the marker has an own colour.
+  final VoidCallback? onResetOwnColor;
+
+  /// Called when the user adds the marker to, or takes it off, the wishlist.
+  /// Without it the wishlist and dried-out controls are not shown.
+  final VoidCallback? onToggleWishlist;
+
+  /// Called when the user marks the marker as dried out, or as usable again.
+  final VoidCallback? onToggleDried;
+
+  /// Whether the marker is on the wishlist.
+  final bool wished;
+
+  /// Whether the marker is marked as dried out.
+  final bool dried;
+
+  /// Whether the marker is in the user's collection.
+  final bool owned;
 
   /// The hexadecimal value, as shown to the user.
   String get displayHex => displayHexOf(color.hex);
@@ -134,6 +171,78 @@ class SwatchDetailSheet extends StatelessWidget {
     } on FormatException {
       return null;
     }
+  }
+
+  /// The "My colour" section: both colours side by side once the user has
+  /// their own, and the way to set, change or drop it.
+  Widget _buildOwnColor(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    final bool stacked = MediaQuery.textScalerOf(context).scale(1) > 1.15;
+    final Widget catalogue = _OwnColorSide(
+      label: context.l10n.swatchesCatalogueLabel,
+      hex: color.originalHex,
+    );
+    final Widget mine = _OwnColorSide(
+      label: context.l10n.swatchesMineLabel,
+      hex: color.hex,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        InkSectionHeading(context.l10n.swatchesMyColourTitle),
+        const SizedBox(height: InkSpacing.group),
+        if (color.hasOwnColor)
+          // Side by side; with large text each colour needs a full row.
+          KeyedSubtree(
+            key: const ValueKey<String>('swatch-own-compare'),
+            child: stacked
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      catalogue,
+                      const SizedBox(height: InkSpacing.group),
+                      mine,
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(child: catalogue),
+                      const SizedBox(width: InkSpacing.block),
+                      Expanded(child: mine),
+                    ],
+                  ),
+          )
+        else
+          Text(
+            context.l10n.swatchesMyColourHelp,
+            style: AppTypography.secondary.copyWith(color: ink.fg2),
+          ),
+        const SizedBox(height: InkSpacing.group),
+        Wrap(
+          spacing: InkSpacing.s8,
+          runSpacing: InkSpacing.s4,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: <Widget>[
+            InkButton.secondary(
+              key: const ValueKey<String>('swatch-own-set'),
+              label: color.hasOwnColor
+                  ? context.l10n.swatchesMyColourChange
+                  : context.l10n.swatchesMyColourSet,
+              icon: InkIcons.edit3,
+              onPressed: onSetOwnColor,
+            ),
+            if (color.hasOwnColor && onResetOwnColor != null)
+              InkButton.text(
+                key: const ValueKey<String>('swatch-own-reset'),
+                label: context.l10n.swatchesMyColourReset,
+                icon: InkIcons.rotateCcw,
+                onPressed: onResetOwnColor,
+              ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -176,6 +285,7 @@ class SwatchDetailSheet extends StatelessWidget {
                   hex: color.hex,
                   size: InkGeometry.heroSwatch,
                   radius: InkRadii.control,
+                  own: color.hasOwnColor,
                 ),
                 const SizedBox(width: InkSpacing.block),
                 Expanded(
@@ -245,6 +355,10 @@ class SwatchDetailSheet extends StatelessWidget {
               ),
             ),
           ],
+          if (onSetOwnColor != null) ...<Widget>[
+            const SizedBox(height: InkSpacing.block),
+            _buildOwnColor(context),
+          ],
           const SizedBox(height: InkSpacing.block),
           Wrap(
             spacing: InkSpacing.s8,
@@ -270,8 +384,25 @@ class SwatchDetailSheet extends StatelessWidget {
                 icon: InkIcons.plus,
                 onPressed: onAddToPalette,
               ),
+              if (onBlendingChain != null)
+                InkButton.secondary(
+                  key: const ValueKey<String>('swatch-blending-chain'),
+                  label: context.l10n.swatchesBlendingChain,
+                  icon: InkIcons.arrowRight,
+                  onPressed: onBlendingChain,
+                ),
             ],
           ),
+          if (onToggleWishlist != null && onToggleDried != null) ...<Widget>[
+            const SizedBox(height: InkSpacing.block),
+            SwatchStatusSection(
+              wished: wished,
+              dried: dried,
+              owned: owned,
+              onToggleWishlist: onToggleWishlist!,
+              onToggleDried: onToggleDried!,
+            ),
+          ],
           if (alternatives.isNotEmpty) ...<Widget>[
             const SizedBox(height: InkSpacing.s24),
             InkSectionHeading(
@@ -348,7 +479,7 @@ class _AlternativeTile extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: InkGeometry.target),
           child: Row(
             children: <Widget>[
-              SwatchBlock(hex: color.hex, size: 36),
+              SwatchBlock(hex: color.hex, size: 36, own: color.hasOwnColor),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -372,6 +503,42 @@ class _AlternativeTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// One side of the catalogue / mine comparison: a 36 swatch, a `caps` label
+/// and the hex.
+class _OwnColorSide extends StatelessWidget {
+  const _OwnColorSide({required this.label, required this.hex});
+
+  final String label;
+  final String hex;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    return Row(
+      children: <Widget>[
+        SwatchBlock(hex: hex, size: 36),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                AppTypography.caps(label),
+                style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+              ),
+              Text(
+                SwatchDetailSheet.displayHexOf(hex),
+                maxLines: 1,
+                style: AppTypography.data.copyWith(color: ink.fg),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

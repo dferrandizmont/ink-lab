@@ -21,25 +21,35 @@ class BackupSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SettingsControlRow(
-      label: context.l10n.settingsBackupTitle,
-      control: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          InkButton(
-            label: context.l10n.settingsExportBackup,
-            variant: InkButtonVariant.smallSecondary,
-            onPressed: () => _export(context),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        SettingsControlRow(
+          label: context.l10n.settingsBackupTitle,
+          control: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              InkButton(
+                label: context.l10n.settingsExportBackup,
+                variant: InkButtonVariant.smallSecondary,
+                onPressed: () => _export(context),
+              ),
+              const SizedBox(width: 8),
+              InkButton(
+                label: context.l10n.settingsImportBackup,
+                variant: InkButtonVariant.smallSecondary,
+                onPressed: () => _import(context),
+              ),
+              const SizedBox(width: 4),
+            ],
           ),
-          const SizedBox(width: 8),
-          InkButton(
-            label: context.l10n.settingsImportBackup,
-            variant: InkButtonVariant.smallSecondary,
-            onPressed: () => _import(context),
-          ),
-          const SizedBox(width: 4),
-        ],
-      ),
+        ),
+        // What the backup holds, and that photos are not part of it.
+        SettingsCaption(
+          context.l10n.settingsBackupSubtitle,
+          textKey: const ValueKey<String>('settings-backup-caption'),
+        ),
+      ],
     );
   }
 
@@ -48,6 +58,10 @@ class BackupSection extends StatelessWidget {
     savedPalettes: scope.savedPalettes,
     history: scope.matchHistory,
     aiSettings: scope.aiSettings,
+    ownColors: scope.ownColors,
+    wishlist: scope.wishlist,
+    dried: scope.dried,
+    artworkDiary: scope.artworkDiary,
   );
 
   Future<void> _export(BuildContext context) async {

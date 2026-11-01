@@ -9,6 +9,7 @@ import 'package:http/testing.dart';
 import 'package:ink_lab/ai/ai.dart';
 import 'package:ink_lab/app.dart';
 import 'package:ink_lab/app_scope.dart';
+import 'package:ink_lab/core/collection_selection.dart';
 import 'package:ink_lab/core/ideas_engine.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
@@ -45,8 +46,9 @@ import '../support/truncation.dart';
 import 'match/match_test_support.dart';
 import 'palette/palette_test_support.dart' show markerColor;
 
-// Regression test for text that does not fit. Spanish is ~30 % longer than
-// English, so every page and main sheet is pumped in both languages on the
+// Regression test for text that does not fit. Spanish, German, French and
+// Portuguese run 20-40 % longer than English, so every page and main sheet is
+// pumped in all six languages of the app on the
 // narrowest supported phone (360 dp) and a Pixel 10 Pro (412 dp), at normal
 // and 1.3x text.
 //
@@ -190,8 +192,16 @@ String _oneLine(String s) => s.replaceAll('\n', ' ');
 void _check(WidgetTester tester, String where) {
   final Object? error = tester.takeException();
   if (error != null) {
-    final String first = error.toString().split('\n').first;
-    _problems.add('$_tag layout error: $first  [$where]');
+    final String full = error is FlutterError
+        ? error.diagnostics.map((n) => n.toStringDeep()).join('\n')
+        : error.toString();
+    final String first = full.split('\n').first;
+    // Where the overflow is: the widgets above the flex that overflowed.
+    final int at = full.indexOf('creator:');
+    final String creator = at < 0
+        ? ''
+        : ' in ${_oneLine(full.substring(at + 8, (at + 200).clamp(0, full.length)))}';
+    _problems.add('$_tag layout error: $first$creator  [$where]');
   }
   for (final String text in truncatedTexts(tester)) {
     _problems.add('$_tag truncated: "${_oneLine(text)}"  [$where]');
@@ -259,11 +269,11 @@ void _expectTypeDescriptionsOneLine(WidgetTester tester) {
         matching: find.byType(RichText),
       ),
     );
-    expect(
-      _lineCount(p),
-      1,
-      reason: '$_tag type description "${p.text.toPlainText()}" wraps',
-    );
+    if (_lineCount(p) != 1) {
+      _problems.add(
+        '$_tag type description wraps: "${_oneLine(p.text.toPlainText())}"',
+      );
+    }
   }
 }
 
@@ -457,7 +467,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
   },
   'swatches: page, filters sheet, detail sheet':
       (WidgetTester tester, _Env env) async {
-        await _pump(tester, env, const SwatchesPage());
+        await _pump(tester, env, SwatchesPage(onBlendingChain: (_) {}));
         _check(tester, 'swatches');
         await _tap(tester, find.textContaining(env.t.swatchesFilters));
         _check(tester, 'filters sheet');
@@ -563,6 +573,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           'splitComplementary',
           'customPalette',
           'rectangle',
+          'blendingChain',
         ]) {
           await tester.drag(
             find.byType(Scrollable).first,
@@ -579,6 +590,128 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           );
           _check(tester, 'palette type $mode');
         }
+      },
+  'palette: blending chain, its rows, notes and options':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const PalettePage());
+        Future<void> baseCode(String code) async {
+          await tester.drag(
+            find.byType(Scrollable).first,
+            const Offset(0, 9000),
+          );
+          await tester.pumpAndSettle();
+          await tester.enterText(
+            find.byKey(const ValueKey<String>('palette-base-input')),
+            code,
+          );
+          await tester.pumpAndSettle();
+          FocusManager.instance.primaryFocus?.unfocus();
+          await tester.pumpAndSettle();
+        }
+
+        Future<void> toTop() async {
+          await tester.drag(
+            find.byType(Scrollable).first,
+            const Offset(0, 9000),
+          );
+          await tester.pumpAndSettle();
+        }
+
+        Future<void> screens(String where) async {
+          await tester.drag(
+            find.byType(Scrollable).first,
+            const Offset(0, 9000),
+          );
+          await tester.pumpAndSettle();
+          var seen = 0;
+          await scrollThrough(tester, find.byType(Scrollable).first, (_) {
+            seen += _expectSingleLines(tester, where);
+            _check(tester, where);
+          });
+          expect(seen, greaterThan(0), reason: '$_tag $where has rows');
+        }
+
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-type-field')),
+        );
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-mode-blendingChain')),
+        );
+        _check(tester, 'chain type, no base');
+        // Five steps: the longest role lines ("Paso 5 · Más oscuro").
+        await baseCode('B411');
+        expect(
+          find.text(env.t.paletteChainResultTitle(5)),
+          findsOneWidget,
+          reason: '$_tag chain of five',
+        );
+        await screens('chain of five');
+        // Other chains as options.
+        await toTop();
+        await _tap(
+          tester,
+          find.descendant(
+            of: find.byType(InkSegmented<int>),
+            matching: find.text('4'),
+          ),
+        );
+        expect(
+          find.byKey(const ValueKey<String>('palette-chain-option-1')),
+          findsOneWidget,
+          reason: '$_tag chain options',
+        );
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-chain-option-1')),
+        );
+        await screens('chain option');
+
+        // A short chain, with the base at one end.
+        await scope.settings.setCollection(
+          AppSettings(
+            ownedSetIds: const <String>{},
+            extraMarkerIds: const <String>{'B08', 'B010', 'B411'},
+          ),
+        );
+        await tester.pumpAndSettle();
+        await toTop();
+        await _tap(
+          tester,
+          find.descendant(
+            of: find.byType(InkSegmented<int>),
+            matching: find.text('5'),
+          ),
+        );
+        await baseCode('B08');
+        expect(
+          find.byKey(const ValueKey<String>('palette-chain-note')),
+          findsOneWidget,
+          reason: '$_tag short chain note',
+        );
+        await screens('short chain');
+
+        // No chain at all, then the whole range.
+        await baseCode('B010');
+        await scope.settings.setCollection(
+          AppSettings(
+            ownedSetIds: const <String>{},
+            extraMarkerIds: const <String>{'B010', 'B411'},
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.text(env.t.paletteChainNeedLighter),
+          findsOneWidget,
+          reason: '$_tag missing lighter marker',
+        );
+        _check(tester, 'no chain');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-chain-whole-range')),
+        );
+        await screens('chain from the whole range');
       },
   'palette: scene rows, paint order and scene name on one line':
       (WidgetTester tester, _Env env) async {
@@ -790,6 +923,262 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           _check(tester, 'match pick sheet');
         }
       },
+  'match: white balance, choosing and refusing a point':
+      (WidgetTester tester, _Env env) async {
+        // Warm paper on the left, a dark stroke on the right.
+        final SampledImage photo = imageFromRgb(8, 8, <List<int>>[
+          for (int y = 0; y < 8; y++)
+            for (int x = 0; x < 8; x++)
+              x < 4 ? <int>[230, 210, 180] : <int>[30, 40, 120],
+        ]);
+        await _pump(
+          tester,
+          env,
+          MatchPage(
+            picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+            decoder: fixedDecoder(photo),
+          ),
+        );
+        await _tap(tester, find.byKey(const ValueKey<String>('match-camera')));
+        _check(tester, 'match with a photo: fix white balance');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('white-balance-start')),
+        );
+        _check(tester, 'match choosing the white');
+        final Rect canvas = tester.getRect(
+          find.byKey(const ValueKey<String>('match-canvas')),
+        );
+        // The dark stroke is not paper: it says so.
+        await tester.tapAt(canvas.center + const Offset(40, 0));
+        await tester.pumpAndSettle();
+        expect(find.text(env.t.matchWhiteBalanceTooDark), findsOneWidget);
+        _check(tester, 'match white refused');
+        await tester.tapAt(canvas.center - const Offset(40, 0));
+        await tester.pumpAndSettle();
+        expect(find.text(env.t.matchWhiteBalanceOn), findsOneWidget);
+        _check(tester, 'match white balance on');
+        await tester.tapAt(canvas.center + const Offset(40, 0));
+        await tester.pumpAndSettle();
+        _check(tester, 'match results, white balance on');
+        await _scroll(tester, 'match results, white balance on');
+      },
+  'swatches: my colour in the detail sheet and the editor':
+      (WidgetTester tester, _Env env) async {
+        final SampledImage photo = imageFromRgb(8, 8, <List<int>>[
+          for (int y = 0; y < 8; y++)
+            for (int x = 0; x < 8; x++)
+              x < 4 ? <int>[230, 210, 180] : <int>[30, 40, 120],
+        ]);
+        final AppScope scope = await _pump(
+          tester,
+          env,
+          SwatchesPage(
+            picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+            decoder: fixedDecoder(photo),
+          ),
+        );
+        await scope.ownColors.set('R101', '334455');
+        await tester.pumpAndSettle();
+        await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
+        await tester.pumpAndSettle();
+        await _tap(tester, find.text('B08'));
+        _check(tester, 'detail sheet, no own colour');
+        await _scroll(
+          tester,
+          'detail sheet, no own colour',
+          within: find.descendant(
+            of: find.byType(BottomSheet),
+            matching: find.byType(Scrollable),
+          ),
+        );
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-own-set')),
+        );
+        _check(tester, 'own colour editor');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('own-color-gallery')),
+        );
+        _check(tester, 'own colour editor with a photo');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('white-balance-start')),
+        );
+        _check(tester, 'own colour editor choosing the white');
+        await tester.enterText(
+          find.byKey(const ValueKey<String>('own-color-hex')),
+          '12',
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'own colour editor, invalid hex');
+        await tester.enterText(
+          find.byKey(const ValueKey<String>('own-color-hex')),
+          '3a7f9c',
+        );
+        await tester.pumpAndSettle();
+        await _scroll(tester, 'own colour editor');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('own-color-save')),
+        );
+        // Back on the sheet: both colours side by side, reset offered.
+        _check(tester, 'detail sheet with an own colour');
+        expect(
+          find.byKey(const ValueKey<String>('swatch-own-compare')),
+          findsOneWidget,
+        );
+        await _scroll(
+          tester,
+          'detail sheet with an own colour',
+          within: find.descendant(
+            of: find.byType(BottomSheet),
+            matching: find.byType(Scrollable),
+          ),
+        );
+      },
+  'settings: own colours, count and reset dialog':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pumpSettings(
+          tester,
+          env,
+          provider: AiProvider.local,
+        );
+        _check(tester, 'settings, no own colours');
+        await scope.ownColors.set('R101', '334455');
+        await scope.ownColors.set('decotime:01', '112233');
+        await tester.pumpAndSettle();
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('settings-own-colors-reset')),
+        );
+        _check(tester, 'reset own colours dialog');
+        await _close(tester);
+        await _scroll(tester, 'settings with own colours');
+      },
+  'ideas: diary list, entry form, pickers and photo viewer':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(
+          tester,
+          env,
+          IdeasPage(
+            today: DateTime(2026, 10, 29),
+            picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+          ),
+        );
+        await scope.savedPalettes.save(
+          SavedPalette(
+            id: 'fit',
+            name: 'Sunrise',
+            baseCode: 'B08',
+            baseName: 'Cotton Candy Blue',
+            mode: PaletteMode.triad,
+            paletteSize: 3,
+            createdAtEpochMs: 1,
+            colorCodes: const <String>['B08', 'BV04', 'YR57'],
+          ),
+        );
+        await _tap(tester, find.text(env.t.ideasDiarySegment));
+        _check(tester, 'diary, empty');
+        expect(find.text(env.t.diaryEmptyTitle), findsOneWidget);
+
+        // The form, new: every field, the pickers and four photos.
+        await _tap(tester, find.text(env.t.diaryAdd));
+        _check(tester, 'diary form, new');
+        await tester.enterText(
+          find.byKey(const ValueKey<String>('diary-title')),
+          'A page of the autumn forest colouring book',
+        );
+        await tester.enterText(
+          find.byKey(const ValueKey<String>('diary-on-what')),
+          'Forest colouring book, page 12',
+        );
+        await tester.enterText(
+          find.byKey(const ValueKey<String>('diary-notes')),
+          'Wet blending on thick paper, three layers of warm colours.',
+        );
+        await tester.pumpAndSettle();
+        final List<MarkerColor> owned = ownedColors(
+          colors: await scope.markers.loadColors(MarkerBrand.ohuhuOahu),
+          brand: MarkerBrand.ohuhuOahu,
+          ownedSetIds: scope.settings.settings.effectiveSetIds(),
+          ownedMarkerCodes: scope.settings.settings.ownedMarkerCodes,
+        );
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('diary-markers-choose')),
+        );
+        _check(tester, 'diary marker picker');
+        for (final MarkerColor marker in owned.take(6)) {
+          await _tap(
+            tester,
+            find.byKey(ValueKey<String>('diary-marker-${marker.newCode}')),
+          );
+        }
+        _check(tester, 'diary marker picker, ticked');
+        await _close(tester);
+        _check(tester, 'diary form, markers');
+        await _tap(tester, find.byKey(const ValueKey<String>('diary-palette')));
+        _check(tester, 'diary palette picker');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('diary-palette-fit')),
+        );
+        await _tap(tester, find.text(env.t.diaryStatusInProgress));
+        for (var i = 0; i < 4; i++) {
+          await _tap(
+            tester,
+            find.byKey(const ValueKey<String>('diary-photo-gallery')),
+          );
+        }
+        _check(tester, 'diary form, four photos');
+        await _scroll(tester, 'diary form, filled');
+        await _tap(tester, find.byKey(const ValueKey<String>('diary-save')));
+        _check(tester, 'diary list, one entry');
+        ScaffoldMessenger.of(tester.element(find.byType(IdeasPage)))
+            .removeCurrentSnackBar();
+        await tester.pumpAndSettle();
+        await _scroll(tester, 'diary list, one entry');
+
+        // A second, plain entry; both listed.
+        await scope.artworkDiary.save(
+          ArtworkEntry(
+            id: 'plain',
+            title: 'Quick sheet',
+            date: DateTime(2026, 1, 3),
+            createdAtEpochMs: 1,
+          ),
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'diary list, two entries');
+
+        // Open a photo at full screen, then the entry to edit.
+        final String photo = scope.artworkDiary.entries
+            .firstWhere((ArtworkEntry e) => e.photos.isNotEmpty)
+            .photos
+            .first;
+        await _tap(tester, find.byKey(ValueKey<String>('diary-thumb-$photo')));
+        _check(tester, 'diary photo viewer');
+        await _close(tester);
+        await tester.tapAt(
+          tester.getTopLeft(
+                find.byKey(
+                  ValueKey<String>(
+                    'diary-entry-${scope.artworkDiary.entries.first.id}',
+                  ),
+                ),
+              ) +
+              const Offset(8, 8),
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'diary form, edit');
+        await _scroll(tester, 'diary form, edit');
+        await _tap(tester, find.byKey(const ValueKey<String>('diary-delete')));
+        _check(tester, 'diary delete dialog');
+        await _close(tester);
+        await _close(tester);
+      },
   'ideas: list, idea of the day, tabs and detail sheets':
       (WidgetTester tester, _Env env) async {
         final DateTime today = DateTime(2026, 10, 29);
@@ -934,7 +1323,57 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         expect(find.text(env.t.collectionSummaryNoSets), findsOneWidget);
         await _scroll(tester, 'collection, nothing chosen');
       },
-  'collection: loose markers screen, both brands':
+  'collection: printable swatch chart card, all brands and the empty state':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const CollectionPage());
+        final Finder card = find.byKey(
+          const ValueKey<String>('collection-chart'),
+        );
+        await tester.ensureVisible(card);
+        await tester.pumpAndSettle();
+        _check(tester, 'chart card');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('collection-chart-colour')),
+        );
+        _check(tester, 'chart card, catalogue colour on');
+        await scope.settings.setBrand(MarkerBrand.decoTime);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(card);
+        await tester.pumpAndSettle();
+        _check(tester, 'chart card, nothing owned');
+        expect(find.text(env.t.collectionChartEmpty), findsOneWidget);
+        await scope.settings.setBrand(MarkerBrand.copic);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(card);
+        await tester.pumpAndSettle();
+        _check(tester, 'chart card, copic');
+        expect(find.text(env.t.collectionChartEmpty), findsOneWidget);
+      },
+  'palette: saved palette row with Share':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const PalettePage());
+        await scope.savedPalettes.save(
+          SavedPalette(
+            id: 'fit',
+            name: 'A saved palette with a rather long name',
+            baseCode: 'B08',
+            baseName: 'Cotton Candy Blue',
+            mode: PaletteMode.triad,
+            paletteSize: 3,
+            createdAtEpochMs: 1,
+            colorCodes: const <String>['B08', 'BV04', 'YR57'],
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(
+          find.byKey(const ValueKey<String>('palette-share-fit')),
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'saved palette row');
+        await _scroll(tester, 'saved palette row');
+      },
+  'collection: loose markers screen, all brands':
       (WidgetTester tester, _Env env) async {
         final AppScope scope = await _pump(
           tester,
@@ -954,6 +1393,25 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await scope.settings.setBrand(MarkerBrand.decoTime);
         await tester.pumpAndSettle();
         _check(tester, 'loose markers, decotime');
+        await scope.settings.setBrand(MarkerBrand.copic);
+        await tester.pumpAndSettle();
+        _check(tester, 'loose markers, copic');
+        await _scroll(tester, 'loose markers, copic');
+      },
+  'collection: Copic ownership, purchase suggestions, wishlist and dried markers':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const CollectionPage());
+        await scope.settings.setBrand(MarkerBrand.copic);
+        await scope.settings.setOwnedMarkerCodes({
+          'copic:BV04',
+          'copic:B05',
+          'copic:R29',
+        });
+        await scope.wishlist.add('copic:Y08');
+        await scope.dried.add('copic:B05');
+        await tester.pumpAndSettle();
+        _check(tester, 'collection copic');
+        await _scroll(tester, 'collection copic');
       },
   'collection: DecoTime families and reset dialog':
       (WidgetTester tester, _Env env) async {
@@ -975,7 +1433,73 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await _close(tester);
         await _scroll(tester, 'collection decotime');
       },
-  'onboarding: every step of both brands':
+  'collection: what to buy next, wishlist and dried out cards':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const CollectionPage());
+        _check(tester, 'collection, what to buy next');
+        expect(
+          find.byKey(const ValueKey<String>('collection-buy-next')),
+          findsOneWidget,
+        );
+        await _scroll(tester, 'collection, what to buy next');
+        for (final String id in <String>['BV04', 'B28', 'BV35', 'R16', 'B08']) {
+          await scope.wishlist.add(id);
+        }
+        await scope.dried.add('B08');
+        await scope.dried.add('R16');
+        await tester.pumpAndSettle();
+        _check(tester, 'collection, wishlist and dried');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('dried-disclosure')),
+        );
+        _check(tester, 'collection, dried list open');
+        await _tap(tester, find.byKey(const ValueKey<String>('wishlist-copy')));
+        _check(tester, 'collection, list copied');
+        await _scroll(tester, 'collection, wishlist and dried');
+        await scope.settings.setCollection(AppSettings());
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey<String>('buy-next-empty')),
+          findsOneWidget,
+        );
+        _check(tester, 'collection, no collection for what to buy next');
+        await scope.settings.setBrand(MarkerBrand.decoTime);
+        await scope.wishlist.add('decotime:01');
+        await tester.pumpAndSettle();
+        _check(tester, 'collection decotime, wishlist');
+      },
+  'swatches: wishlist and dried out in the detail sheet':
+      (WidgetTester tester, _Env env) async {
+        await _pump(tester, env, const SwatchesPage());
+        await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
+        await tester.pumpAndSettle();
+        await _tap(tester, find.text('B08'));
+        final Finder sheetScroll = find.descendant(
+          of: find.byType(BottomSheet),
+          matching: find.byType(Scrollable),
+        );
+        _check(tester, 'detail sheet, wishlist and dried controls');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-wishlist')),
+        );
+        _check(tester, 'detail sheet, on the wishlist');
+        await _tap(tester, find.byKey(const ValueKey<String>('swatch-dried')));
+        _check(tester, 'dried out, wishlist offer already taken');
+        await _tap(tester, find.byKey(const ValueKey<String>('swatch-dried')));
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-wishlist')),
+        );
+        await _tap(tester, find.byKey(const ValueKey<String>('swatch-dried')));
+        _check(tester, 'dried out, offer to add to the wishlist');
+        expect(find.byType(AlertDialog), findsOneWidget);
+        await _close(tester);
+        _check(tester, 'detail sheet, dried out');
+        await _scroll(tester, 'detail sheet, dried out', within: sheetScroll);
+      },
+  'onboarding: every step of all brands':
       (WidgetTester tester, _Env env) async {
         await _pump(tester, env, const OnboardingPage());
         _check(tester, 'onboarding brand');
@@ -1009,6 +1533,16 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         _check(tester, 'onboarding decotime');
         await _tap(tester, next);
         _check(tester, 'onboarding decotime done');
+        await _tap(tester, back);
+        await _tap(tester, back);
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('onboarding-brand-copic')),
+        );
+        await _tap(tester, next);
+        _check(tester, 'onboarding copic');
+        await _tap(tester, next);
+        _check(tester, 'onboarding copic done');
       },
   'onboarding: nothing chosen, summary and what next':
       (WidgetTester tester, _Env env) async {
@@ -1042,7 +1576,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
 void main() {
   setUpAll(loadAppFonts);
 
-  for (final Locale locale in const <Locale>[Locale('es'), Locale('en')]) {
+  for (final Locale locale in AppLocalizations.supportedLocales) {
     for (final double width in const <double>[360, 412]) {
       for (final double scale in const <double>[1.0, 1.3]) {
         final _Env env = _Env(locale, width, scale);

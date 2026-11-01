@@ -18,6 +18,10 @@
 	<array>
 		<string>en</string>
 		<string>es</string>
+		<string>de</string>
+		<string>fr</string>
+		<string>pt</string>
+		<string>it</string>
 	</array>
 	<key>CFBundleName</key>
 	<string>ink_lab</string>
@@ -59,9 +63,9 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>Ink Lab uses the camera so you can photograph a drawing or object and match its colours to your marker collection. Photos are processed on your device and never uploaded.</string>
+	<string>Ink Lab uses the camera to match colours to your markers and to add photos of your artworks to the diary. Photos stay on your device and are never uploaded.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ink Lab lets you choose a photo so it can match its colours to your marker collection. Photos are processed on your device and never uploaded.</string>
+	<string>Ink Lab lets you choose photos to match their colours to your markers and to add your artworks to the diary. Photos stay on your device and are never uploaded.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

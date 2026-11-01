@@ -33,7 +33,13 @@ void main() {
           final result = buildPalette(base, collection, mode, size: size);
           expect(
             result.length,
-            mode == PaletteMode.customPalette ? 0 : size.clamp(3, 5),
+            mode == PaletteMode.customPalette
+                ? 0
+                // A blending chain is never padded: it is as long as the
+                // family allows (see blending_chain_test.dart).
+                : mode == PaletteMode.blendingChain
+                ? lessThanOrEqualTo(size.clamp(3, 5))
+                : size.clamp(3, 5),
           );
           expect(
             result.map((s) => s.color.colorId).toSet().length,
@@ -296,9 +302,23 @@ void main() {
             mode: mode,
           ),
         );
+        if (mode == PaletteMode.blendingChain &&
+            result is PaletteAdviceFailure) {
+          // Seven owned markers may not chain around this base: the honest
+          // answer is that there are no suggestions.
+          expect(result.reason, PaletteFailureReason.noSuggestions);
+          return;
+        }
         expect(result, isA<PaletteAdviceSuccess>());
         final suggestions = (result as PaletteAdviceSuccess).suggestions;
-        expect(suggestions.length, mode == PaletteMode.customPalette ? 0 : 5);
+        expect(
+          suggestions.length,
+          mode == PaletteMode.customPalette
+              ? 0
+              : mode == PaletteMode.blendingChain
+              ? lessThanOrEqualTo(5)
+              : 5,
+        );
         expect(
           suggestions.every(
             (s) => owned.contains(s.color.colorId) && s.color != deco[1],

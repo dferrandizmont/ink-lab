@@ -8,7 +8,58 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
-## Unreleased
+## 0.7.0 · 2026-11-01
+
+- Copic: 358 colours, with individual marker selection in setup and My collection, available throughout the app and
+  in backups.
+- Match: "Fix white balance" under the photo. Tap a point that should be white paper and every colour you sample from
+  that photo is corrected to match (a point that is too dark or too coloured to be paper is refused). It applies to
+  that photo only; "Undo" brings the original colours back.
+- Your own colour for each marker: the catalogue colour is only an estimate of the ink on paper, so in a marker's
+  detail you can set the colour you really get, typing its hex or tapping the painted swatch in a photo (with the same
+  white balance fix). The detail shows both colours side by side and can go back to the catalogue. Photos are never
+  saved, only the colour.
+- Match, Palette (colour theory, scenes and scene from a photo), Ideas and Swatches use your colours, marked with a small
+  corner square. Settings > Colour matching has a "Use my colours" switch (on by default), how many you have and a
+  way to reset them all. They are part of the backup; older backups still import. The OpenRouter request still sends
+  only catalogue colours.
+- Settings > About: "Join the Google Play beta" with the link to copy.
+- Palette: a "Share" button turns the palette on screen (also AI and scene palettes) or a saved palette into an image
+  (1080 px wide, always light) with its title, brand and, for each colour, the role, code, name and hex, and opens the
+  system share sheet.
+- My collection: "Printable swatch chart" makes A4 pages (300 dpi) with an empty, labelled box for each marker you own,
+  in code order, and shares them all at once so you can print or save them. A switch adds a thin strip with the
+  catalogue colour in each box.
+- Privacy: an image is only handed to the app you pick in the system share sheet; Ink Lab sends nothing anywhere.
+- Wishlist: from any marker's detail, "Add to wishlist". My collection has a Wishlist card for the active brand, with
+  each marker's code, name and swatch, a button to remove it and "Copy list", which copies a plain-text shopping list
+  (brand, code and name per line). A marker leaves the list by itself when you add it to your collection. The wishlist
+  is part of the backup; older backups still import.
+- Dried out: an owned marker can be marked "Dried out" from its detail. It stays in your collection, shows a small
+  struck-through drop in Swatches, and Match, Palette (colour theory, scenes and AI) and Ideas stop suggesting it until
+  you mark it usable again. Marking one offers to add it to the wishlist, and My collection has a card with how many
+  are dried and the list to see them. Part of the backup too.
+- My collection: "What to buy next" ranks the single markers you do not have by how many of the 67 scenes would get a
+  closer colour for their roles (a dried-out marker counts as missing), with the two scenes it helps most and a button
+  to put it on the wishlist. When two markers help equally, the one that fills the emptiest part of your range goes
+  first. It all runs on the phone.
+- Palette: a new type, "Blending Chain", for the way alcohol markers are layered. From a base marker it picks three to
+  five of your markers of the same colour family, lightest first, with lightness steps that are even and small enough
+  to blend (and a short tip to work light to dark while the ink is wet). If your collection has no good chain it says
+  which marker you lack (a lighter or a darker one) instead of forcing one, warns when the chain is shorter than the
+  size you asked for, offers other chains, and can look in the whole range on request. It saves, shares as an image and
+  undoes like any other type, and Swatches > a marker's detail has a "Blending chain" action that opens it.
+- The app is now also in German, French, Portuguese and Italian, on top of English and Spanish. It follows the phone's
+  language, or you pick one in Settings > Display > Language; scene names, roles, ideas and the privacy policy link
+  follow it too.
+- Artwork diary: the Ideas tab has a new "Diary" segment, a log of what you paint (a colouring book page, a sheet, a
+  sketchbook page, anything). Each entry has a title, a date, what it was painted on, finished or in progress, the
+  markers used (picked from your collection), a link to one of your saved palettes, notes and up to four photos
+  (camera or gallery, tap for full screen). "Add to diary" also sits on every saved palette (it links the palette
+  and its markers) and in an idea's sheet (it fills in the title). Newest first; edit or delete (with a
+  confirmation) any entry. Photos are copied into the app's private folder, shrunk to 2048 px, never uploaded or sent
+  to the AI features, and deleted with their entry or photo. The entries are part of the backup, the photos are not
+  (the backup goes to the clipboard); older backups still import.
 
 ## 0.6.3 · 2026-10-31
 

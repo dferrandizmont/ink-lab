@@ -45,6 +45,7 @@ class SwatchBlock extends StatelessWidget {
     this.height,
     this.radius = InkRadii.control,
     this.child,
+    this.own = false,
   });
 
   final String hex;
@@ -56,8 +57,21 @@ class SwatchBlock extends StatelessWidget {
   final double radius;
   final Widget? child;
 
+  /// Whether the colour is the user's own colour for the marker rather than
+  /// the catalogue's: a small mark sits in the corner (see [OwnColorMark]).
+  final bool own;
+
   @override
   Widget build(BuildContext context) {
+    final Widget? content = own
+        ? Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              ?child,
+              OwnColorMark(color: swatchContentColor(hex)),
+            ],
+          )
+        : child;
     return Container(
       width: size ?? width,
       height: size ?? height,
@@ -66,7 +80,38 @@ class SwatchBlock extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
         border: Border.all(color: swatchEdgeColor(context, hex)),
       ),
-      child: child,
+      child: content,
+    );
+  }
+}
+
+/// The discreet mark that says a swatch shows the user's own colour: a small
+/// square in the bottom-right corner, drawn in [color] (pass `inkOn` of the
+/// swatch so it reads on any colour).
+class OwnColorMark extends StatelessWidget {
+  const OwnColorMark({super.key, required this.color, this.size = 6});
+
+  final Color color;
+
+  /// Side of the square.
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      right: size / 2 + 1,
+      bottom: size / 2 + 1,
+      child: IgnorePointer(
+        child: SizedBox.square(
+          dimension: size,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(1),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -94,6 +139,8 @@ class ColorSwatchTile extends StatelessWidget {
     this.owned = false,
     this.showHex = true,
     this.favoriteTooltip,
+    this.ownColor = false,
+    this.dried = false,
   });
 
   /// Colour of the swatch, as a hex string such as `#F08C6D`.
@@ -113,6 +160,14 @@ class ColorSwatchTile extends StatelessWidget {
 
   /// Whether the marker is owned (check after the code).
   final bool owned;
+
+  /// Whether the colour is the user's own colour for the marker (a small
+  /// mark in the corner of the colour block).
+  final bool ownColor;
+
+  /// Whether the marker is dried out: a struck-through drop replaces the owned
+  /// check.
+  final bool dried;
 
   /// Whether to show the hex line.
   final bool showHex;
@@ -146,7 +201,10 @@ class ColorSwatchTile extends StatelessWidget {
     return Semantics(
       button: onTap != null,
       selected: selected,
-      label: name == null ? code : '$code, $name',
+      label:
+          (name == null ? code : '$code, $name') +
+          (ownColor ? ', ${context.l10n.commonOwnColour}' : '') +
+          (dried ? ', ${context.l10n.commonDried}' : ''),
       child: SizedBox(
         width: width,
         height: height,
@@ -207,6 +265,7 @@ class ColorSwatchTile extends StatelessWidget {
                   favorite: favorite,
                   onFavoriteToggle: onFavoriteToggle,
                   favoriteTooltip: favoriteTooltip,
+                  ownColor: ownColor,
                 );
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -244,7 +303,14 @@ class ColorSwatchTile extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                if (owned)
+                                if (dried)
+                                  InkIcon(
+                                    InkIcons.dropletOff,
+                                    size: InkGeometry.smallIcon,
+                                    color: ink.fg2,
+                                    semanticLabel: context.l10n.commonDried,
+                                  )
+                                else if (owned)
                                   InkIcon(
                                     InkIcons.check,
                                     size: InkGeometry.smallIcon,
@@ -303,6 +369,7 @@ class _ColourBlock extends StatelessWidget {
     required this.favorite,
     required this.onFavoriteToggle,
     required this.favoriteTooltip,
+    required this.ownColor,
   });
 
   final Color background;
@@ -311,6 +378,7 @@ class _ColourBlock extends StatelessWidget {
   final bool favorite;
   final VoidCallback? onFavoriteToggle;
   final String? favoriteTooltip;
+  final bool ownColor;
 
   @override
   Widget build(BuildContext context) {
@@ -327,6 +395,7 @@ class _ColourBlock extends StatelessWidget {
       ),
       child: Stack(
         children: <Widget>[
+          if (ownColor) OwnColorMark(color: onSwatch, size: 8),
           if (onFavoriteToggle != null)
             Positioned(
               top: 0,

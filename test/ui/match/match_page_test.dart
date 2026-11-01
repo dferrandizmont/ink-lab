@@ -234,80 +234,97 @@ void main() {
     expect(find.text(l10n.matchDecodeFailed), findsOneWidget);
   });
 
-  testWidgets('a collection not set up matches the whole range', (
-    WidgetTester tester,
-  ) async {
-    final FakeImagePickerService picker = FakeImagePickerService(
-      PhotoPicked(tinyPng),
-    );
-    await pumpMatch(
-      tester,
-      picker: picker,
-      image: sampledImage(32, 32, <int>[255, 0, 0]),
-      brand: MarkerBrand.decoTime,
+  for (final brand in [MarkerBrand.decoTime, MarkerBrand.copic]) {
+    testWidgets(
+      '${brand.label}: a collection not set up matches the whole range',
+      (WidgetTester tester) async {
+        final FakeImagePickerService picker = FakeImagePickerService(
+          PhotoPicked(tinyPng),
+        );
+        await pumpMatch(
+          tester,
+          picker: picker,
+          image: sampledImage(32, 32, <int>[255, 0, 0]),
+          brand: brand,
+        );
+
+        await pickAndSample(tester);
+
+        // The page explains that the whole range is used, with a way to set the
+        // collection up.
+        expect(find.text(l10n.matchSubtitleEmpty), findsOneWidget);
+        expect(
+          find.text(l10n.matchWholeRangeBody(brand.label)),
+          findsOneWidget,
+        );
+        expect(
+          find.byKey(const ValueKey<String>('match-whole-range-setup')),
+          findsOneWidget,
+        );
+        // The best match comes from the whole range and is not flagged as
+        // missing: the whole range is what is being matched.
+        expect(find.byType(BestMatchTile), findsWidgets);
+        expect(
+          tester
+              .widget<BestMatchTile>(find.byType(BestMatchTile).first)
+              .notOwned,
+          isFalse,
+        );
+      },
     );
 
-    await pickAndSample(tester);
+    testWidgets('${brand.label}: no close match offers the whole range', (
+      WidgetTester tester,
+    ) async {
+      final FakeImagePickerService picker = FakeImagePickerService(
+        PhotoPicked(tinyPng),
+      );
+      // A single wine red against a pure blue sample.
+      final AppScope scope = await pumpMatch(
+        tester,
+        picker: picker,
+        image: sampledImage(32, 32, <int>[0, 0, 255]),
+        brand: brand,
+        ownedMarkerCodes: <String>{
+          brand == MarkerBrand.copic ? 'copic:R29' : 'decotime:01',
+        },
+      );
 
-    // The page explains that the whole range is used, with a way to set the
-    // collection up.
-    expect(find.text(l10n.matchSubtitleEmpty), findsOneWidget);
-    expect(find.text(l10n.matchWholeRangeBody('DecoTime')), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey<String>('match-whole-range-setup')),
-      findsOneWidget,
-    );
-    // The best match comes from the whole range and is not flagged as
-    // missing: the whole range is what is being matched.
-    expect(find.byType(BestMatchTile), findsWidgets);
-    expect(
-      tester.widget<BestMatchTile>(find.byType(BestMatchTile).first).notOwned,
-      isFalse,
-    );
-  });
+      await pickAndSample(tester);
 
-  testWidgets('no close match: says so and offers the whole range', (
-    WidgetTester tester,
-  ) async {
-    final FakeImagePickerService picker = FakeImagePickerService(
-      PhotoPicked(tinyPng),
-    );
-    // A single wine red against a pure blue sample.
-    final AppScope scope = await pumpMatch(
-      tester,
-      picker: picker,
-      image: sampledImage(32, 32, <int>[0, 0, 255]),
-      brand: MarkerBrand.decoTime,
-      ownedMarkerCodes: <String>{'decotime:01'},
-    );
+      expect(
+        find.byKey(const ValueKey<String>('match-no-close')),
+        findsOneWidget,
+      );
+      // The closest owned marker stays visible with an honest label.
+      expect(
+        find.byKey(
+          ValueKey<String>(
+            brand == MarkerBrand.copic ? 'match-best-R29' : 'match-best-01',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text(AppTypography.caps(l10n.matchQualityApproximate)),
+        findsWidgets,
+      );
+      expect(find.text(l10n.matchRangeTitle(brand.label)), findsOneWidget);
+      final Iterable<BestMatchTile> tiles = tester.widgetList<BestMatchTile>(
+        find.byType(BestMatchTile),
+      );
+      expect(tiles.where((BestMatchTile t) => t.notOwned), hasLength(1));
 
-    await pickAndSample(tester);
-
-    expect(
-      find.byKey(const ValueKey<String>('match-no-close')),
-      findsOneWidget,
-    );
-    // The closest owned marker stays visible with an honest label.
-    expect(find.byKey(const ValueKey<String>('match-best-01')), findsOneWidget);
-    expect(
-      find.text(AppTypography.caps(l10n.matchQualityApproximate)),
-      findsWidgets,
-    );
-    expect(find.text(l10n.matchRangeTitle('DecoTime')), findsOneWidget);
-    final Iterable<BestMatchTile> tiles = tester.widgetList<BestMatchTile>(
-      find.byType(BestMatchTile),
-    );
-    expect(tiles.where((BestMatchTile t) => t.notOwned), hasLength(1));
-
-    // The suggestion can be turned off in Settings.
-    await scope.settings.setMatchSuggestUnowned(false);
-    await tester.pumpAndSettle();
-    expect(find.text(l10n.matchRangeTitle('DecoTime')), findsNothing);
-    expect(
-      find.byKey(const ValueKey<String>('match-no-close')),
-      findsOneWidget,
-    );
-  });
+      // The suggestion can be turned off in Settings.
+      await scope.settings.setMatchSuggestUnowned(false);
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.matchRangeTitle(brand.label)), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('match-no-close')),
+        findsOneWidget,
+      );
+    });
+  }
 
   testWidgets('recent picks are kept per brand', (WidgetTester tester) async {
     final FakeImagePickerService picker = FakeImagePickerService(

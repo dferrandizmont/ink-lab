@@ -24,6 +24,7 @@ class IdeaDetailSheet extends StatefulWidget {
     required this.initial,
     required this.candidates,
     required this.brand,
+    this.onAddToDiary,
   });
 
   /// The plan shown first (the same markers as the list strip).
@@ -32,6 +33,10 @@ class IdeaDetailSheet extends StatefulWidget {
   /// The markers of the collection to pick from.
   final List<MarkerColor> candidates;
   final MarkerBrand brand;
+
+  /// Called with the idea's title after the sheet closed, to start a diary
+  /// entry; without it the sheet has no "Add to diary" button.
+  final ValueChanged<String>? onAddToDiary;
 
   @override
   State<IdeaDetailSheet> createState() => _IdeaDetailSheetState();
@@ -113,9 +118,28 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
           body(l10n.ideaTipText(_preset.id)),
           caps(l10n.ideasMaterialsTitle),
           body(l10n.ideaMaterialsText(_preset.materials), color: ink.fg2),
+          if (widget.onAddToDiary != null) ...<Widget>[
+            const SizedBox(height: InkSpacing.s24),
+            InkButton.secondary(
+              key: ValueKey<String>('ideas-diary-${_preset.id}'),
+              label: l10n.diaryAdd,
+              icon: InkIcons.plus,
+              expand: true,
+              onPressed: _addToDiary,
+            ),
+          ],
         ],
       ),
     );
+  }
+
+  /// Closes the sheet, then hands the idea's title to the page that opened
+  /// it (the sheet's own context is gone by then).
+  void _addToDiary() {
+    final String title = context.l10n.ideaTitle(_preset);
+    final ValueChanged<String> callback = widget.onAddToDiary!;
+    Navigator.of(context).pop();
+    callback(title);
   }
 
   List<Widget> _buildMarkers(
@@ -134,9 +158,9 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
       return <Widget>[
         caps(l10n.ideasMarkersTitle),
         body(
-          widget.brand == MarkerBrand.decoTime
-              ? l10n.ideasNoMarkersDecoTime
-              : l10n.ideasNoMarkersOther,
+          widget.brand.hasRetailSets
+              ? l10n.ideasNoMarkersOther
+              : l10n.ideasNoMarkersBrand(widget.brand.label),
           color: ink.fg2,
         ),
       ];
@@ -208,7 +232,7 @@ class _MarkerRow extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SwatchBlock(hex: color.hex, size: 36),
+              SwatchBlock(hex: color.hex, size: 36, own: color.hasOwnColor),
               const SizedBox(width: InkSpacing.s12),
               Expanded(
                 child: Column(

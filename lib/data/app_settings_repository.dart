@@ -59,6 +59,9 @@ abstract class AppSettingsRepository {
   /// Replaces both parts of the collection in one change.
   Future<void> setCollection(AppSettings settings);
   Future<void> setMatchSuggestUnowned(bool value);
+
+  /// Whether the colours the user stored for their markers are used.
+  Future<void> setUseOwnColors(bool value);
   Future<void> setFavorites(Set<String> colorIds);
   Future<void> setNameDisplayMode(NameDisplayMode mode);
   Future<void> setOnboardingCompleted(bool value);
@@ -87,7 +90,7 @@ abstract class AppSettingsRepository {
 ///   wrote `pack_selection_mode`, `selected_core_set_ids`,
 ///   `selected_addon_set_ids` and `owned_marker_codes`: [load] migrates them
 ///   once (see [AppSettings.fromLegacy]) and writes the new keys.
-/// * `match_suggest_unowned`
+/// * `match_suggest_unowned`, `use_own_colors`
 /// * `favorite_marker_ids` (brand-scoped) with legacy fallback
 ///   `favorite_marker_codes`
 /// * `name_display_mode`, `onboarding_completed`, `theme_mode`, `language`
@@ -114,6 +117,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   static const String keyExtraMarkerIds = 'extra_marker_ids';
   static const String keyChosenSeriesIds = 'chosen_series_ids';
   static const String keyMatchSuggestUnowned = 'match_suggest_unowned';
+  static const String keyUseOwnColors = 'use_own_colors';
   static const String keyFavorites = 'favorite_marker_ids';
   static const String keyLegacyFavorites = 'favorite_marker_codes';
   static const String keyNameDisplayMode = 'name_display_mode';
@@ -227,6 +231,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
       ),
       language: AppLanguage.fromJson(await _store.getString(keyLanguage)),
       matchSuggestUnowned: await _store.getBool(keyMatchSuggestUnowned) ?? true,
+      useOwnColors: await _store.getBool(keyUseOwnColors) ?? true,
     );
     if (migrate) {
       await _store.setStringList(
@@ -292,6 +297,12 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   );
 
   @override
+  Future<void> setUseOwnColors(bool value) => _apply(
+    _state.copyWith(useOwnColors: value),
+    boolKeys: {keyUseOwnColors: value},
+  );
+
+  @override
   Future<void> setFavorites(Set<String> colorIds) {
     final scoped = scopedColorIds(colorIds);
     return _apply(
@@ -337,6 +348,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
     boolKeys: {
       keyOnboardingCompleted: state.onboardingCompleted,
       keyMatchSuggestUnowned: state.matchSuggestUnowned,
+      keyUseOwnColors: state.useOwnColors,
     },
     stringListKeys: {
       keyOwnedSetIds: sortedStrings(state.settings.ownedSetIds),

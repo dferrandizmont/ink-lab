@@ -15,6 +15,10 @@ class AppScope extends InheritedWidget {
     required this.settings,
     required this.savedPalettes,
     required this.matchHistory,
+    required this.ownColors,
+    required this.wishlist,
+    required this.dried,
+    required this.artworkDiary,
     required this.aiSettings,
     required this.secrets,
     required this.markers,
@@ -26,6 +30,19 @@ class AppScope extends InheritedWidget {
   final AppSettingsRepository settings;
   final SavedPaletteRepository savedPalettes;
   final ColorMatchHistoryRepository matchHistory;
+
+  /// The colours the user stored for their own markers.
+  final OwnColorRepository ownColors;
+
+  /// The markers the user wants to buy.
+  final WishlistRepository wishlist;
+
+  /// The owned markers that ran dry: Match, Palette and Ideas skip them.
+  final DriedMarkerRepository dried;
+
+  /// The artwork diary: entries in the key-value store, photos in a private
+  /// folder on the device.
+  final ArtworkDiaryRepository artworkDiary;
   final AiSettingsRepository aiSettings;
   final SecretStore secrets;
   final MarkerRepository markers;
@@ -35,7 +52,8 @@ class AppScope extends InheritedWidget {
   ///
   /// [aiSettings], [secrets], [aiService] and [settingsState] can be
   /// overridden so a test can seed a stored key, inject a fake HTTP transport
-  /// or start from a fresh install.
+  /// or start from a fresh install; [artworkDiary] lets a test watch the
+  /// photo files.
   static AppScope inMemory({
     required MarkerRepository markers,
     required Widget child,
@@ -45,18 +63,37 @@ class AppScope extends InheritedWidget {
     ai.AiService? aiService,
     core.PaletteAdvisor localAdvisor = const PaletteGenerator(),
     AppSettingsState? settingsState,
+    ArtworkDiaryRepository? artworkDiary,
   }) {
     final store = InMemoryKeyValueStore();
     final resolvedAiSettings = aiSettings ?? StoredAiSettingsRepository(store);
     final resolvedSecrets = secrets ?? InMemorySecretStore();
+    final settings = StoredAppSettingsRepository(
+      store,
+      initial: settingsState ?? previewSettings(),
+    );
+    final ownColors = StoredOwnColorRepository(store);
+    final wishlist = StoredWishlistRepository(store);
+    markers.ownColors = OwnColorOverlay(settings: settings, colors: ownColors);
+    WishlistOwnershipSync(
+      settings: settings,
+      wishlist: wishlist,
+      markers: markers,
+    ).start();
     return AppScope(
       key: key,
-      settings: StoredAppSettingsRepository(
-        store,
-        initial: settingsState ?? previewSettings(),
-      ),
+      settings: settings,
       savedPalettes: StoredSavedPaletteRepository(store),
       matchHistory: StoredColorMatchHistoryRepository(store),
+      ownColors: ownColors,
+      wishlist: wishlist,
+      dried: StoredDriedMarkerRepository(store),
+      artworkDiary:
+          artworkDiary ??
+          StoredArtworkDiaryRepository(
+            store,
+            photos: InMemoryArtworkPhotoStore(),
+          ),
       aiSettings: resolvedAiSettings,
       secrets: resolvedSecrets,
       markers: markers,
@@ -85,6 +122,10 @@ class AppScope extends InheritedWidget {
     settings: settings,
     savedPalettes: savedPalettes,
     matchHistory: matchHistory,
+    ownColors: ownColors,
+    wishlist: wishlist,
+    dried: dried,
+    artworkDiary: artworkDiary,
     aiSettings: aiSettings,
     secrets: secrets,
     markers: markers,

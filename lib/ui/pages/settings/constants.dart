@@ -16,11 +16,28 @@ abstract final class SettingsConstants {
   /// Address that receives the reports of AI suggestions.
   static const String contactEmail = 'inklab@mainshai.com';
 
-  /// Privacy policy page (Spanish; English lives under `en/`).
-  static const String privacyUrlEs =
-      'https://inklab.mainshai.com/es/privacy/';
-  static const String privacyUrlEn =
-      'https://inklab.mainshai.com/privacy/';
+  /// Privacy policy page in each language of the website: English lives at
+  /// the root, the others under `/<code>/privacy/`.
+  static const String privacyUrlEn = 'https://inklab.mainshai.com/privacy/';
+  static const String privacyUrlEs = 'https://inklab.mainshai.com/es/privacy/';
+  static const String privacyUrlDe = 'https://inklab.mainshai.com/de/privacy/';
+  static const String privacyUrlFr = 'https://inklab.mainshai.com/fr/privacy/';
+  static const String privacyUrlPt = 'https://inklab.mainshai.com/pt/privacy/';
+  static const String privacyUrlIt = 'https://inklab.mainshai.com/it/privacy/';
+
+  /// The policy page for [languageCode]; English for any other language.
+  static String privacyUrlFor(String languageCode) => switch (languageCode) {
+    'es' => privacyUrlEs,
+    'de' => privacyUrlDe,
+    'fr' => privacyUrlFr,
+    'pt' => privacyUrlPt,
+    'it' => privacyUrlIt,
+    _ => privacyUrlEn,
+  };
+
+  /// Google group that opens the Google Play beta (closed test) to testers.
+  static const String betaGroupUrl =
+      'https://groups.google.com/g/ink-lab-testers';
 
   /// Placeholder of the maximum tokens field.
   static const String aiMaxTokensHint = '1200';

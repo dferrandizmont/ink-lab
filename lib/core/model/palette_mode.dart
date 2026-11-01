@@ -9,6 +9,7 @@ enum PaletteMode {
   square('Square'),
   rectangle('Rectangle'),
   monochrome('Monochrome'),
+  blendingChain('Blending Chain'),
   customPalette('Custom Palette'),
   shadow('Shadow');
 

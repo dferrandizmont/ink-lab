@@ -2,181 +2,181 @@
   "version": 1,
   "categories": ["characters","skin","skyWater","nature","materials","animals","food","holidays","interiors","patterns","fantasy"],
   "roles": {
-    "Amber eye": "Ojo ámbar",
-    "Ash tone": "Tono ceniza",
-    "Aurora teal": "Turquesa de aurora",
-    "Blossom pink": "Rosa de flor",
-    "Blossom shadow": "Sombra de flor",
-    "Blue sheen": "Brillo azulado",
-    "Book spine red": "Rojo de lomo",
-    "Bounce light": "Luz de rebote",
-    "Branch bark": "Corteza de rama",
-    "Bronze shadow": "Sombra de bronce",
-    "Bruised purple": "Morado amoratado",
-    "Burgundy shadow": "Sombra burdeos",
-    "Burnt edge": "Borde quemado",
-    "Butter chick": "Pollito mantequilla",
-    "Butter yellow": "Amarillo mantequilla",
-    "Buttercup": "Botón de oro",
-    "Cactus green": "Verde cactus",
-    "Canopy shadow": "Sombra del dosel",
-    "Cape shadow": "Sombra de la capa",
-    "Caramel drip": "Hilo de caramelo",
-    "Cave shadow": "Sombra de cueva",
-    "Charcoal accent": "Acento carbón",
-    "Cheek warmth": "Calidez de mejilla",
-    "Cherry accent": "Acento cereza",
-    "Citrus yellow": "Amarillo cítrico",
-    "Cloud light": "Luz de nube",
-    "Cloud shadow": "Sombra de nube",
-    "Cold highlight": "Luz fría",
-    "Cone brown": "Marrón de cono",
-    "Cool backdrop": "Fondo frío",
-    "Cool grey": "Gris frío",
-    "Cool reflection": "Reflejo frío",
-    "Cool rim light": "Luz de borde fría",
-    "Cool rock": "Roca fría",
-    "Cool wash": "Veladura fría",
-    "Copper glow": "Brillo cobrizo",
-    "Coral hair": "Pelo coral",
-    "Cornflower": "Azul aciano",
-    "Cream foam": "Espuma cremosa",
-    "Crevice shadow": "Sombra de grieta",
-    "Crumb light": "Miga clara",
-    "Crust shadow": "Sombra de corteza",
-    "Dark edge": "Borde oscuro",
-    "Dark reflection": "Reflejo oscuro",
-    "Deep accent": "Acento profundo",
-    "Deep black": "Negro profundo",
-    "Deep crease": "Arruga profunda",
-    "Deep grain": "Veta profunda",
-    "Deep shade": "Sombra profunda",
-    "Desert sky": "Cielo del desierto",
-    "Dune shadow": "Sombra de duna",
-    "Dusty blue": "Azul empolvado",
-    "Ear dark": "Oreja oscura",
-    "Ebony black": "Negro ébano",
-    "Egg shadow": "Sombra de huevo",
-    "Ember glow": "Brillo de brasa",
-    "Eye green": "Verde de ojos",
-    "Faded grey": "Gris desgastado",
-    "Fairy wing": "Ala de hada",
-    "Feather highlight": "Luz de plumas",
-    "Feather shadow": "Sombra de plumas",
-    "Firefly gold": "Oro de luciérnaga",
-    "Fold highlight": "Luz de pliegue",
-    "Fold shadow": "Sombra de pliegue",
-    "Freckle tan": "Pecas tostadas",
-    "Fruit shadow": "Sombra de fruta",
-    "Fur highlight": "Luz de pelaje",
-    "Fur shadow": "Sombra de pelaje",
-    "Glowing mushroom": "Seta luminosa",
-    "Gold foil": "Pan de oro",
-    "Gold hoard": "Tesoro de oro",
-    "Golden midtone": "Medio tono dorado",
-    "Grain shadow": "Sombra de veta",
-    "Grass green": "Verde hierba",
-    "Grass shade": "Sombra de hierba",
-    "Green undertone": "Subtono verdoso",
-    "Heart highlight": "Luz de corazón",
-    "Hibiscus pop": "Toque de hibisco",
-    "Horizon haze": "Bruma del horizonte",
-    "Hot glow": "Brillo candente",
-    "Ice blue": "Azul hielo",
-    "Indigo deep": "Añil profundo",
-    "Jam red": "Rojo mermelada",
-    "Juicy highlight": "Luz jugosa",
-    "Knot dark": "Nudo oscuro",
-    "Lagoon violet": "Violeta de laguna",
-    "Lamp glow": "Luz de lámpara",
-    "Lavender note": "Nota de lavanda",
-    "Leaf green": "Verde hoja",
-    "Leather green": "Verde cuero",
-    "Lichen yellow": "Amarillo liquen",
-    "Light face": "Cara iluminada",
-    "Light fur": "Pelo claro",
-    "Lightning glow": "Destello de rayo",
-    "Lilac egg": "Huevo lila",
-    "Lips": "Labios",
-    "Menace red": "Rojo amenazante",
-    "Mid grey": "Gris medio",
-    "Midnight": "Medianoche",
-    "Milk chocolate": "Chocolate con leche",
-    "Mint scoop": "Bola de menta",
-    "Moonlight": "Luz de luna",
-    "Moss green": "Verde musgo",
-    "Moss shadow": "Sombra de musgo",
-    "Muzzle dark": "Hocico oscuro",
-    "Navy deep": "Azul marino profundo",
-    "Nose pink": "Rosa de nariz",
-    "Orange zest": "Piel de naranja",
-    "Orchid accent": "Acento orquídea",
-    "Pale wood": "Madera pálida",
-    "Parchment": "Pergamino",
-    "Pink bunny": "Conejo rosa",
-    "Pink nose": "Nariz rosada",
-    "Plate blue": "Azul de plato",
-    "Plum shade": "Sombra ciruela",
-    "Polish highlight": "Brillo de barniz",
-    "Poppy red": "Rojo amapola",
-    "Rain teal": "Turquesa de lluvia",
-    "Reddish glow": "Brillo rojizo",
-    "Roast shadow": "Sombra tostada",
-    "Root brown": "Raíz castaña",
-    "Rope tan": "Cuerda arena",
-    "Rose red": "Rojo rosa",
-    "Sage green": "Verde salvia",
-    "Scale highlight": "Luz de escamas",
-    "Scale shadow": "Sombra de escamas",
-    "Scarlet wing": "Ala escarlata",
-    "Scoop shadow": "Sombra de bola",
-    "Sea teal": "Turquesa marino",
-    "Seam shadow": "Sombra de costura",
-    "Seashell pink": "Rosa concha",
-    "Signal red": "Rojo señal",
-    "Sky pastel": "Cielo pastel",
-    "Sky reflection": "Reflejo del cielo",
-    "Smoke grey": "Gris humo",
-    "Soft grey shadow": "Sombra gris suave",
-    "Specular": "Brillo especular",
-    "Spring sky": "Cielo de primavera",
-    "Star glow": "Brillo de estrellas",
-    "Strawberry scoop": "Bola de fresa",
-    "Stripe shadow": "Sombra de rayas",
-    "Stripe white": "Blanco de raya",
-    "Sun gold": "Oro solar",
-    "Sun warmth": "Calidez del sol",
-    "Sun yellow": "Amarillo sol",
-    "Sunlit crest": "Cresta al sol",
-    "Sunlit frond": "Fronda al sol",
-    "Sunlit grass": "Hierba al sol",
-    "Tail shadow": "Sombra de cola",
-    "Teal contrast": "Contraste turquesa",
-    "Terracotta": "Terracota",
-    "Thread contrast": "Contraste de hilo",
-    "Topstitch gold": "Pespunte dorado",
-    "Toxic glow": "Brillo tóxico",
-    "Twilight canopy": "Dosel crepuscular",
-    "Vanilla cream": "Crema de vainilla",
-    "Verdigris": "Cardenillo",
-    "Violet haze": "Bruma violeta",
-    "Void background": "Fondo vacío",
-    "Warm bounce": "Rebote cálido",
-    "Warm cream": "Crema cálida",
-    "Warm glow": "Brillo cálido",
-    "Warm midtone": "Medio tono cálido",
-    "Warm reflection": "Reflejo cálido",
-    "Warm sheen": "Brillo cálido",
-    "Washed highlight": "Luz desteñida",
-    "Window night": "Noche en la ventana",
-    "Wood highlight": "Luz de madera",
-    "Zenith blue": "Azul cenital"
+    "Amber eye": {"es": "Ojo ámbar", "de": "Bernsteinauge", "fr": "Œil ambré", "pt": "Olho âmbar", "it": "Occhio ambra"},
+    "Ash tone": {"es": "Tono ceniza", "de": "Aschton", "fr": "Ton cendré", "pt": "Tom cinza", "it": "Tono cenere"},
+    "Aurora teal": {"es": "Turquesa de aurora", "de": "Polarlicht-Türkis", "fr": "Sarcelle d’aurore", "pt": "Turquesa de aurora", "it": "Verde acqua d’aurora"},
+    "Blossom pink": {"es": "Rosa de flor", "de": "Blütenrosa", "fr": "Rose de fleur", "pt": "Rosa de flor", "it": "Rosa fiore"},
+    "Blossom shadow": {"es": "Sombra de flor", "de": "Blütenschatten", "fr": "Ombre de fleur", "pt": "Sombra de flor", "it": "Ombra di fiore"},
+    "Blue sheen": {"es": "Brillo azulado", "de": "Blauer Schimmer", "fr": "Reflet bleuté", "pt": "Brilho azulado", "it": "Riflesso bluastro"},
+    "Book spine red": {"es": "Rojo de lomo", "de": "Buchrückenrot", "fr": "Rouge de dos de livre", "pt": "Vermelho de lombada", "it": "Rosso dorso di libro"},
+    "Bounce light": {"es": "Luz de rebote", "de": "Reflexlicht", "fr": "Lumière de rebond", "pt": "Luz de ressalto", "it": "Luce di rimbalzo"},
+    "Branch bark": {"es": "Corteza de rama", "de": "Astrinde", "fr": "Écorce de branche", "pt": "Casca de ramo", "it": "Corteccia di ramo"},
+    "Bronze shadow": {"es": "Sombra de bronce", "de": "Bronzeschatten", "fr": "Ombre de bronze", "pt": "Sombra de bronze", "it": "Ombra bronzo"},
+    "Bruised purple": {"es": "Morado amoratado", "de": "Blutergussviolett", "fr": "Violet meurtri", "pt": "Roxo pisado", "it": "Viola livido"},
+    "Burgundy shadow": {"es": "Sombra burdeos", "de": "Burgunderschatten", "fr": "Ombre bordeaux", "pt": "Sombra bordéus", "it": "Ombra bordeaux"},
+    "Burnt edge": {"es": "Borde quemado", "de": "Verbrannter Rand", "fr": "Bord brûlé", "pt": "Bordo queimado", "it": "Bordo bruciato"},
+    "Butter chick": {"es": "Pollito mantequilla", "de": "Butterküken", "fr": "Poussin beurre", "pt": "Pintainho manteiga", "it": "Pulcino burro"},
+    "Butter yellow": {"es": "Amarillo mantequilla", "de": "Buttergelb", "fr": "Jaune beurre", "pt": "Amarelo manteiga", "it": "Giallo burro"},
+    "Buttercup": {"es": "Botón de oro", "de": "Butterblume", "fr": "Bouton-d’or", "pt": "Botão-de-ouro", "it": "Ranuncolo"},
+    "Cactus green": {"es": "Verde cactus", "de": "Kaktusgrün", "fr": "Vert cactus", "pt": "Verde cato", "it": "Verde cactus"},
+    "Canopy shadow": {"es": "Sombra del dosel", "de": "Kronenschatten", "fr": "Ombre de canopée", "pt": "Sombra da copa", "it": "Ombra della chioma"},
+    "Cape shadow": {"es": "Sombra de la capa", "de": "Umhangschatten", "fr": "Ombre de cape", "pt": "Sombra da capa", "it": "Ombra del mantello"},
+    "Caramel drip": {"es": "Hilo de caramelo", "de": "Karamellfaden", "fr": "Filet de caramel", "pt": "Fio de caramelo", "it": "Filo di caramello"},
+    "Cave shadow": {"es": "Sombra de cueva", "de": "Höhlenschatten", "fr": "Ombre de grotte", "pt": "Sombra de gruta", "it": "Ombra di grotta"},
+    "Charcoal accent": {"es": "Acento carbón", "de": "Kohleakzent", "fr": "Accent charbon", "pt": "Acento carvão", "it": "Accento carbone"},
+    "Cheek warmth": {"es": "Calidez de mejilla", "de": "Wangenwärme", "fr": "Chaleur de joue", "pt": "Calor de bochecha", "it": "Calore della guancia"},
+    "Cherry accent": {"es": "Acento cereza", "de": "Kirschakzent", "fr": "Accent cerise", "pt": "Acento cereja", "it": "Accento ciliegia"},
+    "Citrus yellow": {"es": "Amarillo cítrico", "de": "Zitrusgelb", "fr": "Jaune agrume", "pt": "Amarelo cítrico", "it": "Giallo agrumato"},
+    "Cloud light": {"es": "Luz de nube", "de": "Wolkenlicht", "fr": "Lumière de nuage", "pt": "Luz de nuvem", "it": "Luce di nuvola"},
+    "Cloud shadow": {"es": "Sombra de nube", "de": "Wolkenschatten", "fr": "Ombre de nuage", "pt": "Sombra de nuvem", "it": "Ombra di nuvola"},
+    "Cold highlight": {"es": "Luz fría", "de": "Kaltes Licht", "fr": "Lumière froide", "pt": "Luz fria", "it": "Luce fredda"},
+    "Cone brown": {"es": "Marrón de cono", "de": "Waffelbraun", "fr": "Brun de cône", "pt": "Castanho de cone", "it": "Marrone cialda"},
+    "Cool backdrop": {"es": "Fondo frío", "de": "Kalter Hintergrund", "fr": "Fond froid", "pt": "Fundo frio", "it": "Sfondo freddo"},
+    "Cool grey": {"es": "Gris frío", "de": "Kühles Grau", "fr": "Gris froid", "pt": "Cinzento frio", "it": "Grigio freddo"},
+    "Cool reflection": {"es": "Reflejo frío", "de": "Kalte Spiegelung", "fr": "Reflet froid", "pt": "Reflexo frio", "it": "Riflesso freddo"},
+    "Cool rim light": {"es": "Luz de borde fría", "de": "Kaltes Randlicht", "fr": "Lumière de contour froide", "pt": "Luz de contorno fria", "it": "Luce di bordo fredda"},
+    "Cool rock": {"es": "Roca fría", "de": "Kalter Fels", "fr": "Roche froide", "pt": "Rocha fria", "it": "Roccia fredda"},
+    "Cool wash": {"es": "Veladura fría", "de": "Kalte Lasur", "fr": "Lavis froid", "pt": "Aguada fria", "it": "Velatura fredda"},
+    "Copper glow": {"es": "Brillo cobrizo", "de": "Kupferglanz", "fr": "Lueur cuivrée", "pt": "Brilho acobreado", "it": "Bagliore ramato"},
+    "Coral hair": {"es": "Pelo coral", "de": "Korallenhaar", "fr": "Cheveux corail", "pt": "Cabelo coral", "it": "Capelli corallo"},
+    "Cornflower": {"es": "Azul aciano", "de": "Kornblume", "fr": "Bleuet", "pt": "Azul-centáurea", "it": "Fiordaliso"},
+    "Cream foam": {"es": "Espuma cremosa", "de": "Cremeschaum", "fr": "Mousse crémeuse", "pt": "Espuma cremosa", "it": "Schiuma cremosa"},
+    "Crevice shadow": {"es": "Sombra de grieta", "de": "Spaltenschatten", "fr": "Ombre de crevasse", "pt": "Sombra de fenda", "it": "Ombra di fessura"},
+    "Crumb light": {"es": "Miga clara", "de": "Helle Krume", "fr": "Mie claire", "pt": "Miolo claro", "it": "Mollica chiara"},
+    "Crust shadow": {"es": "Sombra de corteza", "de": "Krustenschatten", "fr": "Ombre de croûte", "pt": "Sombra de côdea", "it": "Ombra di crosta"},
+    "Dark edge": {"es": "Borde oscuro", "de": "Dunkler Rand", "fr": "Bord sombre", "pt": "Bordo escuro", "it": "Bordo scuro"},
+    "Dark reflection": {"es": "Reflejo oscuro", "de": "Dunkle Spiegelung", "fr": "Reflet sombre", "pt": "Reflexo escuro", "it": "Riflesso scuro"},
+    "Deep accent": {"es": "Acento profundo", "de": "Tiefer Akzent", "fr": "Accent profond", "pt": "Acento profundo", "it": "Accento profondo"},
+    "Deep black": {"es": "Negro profundo", "de": "Tiefschwarz", "fr": "Noir profond", "pt": "Preto profundo", "it": "Nero profondo"},
+    "Deep crease": {"es": "Arruga profunda", "de": "Tiefe Falte", "fr": "Pli profond", "pt": "Vinco profundo", "it": "Piega profonda"},
+    "Deep grain": {"es": "Veta profunda", "de": "Tiefe Maserung", "fr": "Veine profonde", "pt": "Veio profundo", "it": "Venatura profonda"},
+    "Deep shade": {"es": "Sombra profunda", "de": "Tiefer Schatten", "fr": "Ombre profonde", "pt": "Sombra profunda", "it": "Ombra profonda"},
+    "Desert sky": {"es": "Cielo del desierto", "de": "Wüstenhimmel", "fr": "Ciel du désert", "pt": "Céu do deserto", "it": "Cielo del deserto"},
+    "Dune shadow": {"es": "Sombra de duna", "de": "Dünenschatten", "fr": "Ombre de dune", "pt": "Sombra de duna", "it": "Ombra di duna"},
+    "Dusty blue": {"es": "Azul empolvado", "de": "Staubblau", "fr": "Bleu poudré", "pt": "Azul acinzentado", "it": "Blu polveroso"},
+    "Ear dark": {"es": "Oreja oscura", "de": "Dunkles Ohr", "fr": "Oreille sombre", "pt": "Orelha escura", "it": "Orecchio scuro"},
+    "Ebony black": {"es": "Negro ébano", "de": "Ebenholzschwarz", "fr": "Noir d’ébène", "pt": "Preto ébano", "it": "Nero ebano"},
+    "Egg shadow": {"es": "Sombra de huevo", "de": "Eierschatten", "fr": "Ombre d’œuf", "pt": "Sombra de ovo", "it": "Ombra d’uovo"},
+    "Ember glow": {"es": "Brillo de brasa", "de": "Glutschein", "fr": "Lueur de braise", "pt": "Brilho de brasa", "it": "Bagliore di brace"},
+    "Eye green": {"es": "Verde de ojos", "de": "Augengrün", "fr": "Vert des yeux", "pt": "Verde dos olhos", "it": "Verde degli occhi"},
+    "Faded grey": {"es": "Gris desgastado", "de": "Verblasstes Grau", "fr": "Gris délavé", "pt": "Cinzento desbotado", "it": "Grigio sbiadito"},
+    "Fairy wing": {"es": "Ala de hada", "de": "Feenflügel", "fr": "Aile de fée", "pt": "Asa de fada", "it": "Ala di fata"},
+    "Feather highlight": {"es": "Luz de plumas", "de": "Federlicht", "fr": "Lumière de plumes", "pt": "Luz de penas", "it": "Luce di piume"},
+    "Feather shadow": {"es": "Sombra de plumas", "de": "Federschatten", "fr": "Ombre de plumes", "pt": "Sombra de penas", "it": "Ombra di piume"},
+    "Firefly gold": {"es": "Oro de luciérnaga", "de": "Glühwürmchengold", "fr": "Or de luciole", "pt": "Ouro de pirilampo", "it": "Oro di lucciola"},
+    "Fold highlight": {"es": "Luz de pliegue", "de": "Faltenlicht", "fr": "Lumière de pli", "pt": "Luz de prega", "it": "Luce di piega"},
+    "Fold shadow": {"es": "Sombra de pliegue", "de": "Faltenschatten", "fr": "Ombre de pli", "pt": "Sombra de prega", "it": "Ombra di piega"},
+    "Freckle tan": {"es": "Pecas tostadas", "de": "Sommersprossenbraun", "fr": "Taches de rousseur", "pt": "Sardas tostadas", "it": "Lentiggini ambrate"},
+    "Fruit shadow": {"es": "Sombra de fruta", "de": "Fruchtschatten", "fr": "Ombre de fruit", "pt": "Sombra de fruta", "it": "Ombra di frutta"},
+    "Fur highlight": {"es": "Luz de pelaje", "de": "Fellglanz", "fr": "Lumière de pelage", "pt": "Luz de pelo", "it": "Luce di pelo"},
+    "Fur shadow": {"es": "Sombra de pelaje", "de": "Fellschatten", "fr": "Ombre de pelage", "pt": "Sombra de pelo", "it": "Ombra di pelo"},
+    "Glowing mushroom": {"es": "Seta luminosa", "de": "Leuchtpilz", "fr": "Champignon lumineux", "pt": "Cogumelo luminoso", "it": "Fungo luminoso"},
+    "Gold foil": {"es": "Pan de oro", "de": "Blattgold", "fr": "Feuille d’or", "pt": "Folha de ouro", "it": "Foglia d’oro"},
+    "Gold hoard": {"es": "Tesoro de oro", "de": "Goldschatz", "fr": "Trésor d’or", "pt": "Tesouro de ouro", "it": "Tesoro d’oro"},
+    "Golden midtone": {"es": "Medio tono dorado", "de": "Goldener Mittelton", "fr": "Ton moyen doré", "pt": "Tom médio dourado", "it": "Mezzo tono dorato"},
+    "Grain shadow": {"es": "Sombra de veta", "de": "Maserungsschatten", "fr": "Ombre de veine", "pt": "Sombra de veio", "it": "Ombra di venatura"},
+    "Grass green": {"es": "Verde hierba", "de": "Grasgrün", "fr": "Vert herbe", "pt": "Verde erva", "it": "Verde erba"},
+    "Grass shade": {"es": "Sombra de hierba", "de": "Grasschatten", "fr": "Ombre d’herbe", "pt": "Sombra de erva", "it": "Ombra d’erba"},
+    "Green undertone": {"es": "Subtono verdoso", "de": "Grünlicher Unterton", "fr": "Sous-ton verdâtre", "pt": "Subtom esverdeado", "it": "Sottotono verdastro"},
+    "Heart highlight": {"es": "Luz de corazón", "de": "Herzlicht", "fr": "Lumière de cœur", "pt": "Luz de coração", "it": "Luce di cuore"},
+    "Hibiscus pop": {"es": "Toque de hibisco", "de": "Hibiskus-Tupfer", "fr": "Touche d’hibiscus", "pt": "Toque de hibisco", "it": "Tocco di ibisco"},
+    "Horizon haze": {"es": "Bruma del horizonte", "de": "Horizontdunst", "fr": "Brume d’horizon", "pt": "Bruma do horizonte", "it": "Foschia dell’orizzonte"},
+    "Hot glow": {"es": "Brillo candente", "de": "Heißer Glanz", "fr": "Lueur ardente", "pt": "Brilho ardente", "it": "Bagliore rovente"},
+    "Ice blue": {"es": "Azul hielo", "de": "Eisblau", "fr": "Bleu glace", "pt": "Azul gelo", "it": "Blu ghiaccio"},
+    "Indigo deep": {"es": "Añil profundo", "de": "Tiefes Indigo", "fr": "Indigo profond", "pt": "Índigo profundo", "it": "Indaco profondo"},
+    "Jam red": {"es": "Rojo mermelada", "de": "Marmeladenrot", "fr": "Rouge confiture", "pt": "Vermelho doce", "it": "Rosso marmellata"},
+    "Juicy highlight": {"es": "Luz jugosa", "de": "Saftiges Licht", "fr": "Lumière juteuse", "pt": "Luz suculenta", "it": "Luce succosa"},
+    "Knot dark": {"es": "Nudo oscuro", "de": "Dunkler Ast", "fr": "Nœud sombre", "pt": "Nó escuro", "it": "Nodo scuro"},
+    "Lagoon violet": {"es": "Violeta de laguna", "de": "Lagunenviolett", "fr": "Violet de lagune", "pt": "Violeta de lagoa", "it": "Viola di laguna"},
+    "Lamp glow": {"es": "Luz de lámpara", "de": "Lampenschein", "fr": "Lueur de lampe", "pt": "Luz de candeeiro", "it": "Luce di lampada"},
+    "Lavender note": {"es": "Nota de lavanda", "de": "Lavendelnote", "fr": "Note de lavande", "pt": "Nota de lavanda", "it": "Nota di lavanda"},
+    "Leaf green": {"es": "Verde hoja", "de": "Blattgrün", "fr": "Vert feuille", "pt": "Verde folha", "it": "Verde foglia"},
+    "Leather green": {"es": "Verde cuero", "de": "Ledergrün", "fr": "Vert cuir", "pt": "Verde couro", "it": "Verde cuoio"},
+    "Lichen yellow": {"es": "Amarillo liquen", "de": "Flechtengelb", "fr": "Jaune lichen", "pt": "Amarelo líquen", "it": "Giallo lichene"},
+    "Light face": {"es": "Cara iluminada", "de": "Helles Gesicht", "fr": "Visage éclairé", "pt": "Rosto iluminado", "it": "Viso chiaro"},
+    "Light fur": {"es": "Pelo claro", "de": "Helles Fell", "fr": "Pelage clair", "pt": "Pelo claro", "it": "Pelo chiaro"},
+    "Lightning glow": {"es": "Destello de rayo", "de": "Blitzschein", "fr": "Éclat d’éclair", "pt": "Clarão de raio", "it": "Bagliore di fulmine"},
+    "Lilac egg": {"es": "Huevo lila", "de": "Fliederei", "fr": "Œuf lilas", "pt": "Ovo lilás", "it": "Uovo lilla"},
+    "Lips": {"es": "Labios", "de": "Lippen", "fr": "Lèvres", "pt": "Lábios", "it": "Labbra"},
+    "Menace red": {"es": "Rojo amenazante", "de": "Bedrohliches Rot", "fr": "Rouge menaçant", "pt": "Vermelho ameaçador", "it": "Rosso minaccioso"},
+    "Mid grey": {"es": "Gris medio", "de": "Mittelgrau", "fr": "Gris moyen", "pt": "Cinzento médio", "it": "Grigio medio"},
+    "Midnight": {"es": "Medianoche", "de": "Mitternacht", "fr": "Minuit", "pt": "Meia-noite", "it": "Mezzanotte"},
+    "Milk chocolate": {"es": "Chocolate con leche", "de": "Milchschokolade", "fr": "Chocolat au lait", "pt": "Chocolate de leite", "it": "Cioccolato al latte"},
+    "Mint scoop": {"es": "Bola de menta", "de": "Minzkugel", "fr": "Boule de menthe", "pt": "Bola de menta", "it": "Pallina menta"},
+    "Moonlight": {"es": "Luz de luna", "de": "Mondlicht", "fr": "Clair de lune", "pt": "Luz de lua", "it": "Chiaro di luna"},
+    "Moss green": {"es": "Verde musgo", "de": "Moosgrün", "fr": "Vert mousse", "pt": "Verde musgo", "it": "Verde muschio"},
+    "Moss shadow": {"es": "Sombra de musgo", "de": "Moosschatten", "fr": "Ombre de mousse", "pt": "Sombra de musgo", "it": "Ombra di muschio"},
+    "Muzzle dark": {"es": "Hocico oscuro", "de": "Dunkle Schnauze", "fr": "Museau sombre", "pt": "Focinho escuro", "it": "Muso scuro"},
+    "Navy deep": {"es": "Azul marino profundo", "de": "Tiefes Marineblau", "fr": "Bleu marine profond", "pt": "Azul-marinho profundo", "it": "Blu marino profondo"},
+    "Nose pink": {"es": "Rosa de nariz", "de": "Nasenrosa", "fr": "Rose de nez", "pt": "Rosa de nariz", "it": "Rosa del naso"},
+    "Orange zest": {"es": "Piel de naranja", "de": "Orangenschale", "fr": "Zeste d’orange", "pt": "Casca de laranja", "it": "Scorza d’arancia"},
+    "Orchid accent": {"es": "Acento orquídea", "de": "Orchideenakzent", "fr": "Accent orchidée", "pt": "Acento orquídea", "it": "Accento orchidea"},
+    "Pale wood": {"es": "Madera pálida", "de": "Helles Holz", "fr": "Bois pâle", "pt": "Madeira pálida", "it": "Legno chiaro"},
+    "Parchment": {"es": "Pergamino", "de": "Pergament", "fr": "Parchemin", "pt": "Pergaminho", "it": "Pergamena"},
+    "Pink bunny": {"es": "Conejo rosa", "de": "Rosa Hase", "fr": "Lapin rose", "pt": "Coelho rosa", "it": "Coniglietto rosa"},
+    "Pink nose": {"es": "Nariz rosada", "de": "Rosa Nase", "fr": "Nez rose", "pt": "Nariz rosado", "it": "Naso rosa"},
+    "Plate blue": {"es": "Azul de plato", "de": "Tellerblau", "fr": "Bleu d’assiette", "pt": "Azul de prato", "it": "Blu piatto"},
+    "Plum shade": {"es": "Sombra ciruela", "de": "Pflaumenschatten", "fr": "Ombre prune", "pt": "Sombra ameixa", "it": "Ombra prugna"},
+    "Polish highlight": {"es": "Brillo de barniz", "de": "Lackglanz", "fr": "Éclat de vernis", "pt": "Brilho de verniz", "it": "Luce di lucido"},
+    "Poppy red": {"es": "Rojo amapola", "de": "Mohnrot", "fr": "Rouge coquelicot", "pt": "Vermelho papoila", "it": "Rosso papavero"},
+    "Rain teal": {"es": "Turquesa de lluvia", "de": "Regentürkis", "fr": "Sarcelle de pluie", "pt": "Turquesa de chuva", "it": "Verde acqua di pioggia"},
+    "Reddish glow": {"es": "Brillo rojizo", "de": "Rötlicher Glanz", "fr": "Lueur rougeâtre", "pt": "Brilho avermelhado", "it": "Bagliore rossastro"},
+    "Roast shadow": {"es": "Sombra tostada", "de": "Röstschatten", "fr": "Ombre de rôti", "pt": "Sombra tostada", "it": "Ombra di tostatura"},
+    "Root brown": {"es": "Raíz castaña", "de": "Wurzelbraun", "fr": "Brun racine", "pt": "Castanho de raiz", "it": "Marrone radice"},
+    "Rope tan": {"es": "Cuerda arena", "de": "Seilsand", "fr": "Corde sable", "pt": "Corda areia", "it": "Beige corda"},
+    "Rose red": {"es": "Rojo rosa", "de": "Rosenrot", "fr": "Rouge rose", "pt": "Vermelho rosa", "it": "Rosso rosa"},
+    "Sage green": {"es": "Verde salvia", "de": "Salbeigrün", "fr": "Vert sauge", "pt": "Verde sálvia", "it": "Verde salvia"},
+    "Scale highlight": {"es": "Luz de escamas", "de": "Schuppenlicht", "fr": "Lumière d’écailles", "pt": "Luz de escamas", "it": "Luce di scaglie"},
+    "Scale shadow": {"es": "Sombra de escamas", "de": "Schuppenschatten", "fr": "Ombre d’écailles", "pt": "Sombra de escamas", "it": "Ombra di scaglie"},
+    "Scarlet wing": {"es": "Ala escarlata", "de": "Scharlachflügel", "fr": "Aile écarlate", "pt": "Asa escarlate", "it": "Ala scarlatta"},
+    "Scoop shadow": {"es": "Sombra de bola", "de": "Kugelschatten", "fr": "Ombre de boule", "pt": "Sombra de bola", "it": "Ombra di pallina"},
+    "Sea teal": {"es": "Turquesa marino", "de": "Meertürkis", "fr": "Sarcelle marine", "pt": "Turquesa marinho", "it": "Verde mare"},
+    "Seam shadow": {"es": "Sombra de costura", "de": "Nahtschatten", "fr": "Ombre de couture", "pt": "Sombra de costura", "it": "Ombra di cucitura"},
+    "Seashell pink": {"es": "Rosa concha", "de": "Muschelrosa", "fr": "Rose coquillage", "pt": "Rosa concha", "it": "Rosa conchiglia"},
+    "Signal red": {"es": "Rojo señal", "de": "Signalrot", "fr": "Rouge signal", "pt": "Vermelho sinal", "it": "Rosso segnale"},
+    "Sky pastel": {"es": "Cielo pastel", "de": "Pastellhimmel", "fr": "Ciel pastel", "pt": "Céu pastel", "it": "Cielo pastello"},
+    "Sky reflection": {"es": "Reflejo del cielo", "de": "Himmelsspiegelung", "fr": "Reflet du ciel", "pt": "Reflexo do céu", "it": "Riflesso del cielo"},
+    "Smoke grey": {"es": "Gris humo", "de": "Rauchgrau", "fr": "Gris fumée", "pt": "Cinzento fumo", "it": "Grigio fumo"},
+    "Soft grey shadow": {"es": "Sombra gris suave", "de": "Weicher Grauschatten", "fr": "Ombre gris doux", "pt": "Sombra cinzenta suave", "it": "Ombra grigia morbida"},
+    "Specular": {"es": "Brillo especular", "de": "Glanzlicht", "fr": "Éclat spéculaire", "pt": "Brilho especular", "it": "Speculare"},
+    "Spring sky": {"es": "Cielo de primavera", "de": "Frühlingshimmel", "fr": "Ciel de printemps", "pt": "Céu de primavera", "it": "Cielo di primavera"},
+    "Star glow": {"es": "Brillo de estrellas", "de": "Sternenschein", "fr": "Lueur d’étoiles", "pt": "Brilho de estrelas", "it": "Bagliore di stella"},
+    "Strawberry scoop": {"es": "Bola de fresa", "de": "Erdbeerkugel", "fr": "Boule de fraise", "pt": "Bola de morango", "it": "Pallina fragola"},
+    "Stripe shadow": {"es": "Sombra de rayas", "de": "Streifenschatten", "fr": "Ombre de rayures", "pt": "Sombra de riscas", "it": "Ombra di riga"},
+    "Stripe white": {"es": "Blanco de raya", "de": "Streifenweiß", "fr": "Blanc de rayure", "pt": "Branco de risca", "it": "Riga bianca"},
+    "Sun gold": {"es": "Oro solar", "de": "Sonnengold", "fr": "Or solaire", "pt": "Ouro solar", "it": "Oro del sole"},
+    "Sun warmth": {"es": "Calidez del sol", "de": "Sonnenwärme", "fr": "Chaleur du soleil", "pt": "Calor do sol", "it": "Calore del sole"},
+    "Sun yellow": {"es": "Amarillo sol", "de": "Sonnengelb", "fr": "Jaune soleil", "pt": "Amarelo sol", "it": "Giallo sole"},
+    "Sunlit crest": {"es": "Cresta al sol", "de": "Sonniger Kamm", "fr": "Crête au soleil", "pt": "Crista ao sol", "it": "Cresta al sole"},
+    "Sunlit frond": {"es": "Fronda al sol", "de": "Sonniger Wedel", "fr": "Fronde au soleil", "pt": "Fronde ao sol", "it": "Fronda al sole"},
+    "Sunlit grass": {"es": "Hierba al sol", "de": "Sonniges Gras", "fr": "Herbe au soleil", "pt": "Erva ao sol", "it": "Erba al sole"},
+    "Tail shadow": {"es": "Sombra de cola", "de": "Schwanzschatten", "fr": "Ombre de queue", "pt": "Sombra de cauda", "it": "Ombra della coda"},
+    "Teal contrast": {"es": "Contraste turquesa", "de": "Türkiskontrast", "fr": "Contraste sarcelle", "pt": "Contraste turquesa", "it": "Contrasto verde acqua"},
+    "Terracotta": {"es": "Terracota", "de": "Terrakotta", "fr": "Terre cuite", "pt": "Terracota", "it": "Terracotta"},
+    "Thread contrast": {"es": "Contraste de hilo", "de": "Fadenkontrast", "fr": "Contraste de fil", "pt": "Contraste de fio", "it": "Filo a contrasto"},
+    "Topstitch gold": {"es": "Pespunte dorado", "de": "Goldene Steppnaht", "fr": "Surpiqûre dorée", "pt": "Pesponto dourado", "it": "Impuntura dorata"},
+    "Toxic glow": {"es": "Brillo tóxico", "de": "Giftiger Glanz", "fr": "Lueur toxique", "pt": "Brilho tóxico", "it": "Bagliore tossico"},
+    "Twilight canopy": {"es": "Dosel crepuscular", "de": "Dämmerungskrone", "fr": "Canopée crépusculaire", "pt": "Copa crepuscular", "it": "Chioma al crepuscolo"},
+    "Vanilla cream": {"es": "Crema de vainilla", "de": "Vanillecreme", "fr": "Crème vanille", "pt": "Creme de baunilha", "it": "Crema alla vaniglia"},
+    "Verdigris": {"es": "Cardenillo", "de": "Grünspan", "fr": "Vert-de-gris", "pt": "Azinhavre", "it": "Verderame"},
+    "Violet haze": {"es": "Bruma violeta", "de": "Violetter Dunst", "fr": "Brume violette", "pt": "Bruma violeta", "it": "Foschia viola"},
+    "Void background": {"es": "Fondo vacío", "de": "Leerer Hintergrund", "fr": "Fond de vide", "pt": "Fundo vazio", "it": "Sfondo vuoto"},
+    "Warm bounce": {"es": "Rebote cálido", "de": "Warmes Reflexlicht", "fr": "Rebond chaud", "pt": "Ressalto quente", "it": "Rimbalzo caldo"},
+    "Warm cream": {"es": "Crema cálida", "de": "Warme Creme", "fr": "Crème chaude", "pt": "Creme quente", "it": "Crema calda"},
+    "Warm glow": {"es": "Brillo cálido", "de": "Warmer Glanz", "fr": "Lueur chaude", "pt": "Brilho quente", "it": "Bagliore caldo"},
+    "Warm midtone": {"es": "Medio tono cálido", "de": "Warmer Mittelton", "fr": "Ton moyen chaud", "pt": "Tom médio quente", "it": "Mezzo tono caldo"},
+    "Warm reflection": {"es": "Reflejo cálido", "de": "Warme Spiegelung", "fr": "Reflet chaud", "pt": "Reflexo quente", "it": "Riflesso caldo"},
+    "Warm sheen": {"es": "Brillo cálido", "de": "Warmer Schimmer", "fr": "Reflet chaud", "pt": "Lustro quente", "it": "Riflesso caldo satinato"},
+    "Washed highlight": {"es": "Luz desteñida", "de": "Verwaschenes Licht", "fr": "Lumière délavée", "pt": "Luz desbotada", "it": "Luce slavata"},
+    "Window night": {"es": "Noche en la ventana", "de": "Fensternacht", "fr": "Nuit à la fenêtre", "pt": "Noite na janela", "it": "Finestra di notte"},
+    "Wood highlight": {"es": "Luz de madera", "de": "Holzlicht", "fr": "Lumière de bois", "pt": "Luz de madeira", "it": "Luce del legno"},
+    "Zenith blue": {"es": "Azul cenital", "de": "Zenitblau", "fr": "Bleu zénithal", "pt": "Azul zenital", "it": "Blu zenit"}
   },
   "scenes": [
     {
       "id": "ghostCharacter",
       "category": "characters",
-      "name": {"en": "Ghost Character", "es": "Personaje fantasma"},
+      "name": {"en": "Ghost Character", "es": "Personaje fantasma", "de": "Geisterfigur", "fr": "Personnage fantôme", "pt": "Personagem fantasma", "it": "Personaggio fantasma"},
       "seed": {"h": 210, "s": 0.18, "v": 0.88},
       "targets": [
         {"role": "Soft shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.05},
@@ -189,7 +189,7 @@
     {
       "id": "cuteCharacter",
       "category": "characters",
-      "name": {"en": "Cute Character", "es": "Personaje adorable"},
+      "name": {"en": "Cute Character", "es": "Personaje adorable", "de": "Niedliche Figur", "fr": "Personnage mignon", "pt": "Personagem querida", "it": "Personaggio tenero"},
       "seed": {"h": 330, "s": 0.28, "v": 0.9},
       "targets": [
         {"role": "Soft shadow", "hues": [0], "valueDelta": -0.15, "saturationDelta": -0.03},
@@ -202,7 +202,7 @@
     {
       "id": "villainCharacter",
       "category": "characters",
-      "name": {"en": "Villain", "es": "Villano"},
+      "name": {"en": "Villain", "es": "Villano", "de": "Schurke", "fr": "Méchant", "pt": "Vilão", "it": "Cattivo"},
       "seed": {"h": 275, "s": 0.55, "v": 0.45},
       "targets": [
         {"role": "Toxic glow", "hues": [190,200], "valueDelta": 0.3, "saturationDelta": 0.25},
@@ -215,7 +215,7 @@
     {
       "id": "warmPortrait",
       "category": "skin",
-      "name": {"en": "Warm Portrait", "es": "Retrato cálido"},
+      "name": {"en": "Warm Portrait", "es": "Retrato cálido", "de": "Warmes Porträt", "fr": "Portrait chaud", "pt": "Retrato quente", "it": "Ritratto caldo"},
       "seed": {"h": 22, "s": 0.46, "v": 0.74},
       "targets": [
         {"role": "Skin/subject shadow", "hues": [0], "valueDelta": -0.17, "saturationDelta": -0.02},
@@ -228,7 +228,7 @@
     {
       "id": "coolPortrait",
       "category": "skin",
-      "name": {"en": "Cool Portrait", "es": "Retrato frío"},
+      "name": {"en": "Cool Portrait", "es": "Retrato frío", "de": "Kaltes Porträt", "fr": "Portrait froid", "pt": "Retrato frio", "it": "Ritratto freddo"},
       "seed": {"h": 205, "s": 0.38, "v": 0.7},
       "targets": [
         {"role": "Subject shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.03},
@@ -241,7 +241,7 @@
     {
       "id": "skinPorcelain",
       "category": "skin",
-      "name": {"en": "Porcelain Skin", "es": "Piel de porcelana"},
+      "name": {"en": "Porcelain Skin", "es": "Piel de porcelana", "de": "Porzellanhaut", "fr": "Peau de porcelaine", "pt": "Pele de porcelana", "it": "Pelle di porcellana"},
       "seed": {"h": 18, "s": 0.16, "v": 0.96},
       "targets": [
         {"role": "Highlight", "hues": [35,45], "valueDelta": 0.03, "saturationDelta": -0.08},
@@ -254,7 +254,7 @@
     {
       "id": "skinTan",
       "category": "skin",
-      "name": {"en": "Tan Skin", "es": "Piel bronceada"},
+      "name": {"en": "Tan Skin", "es": "Piel bronceada", "de": "Gebräunte Haut", "fr": "Peau bronzée", "pt": "Pele bronzeada", "it": "Pelle abbronzata"},
       "seed": {"h": 24, "s": 0.5, "v": 0.82},
       "targets": [
         {"role": "Highlight", "hues": [12,18], "valueDelta": 0.14, "saturationDelta": -0.26},
@@ -267,7 +267,7 @@
     {
       "id": "skinOlive",
       "category": "skin",
-      "name": {"en": "Olive Skin", "es": "Piel aceitunada"},
+      "name": {"en": "Olive Skin", "es": "Piel aceitunada", "de": "Olivhaut", "fr": "Peau olive", "pt": "Pele azeitonada", "it": "Pelle olivastra"},
       "seed": {"h": 38, "s": 0.42, "v": 0.76},
       "targets": [
         {"role": "Highlight", "hues": [10,20], "valueDelta": 0.16, "saturationDelta": -0.2},
@@ -280,7 +280,7 @@
     {
       "id": "skinBrown",
       "category": "skin",
-      "name": {"en": "Brown Skin", "es": "Piel morena"},
+      "name": {"en": "Brown Skin", "es": "Piel morena", "de": "Braune Haut", "fr": "Peau brune", "pt": "Pele morena", "it": "Pelle scura"},
       "seed": {"h": 20, "s": 0.7, "v": 0.62},
       "targets": [
         {"role": "Highlight", "hues": [8,16], "valueDelta": 0.28, "saturationDelta": -0.2},
@@ -293,7 +293,7 @@
     {
       "id": "skinDeep",
       "category": "skin",
-      "name": {"en": "Deep Skin", "es": "Piel oscura"},
+      "name": {"en": "Deep Skin", "es": "Piel oscura", "de": "Dunkle Haut", "fr": "Peau foncée", "pt": "Pele escura", "it": "Pelle molto scura"},
       "seed": {"h": 18, "s": 0.72, "v": 0.34},
       "targets": [
         {"role": "Highlight", "hues": [8,16], "valueDelta": 0.3, "saturationDelta": -0.2},
@@ -306,7 +306,7 @@
     {
       "id": "hairBlonde",
       "category": "skin",
-      "name": {"en": "Blonde Hair", "es": "Pelo rubio"},
+      "name": {"en": "Blonde Hair", "es": "Pelo rubio", "de": "Blondes Haar", "fr": "Cheveux blonds", "pt": "Cabelo louro", "it": "Capelli biondi"},
       "seed": {"h": 45, "s": 0.55, "v": 0.88},
       "targets": [
         {"role": "Highlight", "hues": [5,10], "valueDelta": 0.1, "saturationDelta": -0.35},
@@ -319,7 +319,7 @@
     {
       "id": "hairRed",
       "category": "skin",
-      "name": {"en": "Red Hair", "es": "Pelo pelirrojo"},
+      "name": {"en": "Red Hair", "es": "Pelo pelirrojo", "de": "Rotes Haar", "fr": "Cheveux roux", "pt": "Cabelo ruivo", "it": "Capelli rossi"},
       "seed": {"h": 14, "s": 0.78, "v": 0.7},
       "targets": [
         {"role": "Highlight", "hues": [14,22], "valueDelta": 0.22, "saturationDelta": -0.4},
@@ -332,7 +332,7 @@
     {
       "id": "sunsetLandscape",
       "category": "skyWater",
-      "name": {"en": "Sunset Landscape", "es": "Paisaje al atardecer"},
+      "name": {"en": "Sunset Landscape", "es": "Paisaje al atardecer", "de": "Sonnenuntergangslandschaft", "fr": "Paysage au coucher du soleil", "pt": "Paisagem ao pôr do sol", "it": "Paesaggio al tramonto"},
       "seed": {"h": 28, "s": 0.58, "v": 0.82},
       "targets": [
         {"role": "Ground shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": -0.02},
@@ -345,7 +345,7 @@
     {
       "id": "oceanScene",
       "category": "skyWater",
-      "name": {"en": "Ocean Scene", "es": "Escena marina"},
+      "name": {"en": "Ocean Scene", "es": "Escena marina", "de": "Meeresszene", "fr": "Scène marine", "pt": "Cena marinha", "it": "Scena marina"},
       "seed": {"h": 195, "s": 0.6, "v": 0.62},
       "targets": [
         {"role": "Subject shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.03},
@@ -358,7 +358,7 @@
     {
       "id": "clearSky",
       "category": "skyWater",
-      "name": {"en": "Clear Sky", "es": "Cielo despejado"},
+      "name": {"en": "Clear Sky", "es": "Cielo despejado", "de": "Klarer Himmel", "fr": "Ciel dégagé", "pt": "Céu limpo", "it": "Cielo sereno"},
       "seed": {"h": 205, "s": 0.5, "v": 0.9},
       "targets": [
         {"role": "Zenith blue", "hues": [0], "valueDelta": -0.18, "saturationDelta": 0.25},
@@ -371,7 +371,7 @@
     {
       "id": "stormClouds",
       "category": "skyWater",
-      "name": {"en": "Storm Clouds", "es": "Nubes de tormenta"},
+      "name": {"en": "Storm Clouds", "es": "Nubes de tormenta", "de": "Gewitterwolken", "fr": "Nuages d’orage", "pt": "Nuvens de tempestade", "it": "Nubi di tempesta"},
       "seed": {"h": 215, "s": 0.2, "v": 0.5},
       "targets": [
         {"role": "Cloud shadow", "hues": [0], "valueDelta": -0.3, "saturationDelta": 0.1},
@@ -384,7 +384,7 @@
     {
       "id": "starryNight",
       "category": "skyWater",
-      "name": {"en": "Starry Night", "es": "Noche estrellada"},
+      "name": {"en": "Starry Night", "es": "Noche estrellada", "de": "Sternennacht", "fr": "Nuit étoilée", "pt": "Noite estrelada", "it": "Notte stellata"},
       "seed": {"h": 232, "s": 0.82, "v": 0.3},
       "targets": [
         {"role": "Midnight", "hues": [10], "valueDelta": -0.12, "saturationDelta": 0},
@@ -397,7 +397,7 @@
     {
       "id": "forestScene",
       "category": "nature",
-      "name": {"en": "Forest Scene", "es": "Escena de bosque"},
+      "name": {"en": "Forest Scene", "es": "Escena de bosque", "de": "Waldszene", "fr": "Scène de forêt", "pt": "Cena de floresta", "it": "Scena di bosco"},
       "seed": {"h": 118, "s": 0.5, "v": 0.62},
       "targets": [
         {"role": "Leaf shadow", "hues": [0], "valueDelta": -0.22, "saturationDelta": -0.01},
@@ -410,7 +410,7 @@
     {
       "id": "autumnScene",
       "category": "nature",
-      "name": {"en": "Autumn Scene", "es": "Escena otoñal"},
+      "name": {"en": "Autumn Scene", "es": "Escena otoñal", "de": "Herbstszene", "fr": "Scène d’automne", "pt": "Cena de outono", "it": "Scena autunnale"},
       "seed": {"h": 24, "s": 0.7, "v": 0.78},
       "targets": [
         {"role": "Skin/subject shadow", "hues": [0], "valueDelta": -0.17, "saturationDelta": -0.02},
@@ -423,7 +423,7 @@
     {
       "id": "springGarden",
       "category": "nature",
-      "name": {"en": "Spring Garden", "es": "Jardín primaveral"},
+      "name": {"en": "Spring Garden", "es": "Jardín primaveral", "de": "Frühlingsgarten", "fr": "Jardin de printemps", "pt": "Jardim primaveril", "it": "Giardino di primavera"},
       "seed": {"h": 108, "s": 0.42, "v": 0.86},
       "targets": [
         {"role": "Soft shadow", "hues": [0], "valueDelta": -0.15, "saturationDelta": -0.03},
@@ -436,7 +436,7 @@
     {
       "id": "springMood",
       "category": "nature",
-      "name": {"en": "Spring Mood", "es": "Ambiente primaveral"},
+      "name": {"en": "Spring Mood", "es": "Ambiente primaveral", "de": "Frühlingsstimmung", "fr": "Ambiance de printemps", "pt": "Ambiente primaveril", "it": "Atmosfera primaverile"},
       "seed": {"h": 104, "s": 0.38, "v": 0.86},
       "targets": [
         {"role": "Bud shadow", "hues": [0], "valueDelta": -0.14, "saturationDelta": -0.02},
@@ -449,7 +449,7 @@
     {
       "id": "summerMood",
       "category": "nature",
-      "name": {"en": "Summer Mood", "es": "Ambiente veraniego"},
+      "name": {"en": "Summer Mood", "es": "Ambiente veraniego", "de": "Sommerstimmung", "fr": "Ambiance d’été", "pt": "Ambiente de verão", "it": "Atmosfera estiva"},
       "seed": {"h": 34, "s": 0.62, "v": 0.84},
       "targets": [
         {"role": "Palm shadow", "hues": [0], "valueDelta": -0.22, "saturationDelta": -0.02},
@@ -462,7 +462,7 @@
     {
       "id": "autumnMood",
       "category": "nature",
-      "name": {"en": "Autumn Mood", "es": "Ambiente otoñal"},
+      "name": {"en": "Autumn Mood", "es": "Ambiente otoñal", "de": "Herbststimmung", "fr": "Ambiance d’automne", "pt": "Ambiente outonal", "it": "Atmosfera autunnale"},
       "seed": {"h": 26, "s": 0.58, "v": 0.66},
       "targets": [
         {"role": "Bark shadow", "hues": [0], "valueDelta": -0.26, "saturationDelta": -0.04},
@@ -475,7 +475,7 @@
     {
       "id": "winterMood",
       "category": "nature",
-      "name": {"en": "Winter Mood", "es": "Ambiente invernal"},
+      "name": {"en": "Winter Mood", "es": "Ambiente invernal", "de": "Winterstimmung", "fr": "Ambiance d’hiver", "pt": "Ambiente invernal", "it": "Atmosfera invernale"},
       "seed": {"h": 212, "s": 0.24, "v": 0.84},
       "targets": [
         {"role": "Snow shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": -0.04},
@@ -488,7 +488,7 @@
     {
       "id": "winterSnow",
       "category": "nature",
-      "name": {"en": "Winter Snow", "es": "Nieve de invierno"},
+      "name": {"en": "Winter Snow", "es": "Nieve de invierno", "de": "Winterschnee", "fr": "Neige d’hiver", "pt": "Neve de inverno", "it": "Neve d’inverno"},
       "seed": {"h": 210, "s": 0.18, "v": 0.88},
       "targets": [
         {"role": "Subject shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.03},
@@ -501,7 +501,7 @@
     {
       "id": "cherryBlossom",
       "category": "nature",
-      "name": {"en": "Cherry Blossom", "es": "Cerezo en flor"},
+      "name": {"en": "Cherry Blossom", "es": "Cerezo en flor", "de": "Kirschblüte", "fr": "Cerisier en fleurs", "pt": "Cerejeira em flor", "it": "Ciliegio in fiore"},
       "seed": {"h": 342, "s": 0.22, "v": 0.97},
       "targets": [
         {"role": "Blossom pink", "hues": [0], "valueDelta": -0.04, "saturationDelta": 0.2},
@@ -514,7 +514,7 @@
     {
       "id": "wildflowerMeadow",
       "category": "nature",
-      "name": {"en": "Wildflower Meadow", "es": "Prado de flores silvestres"},
+      "name": {"en": "Wildflower Meadow", "es": "Prado de flores silvestres", "de": "Wildblumenwiese", "fr": "Prairie de fleurs sauvages", "pt": "Prado de flores silvestres", "it": "Prato di fiori selvatici"},
       "seed": {"h": 95, "s": 0.55, "v": 0.78},
       "targets": [
         {"role": "Grass shade", "hues": [15], "valueDelta": -0.28, "saturationDelta": 0.08},
@@ -527,7 +527,7 @@
     {
       "id": "tropicalJungle",
       "category": "nature",
-      "name": {"en": "Tropical Jungle", "es": "Selva tropical"},
+      "name": {"en": "Tropical Jungle", "es": "Selva tropical", "de": "Tropischer Dschungel", "fr": "Jungle tropicale", "pt": "Selva tropical", "it": "Giungla tropicale"},
       "seed": {"h": 140, "s": 0.7, "v": 0.5},
       "targets": [
         {"role": "Canopy shadow", "hues": [10,20], "valueDelta": -0.22, "saturationDelta": 0.05},
@@ -540,7 +540,7 @@
     {
       "id": "desertDunes",
       "category": "nature",
-      "name": {"en": "Desert Dunes", "es": "Dunas del desierto"},
+      "name": {"en": "Desert Dunes", "es": "Dunas del desierto", "de": "Wüstendünen", "fr": "Dunes du désert", "pt": "Dunas do deserto", "it": "Dune del deserto"},
       "seed": {"h": 32, "s": 0.48, "v": 0.88},
       "targets": [
         {"role": "Dune shadow", "hues": [-12,-6], "valueDelta": -0.32, "saturationDelta": 0.1},
@@ -553,7 +553,7 @@
     {
       "id": "lightWood",
       "category": "materials",
-      "name": {"en": "Light Wood", "es": "Madera clara"},
+      "name": {"en": "Light Wood", "es": "Madera clara", "de": "Helles Holz", "fr": "Bois clair", "pt": "Madeira clara", "it": "Legno chiaro"},
       "seed": {"h": 34, "s": 0.5, "v": 0.84},
       "targets": [
         {"role": "Wood highlight", "hues": [8,12], "valueDelta": 0.1, "saturationDelta": -0.32},
@@ -566,7 +566,7 @@
     {
       "id": "darkWood",
       "category": "materials",
-      "name": {"en": "Dark Wood", "es": "Madera oscura"},
+      "name": {"en": "Dark Wood", "es": "Madera oscura", "de": "Dunkles Holz", "fr": "Bois foncé", "pt": "Madeira escura", "it": "Legno scuro"},
       "seed": {"h": 22, "s": 0.62, "v": 0.36},
       "targets": [
         {"role": "Polish highlight", "hues": [12,20], "valueDelta": 0.34, "saturationDelta": -0.28},
@@ -579,7 +579,7 @@
     {
       "id": "stone",
       "category": "materials",
-      "name": {"en": "Stone", "es": "Piedra"},
+      "name": {"en": "Stone", "es": "Piedra", "de": "Stein", "fr": "Pierre", "pt": "Pedra", "it": "Pietra"},
       "seed": {"h": 30, "s": 0.1, "v": 0.62},
       "targets": [
         {"role": "Light face", "hues": [0,20,180,200], "valueDelta": 0.22, "saturationDelta": 0, "maxSaturation": 0.25},
@@ -592,7 +592,7 @@
     {
       "id": "fabric",
       "category": "materials",
-      "name": {"en": "Fabric", "es": "Tela"},
+      "name": {"en": "Fabric", "es": "Tela", "de": "Stoff", "fr": "Tissu", "pt": "Tecido", "it": "Tessuto"},
       "seed": {"h": 350, "s": 0.4, "v": 0.7},
       "targets": [
         {"role": "Fold highlight", "hues": [8,12], "valueDelta": 0.22, "saturationDelta": -0.22},
@@ -605,7 +605,7 @@
     {
       "id": "denim",
       "category": "materials",
-      "name": {"en": "Denim", "es": "Tela vaquera"},
+      "name": {"en": "Denim", "es": "Tela vaquera", "de": "Jeansstoff", "fr": "Jean", "pt": "Ganga", "it": "Denim"},
       "seed": {"h": 218, "s": 0.6, "v": 0.5},
       "targets": [
         {"role": "Washed highlight", "hues": [-10,-5], "valueDelta": 0.28, "saturationDelta": -0.35},
@@ -618,7 +618,7 @@
     {
       "id": "gold",
       "category": "materials",
-      "name": {"en": "Gold", "es": "Oro"},
+      "name": {"en": "Gold", "es": "Oro", "de": "Gold", "fr": "Or", "pt": "Ouro", "it": "Oro"},
       "seed": {"h": 44, "s": 0.76, "v": 0.82},
       "targets": [
         {"role": "Specular", "hues": [6,10], "valueDelta": 0.16, "saturationDelta": -0.55},
@@ -631,7 +631,7 @@
     {
       "id": "silver",
       "category": "materials",
-      "name": {"en": "Silver", "es": "Plata"},
+      "name": {"en": "Silver", "es": "Plata", "de": "Silber", "fr": "Argent", "pt": "Prata", "it": "Argento"},
       "seed": {"h": 208, "s": 0.1, "v": 0.76},
       "targets": [
         {"role": "Specular", "hues": [0,45,90,135,180,225,270,315], "valueDelta": 0.2, "saturationDelta": -0.1, "preferNeutral": true, "maxSaturation": 0.22},
@@ -644,7 +644,7 @@
     {
       "id": "copper",
       "category": "materials",
-      "name": {"en": "Copper", "es": "Cobre"},
+      "name": {"en": "Copper", "es": "Cobre", "de": "Kupfer", "fr": "Cuivre", "pt": "Cobre", "it": "Rame"},
       "seed": {"h": 20, "s": 0.72, "v": 0.74},
       "targets": [
         {"role": "Specular", "hues": [20,28], "valueDelta": 0.2, "saturationDelta": -0.5},
@@ -657,7 +657,7 @@
     {
       "id": "orangeCat",
       "category": "animals",
-      "name": {"en": "Orange Cat", "es": "Gato naranja"},
+      "name": {"en": "Orange Cat", "es": "Gato naranja", "de": "Orange Katze", "fr": "Chat roux", "pt": "Gato laranja", "it": "Gatto rosso"},
       "seed": {"h": 26, "s": 0.76, "v": 0.88},
       "targets": [
         {"role": "Light fur", "hues": [10,14], "valueDelta": 0.1, "saturationDelta": -0.5},
@@ -670,7 +670,7 @@
     {
       "id": "goldenFur",
       "category": "animals",
-      "name": {"en": "Golden Fur", "es": "Pelaje dorado"},
+      "name": {"en": "Golden Fur", "es": "Pelaje dorado", "de": "Goldenes Fell", "fr": "Pelage doré", "pt": "Pelo dourado", "it": "Pelo dorato"},
       "seed": {"h": 36, "s": 0.58, "v": 0.88},
       "targets": [
         {"role": "Fur highlight", "hues": [8,12], "valueDelta": 0.1, "saturationDelta": -0.35},
@@ -683,7 +683,7 @@
     {
       "id": "blackFur",
       "category": "animals",
-      "name": {"en": "Black Fur", "es": "Pelaje negro"},
+      "name": {"en": "Black Fur", "es": "Pelaje negro", "de": "Schwarzes Fell", "fr": "Pelage noir", "pt": "Pelo preto", "it": "Pelo nero"},
       "seed": {"h": 225, "s": 0.25, "v": 0.22},
       "targets": [
         {"role": "Blue sheen", "hues": [0], "valueDelta": 0.45, "saturationDelta": 0.15},
@@ -696,7 +696,7 @@
     {
       "id": "whiteFur",
       "category": "animals",
-      "name": {"en": "White Fur", "es": "Pelaje blanco"},
+      "name": {"en": "White Fur", "es": "Pelaje blanco", "de": "Weißes Fell", "fr": "Pelage blanc", "pt": "Pelo branco", "it": "Pelo bianco"},
       "seed": {"h": 205, "s": 0.1, "v": 0.96},
       "targets": [
         {"role": "Cool shadow", "hues": [20,30], "valueDelta": -0.22, "saturationDelta": 0.1},
@@ -709,7 +709,7 @@
     {
       "id": "tropicalBird",
       "category": "animals",
-      "name": {"en": "Tropical Bird", "es": "Ave tropical"},
+      "name": {"en": "Tropical Bird", "es": "Ave tropical", "de": "Tropenvogel", "fr": "Oiseau tropical", "pt": "Ave tropical", "it": "Uccello tropicale"},
       "seed": {"h": 170, "s": 0.8, "v": 0.7},
       "targets": [
         {"role": "Feather highlight", "hues": [5,10], "valueDelta": 0.25, "saturationDelta": -0.4},
@@ -722,7 +722,7 @@
     {
       "id": "freshFruit",
       "category": "food",
-      "name": {"en": "Fresh Fruit", "es": "Fruta fresca"},
+      "name": {"en": "Fresh Fruit", "es": "Fruta fresca", "de": "Frisches Obst", "fr": "Fruits frais", "pt": "Fruta fresca", "it": "Frutta fresca"},
       "seed": {"h": 8, "s": 0.8, "v": 0.86},
       "targets": [
         {"role": "Juicy highlight", "hues": [8,14], "valueDelta": 0.12, "saturationDelta": -0.6},
@@ -735,7 +735,7 @@
     {
       "id": "bakery",
       "category": "food",
-      "name": {"en": "Bakery", "es": "Panadería"},
+      "name": {"en": "Bakery", "es": "Panadería", "de": "Bäckerei", "fr": "Boulangerie", "pt": "Padaria", "it": "Panetteria"},
       "seed": {"h": 34, "s": 0.55, "v": 0.88},
       "targets": [
         {"role": "Crumb light", "hues": [12], "valueDelta": 0.1, "saturationDelta": -0.35},
@@ -748,7 +748,7 @@
     {
       "id": "chocolateCoffee",
       "category": "food",
-      "name": {"en": "Chocolate and Coffee", "es": "Chocolate y café"},
+      "name": {"en": "Chocolate and Coffee", "es": "Chocolate y café", "de": "Schokolade und Kaffee", "fr": "Chocolat et café", "pt": "Chocolate e café", "it": "Cioccolato e caffè"},
       "seed": {"h": 24, "s": 0.7, "v": 0.32},
       "targets": [
         {"role": "Cream foam", "hues": [12,16], "valueDelta": 0.55, "saturationDelta": -0.5},
@@ -761,7 +761,7 @@
     {
       "id": "iceCream",
       "category": "food",
-      "name": {"en": "Ice Cream", "es": "Helado"},
+      "name": {"en": "Ice Cream", "es": "Helado", "de": "Eiscreme", "fr": "Glace", "pt": "Gelado", "it": "Gelato"},
       "seed": {"h": 330, "s": 0.3, "v": 0.95},
       "targets": [
         {"role": "Mint scoop", "hues": [-180,-170], "valueDelta": -0.05, "saturationDelta": 0},
@@ -774,7 +774,7 @@
     {
       "id": "pastelDream",
       "category": "holidays",
-      "name": {"en": "Pastel Dream", "es": "Sueño pastel"},
+      "name": {"en": "Pastel Dream", "es": "Sueño pastel", "de": "Pastelltraum", "fr": "Rêve pastel", "pt": "Sonho pastel", "it": "Sogno pastello"},
       "seed": {"h": 268, "s": 0.26, "v": 0.9},
       "targets": [
         {"role": "Soft shadow", "hues": [0], "valueDelta": -0.15, "saturationDelta": -0.03},
@@ -787,7 +787,7 @@
     {
       "id": "neonNight",
       "category": "holidays",
-      "name": {"en": "Neon Night", "es": "Noche de neón"},
+      "name": {"en": "Neon Night", "es": "Noche de neón", "de": "Neonnacht", "fr": "Nuit néon", "pt": "Noite de néon", "it": "Notte al neon"},
       "seed": {"h": 322, "s": 0.78, "v": 0.6},
       "targets": [
         {"role": "Primary shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": 0},
@@ -800,7 +800,7 @@
     {
       "id": "moodyNight",
       "category": "holidays",
-      "name": {"en": "Moody Night", "es": "Noche melancólica"},
+      "name": {"en": "Moody Night", "es": "Noche melancólica", "de": "Düstere Nacht", "fr": "Nuit mélancolique", "pt": "Noite melancólica", "it": "Notte cupa"},
       "seed": {"h": 225, "s": 0.5, "v": 0.35},
       "targets": [
         {"role": "Subject shadow", "hues": [0], "valueDelta": -0.2, "saturationDelta": -0.03},
@@ -813,7 +813,7 @@
     {
       "id": "halloweenMood",
       "category": "holidays",
-      "name": {"en": "Halloween Mood", "es": "Ambiente de Halloween"},
+      "name": {"en": "Halloween Mood", "es": "Ambiente de Halloween", "de": "Halloween-Stimmung", "fr": "Ambiance Halloween", "pt": "Ambiente de Halloween", "it": "Atmosfera di Halloween"},
       "seed": {"h": 28, "s": 0.72, "v": 0.78},
       "targets": [
         {"role": "Pumpkin shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": 0.02},
@@ -826,7 +826,7 @@
     {
       "id": "christmasMood",
       "category": "holidays",
-      "name": {"en": "Christmas Mood", "es": "Ambiente navideño"},
+      "name": {"en": "Christmas Mood", "es": "Ambiente navideño", "de": "Weihnachtsstimmung", "fr": "Ambiance de Noël", "pt": "Ambiente natalício", "it": "Atmosfera natalizia"},
       "seed": {"h": 4, "s": 0.64, "v": 0.72},
       "targets": [
         {"role": "Ribbon red", "hues": [0], "valueDelta": -0.08, "saturationDelta": 0.04},
@@ -839,7 +839,7 @@
     {
       "id": "easterPastels",
       "category": "holidays",
-      "name": {"en": "Easter Pastels", "es": "Pasteles de Pascua"},
+      "name": {"en": "Easter Pastels", "es": "Pasteles de Pascua", "de": "Osterpastelle", "fr": "Pastels de Pâques", "pt": "Pastéis de Páscoa", "it": "Pastelli di Pasqua"},
       "seed": {"h": 150, "s": 0.28, "v": 0.92},
       "targets": [
         {"role": "Lilac egg", "hues": [120,130], "valueDelta": -0.04, "saturationDelta": 0},
@@ -852,7 +852,7 @@
     {
       "id": "valentines",
       "category": "holidays",
-      "name": {"en": "Valentine's Day", "es": "San Valentín"},
+      "name": {"en": "Valentine's Day", "es": "San Valentín", "de": "Valentinstag", "fr": "Saint-Valentin", "pt": "Dia dos Namorados", "it": "San Valentino"},
       "seed": {"h": 348, "s": 0.62, "v": 0.82},
       "targets": [
         {"role": "Rose red", "hues": [4], "valueDelta": -0.22, "saturationDelta": 0.2},
@@ -865,7 +865,7 @@
     {
       "id": "cozyInterior",
       "category": "interiors",
-      "name": {"en": "Cozy Interior", "es": "Interior acogedor"},
+      "name": {"en": "Cozy Interior", "es": "Interior acogedor", "de": "Gemütliches Interieur", "fr": "Intérieur douillet", "pt": "Interior aconchegante", "it": "Interno accogliente"},
       "seed": {"h": 28, "s": 0.5, "v": 0.6},
       "targets": [
         {"role": "Skin/subject shadow", "hues": [0], "valueDelta": -0.17, "saturationDelta": -0.02},
@@ -878,7 +878,7 @@
     {
       "id": "vintageRoom",
       "category": "interiors",
-      "name": {"en": "Vintage Room", "es": "Habitación vintage"},
+      "name": {"en": "Vintage Room", "es": "Habitación vintage", "de": "Vintage-Zimmer", "fr": "Chambre vintage", "pt": "Quarto vintage", "it": "Stanza vintage"},
       "seed": {"h": 40, "s": 0.3, "v": 0.7},
       "targets": [
         {"role": "Skin/subject shadow", "hues": [0], "valueDelta": -0.17, "saturationDelta": -0.02},
@@ -891,7 +891,7 @@
     {
       "id": "scandinavian",
       "category": "interiors",
-      "name": {"en": "Scandinavian", "es": "Estilo nórdico"},
+      "name": {"en": "Scandinavian", "es": "Estilo nórdico", "de": "Skandinavisch", "fr": "Style scandinave", "pt": "Estilo nórdico", "it": "Scandinavo"},
       "seed": {"h": 40, "s": 0.08, "v": 0.95},
       "targets": [
         {"role": "Pale wood", "hues": [0], "valueDelta": -0.12, "saturationDelta": 0.28},
@@ -904,7 +904,7 @@
     {
       "id": "studyLibrary",
       "category": "interiors",
-      "name": {"en": "Study and Library", "es": "Estudio y biblioteca"},
+      "name": {"en": "Study and Library", "es": "Estudio y biblioteca", "de": "Studio und Bibliothek", "fr": "Bureau et bibliothèque", "pt": "Estudo e biblioteca", "it": "Studio e biblioteca"},
       "seed": {"h": 20, "s": 0.6, "v": 0.38},
       "targets": [
         {"role": "Lamp glow", "hues": [25,30], "valueDelta": 0.55, "saturationDelta": -0.1},
@@ -917,7 +917,7 @@
     {
       "id": "floralPattern",
       "category": "patterns",
-      "name": {"en": "Floral Pattern", "es": "Patrón floral"},
+      "name": {"en": "Floral Pattern", "es": "Patrón floral", "de": "Blumenmuster", "fr": "Motif floral", "pt": "Padrão floral", "it": "Motivo floreale"},
       "seed": {"h": 340, "s": 0.42, "v": 0.84},
       "targets": [
         {"role": "Petal shadow", "hues": [0], "valueDelta": -0.16, "saturationDelta": 0},
@@ -930,7 +930,7 @@
     {
       "id": "geometricPattern",
       "category": "patterns",
-      "name": {"en": "Geometric Pattern", "es": "Patrón geométrico"},
+      "name": {"en": "Geometric Pattern", "es": "Patrón geométrico", "de": "Geometrisches Muster", "fr": "Motif géométrique", "pt": "Padrão geométrico", "it": "Motivo geometrico"},
       "seed": {"h": 28, "s": 0.5, "v": 0.74},
       "targets": [
         {"role": "Tone A", "hues": [0], "valueDelta": 0, "saturationDelta": 0},
@@ -943,7 +943,7 @@
     {
       "id": "plaidPattern",
       "category": "patterns",
-      "name": {"en": "Plaid Pattern", "es": "Patrón de cuadros"},
+      "name": {"en": "Plaid Pattern", "es": "Patrón de cuadros", "de": "Karomuster", "fr": "Motif écossais", "pt": "Padrão escocês", "it": "Motivo scozzese"},
       "seed": {"h": 4, "s": 0.62, "v": 0.55},
       "targets": [
         {"role": "Tone A", "hues": [0], "valueDelta": 0, "saturationDelta": 0},
@@ -956,7 +956,7 @@
     {
       "id": "polkaDotPattern",
       "category": "patterns",
-      "name": {"en": "Polka Dot Pattern", "es": "Patrón de lunares"},
+      "name": {"en": "Polka Dot Pattern", "es": "Patrón de lunares", "de": "Punktemuster", "fr": "Motif à pois", "pt": "Padrão de bolinhas", "it": "Motivo a pois"},
       "seed": {"h": 200, "s": 0.45, "v": 0.85},
       "targets": [
         {"role": "Tone A", "hues": [0], "valueDelta": 0, "saturationDelta": 0},
@@ -969,7 +969,7 @@
     {
       "id": "candyStripes",
       "category": "patterns",
-      "name": {"en": "Candy Stripes", "es": "Rayas de caramelo"},
+      "name": {"en": "Candy Stripes", "es": "Rayas de caramelo", "de": "Zuckerstreifen", "fr": "Rayures bonbon", "pt": "Riscas de caramelo", "it": "Righe caramella"},
       "seed": {"h": 338, "s": 0.55, "v": 0.92},
       "targets": [
         {"role": "Tone A", "hues": [0], "valueDelta": 0, "saturationDelta": 0},
@@ -982,7 +982,7 @@
     {
       "id": "nauticalStripes",
       "category": "patterns",
-      "name": {"en": "Nautical Stripes", "es": "Rayas marineras"},
+      "name": {"en": "Nautical Stripes", "es": "Rayas marineras", "de": "Marinestreifen", "fr": "Rayures marinières", "pt": "Riscas marinheiras", "it": "Righe marinare"},
       "seed": {"h": 222, "s": 0.8, "v": 0.45},
       "targets": [
         {"role": "Stripe white", "hues": [0,45,90,135,180,225,270,315], "valueDelta": 0.5, "saturationDelta": -0.75, "preferNeutral": true, "maxSaturation": 0.15},
@@ -995,7 +995,7 @@
     {
       "id": "fantasyCreature",
       "category": "fantasy",
-      "name": {"en": "Fantasy Creature", "es": "Criatura fantástica"},
+      "name": {"en": "Fantasy Creature", "es": "Criatura fantástica", "de": "Fabelwesen", "fr": "Créature fantastique", "pt": "Criatura fantástica", "it": "Creatura fantastica"},
       "seed": {"h": 285, "s": 0.62, "v": 0.68},
       "targets": [
         {"role": "Primary shadow", "hues": [0], "valueDelta": -0.24, "saturationDelta": 0},
@@ -1008,7 +1008,7 @@
     {
       "id": "dragon",
       "category": "fantasy",
-      "name": {"en": "Dragon", "es": "Dragón"},
+      "name": {"en": "Dragon", "es": "Dragón", "de": "Drache", "fr": "Dragon", "pt": "Dragão", "it": "Drago"},
       "seed": {"h": 6, "s": 0.78, "v": 0.62},
       "targets": [
         {"role": "Ember glow", "hues": [20,25], "valueDelta": 0.3, "saturationDelta": 0},
@@ -1021,7 +1021,7 @@
     {
       "id": "fairyForest",
       "category": "fantasy",
-      "name": {"en": "Fairy Forest", "es": "Bosque de hadas"},
+      "name": {"en": "Fairy Forest", "es": "Bosque de hadas", "de": "Feenwald", "fr": "Forêt de fées", "pt": "Floresta das fadas", "it": "Bosco fatato"},
       "seed": {"h": 135, "s": 0.5, "v": 0.7},
       "targets": [
         {"role": "Glowing mushroom", "hues": [170,185], "valueDelta": 0.2, "saturationDelta": 0},
@@ -1034,7 +1034,7 @@
     {
       "id": "mermaid",
       "category": "fantasy",
-      "name": {"en": "Mermaid", "es": "Sirena"},
+      "name": {"en": "Mermaid", "es": "Sirena", "de": "Meerjungfrau", "fr": "Sirène", "pt": "Sereia", "it": "Sirena"},
       "seed": {"h": 176, "s": 0.68, "v": 0.7},
       "targets": [
         {"role": "Scale highlight", "hues": [8,12], "valueDelta": 0.2, "saturationDelta": -0.35},

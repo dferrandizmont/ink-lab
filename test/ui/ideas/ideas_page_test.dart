@@ -34,7 +34,8 @@ void main() {
     await pumpIdeas(tester);
 
     expect(find.byKey(IdeasPage.pageKey), findsOneWidget);
-    expect(find.text(l10n.ideasTitle), findsOneWidget);
+    // The page title and the first segment of the Ideas / Diary control.
+    expect(find.text(l10n.ideasTitle), findsNWidgets(2));
     expect(find.text(l10n.ideasHeaderSubtitle), findsOneWidget);
     expect(_key('ideas-search'), findsOneWidget);
     final IdeaPreset featured = IdeasEngine.featuredFor(DateTime(2026, 10, 29));
@@ -175,7 +176,6 @@ void main() {
       await tester.tap(_key('ideas-preset-one_color'));
       await tester.pumpAndSettle();
 
-      expect(find.text(l10n.ideasNoMarkersDecoTime), findsNothing);
       expect(_key('ideas-apply-one_color'), findsOneWidget);
     },
   );

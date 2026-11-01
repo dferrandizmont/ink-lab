@@ -1,9 +1,20 @@
 // Usage: node gen.mjs <repo>
+//
+// The Ideas content (content.mjs) is written in English and Spanish only, so
+// this script regenerates the ideas* and palette* keys of app_en.arb and
+// app_es.arb and nothing else. It never touches app_de/fr/pt/it.arb, which are
+// translated by hand: after a change of content, a new, renamed or removed key
+// is reported at the end (exit code 1) and test/l10n/arb_parity_test.dart
+// fails until the four ARBs have the same keys as app_en.arb.
 import fs from 'node:fs';
 import path from 'node:path';
 import { presets, roles, ui, uiParams, palette } from './content.mjs';
 
 const repo = process.argv[2];
+if (!repo || !process.argv.includes('--force')) {
+  console.error('Refusing to run: read the warning at the top of this file, then pass <repo> --force.');
+  process.exit(2);
+}
 const pascal = (s) => s.split(/[_\s-]+/).map((w) => w[0].toUpperCase() + w.slice(1)).join('');
 const dartStr = (s) => "'" + s.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\$/g, '\\$') + "'";
 
@@ -67,6 +78,24 @@ function updateArb(lang) {
 }
 updateArb('en');
 updateArb('es');
+
+// ---- the hand-translated ARBs are left alone; report what drifted
+const handTranslated = ['de', 'fr', 'pt', 'it'];
+const messageKeys = (lang) => Object.keys(JSON.parse(fs.readFileSync(path.join(repo, 'lib/l10n', `app_${lang}.arb`), 'utf8'))).filter((k) => !k.startsWith('@'));
+const enKeys = new Set(messageKeys('en'));
+let drifted = false;
+for (const lang of handTranslated) {
+  const keys = new Set(messageKeys(lang));
+  const missing = [...enKeys].filter((k) => !keys.has(k));
+  const extra = [...keys].filter((k) => !enKeys.has(k));
+  if (missing.length || extra.length) {
+    drifted = true;
+    console.error(`app_${lang}.arb is out of step with app_en.arb: missing ${missing.length}, extra ${extra.length}`);
+    for (const k of missing) console.error('  missing ' + k);
+    for (const k of extra) console.error('  extra   ' + k);
+  }
+}
+if (drifted) process.exitCode = 1;
 
 // ---- catalog
 const enumCat = { technique: 'technique', colorChallenge: 'colorChallenge', mood: 'mood', season: 'season' };

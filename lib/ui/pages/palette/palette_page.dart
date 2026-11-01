@@ -11,9 +11,11 @@ import 'package:url_launcher/url_launcher.dart' as launcher;
 import '../../../ai/palette_advisor.dart' as ai;
 import '../../../app_scope.dart';
 import '../../../core/app_version.dart' as app_version;
+import '../../../core/blending_chain.dart';
 import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
 import '../../../core/palette_advisor.dart';
+import '../../../core/palette_card_layout.dart';
 import '../../../core/match_quality.dart';
 import '../../../core/palette_generator.dart';
 import '../../../core/photo_palette.dart';
@@ -21,6 +23,8 @@ import '../../../core/color_utils.dart';
 import '../../../core/scene_catalog.dart';
 import '../../../data/data.dart';
 import '../../icons/ink_icons.dart';
+import '../../share/share_actions.dart';
+import '../../share/share_sink.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
@@ -31,12 +35,14 @@ import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
+import '../diary/artwork_entry_page.dart';
 import '../match/color_sampling.dart';
 import '../match/image_picker_service.dart';
 import 'ai_report.dart';
 import 'palette_draft.dart';
 import 'palette_photo_scene.dart';
 import 'palette_reasons.dart';
+import 'palette_share.dart';
 import 'palette_type_picker.dart';
 import '../../../l10n/l10n.dart';
 
@@ -62,6 +68,7 @@ class PalettePage extends StatefulWidget {
     this.decoder,
     this.photoExtractor,
     this.launchEmail,
+    this.shareSink,
   });
 
   /// Key of the page body, handy for tests and for state restoration.
@@ -86,6 +93,10 @@ class PalettePage extends StatefulWidget {
   /// opened. Production uses `url_launcher`; tests inject a fake.
   final Future<bool> Function(Uri uri)? launchEmail;
 
+  /// Where a shared palette image goes. Production opens the system share
+  /// sheet; tests inject a fake.
+  final ShareSink? shareSink;
+
   @override
   State<PalettePage> createState() => _PalettePageState();
 }
@@ -107,8 +118,15 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         mode: launcher.LaunchMode.externalApplication,
       );
 
+  late final ShareSink _share = widget.shareSink ?? const SystemShareSink();
+
+  /// A palette image is being rendered or the share sheet is open.
+  bool _sharing = false;
+
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
+  StreamSubscription<Map<String, String>>? _ownColorsSubscription;
+  StreamSubscription<Set<String>>? _driedSubscription;
   StreamSubscription<AiSettings>? _aiSubscription;
   String _collectionSignature = '';
 
@@ -186,6 +204,20 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   int _paletteSize = 5;
   int _variationToken = 0;
 
+  /// Blending Chain: the chains found for the base, the one on screen, which
+  /// of the chains it is, and whether the whole range of the brand may be
+  /// used instead of the user's markers.
+  BlendingChainResult? _chainResult;
+  BlendingChain? _chain;
+  int _chainIndex = 0;
+  bool _chainWholeRange = false;
+
+  /// Whether the type in use is the Blending Chain.
+  bool get _chainMode => _mode == PaletteMode.blendingChain && !_useScenario;
+
+  /// The chain on screen, or `null` when the type is another one.
+  BlendingChain? get _shownChain => _chainMode ? _chain : null;
+
   List<PaletteSuggestion> _suggestions = const <PaletteSuggestion>[];
   PaletteFailureReason? _failure;
   bool _unknownInput = false;
@@ -222,6 +254,17 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _settingsSubscription?.cancel();
     _collectionSignature = _signatureOf(scope.settings.state);
     _settingsSubscription = scope.settings.changes.listen(_onSettingsChanged);
+    // The colours of the markers changed (an own colour was set or reset).
+    _ownColorsSubscription?.cancel();
+    _driedSubscription?.cancel();
+    _ownColorsSubscription = scope.ownColors.changes.listen(
+      (_) => _onSettingsChanged(scope.settings.state),
+    );
+    // A marker was marked as dried out, or usable again.
+    _driedSubscription?.cancel();
+    _driedSubscription = scope.dried.changes.listen(
+      (_) => _onSettingsChanged(scope.settings.state),
+    );
     _aiSubscription?.cancel();
     // Only an on/off or provider change can alter availability; other edits
     // (temperature, toggles) must not make ML Kit answer another status call.
@@ -255,6 +298,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     paletteDraft.removeListener(_onDraftChanged);
     paletteBaseDraft.removeListener(_onBaseDraftChanged);
     _settingsSubscription?.cancel();
+    _ownColorsSubscription?.cancel();
     _aiSubscription?.cancel();
     _photoToken++;
     _photoScene?.dispose();
@@ -266,7 +310,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   String _signatureOf(AppSettingsState state) {
     final sets = state.settings.effectiveSetIds().toList()..sort();
     final owned = state.settings.ownedMarkerCodes.toList()..sort();
-    return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}';
+    return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}|'
+        '${_scope?.markers.colorRevision}|${_scope?.dried.revision}';
   }
 
   void _onSettingsChanged(AppSettingsState state) {
@@ -308,6 +353,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       brand: brand,
       activeSetIds: settings.effectiveSetIds(),
       ownedMarkerCodes: settings.ownedMarkerCodes,
+      driedColorIds: scope.dried.ids,
     );
     setState(() {
       _brand = brand;
@@ -350,9 +396,13 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final color = paletteBaseDraft.value;
     if (color == null || !mounted) return;
     paletteBaseDraft.value = null;
+    // The type asked for together with the marker (Swatches > Blending chain).
+    final PaletteMode? asked = paletteBaseMode.value;
+    paletteBaseMode.value = null;
     final bool sameBase =
         _baseInput.trim().toUpperCase() == color.newCode.toUpperCase() &&
         _mode != PaletteMode.customPalette &&
+        (asked == null || asked == _mode) &&
         !_useScenario;
     // A palette made from a photo cannot be brought back (the photo is not
     // kept), so replacing one offers no undo.
@@ -361,9 +411,14 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         ? null
         : _PaletteSnapshot.of(this);
     setState(() {
-      if (_mode == PaletteMode.customPalette) _mode = PaletteMode.recommended;
+      if (asked != null) {
+        _mode = asked;
+      } else if (_mode == PaletteMode.customPalette) {
+        _mode = PaletteMode.recommended;
+      }
       _useScenario = false;
       _dropPhoto();
+      _dropChain();
       _baseInput = color.newCode;
       _baseController.text = color.newCode;
       _lockedCodes = const <String>[];
@@ -524,6 +579,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       return;
     }
 
+    if (_chainMode) {
+      _applyChain(resolved!);
+      return;
+    }
+
     final request = _buildRequest();
     final advice = widget.advisor.advise(request);
     setState(() {
@@ -539,6 +599,78 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
           _suggestions = const <PaletteSuggestion>[];
       }
     });
+  }
+
+  /// Builds the blending chains around [base] from the user's markers, or from
+  /// the whole range of the brand when the user asked for it.
+  void _applyChain(MarkerColor base) {
+    final List<MarkerColor> pool = _chainWholeRange ? _catalog : _available;
+    final MarkerColor? inPool = pool
+        .where((MarkerColor c) => c.colorId == base.colorId)
+        .firstOrNull;
+    setState(() {
+      _unknownInput = false;
+      _aiUsed = false;
+      _aiError = null;
+      _lockedCodes = const <String>[];
+      _lockedSuggestions.clear();
+      if (inPool == null) {
+        // Same rule as every other type: the base must be one of the markers.
+        _failure = pool.isEmpty
+            ? PaletteFailureReason.noAvailableColors
+            : PaletteFailureReason.invalidBaseColor;
+        _chainResult = null;
+        _showChain(null);
+        return;
+      }
+      _failure = null;
+      final BlendingChainResult result = buildBlendingChains(
+        inPool,
+        pool,
+        length: _paletteSize,
+      );
+      _chainResult = result;
+      _chainIndex = 0;
+      _showChain(result.best);
+    });
+  }
+
+  /// Puts [chain] on screen (call inside [setState]): the companions in chain
+  /// order, each with its role.
+  void _showChain(BlendingChain? chain) {
+    _chain = chain;
+    if (chain == null) {
+      _suggestions = const <PaletteSuggestion>[];
+      return;
+    }
+    final List<String> roles = blendingChainRoles(chain);
+    _suggestions = <PaletteSuggestion>[
+      for (int i = 0; i < chain.colors.length; i++)
+        if (i != chain.baseIndex)
+          PaletteSuggestion(color: chain.colors[i], reason: roles[i]),
+    ];
+  }
+
+  void _selectChain(int index) {
+    final BlendingChainResult? result = _chainResult;
+    if (result == null || index < 0 || index >= result.chains.length) return;
+    setState(() {
+      _chainIndex = index;
+      _showChain(result.chains[index]);
+    });
+  }
+
+  void _setChainWholeRange(bool value) {
+    setState(() => _chainWholeRange = value);
+    _recompute();
+  }
+
+  /// Forgets the chains (call inside [setState]).
+  void _dropChain() {
+    _chainResult = null;
+    _chain = null;
+    _chainIndex = 0;
+    _chainWholeRange = false;
   }
 
   /// The request for the current UI state, shared by the local engine and the
@@ -715,7 +847,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   }
 
   void _applyVariation(QuickPaletteVariation variation) {
-    if (_suggestions.isEmpty || _available.isEmpty) return;
+    if (_suggestions.isEmpty || _available.isEmpty || _chainMode) return;
     final varied = remixPaletteWithVariation(
       _suggestions,
       _available,
@@ -931,6 +1063,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       // the scenes.
       _useScenario = false;
       _dropPhoto();
+      _dropChain();
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
       if (mode == PaletteMode.customPalette) {
@@ -998,6 +1131,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _aiError = null;
       _notice = null;
       _dropPhoto();
+      _dropChain();
     });
   }
 
@@ -1028,9 +1162,14 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         mode: _mode,
         paletteSize: (_suggestions.length + 1).clamp(3, 5),
         createdAtEpochMs: now.millisecondsSinceEpoch,
+        // A chain is saved in painting order, light to dark, base in place.
         colorCodes: <String>[
-          base.newCode,
-          for (final suggestion in _suggestions) suggestion.color.newCode,
+          if (_shownChain != null)
+            for (final MarkerColor c in _shownChain!.colors) c.newCode
+          else ...<String>[
+            base.newCode,
+            for (final suggestion in _suggestions) suggestion.color.newCode,
+          ],
         ],
         isCustom: _mode == PaletteMode.customPalette,
         scenarioName: _photoMode
@@ -1042,6 +1181,87 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     );
     if (!mounted) return;
     setState(() => _notice = context.l10n.paletteSavedNotice(name));
+  }
+
+  /// The type or scene name that titles the palette on screen.
+  String get _shareTitle => _photoMode
+      ? context.l10n.paletteFromPhotoTitle
+      : _useScenario
+      ? context.l10n.scenarioLabel(_scenario)
+      : context.l10n.modeLabel(_mode);
+
+  /// Renders the palette on screen (AI and scene palettes included) as an
+  /// image and opens the share sheet.
+  Future<void> _sharePalette() async {
+    final MarkerColor? base = _stripBase;
+    if (_sharing || base == null || _suggestions.isEmpty) return;
+    final BlendingChain? chain = _shownChain;
+    final List<String> chainRoles = chain == null
+        ? const <String>[]
+        : blendingChainRoles(chain);
+    final PaletteCardData data = paletteCardData(
+      title: _shareTitle,
+      brand: _brand,
+      colors: chain != null
+          ? <SharedPaletteColor>[
+              for (int i = 0; i < chain.colors.length; i++)
+                (
+                  color: chain.colors[i],
+                  role: context.l10n.roleLabel(chainRoles[i]),
+                ),
+            ]
+          : <SharedPaletteColor>[
+              (
+                color: base,
+                role: _photoMode
+                    ? _photoRole(base)
+                    : context.l10n.roleLabel(_roleBase),
+              ),
+              for (final PaletteSuggestion suggestion in _suggestions)
+                (
+                  color: suggestion.color,
+                  role: context.l10n.roleLabel(_roleFor(suggestion)),
+                ),
+            ],
+    );
+    await _runShare(() => sharePaletteCard(_share, data));
+  }
+
+  /// Shares a saved palette as an image.
+  Future<void> _shareSaved(SavedPalette palette) {
+    if (_sharing) return Future<void>.value();
+    final PaletteCardData data = savedPaletteCardData(
+      palette: palette,
+      catalog: _catalog,
+      baseRole: context.l10n.roleLabel(_roleBase),
+    );
+    // None of its codes are in the catalogue any more: nothing to draw.
+    if (data.entries.isEmpty) {
+      return _runShare(() => throw StateError('empty palette'));
+    }
+    return _runShare(() => sharePaletteCard(_share, data));
+  }
+
+  Future<void> _runShare(Future<void> Function() share) async {
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    final String failed = context.l10n.shareFailed;
+    setState(() => _sharing = true);
+    try {
+      await share();
+    } catch (_) {
+      messenger
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            key: const ValueKey<String>('palette-share-failed'),
+            content: Text(failed),
+          ),
+        );
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
   }
 
   Future<String?> _askName(String initial) => showDialog<String>(
@@ -1115,6 +1335,19 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     };
     final suggestions = <PaletteSuggestion>[];
     final String baseCode = palette.baseCode.toUpperCase();
+    // A saved blending chain holds every step in painting order, base in place.
+    BlendingChain? chain;
+    final MarkerColor? chainBase = byCode[baseCode];
+    if (palette.mode == PaletteMode.blendingChain && chainBase != null) {
+      final List<MarkerColor> steps = <MarkerColor>[
+        for (final String code in palette.colorCodes)
+          if (byCode[code.toUpperCase()] != null) byCode[code.toUpperCase()]!,
+      ];
+      if (steps.length >= 2 &&
+          steps.any((c) => c.colorId == chainBase.colorId)) {
+        chain = BlendingChain(colors: steps, base: chainBase);
+      }
+    }
     for (final code in palette.colorCodes) {
       // The base is the first band of the strip, not a companion row. Older
       // saved palettes hold the companions only.
@@ -1133,15 +1366,32 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _paletteSize = (suggestions.length + 1).clamp(3, 5);
       _useScenario = false;
       _dropPhoto();
+      _dropChain();
       _failure = null;
       _unknownInput = false;
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
       _suggestions = suggestions;
+      if (chain != null) {
+        _paletteSize = chain.colors.length.clamp(3, 5);
+        _showChain(chain);
+      }
       _aiUsed = false;
       _aiError = null;
       _notice = context.l10n.paletteLoadedNotice(palette.name);
     });
+  }
+
+  /// Starts a diary entry linked to [palette], with its markers.
+  Future<void> _addSavedToDiary(SavedPalette palette) async {
+    final String notice = context.l10n.diaryAddedNotice;
+    final bool saved = await ArtworkEntryPage.open(
+      context,
+      palette: palette,
+      picker: widget.picker,
+    );
+    if (!saved || !mounted) return;
+    setState(() => _notice = notice);
   }
 
   Future<void> _deleteSaved(SavedPalette palette) async {
@@ -1244,6 +1494,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   }
 
   List<_PlanStep> _paintPlan() {
+    final BlendingChain? chain = _shownChain;
+    if (chain != null) return _chainPlan(chain);
     final steps = <_PlanStep>[];
     var order = 1;
     final base = _stripBase;
@@ -1307,6 +1559,27 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     return steps;
   }
 
+  /// A blending chain is painted in its own order, light to dark.
+  List<_PlanStep> _chainPlan(BlendingChain chain) {
+    final AppLocalizations t = context.l10n;
+    final List<String> roles = blendingChainRoles(chain);
+    final int last = chain.colors.length - 1;
+    return <_PlanStep>[
+      for (int i = 0; i <= last; i++)
+        _PlanStep(
+          order: i + 1,
+          zone: t.roleLabel(roles[i]),
+          code: chain.colors[i].newCode,
+          name: chain.colors[i].newName,
+          tip: i == 0
+              ? t.palettePaintTipChainFirst
+              : i == last
+              ? t.palettePaintTipChainLast
+              : t.palettePaintTipChainMiddle,
+        ),
+    ];
+  }
+
   String _groupTip(int group) => switch (group) {
     0 => context.l10n.palettePaintTipShadow,
     1 => context.l10n.palettePaintTipHighlight,
@@ -1337,9 +1610,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     };
   }
 
-  /// Selector of the brand-aware messages: `decoTime` or `other`.
-  String get _brandSelector =>
-      _brand == MarkerBrand.decoTime ? 'decoTime' : 'other';
+  /// Selector of the brand-aware messages, with ICU's `other` fallback.
+  String get _brandSelector => _brand.name;
 
   Scene? get _defaultScenarioBaseNotice {
     if (!_useScenario || _photoMode) return null;
@@ -1422,8 +1694,12 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                   _inset(_buildNotice(), top: InkSpacing.block),
                 if (error != null)
                   _inset(_ErrorNote(message: error), top: InkSpacing.block),
+                ..._buildChainNotes(),
                 if (hasResult) ..._buildResult(),
-                if (!hasResult && error == null && !customMode)
+                if (!hasResult &&
+                    error == null &&
+                    !customMode &&
+                    !(_chainMode && _chainResult != null))
                   _inset(
                     _InfoCard(message: context.l10n.paletteEmptyHint),
                     top: InkSpacing.block,
@@ -1849,6 +2125,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                             hex: option.hex,
                             size: 24,
                             radius: InkRadii.xs,
+                            own: option.hasOwnColor,
                           ),
                           const SizedBox(width: InkSpacing.s10),
                           Expanded(
@@ -1933,6 +2210,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   /// The strip with its codes, role/reason card, variations and paint order.
   List<Widget> _buildResult() {
+    final BlendingChain? chain = _shownChain;
+    if (chain != null) return _buildChainResult(chain);
     final InkColors ink = InkColors.of(context);
     final MarkerColor? base = _stripBase;
     // The base is the first band of the strip; companions follow it.
@@ -2069,6 +2348,163 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     ];
   }
 
+  /// What to tell the user about the chain on screen, or why there is none:
+  /// a short chain, a base at the end of its family, the missing marker.
+  List<Widget> _buildChainNotes() {
+    final BlendingChainResult? result = _chainResult;
+    if (!_chainMode || result == null) return const <Widget>[];
+    final AppLocalizations t = context.l10n;
+    final BlendingChain? chain = result.best == null ? null : _chain;
+    final List<String> messages = <String>[];
+    if (chain == null) {
+      messages.add(switch (result.gap) {
+        BlendingGap.lighter => t.paletteChainNeedLighter,
+        BlendingGap.darker => t.paletteChainNeedDarker,
+        _ => t.paletteChainNeedBoth,
+      });
+    } else {
+      if (result.isShort) {
+        messages.add(
+          t.paletteChainShort(chain.colors.length, result.requested),
+        );
+      }
+      if (chain.baseIsLightest && !result.lighterAvailable) {
+        messages.add(t.paletteChainBaseLightest);
+      }
+      if (chain.baseIsDarkest && !result.darkerAvailable) {
+        messages.add(t.paletteChainBaseDarkest);
+      }
+    }
+    final bool canWiden =
+        !_chainWholeRange &&
+        _catalog.length > _available.length &&
+        (chain == null || result.isShort);
+    return <Widget>[
+      if (_chainWholeRange)
+        _inset(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              _InfoCard(message: t.paletteChainWholeRangeNote(_brand.label)),
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: InkButton.text(
+                  key: const ValueKey<String>('palette-chain-my-markers'),
+                  label: t.paletteChainMyMarkers,
+                  onPressed: () => _setChainWholeRange(false),
+                ),
+              ),
+            ],
+          ),
+          top: InkSpacing.block,
+        ),
+      if (messages.isNotEmpty)
+        _inset(
+          KeyedSubtree(
+            key: const ValueKey<String>('palette-chain-note'),
+            child: _InfoCard(message: messages.join(' ')),
+          ),
+          top: InkSpacing.block,
+        ),
+      if (canWiden)
+        _inset(
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: InkButton.secondary(
+              key: const ValueKey<String>('palette-chain-whole-range'),
+              label: t.paletteChainWholeRange,
+              onPressed: () => _setChainWholeRange(true),
+            ),
+          ),
+          top: InkSpacing.s8,
+        ),
+    ];
+  }
+
+  /// The strip, the steps (lightest first), the other chains and the hint of
+  /// a blending chain, then the paint order.
+  List<Widget> _buildChainResult(BlendingChain chain) {
+    final InkColors ink = InkColors.of(context);
+    final AppLocalizations t = context.l10n;
+    final List<String> roles = blendingChainRoles(chain);
+    final Set<String> mine = <String>{
+      for (final MarkerColor c in _available) c.colorId,
+    };
+    final BlendingChainResult? result = _chainResult;
+    final int count = chain.colors.length;
+    return <Widget>[
+      _inset(
+        Semantics(
+          header: true,
+          child: Text(
+            t.paletteChainResultTitle(count),
+            style: AppTypography.section.copyWith(color: ink.fg),
+          ),
+        ),
+        top: InkSpacing.section,
+      ),
+      _inset(
+        PaletteStrip(
+          colors: <String>[for (final MarkerColor c in chain.colors) c.hex],
+          labels: <String>[for (final MarkerColor c in chain.colors) c.newCode],
+          lockedIndices: <int>{chain.baseIndex},
+        ),
+        top: InkSpacing.headingGap,
+      ),
+      _inset(
+        Card(
+          child: Column(
+            children: <Widget>[
+              for (int i = 0; i < count; i++)
+                _SuggestionRow(
+                  key: ValueKey<String>(
+                    'palette-row-${chain.colors[i].newCode}',
+                  ),
+                  suggestion: PaletteSuggestion(
+                    color: chain.colors[i],
+                    reason: roles[i],
+                  ),
+                  role: roles[i],
+                  roleText: t.paletteChainStep(i + 1, t.roleLabel(roles[i])),
+                  note: mine.contains(chain.colors[i].colorId)
+                      ? null
+                      : t.matchNotOwnedBadge,
+                  locked: false,
+                  last: i == count - 1,
+                  onToggleLock: null,
+                ),
+            ],
+          ),
+        ),
+        top: InkSpacing.block,
+      ),
+      if (result != null && result.chains.length > 1)
+        Padding(
+          padding: const EdgeInsets.only(top: InkSpacing.block),
+          child: InkChipRow(
+            semanticLabel: t.paletteChainOptionsLabel,
+            children: <Widget>[
+              for (int i = 0; i < result.chains.length; i++)
+                InkChip(
+                  key: ValueKey<String>('palette-chain-option-$i'),
+                  label: t.paletteChainOption(i + 1),
+                  selected: i == _chainIndex,
+                  onSelected: (_) => _selectChain(i),
+                ),
+            ],
+          ),
+        ),
+      _inset(
+        KeyedSubtree(
+          key: const ValueKey<String>('palette-chain-hint'),
+          child: _InfoCard(message: t.paletteChainHint),
+        ),
+        top: InkSpacing.block,
+      ),
+      ..._buildPaintOrder(),
+    ];
+  }
+
   bool _isLocked(PaletteSuggestion suggestion) => _lockedCodes.any(
     (code) => code.toUpperCase() == suggestion.color.newCode.toUpperCase(),
   );
@@ -2106,7 +2542,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   }
 
   Widget _buildActions({required bool customMode, required bool photoMode}) {
-    final bool showAi = _aiAvailable && !customMode && !photoMode;
+    final bool showAi =
+        _aiAvailable && !customMode && !photoMode && !_chainMode;
     final bool hasResult = _suggestions.isNotEmpty;
     final InkColors ink = InkColors.of(context);
     final Widget clear = InkButton.text(
@@ -2176,6 +2613,15 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                     label: context.l10n.paletteSaveButton,
                     onPressed: _save,
                   ),
+                if (hasResult)
+                  InkButton(
+                    key: const ValueKey<String>('palette-share'),
+                    variant: InkButtonVariant.smallSecondary,
+                    label: context.l10n.paletteShareButton,
+                    icon: InkIcons.share,
+                    loading: _sharing,
+                    onPressed: _sharePalette,
+                  ),
                 if (photoMode) clear,
               ],
             ),
@@ -2244,6 +2690,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                             _hexForCode(code),
                         ],
                         onLoad: () => _loadSaved(palettes[i]),
+                        onShare: () => _shareSaved(palettes[i]),
+                        onAddToDiary: () => _addSavedToDiary(palettes[i]),
                         onDelete: () => _deleteSaved(palettes[i]),
                       ),
                       top: i == 0 ? InkSpacing.headingGap : InkSpacing.block,
@@ -2402,10 +2850,19 @@ class _SuggestionRow extends StatefulWidget {
     required this.locked,
     required this.last,
     required this.onToggleLock,
+    this.roleText,
+    this.note,
   });
 
   final PaletteSuggestion suggestion;
   final String role;
+
+  /// The role line already localised and composed (a blending chain's
+  /// "Step 2 · Base"); with it the second line is the marker name.
+  final String? roleText;
+
+  /// A short remark after the marker name ("You don't own it").
+  final String? note;
   final bool locked;
   final bool last;
 
@@ -2488,13 +2945,17 @@ class _SuggestionRowState extends State<_SuggestionRow> {
     // In scenario mode the role is the reason itself, and a loaded palette's
     // reason says nothing: show the marker name instead.
     final bool nameOnly =
+        widget.roleText != null ||
         suggestion.reason == role ||
         suggestion.reason == PaletteReasons.loaded ||
         suggestion.reason == PaletteReasons.photo;
-    final String why = nameOnly
+    final String name = widget.note == null
         ? color.newName
+        : '${color.newName} · ${widget.note}';
+    final String why = nameOnly
+        ? name
         : context.l10n.reasonLabel(suggestion.reason);
-    final String roleText = context.l10n.roleLabel(role);
+    final String roleText = widget.roleText ?? context.l10n.roleLabel(role);
     // The name alone is one line; a reason is a sentence that clamps and
     // expands on tap.
     return Semantics(
@@ -2581,12 +3042,16 @@ class _SavedPaletteRow extends StatelessWidget {
     required this.palette,
     required this.hexes,
     required this.onLoad,
+    required this.onShare,
+    required this.onAddToDiary,
     required this.onDelete,
   });
 
   final SavedPalette palette;
   final List<String> hexes;
   final VoidCallback onLoad;
+  final VoidCallback onShare;
+  final VoidCallback onAddToDiary;
   final VoidCallback onDelete;
 
   /// What kind of palette this is: the scene it came from, or the colour
@@ -2646,7 +3111,9 @@ class _SavedPaletteRow extends StatelessWidget {
               labelStyle: AppTypography.data,
             ),
             const SizedBox(height: InkSpacing.buttonGap),
-            Row(
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: InkSpacing.s8,
               children: <Widget>[
                 InkButton(
                   key: ValueKey<String>('palette-load-${palette.id}'),
@@ -2655,7 +3122,18 @@ class _SavedPaletteRow extends StatelessWidget {
                   icon: InkIcons.upload,
                   onPressed: onLoad,
                 ),
-                const SizedBox(width: InkSpacing.s8),
+                InkButton.text(
+                  key: ValueKey<String>('palette-share-${palette.id}'),
+                  label: context.l10n.paletteShareButton,
+                  icon: InkIcons.share,
+                  onPressed: onShare,
+                ),
+                InkButton.text(
+                  key: ValueKey<String>('palette-diary-${palette.id}'),
+                  label: context.l10n.diaryAdd,
+                  icon: InkIcons.plus,
+                  onPressed: onAddToDiary,
+                ),
                 InkButton.text(
                   key: ValueKey<String>('palette-delete-${palette.id}'),
                   label: context.l10n.paletteDeleteButton,
@@ -2885,7 +3363,11 @@ final class _PaletteSnapshot {
       lockedSuggestions = Map<String, PaletteSuggestion>.of(
         s._lockedSuggestions,
       ),
-      aiUsed = s._aiUsed;
+      aiUsed = s._aiUsed,
+      chain = s._chain,
+      chainResult = s._chainResult,
+      chainIndex = s._chainIndex,
+      chainWholeRange = s._chainWholeRange;
 
   final PaletteMode mode;
   final bool useScenario;
@@ -2896,6 +3378,10 @@ final class _PaletteSnapshot {
   final List<String> lockedCodes;
   final Map<String, PaletteSuggestion> lockedSuggestions;
   final bool aiUsed;
+  final BlendingChain? chain;
+  final BlendingChainResult? chainResult;
+  final int chainIndex;
+  final bool chainWholeRange;
 
   /// Puts the palette back (call inside setState).
   void restore(_PalettePageState s) {
@@ -2911,6 +3397,10 @@ final class _PaletteSnapshot {
       ..clear()
       ..addAll(lockedSuggestions);
     s._aiUsed = aiUsed;
+    s._chain = chain;
+    s._chainResult = chainResult;
+    s._chainIndex = chainIndex;
+    s._chainWholeRange = chainWholeRange;
     // Whatever photo came since goes, with a photo still being read.
     s._dropPhoto();
     s._failure = null;
@@ -3002,7 +3492,11 @@ class _BasePickerSheetState extends State<_BasePickerSheet> {
                           ),
                           child: Row(
                             children: <Widget>[
-                              SwatchBlock(hex: marker.hex, size: 32),
+                              SwatchBlock(
+                                hex: marker.hex,
+                                size: 32,
+                                own: marker.hasOwnColor,
+                              ),
                               const SizedBox(width: InkSpacing.s12),
                               Text(
                                 marker.newCode,

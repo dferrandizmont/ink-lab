@@ -12,15 +12,19 @@ enum AppThemeMode {
   static AppThemeMode fromJson(Object? json) => decodeEnum(values, json);
 }
 
-/// The language of the app: follow the device, or force Spanish / English.
+/// The language of the app: follow the device, or force one of the six languages.
 ///
-/// Stored as `system`, `es` or `en`. Decoding is lenient (case-insensitive,
-/// also accepts `spanish` / `english`) and falls back to [system], so an old
+/// Stored as `system`, `es`, `en`, `de`, `fr`, `pt` or `it`. Decoding is lenient
+/// (case-insensitive, also accepts the English name of the language) and falls back to [system], so an old
 /// or hand-written backup never fails to import.
 enum AppLanguage {
   system(null),
   spanish('es'),
-  english('en');
+  english('en'),
+  german('de'),
+  french('fr'),
+  portuguese('pt'),
+  italian('it');
 
   const AppLanguage(this.languageCode);
 
@@ -34,6 +38,20 @@ enum AppLanguage {
     return switch (raw) {
       'es' || 'spanish' || 'español' || 'es-es' || 'es_es' => spanish,
       'en' || 'english' || 'en-us' || 'en_us' || 'en-gb' => english,
+      'de' || 'german' || 'deutsch' || 'de-de' || 'de_de' => german,
+      'fr' ||
+      'french' ||
+      'français' ||
+      'francais' ||
+      'fr-fr' ||
+      'fr_fr' => french,
+      'pt' ||
+      'portuguese' ||
+      'português' ||
+      'portugues' ||
+      'pt-pt' ||
+      'pt_pt' => portuguese,
+      'it' || 'italian' || 'italiano' || 'it-it' || 'it_it' => italian,
       _ => system,
     };
   }
@@ -57,6 +75,7 @@ final class AppSettingsState with JsonValue {
     this.themeMode = AppThemeMode.system,
     this.language = AppLanguage.system,
     this.matchSuggestUnowned = true,
+    this.useOwnColors = true,
   }) : settings = settings ?? AppSettings(),
        favorites = Set.unmodifiable(favorites);
 
@@ -79,6 +98,10 @@ final class AppSettingsState with JsonValue {
   /// user's markers is close (backward compatible default: on).
   final bool matchSuggestUnowned;
 
+  /// Matching, palettes and ideas use the colour the user stored for a marker
+  /// instead of the catalogue's (backward compatible default: on).
+  final bool useOwnColors;
+
   AppSettingsState copyWith({
     MarkerBrand? brand,
     BrandScope? scope,
@@ -89,6 +112,7 @@ final class AppSettingsState with JsonValue {
     AppThemeMode? themeMode,
     AppLanguage? language,
     bool? matchSuggestUnowned,
+    bool? useOwnColors,
   }) => AppSettingsState(
     brand: brand ?? this.brand,
     scope: scope ?? this.scope,
@@ -99,6 +123,7 @@ final class AppSettingsState with JsonValue {
     themeMode: themeMode ?? this.themeMode,
     language: language ?? this.language,
     matchSuggestUnowned: matchSuggestUnowned ?? this.matchSuggestUnowned,
+    useOwnColors: useOwnColors ?? this.useOwnColors,
   );
 
   /// Adds or removes a favourite, returning a new state.
@@ -135,6 +160,7 @@ final class AppSettingsState with JsonValue {
         ),
         language: AppLanguage.fromJson(json['language']),
         matchSuggestUnowned: json['matchSuggestUnowned'] != false,
+        useOwnColors: json['useOwnColors'] != false,
       );
 
   @override
@@ -150,6 +176,7 @@ final class AppSettingsState with JsonValue {
     'themeMode': themeMode.toJson(),
     'language': language.toJson(),
     'matchSuggestUnowned': matchSuggestUnowned,
+    'useOwnColors': useOwnColors,
   };
 }
 

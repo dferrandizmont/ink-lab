@@ -14,9 +14,13 @@ import '../../widgets/empty_state.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_search_field.dart';
+import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
+import '../diary/artwork_diary_view.dart';
+import '../diary/artwork_entry_page.dart';
+import '../match/image_picker_service.dart';
 import '../palette/palette_draft.dart';
 import 'idea_detail_sheet.dart';
 
@@ -31,8 +35,12 @@ AppScope? _scopeOf(BuildContext context) =>
 /// (with real light → dark roles); tapping one opens its detail sheet, and
 /// "Use in Palette" hands the palette, roles included, to the Palette page
 /// through [paletteDraft] and switches to that tab.
+///
+/// A segmented control switches between the ideas and the artwork diary
+/// (a log of what the user painted); "Add to diary" in an idea's sheet starts
+/// an entry titled after the idea.
 class IdeasPage extends StatefulWidget {
-  const IdeasPage({super.key, this.onOpenPalette, this.today});
+  const IdeasPage({super.key, this.onOpenPalette, this.today, this.picker});
 
   /// Key of the page body, handy for tests and for state restoration.
   static const Key pageKey = Key('ideas-page');
@@ -44,13 +52,21 @@ class IdeasPage extends StatefulWidget {
   /// The day of the "idea of the day"; defaults to now (tests pin it).
   final DateTime? today;
 
+  /// Photo picker of the diary's entry form (tests inject a fake).
+  final ImagePickerService? picker;
+
   @override
   State<IdeasPage> createState() => _IdeasPageState();
 }
 
+/// What the Ideas tab shows.
+enum _IdeasView { ideas, diary }
+
 class _IdeasPageState extends State<IdeasPage> {
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
+  StreamSubscription<Map<String, String>>? _ownColorsSubscription;
+  StreamSubscription<Set<String>>? _driedSubscription;
   String _collectionSignature = '';
 
   MarkerBrand _brand = MarkerBrand.ohuhuOahu;
@@ -61,6 +77,7 @@ class _IdeasPageState extends State<IdeasPage> {
   bool _wholeRange = false;
   bool _loading = true;
 
+  _IdeasView _view = _IdeasView.ideas;
   IdeaCategory? _category;
   String _query = '';
   final TextEditingController _searchController = TextEditingController();
@@ -80,12 +97,24 @@ class _IdeasPageState extends State<IdeasPage> {
     _settingsSubscription?.cancel();
     _collectionSignature = _signatureOf(scope.settings.state);
     _settingsSubscription = scope.settings.changes.listen(_onSettingsChanged);
+    // The colours of the markers changed (an own colour was set or reset).
+    _ownColorsSubscription?.cancel();
+    _driedSubscription?.cancel();
+    _ownColorsSubscription = scope.ownColors.changes.listen(
+      (_) => _onSettingsChanged(scope.settings.state),
+    );
+    // A marker was marked as dried out, or usable again.
+    _driedSubscription?.cancel();
+    _driedSubscription = scope.dried.changes.listen(
+      (_) => _onSettingsChanged(scope.settings.state),
+    );
     unawaited(_reload());
   }
 
   @override
   void dispose() {
     _settingsSubscription?.cancel();
+    _ownColorsSubscription?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -93,7 +122,8 @@ class _IdeasPageState extends State<IdeasPage> {
   String _signatureOf(AppSettingsState state) {
     final sets = state.settings.effectiveSetIds().toList()..sort();
     final owned = state.settings.ownedMarkerCodes.toList()..sort();
-    return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}';
+    return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}|'
+        '${_scope?.markers.colorRevision}|${_scope?.dried.revision}';
   }
 
   void _onSettingsChanged(AppSettingsState state) {
@@ -130,6 +160,7 @@ class _IdeasPageState extends State<IdeasPage> {
         brand: brand,
         activeSetIds: settings.effectiveSetIds(),
         ownedMarkerCodes: settings.ownedMarkerCodes,
+        driedColorIds: scope.dried.ids,
       );
       _plans.clear();
       _loading = false;
@@ -164,10 +195,34 @@ class _IdeasPageState extends State<IdeasPage> {
         initial: initial,
         candidates: _available,
         brand: _brand,
+        onAddToDiary: _addToDiary,
       ),
     );
     if (applied == null || !mounted) return;
     _applyToPalette(applied);
+  }
+
+  /// Opens a new diary entry titled [title] (the idea's name) and confirms
+  /// it with a snackbar once it is saved.
+  Future<void> _addToDiary(String title) async {
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    final String notice = context.l10n.diaryAddedNotice;
+    final bool saved = await ArtworkEntryPage.open(
+      context,
+      title: title,
+      picker: widget.picker,
+    );
+    if (!saved) return;
+    messenger
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          key: const ValueKey<String>('ideas-diary-added'),
+          content: Text(notice),
+        ),
+      );
   }
 
   /// Hands the palette (roles and reasons included) to the Palette page,
@@ -215,6 +270,7 @@ class _IdeasPageState extends State<IdeasPage> {
       );
     }
 
+    final bool diary = _view == _IdeasView.diary;
     final List<IdeaPreset> filtered = _filteredPresets;
     final bool browsing = _category == null && _query.trim().isEmpty;
     final IdeaPreset featured = IdeasEngine.featuredFor(
@@ -227,7 +283,9 @@ class _IdeasPageState extends State<IdeasPage> {
       children: <Widget>[
         InkPageHeader(
           title: context.l10n.ideasTitle,
-          subtitle: _available.isEmpty
+          subtitle: diary
+              ? context.l10n.ideasDiarySubtitle
+              : _available.isEmpty
               ? context.l10n.ideasNoMarkers
               : _wholeRange
               ? context.l10n.ideasHeaderSubtitleWholeRange
@@ -238,60 +296,89 @@ class _IdeasPageState extends State<IdeasPage> {
             InkSpacing.pageMargin,
             0,
             InkSpacing.pageMargin,
-            InkSpacing.group,
+            InkSpacing.block,
           ),
-          child: InkSearchField(
-            key: const ValueKey<String>('ideas-search'),
-            controller: _searchController,
-            hintText: context.l10n.ideasSearchHint,
-            semanticLabel: context.l10n.ideasSearchHint,
-            onChanged: (String value) => setState(() => _query = value),
-          ),
-        ),
-        _buildCategoryChips(),
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.only(
-              top: InkSpacing.block,
-              bottom: InkSpacing.pageBottom,
-            ),
-            children: <Widget>[
-              if (browsing)
-                _inset(
-                  _FeaturedCard(
-                    key: ValueKey<String>('ideas-featured-${featured.id}'),
-                    preset: featured,
-                    plan: _planFor(featured),
-                    onOpen: () => _open(featured),
-                  ),
-                ),
-              if (filtered.isEmpty)
-                EmptyState(
-                  title: context.l10n.ideasEmptyTitle,
-                  message: context.l10n.ideasEmptySearch,
-                  actionLabel: context.l10n.ideasClearFilters,
-                  onAction: _clearFilters,
-                )
-              else
-                _inset(
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      for (final IdeaPreset preset in filtered)
-                        _IdeaRow(
-                          key: ValueKey<String>('ideas-preset-${preset.id}'),
-                          preset: preset,
-                          plan: _planFor(preset),
-                          showCategory: _category == null,
-                          onTap: () => _open(preset),
-                        ),
-                    ],
-                  ),
-                  top: browsing ? InkSpacing.block : 0,
-                ),
+          child: InkSegmented<_IdeasView>(
+            key: const ValueKey<String>('ideas-view'),
+            expand: true,
+            semanticLabel: context.l10n.ideasTitle,
+            segments: <InkSegment<_IdeasView>>[
+              InkSegment<_IdeasView>(
+                value: _IdeasView.ideas,
+                label: context.l10n.ideasTitle,
+              ),
+              InkSegment<_IdeasView>(
+                value: _IdeasView.diary,
+                label: context.l10n.ideasDiarySegment,
+              ),
             ],
+            selected: _view,
+            onChanged: (_IdeasView view) => setState(() => _view = view),
           ),
         ),
+        if (diary)
+          Expanded(child: ArtworkDiaryView(picker: widget.picker))
+        else ...<Widget>[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              InkSpacing.pageMargin,
+              0,
+              InkSpacing.pageMargin,
+              InkSpacing.group,
+            ),
+            child: InkSearchField(
+              key: const ValueKey<String>('ideas-search'),
+              controller: _searchController,
+              hintText: context.l10n.ideasSearchHint,
+              semanticLabel: context.l10n.ideasSearchHint,
+              onChanged: (String value) => setState(() => _query = value),
+            ),
+          ),
+          _buildCategoryChips(),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.only(
+                top: InkSpacing.block,
+                bottom: InkSpacing.pageBottom,
+              ),
+              children: <Widget>[
+                if (browsing)
+                  _inset(
+                    _FeaturedCard(
+                      key: ValueKey<String>('ideas-featured-${featured.id}'),
+                      preset: featured,
+                      plan: _planFor(featured),
+                      onOpen: () => _open(featured),
+                    ),
+                  ),
+                if (filtered.isEmpty)
+                  EmptyState(
+                    title: context.l10n.ideasEmptyTitle,
+                    message: context.l10n.ideasEmptySearch,
+                    actionLabel: context.l10n.ideasClearFilters,
+                    onAction: _clearFilters,
+                  )
+                else
+                  _inset(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        for (final IdeaPreset preset in filtered)
+                          _IdeaRow(
+                            key: ValueKey<String>('ideas-preset-${preset.id}'),
+                            preset: preset,
+                            plan: _planFor(preset),
+                            showCategory: _category == null,
+                            onTap: () => _open(preset),
+                          ),
+                      ],
+                    ),
+                    top: browsing ? InkSpacing.block : 0,
+                  ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }

@@ -8,3 +8,4 @@ export 'model/palette_mode.dart';
 export 'model/scene.dart';
 export 'model/saved_palette.dart';
 export 'model/ai_palette.dart';
+export 'model/artwork_entry.dart';

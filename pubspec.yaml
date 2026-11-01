@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.6.3+10
+version: 0.7.0+11
 
 environment:
   sdk: ^3.13.5
@@ -47,11 +47,16 @@ dependencies:
   # the device with dart:ui and never uploaded.
   image_picker: ^1.2.0
 
+  # The app's private documents directory, where the artwork diary keeps the
+  # photos the user adds (copied there, never uploaded).
+  path_provider: ^2.1.5
+
   # HTTP transport for the bring-your-own-key AI advisor. Only used by the
   # optional OpenRouter path; the default app never opens a socket.
   http: ^1.2.0
   flutter_secure_storage: ^11.2.0
   url_launcher: ^6.3.3
+  share_plus: ^13.3.1
 
 dev_dependencies:
   flutter_test:
@@ -130,6 +135,7 @@ flutter:
   assets:
     - assets/data/ohuhu_colors.json
     - assets/data/decotime_colors.json
+    - assets/data/copic_colors.json
     - assets/data/oahu_card_locations.json
     - assets/data/scenes.json
 

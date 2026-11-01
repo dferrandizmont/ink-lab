@@ -1,0 +1,93 @@
+"""Offline validation of the Copic generator. Run with python -B -m unittest."""
+
+import copy
+import importlib.util
+import json
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch, MagicMock
+
+HERE = Path(__file__).resolve().parent
+SPEC = importlib.util.spec_from_file_location("generate_copic", HERE / "generate_copic.py")
+generator = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(generator)
+
+
+class CopicGeneratorTest(unittest.TestCase):
+    def setUp(self):
+        self.catalogue = json.loads(generator.DEFAULT_OUT.read_text(encoding="utf-8"))
+        self.rows = [{"number": c["code"], "name": c["name"], "hex": "#" + c["hex"],
+                      "extractedColor": "#123456"} for c in self.catalogue]
+
+    def test_output_and_official_hex(self):
+        self.assertEqual(generator.build(self.rows), self.catalogue)
+        self.assertEqual(len({c["code"] for c in self.catalogue}), 358)
+        self.assertEqual(generator.build(self.rows)[0], {
+            "code": "0", "name": "Colorless Blender", "hex": "ffffff", "sets": []})
+        self.assertEqual(generator.render(self.catalogue).encode("utf-8"),
+                         generator.DEFAULT_OUT.read_bytes())
+
+    def test_refuses_invalid_inputs(self):
+        cases = [self.rows[:-1], {}]
+        for key, value in [("number", self.rows[0]["number"]), ("number", " "),
+                           ("name", " "), ("hex", "#xyzxyz"), ("hex", None)]:
+            rows = copy.deepcopy(self.rows)
+            rows[1][key] = value
+            cases.append(rows)
+        no_blender = copy.deepcopy(self.rows)
+        no_blender[0]["number"] = "999"
+        cases.append(no_blender)
+        for rows in cases:
+            with self.subTest(rows=type(rows).__name__):
+                with self.assertRaises(ValueError):
+                    generator.build(rows)
+
+    def test_normalizes_and_ignores_extracted_color(self):
+        self.rows[1].update(number=" zz1 ", name=" Test ", hex="#ABCDEF")
+        self.assertEqual(generator.build(self.rows)[1], {
+            "code": "ZZ1", "name": "Test", "hex": "abcdef", "sets": []})
+
+    def test_check_and_offline_rebuild(self):
+        with tempfile.TemporaryDirectory(prefix="inklab-copic-test-") as directory:
+            source = Path(directory) / "colors.json"
+            output = Path(directory) / "generated.json"
+            source.write_text(json.dumps(self.rows), encoding="utf-8")
+            args = ["--from-file", str(source), "--out", str(output)]
+            self.assertEqual(generator.main(args), 0)
+            self.assertEqual(output.read_bytes(), generator.DEFAULT_OUT.read_bytes())
+            self.assertEqual(generator.main(args + ["--check"]), 0)
+            output.write_text("[]", encoding="utf-8")
+            self.assertEqual(generator.main(args + ["--check"]), 1)
+            self.assertEqual(output.read_text(encoding="utf-8"), "[]")
+
+    def test_download_accepts_only_the_copic_source_prefix(self):
+        with tempfile.TemporaryDirectory(prefix="inklab-copic-redirect-") as directory:
+            output = Path(directory) / "generated.json"
+            for url, allowed in [
+                (generator.SOURCE_URL, True),
+                ("https://raw.githubusercontent.com/meodai/copic-colors/main/colors.json", True),
+                ("http://raw.githubusercontent.com/meodai/copic-colors/colors.json", False),
+                ("https://example.com/colors.json", False),
+                ("https://raw.githubusercontent.com/meodai/other/colors.json", False),
+                ("https://raw.githubusercontent.com/meodai/copic-colors-evil/colors.json", False),
+                ("https://raw.githubusercontent.com.evil.test/meodai/copic-colors/colors.json", False),
+            ]:
+                with self.subTest(url=url):
+                    output.write_text("unchanged", encoding="utf-8")
+                    response = MagicMock()
+                    response.__enter__.return_value = response
+                    response.geturl.return_value = url
+                    response.read.return_value = json.dumps(self.rows).encode("utf-8")
+                    with patch.object(generator.urllib.request, "urlopen", return_value=response) as open_url:
+                        self.assertEqual(generator.main(["--out", str(output)]), 0 if allowed else 1)
+                    open_url.assert_called_once_with(generator.SOURCE_URL, timeout=30)
+                    if allowed:
+                        self.assertEqual(output.read_bytes(), generator.DEFAULT_OUT.read_bytes())
+                    else:
+                        response.read.assert_not_called()
+                        self.assertEqual(output.read_text(encoding="utf-8"), "unchanged")
+
+
+if __name__ == "__main__":
+    unittest.main()

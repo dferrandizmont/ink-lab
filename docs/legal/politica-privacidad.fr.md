@@ -1,0 +1,224 @@
+# Politique de confidentialité d'Ink Lab
+
+
+Dernière mise à jour : 2026-10-31
+
+Traduction de courtoisie. Seule la [version espagnole](https://inklab.mainshai.com/es/privacy/) fait foi.
+
+Ink Lab est une application destinée à celles et ceux qui dessinent avec des feutres à alcool : consultez les nuanciers,
+associez la couleur d'une photo à un feutre de votre collection et créez des palettes grâce à la théorie des couleurs.
+C'est une application indépendante : elle n'a été ni créée, ni examinée, ni approuvée par Ohuhu, DecoTime ou toute autre
+marque.
+
+Résumé : **vous n'avez pas de compte, il n'y a pas de serveur à nous et vos données restent sur votre téléphone.**
+L'application est entièrement gratuite et open source, et ne comporte ni outil d'analyse propre, ni publicité, ni
+pistage. **Si vous n'activez pas l'IA, l'application n'utilise pas le réseau.** Si vous l'activez, sur Android, l'IA sur
+l'appareil utilise ML Kit de Google, qui envoie à Google des données de diagnostic et d'utilisation (jamais vos
+requêtes, vos couleurs ni vos photos) ; et si vous choisissez OpenRouter avec votre propre clé, l'application envoie
+exactement ce qui est expliqué plus bas.
+
+## 1. Responsable du traitement
+
+
+- Titulaire : Daniel Mont Ferrandiz
+- Adresse e-mail de contact : inklab@mainshai.com
+
+## 2. Données traitées
+
+
+### Données qui restent sur votre téléphone (nous ne les recevons pas)
+Votre marque active, les packs et feutres que vous possédez, vos favoris, votre liste de souhaits, les feutres que
+vous marquez comme secs, les couleurs personnelles que vous enregistrez pour vos feutres, vos palettes enregistrées,
+l'historique de vos derniers choix lors de l'association de couleurs, les entrées et les photos de votre journal et
+vos réglages sont enregistrés uniquement dans l'espace de stockage privé de l'application, sur votre appareil. Pour
+chaque couleur personnelle, seul son code hexadécimal est enregistré, jamais la photo dont vous l'avez tirée. Les
+catalogues de feutres sont inclus dans l'application et tout fonctionne hors connexion. Il n'y a ni synchronisation ni
+copie sur aucun de nos serveurs.
+
+La sauvegarde système d'Android est **désactivée** pour cette application : elle exclut tous les fichiers de
+l'application de la sauvegarde dans le cloud et du transfert entre appareils, de sorte que ni vos réglages, ni votre
+clé, ni vos données, ni les photos du journal ne quittent le téléphone par ce biais. Sur iPhone, les préférences et
+les photos du journal peuvent faire partie de la sauvegarde de l'appareil ou d'iCloud que vous gérez avec votre compte
+Apple : c'est un mécanisme d'Apple, sous votre contrôle, et non un transfert effectué par le développeur.
+
+### Appareil photo et galerie
+Ce n'est que lorsque vous utilisez « Associer », « À partir d’une photo » (dans « Palette ») ou « Ma couleur » (dans
+le détail d'un feutre), ou que vous ajoutez une photo à une entrée du « Journal » (dans « Idées »), et que vous
+choisissez de prendre une photo ou d'en choisir une dans la galerie que l'application demande l'autorisation ou ouvre
+le sélecteur du système. La photo est décodée et analysée **sur votre téléphone** : elle n'est envoyée nulle part et
+n'est jamais transmise à un fournisseur d'IA ; sauf dans le journal (voir ci-dessous), elle n'est pas enregistrée non
+plus. Dans « Associer », seuls la couleur échantillonnée et le feutre associé sont conservés, dans votre historique
+local. Dans « À partir d’une photo », ses couleurs principales sont extraites pour vous proposer des feutres de votre
+collection ; la photo n'est conservée en mémoire que pendant que vous consultez le résultat et, si vous enregistrez la
+palette, ce sont les codes des feutres qui sont enregistrés, jamais la photo. Dans « Ma couleur », vous touchez
+l'échantillon peint sur la photo et seule sa couleur est enregistrée, sous forme de code hexadécimal, jamais la photo.
+
+### Journal
+Dans l'onglet « Idées », « Journal » vous permet de consigner les œuvres que vous peignez : titre, date, support,
+statut, feutres utilisés, palette liée et notes. Les entrées sont enregistrées sur votre téléphone comme le reste de
+vos données. Chaque entrée peut contenir jusqu'à 4 photos, prises avec l'appareil photo ou choisies dans la galerie,
+que l'application copie en taille réduite (2048 pixels de côté au maximum) dans son dossier privé ; la photo d'origine
+de votre galerie n'est pas modifiée. Ces photos ne sont envoyées nulle part ni transmises aux fonctions d'IA (ni à
+OpenRouter, ni à Gemini Nano, ni à ML Kit), et elles sont supprimées lorsque vous retirez la photo ou l'entrée, et avec
+l'application lorsque vous la désinstallez.
+
+### Sauvegarde
+« Exporter » (Réglages → Sauvegarde) génère un texte JSON, et non un fichier, contenant vos réglages, les réglages non
+secrets de l'IA, votre collection, favoris, liste de souhaits, feutres secs, couleurs personnelles, palettes,
+historique et les entrées du journal (avec les noms de fichier internes de leurs photos, pas les photos), et le
+**copie dans le presse-papiers** pour que vous le colliez où vous le souhaitez ; « Importer » le reçoit par collage.
+Lors de l'importation, la sauvegarde remplace vos données actuelles, journal compris : les entrées qui n'y figurent
+pas sont supprimées avec leurs photos, et l'application vous en avertit avant. La sauvegarde n'est pas chiffrée, ne
+contient aucun identifiant et n'inclut jamais votre clé d'API ni les photos du journal. Ce que vous en faites ensuite
+(l'enregistrer dans votre cloud, l'envoyer dans un message...) se fait en dehors de l'application. Sachez que, selon
+votre système, le presse-papiers peut être visible par votre clavier ou par d'autres applications.
+
+### IA facultative
+Elle est **désactivée par défaut** (Réglages → Assistant IA → Suggérer avec l’IA). Lorsqu'elle est désactivée,
+l'application n'ouvre aucune connexion réseau et n'appelle pas ML Kit. Si vous l'activez, l'application vous montre
+d'abord ce qui quitterait le téléphone, et vous pouvez choisir entre :
+
+- **Théorie des couleurs (moteur local) :** sans IA et sans réseau.
+- **Sur l'appareil (Gemini Nano, sur les appareils Android compatibles, via ML Kit de Google) :** votre scénario et les
+  codes de couleur sont traités sur votre téléphone et ne sont envoyés nulle part. Lorsque vous activez l'IA,
+  l'application utilise ML Kit pour vérifier si Gemini Nano est disponible et, si vous choisissez cette option, pour le
+  télécharger et générer les suggestions. Lors de son utilisation, **ML Kit envoie à Google**, via HTTPS et par lots
+  (environ une fois par jour), des données de diagnostic et d'utilisation : des informations sur l'appareil (fabricant,
+  modèle, version et build du système), sur l'application (nom du paquet et version), des identifiants de l'appareil et
+  d'autres identifiants, y compris des identifiants propres à chaque installation, des mesures de performances, la
+  configuration de l'API, la taille des données d'entrée et de sortie, la version de la fonctionnalité, le type
+  d'événement, des codes d'erreur et les langues configurées. Google indique les utiliser à des fins de diagnostic et
+  d'analyse d'utilisation et ne pas les transférer à des tiers
+  (https://developers.google.com/ml-kit/android-data-disclosure). Cet envoi ne comprend pas le contenu de vos requêtes,
+  vos couleurs ni vos photos, seulement leur taille. Le développeur ne reçoit pas ces données : Google les traite selon
+  ses propres conditions et sa politique de confidentialité (https://policies.google.com/privacy). Si le modèle n'est
+  pas sur le téléphone, Android le télécharge une seule fois via les services Google ; ce téléchargement et le modèle
+  sont régis par les conditions de Google. Sur iPhone, il n'y a ni IA sur l'appareil ni ML Kit.
+- **OpenRouter avec votre clé :** uniquement si vous choisissez OpenRouter, enregistrez votre clé et touchez « Suggérer
+  avec l’IA » dans « Palette », l'application envoie, **depuis votre téléphone directement à `openrouter.ai`, via HTTPS,
+  avec votre propre clé et votre propre compte** : la marque (identifiant et nom), le mode de palette, le nom de la
+  scène (en anglais), le code et le nom du feutre de base (le cas échéant) et s'il est verrouillé, la taille de la
+  palette, les codes et les couleurs hexadécimales du catalogue des feutres candidats de votre collection (pas leurs
+  noms), les paramètres de génération (modèle, température et limite de longueur), des instructions fixes de
+  l'application et l'en-tête `X-Title: Ink Lab`. Pour vous montrer les modèles disponibles, l'application consulte le
+  catalogue d'OpenRouter (avec votre clé, si vous l'avez enregistrée). Ne sont **jamais** envoyés : les photos (la
+  requête indique qu'aucune image n'est jointe et l'application n'a aucun moyen d'en joindre une), vos couleurs
+  personnelles, vos favoris, vos palettes enregistrées ni vos identifiants. Comme pour toute connexion à Internet,
+  OpenRouter et le fournisseur du modèle voient l'adresse IP de votre appareil. Ils reçoivent cette requête et
+  appliquent **leurs propres** conditions et politiques de confidentialité, y compris quant à sa durée de conservation,
+  que vous pouvez consulter sur https://openrouter.ai/privacy. Le développeur ne la voit pas, elle ne transite par aucun
+  de ses serveurs et l'application ne l'enregistre pas.
+
+Votre clé OpenRouter est conservée dans le stockage sécurisé du système (Android Keystore ou trousseau iOS, uniquement
+sur cet appareil). Elle n'est pas transmise au développeur, n'est pas incluse dans les sauvegardes et vous pouvez la
+supprimer à tout moment dans « Réglages ». Si l'IA échoue, l'application revient à la théorie des couleurs.
+
+### Autorisations
+L'application ne demande l'autorisation d'accès à l'**appareil photo ou aux photos** que lorsque vous utilisez «
+Associer », « À partir d’une photo » ou « Ma couleur », ou que vous ajoutez une photo au « Journal ». Sur Android,
+elle déclare l'accès à **Internet** et à l'**état du réseau** (`INTERNET` et `ACCESS_NETWORK_STATE`), qui ne sont
+utilisés qu'avec l'IA activée : pour l'IA facultative avec OpenRouter et pour les diagnostics que ML Kit envoie à
+Google lorsque l'IA sur l'appareil est utilisée. Elle ne demande ni la localisation, ni les contacts, ni l'agenda, ni
+le micro, ni les notifications, et n'utilise pas l'identifiant publicitaire. Si vous partagez une palette ou un
+nuancier sous forme d'image, celle-ci n'est remise qu'à l'application que vous choisissez dans le menu de partage du
+système ; l'application n'a besoin d'aucune autorisation pour cela.
+
+### Données qui NE sont PAS traitées
+- Nous ne demandons ni ne conservons votre nom, votre adresse e-mail, votre numéro de téléphone, votre âge ni aucune
+  donnée de compte : il n'y a pas de comptes.
+- Le développeur n'utilise ni outil d'analyse ni rapports de plantage, et il n'y a ni publicité, ni publicité
+  personnalisée, ni pistage entre applications. La seule exception concerne les données de diagnostic et d'utilisation
+  que ML Kit envoie à Google lorsque vous utilisez l'IA sur l'appareil (voir « IA facultative ») ; le développeur ne les
+  reçoit pas.
+- Nous ne recevons ni vos photos, ni vos collections, ni vos palettes, ni votre clé.
+
+### Si vous nous écrivez
+Vous pouvez nous écrire à inklab@mainshai.com. Nous traiterons votre adresse e-mail et ce que vous nous communiquez
+uniquement pour vous répondre. Ne nous envoyez ni votre clé d'API ni des sauvegardes contenant des données que vous ne
+souhaitez pas partager : pour un bug, des données de test nous suffisent.
+
+Si vous signalez une suggestion de l'IA (« Signaler cette suggestion », dans « Palette »), l'application ouvre votre
+application de messagerie avec un message déjà rédigé à l'adresse inklab@mainshai.com : le motif que vous choisissez, la
+version de l'application, le fournisseur et le modèle d'IA, la marque, le mode ou la scène, le code du feutre de base
+ainsi que les codes, rôles et justifications de cette suggestion. Il n'inclut jamais votre clé d'API ni de photos. Il ne
+nous parvient que si vous l'envoyez, et nous l'utilisons pour examiner le contenu signalé et améliorer les suggestions.
+S'il n'y a pas d'application de messagerie, le rapport est copié dans le presse-papiers pour que vous le colliez
+vous-même.
+
+## 3. Finalités et base juridique
+
+
+| Traitement | Finalité | Base juridique (RGPD) |
+|---|---|---|
+| Collections, liste de souhaits, couleurs personnelles, favoris, palettes, journal et réglages sur votre téléphone | Vous permettre d'utiliser l'application et de conserver votre travail | Nous ne les recevons pas : ces données restent sur votre appareil, sous votre contrôle |
+| Photo de « Associer », de « À partir d’une photo », de « Ma couleur » ou du « Journal » | Trouver les feutres les plus proches, lire la couleur de votre échantillon ou conserver la photo d'une œuvre dans votre journal | Traitée (et, dans le journal, enregistrée) uniquement sur votre téléphone, à votre demande ; nous ne la recevons pas |
+| Diagnostics de ML Kit (uniquement avec l'IA sur l'appareil, sur Android) | Diagnostic et analyse d'utilisation du SDK, selon Google | Envoyés uniquement si vous décidez d'activer l'IA facultative ; Google les traite en tant que fournisseur de ML Kit, selon ses propres conditions et sa politique de confidentialité ; nous ne les recevons pas |
+| IA avec OpenRouter (facultative) | Générer des suggestions de palette | Votre consentement lorsque vous l'activez et utilisez votre propre clé ; le traitement est effectué par OpenRouter selon ses conditions |
+| E-mails d'assistance et signalements de suggestions de l'IA | Répondre à votre demande et examiner le contenu signalé | Votre demande et notre intérêt légitime à y donner suite (art. 6, paragraphe 1, point f)) |
+
+Nous ne prenons aucune décision automatisée et n'établissons aucun profil vous concernant.
+
+## 4. Destinataires des données
+L'application ne transmet aucune donnée au développeur. Si vous activez l'IA, sur Android, **Google** reçoit les données
+de diagnostic et d'utilisation que ML Kit envoie lorsque l'IA sur l'appareil est utilisée. Si vous utilisez l'IA avec
+OpenRouter, la requête décrite ci-dessus est reçue par **OpenRouter** et par le **fournisseur du modèle** que vous
+choisissez, en votre nom et avec votre clé. Si vous envoyez un e-mail d'assistance ou un signalement de suggestion, le
+titulaire le reçoit à l'adresse inklab@mainshai.com (ou à dev@mainshai.com, l'adresse utilisée par l'application jusqu'à
+la version 0.6.2) via le service de messagerie de votre choix.
+
+## 5. Transferts internationaux
+Le développeur n'effectue aucun transfert de données. Si vous utilisez l'IA avec OpenRouter, la requête est adressée au
+fournisseur que vous choisissez, qui peut la traiter dans d'autres régions et selon ses propres conditions. Google peut
+traiter les diagnostics de ML Kit dans d'autres pays, selon ses propres conditions. Les autres services que vous décidez
+d'utiliser (messagerie, cloud, destination d'un texte copié) sont régis par leurs propres conditions.
+
+## 6. Durée de conservation
+
+
+- **Données sur votre téléphone :** jusqu'à ce que vous désinstalliez l'application ou effaciez ses données depuis les
+  réglages du système (et, le cas échéant, les textes de sauvegarde que vous avez conservés). Les photos du journal sont
+  en outre supprimées dès que vous retirez la photo ou l'entrée.
+- **E-mails d'assistance :** le temps nécessaire pour traiter votre demande et, au maximum, un an à compter de la
+  dernière réponse.
+
+## 7. Vos droits
+
+
+Vous pouvez exercer vos droits d'**accès, de rectification, d'effacement, d'opposition, de limitation du traitement et
+de portabilité** en écrivant à inklab@mainshai.com. Nous vous répondrons dans un délai d'un mois.
+
+Nous ne recevons pas les données enregistrées sur votre téléphone : nous ne pouvons donc ni les consulter ni les
+supprimer pour vous. Vous pouvez les supprimer en désinstallant l'application ou en effaçant ses données depuis les
+réglages du système, et les emporter avec « Exporter » (Réglages → Sauvegarde) ; les photos du journal ne font pas
+partie de ce texte. Pour ce que vous avez envoyé à OpenRouter, exercez vos droits auprès d'OpenRouter et du
+fournisseur du modèle ; pour les diagnostics de ML Kit, auprès de Google.
+
+Si vous estimez que nous n'avons pas traité correctement vos données, vous pouvez introduire une réclamation auprès de
+l'autorité espagnole de protection des données (Agencia Española de Protección de Datos) : https://www.aepd.es
+
+## 8. Mineurs
+
+
+L'application ne s'adresse pas aux enfants de moins de 13 ans (ou de l'âge minimum équivalent dans votre pays). Elle ne
+demande pas l'âge et ne collecte de données personnelles auprès de personne, y compris des mineurs : il n'y a pas de
+comptes et vos données restent sur l'appareil. L'IA avec OpenRouter nécessite un compte personnel auprès d'un tiers, que
+les mineurs ne doivent pas créer sans l'autorisation de leurs parents ou tuteurs.
+
+## 9. Sécurité
+Il n'y a ni serveur du développeur ni transmission de données depuis l'application, sauf lorsque l'IA facultative est
+activée. Vos données se trouvent dans l'espace privé de l'application ; votre clé, dans le Keystore ou le trousseau ;
+les connexions à OpenRouter utilisent HTTPS et ne suivent pas les redirections. La protection de votre téléphone
+(verrouillage de l'écran, chiffrement, ni root ni jailbreak) vous incombe. Le code est public et chacun peut vérifier ce
+qu'il fait.
+
+## 10. Modifications de cette politique
+
+
+Si ce que fait l'application avec les données change, nous mettrons à jour cette page et la date indiquée en haut. Si le
+changement est important (par exemple, si une fonctionnalité envoyait des données hors du téléphone), nous vous
+l'indiquerons également dans l'application et elle ne serait activée qu'avec votre consentement.
+
+## 11. Contact
+
+
+inklab@mainshai.com
