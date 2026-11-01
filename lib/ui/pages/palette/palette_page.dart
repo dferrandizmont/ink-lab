@@ -1663,7 +1663,19 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       key: PalettePage.pageKey,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        InkPageHeader(title: context.l10n.paletteTitle, subtitle: _subtitle()),
+        InkPageHeader(
+          title: context.l10n.paletteTitle,
+          subtitle: _subtitle(),
+          // The type field below must not jump when the type (or the base)
+          // swaps the subtitle: reserve the tallest one.
+          reserveSubtitleFor: <String>[
+            context.l10n.paletteSubtitleIdle,
+            for (final int count in const <int>[0, 1, 2, 99, 999]) ...<String>[
+              context.l10n.commonMarkersAvailable(count),
+              context.l10n.paletteSubtitleCustom(count),
+            ],
+          ],
+        ),
         Expanded(
           child: NotificationListener<UserScrollNotification>(
             onNotification: _onUserScroll,

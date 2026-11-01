@@ -98,8 +98,8 @@ void main() {
       expect(find.text('Idioma'), findsOneWidget);
       expect(find.text('Códigos de Ohuhu'), findsOneWidget);
       expect(find.text('Sistema'), findsWidgets);
-      expect(find.text('Español'), findsOneWidget);
-      expect(find.text('English'), findsOneWidget);
+      // One Language row: the choice is its value, the list is in a picker.
+      expect(find.text('English'), findsNothing);
       expect(find.text('Settings'), findsNothing);
       expect(tester.takeException(), isNull);
     });

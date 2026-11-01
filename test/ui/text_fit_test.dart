@@ -44,6 +44,7 @@ import 'package:ink_lab/ui/widgets/section_card.dart';
 import '../ai/ai_test_support.dart';
 import '../ai/fake_on_device_platform.dart';
 import '../support/fake_backup_file_io.dart';
+import '../support/layout_stability.dart';
 import '../support/l10n.dart';
 import '../support/pill_shapes.dart';
 import '../support/tap_targets.dart';
@@ -661,6 +662,12 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
             of: find.byType(InkSegmented<int>),
             matching: find.text('4'),
           ),
+        );
+        // The options sit a few rows down: bring them into the built range.
+        await tester.scrollUntilVisible(
+          find.byKey(const ValueKey<String>('palette-chain-option-1')),
+          200,
+          scrollable: find.byType(Scrollable).first,
         );
         expect(
           find.byKey(const ValueKey<String>('palette-chain-option-1')),
@@ -1481,6 +1488,176 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await _close(tester);
         await _tap(tester, find.byKey(const ValueKey<String>('ai-remove-key')));
         _check(tester, 'remove key dialog');
+      },
+  'settings: Language row and picker': (WidgetTester tester, _Env env) async {
+    await _pump(tester, env, const SettingsPage());
+    final Finder row = find.byKey(const ValueKey<String>('settings-language'));
+    await _tap(tester, row);
+    expect(
+      find.byKey(const ValueKey<String>('language-list')),
+      findsOneWidget,
+      reason: '$_tag language picker',
+    );
+    _check(tester, 'language picker');
+    // Every option is named in itself and fits on one line.
+    for (final String name in <String>[
+      'Español',
+      'English',
+      'Deutsch',
+      'Français',
+      'Português',
+      'Italiano',
+    ]) {
+      expect(find.text(name), findsWidgets, reason: '$_tag $name');
+    }
+    await _close(tester);
+    _check(tester, 'settings with the language row');
+    await _scroll(tester, 'settings with the language row');
+  },
+  'switching segments never moves the header: ideas | diary':
+      (WidgetTester tester, _Env env) async {
+        await _pump(tester, env, IdeasPage(today: DateTime(2026, 10, 29)));
+        final Finder view = find.byKey(const ValueKey<String>('ideas-view'));
+        Future<void> tapSegment(String label) async {
+          await tester.tap(
+            find.descendant(of: view, matching: find.text(label)),
+          );
+          await tester.pumpAndSettle();
+          _check(tester, 'ideas | diary: $label');
+        }
+
+        await expectStableAcrossSegments(
+          tester,
+          env: StabilityEnv(env.locale, env.width, env.scale),
+          anchors: <String, Finder>{
+            'header': find.byType(InkPageHeader),
+            'control': view,
+          },
+          segments: <StabilitySegment>[
+            (name: 'ideas', activate: () async {}),
+            (
+              name: 'diary',
+              activate: () => tapSegment(env.t.ideasDiarySegment),
+            ),
+            (name: 'ideas again', activate: () => tapSegment(env.t.ideasTitle)),
+          ],
+        );
+      },
+  'switching types never moves the header: palette type':
+      (WidgetTester tester, _Env env) async {
+        await _pump(tester, env, const PalettePage());
+        Future<void> pick(String rowKey) async {
+          // A plain tap (not _tap): ensureVisible would scroll the page to
+          // put the field at the top, which is not what the user does.
+          await tester.tap(
+            find.byKey(const ValueKey<String>('palette-type-field')),
+          );
+          await tester.pumpAndSettle();
+          await _tap(tester, find.byKey(ValueKey<String>(rowKey)));
+          _check(tester, 'palette type $rowKey');
+        }
+
+        await expectStableAcrossSegments(
+          tester,
+          env: StabilityEnv(env.locale, env.width, env.scale),
+          anchors: <String, Finder>{
+            'header': find.byType(InkPageHeader),
+            'type field': find.byKey(
+              const ValueKey<String>('palette-type-field'),
+            ),
+          },
+          segments: <StabilitySegment>[
+            (name: 'recommended', activate: () async {}),
+            (
+              name: 'custom palette',
+              activate: () => pick('palette-mode-customPalette'),
+            ),
+            (name: 'triad', activate: () => pick('palette-mode-triad')),
+            (
+              name: 'recommended again',
+              activate: () => pick('palette-mode-recommended'),
+            ),
+          ],
+        );
+      },
+  'switching brands never moves the selector: collection':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const CollectionPage());
+        await expectStableAcrossSegments(
+          tester,
+          env: StabilityEnv(env.locale, env.width, env.scale),
+          anchors: <String, Finder>{
+            'brand selector': find.byKey(
+              const ValueKey<String>('collection-brand'),
+            ),
+            'summary': find.byKey(
+              const ValueKey<String>('collection-summary'),
+            ),
+          },
+          // The card below the selector is content: its height follows the
+          // brand.
+          topOnly: <String>{'summary'},
+          segments: <StabilitySegment>[
+            for (final MarkerBrand brand in <MarkerBrand>[
+              ...MarkerBrand.values,
+              MarkerBrand.values.first,
+            ])
+              (
+                name: brand.id,
+                activate: () async {
+                  await scope.settings.setBrand(brand);
+                  _check(tester, 'collection ${brand.id}');
+                },
+              ),
+          ],
+        );
+      },
+  'switching the filter never moves the control: AI model picker':
+      (WidgetTester tester, _Env env) async {
+        await _pumpSettings(
+          tester,
+          env,
+          provider: AiProvider.openRouter,
+          enabled: true,
+          withKey: true,
+        );
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('ai-load-models')),
+        );
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('ai-text-model-row')),
+        );
+        final Finder filter = find.byType(InkSegmented<AiModelFilter>);
+        Future<void> tapSegment(String label) async {
+          await tester.tap(
+            find.descendant(of: filter, matching: find.text(label)),
+          );
+          await tester.pumpAndSettle();
+          _check(tester, 'model picker: $label');
+        }
+
+        await expectStableAcrossSegments(
+          tester,
+          env: StabilityEnv(env.locale, env.width, env.scale),
+          anchors: <String, Finder>{'filter control': filter},
+          segments: <StabilitySegment>[
+            (name: 'free', activate: () async {}),
+            (
+              name: 'paid',
+              activate: () => tapSegment(env.t.settingsAiModelsFilterPaid),
+            ),
+            (
+              name: 'both',
+              activate: () => tapSegment(env.t.settingsAiModelsFilterBoth),
+            ),
+            (
+              name: 'free again',
+              activate: () => tapSegment(env.t.settingsAiModelsFilterFree),
+            ),
+          ],
+        );
       },
   'settings: AI disclosure dialog': (WidgetTester tester, _Env env) async {
     await _pumpSettings(tester, env, provider: AiProvider.openRouter);

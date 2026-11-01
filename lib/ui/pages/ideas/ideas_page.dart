@@ -344,6 +344,14 @@ class _IdeasPageState extends State<IdeasPage> {
               : _wholeRange
               ? context.l10n.ideasHeaderSubtitleWholeRange
               : context.l10n.ideasHeaderSubtitle,
+          // The control below must not jump when the segment (or the
+          // collection) swaps the subtitle: reserve the tallest one.
+          reserveSubtitleFor: <String>[
+            context.l10n.ideasDiarySubtitle,
+            context.l10n.ideasNoMarkers,
+            context.l10n.ideasHeaderSubtitleWholeRange,
+            context.l10n.ideasHeaderSubtitle,
+          ],
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(

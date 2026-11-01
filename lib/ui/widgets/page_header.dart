@@ -14,6 +14,7 @@ class InkPageHeader extends StatelessWidget {
     this.trailing,
     this.subtitleWidget,
     this.padding = InkSpacing.header,
+    this.reserveSubtitleFor = const <String>[],
   });
 
   final String title;
@@ -26,6 +27,12 @@ class InkPageHeader extends StatelessWidget {
   final Widget? subtitleWidget;
   final EdgeInsetsGeometry padding;
 
+  /// The other texts [subtitle] takes on this screen (what a segment, a type
+  /// or a mode swaps in). The subtitle box is always as tall as the tallest
+  /// of them at the current width and text scale, so switching never moves
+  /// what sits below the header.
+  final List<String> reserveSubtitleFor;
+
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
@@ -33,8 +40,9 @@ class InkPageHeader extends StatelessWidget {
         subtitleWidget ??
         (subtitle == null
             ? null
-            : Text(
-                subtitle!,
+            : _ReservedSubtitle(
+                text: subtitle!,
+                alternatives: reserveSubtitleFor,
                 style: AppTypography.secondary.copyWith(color: ink.fg2),
               ));
     return Padding(
@@ -76,6 +84,49 @@ class InkPageHeader extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// The subtitle text, at least as tall as the tallest of [alternatives] would
+/// be at the same width, text scale and style (measured, never clipped).
+class _ReservedSubtitle extends StatelessWidget {
+  const _ReservedSubtitle({
+    required this.text,
+    required this.alternatives,
+    required this.style,
+  });
+
+  final String text;
+  final List<String> alternatives;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    final Text subtitle = Text(text, style: style);
+    if (alternatives.isEmpty) return subtitle;
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final TextStyle resolved = DefaultTextStyle.of(
+          context,
+        ).style.merge(style);
+        final TextScaler scaler = MediaQuery.textScalerOf(context);
+        final TextDirection direction = Directionality.of(context);
+        double tallest = 0;
+        for (final String candidate in <String>[text, ...alternatives]) {
+          final TextPainter painter = TextPainter(
+            text: TextSpan(text: candidate, style: resolved),
+            textDirection: direction,
+            textScaler: scaler,
+          )..layout(maxWidth: constraints.maxWidth);
+          if (painter.height > tallest) tallest = painter.height;
+          painter.dispose();
+        }
+        return ConstrainedBox(
+          constraints: BoxConstraints(minHeight: tallest),
+          child: subtitle,
+        );
+      },
     );
   }
 }

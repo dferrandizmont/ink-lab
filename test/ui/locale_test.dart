@@ -6,6 +6,7 @@ import 'package:ink_lab/app.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/data/data.dart';
+import 'package:ink_lab/ui/pages/settings/language_section.dart';
 import 'package:ink_lab/ui/shell/app_shell.dart';
 
 import '../support/l10n.dart';
@@ -176,7 +177,7 @@ void main() {
     }
   });
 
-  testWidgets('the Language control in Settings > Display drives it', (
+  testWidgets('the Language row in Settings > Display opens a picker', (
     tester,
   ) async {
     final AppScope scope = await _pump(
@@ -186,21 +187,30 @@ void main() {
     await tester.tap(find.text('Settings').last);
     await tester.pumpAndSettle();
 
-    final Finder spanishSegment = find.text('Español');
-    await tester.ensureVisible(spanishSegment);
-    await tester.pumpAndSettle();
-    expect(find.text('Language'), findsOneWidget);
-    expect(find.text('System'), findsWidgets);
+    Future<void> choose(String label) async {
+      final Finder row = find.byKey(LanguageSection.rowKey);
+      await tester.ensureVisible(row);
+      await tester.pumpAndSettle();
+      await tester.tap(row);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(const ValueKey<String>('language-list')),
+          matching: find.text(label),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // The sheet closes on selection.
+      expect(find.byKey(const ValueKey<String>('language-list')), findsNothing);
+    }
 
-    await tester.tap(spanishSegment);
-    await tester.pumpAndSettle();
+    expect(find.text('Language'), findsOneWidget);
+
+    await choose('Español');
     expect(scope.settings.language, AppLanguage.spanish);
     expect(find.text('Idioma'), findsOneWidget);
 
-    await tester.ensureVisible(find.text('English'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('English'));
-    await tester.pumpAndSettle();
+    await choose('English');
     expect(scope.settings.language, AppLanguage.english);
     expect(find.text('Language'), findsOneWidget);
 
@@ -212,13 +222,18 @@ void main() {
           ('Português', AppLanguage.portuguese, 'Idioma'),
           ('Italiano', AppLanguage.italian, 'Lingua'),
         ]) {
-      await tester.ensureVisible(find.text(label));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(label));
-      await tester.pumpAndSettle();
+      await choose(label);
       expect(scope.settings.language, language);
       expect(find.text(title), findsOneWidget, reason: label);
-      expect(find.text(label), findsOneWidget, reason: label);
+      // The row now shows the choice as its value.
+      expect(
+        find.descendant(
+          of: find.byKey(LanguageSection.rowKey),
+          matching: find.text(label),
+        ),
+        findsOneWidget,
+        reason: label,
+      );
     }
   });
 }

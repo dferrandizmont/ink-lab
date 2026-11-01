@@ -8,6 +8,20 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
+## 0.8.1 · 2026-11-01
+
+- Language: Settings > Display shows one "Language" row with the current choice (in its own name) instead of a list of
+  radio buttons. Tapping it opens a scrollable picker: System first, then every language by its own name, the current
+  one ticked; choosing one applies it at once and closes the picker. The list can grow to many more languages without
+  taking over the page.
+- Nothing jumps when you switch: on the Ideas tab the "Ideas | Diary" control no longer moves up and down because the
+  subtitle above it has one line in one view and two in the other. The header reserves the room of the tallest subtitle
+  in every language, width and text size. The same fix is in Palette (switching the type changed the subtitle and moved
+  the type field) and in the AI model picker (the Free | Paid | Both control moved when the filter shortened the list).
+- Tests: a reusable layout-stability helper records where each control sits for every segment and checks they are
+  identical in the six languages, at 360 and 412 dp and at text scale 1.0 and 1.3; it covers Ideas | Diary, the Palette
+  type, the My collection brand selector, the Swatches filters, Settings > Appearance and the AI model picker.
+
 ## 0.8.0 · 2026-11-01
 
 - Finecolour: 480 alcohol-marker colours, selected one by one in setup and My collection,

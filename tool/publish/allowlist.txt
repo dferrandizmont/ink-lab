@@ -439,6 +439,7 @@ test/l10n/core_labels_test.dart
 test/support/fake_backup_file_io.dart
 test/support/fake_share_sink.dart
 test/support/l10n.dart
+test/support/layout_stability.dart
 test/ui/app_shell_test.dart
 test/ui/app_smoke_test.dart
 test/ui/app_theme_test.dart
@@ -463,6 +464,7 @@ test/ui/own_colors_pages_test.dart
 test/ui/round3_regressions_test.dart
 test/ui/settings/ai_section_test.dart
 test/ui/settings/backup_file_test.dart
+test/ui/settings/language_picker_test.dart
 test/ui/settings/packs_section_test.dart
 test/ui/settings/settings_page_test.dart
 test/ui/share/diary_entry_share_test.dart
@@ -514,6 +516,7 @@ test/support/truncation.dart
 test/ui/collection/collection_test.dart
 test/ui/collection/wishlist_dried_test.dart
 test/ui/no_pill_test.dart
+test/ui/segment_stability_test.dart
 test/ui/text_fit_test.dart
 tool/ideas/content.mjs
 tool/ideas/gen.mjs

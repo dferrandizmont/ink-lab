@@ -138,8 +138,13 @@ class _AiModelPickerSheetState extends State<AiModelPickerSheet> {
               ),
               const SizedBox(height: InkSpacing.buttonGap),
               Flexible(
+                // A fixed height (not "up to"): the Free / Paid / Both control
+                // above must not move when the filter shortens the list.
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: maxListHeight),
+                  constraints: BoxConstraints(
+                    minHeight: maxListHeight,
+                    maxHeight: maxListHeight,
+                  ),
                   child: _buildList(ink, visible, offerTyped ? typed : null),
                 ),
               ),
