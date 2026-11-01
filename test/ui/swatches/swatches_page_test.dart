@@ -416,7 +416,11 @@ void main() {
     expect(find.textContaining('more'), findsOneWidget);
   });
 
-  for (final brand in [MarkerBrand.decoTime, MarkerBrand.copic]) {
+  for (final brand in [
+    MarkerBrand.decoTime,
+    MarkerBrand.copic,
+    MarkerBrand.finecolour,
+  ]) {
     testWidgets(
       '${brand.label} without owned markers: All browses, Mine explains',
       (WidgetTester tester) async {
@@ -442,13 +446,23 @@ void main() {
 
       await scope.settings.setBrand(brand);
       await scope.settings.setOwnedMarkerCodes(<String>{
-        brand == MarkerBrand.copic ? 'copic:BV04' : 'decotime:GG9',
+        brand == MarkerBrand.finecolour
+            ? 'finecolour:BV321'
+            : brand == MarkerBrand.copic
+            ? 'copic:BV04'
+            : 'decotime:GG9',
       });
       await tester.pumpAndSettle();
 
       // A brand with owned markers opens on "Mine".
       expect(
-        find.text(brand == MarkerBrand.copic ? 'BV04' : 'GG9'),
+        find.text(
+          brand == MarkerBrand.finecolour
+              ? 'BV321'
+              : brand == MarkerBrand.copic
+              ? 'BV04'
+              : 'GG9',
+        ),
         findsOneWidget,
       );
       expect(find.byType(ColorSwatchTile), findsOneWidget);
@@ -696,7 +710,8 @@ void main() {
       await openDetail(tester);
       final MarkerColor first = sheetOf(tester).alternatives.first.color;
       expect(first.hasOwnColor, isFalse);
-      await tester.tapAt(const Offset(10, 10));
+      // The sheet may reach the top of the screen: close it, do not tap outside.
+      Navigator.of(tester.element(find.byType(SwatchDetailSheet))).pop();
       await tester.pumpAndSettle();
 
       // The user's colour for that neighbour is far from B08: it drops out.

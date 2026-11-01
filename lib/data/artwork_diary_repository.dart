@@ -43,6 +43,9 @@ abstract class ArtworkDiaryRepository {
 
   /// The bytes of the photo [name], or `null` when the file is missing.
   Future<Uint8List?> photoBytes(String name);
+
+  /// The store the photos live in, for the backup file that carries them.
+  ArtworkPhotoStore get photoStore;
 }
 
 /// [ArtworkDiaryRepository] on top of a [KeyValueStore] and an
@@ -120,6 +123,9 @@ final class StoredArtworkDiaryRepository implements ArtworkDiaryRepository {
 
   @override
   Future<Uint8List?> photoBytes(String name) => _photos.read(name);
+
+  @override
+  ArtworkPhotoStore get photoStore => _photos;
 
   /// Deletes the photos in [names] that no entry uses any more.
   Future<void> _deletePhotos(Iterable<String> names) async {

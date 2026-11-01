@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../app_scope.dart';
+import '../../../core/brand_equivalents.dart';
 import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
 import '../../../core/own_colors.dart';
@@ -26,6 +27,8 @@ import '../collection/collection_summary.dart';
 import '../match/color_sampling.dart';
 import '../match/image_picker_service.dart';
 import '../settings/dialogs.dart';
+import 'brand_equivalents_index.dart';
+import 'brand_equivalents_section.dart';
 import 'own_color_page.dart';
 import 'swatch_detail_sheet.dart';
 import '../../../l10n/l10n.dart';
@@ -95,6 +98,11 @@ class _SwatchesPageState extends State<SwatchesPage> {
   Stream<AppSettingsState>? _settingsChanges;
   Stream<Map<String, String>>? _ownColorChanges;
   Stream<Set<String>>? _driedChanges;
+
+  /// The other brands' colours, prepared once for "In other brands" and
+  /// prepared again when the effective colours change.
+  Future<BrandEquivalentsIndex>? _equivalentsIndex;
+  int? _equivalentsRevision;
 
   @override
   void didChangeDependencies() {
@@ -500,7 +508,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
 
   /// The packs that hold at least one colour of the loaded catalogue.
   ///
-  /// Only Ohuhu has packs; DecoTime and Copic are organised by ownership
+  /// Only Ohuhu has packs; DecoTime, Copic and Finecolour are organised by ownership
   /// instead.
   List<String> _availablePacks(List<MarkerColor> colors, MarkerBrand brand) {
     if (!brand.hasRetailSets) return const <String>[];
@@ -773,6 +781,39 @@ class _SwatchesPageState extends State<SwatchesPage> {
     );
   }
 
+  Future<BrandEquivalentsIndex> _indexFor(AppScope scope) {
+    final int revision = scope.markers.colorRevision;
+    final Future<BrandEquivalentsIndex>? kept = _equivalentsIndex;
+    if (kept != null && _equivalentsRevision == revision) return kept;
+    final Future<BrandEquivalentsIndex> index = BrandEquivalentsIndex.load(
+      scope.markers,
+    );
+    _equivalentsRevision = revision;
+    _equivalentsIndex = index;
+    // A failed read is not kept: the next sheet tries again.
+    index.then<void>(
+      (_) {},
+      onError: (Object _) {
+        if (identical(_equivalentsIndex, index)) _equivalentsIndex = null;
+      },
+    );
+    return index;
+  }
+
+  Future<List<BrandEquivalentGroup>> _equivalentsOf(
+    AppScope scope,
+    MarkerColor marker, {
+    required bool onlyMine,
+  }) async {
+    final BrandEquivalentsIndex index = await _indexFor(scope);
+    return index.closestTo(
+      marker,
+      settings: scope.settings.settings,
+      driedIds: scope.dried.ids,
+      onlyMine: onlyMine,
+    );
+  }
+
   Future<void> _openDetail(
     BuildContext context,
     AppScope scope,
@@ -818,6 +859,30 @@ class _SwatchesPageState extends State<SwatchesPage> {
               alternatives: closestAlternatives(current, pool),
               onSelectAlternative: (MarkerColor other) =>
                   setSheetState(() => current = other),
+              brandEquivalents: BrandEquivalentsSection(
+                marker: current,
+                loader: (MarkerColor marker, {required bool onlyMine}) =>
+                    _equivalentsOf(scope, marker, onlyMine: onlyMine),
+                onSelect: (MarkerColor other) async {
+                  // The sheet moves to the marker of the other brand, as it
+                  // does for an alternative; its own alternatives are then
+                  // the markers of that brand.
+                  if (other.brandId != current.brandId) {
+                    final MarkerBrand brand = MarkerBrand.fromId(other.brandId);
+                    final List<MarkerColor> all = await scope.markers
+                        .loadColors(brand);
+                    pool = swatchCandidateColors(colors: all, brand: brand);
+                  }
+                  if (!context.mounted) return;
+                  setSheetState(() => current = other);
+                },
+              ),
+              // A code alone is ambiguous across brands, and a palette only
+              // holds the brand chosen in Settings.
+              brandLabel: current.brandId == scope.settings.brand.id
+                  ? null
+                  : MarkerBrand.fromId(current.brandId).label,
+              showPaletteActions: current.brandId == scope.settings.brand.id,
               onSetOwnColor: () async {
                 final String? hex = await OwnColorPage.open(
                   context,
@@ -828,7 +893,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
                 if (hex == null) return;
                 await _storeOwnColor(scope, current, hex);
                 final List<MarkerColor> all = await scope.markers.loadColors(
-                  scope.settings.brand,
+                  MarkerBrand.fromId(current.brandId),
                 );
                 current =
                     <MarkerColor>[
@@ -838,7 +903,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
                     current;
                 pool = swatchCandidateColors(
                   colors: all,
-                  brand: scope.settings.brand,
+                  brand: MarkerBrand.fromId(current.brandId),
                 );
                 if (!context.mounted) return;
                 setSheetState(() {});
@@ -851,7 +916,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
               onResetOwnColor: () async {
                 await scope.ownColors.remove(current.colorId);
                 final List<MarkerColor> all = await scope.markers.loadColors(
-                  scope.settings.brand,
+                  MarkerBrand.fromId(current.brandId),
                 );
                 current =
                     <MarkerColor>[
@@ -861,7 +926,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
                     current;
                 pool = swatchCandidateColors(
                   colors: all,
-                  brand: scope.settings.brand,
+                  brand: MarkerBrand.fromId(current.brandId),
                 );
                 if (!context.mounted) return;
                 setSheetState(() {});

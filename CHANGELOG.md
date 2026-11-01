@@ -8,6 +8,47 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
+## 0.8.0 · 2026-11-01
+
+- Finecolour: 480 alcohol-marker colours, selected one by one in setup and My collection,
+  available in Swatches, Match, Palette, Ideas, purchase suggestions, blending chains,
+  own colours and backups. Pinned MIT source bundled for offline regeneration.
+
+- Data quality: the test suite now validates every bundled colour catalogue on
+  its own (it discovers `assets/data/*_colors.json`, so a brand added later is
+  checked too): JSON shape, non-empty codes and names, six-digit hex values,
+  unique codes and entries, set/line ids the app knows, the Oahu card
+  locations and that a legacy Ohuhu code never repeats inside one product line.
+  The Copic and Finecolour generators are also checked offline against pinned
+  full-source snapshots, and the Ohuhu generator against its pure helpers. The catalogue
+  suite runs in the ordinary `flutter test`; the three generator suites are run
+  by hand with plain `python`. Nothing here needs network, new packages or CI.
+- Brand equivalents: the detail sheet of a marker (Swatches) has an "In other brands" section with the closest markers of
+  every other brand (three each): swatch, code, name, how far it is and the same wording the app uses elsewhere
+  ("nearly exact", "very close"…). Your own colours are the ones that count, and "Only mine" limits the list to the
+  markers you own and leaves out the dried-out ones. Tapping one opens that marker in the same sheet, with its brand
+  named; a marker of another brand cannot be added to a palette, which only holds the brand chosen in Settings.
+- Colour vision: on the Palette page (any palette type, blending chains and the saved palettes) a "Colour vision"
+  control previews the palette as a person with protanopia, deuteranopia, tritanopia or achromatopsia sees it, and
+  names the pairs of colours that become hard to tell apart. It only changes what is drawn: saving and sharing keep the
+  true colours.
+- Artwork diary numbers: the Diary segment starts with a summary card ("12 artworks · 9 finished · 3 in progress", with the
+  markers you use most as small swatches). Tap it for the numbers: entries per month, finished against still in
+  progress, your ten most used markers, how many of the markers you own you have never used (with the list on request)
+  and the saved palettes you link most.
+- Share a diary entry as an image: the entry page has a Share button that draws the title, date, what it was painted on,
+  status, the first photo, the markers used and the linked palette's colours on a light image like the palette one, and
+  opens the share sheet. Only when you tap it; the photo stays on your phone otherwise.
+- Ideas: every idea has a heart, on its card and in its sheet. A new "Favourites" filter next to the categories shows only
+  the ideas you hearted (with a hint when there are none yet), and a "Recently viewed" row on top of the list brings back
+  the last ideas you opened, newest first. Both are kept on the phone and go in the backup; older backups still import.
+- Backup to a file: Settings > Your data > Backup file has "Save backup file", which makes a ZIP with the whole backup and
+  the photos of the artwork diary and opens the share sheet to save it to Files, Drive or any app (the clipboard copy stays),
+  and "Restore from file", which asks you to pick the ZIP and confirm before it replaces your data, photos included (the
+  diary photos that are not in the file are deleted). It shows progress and a short message when the file is not a backup
+  (not a ZIP, too big, damaged, a photo that is not an image). The file is checked whole before anything is written, and a
+  photo that cannot be written leaves your data as it was. New package: file_selector (flutter.dev) for the file picker.
+
 ## 0.7.1 · 2026-11-01
 
 - Match and a marker's own colour: a portrait photo now fills the photo box instead of showing as a narrow strip

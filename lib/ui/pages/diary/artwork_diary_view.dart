@@ -14,6 +14,7 @@ import '../../widgets/ink_button.dart';
 import '../match/image_picker_service.dart';
 import 'artwork_entry_page.dart';
 import 'artwork_photo_viewer.dart';
+import 'diary_summary_card.dart';
 import 'diary_widgets.dart';
 
 /// The artwork diary list, newest first, with a way to add an entry. It lives
@@ -22,7 +23,9 @@ import 'diary_widgets.dart';
 /// Each entry is a card with its date and status, title, what it was painted
 /// on, photo thumbnails (tap for full screen), the markers as small swatches
 /// and the linked palette. Tapping the card opens the entry to edit or delete
-/// it. An empty diary explains itself in one sentence.
+/// it. With entries, a summary card at the top (counts and the markers used
+/// most) opens the diary numbers. An empty diary explains itself in one
+/// sentence.
 class ArtworkDiaryView extends StatefulWidget {
   const ArtworkDiaryView({super.key, this.picker});
 
@@ -123,6 +126,18 @@ class _ArtworkDiaryViewState extends State<ArtworkDiaryView> {
                     icon: InkIcons.plus,
                     onPressed: () => _add(context),
                   ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  InkSpacing.gutter,
+                  InkSpacing.block,
+                  InkSpacing.gutter,
+                  0,
+                ),
+                child: DiarySummaryCard(
+                  key: const ValueKey<String>('diary-stats-card'),
+                  entries: entries,
                 ),
               ),
               for (final ArtworkEntry entry in entries)

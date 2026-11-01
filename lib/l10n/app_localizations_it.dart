@@ -145,6 +145,80 @@ class AppLocalizationsIt extends AppLocalizations {
       'Il backup sostituisce i tuoi dati attuali: collezione, palette, diario, cronologia e impostazioni. Le voci del diario che non contiene vengono eliminate con le loro foto; le foto non fanno mai parte di un backup.';
 
   @override
+  String get ideasFavoritesChip => 'Preferite';
+
+  @override
+  String get ideasFavoritesEmptyTitle => 'Ancora nessuna idea preferita';
+
+  @override
+  String get ideasFavoritesEmptyMessage =>
+      'Tocca il cuore di un’idea per tenerla qui.';
+
+  @override
+  String get ideasRecentTitle => 'Viste di recente';
+
+  @override
+  String get settingsBackupFileTitle => 'File di backup';
+
+  @override
+  String get settingsBackupFileCaption =>
+      'Un file ZIP con i tuoi dati e le foto del diario. Salvalo in File, Drive o dove preferisci. La chiave API non è mai inclusa.';
+
+  @override
+  String get settingsSaveBackupFile => 'Salva il file di backup';
+
+  @override
+  String get settingsRestoreBackupFile => 'Ripristina da file';
+
+  @override
+  String get settingsBackupFileSaving => 'Preparo i tuoi dati e le foto…';
+
+  @override
+  String get settingsBackupFileRestoring => 'Ripristino del backup…';
+
+  @override
+  String get settingsRestoreConfirmBody =>
+      'Il file sostituisce i tuoi dati attuali: collezione, palette, diario, cronologia e impostazioni. Vengono ripristinate anche le foto del file. Le voci del diario che non contiene vengono eliminate con le loro foto.';
+
+  @override
+  String get settingsBackupFileRestored => 'Backup ripristinato, foto comprese';
+
+  @override
+  String get settingsBackupFileSaveFailed =>
+      'Non è stato possibile creare il file di backup.';
+
+  @override
+  String get settingsBackupFileReadFailed =>
+      'Non è stato possibile leggere il file.';
+
+  @override
+  String get settingsBackupFileNotZip => 'Quel file non è un backup ZIP.';
+
+  @override
+  String get settingsBackupFileTooLarge =>
+      'Il backup è troppo grande per Ink Lab.';
+
+  @override
+  String get settingsBackupFileEntryTooLarge =>
+      'Una foto del backup è troppo grande.';
+
+  @override
+  String get settingsBackupFileDamaged =>
+      'Il file è danneggiato o non è un backup di Ink Lab.';
+
+  @override
+  String get settingsBackupFileUnsupported =>
+      'Questo backup viene da una versione che Ink Lab non sa leggere.';
+
+  @override
+  String get settingsBackupFileNotAPhoto =>
+      'Una foto del file non è un’immagine JPEG, PNG o WebP.';
+
+  @override
+  String get settingsBackupFileWriteFailed =>
+      'Non è stato possibile salvare le foto. I tuoi dati non sono cambiati.';
+
+  @override
   String get settingsImportInvalidJson => 'Il testo non è un JSON valido.';
 
   @override
@@ -414,7 +488,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsDisclaimer =>
-      'Ink Lab è un progetto indipendente della comunità: non è affiliato, approvato né sponsorizzato da Ohuhu, DecoTime o Copic e usa i loro codici, nomi e valori di colore solo come dati di riferimento fattuali.';
+      'Ink Lab è un progetto indipendente della comunità: non è affiliato, approvato né sponsorizzato da Ohuhu, DecoTime, Copic o Finecolour e usa i loro codici, nomi e valori di colore solo come dati di riferimento fattuali.';
 
   @override
   String get paletteTitle => 'Palette';
@@ -2769,6 +2843,8 @@ class AppLocalizationsIt extends AppLocalizations {
       'decoTime':
           '$input non è un codice di pennarello DecoTime. Prova $example.',
       'copic': '$input non è un codice di pennarello Copic. Prova $example.',
+      'finecolour':
+          '$input non è un codice di pennarello Finecolour. Prova $example.',
       'other': '$input non è un codice di pennarello Ink Lab. Prova $example.',
     });
     return '$_temp0';
@@ -2781,6 +2857,8 @@ class AppLocalizationsIt extends AppLocalizations {
           '$input non è nella tua collezione. Prova $example o aggiungilo in La mia collezione.',
       'copic':
           '$input non è nella tua collezione. Prova $example o aggiungilo in La mia collezione.',
+      'finecolour':
+          '$input non è nella tua collezione. Prova $example o aggiungilo in La mia collezione.',
       'other':
           '$input non è nella tua collezione. Prova $example o aggiungilo in La mia collezione.',
     });
@@ -2792,6 +2870,7 @@ class AppLocalizationsIt extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime': 'Non hai ancora pennarelli DecoTime nella tua collezione. Aggiungili in La mia collezione.',
       'copic': 'Non hai ancora pennarelli Copic nella tua collezione. Aggiungili in La mia collezione.',
+      'finecolour': 'Non hai ancora pennarelli Finecolour nella tua collezione. Aggiungili in La mia collezione.',
       'other': 'Non hai ancora pennarelli nella tua collezione. Aggiungili in La mia collezione.',
     });
     return '$_temp0';
@@ -3930,6 +4009,64 @@ class AppLocalizationsIt extends AppLocalizations {
   String get collectionChartTitle => 'Cartella colori stampabile';
 
   @override
+  String get swatchesOtherBrandsTitle => 'In altre marche';
+
+  @override
+  String get swatchesOtherBrandsOnlyMine => 'Solo i miei';
+
+  @override
+  String get swatchesOtherBrandsNone =>
+      'Non c’è un’altra marca con cui confrontare.';
+
+  @override
+  String get swatchesOtherBrandsNoneMine =>
+      'Non hai pennarelli utilizzabili di altre marche.';
+
+  @override
+  String get swatchesOtherBrandsFailed =>
+      'Non è stato possibile leggere le altre marche.';
+
+  @override
+  String get swatchesOtherBrandsPaletteNote =>
+      'Le palette usano la marca scelta nelle opzioni, quindi questo pennarello non può essere aggiunto a una.';
+
+  @override
+  String get paletteVisionTitle => 'Visione dei colori';
+
+  @override
+  String get paletteVisionNormal => 'Normale';
+
+  @override
+  String get paletteVisionProtanopia => 'Protanopia';
+
+  @override
+  String get paletteVisionDeuteranopia => 'Deuteranopia';
+
+  @override
+  String get paletteVisionTritanopia => 'Tritanopia';
+
+  @override
+  String get paletteVisionAchromatopsia => 'Acromatopsia';
+
+  @override
+  String paletteVisionPairs(String pairs) {
+    return 'Difficili da distinguere: $pairs';
+  }
+
+  @override
+  String paletteVisionPairsMore(int count) {
+    return '+$count altri';
+  }
+
+  @override
+  String get paletteVisionNoPairs =>
+      'Tutti i colori restano facili da distinguere.';
+
+  @override
+  String get paletteVisionPreviewNote =>
+      'Solo un’anteprima. Salvando e condividendo restano i colori reali.';
+
+  @override
   String get collectionChartHint =>
       'Riquadri vuoti con il codice e il nome di ogni pennarello che hai, per campionare i tuoi pennarelli reali. Condivisa come immagini A4 da stampare o salvare.';
 
@@ -4301,7 +4438,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'I pennarelli Copic si acquistano singolarmente. Spunta quelli che hai.';
 
   @override
+  String get collectionFinecolourHint =>
+      'I pennarelli Finecolour si acquistano singolarmente. Spunta quelli che hai.';
+
+  @override
   String get onboardingCopicLine => '358 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get onboardingFinecolourLine =>
+      '480 colori · Spunta i pennarelli che hai';
 
   @override
   String onboardingMarkersTitle(String brand) {
@@ -4333,6 +4478,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get diaryAdd => 'Aggiungi al diario';
+
+  @override
+  String get diaryShareButton => 'Condividi questa voce';
 
   @override
   String get diaryStatusLabel => 'Stato';
@@ -4427,4 +4575,99 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get diaryAddedNotice => 'Aggiunto al diario';
+
+  @override
+  String diaryStatsArtworks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count opere',
+      one: '1 opera',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String diaryStatsFinished(int count) {
+    return '$count finite';
+  }
+
+  @override
+  String diaryStatsInProgress(int count) {
+    return '$count in corso';
+  }
+
+  @override
+  String get diaryStatsOpen => 'Vedi i numeri';
+
+  @override
+  String get diaryStatsTitle => 'Numeri del diario';
+
+  @override
+  String get diaryStatsStatusTitle => 'Finite e in corso';
+
+  @override
+  String get diaryStatsMonthsTitle => 'Voci per mese';
+
+  @override
+  String diaryStatsMonthsLatest(int count) {
+    return 'Gli ultimi $count mesi.';
+  }
+
+  @override
+  String get diaryStatsMarkersTitle => 'Pennarelli che usi di più';
+
+  @override
+  String get diaryStatsMarkersEmpty => 'Nessuna voce ha ancora pennarelli.';
+
+  @override
+  String diaryStatsEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count voci',
+      one: '1 voce',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diaryStatsUnusedTitle => 'Pennarelli non ancora usati';
+
+  @override
+  String diaryStatsUnusedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pennarelli che hai non sono in nessuna voce.',
+      one: '1 pennarello che hai non è in nessuna voce.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diaryStatsUnusedNone =>
+      'Tutti i tuoi pennarelli sono in una voce.';
+
+  @override
+  String get diaryStatsUnusedNoCollection =>
+      'Aggiungi i tuoi pennarelli in La mia collezione per vedere quali non hai usato.';
+
+  @override
+  String get diaryStatsUnusedShow => 'Mostra l’elenco';
+
+  @override
+  String get diaryStatsUnusedHide => 'Nascondi l’elenco';
+
+  @override
+  String get diaryStatsPalettesTitle => 'Palette che colleghi di più';
+
+  @override
+  String get diaryStatsPalettesEmpty =>
+      'Nessuna voce collega ancora una palette salvata.';
+
+  @override
+  String diaryShareMore(int count) {
+    return '+$count in più';
+  }
 }

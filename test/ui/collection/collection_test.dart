@@ -27,8 +27,10 @@ MarkerRepository _markers() =>
 Future<AppScope> _pumpCollection(
   WidgetTester tester, {
   AppSettingsState? state,
+  Size size = const Size(412, 900),
+  double textScale = 1,
 }) async {
-  tester.view.physicalSize = const Size(412, 900);
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
   final AppScope scope = AppScope.inMemory(
@@ -39,6 +41,11 @@ Future<AppScope> _pumpCollection(
       localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: testSupportedLocales,
       theme: AppTheme.light(),
+      builder: (BuildContext context, Widget? child) => MediaQuery(
+        data: MediaQuery.of(context)
+            .copyWith(textScaler: TextScaler.linear(textScale)),
+        child: child!,
+      ),
       home: const CollectionPage(),
     ),
   );
@@ -120,7 +127,7 @@ void main() {
 
       // Dropping the series drops its sets.
       await tester.fling(
-        find.byType(SingleChildScrollView),
+        find.byType(SingleChildScrollView).first,
         const Offset(0, 3000),
         5000,
       );
@@ -262,6 +269,128 @@ void main() {
         expect(scope.settings.settings.chosenSeriesIds, {'oahu'});
       },
     );
+
+    testWidgets(
+      'Finecolour selects individual markers, switches and resets only its own collection',
+      (tester) async {
+        final scope = await _pumpCollection(
+          tester,
+          state: AppSettingsState(
+            brand: MarkerBrand.finecolour,
+            onboardingCompleted: true,
+            settings: AppSettings(
+              ownedSetIds: const {'classic_160'},
+              chosenSeriesIds: const {'oahu'},
+              extraMarkerIds: const {
+                'finecolour:0',
+                'decotime:01',
+                'ohuhu_oahu:BV321',
+              },
+            ),
+          ),
+        );
+        expect(find.text(l10n.collectionFinecolourHint), findsOneWidget);
+        expect(find.text(l10n.collectionDecoHint), findsNothing);
+        expect(_key('collection-series-oahu'), findsNothing);
+        expect(_key('collection-family-all'), findsNothing);
+        await tester.ensureVisible(_key('collection-add-loose'));
+        await tester.tap(_key('collection-add-loose'));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(TextField), 'BV321');
+        await tester.pumpAndSettle();
+        await tester.tap(_key('collection-marker-BV321'));
+        await tester.pumpAndSettle();
+        expect(
+          scope.settings.settings.extraMarkerIds,
+          contains('finecolour:BV321'),
+        );
+        expect(
+          tester.widget<Text>(_key('collection-owned-count')).data,
+          l10n.collectionOwnedCount(2, 480),
+        );
+        await tester.tap(_key('collection-untick-visible'));
+        await tester.pumpAndSettle();
+        expect(
+          scope.settings.settings.extraMarkerIds,
+          isNot(contains('finecolour:BV321')),
+        );
+        await tester.tap(_key('collection-tick-visible'));
+        await tester.pumpAndSettle();
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+        await scope.settings.setBrand(MarkerBrand.decoTime);
+        await tester.pumpAndSettle();
+        expect(find.text(l10n.collectionDecoHint), findsOneWidget);
+        await tester.ensureVisible(find.text('Finecolour'));
+        await tester.tap(find.text('Finecolour'));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(_key('collection-reset'));
+        await tester.tap(_key('collection-reset'));
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.widgetWithText(FilledButton, l10n.collectionReset),
+        );
+        await tester.pumpAndSettle();
+        expect(scope.settings.settings.extraMarkerIds, {
+          'decotime:01',
+          'ohuhu_oahu:BV321',
+        });
+        expect(scope.settings.settings.ownedSetIds, {'classic_160'});
+        expect(scope.settings.settings.chosenSeriesIds, {'oahu'});
+      },
+    );
+
+    testWidgets('the active brand is in view on a narrow phone, large text', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await _pumpCollection(
+        tester,
+        size: const Size(360, 800),
+        textScale: 1.3,
+        state: AppSettingsState(
+          brand: MarkerBrand.finecolour,
+          onboardingCompleted: true,
+        ),
+      );
+      final Finder control = _key('collection-brand');
+      final Finder viewport = find.descendant(
+        of: control,
+        matching: find.byType(SingleChildScrollView),
+      );
+      final ScrollableState scrollable = tester.state<ScrollableState>(
+        find.descendant(of: control, matching: find.byType(Scrollable)),
+      );
+      // The brands do not fit, so the control really scrolls.
+      expect(scrollable.position.maxScrollExtent, greaterThan(0));
+
+      void expectInView(MarkerBrand brand) {
+        final Rect shown = tester.getRect(viewport);
+        final Rect segment = tester.getRect(
+          find.descendant(of: control, matching: find.text(brand.label)),
+        );
+        expect(
+          segment.left,
+          greaterThanOrEqualTo(shown.left),
+          reason: '${brand.label} is cut off on the left',
+        );
+        expect(
+          segment.right,
+          lessThanOrEqualTo(shown.right),
+          reason: '${brand.label} is cut off on the right',
+        );
+      }
+
+      // On the first build the active brand is already in view.
+      expectInView(MarkerBrand.finecolour);
+
+      // And it follows the selection both ways.
+      await scope.settings.setBrand(MarkerBrand.ohuhuOahu);
+      await tester.pumpAndSettle();
+      expectInView(MarkerBrand.ohuhuOahu);
+      await scope.settings.setBrand(MarkerBrand.finecolour);
+      await tester.pumpAndSettle();
+      expectInView(MarkerBrand.finecolour);
+    });
 
     testWidgets('reset asks first and only clears the active brand', (
       WidgetTester tester,
@@ -556,7 +685,11 @@ void main() {
   });
 
   group('switching brand reaches every tab', () {
-    for (final brand in [MarkerBrand.decoTime, MarkerBrand.copic]) {
+    for (final brand in [
+      MarkerBrand.decoTime,
+      MarkerBrand.copic,
+      MarkerBrand.finecolour,
+    ]) {
       testWidgets(
         '${brand.label}: Swatches, Match, Palette and Ideas follow the new brand',
         (WidgetTester tester) async {

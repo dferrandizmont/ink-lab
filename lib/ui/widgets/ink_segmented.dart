@@ -31,6 +31,7 @@ class InkSegmented<T> extends StatelessWidget {
     this.numeric = false,
     this.expand = false,
     this.semanticLabel,
+    this.selectedKey,
   });
 
   final List<InkSegment<T>> segments;
@@ -41,6 +42,10 @@ class InkSegmented<T> extends StatelessWidget {
   /// Gives every segment an equal share of the available width.
   final bool expand;
   final String? semanticLabel;
+
+  /// Put on the selected segment, so a scrolling parent can bring it into
+  /// view (see [InkScrollableSegmented]).
+  final GlobalKey? selectedKey;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +92,7 @@ class InkSegmented<T> extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 3),
             child: AnimatedContainer(
+              key: on ? selectedKey : null,
               duration: duration,
               curve: InkMotion.crossFadeCurve,
               height: InkGeometry.segmentHeight,
@@ -137,6 +143,82 @@ class InkSegmented<T> extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// An [InkSegmented] that scrolls sideways when its segments do not fit the
+/// width (a narrow phone, a large text size), and keeps the selected segment
+/// in view: on the first build, and every time the selection changes.
+///
+/// The scroll honours the platform's "remove animations" setting.
+class InkScrollableSegmented<T> extends StatefulWidget {
+  const InkScrollableSegmented({
+    super.key,
+    required this.segments,
+    required this.selected,
+    required this.onChanged,
+    this.numeric = false,
+    this.semanticLabel,
+  });
+
+  final List<InkSegment<T>> segments;
+  final T selected;
+  final ValueChanged<T>? onChanged;
+  final bool numeric;
+  final String? semanticLabel;
+
+  @override
+  State<InkScrollableSegmented<T>> createState() =>
+      _InkScrollableSegmentedState<T>();
+}
+
+class _InkScrollableSegmentedState<T> extends State<InkScrollableSegmented<T>> {
+  final GlobalKey _selectedKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _reveal(animate: false);
+  }
+
+  @override
+  void didUpdateWidget(InkScrollableSegmented<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selected != widget.selected) _reveal(animate: true);
+  }
+
+  /// Scrolls the selected segment to the middle of the visible part, or as
+  /// near as the ends of the control allow. Done after the frame, once the
+  /// segments are laid out.
+  void _reveal({required bool animate}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final BuildContext? target = _selectedKey.currentContext;
+      if (target == null || !target.mounted) return;
+      Scrollable.ensureVisible(
+        target,
+        alignment: 0.5,
+        duration: animate
+            ? InkMotion.accessible(context, InkMotion.crossFade)
+            : Duration.zero,
+        curve: InkMotion.crossFadeCurve,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: InkSegmented<T>(
+        segments: widget.segments,
+        selected: widget.selected,
+        onChanged: widget.onChanged,
+        numeric: widget.numeric,
+        semanticLabel: widget.semanticLabel,
+        selectedKey: _selectedKey,
       ),
     );
   }

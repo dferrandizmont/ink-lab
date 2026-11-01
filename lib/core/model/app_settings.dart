@@ -5,10 +5,11 @@ import 'oahu_set.dart';
 ///
 /// Owned markers = the colours of the Ohuhu sets the user owns
 /// ([ownedSetIds]) + the single markers the user added by hand
-/// ([extraMarkerIds], brand-scoped `brandId:CODE`, any brand). DecoTime and
-/// Copic publish no set membership, so their collections are made of extra
-/// markers only. Every screen (Swatches "Mine", Match, Palette, Ideas, the
-/// counts) reads the collection through `collection_selection.dart`.
+/// ([extraMarkerIds], brand-scoped `brandId:CODE`, any brand). DecoTime,
+/// Copic and Finecolour publish no retail set membership, so their
+/// collections are made of extra markers only. Every screen (Swatches "Mine",
+/// Match, Palette, Ideas, the counts) reads the collection through
+/// `collection_selection.dart`.
 final class AppSettings {
   AppSettings({
     Set<String> ownedSetIds = const {},

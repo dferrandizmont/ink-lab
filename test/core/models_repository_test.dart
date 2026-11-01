@@ -22,6 +22,7 @@ void main() {
           MarkerBrand.ohuhuOahu => 503,
           MarkerBrand.decoTime => 313,
           MarkerBrand.copic => 358,
+          MarkerBrand.finecolour => 480,
         });
         expect(parsed.every((c) => c.brandId == brand.id), isTrue);
         expect(parsed.map((c) => c.colorId).toSet().length, parsed.length);
@@ -37,6 +38,7 @@ void main() {
           MarkerBrand.ohuhuOahu => 'YR513',
           MarkerBrand.decoTime => 'GG9',
           MarkerBrand.copic => 'YR82',
+          MarkerBrand.finecolour => 'SG479',
         });
       },
     );
@@ -88,11 +90,12 @@ void main() {
       repository.loadColors(MarkerBrand.ohuhuOahu),
       repository.loadColors(MarkerBrand.decoTime),
       repository.loadColors(MarkerBrand.copic),
+      repository.loadColors(MarkerBrand.finecolour),
     ]);
     expect(paths, MarkerBrand.values.map((b) => b.assetPath));
     expect(identical(result[0], result[1]), isTrue);
     expect(await repository.loadColors(MarkerBrand.decoTime), result[2]);
-    expect(paths.length, 3);
+    expect(paths.length, MarkerBrand.values.length);
     expect(() => result[0].clear(), throwsUnsupportedError);
   });
   test('explicit parser brand chooses format even with misleading keys', () {

@@ -144,6 +144,81 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Sicherung ersetzt deine aktuellen Daten: Sammlung, Paletten, Tagebuch, Verlauf und Einstellungen. Tagebucheinträge, die nicht darin sind, werden mit ihren Fotos gelöscht; Fotos sind nie Teil einer Sicherung.';
 
   @override
+  String get ideasFavoritesChip => 'Favoriten';
+
+  @override
+  String get ideasFavoritesEmptyTitle => 'Noch keine Lieblingsideen';
+
+  @override
+  String get ideasFavoritesEmptyMessage =>
+      'Tippe auf das Herz einer Idee, um sie hier zu behalten.';
+
+  @override
+  String get ideasRecentTitle => 'Zuletzt angesehen';
+
+  @override
+  String get settingsBackupFileTitle => 'Sicherungsdatei';
+
+  @override
+  String get settingsBackupFileCaption =>
+      'Eine ZIP-Datei mit deinen Daten und den Tagebuchfotos. Speichere sie in Dateien, Drive oder wo du willst. Der API-Schlüssel ist nie enthalten.';
+
+  @override
+  String get settingsSaveBackupFile => 'Sicherungsdatei speichern';
+
+  @override
+  String get settingsRestoreBackupFile => 'Aus Datei wiederherstellen';
+
+  @override
+  String get settingsBackupFileSaving => 'Daten und Fotos werden gepackt…';
+
+  @override
+  String get settingsBackupFileRestoring => 'Sicherung wird wiederhergestellt…';
+
+  @override
+  String get settingsRestoreConfirmBody =>
+      'Die Datei ersetzt deine aktuellen Daten: Sammlung, Paletten, Tagebuch, Verlauf und Einstellungen. Die Fotos in der Datei werden mit wiederhergestellt. Tagebucheinträge, die nicht darin sind, werden mit ihren Fotos gelöscht.';
+
+  @override
+  String get settingsBackupFileRestored =>
+      'Sicherung wiederhergestellt, mit Fotos';
+
+  @override
+  String get settingsBackupFileSaveFailed =>
+      'Die Sicherungsdatei konnte nicht erstellt werden.';
+
+  @override
+  String get settingsBackupFileReadFailed =>
+      'Die Datei konnte nicht gelesen werden.';
+
+  @override
+  String get settingsBackupFileNotZip => 'Diese Datei ist keine ZIP-Sicherung.';
+
+  @override
+  String get settingsBackupFileTooLarge =>
+      'Die Sicherung ist zu groß für Ink Lab.';
+
+  @override
+  String get settingsBackupFileEntryTooLarge =>
+      'Ein Foto in der Sicherung ist zu groß.';
+
+  @override
+  String get settingsBackupFileDamaged =>
+      'Die Datei ist beschädigt oder keine Ink-Lab-Sicherung.';
+
+  @override
+  String get settingsBackupFileUnsupported =>
+      'Diese Sicherung stammt aus einer Version, die Ink Lab nicht lesen kann.';
+
+  @override
+  String get settingsBackupFileNotAPhoto =>
+      'Ein Foto in der Datei ist kein JPEG-, PNG- oder WebP-Bild.';
+
+  @override
+  String get settingsBackupFileWriteFailed =>
+      'Die Fotos konnten nicht gespeichert werden. Deine Daten sind unverändert.';
+
+  @override
   String get settingsImportInvalidJson => 'Der Text ist kein gültiges JSON.';
 
   @override
@@ -410,7 +485,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsDisclaimer =>
-      'Ink Lab ist ein unabhängiges Community-Projekt: Es steht in keiner Verbindung zu Ohuhu, DecoTime oder Copic und wird weder von ihnen empfohlen noch gesponsert. Die App nutzt deren Markercodes, Namen und Farbwerte nur als sachliche Referenzdaten.';
+      'Ink Lab ist ein unabhängiges Community-Projekt: Es steht in keiner Verbindung zu Ohuhu, DecoTime, Copic oder Finecolour und wird weder von ihnen empfohlen noch gesponsert. Die App nutzt deren Markercodes, Namen und Farbwerte nur als sachliche Referenzdaten.';
 
   @override
   String get paletteTitle => 'Palette';
@@ -2763,6 +2838,7 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime': '$input ist kein DecoTime-Markercode. Versuche $example.',
       'copic': '$input ist kein Copic-Markercode. Versuche $example.',
+      'finecolour': '$input ist kein Finecolour-Markercode. Versuche $example.',
       'other': '$input ist kein Ink-Lab-Markercode. Versuche $example.',
     });
     return '$_temp0';
@@ -2775,6 +2851,8 @@ class AppLocalizationsDe extends AppLocalizations {
           '$input ist nicht in deiner Sammlung. Versuche $example oder füge ihn in Meine Sammlung hinzu.',
       'copic':
           '$input ist nicht in deiner Sammlung. Versuche $example oder füge ihn in Meine Sammlung hinzu.',
+      'finecolour':
+          '$input ist nicht in deiner Sammlung. Versuche $example oder füge ihn in Meine Sammlung hinzu.',
       'other':
           '$input ist nicht in deiner Sammlung. Versuche $example oder füge ihn in Meine Sammlung hinzu.',
     });
@@ -2786,6 +2864,7 @@ class AppLocalizationsDe extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime': 'Du hast noch keine DecoTime-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
       'copic': 'Du hast noch keine Copic-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'finecolour': 'Du hast noch keine Finecolour-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
       'other': 'Du hast noch keine Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
     });
     return '$_temp0';
@@ -3922,6 +4001,63 @@ class AppLocalizationsDe extends AppLocalizations {
   String get collectionChartTitle => 'Druckbare Farbkarte';
 
   @override
+  String get swatchesOtherBrandsTitle => 'In anderen Marken';
+
+  @override
+  String get swatchesOtherBrandsOnlyMine => 'Nur meine';
+
+  @override
+  String get swatchesOtherBrandsNone =>
+      'Es gibt keine andere Marke zum Vergleichen.';
+
+  @override
+  String get swatchesOtherBrandsNoneMine =>
+      'Du hast keine nutzbaren Marker anderer Marken.';
+
+  @override
+  String get swatchesOtherBrandsFailed =>
+      'Die anderen Marken konnten nicht gelesen werden.';
+
+  @override
+  String get swatchesOtherBrandsPaletteNote =>
+      'Paletten nutzen die in den Optionen gewählte Marke, daher lässt sich dieser Marker keiner hinzufügen.';
+
+  @override
+  String get paletteVisionTitle => 'Farbsehen';
+
+  @override
+  String get paletteVisionNormal => 'Normal';
+
+  @override
+  String get paletteVisionProtanopia => 'Protanopie';
+
+  @override
+  String get paletteVisionDeuteranopia => 'Deuteranopie';
+
+  @override
+  String get paletteVisionTritanopia => 'Tritanopie';
+
+  @override
+  String get paletteVisionAchromatopsia => 'Achromatopsie';
+
+  @override
+  String paletteVisionPairs(String pairs) {
+    return 'Schwer zu unterscheiden: $pairs';
+  }
+
+  @override
+  String paletteVisionPairsMore(int count) {
+    return '+$count weitere';
+  }
+
+  @override
+  String get paletteVisionNoPairs => 'Alle Farben bleiben gut unterscheidbar.';
+
+  @override
+  String get paletteVisionPreviewNote =>
+      'Nur eine Vorschau. Beim Speichern und Teilen bleiben die echten Farben erhalten.';
+
+  @override
   String get collectionChartHint =>
       'Leere Kästchen mit Code und Name jedes Markers, den du besitzt, um deine echten Marker auszuprobieren. Wird als A4-Bilder zum Drucken oder Speichern geteilt.';
 
@@ -4293,8 +4429,16 @@ class AppLocalizationsDe extends AppLocalizations {
       'Copic-Marker werden einzeln gekauft. Markiere die Marker, die du besitzt.';
 
   @override
+  String get collectionFinecolourHint =>
+      'Finecolour-Marker werden einzeln gekauft. Markiere die Marker, die du besitzt.';
+
+  @override
   String get onboardingCopicLine =>
       '358 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get onboardingFinecolourLine =>
+      '480 Farben · Markiere die Marker, die du besitzt';
 
   @override
   String onboardingMarkersTitle(String brand) {
@@ -4326,6 +4470,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get diaryAdd => 'Zum Tagebuch hinzufügen';
+
+  @override
+  String get diaryShareButton => 'Diesen Eintrag teilen';
 
   @override
   String get diaryStatusLabel => 'Status';
@@ -4420,4 +4567,99 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get diaryAddedNotice => 'Zum Tagebuch hinzugefügt';
+
+  @override
+  String diaryStatsArtworks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Werke',
+      one: '1 Werk',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String diaryStatsFinished(int count) {
+    return '$count fertig';
+  }
+
+  @override
+  String diaryStatsInProgress(int count) {
+    return '$count in Arbeit';
+  }
+
+  @override
+  String get diaryStatsOpen => 'Zahlen ansehen';
+
+  @override
+  String get diaryStatsTitle => 'Zahlen des Tagebuchs';
+
+  @override
+  String get diaryStatsStatusTitle => 'Fertig und in Arbeit';
+
+  @override
+  String get diaryStatsMonthsTitle => 'Einträge pro Monat';
+
+  @override
+  String diaryStatsMonthsLatest(int count) {
+    return 'Die letzten $count Monate.';
+  }
+
+  @override
+  String get diaryStatsMarkersTitle => 'Marker, die du am meisten nutzt';
+
+  @override
+  String get diaryStatsMarkersEmpty => 'Noch kein Eintrag hat Marker.';
+
+  @override
+  String diaryStatsEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Einträge',
+      one: '1 Eintrag',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diaryStatsUnusedTitle => 'Noch nicht genutzte Marker';
+
+  @override
+  String diaryStatsUnusedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Marker von dir stecken in keinem Eintrag.',
+      one: '1 Marker von dir steckt in keinem Eintrag.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diaryStatsUnusedNone => 'Alle deine Marker stecken in Einträgen.';
+
+  @override
+  String get diaryStatsUnusedNoCollection =>
+      'Füge deine Marker unter Meine Sammlung hinzu, um zu sehen, welche du nicht genutzt hast.';
+
+  @override
+  String get diaryStatsUnusedShow => 'Liste zeigen';
+
+  @override
+  String get diaryStatsUnusedHide => 'Liste ausblenden';
+
+  @override
+  String get diaryStatsPalettesTitle =>
+      'Paletten, die du am meisten verknüpfst';
+
+  @override
+  String get diaryStatsPalettesEmpty =>
+      'Noch kein Eintrag verknüpft eine gespeicherte Palette.';
+
+  @override
+  String diaryShareMore(int count) {
+    return '+$count weitere';
+  }
 }

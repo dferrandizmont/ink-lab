@@ -358,6 +358,132 @@ abstract class AppLocalizations {
   /// **'The backup replaces your current data: collection, palettes, diary, history and settings. Diary entries that are not in it are deleted along with their photos; photos are never part of a backup.'**
   String get settingsImportConfirmBody;
 
+  /// No description provided for @ideasFavoritesChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Favourites'**
+  String get ideasFavoritesChip;
+
+  /// No description provided for @ideasFavoritesEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No favourite ideas yet'**
+  String get ideasFavoritesEmptyTitle;
+
+  /// No description provided for @ideasFavoritesEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the heart on an idea to keep it here.'**
+  String get ideasFavoritesEmptyMessage;
+
+  /// No description provided for @ideasRecentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently viewed'**
+  String get ideasRecentTitle;
+
+  /// No description provided for @settingsBackupFileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup file'**
+  String get settingsBackupFileTitle;
+
+  /// No description provided for @settingsBackupFileCaption.
+  ///
+  /// In en, this message translates to:
+  /// **'A ZIP file with your data and the diary photos. Save it to Files, Drive or wherever you like. The API key is never included.'**
+  String get settingsBackupFileCaption;
+
+  /// No description provided for @settingsSaveBackupFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save backup file'**
+  String get settingsSaveBackupFile;
+
+  /// No description provided for @settingsRestoreBackupFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from file'**
+  String get settingsRestoreBackupFile;
+
+  /// No description provided for @settingsBackupFileSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Packing your data and photos…'**
+  String get settingsBackupFileSaving;
+
+  /// No description provided for @settingsBackupFileRestoring.
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring your backup…'**
+  String get settingsBackupFileRestoring;
+
+  /// No description provided for @settingsRestoreConfirmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The file replaces your current data: collection, palettes, diary, history and settings. The photos in the file are restored too. Diary entries that are not in it are deleted along with their photos.'**
+  String get settingsRestoreConfirmBody;
+
+  /// No description provided for @settingsBackupFileRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored, photos included'**
+  String get settingsBackupFileRestored;
+
+  /// No description provided for @settingsBackupFileSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup file could not be created.'**
+  String get settingsBackupFileSaveFailed;
+
+  /// No description provided for @settingsBackupFileReadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The file could not be read.'**
+  String get settingsBackupFileReadFailed;
+
+  /// No description provided for @settingsBackupFileNotZip.
+  ///
+  /// In en, this message translates to:
+  /// **'That file is not a backup ZIP.'**
+  String get settingsBackupFileNotZip;
+
+  /// No description provided for @settingsBackupFileTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'The backup is too big for Ink Lab to handle.'**
+  String get settingsBackupFileTooLarge;
+
+  /// No description provided for @settingsBackupFileEntryTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'A photo in the backup is too big.'**
+  String get settingsBackupFileEntryTooLarge;
+
+  /// No description provided for @settingsBackupFileDamaged.
+  ///
+  /// In en, this message translates to:
+  /// **'The file is damaged or is not an Ink Lab backup.'**
+  String get settingsBackupFileDamaged;
+
+  /// No description provided for @settingsBackupFileUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup comes from a version Ink Lab cannot read.'**
+  String get settingsBackupFileUnsupported;
+
+  /// No description provided for @settingsBackupFileNotAPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'A photo in the file is not a JPEG, PNG or WebP image.'**
+  String get settingsBackupFileNotAPhoto;
+
+  /// No description provided for @settingsBackupFileWriteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The photos could not be saved. Your data has not changed.'**
+  String get settingsBackupFileWriteFailed;
+
   /// No description provided for @settingsImportInvalidJson.
   ///
   /// In en, this message translates to:
@@ -835,7 +961,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime or Copic, and it uses their marker codes, names and colour values only as factual reference data.'**
+  /// **'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime, Copic or Finecolour, and it uses their marker codes, names and colour values only as factual reference data.'**
   String get settingsDisclaimer;
 
   /// No description provided for @paletteTitle.
@@ -4631,19 +4757,19 @@ abstract class AppLocalizations {
   /// No description provided for @paletteUnknownCode.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}'**
+  /// **'{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} finecolour{{input} is not a Finecolour marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}'**
   String paletteUnknownCode(String brand, String input, String example);
 
   /// No description provided for @paletteNotAvailable.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} copic{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}'**
+  /// **'{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} copic{{input} is not in your collection. Try {example} or add it in My collection.} finecolour{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}'**
   String paletteNotAvailable(String brand, String input, String example);
 
   /// No description provided for @paletteNoAvailableColors.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}'**
+  /// **'{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} finecolour{There are no Finecolour markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}'**
   String paletteNoAvailableColors(String brand);
 
   /// No description provided for @paletteMissingBase.
@@ -6632,6 +6758,102 @@ abstract class AppLocalizations {
   /// **'Printable swatch chart'**
   String get collectionChartTitle;
 
+  /// No description provided for @swatchesOtherBrandsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'In other brands'**
+  String get swatchesOtherBrandsTitle;
+
+  /// No description provided for @swatchesOtherBrandsOnlyMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Only mine'**
+  String get swatchesOtherBrandsOnlyMine;
+
+  /// No description provided for @swatchesOtherBrandsNone.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no other brand to compare with.'**
+  String get swatchesOtherBrandsNone;
+
+  /// No description provided for @swatchesOtherBrandsNoneMine.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no usable markers in other brands.'**
+  String get swatchesOtherBrandsNoneMine;
+
+  /// No description provided for @swatchesOtherBrandsFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The other brands could not be read.'**
+  String get swatchesOtherBrandsFailed;
+
+  /// No description provided for @swatchesOtherBrandsPaletteNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Palettes use the brand chosen in Settings, so this marker cannot be added to one.'**
+  String get swatchesOtherBrandsPaletteNote;
+
+  /// No description provided for @paletteVisionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour vision'**
+  String get paletteVisionTitle;
+
+  /// No description provided for @paletteVisionNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get paletteVisionNormal;
+
+  /// No description provided for @paletteVisionProtanopia.
+  ///
+  /// In en, this message translates to:
+  /// **'Protanopia'**
+  String get paletteVisionProtanopia;
+
+  /// No description provided for @paletteVisionDeuteranopia.
+  ///
+  /// In en, this message translates to:
+  /// **'Deuteranopia'**
+  String get paletteVisionDeuteranopia;
+
+  /// No description provided for @paletteVisionTritanopia.
+  ///
+  /// In en, this message translates to:
+  /// **'Tritanopia'**
+  String get paletteVisionTritanopia;
+
+  /// No description provided for @paletteVisionAchromatopsia.
+  ///
+  /// In en, this message translates to:
+  /// **'Achromatopsia'**
+  String get paletteVisionAchromatopsia;
+
+  /// No description provided for @paletteVisionPairs.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard to tell apart: {pairs}'**
+  String paletteVisionPairs(String pairs);
+
+  /// No description provided for @paletteVisionPairsMore.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String paletteVisionPairsMore(int count);
+
+  /// No description provided for @paletteVisionNoPairs.
+  ///
+  /// In en, this message translates to:
+  /// **'Every colour stays easy to tell apart.'**
+  String get paletteVisionNoPairs;
+
+  /// No description provided for @paletteVisionPreviewNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview only. Saving and sharing keep the true colours.'**
+  String get paletteVisionPreviewNote;
+
   /// No description provided for @collectionChartHint.
   ///
   /// In en, this message translates to:
@@ -7190,11 +7412,23 @@ abstract class AppLocalizations {
   /// **'Copic markers are bought one by one. Tick the markers you own.'**
   String get collectionCopicHint;
 
+  /// No description provided for @collectionFinecolourHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Finecolour markers are bought one by one. Tick the markers you own.'**
+  String get collectionFinecolourHint;
+
   /// No description provided for @onboardingCopicLine.
   ///
   /// In en, this message translates to:
   /// **'358 colours · Mark the markers you own'**
   String get onboardingCopicLine;
+
+  /// No description provided for @onboardingFinecolourLine.
+  ///
+  /// In en, this message translates to:
+  /// **'480 colours · Mark the markers you own'**
+  String get onboardingFinecolourLine;
 
   /// No description provided for @onboardingMarkersTitle.
   ///
@@ -7243,6 +7477,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add to diary'**
   String get diaryAdd;
+
+  /// Tooltip and screen reader label of the button that shares a diary entry as an image.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this entry'**
+  String get diaryShareButton;
 
   /// No description provided for @diaryStatusLabel.
   ///
@@ -7417,6 +7657,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Added to the diary'**
   String get diaryAddedNotice;
+
+  /// No description provided for @diaryStatsArtworks.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 artwork} other{{count} artworks}}'**
+  String diaryStatsArtworks(int count);
+
+  /// No description provided for @diaryStatsFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} finished'**
+  String diaryStatsFinished(int count);
+
+  /// No description provided for @diaryStatsInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} in progress'**
+  String diaryStatsInProgress(int count);
+
+  /// No description provided for @diaryStatsOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'See the numbers'**
+  String get diaryStatsOpen;
+
+  /// No description provided for @diaryStatsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Diary numbers'**
+  String get diaryStatsTitle;
+
+  /// No description provided for @diaryStatsStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished and in progress'**
+  String get diaryStatsStatusTitle;
+
+  /// No description provided for @diaryStatsMonthsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries per month'**
+  String get diaryStatsMonthsTitle;
+
+  /// No description provided for @diaryStatsMonthsLatest.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing the latest {count} months.'**
+  String diaryStatsMonthsLatest(int count);
+
+  /// No description provided for @diaryStatsMarkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Markers you use most'**
+  String get diaryStatsMarkersTitle;
+
+  /// No description provided for @diaryStatsMarkersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No entry has markers yet.'**
+  String get diaryStatsMarkersEmpty;
+
+  /// No description provided for @diaryStatsEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 entry} other{{count} entries}}'**
+  String diaryStatsEntries(int count);
+
+  /// No description provided for @diaryStatsUnusedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Markers not used yet'**
+  String get diaryStatsUnusedTitle;
+
+  /// No description provided for @diaryStatsUnusedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 marker you own is not in any entry.} other{{count} markers you own are not in any entry.}}'**
+  String diaryStatsUnusedCount(int count);
+
+  /// No description provided for @diaryStatsUnusedNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Every marker you own is in an entry.'**
+  String get diaryStatsUnusedNone;
+
+  /// No description provided for @diaryStatsUnusedNoCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your markers in My collection to see which ones you have not used.'**
+  String get diaryStatsUnusedNoCollection;
+
+  /// No description provided for @diaryStatsUnusedShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the list'**
+  String get diaryStatsUnusedShow;
+
+  /// No description provided for @diaryStatsUnusedHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the list'**
+  String get diaryStatsUnusedHide;
+
+  /// No description provided for @diaryStatsPalettesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Palettes you link most'**
+  String get diaryStatsPalettesTitle;
+
+  /// No description provided for @diaryStatsPalettesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No entry links a saved palette yet.'**
+  String get diaryStatsPalettesEmpty;
+
+  /// No description provided for @diaryShareMore.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String diaryShareMore(int count);
 }
 
 class _AppLocalizationsDelegate

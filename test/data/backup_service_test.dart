@@ -105,6 +105,61 @@ Future<Harness> populated() async {
 }
 
 void main() {
+  test('Finecolour collection, favourites, palettes, matches and own colours survive backup', () async {
+    final source = await populated();
+    // Backup restore deliberately disables AI; this test covers collection data.
+    await source.aiSettings.setEnabled(false);
+    await source.appSettings.setBrand(MarkerBrand.finecolour);
+    await source.appSettings.setExtraMarkerIds({
+      'finecolour:0',
+      'finecolour:BV321',
+      'decotime:02',
+      'ohuhu_oahu:R1',
+    });
+    await source.appSettings.setFavorites({'finecolour:BV321', 'decotime:01'});
+    await source.ownColors.set('finecolour:BV321', 'abcdef');
+    await source.savedPalettes.save(
+      palette(
+        id: 'cp1',
+        brandId: 'finecolour',
+        baseCode: 'BV321',
+        baseName: 'Blue Berry',
+        colorCodes: ['BV321', 'R140', 'B94'],
+      ),
+    );
+    await source.history.record(
+      pick(id: 'cpick', brandId: 'finecolour', matchedCode: 'BV321'),
+    );
+    final exported = source.backup().exportJson();
+    final target = await harness();
+    await target.backup().importJson(exported);
+    expect(target.backup().exportJson(), exported);
+    expect(target.appSettings.brand, MarkerBrand.finecolour);
+    expect(
+      target.appSettings.settings.extraMarkerIds,
+      source.appSettings.settings.extraMarkerIds,
+    );
+    expect(target.appSettings.favorites, {'finecolour:BV321', 'decotime:01'});
+    expect(target.ownColors.hexOf('finecolour:BV321'), 'abcdef');
+    expect(
+      target.savedPalettes.palettesOf(MarkerBrand.finecolour).single.id,
+      'cp1',
+    );
+    expect(
+      target.history.entries.any((p) => p.brandId == 'finecolour'),
+      isTrue,
+    );
+    // Existing brand data remains independent.
+    expect(
+      target.savedPalettes.palettesOf(MarkerBrand.decoTime).single.id,
+      'd1',
+    );
+    expect(
+      target.appSettings.settings.ownedSetIds,
+      source.appSettings.settings.ownedSetIds,
+    );
+  });
+
   test('Copic collection, favourites, palettes, matches and own colours survive backup', () async {
     final source = await populated();
     // Backup restore deliberately disables AI; this test covers collection data.
@@ -429,6 +484,45 @@ void main() {
     expect(chain.colorCodes, ['BV000', 'BV01', 'BV04', 'BV08']);
   });
 
+  test('Finecolour backup preserves ownership, own colours, wishlist, dried markers and chains', () async {
+    final source = await harness();
+    await source.appSettings.setBrand(MarkerBrand.finecolour);
+    await source.appSettings.setOwnedMarkerCodes({
+      'finecolour:BV321',
+      'finecolour:B94',
+    });
+    await source.ownColors.set('finecolour:BV321', '123456');
+    await source.wishlist.add('finecolour:R140');
+    await source.dried.add('finecolour:B94');
+    await source.savedPalettes.save(
+      palette(
+        id: 'finecolour-chain',
+        brandId: 'finecolour',
+        baseCode: 'BV321',
+        mode: PaletteMode.blendingChain,
+        colorCodes: const ['BV109', 'BV108', 'BV321', 'BV110'],
+        paletteSize: 4,
+      ),
+    );
+    final target = await harness();
+    await target.backup().importJson(source.backup().exportJson());
+    expect(target.appSettings.brand, MarkerBrand.finecolour);
+    expect(target.appSettings.settings.extraMarkerIds, {
+      'finecolour:BV321',
+      'finecolour:B94',
+    });
+    expect(target.ownColors.colors, {'finecolour:BV321': '123456'});
+    expect(target.wishlist.idsOf(MarkerBrand.finecolour), {'finecolour:R140'});
+    expect(target.dried.idsOf(MarkerBrand.finecolour), {'finecolour:B94'});
+    expect(target.wishlist.idsOf(MarkerBrand.decoTime), isEmpty);
+    final chain = target.savedPalettes
+        .palettesOf(MarkerBrand.finecolour)
+        .single;
+    expect(chain.mode, PaletteMode.blendingChain);
+    expect(chain.baseCode, 'BV321');
+    expect(chain.colorCodes, ['BV109', 'BV108', 'BV321', 'BV110']);
+  });
+
   test('own colours go in the backup and come back', () async {
     final source = await populated();
     final exported =
@@ -632,5 +726,117 @@ void main() {
       backup.exportJson(pretty: true),
       contains('"version": ${BackupService.currentVersion}'),
     );
+  });
+
+  group('the whole document is checked before anything is written', () {
+    test('a refused document leaves the diary, its photo and the palettes', () async {
+      final h = await harness();
+      final String photo = await h.artworkDiary.addPhoto(
+        Uint8List.fromList([0xFF, 0xD8, 0xFF, 1]),
+      );
+      await h.artworkDiary.save(
+        ArtworkEntry(
+          id: 'd1',
+          title: 'Mine',
+          date: DateTime(2026, 10, 30),
+          photos: [photo],
+          createdAtEpochMs: 1,
+        ),
+      );
+      await h.savedPalettes.save(palette(id: 'p1'));
+
+      await expectLater(
+        h.backup().importJson(
+          '{"version":1,"artworkDiary":[],"recentIdeas":[5]}',
+        ),
+        throwsA(isA<BackupFormatException>()),
+      );
+
+      // Nothing was written: the entries and their photo are still there.
+      expect(h.artworkDiary.entries, hasLength(1));
+      expect(h.artworkDiary.entries.single.photos, <String>[photo]);
+      expect(h.photos.names, <String>{photo});
+      expect(h.savedPalettes.palettesOf(MarkerBrand.ohuhuOahu), hasLength(1));
+    });
+
+    test('a refused document does not restore the favourites either', () async {
+      final h = await harness();
+      await expectLater(
+        h.backup().importJson(
+          '{"version":1,"ideaFavorites":["smooth_fill"],"recentIdeas":[5]}',
+        ),
+        throwsA(isA<BackupFormatException>()),
+      );
+      expect(h.ideaFavorites.favorites, isEmpty);
+    });
+
+    test('a refused document does not change the settings', () async {
+      final h = await harness();
+      await h.appSettings.setBrand(MarkerBrand.decoTime);
+      await expectLater(
+        h.backup().importJson(
+          '{"version":1,"appSettings":{"brand":"copic"},"recentIdeas":[5]}',
+        ),
+        throwsA(isA<BackupFormatException>()),
+      );
+      expect(h.appSettings.brand, MarkerBrand.decoTime);
+    });
+  });
+
+  group('the untrusted input is bounded', () {
+    test('an idea list that is too long is refused', () async {
+      final h = await harness();
+      final String many = jsonEncode(<String>[
+        for (int i = 0; i <= IdeaFavoritesRepository.maxFavorites; i++)
+          'idea_$i',
+      ]);
+      await expectLater(
+        h.backup().importJson('{"version":1,"ideaFavorites":$many}'),
+        throwsA(isA<BackupFormatException>()),
+      );
+      await expectLater(
+        h.backup().importJson('{"version":1,"recentIdeas":$many}'),
+        throwsA(isA<BackupFormatException>()),
+      );
+      expect(h.ideaFavorites.favorites, isEmpty);
+      expect(h.ideaFavorites.recent, isEmpty);
+    });
+
+    test('an idea id that is too long is refused', () async {
+      final h = await harness();
+      final String long = 'x' * (BackupService.maxIdeaIdLength + 1);
+      await expectLater(
+        h.backup().importJson('{"version":1,"ideaFavorites":["$long"]}'),
+        throwsA(isA<BackupFormatException>()),
+      );
+      expect(h.ideaFavorites.favorites, isEmpty);
+    });
+
+    test('a document that is too long is refused', () async {
+      final h = await harness();
+      final String padded = 'x' * (BackupService.maxDocumentLength + 1);
+      await expectLater(
+        h.backup().importJson('{"version":1,"pad":"$padded"}'),
+        throwsA(isA<BackupFormatException>()),
+      );
+    });
+
+    test('the duplicate ids of a section are stored once', () async {
+      final h = await harness();
+      await h.backup().importJson(
+        '{"version":1,"ideaFavorites":["smooth_fill","smooth_fill","grayscale"],'
+        '"recentIdeas":["grayscale","grayscale","smooth_fill"]}',
+      );
+      expect(h.ideaFavorites.favorites, <String>{'smooth_fill', 'grayscale'});
+      expect(h.ideaFavorites.recent, <String>['grayscale', 'smooth_fill']);
+    });
+
+    test('an id that does not look like an id is dropped', () async {
+      final h = await harness();
+      await h.backup().importJson(
+        '{"version":1,"ideaFavorites":["smooth fill","smooth_fill"]}',
+      );
+      expect(h.ideaFavorites.favorites, <String>{'smooth_fill'});
+    });
   });
 }

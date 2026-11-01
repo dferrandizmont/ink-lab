@@ -395,12 +395,18 @@ void main() {
       final MarkerColor b2 = color('B2', '00ff00');
       final MarkerColor deco = color('07', '0000ff', brandId: 'decotime');
       final MarkerColor copic = color('B05', '0088ff', brandId: 'copic');
+      final MarkerColor finecolour = color(
+        'BV321',
+        '9876aa',
+        brandId: 'finecolour',
+      );
       expect(
-        shoppingListText(<MarkerColor>[deco, copic, b10, b2]),
+        shoppingListText(<MarkerColor>[deco, copic, finecolour, b10, b2]),
         'Ohuhu - B2 - Name B2\n'
         'Ohuhu - B10 - Name B10\n'
         'DecoTime - 07 - Name 07\n'
-        'Copic - B05 - Name B05',
+        'Copic - B05 - Name B05\n'
+        'Finecolour - BV321 - Name BV321',
       );
       expect(shoppingListText(const <MarkerColor>[]), '');
     });

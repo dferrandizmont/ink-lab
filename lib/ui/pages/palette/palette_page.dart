@@ -13,6 +13,7 @@ import '../../../app_scope.dart';
 import '../../../core/app_version.dart' as app_version;
 import '../../../core/blending_chain.dart';
 import '../../../core/collection_selection.dart';
+import '../../../core/color_vision.dart';
 import '../../../core/models.dart';
 import '../../../core/palette_advisor.dart';
 import '../../../core/palette_card_layout.dart';
@@ -44,6 +45,7 @@ import 'palette_photo_scene.dart';
 import 'palette_reasons.dart';
 import 'palette_share.dart';
 import 'palette_type_picker.dart';
+import 'palette_vision.dart';
 import '../../../l10n/l10n.dart';
 
 /// Composition root above the page, or `null` in isolated previews/tests.
@@ -122,6 +124,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   /// A palette image is being rendered or the share sheet is open.
   bool _sharing = false;
+
+  /// The colour vision the palettes on screen are previewed with; `null` is
+  /// normal vision. Only what is drawn changes: a palette is saved and
+  /// shared with its true colours.
+  ColorVisionType? _vision;
 
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
@@ -2217,6 +2224,14 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     // The base is the first band of the strip; companions follow it.
     final int offset = base == null ? 0 : 1;
     final bool photo = _photoMode;
+    final List<String> stripHexes = <String>[
+      if (base != null) base.hex,
+      for (final suggestion in _suggestions) suggestion.color.hex,
+    ];
+    final List<String> stripCodes = <String>[
+      if (base != null) base.newCode,
+      for (final suggestion in _suggestions) suggestion.color.newCode,
+    ];
     final Set<int> locked = photo
         ? const <int>{}
         : <int>{
@@ -2282,18 +2297,13 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       ),
       _inset(
         PaletteStrip(
-          colors: <String>[
-            if (base != null) base.hex,
-            for (final suggestion in _suggestions) suggestion.color.hex,
-          ],
-          labels: <String>[
-            if (base != null) base.newCode,
-            for (final suggestion in _suggestions) suggestion.color.newCode,
-          ],
+          colors: _seenAll(stripHexes),
+          labels: stripCodes,
           lockedIndices: locked,
         ),
         top: InkSpacing.headingGap,
       ),
+      _visionControl(stripHexes, stripCodes),
       _inset(
         Card(
           child: Column(
@@ -2432,6 +2442,12 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     };
     final BlendingChainResult? result = _chainResult;
     final int count = chain.colors.length;
+    final List<String> chainHexes = <String>[
+      for (final MarkerColor c in chain.colors) c.hex,
+    ];
+    final List<String> chainCodes = <String>[
+      for (final MarkerColor c in chain.colors) c.newCode,
+    ];
     return <Widget>[
       _inset(
         Semantics(
@@ -2445,12 +2461,13 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       ),
       _inset(
         PaletteStrip(
-          colors: <String>[for (final MarkerColor c in chain.colors) c.hex],
-          labels: <String>[for (final MarkerColor c in chain.colors) c.newCode],
+          colors: _seenAll(chainHexes),
+          labels: chainCodes,
           lockedIndices: <int>{chain.baseIndex},
         ),
         top: InkSpacing.headingGap,
       ),
+      _visionControl(chainHexes, chainCodes),
       _inset(
         Card(
           child: Column(
@@ -2505,6 +2522,25 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     ];
   }
 
+  List<String> _seenAll(List<String> hexes) => <String>[
+    for (final String hex in hexes) seenHex(hex, _vision),
+  ];
+
+  /// The colour vision preview control of the palette on screen, with the
+  /// pairs of its colours the preview makes hard to tell apart.
+  Widget _visionControl(List<String> hexes, List<String> codes) => _inset(
+    KeyedSubtree(
+      key: const ValueKey<String>('palette-vision'),
+      child: PaletteVisionControl(
+        selected: _vision,
+        onChanged: (ColorVisionType? type) => setState(() => _vision = type),
+        colors: hexes,
+        labels: codes,
+      ),
+    ),
+    top: InkSpacing.block,
+  );
+
   bool _isLocked(PaletteSuggestion suggestion) => _lockedCodes.any(
     (code) => code.toUpperCase() == suggestion.color.newCode.toUpperCase(),
   );
@@ -2531,7 +2567,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
               if (index > 0) const SizedBox(height: InkSpacing.s8),
               _PaintStepRow(
                 step: steps[index],
-                hex: _hexForCode(steps[index].code),
+                hex: seenHex(_hexForCode(steps[index].code), _vision),
               ),
             ],
           ],
@@ -2672,6 +2708,20 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                   ),
                   top: InkSpacing.section,
                 ),
+                // With no palette on screen the control sits here, so a saved
+                // palette can be previewed too.
+                if (palettes.isNotEmpty && _suggestions.isEmpty)
+                  _inset(
+                    KeyedSubtree(
+                      key: const ValueKey<String>('palette-vision-saved'),
+                      child: PaletteVisionControl(
+                        selected: _vision,
+                        onChanged: (ColorVisionType? type) =>
+                            setState(() => _vision = type),
+                      ),
+                    ),
+                    top: InkSpacing.headingGap,
+                  ),
                 if (palettes.isEmpty)
                   _inset(
                     Text(
@@ -2686,6 +2736,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                       _SavedPaletteRow(
                         palette: palettes[i],
                         hexes: <String>[
+                          for (final code in palettes[i].colorCodes)
+                            seenHex(_hexForCode(code), _vision),
+                        ],
+                        vision: _vision,
+                        trueHexes: <String>[
                           for (final code in palettes[i].colorCodes)
                             _hexForCode(code),
                         ],
@@ -3041,6 +3096,8 @@ class _SavedPaletteRow extends StatelessWidget {
   const _SavedPaletteRow({
     required this.palette,
     required this.hexes,
+    required this.trueHexes,
+    required this.vision,
     required this.onLoad,
     required this.onShare,
     required this.onAddToDiary,
@@ -3048,7 +3105,15 @@ class _SavedPaletteRow extends StatelessWidget {
   });
 
   final SavedPalette palette;
+
+  /// The colours as drawn: simulated while a colour vision is previewed.
   final List<String> hexes;
+
+  /// The true colours, to find the pairs the preview makes hard to tell apart.
+  final List<String> trueHexes;
+
+  /// The colour vision being previewed, or `null`.
+  final ColorVisionType? vision;
   final VoidCallback onLoad;
   final VoidCallback onShare;
   final VoidCallback onAddToDiary;
@@ -3110,6 +3175,14 @@ class _SavedPaletteRow extends StatelessWidget {
               colorHeight: 32,
               labelStyle: AppTypography.data,
             ),
+            if (vision != null)
+              PaletteVisionPairs(
+                key: ValueKey<String>('palette-saved-vision-${palette.id}'),
+                colors: trueHexes,
+                labels: palette.colorCodes,
+                type: vision!,
+                top: InkSpacing.s8,
+              ),
             const SizedBox(height: InkSpacing.buttonGap),
             Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,

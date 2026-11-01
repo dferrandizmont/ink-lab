@@ -19,8 +19,16 @@ List<String> _stripHexes(WidgetTester tester) => <String>[
 ];
 
 void main() {
-  for (final brand in [MarkerBrand.ohuhuOahu, MarkerBrand.copic]) {
-    final code = brand == MarkerBrand.copic ? 'BV04' : 'B08';
+  for (final brand in [
+    MarkerBrand.ohuhuOahu,
+    MarkerBrand.copic,
+    MarkerBrand.finecolour,
+  ]) {
+    final code = brand == MarkerBrand.finecolour
+        ? 'BV321'
+        : brand == MarkerBrand.copic
+        ? 'BV04'
+        : 'B08';
     testWidgets(
       '${brand.label}: Palette builds from the own colour of the base marker',
       (WidgetTester tester) async {

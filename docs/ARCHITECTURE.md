@@ -48,6 +48,21 @@ test:
   candidate selection and ordering rules;
 - **ideas engine**: the creative presets (technique guidance, challenge
   palettes) and the rules that turn a preset into a concrete suggestion;
+- **brand equivalents**: `brand_equivalents.dart` answers "what is the same
+  colour in another brand?". It ranks the markers of every other brand by
+  ΔE76, the metric the rest of the app uses, so the answer can be read with
+  the app's own match wording. The catalogue is turned into Lab once, when the
+  finder is built, and the user's own colours are applied the same way the
+  rest of the app applies them. The finder keeps a copy of both, so it must be
+  built again when the catalogue or the effective own colours change;
+- **colour vision**: `color_vision.dart` simulates protanopia, deuteranopia,
+  tritanopia and achromatopsia in linear sRGB (the matrices of Machado,
+  Oliveira and Fernandes, 2009), and lists the pairs of a palette that
+  become hard to tell apart;
+- **diary numbers**: `diary_stats.dart` turns the artwork diary entries and
+  the collection into plain numbers (entries per month, finished against in
+  progress, the most used markers and palettes, the owned markers never used
+  yet). Pure functions over lists, with no storage;
 - **validation**: whether a suggested colour exists in the active collection
   and in the markers the user owns.
 
@@ -64,7 +79,7 @@ platform channel. Anything that needs one of those belongs to a layer above.
   cache;
 - **local persistence**: preferences and user state (active brand, owned
   markers, favourites, saved palettes, wishlist, dried-out markers, the artwork
-  diary, AI settings) in the platform's private
+  diary, the favourite ideas, AI settings) in the platform's private
   storage;
 - **artwork diary**: `artwork_diary_repository.dart` keeps the entries (text,
   date, marker ids, palette id, photo file names) as one JSON list in the
@@ -72,9 +87,31 @@ platform channel. Anything that needs one of those belongs to a layer above.
   documents folder (`artworks/`) behind `ArtworkPhotoStore`, addressed by bare
   file name; they are deleted with their entry and never uploaded, shared or
   sent to the AI features. The backup carries the entries, never the photos;
+- **idea favourites**: `idea_favorites_repository.dart` keeps the ideas the
+  user marked as favourite and the ones they opened last (the last 20, newest
+  first, without duplicates), as two JSON arrays in the key-value store. The
+  ids are the stable ones of the ideas catalogue, so a favourite survives a
+  change of title; an id the catalogue does not know is dropped. The backup
+  carries both lists under `ideaFavorites` and `recentIdeas`, and a backup
+  without them still imports;
 - **backup codec**: export/import of user data as a versioned, plain JSON
   text. It never contains the API key or any other secret, which live behind a
-  separate secret store (Android Keystore / iOS Keychain).
+  separate secret store (Android Keystore / iOS Keychain). The whole
+  document is read and checked before anything is written, so a document that
+  is refused leaves the data the user has exactly as it was.
+- **backup archive**: `backup_archive.dart` puts that same document and the
+  photos of the artwork diary in a ZIP file (`manifest.json`, `backup.json`
+  and `photos/<name>`), so a copy of the data can be kept in a file and not
+  only in the clipboard. The ZIP is written and read with the `archive`
+  package, which is pure Dart and needs no platform channel. An archive that
+  comes from outside is hostile until it is checked: the central directory is
+  read and checked before any entry is unpacked, and the entry names, the
+  sizes (the ones the archive declares and the ones it really holds, up to
+  100 MB in all), the kind of file (no links) and the
+  bytes are checked before anything is written, and the photos are written
+  before the document and undone when one of them or the document fails, so
+  an archive that
+  is refused leaves the data the user has exactly as it was.
 
 The data layer is the only place that knows about assets, files and storage
 mechanisms.
@@ -145,14 +182,17 @@ user picks a base colour
 ## Data flow and the datasets
 
 - Datasets live in `assets/data/` and are **generated** by the scripts in
-  `tool/data/`: `generate_ohuhu.py` and `generate_copic.py`. The DecoTime
+  `tool/data/`: `generate_ohuhu.py`, `generate_copic.py` and `generate_finecolour.py`. The DecoTime
   extraction generator has not yet been ported from the private codebase.
 - The Ohuhu dataset stores the current and the legacy code/name for each
   colour plus the sets it belongs to; the DecoTime dataset stores the code,
   name, hex and set membership. Copic stores 358 codes, names and official
   hex values imported from a pinned meodai/copic-colors revision, with empty
   set lists. Only Ohuhu supports retail set selection (`hasRetailSets`);
-  DecoTime and Copic ownership is tracked marker by marker.
+  DecoTime, Copic and Finecolour ownership is tracked marker by marker.
+  Finecolour stores 480 English-named alcohol markers with approximate chart hex
+  values and EF100/EF101/EF102/EF103 availability ids in `MarkerColor.lines`;
+  these ids are metadata, not selectable Ohuhu `MarkerLine` values.
 - Manual calibration of extracted colours lives with the generator, so a
   regeneration never silently reverts a correction.
 - A stable, brand-scoped colour id (`<brandId>:<code>`) is used for

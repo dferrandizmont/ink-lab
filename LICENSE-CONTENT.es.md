@@ -26,7 +26,7 @@ que nadie la confunda con la original.
 
 ## Datos de los catálogos de rotuladores
 
-Los catálogos de Ohuhu, DecoTime y Copic de `assets/data/` (códigos, nombres, valores hex, pertenencia a
+Los catálogos de Ohuhu, DecoTime, Copic y Finecolour de `assets/data/` (códigos, nombres, valores hex, pertenencia a
 sets y posición en la tarjeta de colores) son **datos factuales de referencia**
 recopilados de fuentes públicas, enumeradas en [NOTICE.md](NOTICE.md). Se usan
 solo para que cada persona identifique los rotuladores que ya tiene. **Quedan
@@ -34,12 +34,12 @@ excluidos tanto de MIT como de CC BY-SA 4.0**: este proyecto no reclama derechos
 sobre los datos de terceros y su inclusión no concede ningún derecho sobre las
 marcas, los diseños ni los materiales de sus propietarios. Los valores hex son
 una aproximación en pantalla del color real del rotulador, no una medida del
-fabricante. El catálogo fuente de Copic conserva su licencia MIT; el aviso
-completo de derechos de autor y permisos figura en [NOTICE.md](NOTICE.md).
+fabricante. Los catálogos fuente de Copic y Finecolour conservan sus licencias MIT; los avisos
+completos de derechos de autor y permisos figuran en [NOTICE.md](NOTICE.md).
 
 ## Marcas
 
-«Ohuhu», «Oahu», «DecoTime» y «Copic» son marcas de sus respectivos propietarios. Este
+«Ohuhu», «Oahu», «DecoTime», «Copic» y «Finecolour» son marcas de sus respectivos propietarios. Este
 proyecto es independiente y no está afiliado, patrocinado ni respaldado por
 ellos. El repositorio no contiene logotipos, fotografías de producto, embalajes
 ni tarjetas de color de ninguna marca.

@@ -9,7 +9,8 @@ enum MarkerBrand {
   /// Its label is "Ohuhu": Oahu is one of its series, never the brand.
   ohuhuOahu('ohuhu_oahu', 'Ohuhu', 'ohuhu_colors.json', MarkerLine.values),
   decoTime('decotime', 'DecoTime', 'decotime_colors.json'),
-  copic('copic', 'Copic', 'copic_colors.json');
+  copic('copic', 'Copic', 'copic_colors.json'),
+  finecolour('finecolour', 'Finecolour', 'finecolour_colors.json');
 
   const MarkerBrand(
     this.id,
@@ -21,7 +22,8 @@ enum MarkerBrand {
   final String label;
   final String assetFile;
 
-  /// Product lines sold under this brand. Empty for single-line brands.
+  /// Selectable Ohuhu product lines. Finecolour line ids are retained on colours
+  /// as metadata; ownership for Finecolour is selected marker by marker.
   final List<MarkerLine> lines;
 
   /// Whether ownership can be selected through the catalogue's retail sets.

@@ -90,7 +90,11 @@ void main() {
     expect(find.textContaining('Combinations ('), findsOneWidget);
   });
 
-  for (final brand in [MarkerBrand.decoTime, MarkerBrand.copic]) {
+  for (final brand in [
+    MarkerBrand.decoTime,
+    MarkerBrand.copic,
+    MarkerBrand.finecolour,
+  ]) {
     testWidgets('${brand.label}: codes and ownership are validated', (
       WidgetTester tester,
     ) async {
@@ -98,7 +102,15 @@ void main() {
         tester,
         brand: brand,
         // Ownership is brand-scoped for non-Ohuhu brands (`brandId:code`).
-        ownedMarkerCodes: brand == MarkerBrand.copic
+        ownedMarkerCodes: brand == MarkerBrand.finecolour
+            ? {
+                'finecolour:BV321',
+                'finecolour:R140',
+                'finecolour:B94',
+                'finecolour:Y1',
+                'finecolour:G45',
+              }
+            : brand == MarkerBrand.copic
             ? {'copic:BV04', 'copic:R29', 'copic:B05', 'copic:Y08', 'copic:G17'}
             : {'decotime:01', 'decotime:02', 'decotime:03'},
       );
@@ -109,10 +121,24 @@ void main() {
         findsOneWidget,
       );
 
-      await enterBaseCode(tester, brand == MarkerBrand.copic ? 'E00' : '05');
+      await enterBaseCode(
+        tester,
+        brand == MarkerBrand.finecolour
+            ? 'E12'
+            : brand == MarkerBrand.copic
+            ? 'E00'
+            : '05',
+      );
       expect(find.textContaining('is not in your collection'), findsOneWidget);
 
-      await enterBaseCode(tester, brand == MarkerBrand.copic ? 'BV04' : '02');
+      await enterBaseCode(
+        tester,
+        brand == MarkerBrand.finecolour
+            ? 'BV321'
+            : brand == MarkerBrand.copic
+            ? 'BV04'
+            : '02',
+      );
       expect(find.textContaining('Combinations ('), findsOneWidget);
     });
   }

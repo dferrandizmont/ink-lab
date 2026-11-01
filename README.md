@@ -94,7 +94,7 @@ Tap a screenshot to enlarge it.
 - **Scenes.** 67 recipes across 11 categories, each with its colour roles.
 - **Artwork diary.** A log of what you paint: date, paper, markers, notes and up
   to four photos.
-- **Three brands.** Ohuhu (503 colours), DecoTime (313) and Copic (358), with
+- **Four brands.** Ohuhu (503 colours), DecoTime (313), Copic (358) and Finecolour (480), with
   individual marker selection.
 
 <details>
@@ -145,7 +145,7 @@ OFL 1.1) and other third-party material keep their own terms, listed in
 [NOTICE.md](NOTICE.md).
 
 An independent project: **not affiliated with, sponsored by or endorsed by Ohuhu,
-DecoTime or Copic**. "Ohuhu", "Oahu", "DecoTime" and "Copic" are trademarks of their owners.
+DecoTime, Copic or Finecolour**. "Ohuhu", "Oahu", "DecoTime", "Copic" and "Finecolour" are trademarks of their owners.
 Sources and full notices are in [NOTICE.md](NOTICE.md).
 
 To report a vulnerability: [SECURITY.md](SECURITY.md).

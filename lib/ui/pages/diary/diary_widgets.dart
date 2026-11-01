@@ -27,6 +27,34 @@ List<String> paletteMarkerIds(SavedPalette palette) => <String>[
     '${palette.brandId}:${code.toUpperCase()}',
 ];
 
+/// The markers with the `brandId:CODE` [ids], own colours applied; an id the
+/// catalogue does not know (or a brand whose catalogue cannot be read) is
+/// left out of the map.
+Future<Map<String, MarkerColor>> loadMarkerColors(
+  AppScope scope,
+  Iterable<String> ids,
+) async {
+  final Set<String> wanted = ids.toSet();
+  final Set<MarkerBrand> brands = <MarkerBrand>{
+    for (final String id in wanted)
+      if (id.contains(':'))
+        MarkerBrand.fromId(id.substring(0, id.indexOf(':'))),
+  };
+  final Map<String, MarkerColor> found = <String, MarkerColor>{};
+  for (final MarkerBrand brand in brands) {
+    List<MarkerColor> colors;
+    try {
+      colors = await scope.markers.loadColors(brand);
+    } catch (_) {
+      colors = const <MarkerColor>[];
+    }
+    for (final MarkerColor color in colors) {
+      if (wanted.contains(color.colorId)) found[color.colorId] = color;
+    }
+  }
+  return found;
+}
+
 /// Resolves marker ids to their colours (own colours applied) and hands them
 /// to [builder]; ids the catalogue does not know are left out of the map.
 ///
@@ -50,28 +78,8 @@ class _MarkerLookupState extends State<MarkerLookup> {
   Future<Map<String, MarkerColor>>? _future;
   String _signature = '';
 
-  Set<MarkerBrand> get _brands => <MarkerBrand>{
-    for (final String id in widget.ids)
-      if (id.contains(':'))
-        MarkerBrand.fromId(id.substring(0, id.indexOf(':'))),
-  };
-
-  Future<Map<String, MarkerColor>> _load(AppScope scope) async {
-    final Set<String> wanted = widget.ids.toSet();
-    final Map<String, MarkerColor> found = <String, MarkerColor>{};
-    for (final MarkerBrand brand in _brands) {
-      List<MarkerColor> colors;
-      try {
-        colors = await scope.markers.loadColors(brand);
-      } catch (_) {
-        colors = const <MarkerColor>[];
-      }
-      for (final MarkerColor color in colors) {
-        if (wanted.contains(color.colorId)) found[color.colorId] = color;
-      }
-    }
-    return found;
-  }
+  Future<Map<String, MarkerColor>> _load(AppScope scope) =>
+      loadMarkerColors(scope, widget.ids);
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +129,7 @@ class DiaryMarkerDots extends StatelessWidget {
                 for (final MarkerColor color in known)
                   SwatchBlock(
                     hex: color.hex,
-                    size: 20,
+                    size: InkGeometry.swatchInline,
                     radius: InkRadii.xs,
                     own: color.hasOwnColor,
                   ),

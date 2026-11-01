@@ -28,8 +28,15 @@ is HTTPS from `raw.githubusercontent.com`; it does not scrape Copic's sites.
 python tool/data/generate_copic.py
 python tool/data/generate_copic.py --from-file /tmp/colors.json
 python tool/data/generate_copic.py --from-file /tmp/colors.json --check
-python -B -m unittest discover -s tool/data -p test_generate_copic.py
+python -B tool/data/test_generate_copic.py
 ```
+
+`baseline/copic_colors_source.json` is the full upstream `colors.json` at the
+pinned commit, kept offline (all eight upstream fields; the generator imports
+only `number`, `name` and the official `hex` and ignores the rest). The MIT
+source allows bundling it, and the test feeds it back through the generator to
+prove it still reproduces the committed `copic_colors.json` byte for byte. Its
+LICENSE ships as `baseline/copic_colors_source.LICENSE`.
 
 The output keeps source order and imports only `number` as `code`, `name`
 and the official `hex` field (never `extractedColor`). Every record has
@@ -133,6 +140,32 @@ Left unchanged until an official source settles them:
   lists their colours, so the app shows the sizes as a hint and offers
   colour families, never auto-filled sets.
 
+## Automating the checks
+
+The generated data is covered offline, with no network, by two suites: the
+catalogue itself and the generators. Run `flutter test
+test/data/catalog_validation_test.dart` (it also runs as part of the plain
+`flutter test` suite) to list every `assets/data/*_colors.json`, parse each
+brand the way the app does and check codes, names, hex values, unique entries,
+known set/line ids, the card locations and that a legacy Ohuhu code never
+repeats inside a single product line.
+
+The generators have a separate `python` suite each (Finecolour commands are
+in its section below). `python -B
+tool/data/test_generate_copic.py` checks that the Copic generator, from its
+pinned offline snapshot, still reproduces the committed `copic_colors.json`
+byte for byte. `python -B tool/data/test_generate_ohuhu.py` checks only the
+Ohuhu generator's pure helpers (natural ordering, text and hex cleaning, the
+sheet-layout guard and the download-host restriction): its community Google
+Sheets have no explicit licence, so no snapshot is bundled and its `build()`
+and `render()` output is not regenerated (the committed Ohuhu file is covered
+by the catalogue suite above and by `test/core/ohuhu_catalog_test.dart`). The
+Copic snapshot is the upstream `colors.json` at the pinned commit, bundled with
+its MIT licence (`baseline/copic_colors_source.LICENSE`).
+
+These `python` suites are run by hand; no CI job runs them (the catalogue suite
+does run in `flutter test`).
+
 ## Adding or changing a pack
 
 1. Add a row to `SET_DEFS` in the generator (id, line, column, header label,
@@ -140,3 +173,29 @@ Left unchanged until an official source settles them:
 2. Add the matching value to `OahuSet` (`lib/core/model/oahu_set.dart`).
 3. Re-run the generator; `flutter test test/core` checks that the JSON and
    the enum agree and that member counts match the pack names.
+
+## Finecolour (480 alcohol markers)
+
+Source: [scottgfhong310/finecolour-color](https://github.com/scottgfhong310/finecolour-color),
+pinned at `20878c90aed7061e4380d19d0f2206ffd01eefed`, file
+`public/apps/finecolour-color/data/finecolour-colors.js`. MIT License,
+Copyright (c) 2026 Scott G.F. Hong (full notice in `NOTICE.md`). The exact
+source and LICENSE are bundled as `baseline/finecolour_colors_source.js`
+and `baseline/finecolour_colors_source.LICENSE`.
+
+`generate_finecolour.py` downloads only that pinned raw GitHub URL. It strips
+the `window.FINECOLOUR_COLORS` assignment and parses strict JSON, never eval.
+It imports only `space == "marker"`: 480 unique codes, non-empty English
+names and six-digit hex values. Fineliners and acrylics are excluded. Hex
+values are sampled from the maker's chart and are approximate, not measured
+ink specifications. EF100/EF101/EF102/EF103 availability is retained in
+`lines`; `sets` is empty and ownership is selected marker by marker, like Copic.
+
+```sh
+python -B tool/data/generate_finecolour.py
+python -B tool/data/generate_finecolour.py --from-file tool/data/baseline/finecolour_colors_source.js --check
+python -B tool/data/test_generate_finecolour.py
+```
+
+The offline test regenerates the committed JSON byte for byte and checks
+space filtering, malformed input and the pinned download restriction.

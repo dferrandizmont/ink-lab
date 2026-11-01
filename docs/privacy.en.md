@@ -1,23 +1,27 @@
 <!--
-Not legal advice. Summarises what the app does with data, checked against the code on 31 Oct 2026;
+Not legal advice. Summarises what the app does with data, checked against the code on 1 Nov 2026;
 have a professional review it before the store launch.
 -->
 
 # Privacy and compliance
 
-Summarises what the app does with data, checked against the code on 31 Oct 2026. The user-facing policy is
+Summarises what the app does with data, checked against the code on 1 Nov 2026. The user-facing policy is
 [`docs/legal/politica-privacidad.md`](legal/politica-privacidad.md) (English:
 [`politica-privacidad.en.md`](legal/politica-privacidad.en.md)) and must say the same as this document.
 Spanish version (authoritative): [`privacy.md`](privacy.md).
 
 ## Data flow
 - **By default the app talks to no server.** No accounts, own server, own analytics or telemetry, ads, purchases or
-  crash reports. With AI off there is no network traffic (measured on an emulator) and the app does not call ML Kit. The marker catalogues ship inside the app (`assets/data/`) and the palette engine is local Dart
-  (`lib/core/`): everything works offline.
+  crash reports. With AI off there is no network traffic (measured on an emulator) and the app does not call ML Kit. The marker catalogues (Ohuhu, Copic and Finecolour, `assets/data/*_colors.json`) ship inside the app and the palette engine is local Dart
+  (`lib/core/`): everything works offline. The "In other brands" equivalents in a marker's detail, the "Colour vision"
+  preview in Palette (it only changes what is drawn; saving and sharing use the true colours) and the "Diary numbers"
+  are also computed only on the phone, from those catalogues and the user's data.
 - **The artwork diary stays on the phone:** the photos the user adds to a "Diary" entry (Ideas → Diary) are copied
   reduced into the app's private folder and are uploaded nowhere: not to an own server, not to the AI features
   (OpenRouter, Gemini Nano or ML Kit). The rest of the diary (title, date, markers used, notes) is text in the app's
-  private storage.
+  private storage. "Share this entry" (`lib/ui/share/diary_entry_renderer.dart`) draws, only when tapped, a PNG with
+  the title, date, surface, status, the first photo, the markers and the colours of the linked palette, and hands it to
+  the system share sheet; the photo is decoded for that image and released when it is done.
 - **The network is only used if the user turns on AI** (Settings → AI assistant → Suggest with AI): with OpenRouter and
   their own key, and on Android for the diagnostics ML Kit sends Google when the on-device AI is used (see below). The
   Android manifest declares `INTERNET`; the merged manifest adds `ACCESS_NETWORK_STATE` and the
@@ -51,8 +55,10 @@ In `shared_preferences` (the app's private storage): active brand, packs and own
 (`dried_marker_ids`), own colours per marker (`own_marker_colors`, `brandId:CODE` → hex: only the derived hex, never
 the photo), saved palettes (`saved_palettes:<brandId>`), the history of the latest Match picks (`color_match_history`:
 sampled colour, matched marker and distance; never the photo), the artwork diary (`artwork_diary`: title, date, what
-it was painted on, status, markers used, linked palette and notes), appearance preferences and the AI settings **without
-the key** (`ai_settings`). No device or user identifiers. The OpenRouter key, if the user saves it, is kept apart:
+it was painted on, status, markers used, linked palette and notes), the favourite and recently viewed ideas
+(`idea_favorites`, `idea_recent`: idea ids only, `lib/data/idea_favorites_repository.dart`), appearance preferences and
+the AI settings **without the key** (`ai_settings`). No device or user identifiers. The OpenRouter key, if the user
+saves it, is kept apart:
 Android Keystore (`flutter_secure_storage`) or iOS Keychain "this device only"
 (`lib/data/secure_secret_store.dart`).
 
@@ -66,7 +72,8 @@ the app when it is uninstalled.
 |---|---|
 | Android system backup | **Disabled:** `allowBackup="false"` plus explicit rules excluding the preferences (`sharedpref`), the database (`database`), the app's files (`file`) and `root/app_flutter/`, which is `getApplicationDocumentsDirectory()` (the diary photos), both for the cloud backup and for the phone-to-phone transfer (`android/app/src/main/res/xml/backup_rules.xml`, `android/app/src/main/res/xml/data_extraction_rules.xml`). Neither the settings, nor the key, nor the photos leave that way. |
 | iOS system backup | **No exclusion flag:** the app declares none. The key is in the Keychain "this device only" and does not move to another iPhone; the preferences and the diary photos do enter the iPhone or iCloud backup that the user manages with their Apple ID. |
-| The app's own `Export` backup | See "Backup". It never includes the key nor the photos: only the internal file name of each diary photo. |
+| The app's own `Export` backup (clipboard) | See "Backup". It never includes the key nor the photos: only the internal file name of each diary photo. |
+| The app's backup file (ZIP) | See "Backup". It carries the same document plus the diary photos; never the key. It only leaves the phone through the system share sheet, to wherever the user sends it. |
 
 ## Permissions
 They are requested when the user taps the feature, never at launch.
@@ -76,9 +83,11 @@ They are requested when the user taps the feature, never at launch.
 | Camera and photos (`NSCameraUsageDescription`, `NSPhotoLibraryUsageDescription` on iOS; system picker on Android) | Matching the colour of a photo to a marker, finding a photo's main colours for a palette ("Scene from a photo"), reading a marker's own colour from a photo of a painted swatch ("My colour"; only the hex is stored) and adding photos to a "Diary" entry (Ideas → Diary). The photo is decoded and analysed **on the phone** and is never sent to any AI provider. In "Match", "Scene from a photo" and "My colour" it is not stored; in the "Diary" a reduced copy is stored in the app's private folder (see "What is stored on the phone"). | `ios/Runner/Info.plist`, `lib/ui/pages/match/`, `lib/ui/pages/palette/palette_photo_scene.dart`, `lib/ui/pages/swatches/own_color_page.dart`, `lib/ui/pages/diary/` |
 | Network (`INTERNET`, and `ACCESS_NETWORK_STATE` via ML Kit, Android) | Only with AI turned on: the optional AI with OpenRouter and ML Kit's diagnostics to Google when the on-device AI is used. With AI off the app opens no socket. | `AndroidManifest.xml`, merged manifest |
 
-No location, contacts, calendar, microphone, general storage, notifications or advertising identifier. Sharing a palette
-or a swatch chart as an image needs no permission: the image is only handed to the app the user picks in the system share
-sheet (`share_plus`, `lib/ui/share/`).
+No location, contacts, calendar, microphone, general storage, notifications or advertising identifier. Sharing a palette,
+a swatch chart or a diary entry as an image, or the backup file, needs no permission: the image or the ZIP is only handed
+to the app the user picks in the system share sheet (`share_plus`, `lib/ui/share/`,
+`lib/ui/pages/settings/backup_file_io.dart`). Neither does picking a backup file: `file_selector` opens the system
+document picker without declaring any permission.
 `ios/Runner/PrivacyInfo.xcprivacy` declares no tracking and no collected data; it only uses the `UserDefaults` API
 with reason `CA92.1`.
 
@@ -105,9 +114,9 @@ Off by default. Before turning it on, the app shows what would leave the phone.
 "Export backup" (Settings) produces a **JSON text** (not a file), with a version (`version`) and **unencrypted**, with
 these sections: the app settings (`appSettings`), the saved palettes (`savedPalettes`), the Match history
 (`colorMatchHistory`), the own colours (`ownColors`), the wishlist (`wishlist`), the dried-out markers (`driedMarkers`),
-the diary entries (`artworkDiary`) and the non-secret AI settings (`aiSettings`)
-(`lib/data/backup_service.dart`). It hands it over **by copying it to the clipboard**; "Import backup" receives it by
-pasting. Where that text ends up is the user's decision. The system clipboard may be visible to the keyboard or to other
+the diary entries (`artworkDiary`), the non-secret AI settings (`aiSettings`) and the favourite and recently viewed
+ideas (`ideaFavorites`, `recentIdeas`) (`lib/data/backup_service.dart`). It hands it over **by copying it to the
+clipboard**; "Import backup" receives it by pasting. Where that text ends up is the user's decision. The system clipboard may be visible to the keyboard or to other
 apps depending on the operating system, so do not leave the backup pasted around. The API key is never part of the
 backup, and neither are the diary photos: the entries travel with the **internal file name** of each photo, never with
 the photo.
@@ -115,6 +124,23 @@ the photo.
 Importing **replaces** the data the document carries; the sections that are not in it are left as they are. Since the
 diary travels complete, the entries that are not in the backup are **deleted along with their photos**, and the app warns
 before importing ("Replace your current data?").
+
+**Backup file** (Settings → Your data → Backup file, `lib/ui/pages/settings/backup_section.dart`). "Save backup file"
+builds a ZIP in memory (`package:archive`, `lib/data/backup_archive.dart`) with `manifest.json` (format `ink-lab-backup`,
+format version, app version and photo count), `backup.json` (exactly the same document as the clipboard backup: **never
+the API key**) and `photos/<name>` with the diary photos the entries refer to. `SystemBackupFileIo`
+(`lib/ui/pages/settings/backup_file_io.dart`) writes it as `ink-lab-backup-YYYY-MM-DD.zip` in the app's temporary
+folder (`getTemporaryDirectory()`, cache the system may clear), first deletes the earlier `ink-lab-backup-*.zip` files
+there and opens the system share sheet (`share_plus`): the file only goes where the user sends it (Files, Drive, another
+app...); it is not deleted when the sheet closes, because the chosen app may still be reading it, and the next save
+deletes it. "Restore from file" opens the system document picker (`file_selector`, filtered to ZIP; no permission
+declared). On Android the picker copies the chosen file into a folder of its own inside the app's cache; the app deletes
+that copy (never the user's original) when it is done, whether or not the restore succeeded. The file is checked whole
+before anything is written (at most 100 MB, 32 MB per entry, 2000 entries, sanitised photo names, every photo decoded as
+an image); a refused file leaves the data and the photos as they were. After confirmation, the import replaces the data
+like the clipboard one does and, in addition, writes the photos from the file and **deletes the diary photos that are not
+in it**; if a photo cannot be written, it is undone and the data stays as it was. The import never turns the AI on or
+touches the key.
 
 ## Support and links
 The support address is **inklab@mainshai.com**. "About" offers to **copy** the repository URL to the clipboard; the app
@@ -134,6 +160,10 @@ an email app, the report is copied to the clipboard. The privacy policy is publi
   Final answers in `docs/tienda/google-play.md`.
 - The diary photos never leave the phone, so the forms do not change: neither Google Play (Data safety) nor Apple
   (privacy labels) has any new data collected or shared.
+- Nor does 0.8 change them: the backup file and the image of a diary entry only leave through the system share sheet,
+  to wherever the user sends them (a user-initiated transfer, which the stores count neither as collection nor as
+  sharing); the brand equivalents, the colour-vision preview, the diary numbers, the favourite and recent ideas and the
+  Finecolour catalogue are computed on, or bundled with, the app, without network; the file picker adds no permission.
 - There are no accounts to delete; data is removed by uninstalling the app or clearing its data in the system.
 - Review the forms with the final AAB/IPA and publish a policy URL consistent with these facts.
 

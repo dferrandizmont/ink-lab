@@ -16,8 +16,11 @@ const List<String> decoTimeFamilyIds = <String>[
 
 /// Human labels of the collection concepts.
 extension CollectionLabels on AppLocalizations {
-  String individualMarkersHint(MarkerBrand brand) =>
-      brand == MarkerBrand.copic ? collectionCopicHint : collectionDecoHint;
+  String individualMarkersHint(MarkerBrand brand) => switch (brand) {
+    MarkerBrand.copic => collectionCopicHint,
+    MarkerBrand.finecolour => collectionFinecolourHint,
+    _ => collectionDecoHint,
+  };
 
   /// What the tips of an Ohuhu series are ("Fine and chisel tips").
   String seriesTips(MarkerLine line) => switch (line) {

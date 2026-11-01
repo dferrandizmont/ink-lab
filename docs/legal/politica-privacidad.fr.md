@@ -1,7 +1,7 @@
 # Politique de confidentialité d'Ink Lab
 
 
-Dernière mise à jour : 2026-10-31
+Dernière mise à jour : 2026-11-01
 
 Traduction de courtoisie. Seule la [version espagnole](https://inklab.mainshai.com/es/privacy/) fait foi.
 
@@ -29,11 +29,13 @@ exactement ce qui est expliqué plus bas.
 ### Données qui restent sur votre téléphone (nous ne les recevons pas)
 Votre marque active, les packs et feutres que vous possédez, vos favoris, votre liste de souhaits, les feutres que
 vous marquez comme secs, les couleurs personnelles que vous enregistrez pour vos feutres, vos palettes enregistrées,
-l'historique de vos derniers choix lors de l'association de couleurs, les entrées et les photos de votre journal et
-vos réglages sont enregistrés uniquement dans l'espace de stockage privé de l'application, sur votre appareil. Pour
-chaque couleur personnelle, seul son code hexadécimal est enregistré, jamais la photo dont vous l'avez tirée. Les
-catalogues de feutres sont inclus dans l'application et tout fonctionne hors connexion. Il n'y a ni synchronisation ni
-copie sur aucun de nos serveurs.
+l'historique de vos derniers choix lors de l'association de couleurs, les entrées et les photos de votre journal, vos
+idées favorites et vues récemment et vos réglages sont enregistrés uniquement dans l'espace de stockage privé de
+l'application, sur votre appareil. Pour chaque couleur personnelle, seul son code hexadécimal est enregistré, jamais la
+photo dont vous l'avez tirée. Les catalogues de feutres sont inclus dans l'application et tout fonctionne hors
+connexion ; « Dans d’autres marques » (dans le détail d'un feutre), l'aperçu « Vision des couleurs » (dans « Palette »)
+et les « Chiffres du journal » sont calculés sur votre téléphone à partir de ces catalogues et de vos données, sans
+rien envoyer. Il n'y a ni synchronisation ni copie sur aucun de nos serveurs.
 
 La sauvegarde système d'Android est **désactivée** pour cette application : elle exclut tous les fichiers de
 l'application de la sauvegarde dans le cloud et du transfert entre appareils, de sorte que ni vos réglages, ni votre
@@ -60,18 +62,31 @@ vos données. Chaque entrée peut contenir jusqu'à 4 photos, prises avec l'appa
 que l'application copie en taille réduite (2048 pixels de côté au maximum) dans son dossier privé ; la photo d'origine
 de votre galerie n'est pas modifiée. Ces photos ne sont envoyées nulle part ni transmises aux fonctions d'IA (ni à
 OpenRouter, ni à Gemini Nano, ni à ML Kit), et elles sont supprimées lorsque vous retirez la photo ou l'entrée, et avec
-l'application lorsque vous la désinstallez.
+l'application lorsque vous la désinstallez. « Partager cette entrée » dessine, uniquement lorsque vous le touchez, une
+image avec le titre, la date, le statut, la première photo, les feutres utilisés et les couleurs de la palette liée,
+et ne la remet qu'à l'application que vous choisissez dans le menu de partage du système.
 
 ### Sauvegarde
 « Exporter » (Réglages → Sauvegarde) génère un texte JSON, et non un fichier, contenant vos réglages, les réglages non
 secrets de l'IA, votre collection, favoris, liste de souhaits, feutres secs, couleurs personnelles, palettes,
-historique et les entrées du journal (avec les noms de fichier internes de leurs photos, pas les photos), et le
-**copie dans le presse-papiers** pour que vous le colliez où vous le souhaitez ; « Importer » le reçoit par collage.
-Lors de l'importation, la sauvegarde remplace vos données actuelles, journal compris : les entrées qui n'y figurent
-pas sont supprimées avec leurs photos, et l'application vous en avertit avant. La sauvegarde n'est pas chiffrée, ne
-contient aucun identifiant et n'inclut jamais votre clé d'API ni les photos du journal. Ce que vous en faites ensuite
-(l'enregistrer dans votre cloud, l'envoyer dans un message...) se fait en dehors de l'application. Sachez que, selon
-votre système, le presse-papiers peut être visible par votre clavier ou par d'autres applications.
+historique, idées favorites et vues récemment et les entrées du journal (avec les noms de fichier internes de leurs
+photos, pas les photos), et le **copie dans le presse-papiers** pour que vous le colliez où vous le souhaitez ;
+« Importer » le reçoit par collage. Lors de l'importation, la sauvegarde remplace vos données actuelles, journal
+compris : les entrées qui n'y figurent pas sont supprimées avec leurs photos, et l'application vous en avertit avant.
+La sauvegarde n'est pas chiffrée, ne contient aucun identifiant et n'inclut jamais votre clé d'API ni les photos du
+journal. Ce que vous en faites ensuite (l'enregistrer dans votre cloud, l'envoyer dans un message...) se fait en
+dehors de l'application. Sachez que, selon votre système, le presse-papiers peut être visible par votre clavier ou par
+d'autres applications.
+
+« Enregistrer en fichier » (Réglages → Tes données → Fichier de sauvegarde) crée un fichier ZIP avec cette même
+sauvegarde et, en plus, les photos du journal, l'écrit dans le dossier temporaire (cache) de l'application et ouvre le
+menu de partage du système pour que vous l'enregistriez dans Fichiers, Drive ou l'application de votre choix : il ne va
+que là où vous l'envoyez, et l'application supprime les fichiers de sauvegarde précédents de ce dossier lorsqu'elle
+crée le suivant. « Restaurer depuis un fichier » ouvre le sélecteur de documents du système, qui n'a besoin d'aucune
+autorisation (le sélecteur laisse une copie du fichier choisi dans le cache de l'application, et l'application la
+supprime une fois terminé) ; le fichier est vérifié en entier avant d'écrire quoi que ce soit et l'application vous
+demande confirmation, car elle remplace vos données actuelles, photos comprises, et supprime les photos du journal qui
+ne sont pas dans le fichier. Aucune sauvegarde, ni celle du presse-papiers ni le fichier, n'inclut votre clé d'API.
 
 ### IA facultative
 Elle est **désactivée par défaut** (Réglages → Assistant IA → Suggérer avec l’IA). Lorsqu'elle est désactivée,
@@ -119,9 +134,10 @@ Associer », « À partir d’une photo » ou « Ma couleur », ou que vous ajou
 elle déclare l'accès à **Internet** et à l'**état du réseau** (`INTERNET` et `ACCESS_NETWORK_STATE`), qui ne sont
 utilisés qu'avec l'IA activée : pour l'IA facultative avec OpenRouter et pour les diagnostics que ML Kit envoie à
 Google lorsque l'IA sur l'appareil est utilisée. Elle ne demande ni la localisation, ni les contacts, ni l'agenda, ni
-le micro, ni les notifications, et n'utilise pas l'identifiant publicitaire. Si vous partagez une palette ou un
-nuancier sous forme d'image, celle-ci n'est remise qu'à l'application que vous choisissez dans le menu de partage du
-système ; l'application n'a besoin d'aucune autorisation pour cela.
+le micro, ni les notifications, et n'utilise pas l'identifiant publicitaire. Si vous partagez une palette, un
+nuancier ou une entrée du journal sous forme d'image, ou un fichier de sauvegarde, il n'est remis qu'à l'application
+que vous choisissez dans le menu de partage du système ; l'application n'a besoin d'aucune autorisation pour cela, ni
+pour choisir un fichier de sauvegarde avec le sélecteur du système.
 
 ### Données qui NE sont PAS traitées
 - Nous ne demandons ni ne conservons votre nom, votre adresse e-mail, votre numéro de téléphone, votre âge ni aucune
@@ -170,14 +186,15 @@ la version 0.6.2) via le service de messagerie de votre choix.
 Le développeur n'effectue aucun transfert de données. Si vous utilisez l'IA avec OpenRouter, la requête est adressée au
 fournisseur que vous choisissez, qui peut la traiter dans d'autres régions et selon ses propres conditions. Google peut
 traiter les diagnostics de ML Kit dans d'autres pays, selon ses propres conditions. Les autres services que vous décidez
-d'utiliser (messagerie, cloud, destination d'un texte copié) sont régis par leurs propres conditions.
+d'utiliser (messagerie, cloud, destination d'un texte copié ou d'un fichier ou d'une image partagés) sont régis par
+leurs propres conditions.
 
 ## 6. Durée de conservation
 
 
 - **Données sur votre téléphone :** jusqu'à ce que vous désinstalliez l'application ou effaciez ses données depuis les
-  réglages du système (et, le cas échéant, les textes de sauvegarde que vous avez conservés). Les photos du journal sont
-  en outre supprimées dès que vous retirez la photo ou l'entrée.
+  réglages du système (et, le cas échéant, les textes ou fichiers de sauvegarde que vous avez conservés). Les photos du
+  journal sont en outre supprimées dès que vous retirez la photo ou l'entrée.
 - **E-mails d'assistance :** le temps nécessaire pour traiter votre demande et, au maximum, un an à compter de la
   dernière réponse.
 
@@ -189,8 +206,9 @@ de portabilité** en écrivant à inklab@mainshai.com. Nous vous répondrons dan
 
 Nous ne recevons pas les données enregistrées sur votre téléphone : nous ne pouvons donc ni les consulter ni les
 supprimer pour vous. Vous pouvez les supprimer en désinstallant l'application ou en effaçant ses données depuis les
-réglages du système, et les emporter avec « Exporter » (Réglages → Sauvegarde) ; les photos du journal ne font pas
-partie de ce texte. Pour ce que vous avez envoyé à OpenRouter, exercez vos droits auprès d'OpenRouter et du
+réglages du système, et les emporter avec « Exporter » (Réglages → Sauvegarde ; les photos du journal ne font pas
+partie de ce texte) ou avec « Enregistrer en fichier » (qui les inclut). Pour ce que vous avez envoyé à OpenRouter,
+exercez vos droits auprès d'OpenRouter et du
 fournisseur du modèle ; pour les diagnostics de ML Kit, auprès de Google.
 
 Si vous estimez que nous n'avons pas traité correctement vos données, vous pouvez introduire une réclamation auprès de

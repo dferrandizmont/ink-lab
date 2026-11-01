@@ -29,6 +29,7 @@ Future<void> main() async {
     }),
   );
   final aiSettings = StoredAiSettingsRepository(store);
+  final ideaFavorites = StoredIdeaFavoritesRepository(store);
   await Future.wait([
     settings.load(),
     savedPalettes.load(),
@@ -38,6 +39,7 @@ Future<void> main() async {
     dried.load(),
     artworkDiary.load(),
     aiSettings.load(),
+    ideaFavorites.load(),
   ]);
   final secrets = SecureSecretStore();
   final markers = MarkerRepository(loadAsset: rootBundle.loadString)
@@ -60,6 +62,7 @@ Future<void> main() async {
       dried: dried,
       artworkDiary: artworkDiary,
       aiSettings: aiSettings,
+      ideaFavorites: ideaFavorites,
       secrets: secrets,
       markers: markers,
       aiService: AiService(

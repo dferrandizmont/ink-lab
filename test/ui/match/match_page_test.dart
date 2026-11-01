@@ -235,7 +235,11 @@ void main() {
     expect(find.text(l10n.matchDecodeFailed), findsOneWidget);
   });
 
-  for (final brand in [MarkerBrand.decoTime, MarkerBrand.copic]) {
+  for (final brand in [
+    MarkerBrand.decoTime,
+    MarkerBrand.copic,
+    MarkerBrand.finecolour,
+  ]) {
     testWidgets(
       '${brand.label}: a collection not set up matches the whole range',
       (WidgetTester tester) async {
@@ -287,7 +291,11 @@ void main() {
         image: sampledImage(32, 32, <int>[0, 0, 255]),
         brand: brand,
         ownedMarkerCodes: <String>{
-          brand == MarkerBrand.copic ? 'copic:R29' : 'decotime:01',
+          brand == MarkerBrand.finecolour
+              ? 'finecolour:R140'
+              : brand == MarkerBrand.copic
+              ? 'copic:R29'
+              : 'decotime:01',
         },
       );
 
@@ -301,7 +309,11 @@ void main() {
       expect(
         find.byKey(
           ValueKey<String>(
-            brand == MarkerBrand.copic ? 'match-best-R29' : 'match-best-01',
+            brand == MarkerBrand.finecolour
+                ? 'match-best-R140'
+                : brand == MarkerBrand.copic
+                ? 'match-best-R29'
+                : 'match-best-01',
           ),
         ),
         findsOneWidget,

@@ -33,6 +33,11 @@ List<MarkerColor> parseColors(String json, {required MarkerBrand brand}) {
         oldName: name.isEmpty ? code : name,
         hex: hex.isEmpty ? 'cfcfcf' : hex,
         sets: jsonDefault<List<dynamic>>(item, 'sets', const []).cast<String>(),
+        lines: jsonDefault<List<dynamic>>(
+          item,
+          'lines',
+          const [],
+        ).cast<String>(),
       );
     }),
   );

@@ -1,7 +1,7 @@
 # Datenschutzerklärung von Ink Lab
 
 
-Zuletzt aktualisiert: 2026-10-31
+Zuletzt aktualisiert: 2026-11-01
 
 Unverbindliche Übersetzung. Maßgeblich ist die [spanische Fassung](https://inklab.mainshai.com/es/privacy/).
 
@@ -28,10 +28,13 @@ erläutert wird.
 ### Daten, die auf Ihrem Handy bleiben (wir erhalten sie nicht)
 Ihre aktive Marke, die Packs und Marker, die Sie besitzen, Ihre Favoriten, Ihre Wunschliste, die Marker, die Sie als
 ausgetrocknet markieren, die eigenen Farben, die Sie für Ihre Marker speichern, Ihre gespeicherten Paletten, der
-Verlauf Ihrer letzten Auswahlen beim Farbabgleich, die Einträge und Fotos Ihres Tagebuchs und Ihre Einstellungen
-werden ausschließlich im privaten Speicher der App auf Ihrem Gerät gespeichert. Von jeder eigenen Farbe wird nur ihr
-Hex-Code gespeichert, niemals das Foto, aus dem Sie sie entnommen haben. Die Markerkataloge sind in der App enthalten,
-und alles funktioniert ohne Verbindung. Es gibt keine Synchronisierung und keine Kopie auf einem unserer Server.
+Verlauf Ihrer letzten Auswahlen beim Farbabgleich, die Einträge und Fotos Ihres Tagebuchs, Ihre Favoriten und zuletzt
+angesehenen Ideen und Ihre Einstellungen werden ausschließlich im privaten Speicher der App auf Ihrem Gerät
+gespeichert. Von jeder eigenen Farbe wird nur ihr Hex-Code gespeichert, niemals das Foto, aus dem Sie sie entnommen
+haben. Die Markerkataloge sind in der App enthalten, und alles funktioniert ohne Verbindung; „In anderen Marken“ (in
+der Detailansicht eines Markers), die Vorschau „Farbsehen“ (in „Palette“) und die „Zahlen des Tagebuchs“ werden auf
+Ihrem Handy aus diesen Katalogen und Ihren Daten berechnet, ohne etwas zu senden. Es gibt keine Synchronisierung und
+keine Kopie auf einem unserer Server.
 
 Die Systemsicherung von Android ist für diese App **deaktiviert**: Sie schließt alle Dateien der App von der
 Cloud-Sicherung und von der Übertragung zwischen Geräten aus, sodass weder Ihre Einstellungen noch Ihr Schlüssel, Ihre
@@ -58,18 +61,31 @@ gespeichert. Jeder Eintrag kann bis zu 4 Fotos enthalten, mit der Kamera aufgeno
 die App kopiert sie verkleinert (höchstens 2048 Pixel Seitenlänge) in ihren privaten Ordner, das Originalfoto in Ihrer
 Galerie bleibt unverändert. Diese Fotos werden nirgendwohin hochgeladen und nicht an die KI-Funktionen gesendet (weder
 an OpenRouter noch an Gemini Nano oder ML Kit); sie werden gelöscht, wenn Sie das Foto oder den Eintrag entfernen, und
-zusammen mit der App, wenn Sie diese deinstallieren.
+zusammen mit der App, wenn Sie diese deinstallieren. „Diesen Eintrag teilen“ zeichnet nur dann, wenn Sie darauf
+tippen, ein Bild mit Titel, Datum, Status, dem ersten Foto, den verwendeten Markern und den Farben der verknüpften
+Palette und übergibt es ausschließlich an die App, die Sie im Teilen-Menü des Systems auswählen.
 
 ### Sicherungskopie
 „Export“ (Optionen → Sicherung) erzeugt einen JSON-Text, keine Datei, mit Ihren Einstellungen, den nicht geheimen
 KI-Einstellungen, Ihrer Sammlung, Favoriten, Wunschliste, ausgetrockneten Markern, eigenen Farben, Paletten, Ihrem
-Verlauf und den Tagebucheinträgen (mit den internen Dateinamen ihrer Fotos, nicht den Fotos selbst) und **kopiert ihn
-in die Zwischenablage**, damit Sie ihn einfügen können, wo Sie möchten; „Import“ nimmt ihn durch Einfügen entgegen.
-Beim Import ersetzt die Sicherung Ihre aktuellen Daten, auch das Tagebuch: Einträge, die nicht darin enthalten sind,
-werden zusammen mit ihren Fotos gelöscht, und die App weist Sie vorher darauf hin. Die Sicherung ist nicht
-verschlüsselt, enthält keine Kennung und niemals Ihren API-Schlüssel oder die Tagebuchfotos. Was Sie danach damit tun
-(ihn in Ihrer Cloud speichern, per Nachricht versenden ...), liegt außerhalb der App. Beachten Sie, dass die
-Zwischenablage je nach System für Ihre Tastatur oder für andere Apps sichtbar sein kann.
+Verlauf, Ihren Favoriten und zuletzt angesehenen Ideen und den Tagebucheinträgen (mit den internen Dateinamen ihrer
+Fotos, nicht den Fotos selbst) und **kopiert ihn in die Zwischenablage**, damit Sie ihn einfügen können, wo Sie
+möchten; „Import“ nimmt ihn durch Einfügen entgegen. Beim Import ersetzt die Sicherung Ihre aktuellen Daten, auch das
+Tagebuch: Einträge, die nicht darin enthalten sind, werden zusammen mit ihren Fotos gelöscht, und die App weist Sie
+vorher darauf hin. Die Sicherung ist nicht verschlüsselt, enthält keine Kennung und niemals Ihren API-Schlüssel oder
+die Tagebuchfotos. Was Sie danach damit tun (ihn in Ihrer Cloud speichern, per Nachricht versenden ...), liegt
+außerhalb der App. Beachten Sie, dass die Zwischenablage je nach System für Ihre Tastatur oder für andere Apps
+sichtbar sein kann.
+
+„Sicherungsdatei speichern“ (Optionen → Deine Daten → Sicherungsdatei) erzeugt eine ZIP-Datei mit derselben Sicherung
+und zusätzlich den Tagebuchfotos, schreibt sie in den temporären Ordner (Cache) der App und öffnet das Teilen-Menü des
+Systems, damit Sie sie in „Dateien“, Drive oder der App Ihrer Wahl speichern: Sie geht nur dorthin, wohin Sie sie
+senden, und die App löscht die früheren Sicherungsdateien in diesem Ordner, wenn sie die nächste erzeugt. „Aus Datei
+wiederherstellen“ öffnet die Dokumentauswahl des Systems, die keine Berechtigung benötigt (die Auswahl hinterlässt eine
+Kopie der gewählten Datei im Cache der App, und die App löscht sie, wenn sie fertig ist); die Datei wird vollständig
+geprüft, bevor etwas geschrieben wird, und die App bittet Sie um Bestätigung, denn sie ersetzt Ihre aktuellen Daten,
+Fotos eingeschlossen, und löscht die Tagebuchfotos, die nicht in der Datei enthalten sind. Keine Sicherung, weder die
+in der Zwischenablage noch die Datei, enthält Ihren API-Schlüssel.
 
 ### Optionale KI
 Sie ist **standardmäßig ausgeschaltet** (Optionen → KI-Assistent → Mit KI vorschlagen). Ist sie ausgeschaltet, baut die App
@@ -115,8 +131,9 @@ Farbe“ verwenden oder dem „Tagebuch“ ein Foto hinzufügen. Unter Android d
 **Internet** und den **Netzwerkstatus** (`INTERNET` und `ACCESS_NETWORK_STATE`), die nur bei aktivierter KI genutzt
 werden: für die optionale KI mit OpenRouter und für die Diagnosedaten, die ML Kit bei Nutzung der KI auf dem Gerät an
 Google sendet. Sie fragt nicht nach Standort, Kontakten, Kalender, Mikrofon oder Benachrichtigungen und verwendet
-nicht die Werbe-ID. Wenn Sie eine Palette oder eine Farbmusterkarte als Bild teilen, wird es nur an die App übergeben,
-die Sie im Teilen-Menü des Systems auswählen; die App benötigt dafür keine Berechtigung.
+nicht die Werbe-ID. Wenn Sie eine Palette, eine Farbmusterkarte oder einen Tagebucheintrag als Bild oder eine
+Sicherungsdatei teilen, wird sie nur an die App übergeben, die Sie im Teilen-Menü des Systems auswählen; die App
+benötigt dafür keine Berechtigung, auch nicht, um eine Sicherungsdatei mit der Auswahl des Systems zu öffnen.
 
 ### Daten, die NICHT verarbeitet werden
 - Wir fragen weder nach Namen, E-Mail-Adresse, Telefonnummer oder Alter noch nach Kontodaten und speichern sie nicht: Es
@@ -163,14 +180,15 @@ den E-Mail-Dienst, den Sie wählen.
 Der Entwickler nimmt keine Datenübermittlungen vor. Wenn Sie die KI mit OpenRouter nutzen, geht die Anfrage an den von
 Ihnen gewählten Anbieter, der sie in anderen Regionen und nach seinen eigenen Bedingungen verarbeiten kann. Google kann
 die Diagnosedaten von ML Kit nach seinen eigenen Bedingungen in anderen Ländern verarbeiten. Die übrigen Dienste, die
-Sie nutzen möchten (E-Mail, Cloud, Ziel eines kopierten Textes), unterliegen ihren eigenen Bedingungen.
+Sie nutzen möchten (E-Mail, Cloud, Ziel eines kopierten Textes oder einer geteilten Datei oder eines geteilten
+Bildes), unterliegen ihren eigenen Bedingungen.
 
 ## 6. Speicherdauer
 
 
 - **Daten auf Ihrem Handy:** bis Sie die App deinstallieren oder ihre Daten in den Systemeinstellungen löschen (und
-  gegebenenfalls die Sicherungstexte, die Sie aufbewahrt haben). Die Tagebuchfotos werden außerdem gelöscht, sobald Sie
-  das Foto oder den Eintrag entfernen.
+  gegebenenfalls die Sicherungstexte oder -dateien, die Sie aufbewahrt haben). Die Tagebuchfotos werden außerdem
+  gelöscht, sobald Sie das Foto oder den Eintrag entfernen.
 - **Support-E-Mails:** so lange, wie es zur Bearbeitung Ihrer Anfrage erforderlich ist, höchstens jedoch ein Jahr ab der
   letzten Antwort.
 
@@ -182,8 +200,9 @@ Datenübertragbarkeit** ausüben, indem Sie an inklab@mainshai.com schreiben. Wi
 
 Wir erhalten die auf Ihrem Handy gespeicherten Daten nicht und können sie daher weder einsehen noch für Sie löschen.
 Sie können sie löschen, indem Sie die App deinstallieren oder ihre Daten in den Systemeinstellungen löschen, und sie
-mit „Export“ (Optionen → Sicherung) mitnehmen; die Tagebuchfotos sind in diesem Text nicht enthalten. Für das, was Sie
-an OpenRouter gesendet haben, üben Sie Ihre Rechte gegenüber OpenRouter und dem Modellanbieter aus; für die
+mit „Export“ (Optionen → Sicherung; die Tagebuchfotos sind in diesem Text nicht enthalten) oder mit „Sicherungsdatei
+speichern“ (die sie enthält) mitnehmen. Für das, was Sie an OpenRouter gesendet haben, üben Sie Ihre Rechte gegenüber
+OpenRouter und dem Modellanbieter aus; für die
 Diagnosedaten von ML Kit gegenüber Google.
 
 Wenn Sie der Ansicht sind, dass wir Ihre Daten nicht ordnungsgemäß verarbeitet haben, können Sie Beschwerde bei der

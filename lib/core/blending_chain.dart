@@ -9,7 +9,7 @@ import 'models.dart';
 /// Everything works in OKLab / OKLCh, where `L` (0 to 1) is perceived
 /// lightness and `C` is chroma, so one threshold means the same thing for a
 /// yellow and for a navy. The thresholds are in [BlendingRules]; they were
-/// tuned on the Ohuhu, DecoTime and Copic catalogues (see the tests).
+/// tuned on the Ohuhu, DecoTime, Copic and Finecolour catalogues (see the tests).
 
 /// The thresholds behind the chain search. Lightness steps are OKLab `L`
 /// differences.

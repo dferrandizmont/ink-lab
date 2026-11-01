@@ -96,7 +96,7 @@ Tippe auf einen Screenshot, um ihn zu vergrößern.
 - **Szenen.** 67 Rezepte in 11 Kategorien, jedes mit seinen Farbrollen.
 - **Tagebuch.** Ein Protokoll deiner Werke: Datum, Papier, Marker, Notizen
   und bis zu vier Fotos.
-- **Drei Marken.** Ohuhu (503 Farben), DecoTime (313) und Copic (358), jeweils
+- **Vier Marken.** Ohuhu (503 Farben), DecoTime (313), Copic (358) und Finecolour (480), jeweils
   mit einzelner Markerauswahl.
 
 <details>
@@ -150,8 +150,8 @@ sind faktische Referenzen von Drittanbietern und fallen unter keine der beiden
 Lizenzen; die Schriften (SIL OFL 1.1) und anderes Material von Drittanbietern
 behalten ihre eigenen Bedingungen, aufgeführt in [NOTICE.md](NOTICE.md).
 
-Ein unabhängiges Projekt: **weder mit Ohuhu, DecoTime oder Copic verbunden noch
-von einer dieser Marken gesponsert oder unterstützt**. „Ohuhu“, „Oahu“, „DecoTime“ und „Copic“ sind Marken ihrer Inhaber.
+Ein unabhängiges Projekt: **weder mit Ohuhu, DecoTime, Copic oder Finecolour verbunden noch
+von einer dieser Marken gesponsert oder unterstützt**. „Ohuhu“, „Oahu“, „DecoTime“, „Copic“ und „Finecolour“ sind Marken ihrer Inhaber.
 Quellen und vollständige Hinweise stehen in [NOTICE.md](NOTICE.md).
 
 Sicherheitslücken melden: [SECURITY.md](SECURITY.md).

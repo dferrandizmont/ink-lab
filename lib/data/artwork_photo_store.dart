@@ -18,6 +18,13 @@ abstract interface class ArtworkPhotoStore {
 
   /// Deletes the photo; a missing one is ignored.
   Future<void> delete(String name);
+
+  /// Keeps [bytes] under the exact [name], as a restored backup does.
+  ///
+  /// The name must be a safe file name ([isSafePhotoName]); anything else is
+  /// refused, so a name that comes from a backup can never point outside the
+  /// folder. A photo already saved under that name is replaced.
+  Future<void> restore(String name, Uint8List bytes);
 }
 
 /// Whether [name] is a bare, safe file name the store may touch: letters,
@@ -92,6 +99,17 @@ final class DirectoryArtworkPhotoStore implements ArtworkPhotoStore {
       // Best effort: a file that cannot be removed is not worth failing for.
     }
   }
+
+  @override
+  Future<void> restore(String name, Uint8List bytes) async {
+    if (!isSafePhotoName(name)) {
+      throw ArgumentError.value(name, 'name', 'not a safe photo name');
+    }
+    final Directory directory = await _directory();
+    await directory.create(recursive: true);
+    await File('${directory.path}${Platform.pathSeparator}$name')
+        .writeAsBytes(bytes, flush: true);
+  }
 }
 
 /// [ArtworkPhotoStore] in memory, for tests and previews.
@@ -121,5 +139,13 @@ final class InMemoryArtworkPhotoStore implements ArtworkPhotoStore {
   @override
   Future<void> delete(String name) async {
     if (isSafePhotoName(name)) _files.remove(name);
+  }
+
+  @override
+  Future<void> restore(String name, Uint8List bytes) async {
+    if (!isSafePhotoName(name)) {
+      throw ArgumentError.value(name, 'name', 'not a safe photo name');
+    }
+    _files[name] = Uint8List.fromList(bytes);
   }
 }

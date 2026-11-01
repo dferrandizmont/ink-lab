@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -25,6 +27,7 @@ import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/pages/palette/palette_photo_scene.dart';
 import 'package:ink_lab/ui/pages/match/color_sampling.dart';
 import 'package:ink_lab/ui/pages/palette/palette_type_picker.dart';
+import 'package:ink_lab/ui/pages/settings/backup_section.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
 import 'package:ink_lab/ui/pages/settings/settings_widgets.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
@@ -40,6 +43,7 @@ import 'package:ink_lab/ui/widgets/section_card.dart';
 
 import '../ai/ai_test_support.dart';
 import '../ai/fake_on_device_platform.dart';
+import '../support/fake_backup_file_io.dart';
 import '../support/l10n.dart';
 import '../support/pill_shapes.dart';
 import '../support/tap_targets.dart';
@@ -1039,6 +1043,91 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           ),
         );
       },
+  'swatches: brand equivalents in the detail sheet':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const SwatchesPage());
+        await scope.settings.setOwnedMarkerCodes(<String>{'copic:B00'});
+        await tester.pumpAndSettle();
+        await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
+        await tester.pumpAndSettle();
+        await _tap(tester, find.text('B08'));
+        final Finder sheetScroll = find.descendant(
+          of: find.byType(BottomSheet),
+          matching: find.byType(Scrollable),
+        );
+        await tester.ensureVisible(
+          find.byKey(const ValueKey<String>('swatch-brand-equivalents')),
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'in other brands');
+        await _scroll(tester, 'in other brands', within: sheetScroll);
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-equivalents-only-mine')),
+        );
+        _check(tester, 'in other brands, only mine');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-equivalents-only-mine')),
+        );
+        // A marker of another brand: its brand, no palette actions, a note.
+        await _tap(
+          tester,
+          find.descendant(
+            of: find.byKey(const ValueKey<String>('swatch-equivalents-copic')),
+            matching: find.byWidgetPredicate(
+              (Widget w) =>
+                  w.key is ValueKey<String> &&
+                  (w.key! as ValueKey<String>).value.startsWith(
+                    'swatch-equivalent-',
+                  ),
+            ),
+          ),
+        );
+        _check(tester, 'detail sheet of another brand');
+        await _scroll(
+          tester,
+          'detail sheet of another brand',
+          within: sheetScroll,
+        );
+      },
+  'palette: colour vision preview': (WidgetTester tester, _Env env) async {
+    final AppScope scope = await _pump(tester, env, const PalettePage());
+    await scope.savedPalettes.save(
+      SavedPalette(
+        id: 'p1',
+        name: 'Stored sky',
+        baseCode: 'B08',
+        baseName: 'Cotton Candy Blue',
+        mode: PaletteMode.triad,
+        paletteSize: 3,
+        createdAtEpochMs: 1,
+        colorCodes: const <String>['B08', 'B08', 'BV19'],
+      ),
+    );
+    await tester.pumpAndSettle();
+    // No palette yet: the control sits with the saved ones.
+    _check(tester, 'colour vision with saved palettes');
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('palette-base-input')),
+      'B08',
+    );
+    await tester.pumpAndSettle();
+    FocusManager.instance.primaryFocus?.unfocus();
+    await tester.pumpAndSettle();
+    final Finder control = find.byKey(const ValueKey<String>('palette-vision'));
+    for (final String label in <String>[
+      env.t.paletteVisionDeuteranopia,
+      env.t.paletteVisionAchromatopsia,
+    ]) {
+      await _tap(
+        tester,
+        find.descendant(of: control, matching: find.text(label)),
+      );
+      _check(tester, 'colour vision $label');
+    }
+    await _scroll(tester, 'colour vision preview');
+  },
   'settings: own colours, count and reset dialog':
       (WidgetTester tester, _Env env) async {
         final AppScope scope = await _pumpSettings(
@@ -1154,6 +1243,23 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.pumpAndSettle();
         _check(tester, 'diary list, two entries');
 
+        // The diary numbers: every section, the unused list opened.
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('diary-stats-card')),
+        );
+        _check(tester, 'diary numbers');
+        await _scroll(tester, 'diary numbers');
+        final Finder unusedToggle = find.byKey(
+          const ValueKey<String>('diary-stats-unused-toggle'),
+        );
+        if (unusedToggle.evaluate().isNotEmpty) {
+          await _tap(tester, unusedToggle);
+          _check(tester, 'diary numbers, unused markers');
+          await _scroll(tester, 'diary numbers, unused markers');
+        }
+        await _close(tester);
+
         // Open a photo at full screen, then the entry to edit.
         final String photo = scope.artworkDiary.entries
             .firstWhere((ArtworkEntry e) => e.photos.isNotEmpty)
@@ -1240,6 +1346,97 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           _check(tester, 'ideas ${category.name}');
         }
       },
+  'ideas: favourites and recently viewed':
+      (WidgetTester tester, _Env env) async {
+        final DateTime today = DateTime(2026, 10, 29);
+        final AppScope scope = await _pump(
+          tester,
+          env,
+          IdeasPage(today: today),
+        );
+        // The Favourites chip with nothing in it: the empty state.
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('ideas-category-favorites')),
+        );
+        _check(tester, 'ideas favourites, empty');
+        // Hearts on the longest ideas, then the filter and the recent row.
+        const List<String> ids = <String>[
+          'skin_tones',
+          'fifty_fifty',
+          'two_colors',
+          'grayscale',
+        ];
+        for (final String id in ids) {
+          await scope.ideaFavorites.toggle(id);
+          await scope.ideaFavorites.recordViewed(id);
+        }
+        await tester.pumpAndSettle();
+        _check(tester, 'ideas favourites');
+        await _scroll(tester, 'ideas favourites');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('ideas-category-all')),
+        );
+        _check(tester, 'ideas recently viewed');
+        await tester.ensureVisible(
+          find.byKey(const ValueKey<String>('ideas-recent')),
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'ideas recently viewed row');
+        // The heart in the sheet.
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('ideas-recent-skin_tones')),
+        );
+        _check(tester, 'idea sheet with a heart');
+        await _close(tester);
+      },
+  'settings: backup file': (WidgetTester tester, _Env env) async {
+    final FakeBackupFileIo io = FakeBackupFileIo()
+      ..pick = pickOf(Uint8List.fromList(<int>[0x50, 0x4B, 3, 4, 0, 0]));
+    await _pump(
+      tester,
+      env,
+      SingleChildScrollView(
+        child: Builder(
+          builder: (BuildContext context) =>
+              BackupSection(scope: AppScope.of(context), fileIo: io),
+        ),
+      ),
+    );
+    _check(tester, 'backup file');
+    // The question before a restore, then a refusal from the archive.
+    await _tap(
+      tester,
+      find.byKey(const ValueKey<String>('settings-backup-file-restore')),
+    );
+    _check(tester, 'backup file restore question');
+    await _close(tester);
+    // The progress line while the backup is built.
+    io.shareGate = Completer<void>();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('settings-backup-file-save')),
+    );
+    await tester.pump();
+    await tester.pump();
+    _check(tester, 'backup file progress');
+    io.shareGate!.complete();
+    await tester.pumpAndSettle();
+    // A refusal message in the snackbar.
+    await _tap(
+      tester,
+      find.byKey(const ValueKey<String>('settings-backup-file-restore')),
+    );
+    await _tap(
+      tester,
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.text(env.t.settingsImportConfirm),
+      ),
+    );
+    _check(tester, 'backup file refusal');
+  },
   'settings: colour theory': (WidgetTester tester, _Env env) async {
     await _pumpSettings(tester, env, provider: AiProvider.local);
     _check(tester, 'settings');
@@ -1350,6 +1547,11 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.pumpAndSettle();
         _check(tester, 'chart card, copic');
         expect(find.text(env.t.collectionChartEmpty), findsOneWidget);
+        await scope.settings.setBrand(MarkerBrand.finecolour);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(card);
+        await tester.pumpAndSettle();
+        _check(tester, 'chart card, finecolour');
       },
   'palette: saved palette row with Share':
       (WidgetTester tester, _Env env) async {
@@ -1398,6 +1600,10 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.pumpAndSettle();
         _check(tester, 'loose markers, copic');
         await _scroll(tester, 'loose markers, copic');
+        await scope.settings.setBrand(MarkerBrand.finecolour);
+        await tester.pumpAndSettle();
+        _check(tester, 'loose markers, finecolour');
+        await _scroll(tester, 'loose markers, finecolour');
       },
   'collection: Copic ownership, purchase suggestions, wishlist and dried markers':
       (WidgetTester tester, _Env env) async {
@@ -1413,6 +1619,21 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.pumpAndSettle();
         _check(tester, 'collection copic');
         await _scroll(tester, 'collection copic');
+      },
+  'collection: Finecolour ownership, purchase suggestions, wishlist and dried markers':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const CollectionPage());
+        await scope.settings.setBrand(MarkerBrand.finecolour);
+        await scope.settings.setOwnedMarkerCodes({
+          'finecolour:BV321',
+          'finecolour:B94',
+          'finecolour:R140',
+        });
+        await scope.wishlist.add('finecolour:Y1');
+        await scope.dried.add('finecolour:B94');
+        await tester.pumpAndSettle();
+        _check(tester, 'collection finecolour');
+        await _scroll(tester, 'collection finecolour');
       },
   'collection: DecoTime families and reset dialog':
       (WidgetTester tester, _Env env) async {
@@ -1606,6 +1827,16 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         _check(tester, 'onboarding copic');
         await _tap(tester, next);
         _check(tester, 'onboarding copic done');
+        await _tap(tester, back);
+        await _tap(tester, back);
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('onboarding-brand-finecolour')),
+        );
+        await _tap(tester, next);
+        _check(tester, 'onboarding finecolour');
+        await _tap(tester, next);
+        _check(tester, 'onboarding finecolour done');
       },
   'onboarding: nothing chosen, summary and what next':
       (WidgetTester tester, _Env env) async {

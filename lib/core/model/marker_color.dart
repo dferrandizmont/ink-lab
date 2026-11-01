@@ -41,7 +41,8 @@ final class MarkerColor with JsonValue {
   String get originalHex => catalogHex ?? hex;
 
   /// Ids of the [MarkerLine]s this colour is sold in (`oahu`, `honolulu`,
-  /// `kaala`). Empty for brands without lines (DecoTime, Copic) and for payloads
+  /// `kaala`), or Finecolour availability ids (`EF100` to `EF103`).
+  /// Empty for brands without lines (DecoTime, Copic) and for payloads
   /// written before lines existed.
   final List<String> lines;
   bool inLine(MarkerLine line) => lines.contains(line.id);

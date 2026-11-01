@@ -223,6 +223,7 @@ void main() {
     MarkerBrand.ohuhuOahu,
     MarkerBrand.decoTime,
     MarkerBrand.copic,
+    MarkerBrand.finecolour,
   ]) {
     group('every scene on the full ${brand.id} range', () {
       final List<MarkerColor> colors = range(brand);

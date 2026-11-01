@@ -221,6 +221,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
             selected: _brand == MarkerBrand.copic,
             onTap: () => setState(() => _brand = MarkerBrand.copic),
           ),
+          const SizedBox(height: InkSpacing.s12),
+          SelectCard(
+            key: const ValueKey<String>('onboarding-brand-finecolour'),
+            title: MarkerBrand.finecolour.label,
+            line: context.l10n.onboardingFinecolourLine,
+            selected: _brand == MarkerBrand.finecolour,
+            onTap: () => setState(() => _brand = MarkerBrand.finecolour),
+          ),
         ];
       case _Step.series:
         return <Widget>[

@@ -1,7 +1,7 @@
 # Política de privacidade do Ink Lab
 
 
-Última atualização: 2026-10-31
+Última atualização: 2026-11-01
 
 Tradução de cortesia. Prevalece a [versão espanhola](https://inklab.mainshai.com/es/privacy/).
 
@@ -27,10 +27,12 @@ escolher o OpenRouter com a sua própria chave, é enviado exatamente o que se e
 ### Dados que ficam no seu telemóvel (não os recebemos)
 A sua marca ativa, os packs e marcadores que tem, os seus favoritos, a sua lista de desejos, os marcadores que
 assinala como secos, as cores próprias que guarda para os seus marcadores, as suas paletas guardadas, o histórico das
-suas últimas escolhas ao associar cores, as entradas e as fotografias do seu diário e as suas definições são guardados
-apenas no armazenamento privado da aplicação, no seu dispositivo. De cada cor própria guarda-se apenas o código
-hexadecimal, nunca a fotografia de onde a tirou. Os catálogos de marcadores vêm incluídos na aplicação e tudo funciona
-sem ligação. Não há sincronização nem cópia em nenhum servidor nosso.
+suas últimas escolhas ao associar cores, as entradas e as fotografias do seu diário, as suas ideias favoritas e vistas
+há pouco e as suas definições são guardados apenas no armazenamento privado da aplicação, no seu dispositivo. De cada
+cor própria guarda-se apenas o código hexadecimal, nunca a fotografia de onde a tirou. Os catálogos de marcadores vêm
+incluídos na aplicação e tudo funciona sem ligação; «Noutras marcas» (no detalhe de um marcador), a pré-visualização
+«Visão das cores» (em «Paleta») e os «Números do diário» são calculados no seu telemóvel com esses catálogos e os seus
+dados, sem enviar nada. Não há sincronização nem cópia em nenhum servidor nosso.
 
 A cópia de segurança do sistema Android está **desativada** para esta aplicação: exclui todos os ficheiros da
 aplicação da cópia na nuvem e da transferência entre dispositivos, pelo que nem as suas definições, nem a sua chave,
@@ -56,17 +58,30 @@ entrada admite até 4 fotografias, tiradas com a câmara ou escolhidas da galeri
 máximo 2048 píxeis de lado) para a sua pasta privada; a fotografia original da sua galeria não é alterada. Essas
 fotografias não são carregadas para lado nenhum nem enviadas às funções de IA (nem ao OpenRouter, nem ao Gemini Nano,
 nem ao ML Kit), e são apagadas quando remove a fotografia ou a entrada, e com a aplicação quando a desinstala.
+«Partilhar esta entrada» desenha, só quando lhe toca, uma imagem com o título, a data, o estado, a primeira
+fotografia, os marcadores usados e as cores da paleta associada, e entrega-a apenas à aplicação que escolher no menu
+de partilha do sistema.
 
 ### Cópia de segurança
 «Exportar» (Definições → Cópia de segurança) gera um texto JSON, não um ficheiro, com as suas definições, as
 definições não secretas da IA, a sua coleção, favoritos, lista de desejos, marcadores secos, cores próprias, paletas,
-histórico e as entradas do diário (com os nomes internos dos ficheiros das suas fotografias, não as fotografias), e
-**copia-o para a área de transferência** para que o cole onde quiser; «Importar» recebe-o quando o cola. Ao importar,
-a cópia substitui os seus dados atuais, incluindo o diário: as entradas que não constem dela são apagadas juntamente
-com as suas fotografias, e a aplicação avisa-o antes. A cópia não está cifrada, não contém nenhum identificador e
-nunca inclui a sua chave de API nem as fotografias do diário. O
-que fizer com ele depois (guardá-lo na sua nuvem, enviá-lo numa mensagem...) fica fora da aplicação. Tenha em conta que,
-consoante o sistema, a área de transferência pode ser visível para o seu teclado ou para outras aplicações.
+histórico, ideias favoritas e vistas há pouco e as entradas do diário (com os nomes internos dos ficheiros das suas
+fotografias, não as fotografias), e **copia-o para a área de transferência** para que o cole onde quiser; «Importar»
+recebe-o quando o cola. Ao importar, a cópia substitui os seus dados atuais, incluindo o diário: as entradas que não
+constem dela são apagadas juntamente com as suas fotografias, e a aplicação avisa-o antes. A cópia não está cifrada,
+não contém nenhum identificador e nunca inclui a sua chave de API nem as fotografias do diário. O que fizer com ele
+depois (guardá-lo na sua nuvem, enviá-lo numa mensagem...) fica fora da aplicação. Tenha em conta que, consoante o
+sistema, a área de transferência pode ser visível para o seu teclado ou para outras aplicações.
+
+«Guardar cópia num ficheiro» (Definições → Os teus dados → Cópia em ficheiro) cria um ficheiro ZIP com essa mesma
+cópia e, além disso, as fotografias do diário, escreve-o na pasta temporária (cache) da aplicação e abre o menu de
+partilha do sistema para que o guarde em Ficheiros, Drive ou na aplicação que escolher: só vai para onde o enviar, e a
+aplicação apaga os ficheiros de cópia anteriores dessa pasta ao criar o seguinte. «Restaurar de um ficheiro» abre o
+seletor de documentos do sistema, que não precisa de nenhuma permissão (o seletor deixa uma cópia do ficheiro
+escolhido na cache da aplicação, e a aplicação apaga-a ao terminar); o ficheiro é verificado por inteiro antes de se
+escrever o que quer que seja e a aplicação pede-lhe confirmação, porque substitui os seus dados atuais, fotografias
+incluídas, e apaga as fotografias do diário que não estejam no ficheiro. Nenhuma cópia, nem a da área de transferência
+nem o ficheiro, inclui a sua chave de API.
 
 ### IA opcional
 Está **desligada por predefinição** (Definições → Assistente de IA → Sugerir com IA). Com ela desligada, a aplicação não abre
@@ -112,8 +127,9 @@ A aplicação pede a permissão de **câmara ou fotografias** apenas quando util
 rede** (`INTERNET` e `ACCESS_NETWORK_STATE`), que só são utilizados com a IA ativada: para a IA opcional com o
 OpenRouter e para os diagnósticos que o ML Kit envia à Google quando se utiliza a IA no dispositivo. Não pede
 localização, contactos, calendário, microfone nem notificações, e não utiliza o identificador de publicidade. Se
-partilhar uma paleta ou uma carta de amostras como imagem, esta só é entregue à aplicação que escolher no menu de
-partilha do sistema; a aplicação não precisa de nenhuma permissão para isso.
+partilhar uma paleta, uma carta de amostras ou uma entrada do diário como imagem, ou um ficheiro de cópia, só é
+entregue à aplicação que escolher no menu de partilha do sistema; a aplicação não precisa de nenhuma permissão para
+isso, nem para escolher um ficheiro de cópia com o seletor do sistema.
 
 ### Dados que NÃO são tratados
 - Não pedimos nem guardamos nome, correio eletrónico, telefone, idade nem qualquer dado de conta: não há contas.
@@ -159,14 +175,15 @@ que escolher.
 O programador não realiza transferências de dados. Se utilizar a IA com o OpenRouter, o pedido vai para o fornecedor que
 escolher, que pode tratá-lo noutras regiões e segundo as suas próprias condições. A Google pode tratar os diagnósticos
 do ML Kit noutros países, segundo as suas próprias condições. Os restantes serviços que decida utilizar (correio
-eletrónico, nuvem, destino de um texto copiado) regem-se pelas suas próprias condições.
+eletrónico, nuvem, destino de um texto copiado ou de um ficheiro ou imagem partilhados) regem-se pelas suas próprias
+condições.
 
 ## 6. Durante quanto tempo são conservados
 
 
 - **Dados no seu telemóvel:** até desinstalar a aplicação ou apagar os seus dados nas definições do sistema (e, se for o
-  caso, dos textos de cópia de segurança que tiver guardado). As fotografias do diário são ainda apagadas assim que
-  remove a fotografia ou a entrada.
+  caso, dos textos ou ficheiros de cópia de segurança que tiver guardado). As fotografias do diário são ainda apagadas
+  assim que remove a fotografia ou a entrada.
 - **Mensagens de suporte:** o tempo necessário para atender a sua consulta e, no máximo, um ano a contar da última
   resposta.
 
@@ -178,8 +195,9 @@ escrevendo para inklab@mainshai.com. Responder-lhe-emos no prazo de um mês.
 
 Não recebemos os dados guardados no seu telemóvel, pelo que não os podemos ver nem apagar por si. Pode apagá-los
 desinstalando a aplicação ou apagando os seus dados nas definições do sistema, e levá-los consigo com «Exportar»
-(Definições → Cópia de segurança); as fotografias do diário não fazem parte desse texto. Relativamente ao que tiver
-enviado ao OpenRouter, exerça os seus direitos junto do OpenRouter e do fornecedor do modelo; quanto aos diagnósticos
+(Definições → Cópia de segurança; as fotografias do diário não fazem parte desse texto) ou com «Guardar cópia num
+ficheiro» (que as inclui). Relativamente ao que tiver enviado ao OpenRouter, exerça os seus direitos junto do
+OpenRouter e do fornecedor do modelo; quanto aos diagnósticos
 do ML Kit, junto da Google.
 
 Se considerar que não tratámos devidamente os seus dados, pode apresentar reclamação à autoridade espanhola de proteção

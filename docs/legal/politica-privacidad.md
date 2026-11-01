@@ -1,7 +1,7 @@
 # Política de privacidad de Ink Lab
 
 
-Última actualización: 2026-10-31
+Última actualización: 2026-11-01
 
 Ink Lab es una app para quien dibuja con rotuladores de alcohol: consulta las muestras de color, empareja el color de
 una foto con un rotulador de tu colección y construye paletas con teoría del color. Es una app independiente: no está
@@ -25,9 +25,11 @@ explica más abajo.
 ### Datos que se quedan en tu móvil (no los recibimos)
 Tu marca activa, los packs y rotuladores que tienes, tus favoritos, tu lista de deseos, los rotuladores que marcas
 como secos, los colores propios que guardas para tus rotuladores, tus paletas guardadas, el historial de tus últimas
-elecciones al emparejar colores, las entradas y las fotos de tu diario y tus ajustes se guardan solo en el
-almacenamiento privado de la app, en tu dispositivo. De cada color propio solo se guarda su código hex, nunca la foto
-de la que lo sacaste. Los catálogos de rotuladores van dentro de la app y todo funciona sin conexión. No hay
+elecciones al emparejar colores, las entradas y las fotos de tu diario, tus ideas favoritas y vistas hace poco y tus
+ajustes se guardan solo en el almacenamiento privado de la app, en tu dispositivo. De cada color propio solo se guarda
+su código hex, nunca la foto de la que lo sacaste. Los catálogos de rotuladores van dentro de la app y todo funciona
+sin conexión; «En otras marcas» (en el detalle de un rotulador), la previsualización de «Visión del color» (en Paleta)
+y los «Números del diario» se calculan en tu móvil con esos catálogos y tus datos, sin enviar nada. No hay
 sincronización ni copia en ningún servidor nuestro.
 
 La copia de seguridad del sistema de Android está **desactivada** para esta app: excluye todos sus ficheros de la
@@ -52,17 +54,29 @@ rotuladores usados, paleta enlazada y notas. Las entradas se guardan en tu móvi
 entrada admite hasta 4 fotos, hechas con la cámara o elegidas de la galería, que la app copia reducidas (como máximo
 2048 píxeles de lado) a su carpeta privada; la foto original de tu galería no se modifica. Esas fotos no se suben a
 ningún sitio ni se envían a las funciones de IA (ni a OpenRouter, ni a Gemini Nano, ni a ML Kit), y se borran cuando
-quitas la foto o la entrada, y con la app al desinstalarla.
+quitas la foto o la entrada, y con la app al desinstalarla. «Compartir esta entrada» dibuja, solo cuando lo tocas, una
+imagen con el título, la fecha, el estado, la primera foto, los rotuladores usados y los colores de la paleta
+enlazada, y la entrega únicamente a la app que elijas en el menú de compartir del sistema.
 
 ### Copia de seguridad
 «Exportar» (Ajustes → Copia de seguridad) genera un texto JSON, no un fichero, con tus ajustes, los ajustes de la IA
 que no son secretos, tu colección, favoritos, lista de deseos, rotuladores secos, colores propios, paletas, historial
-y las entradas del diario (con los nombres internos de los ficheros de sus fotos, no las fotos), y lo **copia al
-portapapeles** para que lo pegues donde quieras; «Importar» lo recibe pegándolo. Al importar, la copia reemplaza tus
-datos actuales, también el diario: las entradas que no estén en ella se borran junto con sus fotos, y la app te lo
-avisa antes. La copia no está cifrada, no lleva ningún identificador y nunca incluye tu clave de API ni las fotos del
-diario. Lo que hagas con él después (guardarlo en tu nube, mandarlo por un mensaje...) queda fuera de la app. Ten en
-cuenta que, según tu sistema, el portapapeles puede ser visible para tu teclado o para otras apps.
+ideas favoritas y vistas hace poco y las entradas del diario (con los nombres internos de los ficheros de sus fotos,
+no las fotos), y lo **copia al portapapeles** para que lo pegues donde quieras; «Importar» lo recibe pegándolo. Al
+importar, la copia reemplaza tus datos actuales, también el diario: las entradas que no estén en ella se borran junto
+con sus fotos, y la app te lo avisa antes. La copia no está cifrada, no lleva ningún identificador y nunca incluye tu
+clave de API ni las fotos del diario. Lo que hagas con él después (guardarlo en tu nube, mandarlo por un mensaje...)
+queda fuera de la app. Ten en cuenta que, según tu sistema, el portapapeles puede ser visible para tu teclado o para
+otras apps.
+
+«Guardar copia en un archivo» (Ajustes → Tus datos → Copia en archivo) crea un archivo ZIP con esa misma copia y,
+además, las fotos del diario, lo escribe en la carpeta temporal (caché) de la app y abre el menú de compartir del
+sistema para que lo guardes en Archivos, Drive o la app que elijas: solo va a donde tú lo mandes, y la app borra los
+archivos de copia anteriores de esa carpeta al crear el siguiente. «Restaurar desde un archivo» abre el selector de
+documentos del sistema, que no necesita ningún permiso (el selector deja una copia del archivo elegido en la caché de
+la app, y la app la borra al terminar); el archivo se comprueba entero antes de escribir nada y la app te pide
+confirmación, porque reemplaza tus datos actuales, fotos incluidas, y borra las fotos del diario que no estén en el
+archivo. Ninguna copia, ni la del portapapeles ni la del archivo, incluye tu clave de API.
 
 ### IA opcional
 Está **apagada de serie** (Ajustes → Asistente de IA → Sugerir con IA). Con ella apagada, la app no abre ninguna
@@ -104,9 +118,10 @@ La app pide el permiso de **cámara o fotos** solo cuando usas «Emparejar», «
 foto al «Diario». En Android declara el acceso a **internet** y al **estado de la red** (`INTERNET` y
 `ACCESS_NETWORK_STATE`), que solo se usan con la IA activada: para la IA opcional con OpenRouter y para los
 diagnósticos que ML Kit envía a Google cuando se usa la IA en el móvil. No pide ubicación, contactos, calendario,
-micrófono ni notificaciones, y no usa el identificador publicitario. Si compartes una paleta o una carta de muestras
-como imagen, solo se entrega a la app que elijas en el menú de compartir del sistema; la app no necesita ningún
-permiso para ello.
+micrófono ni notificaciones, y no usa el identificador publicitario. Si compartes una paleta, una carta de muestras o
+una entrada del diario como imagen, o una copia en archivo, solo se entrega a la app que elijas en el menú de
+compartir del sistema; la app no necesita ningún permiso para ello, ni tampoco para elegir un archivo de copia con el
+selector del sistema.
 
 ### Datos que NO se tratan
 - No pedimos ni guardamos nombre, correo, teléfono, edad ni ningún dato de cuenta: no hay cuentas.
@@ -149,14 +164,14 @@ correo de soporte o un reporte de una sugerencia, lo recibe el titular en inklab
 El desarrollador no realiza transferencias de datos. Si usas la IA con OpenRouter, la petición va al proveedor que
 elijas, que puede tratarla en otras regiones y bajo sus propias condiciones. Google puede tratar los diagnósticos de ML Kit en
 otros países, según sus propias condiciones. Los demás servicios que decidas utilizar
-(correo, nube, destino de un texto copiado) se rigen por sus propias condiciones.
+(correo, nube, destino de un texto copiado o de un archivo o imagen compartidos) se rigen por sus propias condiciones.
 
 ## 6. Cuánto tiempo se conservan
 
 
 - **Datos en tu móvil:** hasta que desinstales la app o borres sus datos desde los ajustes del sistema (y, en su caso,
-  de los textos de copia que hayas guardado). Las fotos del diario, además, se borran en cuanto quitas la foto o la
-  entrada.
+  de los textos o archivos de copia que hayas guardado). Las fotos del diario, además, se borran en cuanto quitas la
+  foto o la entrada.
 - **Correos de soporte:** el tiempo necesario para atender tu consulta y, como máximo, un año desde la última
   respuesta.
 
@@ -168,7 +183,8 @@ portabilidad** escribiendo a inklab@mainshai.com. Te responderemos en el plazo d
 
 No recibimos los datos guardados en tu móvil, así que no podemos verlos ni borrarlos por ti. Puedes borrarlos
 desinstalando la app o borrando sus datos desde los ajustes del sistema, y llevártelos con «Exportar» (Ajustes → Copia
-de seguridad); las fotos del diario no van en ese texto. Para lo que hayas enviado a OpenRouter, ejerce tus derechos
+de seguridad; las fotos del diario no van en ese texto) o con «Guardar copia en un archivo» (que sí las incluye). Para
+lo que hayas enviado a OpenRouter, ejerce tus derechos
 ante OpenRouter y el proveedor del modelo; para los diagnósticos de ML Kit, ante Google.
 
 Si crees que no hemos tratado bien tus datos, puedes reclamar ante la Agencia Española de Protección de Datos:

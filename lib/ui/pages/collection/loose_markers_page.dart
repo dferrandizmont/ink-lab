@@ -16,8 +16,9 @@ import 'collection_summary.dart';
 /// tick per marker and "tick / untick what is in view". A marker that comes
 /// with an owned set says "In your set" and cannot be ticked one by one.
 ///
-/// For DecoTime and Copic (no sets) it is the list of the markers the user has. The
-/// list is the page's own scroll, never a scroll inside a card.
+/// For DecoTime, Copic and Finecolour (no sets) it is the list of the markers
+/// the user has. The list is the page's own scroll, never a scroll inside a
+/// card.
 class LooseMarkersPage extends StatefulWidget {
   const LooseMarkersPage({super.key, this.settings});
 

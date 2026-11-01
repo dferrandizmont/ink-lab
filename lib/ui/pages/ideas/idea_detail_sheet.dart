@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/ideas_engine.dart';
 import '../../../core/models.dart';
 import '../../../core/palette_advisor.dart';
+import '../../../data/idea_favorites_repository.dart';
 import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
@@ -10,7 +11,7 @@ import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/palette_strip.dart';
-import 'ideas_page.dart' show ideaMetaLine;
+import 'ideas_page.dart' show IdeaHeartButton, ideaMetaLine;
 
 /// The detail of one idea, inside an ink sheet: what you practise, what to
 /// draw, the markers picked from your collection with their roles, numbered
@@ -24,6 +25,7 @@ class IdeaDetailSheet extends StatefulWidget {
     required this.initial,
     required this.candidates,
     required this.brand,
+    this.favorites,
     this.onAddToDiary,
   });
 
@@ -33,6 +35,9 @@ class IdeaDetailSheet extends StatefulWidget {
   /// The markers of the collection to pick from.
   final List<MarkerColor> candidates;
   final MarkerBrand brand;
+
+  /// The hearts of the ideas; without it the sheet has no heart.
+  final IdeaFavoritesRepository? favorites;
 
   /// Called with the idea's title after the sheet closed, to start a diary
   /// entry; without it the sheet has no "Add to diary" button.
@@ -91,12 +96,37 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
             ),
           ),
           const SizedBox(height: InkSpacing.group),
-          Semantics(
-            header: true,
-            child: Text(
-              l10n.ideaTitle(_preset),
-              style: AppTypography.sheetTitle.copyWith(color: ink.fg),
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    l10n.ideaTitle(_preset),
+                    style: AppTypography.sheetTitle.copyWith(color: ink.fg),
+                  ),
+                ),
+              ),
+              if (widget.favorites != null)
+                StreamBuilder<Set<String>>(
+                  stream: widget.favorites!.favoriteChanges,
+                  initialData: widget.favorites!.favorites,
+                  builder:
+                      (
+                        BuildContext context,
+                        AsyncSnapshot<Set<String>> snapshot,
+                      ) => IdeaHeartButton(
+                        key: ValueKey<String>(
+                          'ideas-heart-sheet-${_preset.id}',
+                        ),
+                        favorite: (snapshot.data ?? const <String>{}).contains(
+                          _preset.id,
+                        ),
+                        onPressed: _toggleFavorite,
+                      ),
+                ),
+            ],
           ),
           const SizedBox(height: InkSpacing.group),
           body(l10n.ideaSummary(_preset), color: ink.fg2),
@@ -131,6 +161,14 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
         ],
       ),
     );
+  }
+
+  Future<void> _toggleFavorite() async {
+    try {
+      await widget.favorites?.toggle(_preset.id);
+    } catch (_) {
+      // The heart simply does not change when the store cannot write.
+    }
   }
 
   /// Closes the sheet, then hands the idea's title to the page that opened

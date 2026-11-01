@@ -42,6 +42,27 @@
   "settingsCancel": "Cancel",
   "settingsImportConfirmTitle": "Replace your current data?",
   "settingsImportConfirmBody": "The backup replaces your current data: collection, palettes, diary, history and settings. Diary entries that are not in it are deleted along with their photos; photos are never part of a backup.",
+  "ideasFavoritesChip": "Favourites",
+  "ideasFavoritesEmptyTitle": "No favourite ideas yet",
+  "ideasFavoritesEmptyMessage": "Tap the heart on an idea to keep it here.",
+  "ideasRecentTitle": "Recently viewed",
+  "settingsBackupFileTitle": "Backup file",
+  "settingsBackupFileCaption": "A ZIP file with your data and the diary photos. Save it to Files, Drive or wherever you like. The API key is never included.",
+  "settingsSaveBackupFile": "Save backup file",
+  "settingsRestoreBackupFile": "Restore from file",
+  "settingsBackupFileSaving": "Packing your data and photos…",
+  "settingsBackupFileRestoring": "Restoring your backup…",
+  "settingsRestoreConfirmBody": "The file replaces your current data: collection, palettes, diary, history and settings. The photos in the file are restored too. Diary entries that are not in it are deleted along with their photos.",
+  "settingsBackupFileRestored": "Backup restored, photos included",
+  "settingsBackupFileSaveFailed": "The backup file could not be created.",
+  "settingsBackupFileReadFailed": "The file could not be read.",
+  "settingsBackupFileNotZip": "That file is not a backup ZIP.",
+  "settingsBackupFileTooLarge": "The backup is too big for Ink Lab to handle.",
+  "settingsBackupFileEntryTooLarge": "A photo in the backup is too big.",
+  "settingsBackupFileDamaged": "The file is damaged or is not an Ink Lab backup.",
+  "settingsBackupFileUnsupported": "This backup comes from a version Ink Lab cannot read.",
+  "settingsBackupFileNotAPhoto": "A photo in the file is not a JPEG, PNG or WebP image.",
+  "settingsBackupFileWriteFailed": "The photos could not be saved. Your data has not changed.",
   "settingsImportInvalidJson": "The text is not valid JSON.",
   "settingsImportInvalidDocument": "The text is not a backup document.",
   "settingsAiTitle": "AI assistant",
@@ -121,7 +142,7 @@
   "settingsPrivacyPolicy": "Privacy policy",
   "settingsCopyRepository": "Copy the link",
   "settingsRepositoryCopied": "The link was copied",
-  "settingsDisclaimer": "Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime or Copic, and it uses their marker codes, names and colour values only as factual reference data.",
+  "settingsDisclaimer": "Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime, Copic or Finecolour, and it uses their marker codes, names and colour values only as factual reference data.",
   "paletteTitle": "Palette",
   "paletteBaseCodeLabel": "Base marker code",
   "paletteBaseCodeHint": "E08 or B271",
@@ -1158,7 +1179,7 @@
       }
     }
   },
-  "paletteUnknownCode": "{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}",
+  "paletteUnknownCode": "{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} finecolour{{input} is not a Finecolour marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}",
   "@paletteUnknownCode": {
     "placeholders": {
       "brand": {
@@ -1172,7 +1193,7 @@
       }
     }
   },
-  "paletteNotAvailable": "{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} copic{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}",
+  "paletteNotAvailable": "{brand, select, decoTime{{input} is not in your collection. Try {example} or add it in My collection.} copic{{input} is not in your collection. Try {example} or add it in My collection.} finecolour{{input} is not in your collection. Try {example} or add it in My collection.} other{{input} is not in your collection. Try {example} or add it in My collection.}}",
   "@paletteNotAvailable": {
     "placeholders": {
       "brand": {
@@ -1186,7 +1207,7 @@
       }
     }
   },
-  "paletteNoAvailableColors": "{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}",
+  "paletteNoAvailableColors": "{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} finecolour{There are no Finecolour markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}",
   "@paletteNoAvailableColors": {
     "placeholders": {
       "brand": {
@@ -1861,6 +1882,36 @@
   "collectionNoResults": "No marker matches the search.",
   "collectionReset": "Reset collection",
   "collectionChartTitle": "Printable swatch chart",
+  "swatchesOtherBrandsTitle": "In other brands",
+  "swatchesOtherBrandsOnlyMine": "Only mine",
+  "swatchesOtherBrandsNone": "There is no other brand to compare with.",
+  "swatchesOtherBrandsNoneMine": "You have no usable markers in other brands.",
+  "swatchesOtherBrandsFailed": "The other brands could not be read.",
+  "swatchesOtherBrandsPaletteNote": "Palettes use the brand chosen in Settings, so this marker cannot be added to one.",
+  "paletteVisionTitle": "Colour vision",
+  "paletteVisionNormal": "Normal",
+  "paletteVisionProtanopia": "Protanopia",
+  "paletteVisionDeuteranopia": "Deuteranopia",
+  "paletteVisionTritanopia": "Tritanopia",
+  "paletteVisionAchromatopsia": "Achromatopsia",
+  "paletteVisionPairs": "Hard to tell apart: {pairs}",
+  "@paletteVisionPairs": {
+    "placeholders": {
+      "pairs": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteVisionPairsMore": "+{count} more",
+  "@paletteVisionPairsMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteVisionNoPairs": "Every colour stays easy to tell apart.",
+  "paletteVisionPreviewNote": "Preview only. Saving and sharing keep the true colours.",
   "collectionChartHint": "Empty boxes labelled with the code and name of each marker you own, to swatch your real markers. Shared as A4 images to print or save.",
   "collectionChartShowColour": "Catalogue colour",
   "collectionChartShowColourHint": "Show it as a thin strip in each box, to compare.",
@@ -2061,7 +2112,9 @@
   "settingsOwnColorsResetBody": "Every marker goes back to its catalogue colour. This cannot be undone.",
   "settingsJoinBeta": "Join the Google Play beta",
   "collectionCopicHint": "Copic markers are bought one by one. Tick the markers you own.",
+  "collectionFinecolourHint": "Finecolour markers are bought one by one. Tick the markers you own.",
   "onboardingCopicLine": "358 colours · Mark the markers you own",
+  "onboardingFinecolourLine": "480 colours · Mark the markers you own",
   "onboardingMarkersTitle": "Your {brand} markers",
   "@onboardingMarkersTitle": {"placeholders": {"brand": {"type": "String"}}},
   "onboardingNoMarkers": "You have not ticked any {brand} markers yet: tick them in My collection.",
@@ -2073,6 +2126,8 @@
   "diaryEmptyTitle": "Your diary is empty",
   "diaryEmptyMessage": "Log the pages and sheets you paint, with their markers, notes and photos.",
   "diaryAdd": "Add to diary",
+  "diaryShareButton": "Share this entry",
+  "@diaryShareButton": {"description": "Tooltip and screen reader label of the button that shares a diary entry as an image."},
   "diaryStatusLabel": "Status",
   "diaryStatusInProgress": "In progress",
   "diaryStatusFinished": "Finished",
@@ -2125,5 +2180,74 @@
   "diaryDeleteTitle": "Delete this entry?",
   "diaryDeleteBody": "The entry and its photos are removed from this phone. This cannot be undone.",
   "diaryDeleteConfirm": "Delete",
-  "diaryAddedNotice": "Added to the diary"
+  "diaryAddedNotice": "Added to the diary",
+  "diaryStatsArtworks": "{count, plural, =1{1 artwork} other{{count} artworks}}",
+  "@diaryStatsArtworks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "diaryStatsFinished": "{count} finished",
+  "@diaryStatsFinished": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "diaryStatsInProgress": "{count} in progress",
+  "@diaryStatsInProgress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "diaryStatsOpen": "See the numbers",
+  "diaryStatsTitle": "Diary numbers",
+  "diaryStatsStatusTitle": "Finished and in progress",
+  "diaryStatsMonthsTitle": "Entries per month",
+  "diaryStatsMonthsLatest": "Showing the latest {count} months.",
+  "@diaryStatsMonthsLatest": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "diaryStatsMarkersTitle": "Markers you use most",
+  "diaryStatsMarkersEmpty": "No entry has markers yet.",
+  "diaryStatsEntries": "{count, plural, =1{1 entry} other{{count} entries}}",
+  "@diaryStatsEntries": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "diaryStatsUnusedTitle": "Markers not used yet",
+  "diaryStatsUnusedCount": "{count, plural, =1{1 marker you own is not in any entry.} other{{count} markers you own are not in any entry.}}",
+  "@diaryStatsUnusedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "diaryStatsUnusedNone": "Every marker you own is in an entry.",
+  "diaryStatsUnusedNoCollection": "Add your markers in My collection to see which ones you have not used.",
+  "diaryStatsUnusedShow": "Show the list",
+  "diaryStatsUnusedHide": "Hide the list",
+  "diaryStatsPalettesTitle": "Palettes you link most",
+  "diaryStatsPalettesEmpty": "No entry links a saved palette yet.",
+  "diaryShareMore": "+{count} more",
+  "@diaryShareMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

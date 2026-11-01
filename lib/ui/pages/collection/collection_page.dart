@@ -131,9 +131,8 @@ class _CollectionPageState extends State<CollectionPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          InkSegmented<MarkerBrand>(
+          InkScrollableSegmented<MarkerBrand>(
             key: const ValueKey<String>('collection-brand'),
-            expand: true,
             semanticLabel: context.l10n.settingsBrandTitle,
             segments: <InkSegment<MarkerBrand>>[
               for (final MarkerBrand b in MarkerBrand.values)

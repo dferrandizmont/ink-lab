@@ -322,6 +322,9 @@ abstract final class InkGeometry {
   static const double swatchBlockHeight = 72;
   static const double paletteStripHeight = 56;
   static const double heroSwatch = 88;
+
+  /// Swatch of a list row (code + name beside it) and of an inline code.
+  static const double swatchRow = 36, swatchInline = 20;
   static const double grabberWidth = 36, grabberHeight = 4;
 
   static const double iconSize = 24, smallIcon = 16, mediumIcon = 20;

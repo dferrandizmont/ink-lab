@@ -467,6 +467,17 @@ void main() {
               activeSetIds: {'classic_160'},
             ),
           ),
+          (
+            'Finecolour',
+            paletteCandidateColors(
+              colors: parseColors(
+                File(MarkerBrand.finecolour.assetPath).readAsStringSync(),
+                brand: MarkerBrand.finecolour,
+              ),
+              brand: MarkerBrand.finecolour,
+              activeSetIds: {'classic_160'},
+            ),
+          ),
         ]) {
       test('$name: every chain follows the rules, at every length', () {
         var withChain = 0;

@@ -1,4 +1,4 @@
-"""Offline validation of the Copic generator. Run with python -B -m unittest."""
+"""Offline validation of the Copic generator. Run with python -B tool/data/test_generate_copic.py."""
 
 import copy
 import importlib.util
@@ -13,12 +13,27 @@ SPEC = importlib.util.spec_from_file_location("generate_copic", HERE / "generate
 generator = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(generator)
 
+# The full upstream colors.json at the commit pinned by
+# generate_copic.SOURCE_COMMIT, kept offline. It keeps all eight upstream
+# fields; the generator imports only number, name and the official hex and
+# ignores the rest (extractedColor among them, which the test proves). The MIT
+# licence of meodai/copic-colors allows bundling it: the file ships alongside
+# its LICENSE (baseline/copic_colors_source.LICENSE; see NOTICE.md).
+SNAPSHOT = HERE / "baseline" / "copic_colors_source.json"
+
 
 class CopicGeneratorTest(unittest.TestCase):
     def setUp(self):
         self.catalogue = json.loads(generator.DEFAULT_OUT.read_text(encoding="utf-8"))
-        self.rows = [{"number": c["code"], "name": c["name"], "hex": "#" + c["hex"],
-                      "extractedColor": "#123456"} for c in self.catalogue]
+        self.rows = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
+
+    def test_pinned_snapshot_regenerates_the_committed_json(self):
+        # The whole point: the pinned source, through the generator, must
+        # reproduce the committed file byte for byte, with no network.
+        self.assertEqual(len(self.rows), generator.EXPECTED_COUNT)
+        self.assertEqual(generator.build(self.rows), self.catalogue)
+        self.assertEqual(generator.render(generator.build(self.rows)).encode("utf-8"),
+                         generator.DEFAULT_OUT.read_bytes())
 
     def test_output_and_official_hex(self):
         self.assertEqual(generator.build(self.rows), self.catalogue)

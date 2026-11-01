@@ -96,7 +96,7 @@ Touche une capture pour l’agrandir.
 - **Scènes.** 67 recettes en 11 catégories, chacune avec ses rôles de couleur.
 - **Journal de dessins.** Un suivi de tes réalisations : date, papier, marqueurs,
   notes et jusqu’à quatre photos.
-- **Trois marques.** Ohuhu (503 couleurs), DecoTime (313) et Copic (358), avec
+- **Quatre marques.** Ohuhu (503 couleurs), DecoTime (313), Copic (358) et Finecolour (480), avec
   sélection individuelle des marqueurs.
 
 <details>
@@ -151,8 +151,8 @@ sont des références factuelles de tiers et sortent des deux licences ; les pol
 (SIL OFL 1.1) et les autres éléments tiers gardent leurs propres conditions,
 listées dans [NOTICE.md](NOTICE.md).
 
-Un projet indépendant : **sans lien avec Ohuhu, DecoTime ou Copic, sans
-parrainage ni approbation de leur part**. « Ohuhu », « Oahu », « DecoTime » et « Copic » sont des marques de leurs propriétaires.
+Un projet indépendant : **sans lien avec Ohuhu, DecoTime, Copic ou Finecolour, sans
+parrainage ni approbation de leur part**. « Ohuhu », « Oahu », « DecoTime », « Copic » et « Finecolour » sont des marques de leurs propriétaires.
 Les sources et les mentions complètes sont dans [NOTICE.md](NOTICE.md).
 
 Signaler une faille : [SECURITY.md](SECURITY.md).

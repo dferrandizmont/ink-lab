@@ -1,7 +1,7 @@
 # Ink Lab privacy policy
 
 
-Last updated: 2026-10-31
+Last updated: 2026-11-01
 
 Courtesy translation. The [Spanish version](https://inklab.mainshai.com/es/privacy/) is the one that
 applies.
@@ -28,9 +28,11 @@ sends exactly what is explained below.
 ### Data that stays on your phone (we do not receive it)
 Your active brand, the packs and markers you own, your favourites, your wishlist, the markers you mark as dried out,
 the own colours you store for your markers, your saved palettes, the history of your latest colour matches, the
-entries and photos of your diary and your settings are stored only in the app's private storage, on your device. For
-each own colour only its hex code is stored, never the photo you took it from. The marker catalogues ship inside the
-app and everything works offline. There is no synchronisation or copy on any server of ours.
+entries and photos of your diary, your favourite and recently viewed ideas and your settings are stored only in the
+app's private storage, on your device. For each own colour only its hex code is stored, never the photo you took it
+from. The marker catalogues ship inside the app and everything works offline; "In other brands" (in a marker's
+detail), the "Colour vision" preview (in Palette) and the "Diary numbers" are computed on your phone from those
+catalogues and your data, sending nothing. There is no synchronisation or copy on any server of ours.
 
 Android's system backup is **switched off** for this app: it excludes all of the app's files from cloud backup and
 from device-to-device transfer, so neither your settings, nor your key, nor your data, nor the diary photos leave the
@@ -53,17 +55,28 @@ used, linked palette and notes. The entries are stored on your phone like the re
 to 4 photos, taken with the camera or picked from the gallery, which the app copies, shrunk to at most 2048 pixels on
 a side, into its private folder; the original photo in your gallery is not changed. Those photos are not uploaded
 anywhere and are not sent to the AI features (not to OpenRouter, Gemini Nano or ML Kit), and they are deleted when you
-remove the photo or the entry, and with the app when you uninstall it.
+remove the photo or the entry, and with the app when you uninstall it. "Share this entry" draws, only when you tap it,
+an image with the title, the date, the status, the first photo, the markers used and the colours of the linked
+palette, and hands it only to the app you pick in the system share sheet.
 
 ### Backup
 "Export" (Settings → Backup) produces a JSON text, not a file, with your settings, the non-secret AI settings, your
-collection, favourites, wishlist, dried-out markers, own colours, palettes, history and the diary entries (with the
-internal file names of their photos, not the photos), and **copies it to the clipboard** for you to paste wherever you
-like; "Import" receives it by pasting. Importing replaces your current data, the diary included: entries that are not
-in the backup are deleted along with their photos, and the app warns you before. The backup is not encrypted, carries
-no identifier and never includes your API key or the diary photos. What you do with it afterwards (saving it in your
-cloud, sending it in a message...) is outside the app. Note that, depending on your system, the clipboard may be
-visible to your keyboard or to other apps.
+collection, favourites, wishlist, dried-out markers, own colours, palettes, history, favourite and recently viewed
+ideas and the diary entries (with the internal file names of their photos, not the photos), and **copies it to the
+clipboard** for you to paste wherever you like; "Import" receives it by pasting. Importing replaces your current data,
+the diary included: entries that are not in the backup are deleted along with their photos, and the app warns you
+before. The backup is not encrypted, carries no identifier and never includes your API key or the diary photos. What
+you do with it afterwards (saving it in your cloud, sending it in a message...) is outside the app. Note that,
+depending on your system, the clipboard may be visible to your keyboard or to other apps.
+
+"Save backup file" (Settings → Your data → Backup file) makes a ZIP file with that same backup and, in addition, the
+diary photos, writes it to the app's temporary (cache) folder and opens the system share sheet for you to save it to
+Files, Drive or the app you choose: it only goes where you send it, and the app deletes the earlier backup files in
+that folder when it makes the next one. "Restore from file" opens the system document picker, which needs no
+permission (the picker leaves a copy of the chosen file in the app's cache, and the app deletes it when it is done);
+the file is checked whole before anything is written and the app asks you to confirm, because it replaces your
+current data, photos included, and deletes the diary photos that are not in the file. No backup, neither the clipboard
+one nor the file, includes your API key.
 
 ### Optional AI
 It is **off by default** (Settings → AI assistant → Suggest with AI). With it off, the app opens no network connection
@@ -106,8 +119,9 @@ The app asks for the **camera or photos** permission only when you use "Match", 
 a photo to the "Diary". On Android it declares **internet** and **network state** access (`INTERNET` and
 `ACCESS_NETWORK_STATE`), which are only used with AI turned on: for the optional AI with OpenRouter and for the
 diagnostics ML Kit sends Google when the on-device AI is used. It does not ask for location, contacts, calendar,
-microphone or notifications, and it does not use the advertising identifier. If you share a palette or a swatch chart
-as an image, it is only handed to the app you pick in the system share sheet; the app needs no permission for it.
+microphone or notifications, and it does not use the advertising identifier. If you share a palette, a swatch chart or
+a diary entry as an image, or a backup file, it is only handed to the app you pick in the system share sheet; the app
+needs no permission for it, nor to pick a backup file with the system picker.
 
 ### Data that is NOT processed
 - We do not ask for or keep your name, email, phone, age or any account data: there are no accounts.
@@ -149,14 +163,14 @@ If you send a support email or a suggestion report, the holder receives it at in
 The developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose,
 which may process it in other regions and under its own terms. Google may process the ML Kit diagnostics in other
 countries, under its own terms. Any other service you decide to use (email, cloud, the
-destination of copied text) is governed by its own terms.
+destination of copied text or of a shared file or image) is governed by its own terms.
 
 ## 6. How long it is kept
 
 
 - **Data on your phone:** until you uninstall the app or clear its data from the system settings (and, where
-  applicable, from the backup texts you saved). The diary photos are also deleted as soon as you remove the photo or
-  the entry.
+  applicable, from the backup texts or files you saved). The diary photos are also deleted as soon as you remove the
+  photo or the entry.
 - **Support emails:** as long as needed to handle your query and, at most, one year after the last reply.
 
 ## 7. Your rights
@@ -167,7 +181,8 @@ portability** by writing to inklab@mainshai.com. We will reply within one month.
 
 We do not receive the data stored on your phone, so we cannot see or delete it for you. You can delete it by
 uninstalling the app or clearing its data from the system settings, and take it with you with "Export" (Settings →
-Backup); the diary photos are not part of that text. For anything sent to OpenRouter, exercise your rights with
+Backup; the diary photos are not part of that text) or with "Save backup file" (which does include them). For anything
+sent to OpenRouter, exercise your rights with
 OpenRouter and the model provider; for the ML Kit diagnostics, with Google.
 
 If you believe we have not handled your data properly, you can complain to the Spanish Data Protection Agency:

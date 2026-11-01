@@ -144,6 +144,79 @@ class AppLocalizationsEs extends AppLocalizations {
       'La copia reemplaza tus datos actuales: colección, paletas, diario, historial y ajustes. Las entradas del diario que no estén en ella se borran junto con sus fotos; las fotos nunca van en la copia.';
 
   @override
+  String get ideasFavoritesChip => 'Favoritas';
+
+  @override
+  String get ideasFavoritesEmptyTitle => 'Aún no hay ideas favoritas';
+
+  @override
+  String get ideasFavoritesEmptyMessage =>
+      'Toca el corazón de una idea para guardarla aquí.';
+
+  @override
+  String get ideasRecentTitle => 'Vistas hace poco';
+
+  @override
+  String get settingsBackupFileTitle => 'Copia en archivo';
+
+  @override
+  String get settingsBackupFileCaption =>
+      'Un archivo ZIP con tus datos y las fotos del diario. Guárdalo en Archivos, Drive o donde quieras. La clave de la API nunca se incluye.';
+
+  @override
+  String get settingsSaveBackupFile => 'Guardar copia en un archivo';
+
+  @override
+  String get settingsRestoreBackupFile => 'Restaurar desde un archivo';
+
+  @override
+  String get settingsBackupFileSaving => 'Preparando tus datos y fotos…';
+
+  @override
+  String get settingsBackupFileRestoring => 'Restaurando tu copia…';
+
+  @override
+  String get settingsRestoreConfirmBody =>
+      'El archivo reemplaza tus datos actuales: colección, paletas, diario, historial y ajustes. Las fotos del archivo también se restauran. Las entradas del diario que no estén en él se borran junto con sus fotos.';
+
+  @override
+  String get settingsBackupFileRestored => 'Copia restaurada, con las fotos';
+
+  @override
+  String get settingsBackupFileSaveFailed =>
+      'No se pudo crear el archivo de copia.';
+
+  @override
+  String get settingsBackupFileReadFailed => 'No se pudo leer el archivo.';
+
+  @override
+  String get settingsBackupFileNotZip => 'Ese archivo no es una copia en ZIP.';
+
+  @override
+  String get settingsBackupFileTooLarge =>
+      'La copia es demasiado grande para Ink Lab.';
+
+  @override
+  String get settingsBackupFileEntryTooLarge =>
+      'Una foto de la copia es demasiado grande.';
+
+  @override
+  String get settingsBackupFileDamaged =>
+      'El archivo está dañado o no es una copia de Ink Lab.';
+
+  @override
+  String get settingsBackupFileUnsupported =>
+      'Esta copia es de una versión que Ink Lab no puede leer.';
+
+  @override
+  String get settingsBackupFileNotAPhoto =>
+      'Una foto del archivo no es una imagen JPEG, PNG o WebP.';
+
+  @override
+  String get settingsBackupFileWriteFailed =>
+      'No se pudieron guardar las fotos. Tus datos no han cambiado.';
+
+  @override
   String get settingsImportInvalidJson => 'El texto no es un JSON válido.';
 
   @override
@@ -412,7 +485,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsDisclaimer =>
-      'Ink Lab es un proyecto comunitario independiente: no está afiliado, respaldado ni patrocinado por Ohuhu, DecoTime ni Copic, y usa los códigos, nombres y valores de color de sus rotuladores solo como datos factuales de referencia.';
+      'Ink Lab es un proyecto comunitario independiente: no está afiliado, respaldado ni patrocinado por Ohuhu, DecoTime, Copic ni Finecolour, y usa los códigos, nombres y valores de color de sus rotuladores solo como datos factuales de referencia.';
 
   @override
   String get paletteTitle => 'Paleta';
@@ -2764,6 +2837,8 @@ class AppLocalizationsEs extends AppLocalizations {
           '$input no es un código de rotulador de DecoTime. Prueba con $example.',
       'copic':
           '$input no es un código de rotulador de Copic. Prueba con $example.',
+      'finecolour':
+          '$input no es un código de rotulador de Finecolour. Prueba con $example.',
       'other':
           '$input no es un código de rotulador de Ink Lab. Prueba con $example.',
     });
@@ -2777,6 +2852,8 @@ class AppLocalizationsEs extends AppLocalizations {
           '$input no está en tu colección. Prueba con $example o añádelo en Mi colección.',
       'copic':
           '$input no está en tu colección. Prueba con $example o añádelo en Mi colección.',
+      'finecolour':
+          '$input no está en tu colección. Prueba con $example o añádelo en Mi colección.',
       'other':
           '$input no está en tu colección. Prueba con $example o añádelo en Mi colección.',
     });
@@ -2788,6 +2865,7 @@ class AppLocalizationsEs extends AppLocalizations {
     String _temp0 = intl.Intl.selectLogic(brand, {
       'decoTime': 'Aún no hay rotuladores DecoTime en tu colección. Añádelos en Mi colección.',
       'copic': 'Aún no hay rotuladores Copic en tu colección. Añádelos en Mi colección.',
+      'finecolour': 'Aún no hay rotuladores Finecolour en tu colección. Añádelos en Mi colección.',
       'other':
           'Aún no hay rotuladores en tu colección. Añádelos en Mi colección.',
     });
@@ -3932,6 +4010,63 @@ class AppLocalizationsEs extends AppLocalizations {
   String get collectionChartTitle => 'Carta de muestras para imprimir';
 
   @override
+  String get swatchesOtherBrandsTitle => 'En otras marcas';
+
+  @override
+  String get swatchesOtherBrandsOnlyMine => 'Solo los míos';
+
+  @override
+  String get swatchesOtherBrandsNone =>
+      'No hay otra marca con la que comparar.';
+
+  @override
+  String get swatchesOtherBrandsNoneMine =>
+      'No tienes rotuladores utilizables de otras marcas.';
+
+  @override
+  String get swatchesOtherBrandsFailed =>
+      'No se pudieron leer las otras marcas.';
+
+  @override
+  String get swatchesOtherBrandsPaletteNote =>
+      'Las paletas usan la marca elegida en Ajustes, así que este rotulador no se puede añadir a una.';
+
+  @override
+  String get paletteVisionTitle => 'Visión del color';
+
+  @override
+  String get paletteVisionNormal => 'Normal';
+
+  @override
+  String get paletteVisionProtanopia => 'Protanopía';
+
+  @override
+  String get paletteVisionDeuteranopia => 'Deuteranopía';
+
+  @override
+  String get paletteVisionTritanopia => 'Tritanopía';
+
+  @override
+  String get paletteVisionAchromatopsia => 'Acromatopsia';
+
+  @override
+  String paletteVisionPairs(String pairs) {
+    return 'Difíciles de distinguir: $pairs';
+  }
+
+  @override
+  String paletteVisionPairsMore(int count) {
+    return '+$count más';
+  }
+
+  @override
+  String get paletteVisionNoPairs => 'Todos los colores se distinguen bien.';
+
+  @override
+  String get paletteVisionPreviewNote =>
+      'Solo es una vista previa. Al guardar y compartir se mantienen los colores reales.';
+
+  @override
   String get collectionChartHint =>
       'Cajas vacías con el código y el nombre de cada rotulador que tienes, para pintar tus muestras reales. Se comparten como imágenes A4 para imprimir o guardar.';
 
@@ -4301,8 +4436,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Los rotuladores Copic se compran uno a uno. Marca los que tienes.';
 
   @override
+  String get collectionFinecolourHint =>
+      'Los rotuladores Finecolour se compran uno a uno. Marca los que tienes.';
+
+  @override
   String get onboardingCopicLine =>
       '358 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get onboardingFinecolourLine =>
+      '480 colores · Marca los rotuladores que tienes';
 
   @override
   String onboardingMarkersTitle(String brand) {
@@ -4334,6 +4477,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get diaryAdd => 'Añadir al diario';
+
+  @override
+  String get diaryShareButton => 'Compartir esta entrada';
 
   @override
   String get diaryStatusLabel => 'Estado';
@@ -4428,4 +4574,100 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get diaryAddedNotice => 'Añadido al diario';
+
+  @override
+  String diaryStatsArtworks(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count obras',
+      one: '1 obra',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String diaryStatsFinished(int count) {
+    return '$count terminadas';
+  }
+
+  @override
+  String diaryStatsInProgress(int count) {
+    return '$count en curso';
+  }
+
+  @override
+  String get diaryStatsOpen => 'Ver los números';
+
+  @override
+  String get diaryStatsTitle => 'Números del diario';
+
+  @override
+  String get diaryStatsStatusTitle => 'Terminadas y en curso';
+
+  @override
+  String get diaryStatsMonthsTitle => 'Entradas por mes';
+
+  @override
+  String diaryStatsMonthsLatest(int count) {
+    return 'Mostrando los últimos $count meses.';
+  }
+
+  @override
+  String get diaryStatsMarkersTitle => 'Rotuladores que más usas';
+
+  @override
+  String get diaryStatsMarkersEmpty =>
+      'Ninguna entrada tiene rotuladores todavía.';
+
+  @override
+  String diaryStatsEntries(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entradas',
+      one: '1 entrada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diaryStatsUnusedTitle => 'Rotuladores sin usar';
+
+  @override
+  String diaryStatsUnusedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rotuladores que tienes no están en ninguna entrada.',
+      one: '1 rotulador que tienes no está en ninguna entrada.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get diaryStatsUnusedNone =>
+      'Todos tus rotuladores están en alguna entrada.';
+
+  @override
+  String get diaryStatsUnusedNoCollection =>
+      'Añade tus rotuladores en Mi colección para ver cuáles no has usado.';
+
+  @override
+  String get diaryStatsUnusedShow => 'Mostrar la lista';
+
+  @override
+  String get diaryStatsUnusedHide => 'Ocultar la lista';
+
+  @override
+  String get diaryStatsPalettesTitle => 'Paletas que más enlazas';
+
+  @override
+  String get diaryStatsPalettesEmpty =>
+      'Ninguna entrada enlaza una paleta guardada todavía.';
+
+  @override
+  String diaryShareMore(int count) {
+    return '+$count más';
+  }
 }

@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import '../../core/palette_card_layout.dart';
+import 'diary_entry_card_layout.dart';
+import 'diary_entry_renderer.dart';
 import 'palette_card_renderer.dart';
 import 'share_sink.dart';
 import 'swatch_chart_renderer.dart';
@@ -10,6 +12,17 @@ Future<void> sharePaletteCard(ShareSink sink, PaletteCardData data) async {
   final Uint8List bytes = await renderPaletteCard(data);
   await sink.shareImages(<ShareImage>[
     ShareImage(bytes: bytes, name: 'ink-lab-palette.png'),
+  ], subject: data.title);
+}
+
+/// Renders the diary entry [data] as a PNG and opens the share sheet with it.
+Future<void> shareDiaryEntryCard(
+  ShareSink sink,
+  DiaryEntryCardData data,
+) async {
+  final Uint8List bytes = await renderDiaryEntryCard(data);
+  await sink.shareImages(<ShareImage>[
+    ShareImage(bytes: bytes, name: 'ink-lab-diary.png'),
   ], subject: data.title);
 }
 

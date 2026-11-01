@@ -20,6 +20,7 @@ class AppScope extends InheritedWidget {
     required this.dried,
     required this.artworkDiary,
     required this.aiSettings,
+    required this.ideaFavorites,
     required this.secrets,
     required this.markers,
     required this.aiService,
@@ -44,6 +45,9 @@ class AppScope extends InheritedWidget {
   /// folder on the device.
   final ArtworkDiaryRepository artworkDiary;
   final AiSettingsRepository aiSettings;
+
+  /// The favourite ideas and the ideas opened last.
+  final IdeaFavoritesRepository ideaFavorites;
   final SecretStore secrets;
   final MarkerRepository markers;
   final ai.AiService aiService;
@@ -95,6 +99,7 @@ class AppScope extends InheritedWidget {
             photos: InMemoryArtworkPhotoStore(),
           ),
       aiSettings: resolvedAiSettings,
+      ideaFavorites: StoredIdeaFavoritesRepository(store),
       secrets: resolvedSecrets,
       markers: markers,
       aiService:
@@ -127,6 +132,7 @@ class AppScope extends InheritedWidget {
     dried: dried,
     artworkDiary: artworkDiary,
     aiSettings: aiSettings,
+    ideaFavorites: ideaFavorites,
     secrets: secrets,
     markers: markers,
     aiService: aiService,

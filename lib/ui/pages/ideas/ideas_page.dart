@@ -8,6 +8,7 @@ import '../../../core/ideas_engine.dart';
 import '../../../core/models.dart';
 import '../../../data/data.dart';
 import '../../../l10n/l10n.dart';
+import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/empty_state.dart';
@@ -67,6 +68,8 @@ class _IdeasPageState extends State<IdeasPage> {
   StreamSubscription<AppSettingsState>? _settingsSubscription;
   StreamSubscription<Map<String, String>>? _ownColorsSubscription;
   StreamSubscription<Set<String>>? _driedSubscription;
+  StreamSubscription<Set<String>>? _favoritesSubscription;
+  StreamSubscription<List<String>>? _recentSubscription;
   String _collectionSignature = '';
 
   MarkerBrand _brand = MarkerBrand.ohuhuOahu;
@@ -79,6 +82,11 @@ class _IdeasPageState extends State<IdeasPage> {
 
   _IdeasView _view = _IdeasView.ideas;
   IdeaCategory? _category;
+
+  /// The "Favourites" chip: only the ideas with a heart.
+  bool _favoritesOnly = false;
+  Set<String> _favorites = const <String>{};
+  List<String> _recent = const <String>[];
   String _query = '';
   final TextEditingController _searchController = TextEditingController();
 
@@ -108,6 +116,21 @@ class _IdeasPageState extends State<IdeasPage> {
     _driedSubscription = scope.dried.changes.listen(
       (_) => _onSettingsChanged(scope.settings.state),
     );
+    // The hearts and the ideas opened last.
+    _favoritesSubscription?.cancel();
+    _recentSubscription?.cancel();
+    _favorites = scope.ideaFavorites.favorites;
+    _recent = scope.ideaFavorites.recent;
+    _favoritesSubscription = scope.ideaFavorites.favoriteChanges.listen((
+      Set<String> favorites,
+    ) {
+      if (mounted) setState(() => _favorites = favorites);
+    });
+    _recentSubscription = scope.ideaFavorites.recentChanges.listen((
+      List<String> recent,
+    ) {
+      if (mounted) setState(() => _recent = recent);
+    });
     unawaited(_reload());
   }
 
@@ -115,6 +138,9 @@ class _IdeasPageState extends State<IdeasPage> {
   void dispose() {
     _settingsSubscription?.cancel();
     _ownColorsSubscription?.cancel();
+    _driedSubscription?.cancel();
+    _favoritesSubscription?.cancel();
+    _recentSubscription?.cancel();
     _searchController.dispose();
     super.dispose();
   }
@@ -181,20 +207,44 @@ class _IdeasPageState extends State<IdeasPage> {
     final query = _query.trim().toLowerCase();
     return IdeasEngine.presets.where((IdeaPreset preset) {
       if (_category != null && preset.category != _category) return false;
+      if (_favoritesOnly && !_favorites.contains(preset.id)) return false;
       if (query.isEmpty) return true;
       return context.l10n.ideaTitle(preset).toLowerCase().contains(query) ||
           context.l10n.ideaSummary(preset).toLowerCase().contains(query);
     }).toList();
   }
 
+  /// The ideas opened last that the catalogue knows, newest first.
+  List<IdeaPreset> get _recentPresets => <IdeaPreset>[
+    for (final String id in _recent.take(_recentShown))
+      for (final IdeaPreset preset in IdeasEngine.presets)
+        if (preset.id == id) preset,
+  ];
+
+  Future<void> _toggleFavorite(IdeaPreset preset) async {
+    final AppScope? scope = _scope;
+    if (scope == null) return;
+    try {
+      await scope.ideaFavorites.toggle(preset.id);
+    } catch (_) {
+      // The heart simply does not change when the store cannot write.
+    }
+  }
+
   Future<void> _open(IdeaPreset preset) async {
     final IdeaPlan initial = _planFor(preset);
+    // Opening the sheet counts as viewing the idea.
+    final IdeaFavoritesRepository? favorites = _scope?.ideaFavorites;
+    if (favorites != null) {
+      unawaited(favorites.recordViewed(preset.id).catchError((Object _) {}));
+    }
     final IdeaPlan? applied = await showInkSheet<IdeaPlan>(
       context: context,
       builder: (BuildContext context) => IdeaDetailSheet(
         initial: initial,
         candidates: _available,
         brand: _brand,
+        favorites: favorites,
         onAddToDiary: _addToDiary,
       ),
     );
@@ -272,7 +322,11 @@ class _IdeasPageState extends State<IdeasPage> {
 
     final bool diary = _view == _IdeasView.diary;
     final List<IdeaPreset> filtered = _filteredPresets;
-    final bool browsing = _category == null && _query.trim().isEmpty;
+    final bool browsing =
+        _category == null && !_favoritesOnly && _query.trim().isEmpty;
+    final List<IdeaPreset> recent = browsing
+        ? _recentPresets
+        : const <IdeaPreset>[];
     final IdeaPreset featured = IdeasEngine.featuredFor(
       widget.today ?? DateTime.now(),
     );
@@ -348,10 +402,26 @@ class _IdeasPageState extends State<IdeasPage> {
                       key: ValueKey<String>('ideas-featured-${featured.id}'),
                       preset: featured,
                       plan: _planFor(featured),
+                      favorite: _favorites.contains(featured.id),
+                      onToggleFavorite: () => _toggleFavorite(featured),
                       onOpen: () => _open(featured),
                     ),
                   ),
-                if (filtered.isEmpty)
+                if (recent.isNotEmpty)
+                  _RecentRow(
+                    key: const ValueKey<String>('ideas-recent'),
+                    presets: recent,
+                    planFor: _planFor,
+                    onOpen: _open,
+                  ),
+                if (filtered.isEmpty && _favoritesOnly && _query.trim().isEmpty)
+                  EmptyState(
+                    key: const ValueKey<String>('ideas-favorites-empty'),
+                    icon: InkIcons.heart,
+                    title: context.l10n.ideasFavoritesEmptyTitle,
+                    message: context.l10n.ideasFavoritesEmptyMessage,
+                  )
+                else if (filtered.isEmpty)
                   EmptyState(
                     title: context.l10n.ideasEmptyTitle,
                     message: context.l10n.ideasEmptySearch,
@@ -369,6 +439,8 @@ class _IdeasPageState extends State<IdeasPage> {
                             preset: preset,
                             plan: _planFor(preset),
                             showCategory: _category == null,
+                            favorite: _favorites.contains(preset.id),
+                            onToggleFavorite: () => _toggleFavorite(preset),
                             onTap: () => _open(preset),
                           ),
                       ],
@@ -393,6 +465,7 @@ class _IdeasPageState extends State<IdeasPage> {
     setState(() {
       _query = '';
       _category = null;
+      _favoritesOnly = false;
     });
   }
 
@@ -403,15 +476,31 @@ class _IdeasPageState extends State<IdeasPage> {
         InkChip(
           key: const ValueKey<String>('ideas-category-all'),
           label: context.l10n.ideasCategoryAll,
-          selected: _category == null,
-          onSelected: (_) => setState(() => _category = null),
+          selected: _category == null && !_favoritesOnly,
+          onSelected: (_) => setState(() {
+            _category = null;
+            _favoritesOnly = false;
+          }),
+        ),
+        InkChip(
+          key: const ValueKey<String>('ideas-category-favorites'),
+          label: context.l10n.ideasFavoritesChip,
+          icon: InkIcons.heart,
+          selected: _favoritesOnly,
+          onSelected: (_) => setState(() {
+            _category = null;
+            _favoritesOnly = true;
+          }),
         ),
         for (final category in IdeaCategory.values)
           InkChip(
             key: ValueKey<String>('ideas-category-${category.name}'),
             label: context.l10n.ideaCategoryLabel(category),
             selected: _category == category,
-            onSelected: (_) => setState(() => _category = category),
+            onSelected: (_) => setState(() {
+              _category = category;
+              _favoritesOnly = false;
+            }),
           ),
       ],
     );
@@ -441,11 +530,15 @@ class _FeaturedCard extends StatelessWidget {
     super.key,
     required this.preset,
     required this.plan,
+    required this.favorite,
+    required this.onToggleFavorite,
     required this.onOpen,
   });
 
   final IdeaPreset preset;
   final IdeaPlan plan;
+  final bool favorite;
+  final VoidCallback onToggleFavorite;
   final VoidCallback onOpen;
 
   @override
@@ -453,18 +546,40 @@ class _FeaturedCard extends StatelessWidget {
     final InkColors ink = InkColors.of(context);
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(InkSpacing.s16),
+        padding: InkSpacing.card,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text(
-              AppTypography.caps(context.l10n.ideasFeaturedLabel),
-              style: AppTypography.capsStyle.copyWith(color: ink.action),
-            ),
-            const SizedBox(height: InkSpacing.s4),
-            Text(
-              ideaMetaLine(context, preset),
-              style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      // The heart is 44 dp tall; this keeps the caps lines
+                      // centred against it.
+                      const SizedBox(height: InkSpacing.s8),
+                      Text(
+                        AppTypography.caps(context.l10n.ideasFeaturedLabel),
+                        style: AppTypography.capsStyle.copyWith(
+                          color: ink.action,
+                        ),
+                      ),
+                      const SizedBox(height: InkSpacing.s4),
+                      Text(
+                        ideaMetaLine(context, preset),
+                        style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+                      ),
+                    ],
+                  ),
+                ),
+                IdeaHeartButton(
+                  key: ValueKey<String>('ideas-heart-${preset.id}-featured'),
+                  favorite: favorite,
+                  onPressed: onToggleFavorite,
+                ),
+              ],
             ),
             const SizedBox(height: InkSpacing.group),
             Semantics(
@@ -511,12 +626,16 @@ class _IdeaRow extends StatelessWidget {
     required this.preset,
     required this.plan,
     required this.showCategory,
+    required this.favorite,
+    required this.onToggleFavorite,
     required this.onTap,
   });
 
   final IdeaPreset preset;
   final IdeaPlan plan;
   final bool showCategory;
+  final bool favorite;
+  final VoidCallback onToggleFavorite;
   final VoidCallback onTap;
 
   @override
@@ -526,56 +645,221 @@ class _IdeaRow extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(bottom: BorderSide(color: ink.line)),
       ),
-      child: Semantics(
-        button: true,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: InkSpacing.cardV),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        ideaMetaLine(
-                          context,
-                          preset,
-                          withCategory: showCategory,
-                        ),
-                        style: AppTypography.capsStyle.copyWith(color: ink.fg2),
-                      ),
-                    ),
-                    if (plan.palette.isNotEmpty) ...<Widget>[
-                      const SizedBox(width: InkSpacing.s12),
-                      ExcludeSemantics(
-                        child: SizedBox(
-                          width: 72,
-                          child: PaletteStrip(
-                            colors: <String>[
-                              for (final s in plan.palette) s.color.hex,
-                            ],
-                            colorHeight: 14,
-                            radius: InkRadii.xs,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Semantics(
+              button: true,
+              child: InkWell(
+                onTap: onTap,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: InkSpacing.cardV,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              ideaMetaLine(
+                                context,
+                                preset,
+                                withCategory: showCategory,
+                              ),
+                              style: AppTypography.capsStyle.copyWith(
+                                color: ink.fg2,
+                              ),
+                            ),
                           ),
-                        ),
+                          if (plan.palette.isNotEmpty) ...<Widget>[
+                            const SizedBox(width: InkSpacing.s12),
+                            ExcludeSemantics(
+                              child: SizedBox(
+                                width: 72,
+                                child: PaletteStrip(
+                                  colors: <String>[
+                                    for (final s in plan.palette) s.color.hex,
+                                  ],
+                                  colorHeight: 14,
+                                  radius: InkRadii.xs,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: InkSpacing.s4),
+                      Text(
+                        context.l10n.ideaTitle(preset),
+                        style: AppTypography.section.copyWith(color: ink.fg),
+                      ),
+                      const SizedBox(height: InkSpacing.s4),
+                      Text(
+                        context.l10n.ideaSummary(preset),
+                        style: AppTypography.secondary.copyWith(color: ink.fg2),
                       ),
                     ],
-                  ],
+                  ),
                 ),
-                const SizedBox(height: InkSpacing.s4),
-                Text(
-                  context.l10n.ideaTitle(preset),
-                  style: AppTypography.section.copyWith(color: ink.fg),
-                ),
-                const SizedBox(height: InkSpacing.s4),
-                Text(
-                  context.l10n.ideaSummary(preset),
-                  style: AppTypography.secondary.copyWith(color: ink.fg2),
-                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: InkSpacing.s4),
+            child: IdeaHeartButton(
+              key: ValueKey<String>('ideas-heart-${preset.id}'),
+              favorite: favorite,
+              onPressed: onToggleFavorite,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// How many recently viewed ideas the Ideas tab shows (the repository keeps
+/// more).
+const int _recentShown = 6;
+
+/// The heart that marks an idea as a favourite: outlined, filled with the
+/// action colour while the idea is a favourite. Shared by the cards and the
+/// idea sheet.
+class IdeaHeartButton extends StatelessWidget {
+  const IdeaHeartButton({
+    super.key,
+    required this.favorite,
+    required this.onPressed,
+  });
+
+  final bool favorite;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    return InkIconButton(
+      icon: InkIcons.heart,
+      selected: favorite,
+      color: favorite ? ink.action : ink.fg2,
+      tooltip: favorite
+          ? context.l10n.commonRemoveFromFavourites
+          : context.l10n.commonAddToFavourites,
+      onPressed: onPressed,
+    );
+  }
+}
+
+/// "Recently viewed": the ideas opened last, newest first, as a row of small
+/// cards that scrolls sideways.
+class _RecentRow extends StatelessWidget {
+  const _RecentRow({
+    super.key,
+    required this.presets,
+    required this.planFor,
+    required this.onOpen,
+  });
+
+  final List<IdeaPreset> presets;
+  final IdeaPlan Function(IdeaPreset) planFor;
+  final ValueChanged<IdeaPreset> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: InkSpacing.block),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
+            child: InkSectionHeading(context.l10n.ideasRecentTitle),
+          ),
+          const SizedBox(height: InkSpacing.headingGap),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                for (int i = 0; i < presets.length; i++) ...<Widget>[
+                  if (i > 0) const SizedBox(width: InkSpacing.s8),
+                  _RecentCard(
+                    key: ValueKey<String>('ideas-recent-${presets[i].id}'),
+                    preset: presets[i],
+                    plan: planFor(presets[i]),
+                    onTap: () => onOpen(presets[i]),
+                  ),
+                ],
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecentCard extends StatelessWidget {
+  const _RecentCard({
+    super.key,
+    required this.preset,
+    required this.plan,
+    required this.onTap,
+  });
+
+  final IdeaPreset preset;
+  final IdeaPlan plan;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    // Wider with the text scale, so a large font does not wrap the title into
+    // a tall, narrow card.
+    final double scale = MediaQuery.textScalerOf(
+      context,
+    ).scale(1).clamp(1.0, 1.3);
+    return SizedBox(
+      width: 168 * scale,
+      child: Semantics(
+        button: true,
+        child: Material(
+          color: ink.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: InkRadii.cardRadius,
+            side: BorderSide(color: ink.line),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: InkSpacing.card,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    context.l10n.ideaTitle(preset),
+                    style: AppTypography.section.copyWith(color: ink.fg),
+                  ),
+                  if (plan.palette.isNotEmpty) ...<Widget>[
+                    const SizedBox(height: InkSpacing.s8),
+                    ExcludeSemantics(
+                      child: PaletteStrip(
+                        colors: <String>[
+                          for (final s in plan.palette) s.color.hex,
+                        ],
+                        colorHeight: 14,
+                        radius: InkRadii.xs,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
           ),
         ),

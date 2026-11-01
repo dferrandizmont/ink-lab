@@ -6,6 +6,9 @@ import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
 import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
+import '../../share/diary_entry_card_layout.dart';
+import '../../share/share_actions.dart';
+import '../../share/share_sink.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
@@ -34,6 +37,7 @@ class ArtworkEntryPage extends StatefulWidget {
     this.title,
     this.palette,
     this.picker,
+    this.shareSink,
   });
 
   /// Key of the page body, handy for tests.
@@ -51,6 +55,10 @@ class ArtworkEntryPage extends StatefulWidget {
   /// Photo picker. Production wraps `image_picker`; tests inject a fake.
   final ImagePickerService? picker;
 
+  /// Where "Share" sends the image: the system share sheet unless a test
+  /// injects a fake.
+  final ShareSink? shareSink;
+
   /// Opens the form; returns whether an entry was saved.
   static Future<bool> open(
     BuildContext context, {
@@ -58,6 +66,7 @@ class ArtworkEntryPage extends StatefulWidget {
     String? title,
     SavedPalette? palette,
     ImagePickerService? picker,
+    ShareSink? shareSink,
   }) async {
     // Keep the services of this context above the form, also when they sit
     // below the navigator (tests, previews).
@@ -70,6 +79,7 @@ class ArtworkEntryPage extends StatefulWidget {
             title: title,
             palette: palette,
             picker: picker,
+            shareSink: shareSink,
           );
           return scope == null ? page : scope.wrap(page);
         },
@@ -119,9 +129,12 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
   late bool _photosReady = (widget.entry?.photos ?? const <String>[]).isEmpty;
   bool _picking = false;
   bool _saving = false;
+  bool _sharing = false;
   String? _error;
 
   bool get _isNew => widget.entry == null;
+
+  late final ShareSink _shareSink = widget.shareSink ?? const SystemShareSink();
 
   @override
   void initState() {
@@ -336,6 +349,92 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
   }
 
   // ---------------------------------------------------------------------------
+  // Share
+  // ---------------------------------------------------------------------------
+
+  bool get _canShare =>
+      _title.text.trim().isNotEmpty && _photosReady && !_saving && !_sharing;
+
+  /// Renders the entry as it is on screen (title, date, status, first photo,
+  /// markers and palette) and opens the share sheet. Only on this tap: the
+  /// photo is read from memory, drawn into the image and never sent anywhere
+  /// else.
+  Future<void> _share() async {
+    if (!_canShare) return;
+    final AppScope scope = AppScope.of(context);
+    final AppLocalizations l10n = context.l10n;
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    final String date = MaterialLocalizations.of(context)
+        .formatMediumDate(_date);
+    final String status = _status == ArtworkStatus.inProgress
+        ? l10n.diaryStatusInProgress
+        : l10n.diaryStatusFinished;
+    final String? linked = _paletteId;
+    final SavedPalette? palette = linked == null
+        ? null
+        : findSavedPalette(scope, linked);
+    final List<String> paletteIds = palette == null
+        ? const <String>[]
+        : paletteMarkerIds(palette);
+    final String title = _title.text.trim();
+    final String onWhat = _onWhat.text.trim();
+    final List<String> markerIds = List<String>.of(_markerIds);
+    final Uint8List? photo = _photos.isEmpty ? null : _photos.first.bytes;
+    setState(() => _sharing = true);
+    try {
+      final Map<String, MarkerColor> colors = await loadMarkerColors(scope, [
+        ...markerIds,
+        ...paletteIds,
+      ]);
+      final List<MarkerColor> known = <MarkerColor>[
+        for (final String id in markerIds) ?colors[id],
+      ];
+      final List<MarkerColor> shown = known
+          .take(DiaryEntryCardLayout.maxMarkers)
+          .toList();
+      final int more = known.length - shown.length;
+      await shareDiaryEntryCard(
+        _shareSink,
+        DiaryEntryCardData(
+          title: title,
+          meta: '$date · $status',
+          onWhat: onWhat,
+          photo: photo,
+          markers: <DiaryEntryCardMarker>[
+            for (final MarkerColor color in shown)
+              DiaryEntryCardMarker(
+                code: color.newCode,
+                name: color.newName,
+                hex: color.hex,
+              ),
+          ],
+          moreMarkers: more,
+          moreText: more > 0 ? l10n.diaryShareMore(more) : '',
+          markersLabel: l10n.diaryMarkersTitle,
+          paletteLabel: l10n.diaryPaletteTitle,
+          paletteName: palette?.name ?? '',
+          paletteHexes: <String>[
+            for (final String id in paletteIds) ?colors[id]?.hex,
+          ],
+        ),
+      );
+    } catch (_) {
+      messenger
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            key: const ValueKey<String>('diary-share-failed'),
+            content: Text(l10n.shareFailed),
+          ),
+        );
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // Build
   // ---------------------------------------------------------------------------
 
@@ -354,6 +453,15 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isNew ? l10n.diaryNewTitle : l10n.diaryEditTitle),
+        actions: <Widget>[
+          InkIconButton(
+            key: const ValueKey<String>('diary-share'),
+            icon: InkIcons.share,
+            tooltip: l10n.diaryShareButton,
+            onPressed: _canShare ? _share : null,
+          ),
+          const SizedBox(width: InkSpacing.s4),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

@@ -85,6 +85,9 @@ class SwatchDetailSheet extends StatelessWidget {
     this.wished = false,
     this.dried = false,
     this.owned = false,
+    this.brandEquivalents,
+    this.brandLabel,
+    this.showPaletteActions = true,
   });
 
   /// The colour the sheet describes.
@@ -144,6 +147,20 @@ class SwatchDetailSheet extends StatelessWidget {
 
   /// Whether the marker is in the user's collection.
   final bool owned;
+
+  /// The "In other brands" section (see `BrandEquivalentsSection`), shown
+  /// after the closest alternatives. Without it the section is not shown.
+  final Widget? brandEquivalents;
+
+  /// The brand of the marker, shown as a row of its own. Only given when the
+  /// sheet describes a marker of a brand other than the one the app works
+  /// with, where a code alone would be ambiguous.
+  final String? brandLabel;
+
+  /// Whether "Add to palette" and the blending chain are offered. A marker of
+  /// a brand other than the active one cannot go into a palette, which only
+  /// holds the markers of the brand chosen in Settings.
+  final bool showPaletteActions;
 
   /// The hexadecimal value, as shown to the user.
   String get displayHex => displayHexOf(color.hex);
@@ -252,6 +269,7 @@ class SwatchDetailSheet extends StatelessWidget {
     final bool hasOldName = color.oldName != color.newName;
     final String? rgbLine = _rgbLine(context);
     final List<(String, String)> definitions = <(String, String)>[
+      if (brandLabel != null) (context.l10n.settingsBrandTitle, brandLabel!),
       if (lineLabels.isNotEmpty)
         (context.l10n.swatchesLines, lineLabels.join(', ')),
       if (packLabels.isNotEmpty)
@@ -379,12 +397,13 @@ class SwatchDetailSheet extends StatelessWidget {
                 icon: InkIcons.copy,
                 onPressed: onCopyHex,
               ),
-              InkButton(
-                label: context.l10n.swatchesAddToPalette,
-                icon: InkIcons.plus,
-                onPressed: onAddToPalette,
-              ),
-              if (onBlendingChain != null)
+              if (showPaletteActions)
+                InkButton(
+                  label: context.l10n.swatchesAddToPalette,
+                  icon: InkIcons.plus,
+                  onPressed: onAddToPalette,
+                ),
+              if (showPaletteActions && onBlendingChain != null)
                 InkButton.secondary(
                   key: const ValueKey<String>('swatch-blending-chain'),
                   label: context.l10n.swatchesBlendingChain,
@@ -393,6 +412,14 @@ class SwatchDetailSheet extends StatelessWidget {
                 ),
             ],
           ),
+          if (!showPaletteActions) ...<Widget>[
+            const SizedBox(height: InkSpacing.group),
+            Text(
+              context.l10n.swatchesOtherBrandsPaletteNote,
+              key: const ValueKey<String>('swatch-other-brand-note'),
+              style: AppTypography.secondary.copyWith(color: ink.fg2),
+            ),
+          ],
           if (onToggleWishlist != null && onToggleDried != null) ...<Widget>[
             const SizedBox(height: InkSpacing.block),
             SwatchStatusSection(
@@ -445,6 +472,10 @@ class SwatchDetailSheet extends StatelessWidget {
                   ],
                 ],
               ),
+          ],
+          if (brandEquivalents != null) ...<Widget>[
+            const SizedBox(height: InkSpacing.s24),
+            brandEquivalents!,
           ],
         ],
       ),

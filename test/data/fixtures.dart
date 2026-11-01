@@ -63,6 +63,7 @@ final class Harness {
     required this.dried,
     required this.artworkDiary,
     required this.photos,
+    required this.ideaFavorites,
   });
 
   final KeyValueStore store;
@@ -78,6 +79,9 @@ final class Harness {
   /// The photo files behind [artworkDiary].
   final InMemoryArtworkPhotoStore photos;
 
+  /// The favourite ideas and the ideas opened last.
+  final StoredIdeaFavoritesRepository ideaFavorites;
+
   BackupService backup() => BackupService(
     appSettings: appSettings,
     savedPalettes: savedPalettes,
@@ -87,6 +91,7 @@ final class Harness {
     wishlist: wishlist,
     dried: dried,
     artworkDiary: artworkDiary,
+    ideaFavorites: ideaFavorites,
   );
 }
 
@@ -101,6 +106,7 @@ Future<Harness> harness([Map<String, Object>? initial]) async {
   final dried = StoredDriedMarkerRepository(store);
   final photos = InMemoryArtworkPhotoStore();
   final artworkDiary = StoredArtworkDiaryRepository(store, photos: photos);
+  final ideaFavorites = StoredIdeaFavoritesRepository(store);
   await appSettings.load();
   await savedPalettes.load();
   await history.load();
@@ -109,6 +115,7 @@ Future<Harness> harness([Map<String, Object>? initial]) async {
   await wishlist.load();
   await dried.load();
   await artworkDiary.load();
+  await ideaFavorites.load();
   return Harness(
     store: store,
     appSettings: appSettings,
@@ -120,5 +127,6 @@ Future<Harness> harness([Map<String, Object>? initial]) async {
     dried: dried,
     artworkDiary: artworkDiary,
     photos: photos,
+    ideaFavorites: ideaFavorites,
   );
 }
