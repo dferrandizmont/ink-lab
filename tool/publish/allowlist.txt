@@ -331,6 +331,7 @@ lib/ui/pages/match/color_sampling.dart
 lib/ui/pages/match/image_picker_service.dart
 lib/ui/pages/match/match_page.dart
 lib/ui/pages/match/match_result_tile.dart
+lib/ui/pages/match/photo_box.dart
 lib/ui/pages/match/photo_sampling.dart
 lib/ui/pages/palette/palette_draft.dart
 lib/ui/pages/palette/palette_page.dart
@@ -440,6 +441,7 @@ test/ui/locale_test.dart
 test/ui/match/color_sampling_test.dart
 test/ui/match/match_page_test.dart
 test/ui/match/match_test_support.dart
+test/ui/match/photo_box_test.dart
 test/ui/match/white_balance_match_test.dart
 test/ui/palette/palette_ai_test.dart
 test/ui/palette/palette_blending_chain_test.dart

@@ -192,11 +192,32 @@ class ColorSwatchTile extends StatelessWidget {
       _codeLine = 22;
   static const double _nameLine = 20, _hexLine = 16, _minBlock = 32;
 
+  /// The height of a grid cell that holds the colour block, the code, two name
+  /// lines and the hex line (spec §4 "Swatch cell").
+  ///
+  /// The text lines grow with the system font scale, so the cell does too:
+  /// with fixed lines a second name line would be cut at the card's bottom edge
+  /// at large text sizes.
+  static double gridCellHeight(BuildContext context) =>
+      InkGeometry.swatchBlockHeight +
+      _bodyTop +
+      _bodyBottom +
+      _line(context, _codeLine) +
+      2 * _line(context, _nameLine) +
+      _line(context, _hexLine);
+
+  /// [height], a line height at scale 1, as the system text scale makes it.
+  static double _line(BuildContext context, double height) =>
+      MediaQuery.textScalerOf(context).scale(height);
+
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
     final Color background = swatchColor(hex);
     final Color onSwatch = inkOn(background);
+    final double codeLine = _line(context, _codeLine);
+    final double nameLine = _line(context, _nameLine);
+    final double hexLine = _line(context, _hexLine);
 
     return Semantics(
       button: onTap != null,
@@ -222,9 +243,9 @@ class ColorSwatchTile extends StatelessWidget {
                 final double natural =
                     InkGeometry.swatchBlockHeight +
                     _bodyTop +
-                    _codeLine +
-                    (name == null ? 0 : 2 * _nameLine) +
-                    (showHex ? _hexLine : 0) +
+                    codeLine +
+                    (name == null ? 0 : 2 * nameLine) +
+                    (showHex ? hexLine : 0) +
                     _bodyBottom;
                 // Fill the height only when it is imposed (a grid extent or
                 // [height]) or too short for the natural cell.
@@ -239,21 +260,21 @@ class ColorSwatchTile extends StatelessWidget {
                       constraints.maxHeight -
                       _bodyTop -
                       _bodyBottom -
-                      _codeLine -
+                      codeLine -
                       _minBlock;
                   nameLines = 0;
                   hexVisible = false;
-                  if (name != null && budget >= _nameLine) {
+                  if (name != null && budget >= nameLine) {
                     nameLines = 1;
-                    budget -= _nameLine;
+                    budget -= nameLine;
                   }
-                  if (showHex && budget >= _hexLine) {
+                  if (showHex && budget >= hexLine) {
                     hexVisible = true;
-                    budget -= _hexLine;
+                    budget -= hexLine;
                   }
                   // A second name line only when the block keeps its 72.
-                  const double secondLine =
-                      _nameLine + InkGeometry.swatchBlockHeight - _minBlock;
+                  final double secondLine =
+                      nameLine + InkGeometry.swatchBlockHeight - _minBlock;
                   if (nameLines == 1 && budget >= secondLine) {
                     nameLines = 2;
                   }
@@ -290,7 +311,7 @@ class ColorSwatchTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(
-                            height: _codeLine,
+                            height: codeLine,
                             child: Row(
                               children: <Widget>[
                                 Expanded(
@@ -322,7 +343,7 @@ class ColorSwatchTile extends StatelessWidget {
                           ),
                           if (nameLines > 0)
                             SizedBox(
-                              height: _nameLine * nameLines,
+                              height: nameLine * nameLines,
                               // A name can be longer than the cell: the tile opens
                               // the full detail on tap, and a long press shows
                               // the whole name.

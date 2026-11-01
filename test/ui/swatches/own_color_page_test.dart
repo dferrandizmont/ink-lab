@@ -270,4 +270,34 @@ void main() {
     await _open(tester);
     expect(find.text(l10n.matchPrivacyCaption), findsOneWidget);
   });
+
+  testWidgets('a portrait photo fills the box and taps map to the photo', (
+    tester,
+  ) async {
+    // 24x32 (3:4): paper on the left half, ink on the right half.
+    final SampledImage portrait = imageFromRgb(24, 32, <List<int>>[
+      for (var y = 0; y < 32; y++)
+        for (var x = 0; x < 24; x++) x < 12 ? _paper : _ink,
+    ]);
+    await _open(
+      tester,
+      picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+      decoder: fixedDecoder(portrait),
+    );
+    await _pickPhoto(tester);
+
+    Rect rect = tester.getRect(_canvas);
+    expect(rect.height, greaterThan(196));
+    // Not capped here: the photo is as tall as its width asks for.
+    expect(rect.height, closeTo(rect.width * 4 / 3, 1.5));
+
+    await tester.tapAt(Offset(rect.center.dx + rect.width / 4, rect.center.dy));
+    await tester.pumpAndSettle();
+    expect(_typed(tester), colorIntToHex(_int(_ink)));
+    // The hint above the photo is gone, so the photo may have moved.
+    rect = tester.getRect(_canvas);
+    await tester.tapAt(Offset(rect.center.dx - rect.width / 4, rect.center.dy));
+    await tester.pumpAndSettle();
+    expect(_typed(tester), colorIntToHex(_int(_paper)));
+  });
 }

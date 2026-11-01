@@ -8,6 +8,7 @@ import 'package:ink_lab/ui/pages/match/color_sampling.dart';
 import 'package:ink_lab/ui/pages/match/image_picker_service.dart';
 import 'package:ink_lab/ui/pages/match/match_page.dart';
 import 'package:ink_lab/ui/pages/match/match_result_tile.dart';
+import 'package:ink_lab/ui/pages/match/photo_box.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
 
 import 'match_test_support.dart';
@@ -352,5 +353,68 @@ void main() {
     await scope.settings.setBrand(MarkerBrand.ohuhuOahu);
     await tester.pumpAndSettle();
     expect(tile, findsOneWidget);
+  });
+
+  testWidgets('a portrait photo fills the box and taps map to the photo', (
+    WidgetTester tester,
+  ) async {
+    // 8x16: red on the left half, blue on the right half.
+    final SampledImage portrait = imageFromRgb(8, 16, <List<int>>[
+      for (var y = 0; y < 16; y++)
+        for (var x = 0; x < 8; x++) x < 4 ? <int>[255, 0, 0] : <int>[0, 0, 255],
+    ]);
+    final FakeImagePickerService picker = FakeImagePickerService(
+      PhotoPicked(tinyPng),
+    );
+    await pumpMatch(tester, picker: picker, image: portrait);
+    final Finder canvas = find.byKey(const ValueKey<String>('match-canvas'));
+
+    await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
+    await tester.pumpAndSettle();
+
+    // The box grew past the old 196 and the photo fills it, whole.
+    final Rect box = tester.getRect(canvas);
+    expect(box.height, greaterThan(196));
+    // 600 wide x 3200 high: the 520 cap, less the 1 px border on each side.
+    expect(box.height, closeTo(maxPhotoBoxHeight - 2, 1e-6));
+    final Rect fitted = containRect(box.size, portrait.aspectRatio);
+    expect(fitted.width, closeTo(box.height / 2, 1e-6));
+
+    // A quarter of the way across the photo is red, three quarters is blue.
+    await tester.tapAt(
+      Offset(
+        box.left + fitted.left + fitted.width / 4,
+        box.top + fitted.height / 2,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('#FF0000'), findsOneWidget);
+    await tester.tapAt(
+      Offset(
+        box.left + fitted.left + fitted.width * 3 / 4,
+        box.top + fitted.height / 2,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('#0000FF'), findsOneWidget);
+  });
+
+  testWidgets('a panoramic photo keeps the box at its old height', (
+    WidgetTester tester,
+  ) async {
+    final FakeImagePickerService picker = FakeImagePickerService(
+      PhotoPicked(tinyPng),
+    );
+    await pumpMatch(
+      tester,
+      picker: picker,
+      image: sampledImage(96, 16, <int>[255, 0, 0]),
+    );
+    await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
+    await tester.pumpAndSettle();
+    expect(
+      tester.getSize(find.byKey(const ValueKey<String>('match-canvas'))).height,
+      196 - 2,
+    );
   });
 }

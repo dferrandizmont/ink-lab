@@ -30,6 +30,7 @@ import 'package:ink_lab/ui/pages/settings/settings_widgets.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
 import 'package:ink_lab/ui/shell/app_shell.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
+import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
 import 'package:ink_lab/ui/widgets/ink_chip.dart';
 import 'package:ink_lab/ui/widgets/ink_segmented.dart';
 import 'package:ink_lab/ui/widgets/page_header.dart';
@@ -1468,6 +1469,68 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await scope.wishlist.add('decotime:01');
         await tester.pumpAndSettle();
         _check(tester, 'collection decotime, wishlist');
+      },
+  'swatches: grid cells show every line of long names, with the marks on':
+      (WidgetTester tester, _Env env) async {
+        const List<String> names = <String>[
+          "Robin's Egg Blue",
+          'Warm Gray No.7',
+          'Pale Cherry Pink',
+          'Light Reddish Violet',
+        ];
+        await _pump(
+          tester,
+          env,
+          Builder(
+            builder: (BuildContext context) => GridView.count(
+              crossAxisCount: 3,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              padding: const EdgeInsets.all(16),
+              childAspectRatio: 110 / ColorSwatchTile.gridCellHeight(context),
+              children: <Widget>[
+                for (int i = 0; i < names.length; i++)
+                  ColorSwatchTile(
+                    hex: '#8FB8D0',
+                    code: 'B${i + 1}4',
+                    name: names[i],
+                    owned: i.isEven,
+                    ownColor: i == 0 || i == 3,
+                    dried: i == 1,
+                  ),
+              ],
+            ),
+          ),
+        );
+        _check(tester, 'swatch grid cells');
+        // Every name line fits in its box and inside the card: nothing is
+        // painted past the bottom edge.
+        for (final String name in names) {
+          final Finder paragraph = find.text(name);
+          expect(paragraph, findsOneWidget);
+          final RenderParagraph render = tester.renderObject<RenderParagraph>(
+            paragraph,
+          );
+          final double wanted = render.getMinIntrinsicHeight(render.size.width);
+          if (wanted > render.size.height + 0.5) {
+            _problems.add(
+              '$_tag clipped name: "$name" needs $wanted, has '
+              '${render.size.height}  [swatch grid cells]',
+            );
+          }
+          final Rect tile = tester.getRect(
+            find.ancestor(
+              of: paragraph,
+              matching: find.byType(ColorSwatchTile),
+            ),
+          );
+          final Rect text = tester.getRect(paragraph);
+          if (text.top + wanted > tile.bottom + 0.5) {
+            _problems.add(
+              '$_tag name past the card: "$name"  [swatch grid cells]',
+            );
+          }
+        }
       },
   'swatches: wishlist and dried out in the detail sheet':
       (WidgetTester tester, _Env env) async {

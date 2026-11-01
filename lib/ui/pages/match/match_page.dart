@@ -22,6 +22,7 @@ import '../collection/collection_page.dart';
 import 'color_sampling.dart';
 import 'image_picker_service.dart';
 import 'match_result_tile.dart';
+import 'photo_box.dart';
 import 'photo_sampling.dart';
 import '../../../l10n/l10n.dart';
 
@@ -65,7 +66,6 @@ class MatchPage extends StatefulWidget {
 
 class _MatchPageState extends State<MatchPage> {
   static const double _radiusFraction = defaultSamplingRadiusFraction;
-  static const double _photoHeight = 196;
 
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
@@ -589,20 +589,13 @@ class _MatchPageState extends State<MatchPage> {
   }
 
   Widget _buildPhoto() {
-    final InkColors ink = InkColors.of(context);
     final bool hasPhoto = _bytes != null && _sampled != null;
     return _Gutter(
       child: Semantics(
         container: true,
         label: context.l10n.matchPhotoSemantics,
-        child: Container(
-          height: _photoHeight,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: ink.surface,
-            borderRadius: InkRadii.cardRadius,
-            border: Border.all(color: ink.line),
-          ),
+        child: PhotoBox(
+          aspectRatio: hasPhoto ? _sampled!.aspectRatio : null,
           child: hasPhoto
               ? _buildCanvas()
               : EmptyState(

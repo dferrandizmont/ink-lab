@@ -80,11 +80,6 @@ class SwatchesPage extends StatefulWidget {
 }
 
 class _SwatchesPageState extends State<SwatchesPage> {
-  /// Height of a grid cell: colour block, body padding, code, two name lines,
-  /// hex line (spec §4 "Swatch cell").
-  static const double _cellHeight =
-      InkGeometry.swatchBlockHeight + 12 + 22 + 40 + 16 + 12;
-
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
   bool _favoritesOnly = false;
@@ -322,14 +317,13 @@ class _SwatchesPageState extends State<SwatchesPage> {
                     InkSpacing.pageBottom,
                   ),
                   sliver: SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                          // Three columns on a phone; wider screens add more.
-                          maxCrossAxisExtent: 130,
-                          mainAxisExtent: _cellHeight,
-                          crossAxisSpacing: InkSpacing.block,
-                          mainAxisSpacing: InkSpacing.block,
-                        ),
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      // Three columns on a phone; wider screens add more.
+                      maxCrossAxisExtent: 130,
+                      mainAxisExtent: ColorSwatchTile.gridCellHeight(context),
+                      crossAxisSpacing: InkSpacing.block,
+                      mainAxisSpacing: InkSpacing.block,
+                    ),
                     delegate: SliverChildBuilderDelegate((
                       BuildContext context,
                       int index,
@@ -969,15 +963,15 @@ class _LoadingBody extends StatelessWidget {
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 130,
-              mainAxisExtent: _SwatchesPageState._cellHeight,
+              mainAxisExtent: ColorSwatchTile.gridCellHeight(context),
               crossAxisSpacing: InkSpacing.block,
               mainAxisSpacing: InkSpacing.block,
             ),
             itemCount: 12,
             itemBuilder: (BuildContext context, int index) =>
-                const SkeletonBlock(height: _SwatchesPageState._cellHeight),
+                SkeletonBlock(height: ColorSwatchTile.gridCellHeight(context)),
           ),
         ),
       ],

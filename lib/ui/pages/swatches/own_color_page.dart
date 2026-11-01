@@ -14,6 +14,7 @@ import '../../widgets/ink_button.dart';
 import '../../widgets/page_header.dart';
 import '../match/color_sampling.dart';
 import '../match/image_picker_service.dart';
+import '../match/photo_box.dart';
 import '../match/photo_sampling.dart';
 
 /// Where the user sets the colour a marker really gives on paper.
@@ -60,8 +61,6 @@ class OwnColorPage extends StatefulWidget {
 }
 
 class _OwnColorPageState extends State<OwnColorPage> {
-  static const double _photoHeight = 196;
-
   late final TextEditingController _hex = TextEditingController(
     text: _bare(widget.color.hex).toUpperCase(),
   );
@@ -385,17 +384,10 @@ class _OwnColorPageState extends State<OwnColorPage> {
   }
 
   Widget _buildPhoto(BuildContext context) {
-    final InkColors ink = InkColors.of(context);
     final bool hasPhoto = _bytes != null && _sampled != null;
     if (!hasPhoto) return const SizedBox.shrink();
-    return Container(
-      height: _photoHeight,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: ink.surface,
-        borderRadius: InkRadii.cardRadius,
-        border: Border.all(color: ink.line),
-      ),
+    return PhotoBox(
+      aspectRatio: _sampled!.aspectRatio,
       child: PhotoSampleCanvas(
         gestureKey: const ValueKey<String>('own-color-canvas'),
         bytes: _bytes!,

@@ -8,6 +8,13 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
+## 0.7.1 · 2026-11-01
+
+- Match and a marker's own colour: a portrait photo now fills the photo box instead of showing as a narrow strip
+  between empty bars, so it is easier to see and to tap the colour you want. Landscape photos look as before.
+- Swatches: with a large system font size, the second line of long marker names ("Robin's Egg Blue") is no longer cut
+  at the bottom of the card; the cells grow with the text size.
+
 ## 0.7.0 · 2026-11-01
 
 - Copic: 358 colours, with individual marker selection in setup and My collection, available throughout the app and
