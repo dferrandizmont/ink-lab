@@ -10,8 +10,11 @@ import 'package:ink_lab/ui/pages/match/match_page.dart';
 import 'package:ink_lab/ui/pages/match/match_result_tile.dart';
 import 'package:ink_lab/ui/pages/match/photo_box.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
+import 'package:ink_lab/ui/widgets/ink_button.dart';
+import 'package:ink_lab/ui/widgets/page_header.dart';
 
 import 'match_test_support.dart';
+import '../../support/layout_stability.dart';
 import '../../support/l10n.dart';
 
 /// Opens the camera and taps the centre of the canvas, where the fake image is
@@ -22,6 +25,14 @@ Future<void> pickAndSample(WidgetTester tester) async {
   await tester.tap(find.byKey(const ValueKey<String>('match-canvas')));
   await tester.pumpAndSettle();
 }
+
+/// A wide photo (the box keeps its height) with warm paper on the left half
+/// and a dark stroke on the right one.
+SampledImage widePaperAndInk() => imageFromRgb(96, 16, <List<int>>[
+  for (int y = 0; y < 16; y++)
+    for (int x = 0; x < 96; x++)
+      x < 48 ? <int>[230, 210, 180] : <int>[30, 40, 120],
+]);
 
 void main() {
   testWidgets('picking a photo samples a colour and ranks six markers', (
@@ -322,16 +333,23 @@ void main() {
         find.text(AppTypography.caps(l10n.matchQualityApproximate)),
         findsWidgets,
       );
-      expect(find.text(l10n.matchRangeTitle(brand.label)), findsOneWidget);
+      // The best of the whole range is folded: the summary shows its code
+      // and its distance, and opening it shows the marker itself.
+      expect(find.text(l10n.matchBestOfRange(brand.label)), findsOneWidget);
+      expect(find.byKey(const ValueKey<String>('match-range')), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey<String>('match-range')));
+      await tester.pumpAndSettle();
       final Iterable<BestMatchTile> tiles = tester.widgetList<BestMatchTile>(
         find.byType(BestMatchTile),
       );
       expect(tiles.where((BestMatchTile t) => t.notOwned), hasLength(1));
+      // Not a badge: a quiet line.
+      expect(find.text(l10n.matchNotOwnedLine), findsOneWidget);
 
       // The suggestion can be turned off in Settings.
       await scope.settings.setMatchSuggestUnowned(false);
       await tester.pumpAndSettle();
-      expect(find.text(l10n.matchRangeTitle(brand.label)), findsNothing);
+      expect(find.text(l10n.matchBestOfRange(brand.label)), findsNothing);
       expect(
         find.byKey(const ValueKey<String>('match-no-close')),
         findsOneWidget,
@@ -427,6 +445,198 @@ void main() {
     expect(
       tester.getSize(find.byKey(const ValueKey<String>('match-canvas'))).height,
       196 - 2,
+    );
+  });
+
+  testWidgets('the camera and the gallery are in view with a result', (
+    WidgetTester tester,
+  ) async {
+    final FakeImagePickerService picker = FakeImagePickerService(
+      PhotoPicked(tinyPng),
+    );
+    await pumpMatch(
+      tester,
+      picker: picker,
+      image: sampledImage(96, 16, <int>[255, 0, 0]),
+      size: const Size(360, 740),
+    );
+
+    await pickAndSample(tester);
+
+    // The result is there...
+    expect(find.byType(BestMatchTile), findsOneWidget);
+    // ...and the buttons to take another photo are above the fold: the page
+    // did not have to be scrolled to reach them.
+    final ScrollableState scroll = tester.state<ScrollableState>(
+      find.byType(Scrollable).first,
+    );
+    expect(scroll.position.pixels, 0);
+    for (final String key in <String>['match-camera', 'match-gallery']) {
+      final Rect button = tester.getRect(find.byKey(ValueKey<String>(key)));
+      expect(button.top, greaterThanOrEqualTo(0), reason: key);
+      expect(button.bottom, lessThanOrEqualTo(740), reason: key);
+    }
+  });
+
+  testWidgets('the row of actions holds the camera, the gallery and the fix', (
+    WidgetTester tester,
+  ) async {
+    await pumpMatch(
+      tester,
+      picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+      image: sampledImage(96, 16, <int>[255, 0, 0]),
+      size: const Size(360, 740),
+    );
+
+    // The fix waits for a photo, but the row is always the same.
+    final Finder start = find.byKey(
+      const ValueKey<String>('white-balance-start'),
+    );
+    expect(start, findsOneWidget);
+    expect(tester.widget<InkButton>(start).onPressed, isNull);
+
+    await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
+    await tester.pumpAndSettle();
+
+    expect(tester.widget<InkButton>(start).onPressed, isNotNull);
+    // Both buttons of the row are secondary: the page has no loud button.
+    for (final String key in <String>['match-camera', 'match-gallery']) {
+      expect(
+        tester.widget<InkButton>(find.byKey(ValueKey<String>(key))).variant,
+        InkButtonVariant.smallSecondary,
+        reason: key,
+      );
+    }
+  });
+
+  testWidgets('the recent picks show six and the rest in a picker', (
+    WidgetTester tester,
+  ) async {
+    final FakeImagePickerService picker = FakeImagePickerService(
+      PhotoPicked(tinyPng),
+    );
+    final AppScope scope = await pumpMatch(
+      tester,
+      picker: picker,
+      // Two colours: a pick is remembered with the colour it was made with.
+      image: imageFromRgb(64, 64, <List<int>>[
+        for (int y = 0; y < 64; y++)
+          for (int x = 0; x < 64; x++)
+            x < 32 ? <int>[255, 0, 0] : <int>[0, 0, 255],
+      ]),
+    );
+
+    Future<void> sampleAt(double fraction) async {
+      final Rect canvas = tester.getRect(
+        find.byKey(const ValueKey<String>('match-canvas')),
+      );
+      await tester.tapAt(
+        Offset(canvas.left + canvas.width * fraction, canvas.center.dy),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
+    await tester.pumpAndSettle();
+    await sampleAt(0.25);
+    // The best match and its five alternates.
+    await tester.tap(find.byType(BestMatchTile).first);
+    await tester.pumpAndSettle();
+    for (int i = 0; i < 5; i++) {
+      await tester.tap(find.byType(MatchResultTile).at(i));
+      await tester.pumpAndSettle();
+    }
+    // Another colour: two more picks.
+    await sampleAt(0.75);
+    await tester.tap(find.byType(BestMatchTile).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(MatchResultTile).first);
+    await tester.pumpAndSettle();
+
+    expect(scope.matchHistory.entries, hasLength(8));
+
+    // Six on the page, the rest behind "See all".
+    expect(
+      find.byWidgetPredicate(
+        (Widget w) =>
+            w.key is ValueKey<String> &&
+            (w.key! as ValueKey<String>).value.startsWith('match-pick-'),
+      ),
+      findsNWidgets(6),
+    );
+    expect(
+      find.byKey(const ValueKey<String>('match-history-see-all')),
+      findsOneWidget,
+    );
+    expect(find.text(l10n.matchSeeAll(8)), findsOneWidget);
+
+    await tester.tap(
+      find.byKey(const ValueKey<String>('match-history-see-all')),
+    );
+    await tester.pumpAndSettle();
+
+    // Every pick is in the sheet.
+    expect(
+      find.byWidgetPredicate(
+        (Widget w) =>
+            w.key is ValueKey<String> &&
+            (w.key! as ValueKey<String>).value.startsWith('match-history-row-'),
+      ),
+      findsNWidgets(8),
+    );
+  });
+
+  stabilityTest('match: the row of actions never moves', (
+    WidgetTester tester,
+    StabilityEnv env,
+  ) async {
+    await pumpStability(
+      tester,
+      env,
+      MatchPage(
+        picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+        decoder: fixedDecoder(widePaperAndInk()),
+      ),
+    );
+
+    Future<void> pickPhoto() async {
+      await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> fixWhites() async {
+      await tester.tap(
+        find.byKey(const ValueKey<String>('white-balance-start')),
+      );
+      await tester.pumpAndSettle();
+      // The left half of the photo is the paper.
+      final Rect canvas = tester.getRect(
+        find.byKey(const ValueKey<String>('match-canvas')),
+      );
+      await tester.tapAt(
+        Offset(canvas.left + canvas.width / 4, canvas.center.dy),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    await expectStableAcrossSegments(
+      tester,
+      env: env,
+      anchors: <String, Finder>{
+        'header': find.byType(InkPageHeader),
+        'actions': find.byKey(const ValueKey<String>('match-actions')),
+        'camera': find.byKey(const ValueKey<String>('match-camera')),
+        'gallery': find.byKey(const ValueKey<String>('match-gallery')),
+        'white balance': find.byKey(
+          const ValueKey<String>('white-balance-start'),
+        ),
+      },
+      segments: <StabilitySegment>[
+        (name: 'no photo', activate: () async {}),
+        (name: 'with photo', activate: pickPhoto),
+        (name: 'whites fixed', activate: fixWhites),
+        (name: 'no photo again', activate: () async {}),
+      ],
     );
   });
 }

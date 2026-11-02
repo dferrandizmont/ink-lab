@@ -7,14 +7,17 @@ import '../../icons/ink_icons.dart';
 import '../../share/share_actions.dart';
 import '../../share/share_sink.dart';
 import '../../share/swatch_chart_renderer.dart';
-import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/ink_disclosure.dart';
 import '../settings/settings_widgets.dart';
 
 /// The "Printable swatch chart" card of My collection: what the chart will
 /// hold, the switch for the catalogue colour and the button that renders the
 /// A4 pages and hands them to the system share sheet.
+///
+/// Folded (spec §2.6): its summary says how many markers and pages it holds;
+/// the switch and the button are inside.
 class SwatchChartCard extends StatefulWidget {
   const SwatchChartCard({
     super.key,
@@ -44,6 +47,7 @@ class SwatchChartCard extends StatefulWidget {
 class _SwatchChartCardState extends State<SwatchChartCard> {
   bool _showColour = false;
   bool _busy = false;
+  bool _open = false;
 
   ShareSink get _sink => widget.shareSink ?? const SystemShareSink();
 
@@ -86,35 +90,20 @@ class _SwatchChartCardState extends State<SwatchChartCard> {
 
   @override
   Widget build(BuildContext context) {
-    final InkColors ink = InkColors.of(context);
     final AppLocalizations l10n = context.l10n;
     final int count = widget.markers.length;
     final int pages = const SwatchChartLayout().pageCount(count);
-    return Card(
+    return InkDisclosure(
+      key: const ValueKey<String>('collection-chart'),
+      title: l10n.collectionChartTitle,
+      subtitle: count == 0
+          ? l10n.collectionChartEmpty
+          : '${l10n.collectionMarkers(count)} · ${l10n.collectionChartPages(pages)}',
+      expanded: _open,
+      onToggle: () => setState(() => _open = !_open),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Padding(
-            padding: InkSpacing.card,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  count == 0
-                      ? l10n.collectionChartEmpty
-                      : '${l10n.collectionMarkers(count)} · ${l10n.collectionChartPages(pages)}',
-                  key: const ValueKey<String>('collection-chart-summary'),
-                  style: AppTypography.body.copyWith(color: ink.fg),
-                ),
-                const SizedBox(height: InkSpacing.s4),
-                Text(
-                  l10n.collectionChartHint,
-                  style: AppTypography.secondary.copyWith(color: ink.fg2),
-                ),
-              ],
-            ),
-          ),
-          const Divider(),
           SettingsSwitchRow(
             key: const ValueKey<String>('collection-chart-colour'),
             label: l10n.collectionChartShowColour,
@@ -124,7 +113,12 @@ class _SwatchChartCardState extends State<SwatchChartCard> {
           ),
           const Divider(),
           Padding(
-            padding: InkSpacing.card,
+            padding: const EdgeInsets.fromLTRB(
+              InkSpacing.cardH,
+              InkSpacing.cardV,
+              InkSpacing.cardH,
+              InkSpacing.cardV,
+            ),
             child: InkButton.secondary(
               key: const ValueKey<String>('collection-chart-share'),
               label: _busy

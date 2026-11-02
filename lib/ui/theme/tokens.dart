@@ -327,7 +327,19 @@ abstract final class InkGeometry {
   static const double swatchRow = 36, swatchInline = 20;
   static const double grabberWidth = 36, grabberHeight = 4;
 
+  /// A tall row of a sheet or a card ("My colour", a summary row).
+  static const double rowTall = 56;
+
+  /// The height of the quality badge.
+  static const double badgeHeight = 24;
+
+  /// The skeleton that stands for a list of brands while it is measured.
+  static const double skeletonList = 96;
+
   static const double iconSize = 24, smallIcon = 16, mediumIcon = 20;
+
+  /// The dots of a match quality meter and the gap between them.
+  static const double qualityDot = 6, qualityDotGap = 3;
 }
 
 /// Motion tokens (spec §5).

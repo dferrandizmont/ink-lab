@@ -98,63 +98,78 @@ class _ArtworkDiaryViewState extends State<ArtworkDiaryView> {
       initialData: scope.artworkDiary.entries,
       builder: (BuildContext context, AsyncSnapshot<List<ArtworkEntry>> s) {
         final List<ArtworkEntry> entries = s.data ?? const <ArtworkEntry>[];
-        return ListView(
-          padding: const EdgeInsets.only(
-            top: InkSpacing.block,
-            bottom: InkSpacing.pageBottom,
-          ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            if (entries.isEmpty)
-              EmptyState(
-                icon: InkIcons.edit3,
-                title: context.l10n.diaryEmptyTitle,
-                message: context.l10n.diaryEmptyMessage,
-                actionLabel: context.l10n.diaryAdd,
-                onAction: () => _add(context),
-                primaryAction: true,
-              )
-            else ...<Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: InkSpacing.gutter,
-                ),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: InkButton.secondary(
-                    key: const ValueKey<String>('diary-add'),
-                    label: context.l10n.diaryAdd,
-                    icon: InkIcons.plus,
-                    onPressed: () => _add(context),
-                  ),
+            // "Add to diary" is the primary of the segment and sits in the
+            // same 48 dp slot as the search field of the Ideas segment, so
+            // switching segments never moves anything.
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                InkSpacing.pageMargin,
+                0,
+                InkSpacing.pageMargin,
+                InkSpacing.group,
+              ),
+              child: SizedBox(
+                key: const ValueKey<String>('diary-add-slot'),
+                height: InkGeometry.fieldHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    InkButton(
+                      key: const ValueKey<String>('diary-add'),
+                      label: context.l10n.diaryAdd,
+                      icon: InkIcons.plus,
+                      expand: true,
+                      onPressed: () => _add(context),
+                    ),
+                  ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  InkSpacing.gutter,
-                  InkSpacing.block,
-                  InkSpacing.gutter,
-                  0,
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.only(
+                  top: InkSpacing.block,
+                  bottom: InkSpacing.pageBottom,
                 ),
-                child: DiarySummaryCard(
-                  key: const ValueKey<String>('diary-stats-card'),
-                  entries: entries,
-                ),
+                children: <Widget>[
+                  if (entries.isEmpty)
+                    EmptyState(
+                      icon: InkIcons.edit3,
+                      title: context.l10n.diaryEmptyTitle,
+                      message: context.l10n.diaryEmptyMessage,
+                    )
+                  else ...<Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: InkSpacing.gutter,
+                      ),
+                      child: DiarySummaryCard(
+                        key: const ValueKey<String>('diary-stats-card'),
+                        entries: entries,
+                      ),
+                    ),
+                    for (final ArtworkEntry entry in entries)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          InkSpacing.gutter,
+                          InkSpacing.block,
+                          InkSpacing.gutter,
+                          0,
+                        ),
+                        child: _EntryCard(
+                          key: ValueKey<String>('diary-entry-${entry.id}'),
+                          entry: entry,
+                          picker: picker,
+                        ),
+                      ),
+                  ],
+                ],
               ),
-              for (final ArtworkEntry entry in entries)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    InkSpacing.gutter,
-                    InkSpacing.block,
-                    InkSpacing.gutter,
-                    0,
-                  ),
-                  child: _EntryCard(
-                    key: ValueKey<String>('diary-entry-${entry.id}'),
-                    entry: entry,
-                    picker: picker,
-                  ),
-                ),
-            ],
+            ),
           ],
         );
       },

@@ -8,14 +8,16 @@ import '../../../data/data.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/ink_disclosure.dart';
 import 'backup_file_io.dart';
 import 'dialogs.dart';
-import 'settings_widgets.dart';
 import '../../../l10n/l10n.dart';
 
 /// The export and the import of the user data.
 ///
-/// Renders the row of the "Your data" card; the page owns the group.
+/// Renders the block of the "Your data" card; the page owns the group. The
+/// backup file is the primary action of the card; the copy by text, without
+/// the photos, is folded in a block of its own.
 class BackupSection extends StatefulWidget {
   const BackupSection({
     super.key,
@@ -44,83 +46,94 @@ class _BackupSectionState extends State<BackupSection> {
   /// buttons are off, so a second tap cannot start a second backup.
   _FileWork? _work;
 
+  /// Whether the copy by text is open. It starts folded: the file is the
+  /// backup the app offers first.
+  bool _textOpen = false;
+
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
+    final InkColors ink = InkColors.of(context);
     final _FileWork? work = _work;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        SettingsControlRow(
-          label: context.l10n.settingsBackupTitle,
-          control: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              InkButton(
-                label: context.l10n.settingsExportBackup,
-                variant: InkButtonVariant.smallSecondary,
-                onPressed: () => _export(context),
-              ),
-              const SizedBox(width: 8),
-              InkButton(
-                label: context.l10n.settingsImportBackup,
-                variant: InkButtonVariant.smallSecondary,
-                onPressed: () => _import(context),
-              ),
-              const SizedBox(width: 4),
-            ],
+    return Padding(
+      padding: InkSpacing.card,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          // The same data in a ZIP file, with the diary photos: the primary
+          // action of the card.
+          InkButton(
+            key: const ValueKey<String>('settings-backup-file-save'),
+            label: l10n.settingsSaveBackupFile,
+            expand: true,
+            loading: work == _FileWork.saving,
+            onPressed: work == null ? _saveFile : null,
           ),
-        ),
-        // What the backup holds, and that photos are not part of it.
-        SettingsCaption(
-          context.l10n.settingsBackupSubtitle,
-          textKey: const ValueKey<String>('settings-backup-caption'),
-        ),
-        // The same data in a ZIP file, with the diary photos.
-        SettingsControlRow(
-          label: l10n.settingsBackupFileTitle,
-          stacked: true,
-          caption: l10n.settingsBackupFileCaption,
-          control: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              InkButton.secondary(
-                key: const ValueKey<String>('settings-backup-file-save'),
-                label: l10n.settingsSaveBackupFile,
-                expand: true,
-                loading: work == _FileWork.saving,
-                onPressed: work == null ? _saveFile : null,
+          const SizedBox(height: InkSpacing.buttonGap),
+          InkButton.secondary(
+            key: const ValueKey<String>('settings-backup-file-restore'),
+            label: l10n.settingsRestoreBackupFile,
+            expand: true,
+            loading: work == _FileWork.restoring,
+            onPressed: work == null ? _restoreFile : null,
+          ),
+          if (work != null) ...<Widget>[
+            const SizedBox(height: InkSpacing.group),
+            Semantics(
+              liveRegion: true,
+              child: Text(
+                work == _FileWork.saving
+                    ? l10n.settingsBackupFileSaving
+                    : l10n.settingsBackupFileRestoring,
+                key: const ValueKey<String>('settings-backup-file-progress'),
+                style: AppTypography.secondary.copyWith(color: ink.fg2),
               ),
-              const SizedBox(height: InkSpacing.buttonGap),
-              InkButton.secondary(
-                key: const ValueKey<String>('settings-backup-file-restore'),
-                label: l10n.settingsRestoreBackupFile,
-                expand: true,
-                loading: work == _FileWork.restoring,
-                onPressed: work == null ? _restoreFile : null,
-              ),
-              if (work != null)
-                Semantics(
-                  liveRegion: true,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: InkSpacing.group),
-                    child: Text(
-                      work == _FileWork.saving
-                          ? l10n.settingsBackupFileSaving
-                          : l10n.settingsBackupFileRestoring,
-                      key: const ValueKey<String>(
-                        'settings-backup-file-progress',
-                      ),
-                      style: AppTypography.secondary.copyWith(
-                        color: InkColors.of(context).fg2,
-                      ),
-                    ),
-                  ),
+            ),
+          ],
+          // What the file holds, and that the key is never in it.
+          const SizedBox(height: InkSpacing.group),
+          Text(
+            l10n.settingsBackupFileCaption,
+            key: const ValueKey<String>('settings-backup-file-caption'),
+            style: AppTypography.secondary.copyWith(color: ink.fg2),
+          ),
+          // The copy by text: a second way to back up, without the photos.
+          InkDisclosure(
+            key: const ValueKey<String>('settings-backup-text'),
+            title: l10n.settingsBackupTextTitle,
+            expanded: _textOpen,
+            onToggle: () => setState(() => _textOpen = !_textOpen),
+            padding: EdgeInsets.zero,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const SizedBox(height: InkSpacing.group),
+                // What the copy holds, and that photos are not part of it.
+                Text(
+                  l10n.settingsBackupSubtitle,
+                  key: const ValueKey<String>('settings-backup-caption'),
+                  style: AppTypography.secondary.copyWith(color: ink.fg2),
                 ),
-            ],
+                const SizedBox(height: InkSpacing.buttonGap),
+                InkButton.secondary(
+                  key: const ValueKey<String>('settings-backup-export'),
+                  label: l10n.settingsExportBackup,
+                  expand: true,
+                  onPressed: () => _export(context),
+                ),
+                const SizedBox(height: InkSpacing.buttonGap),
+                InkButton.secondary(
+                  key: const ValueKey<String>('settings-backup-import'),
+                  label: l10n.settingsImportBackup,
+                  expand: true,
+                  onPressed: () => _import(context),
+                ),
+                const SizedBox(height: InkSpacing.group),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

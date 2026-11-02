@@ -220,6 +220,12 @@ class _OwnColorPageState extends State<OwnColorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              // The help of this page, which used to sit in the swatch sheet.
+              Text(
+                context.l10n.swatchesMyColourHelp,
+                style: AppTypography.secondary.copyWith(color: ink.fg2),
+              ),
+              const SizedBox(height: InkSpacing.group),
               Text(
                 color.newName,
                 style: AppTypography.secondary.copyWith(color: ink.fg2),

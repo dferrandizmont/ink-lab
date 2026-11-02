@@ -74,6 +74,12 @@ Future<void> _until(WidgetTester tester, bool Function() done) async {
   await tester.pumpAndSettle();
 }
 
+/// Opens the entry form header's "More actions" menu.
+Future<void> _openMenu(WidgetTester tester) async {
+  await tester.tap(find.byTooltip(l10n.commonMoreActions));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
@@ -182,7 +188,14 @@ void main() {
         ),
         findsOneWidget,
       );
-      // The palette linked twice.
+      // The palette linked twice, once the folded block is opened.
+      expect(key('diary-stats-palettes-toggle'), findsOneWidget);
+      await tester.ensureVisible(key('diary-stats-palettes'));
+      await tester.pumpAndSettle();
+      expect(key('diary-stats-palettes-list'), findsNothing);
+      await tester.tap(key('diary-stats-palettes-toggle'));
+      await tester.pumpAndSettle();
+      expect(key('diary-stats-palettes-list'), findsOneWidget);
       expect(key('diary-stats-palette-p1'), findsOneWidget);
       expect(
         find.descendant(
@@ -192,6 +205,26 @@ void main() {
         findsOneWidget,
       );
       expect(find.text(l10n.diaryStatsMonthsLatest(12)), findsNothing);
+    });
+
+    testWidgets('leaves the palettes folded until asked', (
+      WidgetTester tester,
+    ) async {
+      await pumpDiaryPage(
+        tester,
+        const DiaryStatsPage(),
+        setup: _seed(_entries),
+      );
+      await tester.ensureVisible(key('diary-stats-palettes'));
+      await tester.pumpAndSettle();
+      expect(key('diary-stats-palettes-toggle'), findsOneWidget);
+      expect(key('diary-stats-palettes-list'), findsNothing);
+      expect(key('diary-stats-palette-p1'), findsNothing);
+
+      await tester.tap(key('diary-stats-palettes-toggle'));
+      await tester.pumpAndSettle();
+      expect(key('diary-stats-palettes-list'), findsOneWidget);
+      expect(key('diary-stats-palette-p1'), findsOneWidget);
     });
 
     testWidgets('show only the latest twelve months', (
@@ -301,22 +334,22 @@ void main() {
   });
 
   group('sharing an entry as an image', () {
-    Finder shareButton() => find.descendant(
-      of: key('diary-share'),
-      matching: find.byType(IconButton),
-    );
-
-    bool enabled(WidgetTester tester) =>
-        tester.widget<IconButton>(shareButton()).onPressed != null;
-
-    testWidgets('is off until the entry has a title', (
+    testWidgets('does nothing until the entry has a title', (
       WidgetTester tester,
     ) async {
-      await pumpDiaryPage(tester, ArtworkEntryPage(shareSink: FakeShareSink()));
-      expect(enabled(tester), isFalse);
+      final FakeShareSink sink = FakeShareSink();
+      await pumpDiaryPage(tester, ArtworkEntryPage(shareSink: sink));
+      await _openMenu(tester);
+      await tester.tap(key('diary-share'));
+      await tester.pumpAndSettle();
+      expect(sink.shared, isEmpty, reason: 'no title, nothing to share');
+
       await tester.enterText(key('diary-title'), 'Forest page');
-      await tester.pump();
-      expect(enabled(tester), isTrue);
+      await tester.pumpAndSettle();
+      await _openMenu(tester);
+      await tester.tap(key('diary-share'));
+      await _until(tester, () => sink.shared.isNotEmpty);
+      expect(sink.shared, hasLength(1));
     });
 
     testWidgets('renders the entry and opens the share sheet on tap only', (
@@ -331,6 +364,7 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
       expect(sink.shared, isEmpty, reason: 'nothing leaves without a tap');
 
+      await _openMenu(tester);
       await tester.tap(key('diary-share'));
       await _until(tester, () => sink.shared.isNotEmpty);
 
@@ -353,7 +387,6 @@ void main() {
         ).height.round(),
       );
       expect(sink.subjects.single, 'Forest');
-      expect(enabled(tester), isTrue, reason: 'ready to share again');
       expect(find.byType(SnackBar), findsNothing);
     });
 
@@ -378,6 +411,7 @@ void main() {
           ),
           diary: stores.diary,
         );
+        await _openMenu(tester);
         await tester.tap(key('diary-share'));
         await _until(tester, () => sink.shared.isNotEmpty);
         return pngSize(sink.shared.single.single.bytes)!.height;
@@ -400,11 +434,11 @@ void main() {
         tester,
         ArtworkEntryPage(entry: entry(), shareSink: sink),
       );
+      await _openMenu(tester);
       await tester.tap(key('diary-share'));
       await _until(tester, () => find.byType(SnackBar).evaluate().isNotEmpty);
       expect(key('diary-share-failed'), findsOneWidget);
       expect(find.text(l10n.shareFailed), findsOneWidget);
-      expect(enabled(tester), isTrue);
     });
   });
 }

@@ -62,6 +62,7 @@ class _DiaryStatsPageState extends State<DiaryStatsPage> {
   AppScope? _scope;
   Future<List<MarkerColor>>? _owned;
   bool _showUnused = false;
+  bool _showPalettes = false;
 
   @override
   void didChangeDependencies() {
@@ -209,7 +210,11 @@ class _DiaryStatsPageState extends State<DiaryStatsPage> {
         SectionCard(
           key: const ValueKey<String>('diary-stats-palettes'),
           title: l10n.diaryStatsPalettesTitle,
-          child: _TopPalettes(usage: stats.mostLinkedPalettes),
+          child: _TopPalettes(
+            usage: stats.mostLinkedPalettes,
+            expanded: _showPalettes,
+            onToggle: () => setState(() => _showPalettes = !_showPalettes),
+          ),
         ),
       ],
     );
@@ -595,9 +600,18 @@ class _Unused extends StatelessWidget {
 /// The saved palettes linked most: name, colours and how many entries link it.
 /// A palette deleted since is left out.
 class _TopPalettes extends StatelessWidget {
-  const _TopPalettes({required this.usage});
+  const _TopPalettes({
+    required this.usage,
+    required this.expanded,
+    required this.onToggle,
+  });
 
   final List<DiaryPaletteUsage> usage;
+
+  /// The list of palettes is long (every saved palette), so it stays closed
+  /// until the user asks for it, like the unused markers.
+  final bool expanded;
+  final VoidCallback onToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -618,40 +632,62 @@ class _TopPalettes extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        for (int i = 0; i < rows.length; i++) ...<Widget>[
-          if (i > 0) const SizedBox(height: InkSpacing.block),
-          Semantics(
-            container: true,
-            label:
-                '${rows[i].$1.name}, '
-                '${l10n.diaryStatsEntries(rows[i].$2)}',
-            child: ExcludeSemantics(
-              child: Column(
-                key: ValueKey<String>('diary-stats-palette-${rows[i].$1.id}'),
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          rows[i].$1.name,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTypography.body.copyWith(color: ink.fg),
+        InkButton.text(
+          key: const ValueKey<String>('diary-stats-palettes-toggle'),
+          label: expanded
+              ? l10n.diaryStatsUnusedHide
+              : l10n.diaryStatsUnusedShow,
+          onPressed: onToggle,
+        ),
+        if (expanded) ...<Widget>[
+          const SizedBox(height: InkSpacing.group),
+          Column(
+            key: const ValueKey<String>('diary-stats-palettes-list'),
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              for (int i = 0; i < rows.length; i++) ...<Widget>[
+                if (i > 0) const SizedBox(height: InkSpacing.block),
+                Semantics(
+                  container: true,
+                  label:
+                      '${rows[i].$1.name}, '
+                      '${l10n.diaryStatsEntries(rows[i].$2)}',
+                  child: ExcludeSemantics(
+                    child: Column(
+                      key: ValueKey<String>(
+                        'diary-stats-palette-${rows[i].$1.id}',
+                      ),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                rows[i].$1.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTypography.body.copyWith(
+                                  color: ink.fg,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: InkSpacing.s8),
+                            Text(
+                              l10n.diaryStatsEntries(rows[i].$2),
+                              style: AppTypography.secondary.copyWith(
+                                color: ink.fg2,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(width: InkSpacing.s8),
-                      Text(
-                        l10n.diaryStatsEntries(rows[i].$2),
-                        style: AppTypography.secondary.copyWith(color: ink.fg2),
-                      ),
-                    ],
+                        const SizedBox(height: InkSpacing.group),
+                        DiaryPaletteStrip(palette: rows[i].$1),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: InkSpacing.group),
-                  DiaryPaletteStrip(palette: rows[i].$1),
-                ],
-              ),
-            ),
+                ),
+              ],
+            ],
           ),
         ],
       ],

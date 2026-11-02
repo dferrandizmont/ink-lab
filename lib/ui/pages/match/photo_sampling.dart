@@ -192,15 +192,61 @@ class ReticlePainter extends CustomPainter {
       oldDelegate.centre != centre || oldDelegate.sampleColor != sampleColor;
 }
 
-/// The white balance control under a photo: the "Fix white balance" button,
-/// the hint while the user is choosing the white, or the "on" state with a way
-/// back.
-class WhiteBalanceBar extends StatelessWidget {
-  const WhiteBalanceBar({
+/// The action that starts choosing the white of the photo.
+///
+/// The Match page shows it as a text button at the right of its row of
+/// actions (so the row never moves); the "my colour" editor shows it as a
+/// small secondary button under the photo.
+class WhiteBalanceAction extends StatelessWidget {
+  const WhiteBalanceAction({
+    super.key,
+    required this.onPressed,
+    this.variant = InkButtonVariant.text,
+    this.icon,
+  });
+
+  /// Starts choosing the white; `null` disables the button.
+  final VoidCallback? onPressed;
+
+  /// How the button is drawn: a text button on Match, a small secondary one
+  /// in the editor.
+  final InkButtonVariant variant;
+
+  /// Optional leading icon.
+  final InkIcons? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final String label = context.l10n.matchWhiteBalanceButton;
+    return switch (variant) {
+      InkButtonVariant.text => InkButton.text(
+        key: const ValueKey<String>('white-balance-start'),
+        label: label,
+        icon: icon,
+        onPressed: onPressed,
+      ),
+      _ => InkButton(
+        key: const ValueKey<String>('white-balance-start'),
+        label: label,
+        icon: icon,
+        variant: variant,
+        onPressed: onPressed,
+      ),
+    };
+  }
+}
+
+/// What the white balance of the photo is doing: the hint while the user is
+/// choosing the white, the "on" state with a way back, or why the last point
+/// was refused.
+///
+/// It draws nothing when there is nothing to say, so a page can always leave
+/// room for it without moving anything.
+class WhiteBalanceStatus extends StatelessWidget {
+  const WhiteBalanceStatus({
     super.key,
     required this.balance,
     required this.choosing,
-    required this.onStart,
     required this.onCancel,
     required this.onReset,
     this.rejection,
@@ -215,7 +261,6 @@ class WhiteBalanceBar extends StatelessWidget {
   /// Why the last chosen point was refused, if it was.
   final WhiteBalanceRejection? rejection;
 
-  final VoidCallback onStart;
   final VoidCallback onCancel;
   final VoidCallback onReset;
 
@@ -229,6 +274,7 @@ class WhiteBalanceBar extends StatelessWidget {
         context.l10n.matchWhiteBalanceTooColourful,
       null => null,
     };
+    if (problem == null && !choosing && !on) return const SizedBox.shrink();
     Widget line({
       required InkIcons icon,
       required String text,
@@ -289,20 +335,65 @@ class WhiteBalanceBar extends StatelessWidget {
         actionKey: const ValueKey<String>('white-balance-reset'),
       );
     } else {
-      main = Align(
-        alignment: Alignment.centerLeft,
-        child: InkButton(
-          key: const ValueKey<String>('white-balance-start'),
-          label: context.l10n.matchWhiteBalanceButton,
-          icon: InkIcons.crosshair,
-          variant: InkButtonVariant.smallSecondary,
-          onPressed: onStart,
-        ),
-      );
+      main = const SizedBox.shrink();
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[?problemLine, main],
+    );
+  }
+}
+
+/// The white balance control under a photo: the "Fix white balance" button,
+/// the hint while the user is choosing the white, or the "on" state with a way
+/// back.
+class WhiteBalanceBar extends StatelessWidget {
+  const WhiteBalanceBar({
+    super.key,
+    required this.balance,
+    required this.choosing,
+    required this.onStart,
+    required this.onCancel,
+    required this.onReset,
+    this.rejection,
+  });
+
+  /// The balance in force, if any.
+  final WhiteBalance? balance;
+
+  /// Whether the next tap on the photo chooses its white.
+  final bool choosing;
+
+  /// Why the last chosen point was refused, if it was.
+  final WhiteBalanceRejection? rejection;
+
+  final VoidCallback onStart;
+  final VoidCallback onCancel;
+  final VoidCallback onReset;
+
+  @override
+  Widget build(BuildContext context) {
+    final bool on = balance != null && !balance!.isIdentity;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        WhiteBalanceStatus(
+          balance: balance,
+          choosing: choosing,
+          rejection: rejection,
+          onCancel: onCancel,
+          onReset: onReset,
+        ),
+        if (!choosing && !on)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: WhiteBalanceAction(
+              variant: InkButtonVariant.smallSecondary,
+              icon: InkIcons.crosshair,
+              onPressed: onStart,
+            ),
+          ),
+      ],
     );
   }
 }

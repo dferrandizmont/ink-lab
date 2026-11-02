@@ -6,12 +6,28 @@ import '../theme/tokens.dart';
 /// The header of every screen (spec §3, §6): padding 24 top / 16 sides /
 /// 16 bottom, `title` (Archivo 800 40/40), optional trailing `data` on the
 /// title baseline (e.g. "160 of 321"), gap 8, `secondary` subtitle in `fg2`.
+///
+/// [action] puts one control (an `InkIconButton`, an `InkOverflowMenu`) at
+/// the right end of the title line, before [trailing] when both are given:
+///
+/// ```dart
+/// InkPageHeader(
+///   title: l10n.paletteTitle,
+///   subtitle: l10n.paletteSubtitle,
+///   action: InkIconButton(
+///     icon: InkIcons.bookmark,
+///     tooltip: l10n.paletteSavedTitle,
+///     onPressed: openSaved,
+///   ),
+/// )
+/// ```
 class InkPageHeader extends StatelessWidget {
   const InkPageHeader({
     super.key,
     required this.title,
     this.subtitle,
     this.trailing,
+    this.action,
     this.subtitleWidget,
     this.padding = InkSpacing.header,
     this.reserveSubtitleFor = const <String>[],
@@ -22,6 +38,12 @@ class InkPageHeader extends StatelessWidget {
 
   /// Short `data` text right-aligned on the title baseline.
   final String? trailing;
+
+  /// A control at the right end of the title line, before [trailing]. It is
+  /// at most 44 dp high, so a header with an action is 4 dp taller than the
+  /// 40 dp title line; give every state of one screen the same action so
+  /// nothing moves.
+  final Widget? action;
 
   /// Rich subtitle; replaces [subtitle].
   final Widget? subtitleWidget;
@@ -71,11 +93,17 @@ class InkPageHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              if (trailing != null)
+              if (action != null) ...<Widget>[
+                const SizedBox(width: InkSpacing.group),
+                action!,
+              ],
+              if (trailing != null) ...<Widget>[
+                if (action != null) const SizedBox(width: InkSpacing.group),
                 Text(
                   trailing!,
                   style: AppTypography.data.copyWith(color: ink.fg2),
                 ),
+              ],
             ],
           ),
           if (sub != null) ...<Widget>[
@@ -107,9 +135,8 @@ class _ReservedSubtitle extends StatelessWidget {
     if (alternatives.isEmpty) return subtitle;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final TextStyle resolved = DefaultTextStyle.of(
-          context,
-        ).style.merge(style);
+        final TextStyle resolved = DefaultTextStyle.of(context).style
+            .merge(style);
         final TextScaler scaler = MediaQuery.textScalerOf(context);
         final TextDirection direction = Directionality.of(context);
         double tallest = 0;

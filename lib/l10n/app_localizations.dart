@@ -166,12 +166,6 @@ abstract class AppLocalizations {
   /// **'Saved palettes'**
   String get settingsPalettesTitle;
 
-  /// No description provided for @settingsPalettesEmpty.
-  ///
-  /// In en, this message translates to:
-  /// **'No palette has been saved yet.'**
-  String get settingsPalettesEmpty;
-
   /// No description provided for @settingsClearPalettes.
   ///
   /// In en, this message translates to:
@@ -189,12 +183,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The palettes saved for this brand will be deleted. This cannot be undone.'**
   String get settingsClearPalettesBody;
-
-  /// No description provided for @settingsDeletePalette.
-  ///
-  /// In en, this message translates to:
-  /// **'Delete the palette'**
-  String get settingsDeletePalette;
 
   /// No description provided for @settingsFavoritesTitle.
   ///
@@ -286,12 +274,6 @@ abstract class AppLocalizations {
   /// **'Dark'**
   String get settingsAppearanceDark;
 
-  /// No description provided for @settingsBackupTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Backup'**
-  String get settingsBackupTitle;
-
   /// No description provided for @settingsBackupSubtitle.
   ///
   /// In en, this message translates to:
@@ -382,17 +364,17 @@ abstract class AppLocalizations {
   /// **'Recently viewed'**
   String get ideasRecentTitle;
 
-  /// No description provided for @settingsBackupFileTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Backup file'**
-  String get settingsBackupFileTitle;
-
   /// No description provided for @settingsBackupFileCaption.
   ///
   /// In en, this message translates to:
   /// **'A ZIP file with your data and the diary photos. Save it to Files, Drive or wherever you like. The API key is never included.'**
   String get settingsBackupFileCaption;
+
+  /// No description provided for @settingsBackupTextTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy as text (no photos)'**
+  String get settingsBackupTextTitle;
 
   /// No description provided for @settingsSaveBackupFile.
   ///
@@ -1486,12 +1468,6 @@ abstract class AppLocalizations {
   /// **'Build a palette from a base marker you own'**
   String get paletteSubtitleIdle;
 
-  /// No description provided for @paletteAiOptionalNote.
-  ///
-  /// In en, this message translates to:
-  /// **'AI is optional and off by default.'**
-  String get paletteAiOptionalNote;
-
   /// No description provided for @paletteLockButton.
   ///
   /// In en, this message translates to:
@@ -1539,6 +1515,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No saved palettes for this brand yet.'**
   String get paletteSavedEmpty;
+
+  /// Summary of the paint order disclosure: how many steps the palette is painted in.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 step} other{{count} steps}}'**
+  String palettePaintPlanSummary(int count);
 
   /// No description provided for @paletteLoadButton.
   ///
@@ -1767,12 +1749,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Closest alternatives'**
   String get swatchesClosestAlternatives;
-
-  /// No description provided for @swatchesDeltaEUnit.
-  ///
-  /// In en, this message translates to:
-  /// **'ΔE 76'**
-  String get swatchesDeltaEUnit;
 
   /// No description provided for @swatchesInPacks.
   ///
@@ -2005,7 +1981,7 @@ abstract class AppLocalizations {
   /// No description provided for @ideasHeaderSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Exercises for your markers, with a palette from your collection'**
+  /// **'Exercises for your markers'**
   String get ideasHeaderSubtitle;
 
   /// No description provided for @ideasHeaderSubtitleWholeRange.
@@ -2031,6 +2007,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use in Palette'**
   String get ideasApplyButton;
+
+  /// No description provided for @ideasMoreDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'More details'**
+  String get ideasMoreDetails;
 
   /// No description provided for @ideasGuideOnlyNote.
   ///
@@ -2121,12 +2103,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Idea of the day'**
   String get ideasFeaturedLabel;
-
-  /// No description provided for @ideasOpenButton.
-  ///
-  /// In en, this message translates to:
-  /// **'See steps'**
-  String get ideasOpenButton;
 
   /// No description provided for @ideasOtherMarkersButton.
   ///
@@ -4354,12 +4330,6 @@ abstract class AppLocalizations {
   /// **'Alternatives'**
   String get matchAlternatesTitle;
 
-  /// No description provided for @matchDeltaMethod.
-  ///
-  /// In en, this message translates to:
-  /// **'ΔE 76'**
-  String get matchDeltaMethod;
-
   /// No description provided for @matchSaveButton.
   ///
   /// In en, this message translates to:
@@ -4510,6 +4480,18 @@ abstract class AppLocalizations {
   /// **'Close'**
   String get commonClose;
 
+  /// Tooltip of the three-dot overflow button that opens a menu with the secondary actions of a card, sheet or screen.
+  ///
+  /// In en, this message translates to:
+  /// **'More actions'**
+  String get commonMoreActions;
+
+  /// One-line colour match quality: the CIELAB distance and the quality word, for example 'ΔE 10.8 · Rough'.
+  ///
+  /// In en, this message translates to:
+  /// **'ΔE {value} · {quality}'**
+  String commonQualityLine(double value, String quality);
+
   /// No description provided for @commonBaseLocked.
   ///
   /// In en, this message translates to:
@@ -4617,12 +4599,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{1 pack selected} other{{count} packs selected}}'**
   String settingsPacksSelected(int count);
-
-  /// No description provided for @settingsPaletteDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'{mode} · {colors}'**
-  String settingsPaletteDescription(String mode, String colors);
 
   /// No description provided for @settingsImportUnsupportedVersion.
   ///
@@ -6542,6 +6518,24 @@ abstract class AppLocalizations {
   /// **'You don\'t own it'**
   String get matchNotOwnedBadge;
 
+  /// No description provided for @matchBestOfRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Best of the whole {brand} range'**
+  String matchBestOfRange(String brand);
+
+  /// No description provided for @matchNotOwnedLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Not in your collection'**
+  String get matchNotOwnedLine;
+
+  /// No description provided for @matchSeeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all ({count})'**
+  String matchSeeAll(int count);
+
   /// No description provided for @matchSubtitleEmpty.
   ///
   /// In en, this message translates to:
@@ -6751,6 +6745,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset collection'**
   String get collectionReset;
+
+  /// No description provided for @collectionOwnedGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'What you own'**
+  String get collectionOwnedGroup;
+
+  /// No description provided for @collectionShoppingGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get collectionShoppingGroup;
+
+  /// No description provided for @collectionToolsGroup.
+  ///
+  /// In en, this message translates to:
+  /// **'Tools'**
+  String get collectionToolsGroup;
+
+  /// No description provided for @commonSeeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all ({count})'**
+  String commonSeeAll(int count);
 
   /// No description provided for @collectionChartTitle.
   ///
@@ -7280,18 +7298,6 @@ abstract class AppLocalizations {
   /// **'Catalogue colours are estimates. Store the colour your marker really gives on paper.'**
   String get swatchesMyColourHelp;
 
-  /// No description provided for @swatchesMyColourSet.
-  ///
-  /// In en, this message translates to:
-  /// **'Set my colour'**
-  String get swatchesMyColourSet;
-
-  /// No description provided for @swatchesMyColourChange.
-  ///
-  /// In en, this message translates to:
-  /// **'Change'**
-  String get swatchesMyColourChange;
-
   /// No description provided for @swatchesMyColourReset.
   ///
   /// In en, this message translates to:
@@ -7309,6 +7315,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to the catalogue colour'**
   String get swatchesMyColourWasReset;
+
+  /// No description provided for @swatchesMyColourSame.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as the catalogue'**
+  String get swatchesMyColourSame;
+
+  /// The colour the user stored for this marker, for example "Yours: #0A0B0C".
+  ///
+  /// In en, this message translates to:
+  /// **'Yours: {hex}'**
+  String swatchesMyColourValue(String hex);
+
+  /// No description provided for @swatchesStatusWished.
+  ///
+  /// In en, this message translates to:
+  /// **'On your wishlist'**
+  String get swatchesStatusWished;
+
+  /// No description provided for @swatchesDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get swatchesDetailsTitle;
 
   /// No description provided for @swatchesCatalogueLabel.
   ///
@@ -7597,6 +7627,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Technique, paper, blending...'**
   String get diaryNotesHint;
+
+  /// Title of the collapsed block of the diary entry form that holds the optional fields (painted on, date, palette, notes).
+  ///
+  /// In en, this message translates to:
+  /// **'More details'**
+  String get diaryMoreDetails;
 
   /// No description provided for @diaryPhotosTitle.
   ///

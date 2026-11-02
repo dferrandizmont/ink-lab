@@ -13,6 +13,8 @@ import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/ink_disclosure.dart';
+import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
@@ -132,14 +134,30 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
   bool _sharing = false;
   String? _error;
 
+  /// Whether the "More details" block of the form is open: folded while every
+  /// field it holds is empty, open as soon as one of them has a value.
+  late bool _detailsOpen;
+
   bool get _isNew => widget.entry == null;
 
   late final ShareSink _shareSink = widget.shareSink ?? const SystemShareSink();
+
+  static bool _isToday(DateTime date) {
+    final DateTime now = DateTime.now();
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+  }
 
   @override
   void initState() {
     super.initState();
     _markerIds = _markerIds.toSet().toList();
+    _detailsOpen =
+        _onWhat.text.trim().isNotEmpty ||
+        _notes.text.trim().isNotEmpty ||
+        _paletteId != null ||
+        !_isToday(_date);
     _title.addListener(_onTitleChanged);
   }
 
@@ -454,11 +472,24 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
       appBar: AppBar(
         title: Text(_isNew ? l10n.diaryNewTitle : l10n.diaryEditTitle),
         actions: <Widget>[
-          InkIconButton(
-            key: const ValueKey<String>('diary-share'),
-            icon: InkIcons.share,
-            tooltip: l10n.diaryShareButton,
-            onPressed: _canShare ? _share : null,
+          InkOverflowMenu(
+            key: const ValueKey<String>('diary-overflow'),
+            items: <InkMenuItem>[
+              InkMenuItem(
+                key: const ValueKey<String>('diary-share'),
+                label: l10n.diaryShareButton,
+                icon: InkIcons.share,
+                onSelected: _share,
+              ),
+              if (!_isNew)
+                InkMenuItem(
+                  key: const ValueKey<String>('diary-delete'),
+                  label: l10n.diaryDelete,
+                  icon: InkIcons.trash2,
+                  destructive: true,
+                  onSelected: _delete,
+                ),
+            ],
           ),
           const SizedBox(width: InkSpacing.s4),
         ],
@@ -488,108 +519,9 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
                 style: AppTypography.body.copyWith(color: ink.fg),
                 decoration: InputDecoration(labelText: l10n.diaryTitleLabel),
               ),
-              const SizedBox(height: InkSpacing.buttonGap),
-              TextField(
-                key: const ValueKey<String>('diary-on-what'),
-                controller: _onWhat,
-                textInputAction: TextInputAction.next,
-                textCapitalization: TextCapitalization.sentences,
-                inputFormatters: <TextInputFormatter>[
-                  LengthLimitingTextInputFormatter(120),
-                ],
-                style: AppTypography.body.copyWith(color: ink.fg),
-                decoration: InputDecoration(
-                  labelText: l10n.diaryOnWhatLabel,
-                  hintText: l10n.diaryOnWhatHint,
-                ),
-              ),
-              const SizedBox(height: InkSpacing.buttonGap),
-              InkListCard(
-                children: <Widget>[
-                  InkListRow(
-                    key: const ValueKey<String>('diary-date'),
-                    label: l10n.diaryDateLabel,
-                    value: MaterialLocalizations.of(context)
-                        .formatMediumDate(_date),
-                    chevron: true,
-                    onTap: _pickDate,
-                  ),
-                ],
-              ),
-              const SizedBox(height: InkSpacing.block),
-              _caps(l10n.diaryStatusLabel),
-              const SizedBox(height: InkSpacing.group),
-              InkSegmented<ArtworkStatus>(
-                key: const ValueKey<String>('diary-status'),
-                expand: true,
-                semanticLabel: l10n.diaryStatusLabel,
-                segments: <InkSegment<ArtworkStatus>>[
-                  InkSegment<ArtworkStatus>(
-                    value: ArtworkStatus.finished,
-                    label: l10n.diaryStatusFinished,
-                  ),
-                  InkSegment<ArtworkStatus>(
-                    value: ArtworkStatus.inProgress,
-                    label: l10n.diaryStatusInProgress,
-                  ),
-                ],
-                selected: _status,
-                onChanged: (ArtworkStatus value) =>
-                    setState(() => _status = value),
-              ),
               const SizedBox(height: InkSpacing.section),
-              InkSectionHeading(l10n.diaryMarkersTitle),
-              const SizedBox(height: InkSpacing.group),
-              if (_markerIds.isNotEmpty) ...<Widget>[
-                _buildMarkerChips(),
-                const SizedBox(height: InkSpacing.group),
-              ],
-              Align(
-                alignment: Alignment.centerLeft,
-                child: InkButton.secondary(
-                  key: const ValueKey<String>('diary-markers-choose'),
-                  label: l10n.diaryMarkersChoose,
-                  icon: InkIcons.plus,
-                  onPressed: _chooseMarkers,
-                ),
-              ),
-              const SizedBox(height: InkSpacing.section),
-              InkSectionHeading(l10n.diaryPaletteTitle),
-              const SizedBox(height: InkSpacing.group),
-              InkListCard(
-                children: <Widget>[
-                  InkListRow(
-                    key: const ValueKey<String>('diary-palette'),
-                    label: palette?.name ?? l10n.diaryPaletteNone,
-                    subtitle: paletteGone ? l10n.diaryPaletteMissing : null,
-                    chevron: true,
-                    onTap: _choosePalette,
-                  ),
-                ],
-              ),
-              if (palette != null) ...<Widget>[
-                const SizedBox(height: InkSpacing.group),
-                DiaryPaletteStrip(palette: palette, colorHeight: 24),
-              ],
-              const SizedBox(height: InkSpacing.section),
-              TextField(
-                key: const ValueKey<String>('diary-notes'),
-                controller: _notes,
-                minLines: 3,
-                maxLines: 8,
-                keyboardType: TextInputType.multiline,
-                textCapitalization: TextCapitalization.sentences,
-                inputFormatters: <TextInputFormatter>[
-                  LengthLimitingTextInputFormatter(2000),
-                ],
-                style: AppTypography.body.copyWith(color: ink.fg),
-                decoration: InputDecoration(
-                  labelText: l10n.diaryNotesLabel,
-                  hintText: l10n.diaryNotesHint,
-                  alignLabelWithHint: true,
-                ),
-              ),
-              const SizedBox(height: InkSpacing.section),
+              // Title, then the photos and the markers used: the essentials of
+              // an entry. Everything else is one tap away in "More details".
               InkSectionHeading(l10n.diaryPhotosTitle),
               const SizedBox(height: InkSpacing.group),
               Text(
@@ -630,10 +562,11 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
               Row(
                 children: <Widget>[
                   Expanded(
-                    child: InkButton.secondary(
+                    child: InkButton(
                       key: const ValueKey<String>('diary-photo-camera'),
                       label: l10n.matchCameraButton,
                       icon: InkIcons.camera,
+                      variant: InkButtonVariant.smallSecondary,
                       expand: true,
                       onPressed: _picking || full
                           ? null
@@ -642,10 +575,11 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
                   ),
                   const SizedBox(width: InkSpacing.buttonGap),
                   Expanded(
-                    child: InkButton.secondary(
+                    child: InkButton(
                       key: const ValueKey<String>('diary-photo-gallery'),
                       label: l10n.matchGalleryButton,
                       icon: InkIcons.image,
+                      variant: InkButtonVariant.smallSecondary,
                       expand: true,
                       onPressed: _picking || full
                           ? null
@@ -655,22 +589,132 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
                 ],
               ),
               const SizedBox(height: InkSpacing.section),
+              InkSectionHeading(l10n.diaryMarkersTitle),
+              const SizedBox(height: InkSpacing.group),
+              if (_markerIds.isNotEmpty) ...<Widget>[
+                _buildMarkerChips(),
+                const SizedBox(height: InkSpacing.group),
+              ],
+              Align(
+                alignment: Alignment.centerLeft,
+                child: InkButton.secondary(
+                  key: const ValueKey<String>('diary-markers-choose'),
+                  label: l10n.diaryMarkersChoose,
+                  icon: InkIcons.plus,
+                  onPressed: _chooseMarkers,
+                ),
+              ),
+              const SizedBox(height: InkSpacing.section),
+              _caps(l10n.diaryStatusLabel),
+              const SizedBox(height: InkSpacing.group),
+              InkSegmented<ArtworkStatus>(
+                key: const ValueKey<String>('diary-status'),
+                expand: true,
+                semanticLabel: l10n.diaryStatusLabel,
+                segments: <InkSegment<ArtworkStatus>>[
+                  InkSegment<ArtworkStatus>(
+                    value: ArtworkStatus.finished,
+                    label: l10n.diaryStatusFinished,
+                  ),
+                  InkSegment<ArtworkStatus>(
+                    value: ArtworkStatus.inProgress,
+                    label: l10n.diaryStatusInProgress,
+                  ),
+                ],
+                selected: _status,
+                onChanged: (ArtworkStatus value) =>
+                    setState(() => _status = value),
+              ),
+              const SizedBox(height: InkSpacing.section),
+              InkDisclosure(
+                key: const ValueKey<String>('diary-details'),
+                title: l10n.diaryMoreDetails,
+                expanded: _detailsOpen,
+                padding: EdgeInsets.zero,
+                onToggle: () => setState(() => _detailsOpen = !_detailsOpen),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: InkSpacing.block),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      TextField(
+                        key: const ValueKey<String>('diary-on-what'),
+                        controller: _onWhat,
+                        textInputAction: TextInputAction.next,
+                        textCapitalization: TextCapitalization.sentences,
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(120),
+                        ],
+                        style: AppTypography.body.copyWith(color: ink.fg),
+                        decoration: InputDecoration(
+                          labelText: l10n.diaryOnWhatLabel,
+                          hintText: l10n.diaryOnWhatHint,
+                        ),
+                      ),
+                      const SizedBox(height: InkSpacing.buttonGap),
+                      InkListCard(
+                        children: <Widget>[
+                          InkListRow(
+                            key: const ValueKey<String>('diary-date'),
+                            label: l10n.diaryDateLabel,
+                            value: MaterialLocalizations.of(
+                              context,
+                            ).formatMediumDate(_date),
+                            chevron: true,
+                            onTap: _pickDate,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: InkSpacing.buttonGap),
+                      InkListCard(
+                        children: <Widget>[
+                          InkListRow(
+                            key: const ValueKey<String>('diary-palette'),
+                            label: l10n.diaryPaletteTitle,
+                            value: palette?.name ?? l10n.diaryPaletteNone,
+                            subtitle: paletteGone
+                                ? l10n.diaryPaletteMissing
+                                : null,
+                            chevron: true,
+                            onTap: _choosePalette,
+                          ),
+                        ],
+                      ),
+                      if (palette != null) ...<Widget>[
+                        const SizedBox(height: InkSpacing.group),
+                        DiaryPaletteStrip(palette: palette, colorHeight: 24),
+                      ],
+                      const SizedBox(height: InkSpacing.buttonGap),
+                      TextField(
+                        key: const ValueKey<String>('diary-notes'),
+                        controller: _notes,
+                        minLines: 3,
+                        maxLines: 8,
+                        keyboardType: TextInputType.multiline,
+                        textCapitalization: TextCapitalization.sentences,
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(2000),
+                        ],
+                        style: AppTypography.body.copyWith(color: ink.fg),
+                        decoration: InputDecoration(
+                          labelText: l10n.diaryNotesLabel,
+                          hintText: l10n.diaryNotesHint,
+                          alignLabelWithHint: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: InkSpacing.section),
+              // Save entry is the only primary action of the form; share and
+              // delete live in the header's "More actions".
               InkButton(
                 key: const ValueKey<String>('diary-save'),
                 label: l10n.diarySave,
                 expand: true,
                 onPressed: _canSave ? _save : null,
               ),
-              if (!_isNew) ...<Widget>[
-                const SizedBox(height: InkSpacing.group),
-                InkButton.text(
-                  key: const ValueKey<String>('diary-delete'),
-                  label: l10n.diaryDelete,
-                  icon: InkIcons.trash2,
-                  expand: true,
-                  onPressed: _saving ? null : _delete,
-                ),
-              ],
             ],
           ),
         ),

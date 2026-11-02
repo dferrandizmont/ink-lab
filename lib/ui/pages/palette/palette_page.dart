@@ -31,6 +31,8 @@ import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
+import '../../widgets/ink_disclosure.dart';
+import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/ink_search_field.dart';
 import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
@@ -46,6 +48,7 @@ import 'palette_reasons.dart';
 import 'palette_share.dart';
 import 'palette_type_picker.dart';
 import 'palette_vision.dart';
+import 'saved_palettes_sheet.dart';
 import '../../../l10n/l10n.dart';
 
 /// Composition root above the page, or `null` in isolated previews/tests.
@@ -130,6 +133,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   /// shared with its true colours.
   ColorVisionType? _vision;
 
+  /// Whether the "Paint order" disclosure is open (it starts folded).
+  bool _paintOrderOpen = false;
+
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
   StreamSubscription<Map<String, String>>? _ownColorsSubscription;
@@ -158,11 +164,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   /// Typed message of the last failed AI call, shown next to the button.
   String? _aiError;
-
-  /// Saved-palette streams, one per brand, so the StreamBuilder keeps its
-  /// subscription across rebuilds.
-  final Map<MarkerBrand, Stream<List<SavedPalette>>> _savedStreams =
-      <MarkerBrand, Stream<List<SavedPalette>>>{};
 
   MarkerBrand _brand = MarkerBrand.ohuhuOahu;
   List<MarkerColor> _catalog = const <MarkerColor>[];
@@ -257,7 +258,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final scope = _scopeOf(context);
     if (scope == null || identical(scope, _scope)) return;
     _scope = scope;
-    _savedStreams.clear();
     _settingsSubscription?.cancel();
     _collectionSignature = _signatureOf(scope.settings.state);
     _settingsSubscription = scope.settings.changes.listen(_onSettingsChanged);
@@ -1401,30 +1401,16 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     setState(() => _notice = notice);
   }
 
-  Future<void> _deleteSaved(SavedPalette palette) async {
-    final scope = _scope;
-    if (scope == null) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(context.l10n.paletteDeleteDialogTitle),
-        content: Text(context.l10n.paletteDeleteDialogBody),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(context.l10n.paletteSaveDialogCancel),
-          ),
-          FilledButton(
-            key: const ValueKey<String>('palette-delete-confirm'),
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(context.l10n.paletteDeleteButton),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true) return;
-    await scope.savedPalettes.delete(_brand, palette.id);
-  }
+  /// Opens the brand's saved palettes as a draggable selector (spec §2.2):
+  /// loading, sharing, adding to the diary and deleting all happen there.
+  Future<void> _openSavedPalettes(AppScope scope) => SavedPalettesSheet.show(
+    context,
+    scope: scope,
+    brand: _brand,
+    onLoad: _loadSaved,
+    onShare: _shareSaved,
+    onAddToDiary: _addSavedToDiary,
+  );
 
   // ---------------------------------------------------------------------------
   // Presentation helpers
@@ -1666,6 +1652,12 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         InkPageHeader(
           title: context.l10n.paletteTitle,
           subtitle: _subtitle(),
+          action: InkIconButton(
+            key: const ValueKey<String>('palette-saved-palettes'),
+            icon: InkIcons.bookmark,
+            tooltip: context.l10n.paletteSavedTitle,
+            onPressed: () => _openSavedPalettes(scope),
+          ),
           // The type field below must not jump when the type (or the base)
           // swaps the subtitle: reserve the tallest one.
           reserveSubtitleFor: <String>[
@@ -1724,7 +1716,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                     top: InkSpacing.block,
                   ),
                 _buildActions(customMode: customMode, photoMode: _photoMode),
-                _buildSavedPalettes(scope),
               ],
             ),
           ),
@@ -1901,11 +1892,18 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           if (customMode) return size;
-          // The base field takes the full width so the code and the whole
-          // marker name stay readable; the size control sits below it and
-          // only goes beside it on wide screens.
+          // Base marker and Size share a row while both fit; past that (a
+          // narrow phone at a large text scale) Size drops below the field.
+          // Both widths are measured, so the switch is exact in every
+          // language and at every text scale (like InkDefinitionRow).
+          final double gap = InkSpacing.buttonGap;
+          final double sizeWidth = _sizeControlWidth(context);
           final double scale = MediaQuery.textScalerOf(context).scale(1);
-          if (constraints.maxWidth < 440 + 120 * scale) {
+          final double baseWanted = math.max(
+            _baseFieldMinWidth(context),
+            _baseFieldFloor * scale,
+          );
+          if (constraints.maxWidth < baseWanted + gap + sizeWidth) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -1919,7 +1917,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Expanded(child: _buildBaseInput()),
-              const SizedBox(width: InkSpacing.buttonGap),
+              SizedBox(width: gap),
               size,
             ],
           );
@@ -1927,6 +1925,61 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       ),
       top: InkSpacing.block,
     );
+  }
+
+  /// The narrowest a base field may be before the size control moves below it
+  /// (scaled by the text scale at build time).
+  static const double _baseFieldFloor = 150;
+
+  /// Width of the three-segment size control: each 3 / 4 / 5 segment is at
+  /// least `InkGeometry.target` wide plus its 10 dp padding, in a 48-high
+  /// container (3 dp side padding, 2 dp between segments).
+  double _sizeControlWidth(BuildContext context) {
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    final TextDirection direction = Directionality.of(context);
+    double widest = 0;
+    for (final String label in const <String>['3', '4', '5']) {
+      final TextPainter painter = TextPainter(
+        text: TextSpan(text: label, style: AppTypography.code),
+        textDirection: direction,
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      final double width = painter.width + 20;
+      painter.dispose();
+      if (width > widest) widest = width;
+    }
+    final double segment = math.max(widest, InkGeometry.target);
+    return segment * 3 + 2 * 2 + 2 * 3;
+  }
+
+  /// What the base field needs to hold its swatch, the text it shows (its
+  /// code, or its hint while it is empty) and the pick button, measured like
+  /// the size control: the row only keeps the base and the size together when
+  /// neither text is cut.
+  double _baseFieldMinWidth(BuildContext context) {
+    final TextDirection direction = Directionality.of(context);
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    double text = 0;
+    for (final (String value, TextStyle style) in <(String, TextStyle)>[
+      (_exampleCode, AppTypography.code),
+      (context.l10n.paletteBaseCodeHint, AppTypography.secondary),
+    ]) {
+      final TextPainter painter = TextPainter(
+        text: TextSpan(text: value, style: style),
+        textDirection: direction,
+        textScaler: scaler,
+        maxLines: 1,
+      )..layout();
+      if (painter.width > text) text = painter.width;
+      painter.dispose();
+    }
+    // Left padding 12, swatch 24, gap 10, pick button 44, right padding 2.
+    const double chrome = 12 + 24 + 10 + InkGeometry.target + 2;
+    // A little slack so the row/stack boundary never lands exactly on the
+    // measured width: rounding the Expanded down by a fraction of a pixel
+    // would otherwise ellipsise the last glyph of the hint.
+    return chrome + text + InkSpacing.buttonGap;
   }
 
   Widget _buildBaseInput() {
@@ -2231,7 +2284,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   List<Widget> _buildResult() {
     final BlendingChain? chain = _shownChain;
     if (chain != null) return _buildChainResult(chain);
-    final InkColors ink = InkColors.of(context);
     final MarkerColor? base = _stripBase;
     // The base is the first band of the strip; companions follow it.
     final int offset = base == null ? 0 : 1;
@@ -2253,57 +2305,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
           };
     return <Widget>[
       _inset(
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Semantics(
-                header: true,
-                child: Text(
-                  context.l10n.paletteResultTitle(_suggestions.length + offset),
-                  style: AppTypography.section.copyWith(color: ink.fg),
-                ),
-              ),
-            ),
-            if (_aiUsed)
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: InkSpacing.s8),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: ink.pale,
-                      borderRadius: BorderRadius.circular(InkRadii.xs),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: InkSpacing.s8,
-                        vertical: InkSpacing.s2,
-                      ),
-                      child: Tooltip(
-                        message: context.l10n.aiResultLabel(
-                          _aiModel,
-                          aiCount: _aiCount,
-                          total: _aiTotal,
-                        ),
-                        excludeFromSemantics: true,
-                        child: Text(
-                          context.l10n.aiResultLabel(
-                            _aiModel,
-                            aiCount: _aiCount,
-                            total: _aiTotal,
-                          ),
-                          key: const ValueKey<String>('palette-ai-badge'),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTypography.secondary.copyWith(
-                            color: ink.action,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
+        _resultHeader(
+          title: context.l10n.paletteResultTitle(_suggestions.length + offset),
         ),
         top: InkSpacing.section,
       ),
@@ -2315,7 +2318,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         ),
         top: InkSpacing.headingGap,
       ),
-      _visionControl(stripHexes, stripCodes),
       _inset(
         Card(
           child: Column(
@@ -2338,19 +2340,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         ),
         top: InkSpacing.block,
       ),
-      if (_aiUsed)
-        _inset(
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: InkButton.text(
-              key: const ValueKey<String>('palette-ai-report'),
-              label: context.l10n.paletteAiReportButton,
-              icon: InkIcons.flag,
-              onPressed: _reportAi,
-            ),
-          ),
-          top: InkSpacing.s8,
-        ),
       if (!photo)
         Padding(
           padding: const EdgeInsets.only(top: InkSpacing.block),
@@ -2446,7 +2435,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   /// The strip, the steps (lightest first), the other chains and the hint of
   /// a blending chain, then the paint order.
   List<Widget> _buildChainResult(BlendingChain chain) {
-    final InkColors ink = InkColors.of(context);
     final AppLocalizations t = context.l10n;
     final List<String> roles = blendingChainRoles(chain);
     final Set<String> mine = <String>{
@@ -2462,13 +2450,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     ];
     return <Widget>[
       _inset(
-        Semantics(
-          header: true,
-          child: Text(
-            t.paletteChainResultTitle(count),
-            style: AppTypography.section.copyWith(color: ink.fg),
-          ),
-        ),
+        _resultHeader(title: t.paletteChainResultTitle(count)),
         top: InkSpacing.section,
       ),
       _inset(
@@ -2479,7 +2461,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         ),
         top: InkSpacing.headingGap,
       ),
-      _visionControl(chainHexes, chainCodes),
       _inset(
         Card(
           child: Column(
@@ -2538,143 +2519,255 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     for (final String hex in hexes) seenHex(hex, _vision),
   ];
 
-  /// The colour vision preview control of the palette on screen, with the
-  /// pairs of its colours the preview makes hard to tell apart.
-  Widget _visionControl(List<String> hexes, List<String> codes) => _inset(
-    KeyedSubtree(
-      key: const ValueKey<String>('palette-vision'),
-      child: PaletteVisionControl(
-        selected: _vision,
-        onChanged: (ColorVisionType? type) => setState(() => _vision = type),
-        colors: hexes,
-        labels: codes,
-      ),
+  /// The row that titles a result ("Combinations (5)") with the AI badge (when
+  /// the result came from the AI) and the "⋯" of its secondary actions.
+  Widget _resultHeader({required String title}) {
+    final InkColors ink = InkColors.of(context);
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Semantics(
+            header: true,
+            child: Text(
+              title,
+              style: AppTypography.section.copyWith(color: ink.fg),
+            ),
+          ),
+        ),
+        if (_aiUsed)
+          Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(left: InkSpacing.s8),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: ink.pale,
+                  borderRadius: BorderRadius.circular(InkRadii.xs),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: InkSpacing.s8,
+                    vertical: InkSpacing.s2,
+                  ),
+                  child: Tooltip(
+                    message: context.l10n.aiResultLabel(
+                      _aiModel,
+                      aiCount: _aiCount,
+                      total: _aiTotal,
+                    ),
+                    excludeFromSemantics: true,
+                    child: Text(
+                      context.l10n.aiResultLabel(
+                        _aiModel,
+                        aiCount: _aiCount,
+                        total: _aiTotal,
+                      ),
+                      key: const ValueKey<String>('palette-ai-badge'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.secondary.copyWith(
+                        color: ink.action,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        InkOverflowMenu(
+          key: const ValueKey<String>('palette-overflow'),
+          items: _resultMenuItems(),
+        ),
+      ],
+    );
+  }
+
+  /// The secondary actions of the result: Share · Colour vision (the preview
+  /// of `palette_vision`) · Report (only with an AI result) · Clear.
+  List<InkMenuItem> _resultMenuItems() => <InkMenuItem>[
+    InkMenuItem(
+      key: const ValueKey<String>('palette-share'),
+      label: context.l10n.paletteShareButton,
+      icon: InkIcons.share,
+      onSelected: _sharePalette,
     ),
-    top: InkSpacing.block,
-  );
+    InkMenuItem(
+      key: const ValueKey<String>('palette-vision-open'),
+      label: context.l10n.paletteVisionTitle,
+      onSelected: _openVision,
+    ),
+    if (_aiUsed)
+      InkMenuItem(
+        key: const ValueKey<String>('palette-ai-report'),
+        label: context.l10n.paletteAiReportButton,
+        icon: InkIcons.flag,
+        onSelected: _reportAi,
+      ),
+    InkMenuItem(
+      key: const ValueKey<String>('palette-clear'),
+      label: context.l10n.paletteClearButton,
+      icon: InkIcons.trash2,
+      destructive: true,
+      onSelected: _clear,
+    ),
+  ];
+
+  /// The true colours and codes of the palette on screen (a chain in painting
+  /// order, or the base plus the companions), for the colour vision preview.
+  ({List<String> hexes, List<String> codes}) _onScreenPalette() {
+    final BlendingChain? chain = _shownChain;
+    if (chain != null) {
+      return (
+        hexes: <String>[for (final MarkerColor c in chain.colors) c.hex],
+        codes: <String>[for (final MarkerColor c in chain.colors) c.newCode],
+      );
+    }
+    final MarkerColor? base = _stripBase;
+    return (
+      hexes: <String>[
+        if (base != null) base.hex,
+        for (final PaletteSuggestion s in _suggestions) s.color.hex,
+      ],
+      codes: <String>[
+        if (base != null) base.newCode,
+        for (final PaletteSuggestion s in _suggestions) s.color.newCode,
+      ],
+    );
+  }
+
+  /// Opens the colour vision preview (spec §2.2) in a sheet: the page keeps
+  /// only the chosen vision, the picker and the pairs live in the sheet.
+  Future<void> _openVision() async {
+    final ({List<String> hexes, List<String> codes}) palette =
+        _onScreenPalette();
+    await showInkSheet<void>(
+      context: context,
+      builder: (BuildContext context) => _VisionSheet(
+        initial: _vision,
+        hexes: palette.hexes,
+        codes: palette.codes,
+        onChanged: (ColorVisionType? type) {
+          if (mounted) setState(() => _vision = type);
+        },
+      ),
+    );
+  }
 
   bool _isLocked(PaletteSuggestion suggestion) => _lockedCodes.any(
     (code) => code.toUpperCase() == suggestion.color.newCode.toUpperCase(),
   );
 
+  /// The paint order of the palette on screen, folded behind a disclosure: the
+  /// steps are only built while it is open.
   List<Widget> _buildPaintOrder() {
     final steps = _paintPlan();
     if (steps.isEmpty) return const <Widget>[];
-    final InkColors ink = InkColors.of(context);
     return <Widget>[
       _inset(
-        Semantics(
-          header: true,
-          child: Text(
-            context.l10n.palettePaintPlanTitle,
-            style: AppTypography.section.copyWith(color: ink.fg),
+        InkDisclosure(
+          key: const ValueKey<String>('palette-paint-order'),
+          title: AppTypography.caps(context.l10n.palettePaintPlanTitle),
+          subtitle: context.l10n.palettePaintPlanSummary(steps.length),
+          expanded: _paintOrderOpen,
+          onToggle: () => setState(() => _paintOrderOpen = !_paintOrderOpen),
+          padding: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.only(top: InkSpacing.headingGap),
+            child: Column(
+              children: <Widget>[
+                for (var index = 0; index < steps.length; index++) ...<Widget>[
+                  if (index > 0) const SizedBox(height: InkSpacing.s8),
+                  _PaintStepRow(
+                    step: steps[index],
+                    hex: seenHex(_hexForCode(steps[index].code), _vision),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
         top: InkSpacing.section,
       ),
-      _inset(
-        Column(
-          children: <Widget>[
-            for (var index = 0; index < steps.length; index++) ...<Widget>[
-              if (index > 0) const SizedBox(height: InkSpacing.s8),
-              _PaintStepRow(
-                step: steps[index],
-                hex: seenHex(_hexForCode(steps[index].code), _vision),
-              ),
-            ],
-          ],
-        ),
-        top: InkSpacing.headingGap,
-      ),
     ];
   }
 
+  /// Regenerates the palette on screen: a scenario gets another variation, any
+  /// other type recomputes from its base.
+  void _regenerate() {
+    if (_useScenario) setState(() => _variationToken++);
+    _recompute();
+  }
+
+  /// The actions under the result (spec §2.2): "Suggest with AI" when the AI
+  /// is on, a secondary "Regenerate" (or "Generate" before there is a result)
+  /// and the primary "Save palette". Share, the colour vision preview and
+  /// Clear live in the result's "⋯".
+  ///
+  /// The secondaries share a row and are all the same size; the primary is
+  /// on its own full-width row below, in a slot that is always there, so the
+  /// result appearing never moves anything.
   Widget _buildActions({required bool customMode, required bool photoMode}) {
     final bool showAi =
         _aiAvailable && !customMode && !photoMode && !_chainMode;
     final bool hasResult = _suggestions.isNotEmpty;
-    final InkColors ink = InkColors.of(context);
-    final Widget clear = InkButton.text(
-      key: const ValueKey<String>('palette-clear'),
-      label: context.l10n.paletteClearButton,
-      onPressed: _clear,
-    );
+    // A photo palette has nothing to regenerate: same photo, same markers.
+    final bool showSecondary = !photoMode && !customMode;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        // A photo palette has no Generate or Regenerate: Clear follows Save
-        // on the one row, flush with the content like the other buttons.
-        if (!photoMode)
-          _inset(
-            Wrap(
-              spacing: InkSpacing.buttonGap,
-              runSpacing: InkSpacing.s8,
-              children: <Widget>[
-                // A photo palette has nothing to regenerate: same photo, same
-                // markers.
-                if (!photoMode)
-                  InkButton(
-                    key: const ValueKey<String>('palette-generate'),
-                    variant: InkButtonVariant.smallSecondary,
-                    label: context.l10n.paletteGenerateButton,
-                    icon: InkIcons.shuffle,
-                    onPressed:
-                        customMode ||
-                            (_baseInput.trim().isEmpty && !_useScenario)
-                        ? null
-                        : _recompute,
-                  ),
-                if (_useScenario && !photoMode)
-                  InkButton(
-                    key: const ValueKey<String>('palette-regenerate'),
-                    variant: InkButtonVariant.smallSecondary,
-                    label: context.l10n.paletteRegenerateButton,
-                    icon: InkIcons.rotateCcw,
-                    onPressed: () {
-                      setState(() => _variationToken++);
-                      _recompute();
-                    },
-                  ),
-                clear,
-              ],
-            ),
-            top: InkSpacing.block,
+        _inset(
+          Wrap(
+            spacing: InkSpacing.buttonGap,
+            runSpacing: InkSpacing.s8,
+            children: <Widget>[
+              if (showAi)
+                InkButton(
+                  key: const ValueKey<String>('palette-suggest-ai'),
+                  variant: InkButtonVariant.smallSecondary,
+                  label: _aiLoading
+                      ? context.l10n.paletteSuggestAiLoading
+                      : context.l10n.paletteSuggestAiButton,
+                  loading: _aiLoading,
+                  onPressed: _suggestWithAi,
+                ),
+              if (showSecondary)
+                hasResult
+                    ? InkButton(
+                        key: const ValueKey<String>('palette-regenerate'),
+                        variant: InkButtonVariant.smallSecondary,
+                        label: context.l10n.paletteRegenerateButton,
+                        icon: InkIcons.rotateCcw,
+                        onPressed: _regenerate,
+                      )
+                    : InkButton(
+                        key: const ValueKey<String>('palette-generate'),
+                        variant: InkButtonVariant.smallSecondary,
+                        label: context.l10n.paletteGenerateButton,
+                        icon: InkIcons.shuffle,
+                        onPressed: _baseInput.trim().isEmpty && !_useScenario
+                            ? null
+                            : _recompute,
+                      ),
+            ],
           ),
-        if (showAi || hasResult || photoMode)
-          _inset(
-            Wrap(
-              spacing: InkSpacing.buttonGap,
-              runSpacing: InkSpacing.s8,
-              children: <Widget>[
-                if (showAi)
-                  InkButton.secondary(
-                    key: const ValueKey<String>('palette-suggest-ai'),
-                    label: _aiLoading
-                        ? context.l10n.paletteSuggestAiLoading
-                        : context.l10n.paletteSuggestAiButton,
-                    loading: _aiLoading,
-                    onPressed: _suggestWithAi,
-                  ),
-                if (hasResult)
-                  InkButton(
+          top: InkSpacing.block,
+        ),
+        // The slot of the primary is always there: before there is a result it
+        // is empty, but it keeps its height, so nothing moves below it.
+        _inset(
+          SizedBox(
+            key: const ValueKey<String>('palette-save-slot'),
+            height: InkGeometry.buttonHeight,
+            child: hasResult
+                ? InkButton(
                     key: const ValueKey<String>('palette-save'),
                     label: context.l10n.paletteSaveButton,
+                    expand: true,
                     onPressed: _save,
-                  ),
-                if (hasResult)
-                  InkButton(
-                    key: const ValueKey<String>('palette-share'),
-                    variant: InkButtonVariant.smallSecondary,
-                    label: context.l10n.paletteShareButton,
-                    icon: InkIcons.share,
-                    loading: _sharing,
-                    onPressed: _sharePalette,
-                  ),
-                if (photoMode) clear,
-              ],
-            ),
-            top: InkSpacing.s8,
+                  )
+                : null,
           ),
+          top: InkSpacing.buttonGap,
+        ),
         if (_aiError != null)
           _inset(
             KeyedSubtree(
@@ -2683,89 +2776,57 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
             ),
             top: InkSpacing.buttonGap,
           ),
-        if (!_aiAvailable && !photoMode)
-          _inset(
-            Text(
-              context.l10n.paletteAiOptionalNote,
-              style: AppTypography.secondary.copyWith(color: ink.fg2),
-            ),
-            top: InkSpacing.buttonGap,
-          ),
       ],
     );
   }
+}
 
-  Widget _buildSavedPalettes(AppScope scope) {
-    return StreamBuilder<List<SavedPalette>>(
-      key: ValueKey<String>('palette-saved-${_brand.id}'),
-      stream: _savedStreams.putIfAbsent(
-        _brand,
-        () => scope.savedPalettes.watch(_brand),
-      ),
-      initialData: scope.savedPalettes.palettesOf(_brand),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<SavedPalette>> snapshot) {
-            final InkColors ink = InkColors.of(context);
-            final palettes = snapshot.data ?? const <SavedPalette>[];
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _inset(
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      context.l10n.paletteSavedTitle,
-                      style: AppTypography.section.copyWith(color: ink.fg),
-                    ),
-                  ),
-                  top: InkSpacing.section,
-                ),
-                // With no palette on screen the control sits here, so a saved
-                // palette can be previewed too.
-                if (palettes.isNotEmpty && _suggestions.isEmpty)
-                  _inset(
-                    KeyedSubtree(
-                      key: const ValueKey<String>('palette-vision-saved'),
-                      child: PaletteVisionControl(
-                        selected: _vision,
-                        onChanged: (ColorVisionType? type) =>
-                            setState(() => _vision = type),
-                      ),
-                    ),
-                    top: InkSpacing.headingGap,
-                  ),
-                if (palettes.isEmpty)
-                  _inset(
-                    Text(
-                      context.l10n.paletteSavedEmpty,
-                      style: AppTypography.secondary.copyWith(color: ink.fg2),
-                    ),
-                    top: InkSpacing.headingGap,
-                  )
-                else
-                  for (var i = 0; i < palettes.length; i++)
-                    _inset(
-                      _SavedPaletteRow(
-                        palette: palettes[i],
-                        hexes: <String>[
-                          for (final code in palettes[i].colorCodes)
-                            seenHex(_hexForCode(code), _vision),
-                        ],
-                        vision: _vision,
-                        trueHexes: <String>[
-                          for (final code in palettes[i].colorCodes)
-                            _hexForCode(code),
-                        ],
-                        onLoad: () => _loadSaved(palettes[i]),
-                        onShare: () => _shareSaved(palettes[i]),
-                        onAddToDiary: () => _addSavedToDiary(palettes[i]),
-                        onDelete: () => _deleteSaved(palettes[i]),
-                      ),
-                      top: i == 0 ? InkSpacing.headingGap : InkSpacing.block,
-                    ),
-              ],
-            );
-          },
+/// The colour vision preview (spec §2.2) inside a sheet: it holds the picked
+/// vision while the sheet is open and reports every change, so the page draws
+/// the palette on screen simulated as it is chosen.
+class _VisionSheet extends StatefulWidget {
+  const _VisionSheet({
+    required this.initial,
+    required this.hexes,
+    required this.codes,
+    required this.onChanged,
+  });
+
+  /// The vision the page is previewing when the sheet opens.
+  final ColorVisionType? initial;
+
+  /// The true colours of the palette on screen.
+  final List<String> hexes;
+
+  /// The marker codes of [hexes], to name the pairs.
+  final List<String> codes;
+
+  final ValueChanged<ColorVisionType?> onChanged;
+
+  @override
+  State<_VisionSheet> createState() => _VisionSheetState();
+}
+
+class _VisionSheetState extends State<_VisionSheet> {
+  ColorVisionType? _vision;
+
+  @override
+  void initState() {
+    super.initState();
+    _vision = widget.initial;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PaletteVisionControl(
+      key: const ValueKey<String>('palette-vision'),
+      selected: _vision,
+      onChanged: (ColorVisionType? type) {
+        setState(() => _vision = type);
+        widget.onChanged(type);
+      },
+      colors: widget.hexes,
+      labels: widget.codes,
     );
   }
 }
@@ -3103,137 +3164,6 @@ class _SuggestionRowState extends State<_SuggestionRow> {
   }
 }
 
-/// One saved palette, with a load and a delete action.
-class _SavedPaletteRow extends StatelessWidget {
-  const _SavedPaletteRow({
-    required this.palette,
-    required this.hexes,
-    required this.trueHexes,
-    required this.vision,
-    required this.onLoad,
-    required this.onShare,
-    required this.onAddToDiary,
-    required this.onDelete,
-  });
-
-  final SavedPalette palette;
-
-  /// The colours as drawn: simulated while a colour vision is previewed.
-  final List<String> hexes;
-
-  /// The true colours, to find the pairs the preview makes hard to tell apart.
-  final List<String> trueHexes;
-
-  /// The colour vision being previewed, or `null`.
-  final ColorVisionType? vision;
-  final VoidCallback onLoad;
-  final VoidCallback onShare;
-  final VoidCallback onAddToDiary;
-  final VoidCallback onDelete;
-
-  /// What kind of palette this is: the scene it came from, or the colour
-  /// theory mode. A scene that cannot be resolved reads as "Scenes".
-  String _kindLabel(BuildContext context) {
-    final String? sceneId = palette.scenarioName;
-    if (sceneId == null || sceneId.isEmpty) {
-      return context.l10n.modeLabel(palette.mode);
-    }
-    if (sceneId == PhotoScene.savedName) {
-      return context.l10n.paletteFromPhotoTitle;
-    }
-    // Older saves hold the wire value (`ForestScene`), newer ones the id.
-    final Scene? scene = SceneCatalog.isInstalled
-        ? SceneCatalog.current.find(
-            '${sceneId[0].toLowerCase()}${sceneId.substring(1)}',
-          )
-        : null;
-    return scene == null
-        ? context.l10n.paletteTypeScenesGroup
-        : context.l10n.scenarioLabel(scene);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final InkColors ink = InkColors.of(context);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          InkSpacing.cardH,
-          InkSpacing.cardV,
-          InkSpacing.cardH,
-          InkSpacing.s8,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              palette.name,
-              style: Theme.of(context).textTheme.titleMedium
-                  ?.copyWith(color: ink.fg),
-            ),
-            const SizedBox(height: InkSpacing.s4),
-            _OneLine(
-              key: ValueKey<String>('palette-saved-subtitle-${palette.id}'),
-              text: context.l10n.paletteSavedSubtitle(
-                _kindLabel(context),
-                palette.paletteSize,
-              ),
-              style: AppTypography.secondary.copyWith(color: ink.fg2),
-            ),
-            const SizedBox(height: InkSpacing.s8),
-            PaletteStrip(
-              colors: hexes,
-              labels: palette.colorCodes,
-              colorHeight: 32,
-              labelStyle: AppTypography.data,
-            ),
-            if (vision != null)
-              PaletteVisionPairs(
-                key: ValueKey<String>('palette-saved-vision-${palette.id}'),
-                colors: trueHexes,
-                labels: palette.colorCodes,
-                type: vision!,
-                top: InkSpacing.s8,
-              ),
-            const SizedBox(height: InkSpacing.buttonGap),
-            Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: InkSpacing.s8,
-              children: <Widget>[
-                InkButton(
-                  key: ValueKey<String>('palette-load-${palette.id}'),
-                  variant: InkButtonVariant.smallSecondary,
-                  label: context.l10n.paletteLoadButton,
-                  icon: InkIcons.upload,
-                  onPressed: onLoad,
-                ),
-                InkButton.text(
-                  key: ValueKey<String>('palette-share-${palette.id}'),
-                  label: context.l10n.paletteShareButton,
-                  icon: InkIcons.share,
-                  onPressed: onShare,
-                ),
-                InkButton.text(
-                  key: ValueKey<String>('palette-diary-${palette.id}'),
-                  label: context.l10n.diaryAdd,
-                  icon: InkIcons.plus,
-                  onPressed: onAddToDiary,
-                ),
-                InkButton.text(
-                  key: ValueKey<String>('palette-delete-${palette.id}'),
-                  label: context.l10n.paletteDeleteButton,
-                  icon: InkIcons.trash2,
-                  onPressed: onDelete,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 /// Asks for a palette name.
 ///
 /// The dialog owns its [TextEditingController] so it is disposed with the
@@ -3378,6 +3308,8 @@ class _AiReportDialogState extends State<_AiReportDialog> {
   }
 }
 
+/// A short note under the field it belongs to (spec §2.2): one `secondary`
+/// line in `fg2`, no card, so it does not compete with the result.
 class _InfoCard extends StatelessWidget {
   const _InfoCard({required this.message});
 
@@ -3386,14 +3318,9 @@ class _InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
-    return Card(
-      child: Padding(
-        padding: InkSpacing.card,
-        child: Text(
-          message,
-          style: AppTypography.secondary.copyWith(color: ink.fg2),
-        ),
-      ),
+    return Text(
+      message,
+      style: AppTypography.secondary.copyWith(color: ink.fg2),
     );
   }
 }

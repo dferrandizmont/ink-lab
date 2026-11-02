@@ -300,7 +300,7 @@ void main() {
     expect(badge, findsOneWidget);
     expect(tester.widget<Text>(badge).data, 'AI · gemini-2.5-flash-lite');
 
-    await tester.tap(find.byKey(const ValueKey<String>('palette-generate')));
+    await tester.tap(find.byKey(const ValueKey<String>('palette-regenerate')));
     await tester.pumpAndSettle();
 
     expect(badge, findsNothing);

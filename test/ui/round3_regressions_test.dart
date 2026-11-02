@@ -92,7 +92,10 @@ void main() {
       await tester.tap(_navItem('Palette'));
       await tester.pumpAndSettle();
       expect(find.byKey(PalettePage.pageKey), findsOneWidget);
-      expect(find.text('Saved palettes'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('palette-saved-palettes')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('the saved palettes list can be mounted again', (
@@ -139,7 +142,10 @@ void main() {
         shown.value = true;
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull);
-        expect(find.text('Palette a'), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey<String>('settings-saved-palettes')),
+          findsOneWidget,
+        );
       }
     });
 

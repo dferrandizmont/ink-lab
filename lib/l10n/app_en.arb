@@ -10,11 +10,9 @@
   "settingsBrandTitle": "Brand",
   "settingsBrandSubtitle": "The brand selects the catalogue of markers the app works with.",
   "settingsPalettesTitle": "Saved palettes",
-  "settingsPalettesEmpty": "No palette has been saved yet.",
   "settingsClearPalettes": "Clear all",
   "settingsClearPalettesTitle": "Delete every saved palette?",
   "settingsClearPalettesBody": "The palettes saved for this brand will be deleted. This cannot be undone.",
-  "settingsDeletePalette": "Delete the palette",
   "settingsFavoritesTitle": "Favourites",
   "settingsFavoritesEmpty": "No colour is a favourite yet.",
   "settingsClearFavorites": "Clear all",
@@ -30,7 +28,6 @@
   "settingsAppearanceSystem": "System",
   "settingsAppearanceLight": "Light",
   "settingsAppearanceDark": "Dark",
-  "settingsBackupTitle": "Backup",
   "settingsBackupSubtitle": "Copies your data (collection, palettes, diary, history and settings) to the clipboard as text, so you can import it later. Photos and the API key are not included.",
   "settingsExportBackup": "Export",
   "settingsImportBackup": "Import",
@@ -46,8 +43,8 @@
   "ideasFavoritesEmptyTitle": "No favourite ideas yet",
   "ideasFavoritesEmptyMessage": "Tap the heart on an idea to keep it here.",
   "ideasRecentTitle": "Recently viewed",
-  "settingsBackupFileTitle": "Backup file",
   "settingsBackupFileCaption": "A ZIP file with your data and the diary photos. Save it to Files, Drive or wherever you like. The API key is never included.",
+  "settingsBackupTextTitle": "Copy as text (no photos)",
   "settingsSaveBackupFile": "Save backup file",
   "settingsRestoreBackupFile": "Restore from file",
   "settingsBackupFileSaving": "Packing your data and photos…",
@@ -314,7 +311,6 @@
   "palettePaintTipAccent": "Reserve the accent for focal areas only.",
   "palettePaintTipSupport": "Use this support tone to blend transitions.",
   "paletteSubtitleIdle": "Build a palette from a base marker you own",
-  "paletteAiOptionalNote": "AI is optional and off by default.",
   "paletteLockButton": "Lock",
   "paletteUnlockButton": "Unlock",
   "paletteSaveDialogTitle": "Save palette",
@@ -323,6 +319,15 @@
   "paletteSaveDialogConfirm": "Save",
   "paletteSavedTitle": "Saved palettes",
   "paletteSavedEmpty": "No saved palettes for this brand yet.",
+  "palettePaintPlanSummary": "{count, plural, =1{1 step} other{{count} steps}}",
+  "@palettePaintPlanSummary": {
+    "description": "Summary of the paint order disclosure: how many steps the palette is painted in.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "paletteLoadButton": "Load",
   "paletteDeleteButton": "Delete",
   "paletteDeleteDialogTitle": "Delete palette?",
@@ -405,7 +410,6 @@
   "swatchesClearFilters": "Clear filters",
   "swatchesLoadingSemantics": "Loading colours",
   "swatchesClosestAlternatives": "Closest alternatives",
-  "swatchesDeltaEUnit": "ΔE 76",
   "swatchesInPacks": "In sets",
   "swatchesLocation": "Location",
   "swatchesAddToPalette": "Add to palette",
@@ -444,11 +448,12 @@
   "swatchesScopeCollection": "Your collection",
   "swatchesScopePack": "Pack",
   "ideasTitle": "Ideas",
-  "ideasHeaderSubtitle": "Exercises for your markers, with a palette from your collection",
+  "ideasHeaderSubtitle": "Exercises for your markers",
   "ideasHeaderSubtitleWholeRange": "Exercises with a palette from the whole range",
   "ideasSearchHint": "Search ideas",
   "ideasCategoryAll": "All",
   "ideasApplyButton": "Use in Palette",
+  "ideasMoreDetails": "More details",
   "ideasGuideOnlyNote": "This exercise uses your whole collection, so it has no fixed palette.",
   "ideasNoMarkersOther": "Add the markers you own in My collection to get a palette for this idea.",
   "ideasCategoriesLabel": "Categories",
@@ -464,7 +469,6 @@
   "ideasDifficultyMedium": "Medium",
   "ideasDifficultyHard": "Hard",
   "ideasFeaturedLabel": "Idea of the day",
-  "ideasOpenButton": "See steps",
   "ideasOtherMarkersButton": "Other markers",
   "ideasPracticeTitle": "What you practise",
   "ideasSubjectTitle": "What to draw",
@@ -863,7 +867,6 @@
   "matchSampledLabel": "Sampled",
   "matchBestMatchTitle": "Best match",
   "matchAlternatesTitle": "Alternatives",
-  "matchDeltaMethod": "ΔE 76",
   "matchSaveButton": "Save",
   "matchRecentTitle": "Recent picks",
   "matchRecentDetailSampled": "Sampled",
@@ -889,6 +892,26 @@
   "commonRemoveFromFavourites": "Remove from favourites",
   "commonClearSearch": "Clear search",
   "commonClose": "Close",
+  "commonMoreActions": "More actions",
+  "@commonMoreActions": {
+    "description": "Tooltip of the three-dot overflow button that opens a menu with the secondary actions of a card, sheet or screen."
+  },
+  "commonQualityLine": "ΔE {value} · {quality}",
+  "@commonQualityLine": {
+    "description": "One-line colour match quality: the CIELAB distance and the quality word, for example 'ΔE 10.8 · Rough'.",
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 1
+        }
+      },
+      "quality": {
+        "type": "String"
+      }
+    }
+  },
   "commonBaseLocked": "Base locked",
   "commonDeltaE": "ΔE {value}",
   "@commonDeltaE": {
@@ -983,17 +1006,6 @@
     "placeholders": {
       "count": {
         "type": "int"
-      }
-    }
-  },
-  "settingsPaletteDescription": "{mode} · {colors}",
-  "@settingsPaletteDescription": {
-    "placeholders": {
-      "mode": {
-        "type": "String"
-      },
-      "colors": {
-        "type": "String"
       }
     }
   },
@@ -1798,6 +1810,23 @@
     }
   },
   "matchNotOwnedBadge": "You don't own it",
+  "matchBestOfRange": "Best of the whole {brand} range",
+  "@matchBestOfRange": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "matchNotOwnedLine": "Not in your collection",
+  "matchSeeAll": "See all ({count})",
+  "@matchSeeAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "matchSubtitleEmpty": "No markers in your collection yet",
   "swatchesWholeRangeNotice": "Showing the whole {brand} range",
   "@swatchesWholeRangeNotice": {
@@ -1881,6 +1910,17 @@
   "collectionInYourSets": "In your set",
   "collectionNoResults": "No marker matches the search.",
   "collectionReset": "Reset collection",
+  "collectionOwnedGroup": "What you own",
+  "collectionShoppingGroup": "Shopping",
+  "collectionToolsGroup": "Tools",
+  "commonSeeAll": "See all ({count})",
+  "@commonSeeAll": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "collectionChartTitle": "Printable swatch chart",
   "swatchesOtherBrandsTitle": "In other brands",
   "swatchesOtherBrandsOnlyMine": "Only mine",
@@ -2076,11 +2116,21 @@
   "commonOwnColour": "My colour",
   "swatchesMyColourTitle": "My colour",
   "swatchesMyColourHelp": "Catalogue colours are estimates. Store the colour your marker really gives on paper.",
-  "swatchesMyColourSet": "Set my colour",
-  "swatchesMyColourChange": "Change",
   "swatchesMyColourReset": "Back to catalogue",
   "swatchesMyColourSaved": "Your colour was saved",
   "swatchesMyColourWasReset": "Back to the catalogue colour",
+  "swatchesMyColourSame": "Same as the catalogue",
+  "swatchesMyColourValue": "Yours: {hex}",
+  "@swatchesMyColourValue": {
+    "description": "The colour the user stored for this marker, for example \"Yours: #0A0B0C\".",
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      }
+    }
+  },
+  "swatchesStatusWished": "On your wishlist",
+  "swatchesDetailsTitle": "Details",
   "swatchesCatalogueLabel": "Catalogue",
   "swatchesMineLabel": "Mine",
   "ownColorTitle": "My colour for {code}",
@@ -2154,6 +2204,8 @@
   "diaryPaletteEmpty": "You have no saved palettes yet.",
   "diaryNotesLabel": "Notes",
   "diaryNotesHint": "Technique, paper, blending...",
+  "diaryMoreDetails": "More details",
+  "@diaryMoreDetails": {"description": "Title of the collapsed block of the diary entry form that holds the optional fields (painted on, date, palette, notes)."},
   "diaryPhotosTitle": "Photos",
   "diaryPhotosHelp": "Up to {count} photos. They stay on this phone.",
   "@diaryPhotosHelp": {

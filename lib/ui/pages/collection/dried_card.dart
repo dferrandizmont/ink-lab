@@ -5,7 +5,6 @@ import '../../../core/models.dart';
 import '../../../core/natural_sort.dart';
 import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
-import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_disclosure.dart';
@@ -13,6 +12,9 @@ import 'marker_status_row.dart';
 
 /// The dried-out markers of the active brand in My collection: how many, what
 /// it means, and a list (closed until opened) to mark each one usable again.
+///
+/// The count is the header of a folded [InkDisclosure] and the explanation is
+/// its summary (spec §2.6).
 class DriedCard extends StatefulWidget {
   const DriedCard({
     super.key,
@@ -62,61 +64,48 @@ class _DriedCardState extends State<DriedCard> {
               b.substring(b.indexOf(':') + 1),
             ),
           );
-        return Card(
-          child: Padding(
-            padding: InkSpacing.card,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text(
-                  context.l10n.driedCount(ids.length),
-                  key: const ValueKey<String>('dried-count'),
-                  style: AppTypography.body.copyWith(color: ink.fg),
-                ),
-                const SizedBox(height: InkSpacing.s4),
-                Text(
-                  ids.isEmpty
-                      ? context.l10n.driedEmpty
-                      : context.l10n.driedHint,
-                  style: AppTypography.secondary.copyWith(color: ink.fg2),
-                ),
-                if (ids.isNotEmpty) ...<Widget>[
-                  const SizedBox(height: InkSpacing.group),
-                  InkDisclosure(
-                    key: const ValueKey<String>('dried-disclosure'),
-                    title: context.l10n.driedTitle,
-                    expanded: _open,
-                    padding: EdgeInsets.zero,
-                    onToggle: () => setState(() => _open = !_open),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        for (final String id in ids) ...<Widget>[
-                          MarkerStatusRow(
-                            key: ValueKey<String>('dried-row-$id'),
-                            colorId: id,
-                            color: findMarker(widget.catalog, id),
-                            nameDisplayMode: widget.nameDisplayMode,
-                            trailing: InkIconButton(
-                              key: ValueKey<String>('dried-unmark-$id'),
-                              icon: InkIcons.rotateCcw,
-                              tooltip: context.l10n.driedUnmark,
-                              onPressed: () => scope.dried.remove(id),
-                            ),
-                          ),
-                          Divider(
-                            height: InkGeometry.border,
-                            thickness: InkGeometry.border,
-                            color: ink.line,
-                          ),
-                        ],
-                      ],
-                    ),
+        return InkDisclosure(
+          key: const ValueKey<String>('dried-disclosure'),
+          title: context.l10n.driedCount(ids.length),
+          subtitle: ids.isEmpty
+              ? context.l10n.driedEmpty
+              : context.l10n.driedHint,
+          expanded: _open,
+          onToggle: () => setState(() => _open = !_open),
+          child: ids.isEmpty
+              ? const SizedBox.shrink()
+              : Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    InkSpacing.cardH,
+                    0,
+                    InkSpacing.cardH,
+                    InkSpacing.cardV,
                   ),
-                ],
-              ],
-            ),
-          ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      for (final String id in ids) ...<Widget>[
+                        MarkerStatusRow(
+                          key: ValueKey<String>('dried-row-$id'),
+                          colorId: id,
+                          color: findMarker(widget.catalog, id),
+                          nameDisplayMode: widget.nameDisplayMode,
+                          trailing: InkIconButton(
+                            key: ValueKey<String>('dried-unmark-$id'),
+                            icon: InkIcons.rotateCcw,
+                            tooltip: context.l10n.driedUnmark,
+                            onPressed: () => scope.dried.remove(id),
+                          ),
+                        ),
+                        Divider(
+                          height: InkGeometry.border,
+                          thickness: InkGeometry.border,
+                          color: ink.line,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
         );
       },
     );

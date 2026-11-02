@@ -9,10 +9,12 @@ import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
+import '../../widgets/ink_disclosure.dart';
 import '../../widgets/ink_segmented.dart';
 import '../../widgets/section_card.dart';
 import '../../share/share_sink.dart';
 import '../settings/dialogs.dart';
+import '../settings/settings_widgets.dart';
 import 'collection_pickers.dart';
 import 'collection_summary.dart';
 import 'collection_summary_card.dart';
@@ -25,11 +27,11 @@ import 'wishlist_card.dart';
 /// "My collection": the one place where the user says which markers they
 /// own (see `AppSettings`).
 ///
-/// Brand switch at the top, a summary card, then for Ohuhu the series, the
-/// sets and a line that opens the loose markers on their own screen; for
-/// individually collected brands the same line, plus quick "add by family"
-/// chips when the catalogue has families (DecoTime). "Reset collection" closes
-/// the page.
+/// Three `caps` groups, as in Settings. *What you own* keeps the brand switch
+/// and the summary, and folds the series, the sets and the loose markers into
+/// summary rows. *Shopping* holds what to buy next, the wishlist and the dried
+/// out markers. *Tools* keeps the printable swatch chart, and "Reset
+/// collection" closes the page as a text button.
 class CollectionPage extends StatefulWidget {
   const CollectionPage({super.key, this.shareSink});
 
@@ -51,6 +53,11 @@ class CollectionPage extends StatefulWidget {
 class _CollectionPageState extends State<CollectionPage> {
   AppScope? _scope;
   Stream<AppSettingsState>? _changes;
+
+  /// Whether the "Series you own" and "Sets you own" groups of the Ohuhu
+  /// collection are open (both start folded).
+  bool _seriesOpen = false;
+  bool _setsOpen = false;
 
   @override
   void didChangeDependencies() {
@@ -107,125 +114,199 @@ class _CollectionPageState extends State<CollectionPage> {
       brand.id,
     );
     final CollectionSummary summary = CollectionSummary.of(state, catalog);
-
-    Widget head(String text) => Padding(
-      padding: const EdgeInsets.only(top: InkSpacing.s24),
-      child: InkGroupHead(text),
-    );
-    Widget caption(String text) => Padding(
-      padding: const EdgeInsets.only(bottom: InkSpacing.group),
-      child: Text(
-        text,
-        style: AppTypography.secondary.copyWith(color: ink.fg2),
-      ),
-    );
+    final String seriesLabel = <String>[
+      for (final MarkerLine line in MarkerLine.values)
+        if (series.contains(line)) line.label,
+    ].join(' + ');
+    final TextStyle caption = AppTypography.secondary.copyWith(color: ink.fg2);
 
     return SingleChildScrollView(
       key: CollectionPage.pageKey,
       padding: const EdgeInsets.fromLTRB(
         InkSpacing.gutter,
-        InkSpacing.group,
+        InkSpacing.section,
         InkSpacing.gutter,
         InkSpacing.pageBottom,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          InkScrollableSegmented<MarkerBrand>(
-            key: const ValueKey<String>('collection-brand'),
-            semanticLabel: context.l10n.settingsBrandTitle,
-            segments: <InkSegment<MarkerBrand>>[
-              for (final MarkerBrand b in MarkerBrand.values)
-                InkSegment<MarkerBrand>(value: b, label: b.label),
-            ],
-            selected: brand,
-            onChanged: (MarkerBrand b) => scope.settings.setBrand(b),
-          ),
-          const SizedBox(height: InkSpacing.block),
-          KeyedSubtree(
-            key: const ValueKey<String>('collection-summary'),
-            child: CollectionSummaryCard(summary: summary),
-          ),
-          if (ohuhu) ...<Widget>[
-            head(context.l10n.collectionSeriesTitle),
-            SeriesChips(
-              selected: series,
-              onToggle: (MarkerLine line, bool on) =>
-                  _toggleSeries(scope, settings, line, on),
-            ),
-            if (series.contains(MarkerLine.honolulu))
+          // What you own.
+          SettingsGroup(
+            title: context.l10n.collectionOwnedGroup,
+            children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: InkSpacing.group),
-                child: caption(context.l10n.collectionHonoluluNote),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: InkSpacing.cardH,
+                  vertical: InkSpacing.cardV,
+                ),
+                child: InkScrollableSegmented<MarkerBrand>(
+                  key: const ValueKey<String>('collection-brand'),
+                  semanticLabel: context.l10n.settingsBrandTitle,
+                  segments: <InkSegment<MarkerBrand>>[
+                    for (final MarkerBrand b in MarkerBrand.values)
+                      InkSegment<MarkerBrand>(value: b, label: b.label),
+                  ],
+                  selected: brand,
+                  onChanged: (MarkerBrand b) => scope.settings.setBrand(b),
+                ),
               ),
-            head(context.l10n.collectionSetsTitle),
-            if (series.isEmpty)
-              caption(context.l10n.collectionSetsEmpty)
-            else
-              SeriesSetPicker(
-                series: series,
-                ownedSetIds: settings.ownedSetIds,
-                onToggle: (OahuSet set, bool on) {
-                  final Set<String> next = <String>{...settings.ownedSetIds};
-                  on ? next.add(set.id) : next.remove(set.id);
-                  scope.settings.setOwnedSetIds(next);
-                },
+              KeyedSubtree(
+                key: const ValueKey<String>('collection-summary'),
+                child: CollectionSummaryCard(
+                  summary: summary,
+                  embedded: true,
+                ),
               ),
-            head(context.l10n.collectionExtrasTitle),
-            _MarkersRow(
-              countLabel: context.l10n.collectionExtrasCount(extras.length),
-              hint: context.l10n.collectionExtrasHint,
-              buttonLabel: context.l10n.collectionExtrasAddTitle,
-            ),
-          ] else ...<Widget>[
-            const SizedBox(height: InkSpacing.block),
-            caption(context.l10n.individualMarkersHint(brand)),
-            if (brand == MarkerBrand.decoTime) ...<Widget>[
-              caption(context.l10n.collectionDecoSizesHint),
-              head(context.l10n.collectionFamiliesTitle),
-              _familyChips(context, scope, settings, range, extras),
+              if (ohuhu) ...<Widget>[
+                InkDisclosure(
+                  key: const ValueKey<String>('collection-series'),
+                  title: context.l10n.collectionSeriesTitle,
+                  subtitle: series.isEmpty ? null : seriesLabel,
+                  expanded: _seriesOpen,
+                  onToggle: () => setState(() => _seriesOpen = !_seriesOpen),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      InkSpacing.cardH,
+                      0,
+                      InkSpacing.cardH,
+                      InkSpacing.cardV,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        SeriesChips(
+                          selected: series,
+                          onToggle: (MarkerLine line, bool on) =>
+                              _toggleSeries(scope, settings, line, on),
+                        ),
+                        if (series.contains(MarkerLine.honolulu)) ...<Widget>[
+                          const SizedBox(height: InkSpacing.group),
+                          Text(
+                            context.l10n.collectionHonoluluNote,
+                            style: caption,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                InkDisclosure(
+                  key: const ValueKey<String>('collection-sets'),
+                  title: context.l10n.collectionSetsTitle,
+                  subtitle: settings.ownedSetIds.isEmpty
+                      ? context.l10n.collectionSetsEmpty
+                      : context.l10n.collectionSets(
+                          settings.ownedSetIds.length,
+                        ),
+                  expanded: _setsOpen,
+                  onToggle: () => setState(() => _setsOpen = !_setsOpen),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      InkSpacing.cardH,
+                      0,
+                      InkSpacing.cardH,
+                      InkSpacing.cardV,
+                    ),
+                    child: series.isEmpty
+                        ? Text(context.l10n.collectionSetsEmpty, style: caption)
+                        : SeriesSetPicker(
+                            series: series,
+                            ownedSetIds: settings.ownedSetIds,
+                            onToggle: (OahuSet set, bool on) {
+                              final Set<String> next = <String>{
+                                ...settings.ownedSetIds,
+                              };
+                              on ? next.add(set.id) : next.remove(set.id);
+                              scope.settings.setOwnedSetIds(next);
+                            },
+                          ),
+                  ),
+                ),
+                InkListRow(
+                  key: const ValueKey<String>('collection-add-loose'),
+                  label: context.l10n.collectionExtrasTitle,
+                  value: context.l10n.collectionExtrasCount(extras.length),
+                  subtitle: context.l10n.collectionExtrasHint,
+                  chevron: true,
+                  onTap: () => LooseMarkersPage.open(context),
+                ),
+              ] else ...<Widget>[
+                if (brand == MarkerBrand.decoTime)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      InkSpacing.cardH,
+                      InkSpacing.cardV,
+                      InkSpacing.cardH,
+                      InkSpacing.group,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Text(
+                          context.l10n.collectionDecoSizesHint,
+                          style: caption,
+                        ),
+                        const SizedBox(height: InkSpacing.block),
+                        InkGroupHead(context.l10n.collectionFamiliesTitle),
+                        _familyChips(context, scope, settings, range, extras),
+                      ],
+                    ),
+                  ),
+                InkListRow(
+                  key: const ValueKey<String>('collection-add-loose'),
+                  label: context.l10n.collectionDecoMarkersTitle,
+                  value: context.l10n.collectionMarkers(extras.length),
+                  subtitle: context.l10n.individualMarkersHint(brand),
+                  chevron: true,
+                  onTap: () => LooseMarkersPage.open(context),
+                ),
+              ],
             ],
-            head(context.l10n.collectionDecoMarkersTitle),
-            _MarkersRow(
-              countLabel: context.l10n.collectionMarkers(extras.length),
-              hint: null,
-              buttonLabel: context.l10n.collectionDecoMarkersButton,
-            ),
-          ],
-          head(context.l10n.buyNextTitle),
-          PurchaseCard(
-            key: const ValueKey<String>('collection-buy-next'),
-            brand: brand,
-            catalog: catalog,
-            settings: settings,
-            nameDisplayMode: state.nameDisplayMode,
           ),
-          head(context.l10n.wishlistTitle),
-          WishlistCard(
-            key: const ValueKey<String>('collection-wishlist'),
-            brand: brand,
-            catalog: catalog,
-            nameDisplayMode: state.nameDisplayMode,
+          const SizedBox(height: InkSpacing.section),
+          // Shopping.
+          SettingsGroup(
+            title: context.l10n.collectionShoppingGroup,
+            children: <Widget>[
+              PurchaseCard(
+                key: const ValueKey<String>('collection-buy-next'),
+                brand: brand,
+                catalog: catalog,
+                settings: settings,
+                nameDisplayMode: state.nameDisplayMode,
+              ),
+              WishlistCard(
+                key: const ValueKey<String>('collection-wishlist'),
+                brand: brand,
+                catalog: catalog,
+                nameDisplayMode: state.nameDisplayMode,
+              ),
+              DriedCard(
+                key: const ValueKey<String>('collection-dried'),
+                brand: brand,
+                catalog: catalog,
+                nameDisplayMode: state.nameDisplayMode,
+              ),
+            ],
           ),
-          head(context.l10n.driedTitle),
-          DriedCard(
-            key: const ValueKey<String>('collection-dried'),
-            brand: brand,
-            catalog: catalog,
-            nameDisplayMode: state.nameDisplayMode,
-          ),
-          head(context.l10n.collectionChartTitle),
-          SwatchChartCard(
-            key: const ValueKey<String>('collection-chart'),
-            brand: brand,
-            markers: ownedColors(
-              colors: catalog,
-              brand: brand,
-              ownedSetIds: settings.ownedSetIds,
-              ownedMarkerCodes: settings.extraMarkerIds,
-            ),
-            nameDisplay: state.nameDisplayMode,
-            shareSink: widget.shareSink,
+          const SizedBox(height: InkSpacing.section),
+          // Tools.
+          SettingsGroup(
+            title: context.l10n.collectionToolsGroup,
+            children: <Widget>[
+              SwatchChartCard(
+                brand: brand,
+                markers: ownedColors(
+                  colors: catalog,
+                  brand: brand,
+                  ownedSetIds: settings.ownedSetIds,
+                  ownedMarkerCodes: settings.extraMarkerIds,
+                ),
+                nameDisplay: state.nameDisplayMode,
+                shareSink: widget.shareSink,
+              ),
+            ],
           ),
           const SizedBox(height: InkSpacing.section),
           _DestructiveButton(
@@ -353,56 +434,8 @@ class _CollectionPageState extends State<CollectionPage> {
   }
 }
 
-/// The loose-markers line of My collection: how many, and the button that
-/// opens the full list on its own screen.
-class _MarkersRow extends StatelessWidget {
-  const _MarkersRow({
-    required this.countLabel,
-    required this.hint,
-    required this.buttonLabel,
-  });
-
-  final String countLabel;
-  final String? hint;
-  final String buttonLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    final InkColors ink = InkColors.of(context);
-    return Card(
-      child: Padding(
-        padding: InkSpacing.card,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Text(
-              countLabel,
-              key: const ValueKey<String>('collection-extras-count'),
-              style: AppTypography.body.copyWith(color: ink.fg),
-            ),
-            if (hint != null) ...<Widget>[
-              const SizedBox(height: InkSpacing.s4),
-              Text(
-                hint!,
-                style: AppTypography.secondary.copyWith(color: ink.fg2),
-              ),
-            ],
-            const SizedBox(height: InkSpacing.block),
-            InkButton.secondary(
-              key: const ValueKey<String>('collection-add-loose'),
-              label: buttonLabel,
-              expand: true,
-              onPressed: () => LooseMarkersPage.open(context),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// A full-width secondary button drawn in the error colour (irreversible
-/// action; the caller asks for confirmation first).
+/// A full-width text button drawn in the error colour (irreversible action;
+/// the caller asks for confirmation first).
 class _DestructiveButton extends StatelessWidget {
   const _DestructiveButton({
     super.key,
@@ -425,15 +458,11 @@ class _DestructiveButton extends StatelessWidget {
     );
     return Theme(
       data: theme.copyWith(
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: theme.outlinedButtonTheme.style?.merge(tint) ?? tint,
+        textButtonTheme: TextButtonThemeData(
+          style: theme.textButtonTheme.style?.merge(tint) ?? tint,
         ),
       ),
-      child: InkButton.secondary(
-        label: label,
-        expand: true,
-        onPressed: onPressed,
-      ),
+      child: InkButton.text(label: label, expand: true, onPressed: onPressed),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:ink_lab/ui/pages/match/image_picker_service.dart';
 import 'package:ink_lab/ui/pages/match/match_result_tile.dart';
 import 'package:ink_lab/ui/pages/match/photo_sampling.dart';
 import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
+import 'package:ink_lab/ui/widgets/ink_button.dart';
 
 import '../../support/l10n.dart';
 import 'match_test_support.dart';
@@ -61,12 +62,17 @@ void main() {
     _int(_paper),
   ) as WhiteBalanceApplied).balance;
 
-  testWidgets('the fix is offered once there is a photo', (tester) async {
+  testWidgets('the fix waits for a photo', (tester) async {
     await _pump(tester, _paperAndInk());
-    expect(find.text(l10n.matchWhiteBalanceButton), findsNothing);
+    // The row of actions is always the same: the fix is there, disabled.
+    final Finder start = find.byKey(
+      const ValueKey<String>('white-balance-start'),
+    );
+    expect(start, findsOneWidget);
+    expect(tester.widget<InkButton>(start).onPressed, isNull);
 
     await _pickPhoto(tester);
-    expect(find.text(l10n.matchWhiteBalanceButton), findsOneWidget);
+    expect(tester.widget<InkButton>(start).onPressed, isNotNull);
   });
 
   testWidgets('tapping the paper balances every sampled colour', (

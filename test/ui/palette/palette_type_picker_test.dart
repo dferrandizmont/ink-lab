@@ -298,7 +298,11 @@ void main() {
       expect(tester.widget<Text>(_key('palette-scene-value')).data, 'Dragon');
       expect(find.textContaining('default base for Dragon'), findsOneWidget);
       expect(_resultColors(tester), isNot(before));
-      // The roles of the new scene are the reasons of the new result.
+      // The roles of the new scene are the reasons of the new result. Their
+      // text lives in the paint order, which folds behind a disclosure.
+      await tester.ensureVisible(_key('palette-paint-order'));
+      await tester.tap(_key('palette-paint-order'));
+      await tester.pumpAndSettle();
       expect(find.textContaining('Ember glow'), findsWidgets);
     });
 

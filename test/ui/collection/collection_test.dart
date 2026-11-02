@@ -74,6 +74,15 @@ Future<AppScope> _pumpApp(
 
 Finder _key(String key) => find.byKey(ValueKey<String>(key));
 
+/// Opens the folded group of My collection with [key] (Series, Sets...).
+Future<void> _openGroup(WidgetTester tester, String key) async {
+  final Finder finder = _key(key);
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.tap(finder);
+  await tester.pumpAndSettle();
+}
+
 Finder _nav(String label) => find.descendant(
   of: find.byType(InkNavigationBar),
   matching: find.text(label),
@@ -90,10 +99,13 @@ void main() {
       expect(find.text('Ohuhu · Oahu'), findsOneWidget);
       expect(find.text('1 set · 161 markers'), findsOneWidget);
 
-      // A Honolulu set: pick the series, then the set.
+      // A Honolulu set: pick the series, then the set. Both groups start
+      // folded.
+      await _openGroup(tester, 'collection-series');
       await tester.tap(_key('collection-series-honolulu'));
       await tester.pumpAndSettle();
       expect(find.text(l10n.collectionHonoluluNote), findsOneWidget);
+      await _openGroup(tester, 'collection-sets');
       await tester.ensureVisible(_key('collection-set-honolulu_24'));
       await tester.tap(_key('collection-set-honolulu_24'));
       await tester.pumpAndSettle();
@@ -429,10 +441,15 @@ void main() {
       );
       expect(find.text('Ohuhu · Honolulu'), findsOneWidget);
       expect(find.text(l10n.collectionSummaryNoSets), findsOneWidget);
-      // The Honolulu sets are offered although none is owned yet.
-      expect(_key('collection-set-honolulu_24'), findsOneWidget);
+      // The Honolulu sets are offered although none is owned yet. The series
+      // and sets groups start folded.
+      await _openGroup(tester, 'collection-series');
       expect(find.text(l10n.collectionHonoluluNote), findsOneWidget);
+      await _openGroup(tester, 'collection-sets');
+      expect(_key('collection-set-honolulu_24'), findsOneWidget);
 
+      await tester.ensureVisible(_key('collection-series-kaala'));
+      await tester.pumpAndSettle();
       await tester.tap(_key('collection-series-kaala'));
       await tester.pumpAndSettle();
       expect(scope.settings.settings.chosenSeriesIds, <String>{
@@ -737,9 +754,11 @@ void main() {
           await tester.tap(_nav('Swatches'));
           await tester.pumpAndSettle();
           expect(find.byKey(SwatchesPage.pageKey), findsOneWidget);
+          // The subtitle says the brand, never a count.
+          expect(find.text(brand.label), findsOneWidget);
           expect(
             find.text('${brand.label} · ${l10n.collectionNotSetUp}'),
-            findsOneWidget,
+            findsNothing,
           );
           expect(find.text('B08'), findsNothing);
         },

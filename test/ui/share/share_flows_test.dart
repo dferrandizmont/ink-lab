@@ -75,6 +75,15 @@ Future<AppScope> _pumpCollection(
   return scope;
 }
 
+/// Opens the folded "Printable swatch chart" card of My collection (spec §2.6):
+/// the switch and the share button live inside.
+Future<void> _openChart(WidgetTester tester) async {
+  await tester.ensureVisible(_key('collection-chart'));
+  await tester.pumpAndSettle();
+  await tester.tap(_key('collection-chart'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   setUpAll(loadAppFonts);
 
@@ -83,9 +92,14 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpPalette(tester, shareSink: FakeShareSink());
-      expect(_key('palette-share'), findsNothing);
+      expect(_key('palette-overflow'), findsNothing);
       await enterBaseCode(tester, 'B08');
+      // Share lives in the result's "⋯" now, which appears with a result.
+      expect(_key('palette-overflow'), findsOneWidget);
+      await tester.tap(_key('palette-overflow'));
+      await tester.pumpAndSettle();
       expect(_key('palette-share'), findsOneWidget);
+      await closeSheet(tester);
     });
 
     testWidgets('renders the palette on screen and opens the share sheet', (
@@ -95,9 +109,7 @@ void main() {
       await pumpPalette(tester, shareSink: sink);
       await enterBaseCode(tester, 'B08');
 
-      await tester.ensureVisible(_key('palette-share'));
-      await tester.tap(_key('palette-share'));
-      await tester.pump();
+      await tapResultItem(tester, 'palette-share', settle: false);
       await _untilShared(tester, sink);
 
       expect(sink.shared, hasLength(1));
@@ -108,8 +120,6 @@ void main() {
       // The base and four companions (the default size of five).
       expect(size?.height, PaletteCardLayout(5).height.round());
       expect(sink.subjects.single, l10n.modeLabel(PaletteMode.recommended));
-      // The button is free again.
-      expect(tester.widget<InkButton>(_key('palette-share')).loading, isFalse);
     });
 
     testWidgets('a scene palette is titled with the scene', (
@@ -118,9 +128,7 @@ void main() {
       final FakeShareSink sink = FakeShareSink();
       await pumpPalette(tester, shareSink: sink);
       await choosePaletteType(tester, 'palette-scenario-toggle');
-      await tester.ensureVisible(_key('palette-share'));
-      await tester.tap(_key('palette-share'));
-      await tester.pump();
+      await tapResultItem(tester, 'palette-share', settle: false);
       await _untilShared(tester, sink);
 
       expect(sink.shared, hasLength(1));
@@ -151,9 +159,13 @@ void main() {
           ),
         ),
       );
-      await tester.ensureVisible(_key('palette-share-p1'));
-      await tester.tap(_key('palette-share-p1'));
-      await tester.pump();
+      await openSavedPalettesSheet(tester);
+      await tapOverflowItem(
+        tester,
+        'palette-saved-menu-p1',
+        'palette-share-p1',
+        settle: false,
+      );
       await _untilShared(tester, sink);
 
       expect(sink.subjects.single, 'Stored sky');
@@ -169,9 +181,7 @@ void main() {
       final FakeShareSink sink = FakeShareSink(fail: true);
       await pumpPalette(tester, shareSink: sink);
       await enterBaseCode(tester, 'B08');
-      await tester.ensureVisible(_key('palette-share'));
-      await tester.tap(_key('palette-share'));
-      await tester.pump();
+      await tapResultItem(tester, 'palette-share', settle: false);
       await _untilFound(tester, _key('palette-share-failed'));
 
       expect(_key('palette-share-failed'), findsOneWidget);
@@ -195,6 +205,9 @@ void main() {
         ),
         findsOneWidget,
       );
+      await _openChart(tester);
+      await tester.ensureVisible(_key('collection-chart-share'));
+      await tester.pumpAndSettle();
       await tester.tap(_key('collection-chart-share'));
       await tester.pump();
       await _untilShared(tester, sink);
@@ -214,8 +227,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await _pumpCollection(tester, FakeShareSink());
-      await tester.ensureVisible(_key('collection-chart-colour'));
-      await tester.pumpAndSettle();
+      await _openChart(tester);
       expect(find.text(l10n.collectionChartShowColour), findsOneWidget);
       final Finder toggled = find.descendant(
         of: _key('collection-chart-colour'),
@@ -236,8 +248,7 @@ void main() {
       final AppScope scope = await _pumpCollection(tester, sink);
       await scope.settings.setBrand(MarkerBrand.decoTime);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(_key('collection-chart'));
-      await tester.pumpAndSettle();
+      await _openChart(tester);
 
       expect(find.text(l10n.collectionChartEmpty), findsOneWidget);
       expect(
@@ -248,6 +259,7 @@ void main() {
 
     testWidgets('a failure shows a notice', (WidgetTester tester) async {
       await _pumpCollection(tester, FakeShareSink(fail: true));
+      await _openChart(tester);
       await tester.ensureVisible(_key('collection-chart-share'));
       await tester.pumpAndSettle();
       await tester.tap(_key('collection-chart-share'));

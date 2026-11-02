@@ -72,6 +72,19 @@ Future<void> _openDetail(WidgetTester tester, String code) async {
 
 bool _isDriedMark(Widget w) => w is InkIcon && w.icon == InkIcons.dropletOff;
 
+/// Opens the "⋯" menu of the detail sheet.
+Future<void> _openMenu(WidgetTester tester) async {
+  await tester.tap(find.byTooltip(l10n.commonMoreActions));
+  await tester.pumpAndSettle();
+}
+
+/// Opens the "⋯" menu of the detail sheet and taps one of its entries.
+Future<void> _tapMenu(WidgetTester tester, String key) async {
+  await _openMenu(tester);
+  await tester.tap(_key(key));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   setUpAll(loadAppFonts);
 
@@ -83,24 +96,30 @@ void main() {
       // BV04 is not in the default collection (Classic 160).
       await _openDetail(tester, 'BV04');
 
-      expect(_key('swatch-wishlist'), findsOneWidget);
+      await _openMenu(tester);
+      expect(_key('swatch-menu-wishlist'), findsOneWidget);
       expect(find.text(l10n.wishlistAdd), findsOneWidget);
       // Not owned, so it cannot be marked as dried out.
-      expect(_key('swatch-dried'), findsNothing);
+      expect(_key('swatch-menu-dried'), findsNothing);
 
-      await _tapVisible(tester, _key('swatch-wishlist'));
+      await tester.tap(_key('swatch-menu-wishlist'));
+      await tester.pumpAndSettle();
       expect(scope.wishlist.contains('BV04'), isTrue);
-      expect(find.text(l10n.wishlistRemove), findsOneWidget);
+      // The status line of the header says it.
+      expect(find.text(l10n.swatchesStatusWished), findsOneWidget);
 
-      await _tapVisible(tester, _key('swatch-wishlist'));
+      await _openMenu(tester);
+      expect(find.text(l10n.wishlistRemove), findsOneWidget);
+      await tester.tap(_key('swatch-menu-wishlist'));
+      await tester.pumpAndSettle();
       expect(scope.wishlist.contains('BV04'), isFalse);
-      expect(find.text(l10n.wishlistAdd), findsOneWidget);
+      expect(find.text(l10n.swatchesStatusWished), findsNothing);
     });
 
     testWidgets('the wishlist is per brand', (WidgetTester tester) async {
       final AppScope scope = await pumpSwatches(tester);
       await _openDetail(tester, 'B08');
-      await _tapVisible(tester, _key('swatch-wishlist'));
+      await _tapMenu(tester, 'swatch-menu-wishlist');
       expect(scope.wishlist.ids, <String>{'ohuhu_oahu:B08'});
       expect(scope.wishlist.countOf(MarkerBrand.decoTime), 0);
     });
@@ -113,14 +132,15 @@ void main() {
         final AppScope scope = await pumpSwatches(tester);
         await _openDetail(tester, 'B08');
 
+        await _openMenu(tester);
         expect(find.text(l10n.driedMark), findsOneWidget);
         expect(_key('swatch-dried-note'), findsNothing);
-        await _tapVisible(tester, _key('swatch-dried'));
+        await tester.tap(_key('swatch-menu-dried'));
+        await tester.pumpAndSettle();
 
         expect(scope.dried.contains('B08'), isTrue);
         expect(_key('swatch-dried-note'), findsOneWidget);
         expect(find.text(l10n.driedNote), findsOneWidget);
-        expect(find.text(l10n.driedUnmark), findsOneWidget);
         // Marking it dried offers to buy a refill.
         expect(find.text(l10n.wishlistOfferTitle), findsOneWidget);
         expect(find.text(l10n.wishlistOfferBody('B08')), findsOneWidget);
@@ -133,6 +153,9 @@ void main() {
         await tester.pumpAndSettle();
         expect(scope.wishlist.contains('B08'), isTrue);
         expect(scope.dried.contains('B08'), isTrue);
+        // The menu offers the way back.
+        await _openMenu(tester);
+        expect(find.text(l10n.driedUnmark), findsOneWidget);
       },
     );
 
@@ -141,7 +164,7 @@ void main() {
     ) async {
       final AppScope scope = await pumpSwatches(tester);
       await _openDetail(tester, 'B08');
-      await _tapVisible(tester, _key('swatch-dried'));
+      await _tapMenu(tester, 'swatch-menu-dried');
       await tester.tap(
         find.descendant(
           of: find.byType(AlertDialog),
@@ -159,7 +182,7 @@ void main() {
       final AppScope scope = await pumpSwatches(tester);
       await scope.wishlist.add('B08');
       await _openDetail(tester, 'B08');
-      await _tapVisible(tester, _key('swatch-dried'));
+      await _tapMenu(tester, 'swatch-menu-dried');
       expect(find.byType(AlertDialog), findsNothing);
       expect(scope.dried.contains('B08'), isTrue);
     });
@@ -171,7 +194,7 @@ void main() {
       await scope.dried.add('B08');
       await _openDetail(tester, 'B08');
       expect(_key('swatch-dried-note'), findsOneWidget);
-      await _tapVisible(tester, _key('swatch-dried'));
+      await _tapMenu(tester, 'swatch-menu-dried');
       expect(find.byType(AlertDialog), findsNothing);
       expect(scope.dried.contains('B08'), isFalse);
       expect(_key('swatch-dried-note'), findsNothing);
@@ -199,6 +222,8 @@ void main() {
     ) async {
       final AppScope scope = await _pumpCollection(tester);
       expect(find.text(l10n.wishlistCount(0)), findsOneWidget);
+      // The list lives inside a folded group; the empty explanation too.
+      await _tapVisible(tester, _key('wishlist-disclosure'));
       expect(find.text(l10n.wishlistEmpty), findsOneWidget);
       expect(_key('wishlist-copy'), findsNothing);
 
@@ -250,6 +275,7 @@ void main() {
       await scope.wishlist.add('B08');
       await tester.pumpAndSettle();
 
+      await _tapVisible(tester, _key('wishlist-disclosure'));
       await _tapVisible(tester, _key('wishlist-copy'));
 
       final List<MarkerColor> all = _catalogue();
@@ -274,7 +300,7 @@ void main() {
       final AppScope scope = await _pumpCollection(tester);
       expect(find.text(l10n.driedCount(0)), findsOneWidget);
       expect(find.text(l10n.driedEmpty), findsOneWidget);
-      expect(_key('dried-disclosure'), findsNothing);
+      expect(_key('dried-disclosure'), findsOneWidget);
 
       await scope.dried.add('B08');
       await scope.dried.add('R16');
@@ -298,35 +324,40 @@ void main() {
       WidgetTester tester,
     ) async {
       final AppScope scope = await _pumpCollection(tester);
-      final Finder rows = find.byWidgetPredicate(
+      Finder rows(String prefix) => find.byWidgetPredicate(
         (Widget w) =>
             w.key is ValueKey<String> &&
-            (w.key! as ValueKey<String>).value.startsWith('buy-next-ohuhu'),
+            (w.key! as ValueKey<String>).value.startsWith(prefix),
       );
-      expect(rows, findsNWidgets(10));
+      // Three suggestions inline...
+      expect(rows('buy-next-ohuhu'), findsNWidgets(3));
       expect(find.textContaining('Improves'), findsWidgets);
       expect(_key('buy-next-empty'), findsNothing);
 
-      final List<MarkerColor> all = _catalogue();
+      // ...and "See all" opens the full ranking.
+      await _tapVisible(tester, _key('collection-buy-next-see-all'));
+      final Finder allRows = rows('buy-all-ohuhu');
+      expect(allRows, findsNWidgets(10));
+
+      final List<MarkerColor> catalogue = _catalogue();
       final Set<String> owned = <String>{
-        for (final MarkerColor c in all)
+        for (final MarkerColor c in catalogue)
           if (c.sets.contains('classic_160')) c.colorId,
       };
-      for (final Element e in rows.evaluate()) {
+      for (final Element e in allRows.evaluate()) {
         final String id = (e.widget.key! as ValueKey<String>).value.substring(
-          'buy-next-'.length,
+          'buy-all-'.length,
         );
         expect(owned, isNot(contains(id)));
       }
 
       // The button puts the marker on the wishlist and takes it off again.
       final String firstId =
-          (rows.evaluate().first.widget.key! as ValueKey<String>).value
-              .substring('buy-next-'.length);
-      await _tapVisible(tester, _key('buy-next-wish-$firstId'));
+          (allRows.evaluate().first.widget.key! as ValueKey<String>).value
+              .substring('buy-all-'.length);
+      await _tapVisible(tester, _key('buy-all-wish-$firstId'));
       expect(scope.wishlist.contains(firstId), isTrue);
-      expect(find.text(l10n.wishlistCount(1)), findsOneWidget);
-      await _tapVisible(tester, _key('buy-next-wish-$firstId'));
+      await _tapVisible(tester, _key('buy-all-wish-$firstId'));
       expect(scope.wishlist.contains(firstId), isFalse);
     });
 
@@ -349,14 +380,14 @@ void main() {
       final List<MarkerColor> owned = all
           .where((MarkerColor c) => c.sets.contains('classic_160'))
           .toList();
-      final String before = _suggestedIds(tester).join(',');
+      final String before = (await _allSuggestedIds(tester)).join(',');
       for (final MarkerColor c in owned.where(
         (MarkerColor c) => hexToHsv(c.hex)[0] > 40 && hexToHsv(c.hex)[0] < 90,
       )) {
         await scope.dried.add(c.colorId);
       }
       await tester.pumpAndSettle();
-      expect(_suggestedIds(tester).join(','), isNot(before));
+      expect((await _allSuggestedIds(tester)).join(','), isNot(before));
     });
 
     testWidgets('a marker leaves the wishlist when you get it', (
@@ -366,6 +397,7 @@ void main() {
       // BV04 is outside Classic 160.
       await scope.wishlist.add('BV04');
       await tester.pumpAndSettle();
+      await _tapVisible(tester, _key('wishlist-disclosure'));
       expect(_key('wishlist-row-ohuhu_oahu:BV04'), findsOneWidget);
 
       await scope.settings.setExtraMarkerIds(<String>{'ohuhu_oahu:BV04'});
@@ -480,14 +512,26 @@ void main() {
   });
 }
 
-List<String> _suggestedIds(WidgetTester tester) => <String>[
-  for (final Element e
-      in find
-          .byWidgetPredicate(
-            (Widget w) =>
-                w.key is ValueKey<String> &&
-                (w.key! as ValueKey<String>).value.startsWith('buy-next-ohuhu'),
-          )
-          .evaluate())
-    (e.widget.key! as ValueKey<String>).value,
-];
+/// The full "What to buy next" ranking, read from its "See all" selector.
+Future<List<String>> _allSuggestedIds(WidgetTester tester) async {
+  await _tapVisible(tester, _key('collection-buy-next-see-all'));
+  final List<String> ids = <String>[
+    for (final Element e
+        in find
+            .byWidgetPredicate(
+              (Widget w) =>
+                  w.key is ValueKey<String> &&
+                  (w.key! as ValueKey<String>).value.startsWith(
+                    'buy-all-ohuhu',
+                  ),
+            )
+            .evaluate())
+      (e.widget.key! as ValueKey<String>).value.substring(
+        'buy-all-'.length,
+      ),
+  ];
+  expect(ids, hasLength(10));
+  await tester.tap(find.byTooltip(l10n.commonClose));
+  await tester.pumpAndSettle();
+  return ids;
+}

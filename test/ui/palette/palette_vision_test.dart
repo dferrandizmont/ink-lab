@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/color_vision.dart';
-import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/ui/pages/palette/palette_vision.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/widgets/palette_strip.dart';
@@ -55,9 +53,14 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpPalette(tester);
+      expect(_key('palette-overflow'), findsNothing);
       expect(_key('palette-vision'), findsNothing);
 
       await enterBaseCode(tester, 'B08');
+
+      // The preview lives in its own sheet, opened from the result's "⋯".
+      expect(_key('palette-overflow'), findsOneWidget);
+      await tapResultItem(tester, 'palette-vision-open');
 
       expect(_key('palette-vision'), findsOneWidget);
       for (final ColorVisionType? type in <ColorVisionType?>[
@@ -86,6 +89,7 @@ void main() {
       await enterBaseCode(tester, 'B08');
       final List<String> normal = _stripColors(tester);
       expect(normal, isNotEmpty);
+      await tapResultItem(tester, 'palette-vision-open');
 
       for (final ColorVisionType type in ColorVisionType.values) {
         await _choose(tester, colorVisionLabelOf(type));
@@ -114,15 +118,14 @@ void main() {
       await pumpPalette(tester, shareSink: sink);
       await enterBaseCode(tester, 'B08');
 
-      await tester.ensureVisible(_key('palette-share'));
-      await tester.tap(_key('palette-share'));
-      await tester.pump();
+      await tapResultItem(tester, 'palette-share', settle: false);
       await _untilShared(tester, sink, 1);
 
+      await tapResultItem(tester, 'palette-vision-open');
       await _choose(tester, colorVisionLabelOf(ColorVisionType.achromatopsia));
-      await tester.ensureVisible(_key('palette-share'));
-      await tester.tap(_key('palette-share'));
-      await tester.pump();
+      // The preview only changes what is drawn: close its sheet and share.
+      await closeSheet(tester);
+      await tapResultItem(tester, 'palette-share', settle: false);
       await _untilShared(tester, sink, 2);
 
       expect(sink.shared, hasLength(2));
@@ -133,54 +136,6 @@ void main() {
             'the image shared while previewing is the one of the true '
             'colours',
       );
-    });
-
-    testWidgets('previews the saved palettes too, with their own pairs', (
-      WidgetTester tester,
-    ) async {
-      await pumpPalette(
-        tester,
-        setup: (AppScope scope) => scope.savedPalettes.save(
-          SavedPalette(
-            id: 'p1',
-            name: 'Stored sky',
-            baseCode: 'B08',
-            baseName: 'Cotton Candy Blue',
-            mode: PaletteMode.triad,
-            paletteSize: 3,
-            createdAtEpochMs: 1,
-            colorCodes: const <String>['B08', 'B08', 'BV19'],
-          ),
-        ),
-      );
-      // No palette on screen: the control sits with the saved ones.
-      expect(_key('palette-vision'), findsNothing);
-      expect(_key('palette-vision-saved'), findsOneWidget);
-      final List<String> normal = _stripColors(tester);
-
-      await tester.ensureVisible(_key('palette-vision-saved'));
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.descendant(
-          of: _key('palette-vision-saved'),
-          matching: find.text(colorVisionLabelOf(ColorVisionType.deuteranopia)),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(_stripColors(tester), <String>[
-        for (final String hex in normal)
-          ColorVision.simulate(hex, ColorVisionType.deuteranopia),
-      ]);
-      // The same marker twice is the plainest pair there is.
-      expect(_key('palette-saved-vision-p1'), findsOneWidget);
-      final Text warning = tester.widget<Text>(
-        find.descendant(
-          of: _key('palette-saved-vision-p1'),
-          matching: find.byType(Text),
-        ),
-      );
-      expect(warning.data, contains('B08 / B08'));
     });
   });
 

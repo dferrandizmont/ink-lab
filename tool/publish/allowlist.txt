@@ -339,6 +339,7 @@ lib/ui/pages/palette/palette_page.dart
 lib/ui/pages/palette/palette_reasons.dart
 lib/ui/pages/palette/palette_share.dart
 lib/ui/pages/palette/palette_vision.dart
+lib/ui/pages/palette/saved_palettes_sheet.dart
 lib/ui/pages/settings/about_section.dart
 lib/ui/pages/settings/ai_model_picker.dart
 lib/ui/pages/settings/ai_section.dart
@@ -362,7 +363,6 @@ lib/ui/pages/swatches/brand_equivalents_index.dart
 lib/ui/pages/swatches/brand_equivalents_section.dart
 lib/ui/pages/swatches/own_color_page.dart
 lib/ui/pages/swatches/swatch_detail_sheet.dart
-lib/ui/pages/swatches/swatch_status_section.dart
 lib/ui/pages/swatches/swatches_page.dart
 lib/ui/share/diary_entry_card_layout.dart
 lib/ui/share/diary_entry_renderer.dart
@@ -382,6 +382,7 @@ lib/ui/widgets/empty_state.dart
 lib/ui/widgets/ink_button.dart
 lib/ui/widgets/ink_chip.dart
 lib/ui/widgets/ink_disclosure.dart
+lib/ui/widgets/ink_overflow_menu.dart
 lib/ui/widgets/ink_search_field.dart
 lib/ui/widgets/ink_segmented.dart
 lib/ui/widgets/ink_sheet.dart

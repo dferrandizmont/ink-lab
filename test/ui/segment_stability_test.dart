@@ -6,12 +6,15 @@ import 'package:ink_lab/ai/ai.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
+import 'package:ink_lab/ui/icons/ink_icons.dart';
 import 'package:ink_lab/ui/pages/collection/collection_page.dart';
 import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
+import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
 import 'package:ink_lab/ui/widgets/ink_chip.dart';
+import 'package:ink_lab/ui/widgets/ink_sheet.dart';
 import 'package:ink_lab/ui/widgets/ink_search_field.dart';
 import 'package:ink_lab/ui/widgets/ink_segmented.dart';
 import 'package:ink_lab/ui/widgets/page_header.dart';
@@ -25,6 +28,20 @@ import '../support/layout_stability.dart';
 // position of its controls is compared across the segments.
 
 Finder _key(String key) => find.byKey(ValueKey<String>(key));
+
+/// The owned checks of the grid cells.
+Finder _ownedChecks() => find.byWidgetPredicate(
+  (Widget w) => w is InkIcon && w.icon == InkIcons.check,
+);
+
+/// The control under the segment switch: the search field in Ideas and the
+/// "Add to diary" button in the Diary. Both sit in the same 48 dp slot, so
+/// the content below them starts at the same place in both segments.
+Finder _ideasContentSlot() => find.byWidgetPredicate(
+  (Widget w) =>
+      w.key == const ValueKey<String>('ideas-search') ||
+      w.key == const ValueKey<String>('diary-add-slot'),
+);
 
 /// The text [label] inside [scope] (a segmented control, a chip row...).
 Finder _in(Finder scope, String label) =>
@@ -61,6 +78,10 @@ void main() {
       anchors: <String, Finder>{
         'header': find.byType(InkPageHeader),
         'control': view,
+        // The slot under the control: the search field in Ideas, the "Add to
+        // diary" button in the Diary. Both are 48 high, so the content below
+        // them starts at the same place in both segments.
+        'content slot': _ideasContentSlot(),
         // Only the ideas segment has a search field below the control.
         'search': _key('ideas-search'),
       },
@@ -95,6 +116,8 @@ void main() {
       anchors: <String, Finder>{
         'header': find.byType(InkPageHeader),
         'control': view,
+        // The slot under the control is the same in both segments.
+        'content slot': _ideasContentSlot(),
       },
       segments: <StabilitySegment>[
         (name: 'ideas', activate: () async {}),
@@ -186,12 +209,79 @@ void main() {
         'header': find.byType(InkPageHeader),
         'search': find.byType(InkSearchField),
         'chips': chips,
+        // The first cell of the grid: the filters change its colours, not
+        // its place.
+        'grid': find.byType(ColorSwatchTile),
       },
       segments: <StabilitySegment>[
         (name: 'all', activate: () async {}),
         (name: 'mine', activate: () => tap(env.t.swatchesOwnedOnly)),
         (name: 'favourites', activate: () => tap(env.t.swatchesFavoritesOnly)),
         (name: 'all again', activate: () => tap(env.t.swatchesAllFilter)),
+      ],
+    );
+    // The owned check of the grid follows the filter: with "Mine" every cell
+    // would carry it, so it says nothing and is left out.
+    await tap(env.t.swatchesOwnedOnly);
+    await tester.pumpAndSettle();
+    expect(_ownedChecks(), findsNothing);
+    await tap(env.t.swatchesAllFilter);
+    await tester.pumpAndSettle();
+    expect(_ownedChecks(), findsWidgets);
+  });
+
+  stabilityTest('swatches: the detail sheet keeps its header and its actions', (
+    WidgetTester tester,
+    StabilityEnv env,
+  ) async {
+    await pumpStability(tester, env, SwatchesPage(onBlendingChain: (_) {}));
+    // The whole range, so there is a swatch to open.
+    await _tapIn(tester, find.byType(InkChipRow), env.t.swatchesAllFilter);
+    final Finder swatch = find.text('B08');
+    await tester.ensureVisible(swatch);
+    await tester.pumpAndSettle();
+    await tester.tap(swatch);
+    await tester.pumpAndSettle();
+    // The sheet at the full height: its header, its action and the row of
+    // the own colour are on screen together with the groups below.
+    await tester.drag(
+      find
+          .descendant(
+            of: find.byType(InkSheet),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+      const Offset(0, -600),
+    );
+    await tester.pumpAndSettle();
+    // The header of the group of a brand: the group itself grows with its
+    // results, and tapping one of those would open another marker.
+    final Finder groupHeader = find
+        .descendant(
+          of: _key('swatch-equivalents-copic'),
+          matching: find.byType(InkWell),
+        )
+        .first;
+    await expectStableAcrossSegments(
+      tester,
+      env: env,
+      anchors: <String, Finder>{
+        'header': _key('swatch-header'),
+        'primary': _key('swatch-primary'),
+        'my colour': _key('swatch-my-colour-row'),
+      },
+      segments: <StabilitySegment>[
+        (name: 'every brand', activate: () async {}),
+        (name: 'a group open', activate: () => tester.tap(groupHeader)),
+        (name: 'the group closed', activate: () => tester.tap(groupHeader)),
+        (
+          name: 'only mine',
+          activate: () => tester.tap(_key('swatch-equivalents-only-mine')),
+        ),
+        (
+          name: 'every brand again',
+          activate: () => tester.tap(_key('swatch-equivalents-only-mine')),
+        ),
       ],
     );
   });

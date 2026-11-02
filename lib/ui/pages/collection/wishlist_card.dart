@@ -10,11 +10,15 @@ import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/ink_disclosure.dart';
 import 'marker_status_row.dart';
 
 /// The wishlist of the active brand in My collection: the markers to buy,
 /// each removable, and a button that copies them as a plain-text shopping
 /// list (brand, code and name per line).
+///
+/// The count is the header of a folded [InkDisclosure] (spec §2.6); the list
+/// and "Copy list" are inside.
 class WishlistCard extends StatefulWidget {
   const WishlistCard({
     super.key,
@@ -37,6 +41,7 @@ class WishlistCard extends StatefulWidget {
 class _WishlistCardState extends State<WishlistCard> {
   AppScope? _scope;
   Stream<Set<String>>? _changes;
+  bool _open = false;
 
   @override
   void didChangeDependencies() {
@@ -79,55 +84,55 @@ class _WishlistCardState extends State<WishlistCard> {
         final List<MarkerColor> known = <MarkerColor>[
           for (final String id in ids) ?findMarker(widget.catalog, id),
         ];
-        return Card(
+        return InkDisclosure(
+          key: const ValueKey<String>('wishlist-disclosure'),
+          title: context.l10n.wishlistCount(ids.length),
+          expanded: _open,
+          onToggle: () => setState(() => _open = !_open),
           child: Padding(
-            padding: InkSpacing.card,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text(
-                  context.l10n.wishlistCount(ids.length),
-                  key: const ValueKey<String>('wishlist-count'),
-                  style: AppTypography.body.copyWith(color: ink.fg),
-                ),
-                if (ids.isEmpty) ...<Widget>[
-                  const SizedBox(height: InkSpacing.s4),
-                  Text(
+            padding: const EdgeInsets.fromLTRB(
+              InkSpacing.cardH,
+              0,
+              InkSpacing.cardH,
+              InkSpacing.cardV,
+            ),
+            child: ids.isEmpty
+                ? Text(
                     context.l10n.wishlistEmpty,
                     style: AppTypography.secondary.copyWith(color: ink.fg2),
-                  ),
-                ] else ...<Widget>[
-                  const SizedBox(height: InkSpacing.group),
-                  for (final String id in ids) ...<Widget>[
-                    MarkerStatusRow(
-                      key: ValueKey<String>('wishlist-row-$id'),
-                      colorId: id,
-                      color: findMarker(widget.catalog, id),
-                      nameDisplayMode: widget.nameDisplayMode,
-                      trailing: InkIconButton(
-                        key: ValueKey<String>('wishlist-remove-$id'),
-                        icon: InkIcons.x,
-                        tooltip: context.l10n.wishlistRemove,
-                        onPressed: () => scope.wishlist.remove(id),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      for (final String id in ids) ...<Widget>[
+                        MarkerStatusRow(
+                          key: ValueKey<String>('wishlist-row-$id'),
+                          colorId: id,
+                          color: findMarker(widget.catalog, id),
+                          nameDisplayMode: widget.nameDisplayMode,
+                          trailing: InkIconButton(
+                            key: ValueKey<String>('wishlist-remove-$id'),
+                            icon: InkIcons.x,
+                            tooltip: context.l10n.wishlistRemove,
+                            onPressed: () => scope.wishlist.remove(id),
+                          ),
+                        ),
+                        Divider(
+                          height: InkGeometry.border,
+                          thickness: InkGeometry.border,
+                          color: ink.line,
+                        ),
+                      ],
+                      const SizedBox(height: InkSpacing.block),
+                      InkButton.secondary(
+                        key: const ValueKey<String>('wishlist-copy'),
+                        label: context.l10n.wishlistCopy,
+                        icon: InkIcons.copy,
+                        expand: true,
+                        onPressed: known.isEmpty ? null : () => _copy(known),
                       ),
-                    ),
-                    Divider(
-                      height: InkGeometry.border,
-                      thickness: InkGeometry.border,
-                      color: ink.line,
-                    ),
-                  ],
-                  const SizedBox(height: InkSpacing.block),
-                  InkButton.secondary(
-                    key: const ValueKey<String>('wishlist-copy'),
-                    label: context.l10n.wishlistCopy,
-                    icon: InkIcons.copy,
-                    expand: true,
-                    onPressed: known.isEmpty ? null : () => _copy(known),
+                    ],
                   ),
-                ],
-              ],
-            ),
           ),
         );
       },

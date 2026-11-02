@@ -10,21 +10,28 @@ import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/ink_disclosure.dart';
+import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/palette_strip.dart';
 import 'ideas_page.dart' show IdeaHeartButton, ideaMetaLine;
 
-/// The detail of one idea, inside an ink sheet: what you practise, what to
-/// draw, the markers picked from your collection with their roles, numbered
-/// steps tied to those markers, a tip and the materials.
+/// The detail of one idea, inside a draggable ink sheet (0.9 review §2.3):
+/// the title with its heart, the meta line, a one-line summary, the palette
+/// picked from the collection with "Use in Palette" as the only action on
+/// view, the steps and, folded away, what you practise, what to draw, a tip
+/// and the materials.
 ///
-/// "Other markers" picks the palette again with a new seed; "Use in Palette"
-/// closes the sheet with the plan on screen (the caller hands it over).
+/// "Other markers" (in the sheet's "⋯" menu) picks the palette again with a
+/// new seed; "Use in Palette" closes the sheet with the plan on screen (the
+/// caller hands it over). The named markers sit behind their own disclosure,
+/// which starts folded and shows how many there are.
 class IdeaDetailSheet extends StatefulWidget {
   const IdeaDetailSheet({
     super.key,
     required this.initial,
     required this.candidates,
     required this.brand,
+    required this.scrollController,
     this.favorites,
     this.onAddToDiary,
   });
@@ -36,11 +43,15 @@ class IdeaDetailSheet extends StatefulWidget {
   final List<MarkerColor> candidates;
   final MarkerBrand brand;
 
+  /// The scroll controller of the sheet content, handed over by
+  /// [showInkDraggableSheet] so a drag on the content resizes the sheet.
+  final ScrollController scrollController;
+
   /// The hearts of the ideas; without it the sheet has no heart.
   final IdeaFavoritesRepository? favorites;
 
   /// Called with the idea's title after the sheet closed, to start a diary
-  /// entry; without it the sheet has no "Add to diary" button.
+  /// entry; without it the sheet has no "Add to diary" entry in its menu.
   final ValueChanged<String>? onAddToDiary;
 
   @override
@@ -49,6 +60,12 @@ class IdeaDetailSheet extends StatefulWidget {
 
 class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
   late IdeaPlan _plan = widget.initial;
+
+  /// The named markers of the palette, under a disclosure, folded by default.
+  bool _markersOpen = false;
+
+  /// What you practise, what to draw, the tip and the materials, folded away.
+  bool _detailsOpen = false;
 
   IdeaPreset get _preset => _plan.preset;
 
@@ -67,6 +84,7 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
     final InkColors ink = InkColors.of(context);
     final AppLocalizations l10n = context.l10n;
     final List<String> steps = l10n.ideaStepsText(_preset.id);
+    final List<PaletteSuggestion> palette = _plan.palette;
 
     Widget caps(String text, {double top = InkSpacing.s24}) => Padding(
       padding: EdgeInsets.only(top: top, bottom: InkSpacing.group),
@@ -80,23 +98,16 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
       style: AppTypography.secondary.copyWith(color: color ?? ink.fg),
     );
 
-    return SingleChildScrollView(
+    return ListView(
       key: ValueKey<String>('ideas-detail-${_preset.id}'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            // Room for the close button of the sheet.
-            padding: const EdgeInsets.only(
-              right: InkSpacing.sheetCloseClearance,
-            ),
-            child: Text(
-              ideaMetaLine(context, _preset),
-              style: AppTypography.capsStyle.copyWith(color: ink.fg2),
-            ),
-          ),
-          const SizedBox(height: InkSpacing.group),
-          Row(
+      controller: widget.scrollController,
+      padding: EdgeInsets.zero,
+      children: <Widget>[
+        // Title with the heart and the "⋯" menu. The right clearance keeps
+        // them clear of the sheet's floating close button.
+        Padding(
+          padding: const EdgeInsets.only(right: InkSpacing.sheetCloseClearance),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
@@ -108,7 +119,8 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
                   ),
                 ),
               ),
-              if (widget.favorites != null)
+              if (widget.favorites != null) ...<Widget>[
+                const SizedBox(width: InkSpacing.s8),
                 StreamBuilder<Set<String>>(
                   stream: widget.favorites!.favoriteChanges,
                   initialData: widget.favorites!.favorites,
@@ -126,40 +138,79 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
                         onPressed: _toggleFavorite,
                       ),
                 ),
+              ],
+              const SizedBox(width: InkSpacing.s8),
+              InkOverflowMenu(
+                key: ValueKey<String>('ideas-overflow-${_preset.id}'),
+                items: <InkMenuItem>[
+                  if (widget.onAddToDiary != null)
+                    InkMenuItem(
+                      key: ValueKey<String>('ideas-diary-${_preset.id}'),
+                      label: l10n.diaryAdd,
+                      icon: InkIcons.plus,
+                      onSelected: _addToDiary,
+                    ),
+                  if (palette.isNotEmpty)
+                    InkMenuItem(
+                      key: ValueKey<String>('ideas-other-${_preset.id}'),
+                      label: l10n.ideasOtherMarkersButton,
+                      icon: InkIcons.shuffle,
+                      onSelected: _otherMarkers,
+                    ),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: InkSpacing.group),
-          body(l10n.ideaSummary(_preset), color: ink.fg2),
-          caps(l10n.ideasPracticeTitle),
-          body(l10n.ideaPracticeText(_preset.id)),
-          caps(l10n.ideasSubjectTitle),
-          body(l10n.ideaSubjectText(_preset.id)),
-          ..._buildMarkers(caps, body),
-          caps(l10n.ideasStepsTitle),
-          for (var i = 0; i < steps.length; i++)
-            _StepRow(
-              number: i + 1,
-              text: steps[i],
-              marker: i < _preset.stepRoles.length
-                  ? _plan.markerFor(_preset.stepRoles[i])?.color
-                  : null,
-            ),
-          caps(l10n.ideasTipTitle, top: InkSpacing.block),
-          body(l10n.ideaTipText(_preset.id)),
-          caps(l10n.ideasMaterialsTitle),
-          body(l10n.ideaMaterialsText(_preset.materials), color: ink.fg2),
-          if (widget.onAddToDiary != null) ...<Widget>[
-            const SizedBox(height: InkSpacing.s24),
-            InkButton.secondary(
-              key: ValueKey<String>('ideas-diary-${_preset.id}'),
-              label: l10n.diaryAdd,
-              icon: InkIcons.plus,
-              expand: true,
-              onPressed: _addToDiary,
-            ),
-          ],
-        ],
-      ),
+        ),
+        const SizedBox(height: InkSpacing.group),
+        Text(
+          ideaMetaLine(context, _preset),
+          style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+        ),
+        const SizedBox(height: InkSpacing.group),
+        // One line: the whole summary is one long-press away.
+        Tooltip(
+          message: l10n.ideaSummary(_preset),
+          child: Text(
+            l10n.ideaSummary(_preset),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.secondary.copyWith(color: ink.fg2),
+          ),
+        ),
+        const SizedBox(height: InkSpacing.block),
+        ..._buildMarkers(context, caps, body, palette),
+        caps(l10n.ideasStepsTitle),
+        for (var i = 0; i < steps.length; i++)
+          _StepRow(
+            number: i + 1,
+            text: steps[i],
+            marker: i < _preset.stepRoles.length
+                ? _plan.markerFor(_preset.stepRoles[i])?.color
+                : null,
+          ),
+        const SizedBox(height: InkSpacing.block),
+        InkDisclosure(
+          key: ValueKey<String>('ideas-details-${_preset.id}'),
+          title: l10n.ideasMoreDetails,
+          expanded: _detailsOpen,
+          onToggle: () => setState(() => _detailsOpen = !_detailsOpen),
+          padding: EdgeInsets.zero,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              caps(l10n.ideasPracticeTitle, top: 0),
+              body(l10n.ideaPracticeText(_preset.id)),
+              caps(l10n.ideasSubjectTitle),
+              body(l10n.ideaSubjectText(_preset.id)),
+              caps(l10n.ideasTipTitle, top: InkSpacing.block),
+              body(l10n.ideaTipText(_preset.id)),
+              caps(l10n.ideasMaterialsTitle),
+              body(l10n.ideaMaterialsText(_preset.materials), color: ink.fg2),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -181,8 +232,10 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
   }
 
   List<Widget> _buildMarkers(
+    BuildContext context,
     Widget Function(String, {double top}) caps,
     Widget Function(String, {Color? color}) body,
+    List<PaletteSuggestion> palette,
   ) {
     final InkColors ink = InkColors.of(context);
     final AppLocalizations l10n = context.l10n;
@@ -203,44 +256,46 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
         ),
       ];
     }
-    final List<PaletteSuggestion> palette = _plan.palette;
     return <Widget>[
       caps(l10n.ideasMarkersTitle),
-      if (palette.isNotEmpty) ...<Widget>[
-        PaletteStrip(
-          colors: <String>[for (final s in palette) s.color.hex],
-          labels: <String>[for (final s in palette) s.color.newCode],
-          colorHeight: 44,
-          radius: InkRadii.control,
-        ),
-        const SizedBox(height: InkSpacing.block),
-        for (final PaletteSuggestion s in palette) _MarkerRow(suggestion: s),
-      ],
+      // The strip is the swatches only (like the featured card); the codes
+      // wait in the folded list below.
+      PaletteStrip(
+        colors: <String>[for (final s in palette) s.color.hex],
+        colorHeight: 44,
+        radius: InkRadii.control,
+      ),
       if (_plan.missing > 0)
         Padding(
           padding: const EdgeInsets.only(top: InkSpacing.s4),
           child: body(l10n.ideasMissingMarkers(_plan.missing), color: ink.fg2),
         ),
       const SizedBox(height: InkSpacing.block),
-      _ActionButtons(
-        secondary: InkButton.secondary(
-          key: ValueKey<String>('ideas-other-${_preset.id}'),
-          label: l10n.ideasOtherMarkersButton,
-          icon: InkIcons.shuffle,
-          expand: true,
-          onPressed: _otherMarkers,
+      // The primary sits right under the strip, so it is on view when the
+      // sheet opens at half height (§2.3.4).
+      InkButton(
+        key: ValueKey<String>('ideas-apply-${_preset.id}'),
+        label: l10n.ideasApplyButton,
+        trailingIcon: InkIcons.arrowRight,
+        expand: true,
+        onPressed: () => Navigator.of(context).pop(_plan),
+      ),
+      const SizedBox(height: InkSpacing.block),
+      // The named markers stay in "Your markers", folded after the strip
+      // (the summary says how many there are).
+      InkDisclosure(
+        key: ValueKey<String>('ideas-markers-${_preset.id}'),
+        title: l10n.collectionMarkers(palette.length),
+        expanded: _markersOpen,
+        onToggle: () => setState(() => _markersOpen = !_markersOpen),
+        padding: EdgeInsets.zero,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            const SizedBox(height: InkSpacing.s4),
+            for (final PaletteSuggestion s in palette) _MarkerRow(suggestion: s),
+          ],
         ),
-        secondaryLabel: l10n.ideasOtherMarkersButton,
-        primary: palette.isNotEmpty
-            ? InkButton(
-                key: ValueKey<String>('ideas-apply-${_preset.id}'),
-                label: l10n.ideasApplyButton,
-                trailingIcon: InkIcons.arrowRight,
-                expand: true,
-                onPressed: () => Navigator.of(context).pop(_plan),
-              )
-            : null,
-        primaryLabel: l10n.ideasApplyButton,
       ),
     ];
   }
@@ -369,68 +424,6 @@ class _StepRow extends StatelessWidget {
           ],
         ],
       ),
-    );
-  }
-}
-
-/// The sheet's two actions at full width: side by side in equal halves while
-/// both labels fit on one line, one above the other (each full width) when
-/// they do not, so a label is never cut or wrapped.
-class _ActionButtons extends StatelessWidget {
-  const _ActionButtons({
-    required this.secondary,
-    required this.secondaryLabel,
-    required this.primary,
-    required this.primaryLabel,
-  });
-
-  final Widget secondary;
-  final String secondaryLabel;
-  final Widget? primary;
-  final String primaryLabel;
-
-  /// Width a button needs: padding 16 + 16, icon 16 and its gap 8, the label
-  /// and a hair of margin.
-  double _needed(BuildContext context, String label) {
-    final TextPainter painter = TextPainter(
-      text: TextSpan(text: label, style: AppTypography.button),
-      textDirection: Directionality.of(context),
-      textScaler: MediaQuery.textScalerOf(context),
-      maxLines: 1,
-    )..layout();
-    final double width = painter.width;
-    painter.dispose();
-    return width + 32 + 16 + 8 + 4;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final Widget? primary = this.primary;
-    if (primary == null) return secondary;
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final double half = (constraints.maxWidth - InkSpacing.buttonGap) / 2;
-        final bool sideBySide =
-            _needed(context, secondaryLabel) <= half &&
-            _needed(context, primaryLabel) <= half;
-        if (sideBySide) {
-          return Row(
-            children: <Widget>[
-              Expanded(child: secondary),
-              const SizedBox(width: InkSpacing.buttonGap),
-              Expanded(child: primary),
-            ],
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            secondary,
-            const SizedBox(height: InkSpacing.s8),
-            primary,
-          ],
-        );
-      },
     );
   }
 }

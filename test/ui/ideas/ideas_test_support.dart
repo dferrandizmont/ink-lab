@@ -40,8 +40,9 @@ Future<AppScope> pumpIdeas(
   Set<String>? ownedMarkerCodes,
   DateTime? today,
   VoidCallback? onOpenPalette,
+  Size size = const Size(800, 4000),
 }) async {
-  tester.view.physicalSize = const Size(800, 4000);
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 

@@ -193,6 +193,7 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
 
   @override
   Widget build(BuildContext context) {
+    final bool enabled = _controller.enabled;
     final bool onDeviceOffered = _onDeviceOffered;
     final AiProvider selectedProvider = _effectiveProvider;
     final bool onDevice = selectedProvider == AiProvider.onDevice;
@@ -203,73 +204,79 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
       children: <Widget>[
         SettingsSwitchRow(
           label: context.l10n.settingsAiEnabled,
-          subtitle: switch (selectedProvider) {
-            AiProvider.local =>
-              _onDeviceMentioned
-                  ? context.l10n.settingsAiEnabledSubtitleColourTheory
-                  : context
-                        .l10n
-                        .settingsAiEnabledSubtitleColourTheoryNoOnDevice,
-            AiProvider.onDevice =>
-              context.l10n.settingsAiEnabledSubtitleOnDevice,
-            AiProvider.openRouter =>
-              context.l10n.settingsAiEnabledSubtitleOpenRouter,
-          },
-          value: _controller.enabled,
+          // With the AI off the card shows the switch and this line only:
+          // the provider, the key and the fallback come with the AI.
+          subtitle: enabled
+              ? switch (selectedProvider) {
+                  AiProvider.local =>
+                    _onDeviceMentioned
+                        ? context.l10n.settingsAiEnabledSubtitleColourTheory
+                        : context
+                              .l10n
+                              .settingsAiEnabledSubtitleColourTheoryNoOnDevice,
+                  AiProvider.onDevice =>
+                    context.l10n.settingsAiEnabledSubtitleOnDevice,
+                  AiProvider.openRouter =>
+                    context.l10n.settingsAiEnabledSubtitleOpenRouter,
+                }
+              : context.l10n.settingsAiSubtitle,
+          value: enabled,
           onChanged: _onToggleEnabled,
         ),
-        SettingsControlRow(
-          label: context.l10n.settingsAiProvider,
-          stacked: true,
-          // Three long options: a radio list, not a segmented control.
-          control: Semantics(
-            container: true,
+        if (enabled) ...<Widget>[
+          SettingsControlRow(
             label: context.l10n.settingsAiProvider,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                SettingsRadioRow(
-                  label: context.l10n.settingsAiProviderColourTheory,
-                  selected: selectedProvider == AiProvider.local,
-                  onTap: () => _controller.setProvider(AiProvider.local),
-                ),
-                // Offered only where the phone has an on-device model: there
-                // is no "not available" row on iOS or unsupported devices.
-                if (onDeviceOffered)
+            stacked: true,
+            // Three long options: a radio list, not a segmented control.
+            control: Semantics(
+              container: true,
+              label: context.l10n.settingsAiProvider,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
                   SettingsRadioRow(
-                    label: context.l10n.settingsAiProviderOnDevice,
-                    semantic: context.l10n.settingsAiOnDeviceName,
-                    selected: selectedProvider == AiProvider.onDevice,
-                    onTap: () => _controller.setProvider(AiProvider.onDevice),
+                    label: context.l10n.settingsAiProviderColourTheory,
+                    selected: selectedProvider == AiProvider.local,
+                    onTap: () => _controller.setProvider(AiProvider.local),
                   ),
-                SettingsRadioRow(
-                  label: context.l10n.settingsAiProviderOpenRouter,
-                  selected: selectedProvider == AiProvider.openRouter,
-                  onTap: () => _controller.setProvider(AiProvider.openRouter),
-                ),
-              ],
+                  // Offered only where the phone has an on-device model: there
+                  // is no "not available" row on iOS or unsupported devices.
+                  if (onDeviceOffered)
+                    SettingsRadioRow(
+                      label: context.l10n.settingsAiProviderOnDevice,
+                      semantic: context.l10n.settingsAiOnDeviceName,
+                      selected: selectedProvider == AiProvider.onDevice,
+                      onTap: () => _controller.setProvider(AiProvider.onDevice),
+                    ),
+                  SettingsRadioRow(
+                    label: context.l10n.settingsAiProviderOpenRouter,
+                    selected: selectedProvider == AiProvider.openRouter,
+                    onTap: () => _controller.setProvider(AiProvider.openRouter),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        SettingsCaption(switch (selectedProvider) {
-          AiProvider.local => context.l10n.settingsAiExplainColourTheory,
-          AiProvider.onDevice => context.l10n.settingsAiExplainOnDevice,
-          AiProvider.openRouter => context.l10n.settingsAiExplainOpenRouter,
-        }, textKey: const ValueKey<String>('ai-provider-explanation')),
-        if (onDevice) _buildOnDevice(),
-        if (openRouter) ...<Widget>[
-          _buildApiKey(),
-          _buildConnection(),
-          _buildModels(),
-          _Block(child: _buildTemperature()),
-          _Block(child: _buildMaxTokens()),
+          SettingsCaption(switch (selectedProvider) {
+            AiProvider.local => context.l10n.settingsAiExplainColourTheory,
+            AiProvider.onDevice => context.l10n.settingsAiExplainOnDevice,
+            AiProvider.openRouter => context.l10n.settingsAiExplainOpenRouter,
+          }, textKey: const ValueKey<String>('ai-provider-explanation')),
+          if (onDevice) _buildOnDevice(),
+          if (openRouter) ...<Widget>[
+            _buildApiKey(),
+            _buildConnection(),
+            _buildModels(),
+            _Block(child: _buildTemperature()),
+            _Block(child: _buildMaxTokens()),
+          ],
+          SettingsSwitchRow(
+            label: context.l10n.settingsAiAutoFallback,
+            subtitle: context.l10n.settingsAiAutoFallbackSubtitle,
+            value: _controller.autoFallback,
+            onChanged: _controller.setAutoFallback,
+          ),
         ],
-        SettingsSwitchRow(
-          label: context.l10n.settingsAiAutoFallback,
-          subtitle: context.l10n.settingsAiAutoFallbackSubtitle,
-          value: _controller.autoFallback,
-          onChanged: _controller.setAutoFallback,
-        ),
       ],
     );
   }

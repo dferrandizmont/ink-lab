@@ -137,3 +137,49 @@ Future<void> openPaletteSceneSheet(WidgetTester tester) async {
   await tester.tap(find.byKey(const ValueKey<String>('palette-scene-field')));
   await tester.pumpAndSettle();
 }
+
+/// Opens the saved-palettes sheet from the page header action.
+Future<void> openSavedPalettesSheet(WidgetTester tester) async {
+  await tester.tap(
+    find.byKey(const ValueKey<String>('palette-saved-palettes')),
+  );
+  await tester.pumpAndSettle();
+}
+
+/// Closes the top sheet or dialog.
+Future<void> closeSheet(WidgetTester tester) async {
+  tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+  await tester.pumpAndSettle();
+}
+
+/// Opens the overflow menu [menuKey] and taps its item [itemKey]. The entries
+/// of an [InkOverflowMenu] only exist while the menu is open, so a test must
+/// open it first. Use `settle: false` for an action that starts real async
+/// work (a share), where the caller drives the clock itself.
+Future<void> tapOverflowItem(
+  WidgetTester tester,
+  String menuKey,
+  String itemKey, {
+  bool settle = true,
+}) async {
+  await tester.tap(find.byKey(ValueKey<String>(menuKey)));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(ValueKey<String>(itemKey)));
+  if (settle) {
+    await tester.pumpAndSettle();
+  } else {
+    await tester.pump();
+  }
+}
+
+/// Opens the result's "⋯" menu and taps the item [itemKey].
+Future<void> tapResultItem(
+  WidgetTester tester,
+  String itemKey, {
+  bool settle = true,
+}) => tapOverflowItem(
+  tester,
+  'palette-overflow',
+  itemKey,
+  settle: settle,
+);

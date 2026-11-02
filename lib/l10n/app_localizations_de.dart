@@ -42,9 +42,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settingsPalettesTitle => 'Gespeicherte Paletten';
 
   @override
-  String get settingsPalettesEmpty => 'Noch keine Palette gespeichert.';
-
-  @override
   String get settingsClearPalettes => 'Alle löschen';
 
   @override
@@ -54,9 +51,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get settingsClearPalettesBody =>
       'Die für diese Marke gespeicherten Paletten werden gelöscht. Das lässt sich nicht rückgängig machen.';
-
-  @override
-  String get settingsDeletePalette => 'Palette löschen';
 
   @override
   String get settingsFavoritesTitle => 'Favoriten';
@@ -103,9 +97,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsAppearanceDark => 'Dunkel';
-
-  @override
-  String get settingsBackupTitle => 'Sicherung';
 
   @override
   String get settingsBackupSubtitle =>
@@ -157,11 +148,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ideasRecentTitle => 'Zuletzt angesehen';
 
   @override
-  String get settingsBackupFileTitle => 'Sicherungsdatei';
-
-  @override
   String get settingsBackupFileCaption =>
       'Eine ZIP-Datei mit deinen Daten und den Tagebuchfotos. Speichere sie in Dateien, Drive oder wo du willst. Der API-Schlüssel ist nie enthalten.';
+
+  @override
+  String get settingsBackupTextTitle => 'Kopie als Text (ohne Fotos)';
 
   @override
   String get settingsSaveBackupFile => 'Sicherungsdatei speichern';
@@ -782,9 +773,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Erstelle eine Palette aus einem Basismarker, den du besitzt';
 
   @override
-  String get paletteAiOptionalNote => 'KI ist optional und standardmäßig aus.';
-
-  @override
   String get paletteLockButton => 'Sperren';
 
   @override
@@ -808,6 +796,17 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get paletteSavedEmpty =>
       'Für diese Marke sind noch keine Paletten gespeichert.';
+
+  @override
+  String palettePaintPlanSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Schritte',
+      one: '1 Schritt',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get paletteLoadButton => 'Laden';
@@ -936,9 +935,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get swatchesClosestAlternatives => 'Nächste Alternativen';
 
   @override
-  String get swatchesDeltaEUnit => 'ΔE 76';
-
-  @override
   String get swatchesInPacks => 'In Sets';
 
   @override
@@ -1059,8 +1055,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ideasTitle => 'Ideen';
 
   @override
-  String get ideasHeaderSubtitle =>
-      'Übungen für deine Marker, mit einer Palette aus deiner Sammlung';
+  String get ideasHeaderSubtitle => 'Übungen für deine Marker';
 
   @override
   String get ideasHeaderSubtitleWholeRange =>
@@ -1074,6 +1069,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ideasApplyButton => 'In Palette nutzen';
+
+  @override
+  String get ideasMoreDetails => 'Mehr Details';
 
   @override
   String get ideasGuideOnlyNote =>
@@ -1121,9 +1119,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ideasFeaturedLabel => 'Idee des Tages';
-
-  @override
-  String get ideasOpenButton => 'Schritte ansehen';
 
   @override
   String get ideasOtherMarkersButton => 'Andere Marker';
@@ -2528,9 +2523,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchAlternatesTitle => 'Alternativen';
 
   @override
-  String get matchDeltaMethod => 'ΔE 76';
-
-  @override
   String get matchSaveButton => 'Speichern';
 
   @override
@@ -2610,6 +2602,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get commonClose => 'Schließen';
+
+  @override
+  String get commonMoreActions => 'Weitere Aktionen';
+
+  @override
+  String commonQualityLine(double value, String quality) {
+    final intl.NumberFormat valueNumberFormat =
+        intl.NumberFormat.decimalPatternDigits(
+          locale: localeName,
+          decimalDigits: 1,
+        );
+    final String valueString = valueNumberFormat.format(value);
+
+    return 'ΔE $valueString · $quality';
+  }
 
   @override
   String get commonBaseLocked => 'Basis gesperrt';
@@ -2706,11 +2713,6 @@ class AppLocalizationsDe extends AppLocalizations {
       one: '1 Pack ausgewählt',
     );
     return '$_temp0';
-  }
-
-  @override
-  String settingsPaletteDescription(String mode, String colors) {
-    return '$mode · $colors';
   }
 
   @override
@@ -3863,6 +3865,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchNotOwnedBadge => 'Besitzt du nicht';
 
   @override
+  String matchBestOfRange(String brand) {
+    return 'Bester aus dem ganzen $brand-Sortiment';
+  }
+
+  @override
+  String get matchNotOwnedLine => 'Nicht in deiner Sammlung';
+
+  @override
+  String matchSeeAll(int count) {
+    return 'Alle ansehen ($count)';
+  }
+
+  @override
   String get matchSubtitleEmpty => 'Noch keine Marker in deiner Sammlung';
 
   @override
@@ -3996,6 +4011,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get collectionReset => 'Zurücksetzen';
+
+  @override
+  String get collectionOwnedGroup => 'Was du besitzt';
+
+  @override
+  String get collectionShoppingGroup => 'Einkäufe';
+
+  @override
+  String get collectionToolsGroup => 'Werkzeuge';
+
+  @override
+  String commonSeeAll(int count) {
+    return 'Alle anzeigen ($count)';
+  }
 
   @override
   String get collectionChartTitle => 'Druckbare Farbkarte';
@@ -4348,12 +4377,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Katalogfarben sind Schätzungen. Speichere die Farbe, die dein Marker wirklich auf Papier ergibt.';
 
   @override
-  String get swatchesMyColourSet => 'Meine Farbe festlegen';
-
-  @override
-  String get swatchesMyColourChange => 'Ändern';
-
-  @override
   String get swatchesMyColourReset => 'Zurück zum Katalog';
 
   @override
@@ -4361,6 +4384,20 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get swatchesMyColourWasReset => 'Zurück zur Katalogfarbe';
+
+  @override
+  String get swatchesMyColourSame => 'Wie im Katalog';
+
+  @override
+  String swatchesMyColourValue(String hex) {
+    return 'Deins: $hex';
+  }
+
+  @override
+  String get swatchesStatusWished => 'Auf deiner Wunschliste';
+
+  @override
+  String get swatchesDetailsTitle => 'Details';
 
   @override
   String get swatchesCatalogueLabel => 'Katalog';
@@ -4532,6 +4569,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get diaryNotesHint => 'Technik, Papier, Verblenden ...';
+
+  @override
+  String get diaryMoreDetails => 'Mehr Details';
 
   @override
   String get diaryPhotosTitle => 'Fotos';

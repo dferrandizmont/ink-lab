@@ -14,7 +14,7 @@ String _semanticsOf(
   bool notOwned = false,
 }) {
   final MarkerColor color = match.color;
-  final String owned = notOwned ? '${context.l10n.matchNotOwnedBadge}, ' : '';
+  final String owned = notOwned ? '${context.l10n.matchNotOwnedLine}, ' : '';
   return '${color.newCode}, ${color.newName}, $owned'
       '${context.l10n.matchQualityLabel(match.deltaE)}, '
       '${context.l10n.commonDeltaE(match.deltaE)}. ${context.l10n.matchSaveButton}.';
@@ -102,10 +102,16 @@ class BestMatchTile extends StatelessWidget {
                       QualityBadge(
                         context.l10n.matchQualityLabel(match.deltaE),
                       ),
-                      if (notOwned)
-                        QualityBadge(context.l10n.matchNotOwnedBadge),
                     ],
                   ),
+                  if (notOwned) ...<Widget>[
+                    const SizedBox(height: InkSpacing.s4),
+                    // Not a badge: the marker is simply not in the collection.
+                    Text(
+                      context.l10n.matchNotOwnedLine,
+                      style: AppTypography.secondary.copyWith(color: ink.fg2),
+                    ),
+                  ],
                 ],
               ),
             ),

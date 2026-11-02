@@ -10,12 +10,17 @@ import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/ink_sheet.dart';
+import '../../widgets/page_header.dart';
 import 'marker_status_row.dart';
 
-/// "What to buy next" in My collection: the ten loose markers of the active
+/// "What to buy next" in My collection: the loose markers of the active
 /// brand that would bring the user's colours closest to the most drawing
-/// scenes (see `suggestPurchases`), each with a one-line reason and a button
-/// that puts it on the wishlist.
+/// scenes (see `suggestPurchases`).
+///
+/// Shows the three first suggestions and a "See all" that opens the full
+/// ranking in a draggable selector (spec §2.6); each row keeps the one-line
+/// reason and the button that puts it on the wishlist.
 class PurchaseCard extends StatefulWidget {
   const PurchaseCard({
     super.key,
@@ -48,6 +53,9 @@ class _PurchaseCardState extends State<PurchaseCard> {
   String? _signature;
   List<PurchaseSuggestion> _suggestions = const <PurchaseSuggestion>[];
   bool _hasCollection = false;
+
+  /// How many suggestions are shown inline before "See all".
+  static const int _inline = 3;
 
   @override
   void didChangeDependencies() {
@@ -97,85 +105,71 @@ class _PurchaseCardState extends State<PurchaseCard> {
         : const <PurchaseSuggestion>[];
   }
 
-  String _reason(AppLocalizations l10n, PurchaseSuggestion s, String language) {
-    if (s.improvedScenes == 0) return l10n.buyNextReasonGap;
-    final String names =
-        s.topScenes.take(2).map((scene) => scene.nameFor(language)).join(', ') +
-        (s.improvedScenes > 2 ? '…' : '');
-    return l10n.buyNextReasonScenes(s.improvedScenes, names);
-  }
-
   @override
   Widget build(BuildContext context) {
     final AppScope scope = _scope!;
     final InkColors ink = InkColors.of(context);
-    return Card(
-      child: Padding(
-        padding: InkSpacing.card,
-        child: FutureBuilder<SceneCatalog>(
-          future: _scenes,
-          builder: (BuildContext context, AsyncSnapshot<SceneCatalog> scenes) {
-            final SceneCatalog? catalog = scenes.data;
-            if (catalog == null) {
-              // The catalogue is a bundled asset: a moment, or never (error).
-              return const SizedBox(height: InkGeometry.target);
-            }
+    return FutureBuilder<SceneCatalog>(
+      future: _scenes,
+      builder: (BuildContext context, AsyncSnapshot<SceneCatalog> scenes) {
+        final SceneCatalog? catalog = scenes.data;
+        if (catalog == null) {
+          // The catalogue is a bundled asset: a moment, or never (error).
+          return const SizedBox(height: InkGeometry.target);
+        }
+        return StreamBuilder<Set<String>>(
+          stream: _driedChanges,
+          initialData: scope.dried.ids,
+          builder: (BuildContext context, AsyncSnapshot<Set<String>> _) {
+            _refresh(scope, catalog);
             return StreamBuilder<Set<String>>(
-              stream: _driedChanges,
-              initialData: scope.dried.ids,
-              builder: (BuildContext context, AsyncSnapshot<Set<String>> _) {
-                _refresh(scope, catalog);
-                return StreamBuilder<Set<String>>(
-                  stream: _wishChanges,
-                  initialData: scope.wishlist.ids,
-                  builder: (
-                    BuildContext context,
-                    AsyncSnapshot<Set<String>> _,
-                  ) => _content(context, scope, ink),
-                );
-              },
+              stream: _wishChanges,
+              initialData: scope.wishlist.ids,
+              builder:
+                  (BuildContext context, AsyncSnapshot<Set<String>> _) =>
+                      _content(context, scope, ink),
             );
           },
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _content(BuildContext context, AppScope scope, InkColors ink) {
     final AppLocalizations l10n = context.l10n;
     final String language = Localizations.localeOf(context).languageCode;
-    final Set<String> dried = scope.dried.ids;
     final List<Widget> children = <Widget>[
-      Text(
-        l10n.buyNextIntro,
-        style: AppTypography.secondary.copyWith(color: ink.fg2),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(
+          InkSpacing.cardH,
+          InkSpacing.cardV,
+          InkSpacing.cardH,
+          0,
+        ),
+        child: Text(
+          l10n.buyNextIntro,
+          style: AppTypography.secondary.copyWith(color: ink.fg2),
+        ),
       ),
     ];
     if (!_hasCollection) {
-      children
-        ..add(const SizedBox(height: InkSpacing.group))
-        ..add(
-          Text(
-            l10n.buyNextNoCollection,
-            key: const ValueKey<String>('buy-next-empty'),
-            style: AppTypography.body.copyWith(color: ink.fg),
-          ),
-        );
+      children.add(
+        _line(
+          l10n.buyNextNoCollection,
+          ink,
+          key: const ValueKey<String>('buy-next-empty'),
+        ),
+      );
     } else if (_suggestions.isEmpty) {
-      children
-        ..add(const SizedBox(height: InkSpacing.group))
-        ..add(
-          Text(
-            l10n.buyNextComplete,
-            key: const ValueKey<String>('buy-next-complete'),
-            style: AppTypography.body.copyWith(color: ink.fg),
-          ),
-        );
+      children.add(
+        _line(
+          l10n.buyNextComplete,
+          ink,
+          key: const ValueKey<String>('buy-next-complete'),
+        ),
+      );
     } else {
-      children.add(const SizedBox(height: InkSpacing.group));
-      for (final PurchaseSuggestion s in _suggestions) {
-        final String id = s.color.colorId;
-        final bool wished = scope.wishlist.contains(id);
+      for (final PurchaseSuggestion s in _suggestions.take(_inline)) {
         children
           ..add(
             Divider(
@@ -185,24 +179,31 @@ class _PurchaseCardState extends State<PurchaseCard> {
             ),
           )
           ..add(
-            MarkerStatusRow(
-              key: ValueKey<String>('buy-next-$id'),
-              colorId: id,
-              color: s.color,
-              nameDisplayMode: widget.nameDisplayMode,
-              notes: <String>[
-                _reason(l10n, s, language),
-                if (dried.contains(id)) l10n.buyNextRefill,
-              ],
-              trailing: InkIconButton(
-                key: ValueKey<String>('buy-next-wish-$id'),
-                icon: InkIcons.bookmark,
-                selected: wished,
-                tooltip: wished ? l10n.wishlistRemove : l10n.wishlistAdd,
-                onPressed: () => scope.wishlist.toggle(id),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: InkSpacing.cardH,
               ),
+              child: _row(context, scope, s, l10n, language),
             ),
           );
+      }
+      if (_suggestions.length > _inline) {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              InkSpacing.cardH,
+              InkSpacing.group,
+              InkSpacing.cardH,
+              InkSpacing.cardV,
+            ),
+            child: InkButton.text(
+              key: const ValueKey<String>('collection-buy-next-see-all'),
+              label: l10n.commonSeeAll(_suggestions.length),
+              expand: true,
+              onPressed: () => _showAll(context, scope),
+            ),
+          ),
+        );
       }
     }
     return Column(
@@ -210,4 +211,141 @@ class _PurchaseCardState extends State<PurchaseCard> {
       children: children,
     );
   }
+
+  Widget _line(String text, InkColors ink, {required Key key}) => Padding(
+    padding: const EdgeInsets.fromLTRB(
+      InkSpacing.cardH,
+      InkSpacing.group,
+      InkSpacing.cardH,
+      InkSpacing.cardV,
+    ),
+    child: Text(
+      text,
+      key: key,
+      style: AppTypography.body.copyWith(color: ink.fg),
+    ),
+  );
+
+  Widget _row(
+    BuildContext context,
+    AppScope scope,
+    PurchaseSuggestion s,
+    AppLocalizations l10n,
+    String language,
+  ) {
+    final String id = s.color.colorId;
+    final bool wished = scope.wishlist.contains(id);
+    return MarkerStatusRow(
+      key: ValueKey<String>('buy-next-$id'),
+      colorId: id,
+      color: s.color,
+      nameDisplayMode: widget.nameDisplayMode,
+      notes: <String>[
+        _reasonText(l10n, s, language),
+        if (scope.dried.contains(id)) l10n.buyNextRefill,
+      ],
+      trailing: InkIconButton(
+        key: ValueKey<String>('buy-next-wish-$id'),
+        icon: InkIcons.bookmark,
+        selected: wished,
+        tooltip: wished ? l10n.wishlistRemove : l10n.wishlistAdd,
+        onPressed: () => scope.wishlist.toggle(id),
+      ),
+    );
+  }
+
+  Future<void> _showAll(BuildContext context, AppScope scope) {
+    final String language = Localizations.localeOf(context).languageCode;
+    return showInkDraggableSheet<void>(
+      context: context,
+      initial: 0.5,
+      snaps: const <double>[0.5, 1.0],
+      builder: (BuildContext context, ScrollController scroll) =>
+          _AllSuggestionsSheet(
+            scope: scope,
+            suggestions: _suggestions,
+            nameDisplayMode: widget.nameDisplayMode,
+            language: language,
+            scrollController: scroll,
+          ),
+    );
+  }
+}
+
+/// The full "What to buy next" ranking, in a draggable selector (spec §2.6).
+class _AllSuggestionsSheet extends StatelessWidget {
+  const _AllSuggestionsSheet({
+    required this.scope,
+    required this.suggestions,
+    required this.nameDisplayMode,
+    required this.language,
+    required this.scrollController,
+  });
+
+  final AppScope scope;
+  final List<PurchaseSuggestion> suggestions;
+  final NameDisplayMode nameDisplayMode;
+  final String language;
+  final ScrollController scrollController;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+    return StreamBuilder<Set<String>>(
+      stream: scope.wishlist.changes,
+      initialData: scope.wishlist.ids,
+      builder: (BuildContext context, AsyncSnapshot<Set<String>> snapshot) {
+        final Set<String> wished = snapshot.data ?? scope.wishlist.ids;
+        final Set<String> dried = scope.dried.ids;
+        return SingleChildScrollView(
+          controller: scrollController,
+          padding: const EdgeInsets.fromLTRB(
+            InkSpacing.cardH,
+            0,
+            InkSpacing.cardH,
+            InkSpacing.sheet,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              InkSectionHeading(l10n.buyNextTitle),
+              const SizedBox(height: InkSpacing.group),
+              for (final PurchaseSuggestion s in suggestions)
+                MarkerStatusRow(
+                  key: ValueKey<String>('buy-all-${s.color.colorId}'),
+                  colorId: s.color.colorId,
+                  color: s.color,
+                  nameDisplayMode: nameDisplayMode,
+                  notes: <String>[
+                    _reasonText(l10n, s, language),
+                    if (dried.contains(s.color.colorId)) l10n.buyNextRefill,
+                  ],
+                  trailing: InkIconButton(
+                    key: ValueKey<String>('buy-all-wish-${s.color.colorId}'),
+                    icon: InkIcons.bookmark,
+                    selected: wished.contains(s.color.colorId),
+                    tooltip: wished.contains(s.color.colorId)
+                        ? l10n.wishlistRemove
+                        : l10n.wishlistAdd,
+                    onPressed: () => scope.wishlist.toggle(s.color.colorId),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+String _reasonText(
+  AppLocalizations l10n,
+  PurchaseSuggestion s,
+  String language,
+) {
+  if (s.improvedScenes == 0) return l10n.buyNextReasonGap;
+  final String names =
+      s.topScenes.take(2).map((scene) => scene.nameFor(language)).join(', ') +
+      (s.improvedScenes > 2 ? '…' : '');
+  return l10n.buyNextReasonScenes(s.improvedScenes, names);
 }

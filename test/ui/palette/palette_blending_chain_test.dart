@@ -147,10 +147,17 @@ void main() {
       );
       String nameOf(String code) =>
           catalog.firstWhere((MarkerColor c) => c.newCode == code).newName;
+      // The paint order starts folded: open its disclosure first.
+      await tester.ensureVisible(_key('palette-paint-order'));
+      await tester.tap(_key('palette-paint-order'));
+      await tester.pumpAndSettle();
       await tester.ensureVisible(_key('palette-step-name-4'));
       await tester.pumpAndSettle();
 
-      expect(find.text(l10n.palettePaintPlanTitle), findsOneWidget);
+      expect(
+        find.text(AppTypography.caps(l10n.palettePaintPlanTitle)),
+        findsOneWidget,
+      );
       // No "block the shape with the base" tip: the base is a step like any.
       expect(find.text(l10n.palettePaintTipBase), findsNothing);
       String text(String key) => tester
@@ -190,15 +197,15 @@ void main() {
       expect(_stripLabels(tester), first);
     });
 
-    testWidgets('Generate and Clear still work', (WidgetTester tester) async {
+    testWidgets('Regenerate and Clear still work', (WidgetTester tester) async {
       await _pumpChain(tester);
       final List<String> before = _stripLabels(tester);
-      await tester.ensureVisible(_key('palette-generate'));
-      await tester.tap(_key('palette-generate'));
+      await tester.ensureVisible(_key('palette-regenerate'));
+      await tester.tap(_key('palette-regenerate'));
       await tester.pumpAndSettle();
       expect(_stripLabels(tester), before);
 
-      await tester.tap(_key('palette-clear'));
+      await tapResultItem(tester, 'palette-clear');
       await tester.pumpAndSettle();
       expect(find.byType(PaletteStrip), findsNothing);
       expect(find.text(l10n.paletteEmptyHint), findsOneWidget);
@@ -331,6 +338,12 @@ void main() {
         SavedPalette.fromJson(saved.single.toJson()).mode,
         PaletteMode.blendingChain,
       );
+      // The saved list moved to its own sheet: clear the page, then open it.
+      await tapResultItem(tester, 'palette-clear');
+      await tester.pumpAndSettle();
+      expect(find.byType(PaletteStrip), findsNothing);
+
+      await openSavedPalettesSheet(tester);
       expect(
         find.text(
           l10n.paletteSavedSubtitle(
@@ -341,11 +354,6 @@ void main() {
         findsOneWidget,
       );
 
-      await tester.tap(_key('palette-clear'));
-      await tester.pumpAndSettle();
-      expect(find.byType(PaletteStrip).evaluate().length, 1); // saved row only
-
-      await tester.ensureVisible(_key('palette-load-${saved.single.id}'));
       await tester.tap(_key('palette-load-${saved.single.id}'));
       await tester.pumpAndSettle();
 
@@ -382,7 +390,7 @@ void main() {
           ),
         ),
       );
-      await tester.ensureVisible(_key('palette-load-c1'));
+      await openSavedPalettesSheet(tester);
       await tester.tap(_key('palette-load-c1'));
       await tester.pumpAndSettle();
       expect(_stripLabels(tester), <String>['B08', 'B010']);
@@ -397,9 +405,7 @@ void main() {
       await enterBaseCode(tester, 'B08');
       await _selectSize(tester, 4);
 
-      await tester.ensureVisible(_key('palette-share'));
-      await tester.tap(_key('palette-share'));
-      await tester.pump();
+      await tapResultItem(tester, 'palette-share', settle: false);
       await tester.runAsync(() async {
         for (int i = 0; i < 600 && sink.shared.isEmpty; i++) {
           await Future<void>.delayed(const Duration(milliseconds: 50));

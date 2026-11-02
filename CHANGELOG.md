@@ -8,6 +8,61 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
+## 0.9.0 · 2026-11-02
+
+- Ideas, tidied up: the list's featured card is now one big tap target (no separate "Open" button) and "Recently viewed"
+  is a row that unfolds on demand instead of a block that always takes space. The idea sheet has been reordered: name,
+  heart and the ⋯ menu on top, then a one-line summary, the markers it uses as a strip of colours, one clear
+  full-width button to use the idea, and only then the rest folded away — the full list of named markers behind its
+  count, and what you practise, what to draw, a tip and what you need behind "More details". Everything is reachable
+  with a screen reader and stays inside the sheet at every text size.
+- Diary (Ideas › Diary): the entry form starts with Title, Photos and Markers used, and then Status; "Painted on",
+  Date (today by default), Palette and Notes move into a folded "More details" group, open only when one of them already
+  has a value. Share and Delete entry move to the "⋯" menu in the header and "Save entry" is the only primary button.
+  In the list, "Add to diary" is now the segment's primary action in the same 48 dp slot the search field uses in Ideas,
+  so nothing moves when you switch segment, and "Palettes you link most" is folded, like "unused" already was.
+- My collection: the page is now three groups of caps headings — "What you own" (the brand switch, the summary, and
+  the series, the sets and the loose markers folded into summary rows that unfold what they hold), "Shopping" (what to
+  buy next, showing the three first suggestions and a "See all" that opens the full ranking in a sheet; the wishlist
+  and the dried-out markers, folded behind their counts) and "Tools" (the printable swatch chart, folded behind its
+  marker and page count). "Reset collection" is a text button in the error colour. The section titles, the counts and
+  every shortcut stay the same.
+- Match: the screen is quieter and the buttons stay put. The camera and the gallery sit in a fixed row right under the
+  photo, as small secondary buttons, with "Fix white balance" as a text button at the right; the row is the same with
+  or without a photo, so taking a picture never moves it. The sampled colour shows only its hex, the alternatives lose
+  the "ΔE 76" note, the best marker of the whole range is folded (its code and distance are in the summary), a marker
+  that is not in the collection says so in a quiet line instead of a badge, and the recent picks show one row of six
+  with "See all (n)" opening the rest in a sheet.
+- Settings: the lists that could grow are not painted in the page any more. "Favourites" is now a row with the number
+  of colours and a chevron; tapping it opens a draggable sheet with the list, where every colour can be removed and
+  where the "⋯" menu clears them all. Settings is exactly as long with 40 favourites as with none.
+- Settings: the backup card has one clear order. "Save backup file" is the primary button, "Restore from file" the
+  secondary one, and the copy as text (without photos) is folded in a block of its own, with Export and Import inside.
+- Settings: the AI card only shows the switch and one line of explanation while the AI is off. The provider, the key
+  and the built-in fallback come when it is turned on.
+- Palette: the saved palettes leave the page. A bookmark button in the header ("Saved palettes") opens them in a
+  selector sheet: tap a row to load it, and its "⋯" holds Share, Add to diary and Delete. The result has one "⋯" for
+  Share, Colour vision, Report (with AI) and Clear, so the page shows one primary button ("Save palette") and one
+  secondary. The paint order folds away, the notes are single lines without cards, and the base marker and Size share
+  a row when they fit.
+- Swatches: the marker sheet is calmer. It opens at half height and you drag it up for the rest. The star sits beside
+  the name, tapping the hex copies it, and there is one main action (add to palette, or the wishlist for another
+  brand); copy, blending chain, wishlist, dried out and "back to catalogue colour" moved to a "⋯" menu. "My colour" is
+  one compact row, "Closest alternatives" and "Details" fold away, and "In other brands" shows one folded group per
+  brand with only its best match (small text and dots instead of the wide "Approximate" bar).
+- Swatches: the grid is lighter. A cell shows the code and the name, without the hex (it stays in the list view and in
+  the detail sheet), so the cells are lower and more colours fit on the screen. The owned ✓ only shows with the "All"
+  filter: with "Mine" (or "Favourites") every cell would carry it and it would say nothing. The subtitle of the header
+  says the brand and its series instead of repeating a count that is already on the title line, and the header reserves
+  the room of the tallest subtitle, so changing the collection moves nothing.
+- Polish after the review: nothing jumps any more. "Add to diary" really sits in the same 48 dp slot as the search field
+  of Ideas, so switching between Ideas and Diary does not move the list 4 dp; the diary form takes its photos with the
+  same small secondary buttons as Match; in the palette the secondaries ("Generate"/"Regenerate" and "Suggest with AI")
+  share one row and are all the same size, with "Save palette" alone on its own full-width row below — the row is
+  already there before there is a result, so the result never pushes anything — and in the marker sheet the hex keeps
+  its 44 dp tap target without forcing the line to grow, while the star leaves the same room at the right as the code,
+  so it never ends up under the "⋯" or the ✕ of the sheet.
+
 ## 0.8.1 · 2026-11-01
 
 - Language: Settings > Display shows one "Language" row with the current choice (in its own name) instead of a list of

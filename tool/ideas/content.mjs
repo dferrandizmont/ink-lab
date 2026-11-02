@@ -901,7 +901,7 @@ export const roles = {
 
 // Plain UI strings of the Ideas page: key -> [en, es] (null = remove key).
 export const ui = {
-  ideasHeaderSubtitle: ['Exercises for your markers, with a palette from your collection', 'Ejercicios para tus rotuladores, con la paleta sacada de tu colección'],
+  ideasHeaderSubtitle: ['Exercises for your markers', 'Ejercicios con tus rotuladores'],
   ideasCategoryTechnique: ['Techniques', 'Técnicas'],
   ideasCategoryColorChallenge: ['Color challenges', 'Retos de color'],
   ideasCategoryMood: ['Moods', 'Ambientes'],
@@ -910,8 +910,8 @@ export const ui = {
   ideasDifficultyMedium: ['Medium', 'Media'],
   ideasDifficultyHard: ['Hard', 'Difícil'],
   ideasFeaturedLabel: ['Idea of the day', 'Idea del día'],
-  ideasOpenButton: ['See steps', 'Ver pasos'],
   ideasApplyButton: ['Use in Palette', 'Usar en Paleta'],
+  ideasMoreDetails: ['More details', 'Más detalles'],
   ideasOtherMarkersButton: ['Other markers', 'Otros rotuladores'],
   ideasPracticeTitle: ['What you practice', 'Qué practicas'],
   ideasSubjectTitle: ['What to draw', 'Qué dibujar'],
@@ -929,6 +929,7 @@ export const ui = {
   ideasNoMarkersOther: ['No markers available for the current collection filters.', 'No hay rotuladores disponibles con los filtros actuales de la colección.'],
   ideasBackLabel: ['Back to ideas', 'Volver a las ideas'],
   // Removed: inline card and "Generate" flow.
+  ideasOpenButton: null,
   ideasSelectedLabel: null,
   ideasBadgeGuideOnly: null,
   ideasBadgeGuideAndPalette: null,

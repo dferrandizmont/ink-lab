@@ -56,6 +56,12 @@ Future<void> _tapKey(WidgetTester tester, String value) async {
   await tester.pumpAndSettle();
 }
 
+/// Opens the header's "More actions" menu (share, and delete when editing).
+Future<void> _openMenu(WidgetTester tester) async {
+  await tester.tap(find.byTooltip(l10n.commonMoreActions));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   group('the Diary segment of the Ideas tab', () {
     testWidgets('sits next to Ideas and shows the empty state', (
@@ -183,6 +189,35 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byKey(ArtworkPhotoViewer.pageKey), findsNothing);
     });
+
+    testWidgets('Add to diary is the primary, in the 48 dp add slot', (
+      WidgetTester tester,
+    ) async {
+      await pumpDiary(tester);
+      final Finder add = key('diary-add');
+      expect(
+        find.descendant(of: add, matching: find.byType(FilledButton)),
+        findsOneWidget,
+      );
+      expect(tester.getSize(add).height, closeTo(48, 0.5));
+    });
+
+    testWidgets('the add slot sits where the Ideas search field sits', (
+      WidgetTester tester,
+    ) async {
+      await pumpDiaryPage(tester, IdeasPage(today: DateTime(2026, 10, 29)));
+      final double searchTop = tester.getTopLeft(key('ideas-search')).dy;
+      final double searchHeight = tester.getSize(key('ideas-search')).height;
+
+      await tester.tap(find.text(l10n.ideasDiarySegment));
+      await tester.pumpAndSettle();
+
+      expect(tester.getTopLeft(key('diary-add')).dy, closeTo(searchTop, 0.5));
+      expect(
+        tester.getSize(key('diary-add')).height,
+        closeTo(searchHeight, 0.5),
+      );
+    });
   });
 
   group('the entry form', () {
@@ -207,6 +242,8 @@ void main() {
       expect(_canSave(tester), isFalse);
 
       await tester.enterText(key('diary-title'), '  Autumn leaves  ');
+      // The optional fields live in "More details", folded while empty.
+      await _tapKey(tester, 'diary-details');
       await tester.enterText(key('diary-on-what'), 'Sketchbook');
       await tester.enterText(
         key('diary-notes'),
@@ -451,7 +488,9 @@ void main() {
       );
       await _openEntry(tester, 'e1');
 
-      await _tapKey(tester, 'diary-delete');
+      await _openMenu(tester);
+      await tester.tap(key('diary-delete'));
+      await tester.pumpAndSettle();
       expect(find.text(l10n.diaryDeleteTitle), findsOneWidget);
       expect(find.text(l10n.diaryDeleteBody), findsOneWidget);
 
@@ -461,7 +500,9 @@ void main() {
       expect(scope.artworkDiary.entries, hasLength(1));
       expect(d.photos.names, {a});
 
-      await _tapKey(tester, 'diary-delete');
+      await _openMenu(tester);
+      await tester.tap(key('diary-delete'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.diaryDeleteConfirm));
       await tester.pumpAndSettle();
 
@@ -471,11 +512,69 @@ void main() {
       expect(find.text(l10n.diaryEmptyTitle), findsOneWidget);
     });
 
-    testWidgets('a new entry has no delete button', (
+    testWidgets('the header menu shares and, when editing, deletes', (
       WidgetTester tester,
     ) async {
       await pumpDiaryPage(tester, const ArtworkEntryPage());
+      await _openMenu(tester);
+      expect(key('diary-share'), findsOneWidget);
       expect(key('diary-delete'), findsNothing);
+      // Close the menu before pumping the next page.
+      Navigator.of(tester.element(key('diary-overflow'))).pop();
+      await tester.pumpAndSettle();
+
+      await pumpDiaryPage(tester, ArtworkEntryPage(entry: entry()));
+      await _openMenu(tester);
+      expect(key('diary-share'), findsOneWidget);
+      expect(key('diary-delete'), findsOneWidget);
+    });
+
+    testWidgets('Save entry is the only primary action of the form', (
+      WidgetTester tester,
+    ) async {
+      await pumpDiaryPage(tester, ArtworkEntryPage(entry: entry()));
+      expect(find.byType(FilledButton), findsOneWidget);
+      expect(
+        find.descendant(
+          of: key('diary-save'),
+          matching: find.byType(FilledButton),
+        ),
+        findsOneWidget,
+      );
+      // The delete button is no longer in the body.
+      expect(key('diary-delete'), findsNothing);
+    });
+
+    testWidgets('folds More details while empty, opens it when one has a value', (
+      WidgetTester tester,
+    ) async {
+      await pumpDiaryPage(tester, const ArtworkEntryPage());
+      expect(find.text(l10n.diaryMoreDetails), findsOneWidget);
+      // Folded: the optional fields are not built.
+      expect(key('diary-on-what'), findsNothing);
+      expect(key('diary-date'), findsNothing);
+      expect(key('diary-palette'), findsNothing);
+      expect(key('diary-notes'), findsNothing);
+
+      await _tapKey(tester, 'diary-details');
+      expect(key('diary-on-what'), findsOneWidget);
+      expect(key('diary-date'), findsOneWidget);
+      expect(key('diary-palette'), findsOneWidget);
+      expect(key('diary-notes'), findsOneWidget);
+
+      // An entry with notes opens the block on its own.
+      await pumpDiaryPage(
+        tester,
+        ArtworkEntryPage(entry: entry(notes: 'First layer')),
+      );
+      expect(key('diary-notes'), findsOneWidget);
+    });
+
+    testWidgets('a new entry has no delete button', (WidgetTester tester) async {
+      await pumpDiaryPage(tester, const ArtworkEntryPage());
+      await _openMenu(tester);
+      expect(key('diary-delete'), findsNothing);
+      expect(key('diary-share'), findsOneWidget);
       expect(key('diary-save'), findsOneWidget);
     });
   });
@@ -491,7 +590,10 @@ void main() {
       final IdeaPreset preset = IdeasEngine.byId('one_color')!;
       await tester.tap(key('ideas-preset-one_color'));
       await tester.pumpAndSettle();
-      await _tapKey(tester, 'ideas-diary-one_color');
+      // "Add to diary" lives in the idea's ⋯ menu.
+      await _tapKey(tester, 'ideas-overflow-one_color');
+      await tester.tap(key('ideas-diary-one_color'));
+      await tester.pumpAndSettle();
 
       // The sheet is gone and the form is open with the idea's name.
       expect(key('ideas-detail-one_color'), findsNothing);
@@ -518,6 +620,8 @@ void main() {
         savedPalette(codes: const ['B08', 'R101', 'Y1']),
         picker: picker,
       );
+      await _tapKey(tester, 'palette-saved-palettes');
+      await _tapKey(tester, 'palette-saved-menu-p1');
       await _tapKey(tester, 'palette-diary-p1');
 
       expect(find.byKey(ArtworkEntryPage.pageKey), findsOneWidget);

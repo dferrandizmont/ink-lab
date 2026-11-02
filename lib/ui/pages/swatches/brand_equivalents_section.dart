@@ -7,7 +7,7 @@ import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_chip.dart';
-import '../../widgets/page_header.dart';
+import '../../widgets/ink_disclosure.dart';
 import '../../widgets/skeleton_block.dart';
 
 /// Looks up the closest markers of the other brands for [marker].
@@ -22,6 +22,10 @@ typedef BrandEquivalentsLoader = Future<List<BrandEquivalentGroup>> Function(
 
 /// "In other brands": the closest markers of every other brand to a marker,
 /// with how close each one is, and a switch to keep only the user's own.
+///
+/// Every brand is a closed group that shows its best match; opening it shows
+/// the three closest. Which groups are open is kept here, and forgotten when
+/// the marker changes.
 ///
 /// The answer is computed once per marker (and per switch position): the
 /// future is kept in the state, so rebuilding the sheet around the section
@@ -52,6 +56,9 @@ class _BrandEquivalentsSectionState extends State<BrandEquivalentsSection> {
   bool _onlyMine = false;
   late Future<List<BrandEquivalentGroup>> _future = _load();
 
+  /// The brands whose group is open.
+  final Set<String> _open = <String>{};
+
   Future<List<BrandEquivalentGroup>> _load() =>
       widget.loader(widget.marker, onlyMine: _onlyMine);
 
@@ -63,6 +70,8 @@ class _BrandEquivalentsSectionState extends State<BrandEquivalentsSection> {
     if (oldWidget.marker.colorId != widget.marker.colorId ||
         oldWidget.marker.hex != widget.marker.hex) {
       _future = _load();
+      // The groups of the old marker are closed: the new ones start closed.
+      _open.clear();
     }
   }
 
@@ -73,6 +82,12 @@ class _BrandEquivalentsSectionState extends State<BrandEquivalentsSection> {
     });
   }
 
+  void _toggle(String brandId) {
+    setState(() {
+      if (!_open.remove(brandId)) _open.add(brandId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
@@ -80,16 +95,28 @@ class _BrandEquivalentsSectionState extends State<BrandEquivalentsSection> {
       key: const ValueKey<String>('swatch-brand-equivalents'),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        InkSectionHeading(context.l10n.swatchesOtherBrandsTitle),
-        const SizedBox(height: InkSpacing.headingGap),
-        Align(
-          alignment: AlignmentDirectional.centerStart,
-          child: InkChip(
-            key: const ValueKey<String>('swatch-equivalents-only-mine'),
-            label: context.l10n.swatchesOtherBrandsOnlyMine,
-            selected: _onlyMine,
-            onSelected: _setOnlyMine,
-          ),
+        // The switch shares the line of the heading while both fit; in a
+        // long translation it drops below it, and the heading never wraps.
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: InkSpacing.group,
+          runSpacing: InkSpacing.s8,
+          children: <Widget>[
+            Semantics(
+              header: true,
+              child: Text(
+                context.l10n.swatchesOtherBrandsTitle,
+                style: AppTypography.section.copyWith(color: ink.fg),
+              ),
+            ),
+            InkChip(
+              key: const ValueKey<String>('swatch-equivalents-only-mine'),
+              label: context.l10n.swatchesOtherBrandsOnlyMine,
+              selected: _onlyMine,
+              onSelected: _setOnlyMine,
+            ),
+          ],
         ),
         const SizedBox(height: InkSpacing.block),
         FutureBuilder<List<BrandEquivalentGroup>>(
@@ -109,7 +136,7 @@ class _BrandEquivalentsSectionState extends State<BrandEquivalentsSection> {
                 }
                 final List<BrandEquivalentGroup>? groups = snapshot.data;
                 if (groups == null) {
-                  return const SkeletonBlock(height: 96);
+                  return const SkeletonBlock(height: InkGeometry.skeletonList);
                 }
                 if (groups.isEmpty) {
                   return _note(
@@ -125,7 +152,13 @@ class _BrandEquivalentsSectionState extends State<BrandEquivalentsSection> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     for (final BrandEquivalentGroup group in groups)
-                      _BrandGroup(group: group, onSelect: widget.onSelect),
+                      if (group.matches.isNotEmpty)
+                        _BrandGroup(
+                          group: group,
+                          expanded: _open.contains(group.brandId),
+                          onToggle: () => _toggle(group.brandId),
+                          onSelect: widget.onSelect,
+                        ),
                   ],
                 );
               },
@@ -145,36 +178,63 @@ class _BrandEquivalentsSectionState extends State<BrandEquivalentsSection> {
       );
 }
 
-/// The closest markers of one brand: its name, then one row per marker.
+/// The closest markers of one brand: a closed group that shows its best
+/// match, and the three of them when it is opened.
 class _BrandGroup extends StatelessWidget {
-  const _BrandGroup({required this.group, required this.onSelect});
+  const _BrandGroup({
+    required this.group,
+    required this.expanded,
+    required this.onToggle,
+    required this.onSelect,
+  });
 
   final BrandEquivalentGroup group;
+  final bool expanded;
+  final VoidCallback onToggle;
   final ValueChanged<MarkerColor> onSelect;
 
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
-    return Column(
+    final AppLocalizations l10n = context.l10n;
+    final BrandEquivalent best = group.matches.first;
+    final MarkerColor color = best.color;
+    return InkDisclosure(
       key: ValueKey<String>('swatch-equivalents-${group.brandId}'),
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        const SizedBox(height: InkSpacing.group),
-        Semantics(
-          header: true,
-          child: Text(
-            AppTypography.caps(group.brand.label),
-            style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+      title: AppTypography.caps(group.brand.label),
+      leading: SwatchBlock(
+        hex: color.hex,
+        size: InkGeometry.swatchInline,
+        radius: InkRadii.xs,
+      ),
+      subtitleWidget: Row(
+        children: <Widget>[
+          Text(
+            color.newCode,
+            style: AppTypography.code.copyWith(color: ink.fg),
           ),
-        ),
-        for (final BrandEquivalent match in group.matches)
-          _EquivalentRow(match: match, onTap: () => onSelect(match.color)),
-      ],
+          const SizedBox(width: InkSpacing.s8),
+          Expanded(child: InkQualityText(best.deltaE)),
+        ],
+      ),
+      semanticLabel:
+          '${group.brand.label}, ${color.newCode}, '
+          '${l10n.commonDeltaE(best.deltaE)}',
+      expanded: expanded,
+      onToggle: onToggle,
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          for (final BrandEquivalent match in group.matches.take(3))
+            _EquivalentRow(match: match, onTap: () => onSelect(match.color)),
+        ],
+      ),
     );
   }
 }
 
-/// One result: swatch, code, name, distance and quality, at least 48 high.
+/// One result: swatch, code, name and distance, at least 48 high.
 class _EquivalentRow extends StatelessWidget {
   const _EquivalentRow({required this.match, required this.onTap});
 
@@ -227,18 +287,7 @@ class _EquivalentRow extends StatelessWidget {
                         style: AppTypography.secondary.copyWith(color: ink.fg2),
                       ),
                       const SizedBox(height: InkSpacing.s2),
-                      Wrap(
-                        spacing: InkSpacing.s8,
-                        runSpacing: InkSpacing.s4,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            context.l10n.commonDeltaE(match.deltaE),
-                            style: AppTypography.data.copyWith(color: ink.fg2),
-                          ),
-                          QualityBadge(quality),
-                        ],
-                      ),
+                      InkQualityText(match.deltaE),
                     ],
                   ),
                 ),

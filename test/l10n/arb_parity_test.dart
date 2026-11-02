@@ -23,12 +23,12 @@ Set<String> _placeholders(String message) => {
 
 /// Brand names, units, codes and words that are the same in every language.
 const Set<String> _sameEverywhere = <String>{
+  'commonQualityLine',
   'appTitle',
   'collectionFamilyChip',
   'commonDeltaE',
   'commonOk',
   'commonRgb',
-  'matchDeltaMethod',
   'matchOkButton',
   'packFullLabel',
   'paletteOkButton',
@@ -39,8 +39,6 @@ const Set<String> _sameEverywhere = <String>{
   'settingsLanguageItalian',
   'settingsLanguagePortuguese',
   'settingsLanguageSpanish',
-  'settingsPaletteDescription',
-  'swatchesDeltaEUnit',
   'swatchesHex',
 };
 
@@ -89,6 +87,7 @@ const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
     'settingsLanguageSystem',
     'settingsVersion',
     'swatchesClassicPack',
+    'swatchesDetailsTitle',
     'swatchesLabelPack',
     'swatchesScopePack',
     'variationPrefixWarm',
@@ -149,7 +148,6 @@ const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
     'reasonVariation',
     'roleBase',
     'sceneCategoryFantasy',
-    'settingsBackupTitle',
     'swatchesAlternativeSemantics',
     'swatchesClassicPack',
     'swatchesLabelPack',

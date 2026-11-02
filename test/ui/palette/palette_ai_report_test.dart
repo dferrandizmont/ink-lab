@@ -69,10 +69,8 @@ Future<void> _suggest(WidgetTester tester) async {
 }
 
 Future<void> _openDialog(WidgetTester tester) async {
-  await tester.ensureVisible(_k('palette-ai-report'));
-  await tester.pumpAndSettle();
-  await tester.tap(_k('palette-ai-report'));
-  await tester.pumpAndSettle();
+  // The report entry lives in the result's "⋯" menu.
+  await tapResultItem(tester, 'palette-ai-report');
 }
 
 void main() {
@@ -81,16 +79,20 @@ void main() {
   ) async {
     await _pump(tester);
     await enterBaseCode(tester, 'B08');
+    // There is a result, but no AI one: no report entry.
     expect(_k('palette-ai-report'), findsNothing);
 
     await _suggest(tester);
     expect(_k('palette-ai-badge'), findsOneWidget);
+    await tester.tap(_k('palette-overflow'));
+    await tester.pumpAndSettle();
     expect(_k('palette-ai-report'), findsOneWidget);
     expect(find.text('Report this suggestion'), findsOneWidget);
+    await closeSheet(tester);
 
-    await tester.ensureVisible(_k('palette-clear'));
-    await tester.tap(_k('palette-clear'));
+    await tapResultItem(tester, 'palette-clear');
     await tester.pumpAndSettle();
+    expect(_k('palette-overflow'), findsNothing);
     expect(_k('palette-ai-report'), findsNothing);
   });
 
@@ -99,7 +101,10 @@ void main() {
   ) async {
     await _pump(tester);
     await _suggest(tester);
+    await tester.tap(_k('palette-overflow'));
+    await tester.pumpAndSettle();
     expect(_k('palette-ai-report'), findsOneWidget);
+    await closeSheet(tester);
 
     await choosePaletteType(tester, 'palette-mode-complementary');
     expect(_k('palette-ai-report'), findsNothing);

@@ -7,6 +7,7 @@ import 'package:ink_lab/core/palette_advisor.dart';
 import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
+import 'package:ink_lab/ui/widgets/ink_button.dart';
 import 'package:ink_lab/ui/widgets/ink_segmented.dart';
 import 'package:ink_lab/ui/widgets/palette_strip.dart';
 
@@ -33,7 +34,77 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('Recommended'), findsWidgets);
-    expect(find.text(l10n.paletteSavedEmpty), findsOneWidget);
+    // The saved palettes moved to their own sheet: the page only offers the
+    // header action, and the list is not painted on it.
+    expect(
+      find.byKey(const ValueKey<String>('palette-saved-palettes')),
+      findsOneWidget,
+    );
+    expect(find.text(l10n.paletteSavedEmpty), findsNothing);
+  });
+
+  testWidgets('with a result, Save palette is the only primary button', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(tester);
+    await enterBaseCode(tester, 'B08');
+
+    final List<InkButton> primaries = tester
+        .widgetList<InkButton>(find.byType(InkButton))
+        .where((InkButton button) => button.variant == InkButtonVariant.primary)
+        .toList();
+    expect(primaries, hasLength(1));
+    expect(primaries.single.key, const ValueKey<String>('palette-save'));
+    expect(
+      find.byKey(const ValueKey<String>('palette-regenerate')),
+      findsOneWidget,
+    );
+    // Share, colour vision and clear wait in the result's "⋯".
+    expect(find.byKey(const ValueKey<String>('palette-share')), findsNothing);
+  });
+
+  testWidgets('the actions keep their place with and without a result', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(tester);
+
+    // Without a result: the row of secondaries and the empty slot of the
+    // primary, which is already there.
+    final Rect slotBefore = tester.getRect(
+      find.byKey(const ValueKey<String>('palette-save-slot')),
+    );
+    final double generateHeight = tester
+        .getRect(find.byKey(const ValueKey<String>('palette-generate')))
+        .height;
+    expect(find.byKey(const ValueKey<String>('palette-save')), findsNothing);
+
+    await enterBaseCode(tester, 'B08');
+
+    // With a result the slot is the same, so nothing below it moves.
+    final Rect slotAfter = tester.getRect(
+      find.byKey(const ValueKey<String>('palette-save-slot')),
+    );
+    expect(find.byKey(const ValueKey<String>('palette-save')), findsOneWidget);
+    expect(
+      slotAfter.height,
+      moreOrLessEquals(slotBefore.height, epsilon: 0.01),
+    );
+    expect(
+      slotAfter.width,
+      moreOrLessEquals(slotBefore.width, epsilon: 0.01),
+    );
+    // The primary takes the whole row.
+    expect(
+      tester.getRect(find.byKey(const ValueKey<String>('palette-save'))).width,
+      moreOrLessEquals(slotAfter.width, epsilon: 0.01),
+    );
+    // The secondaries of the row are all the same size.
+    expect(
+      tester
+          .getRect(find.byKey(const ValueKey<String>('palette-regenerate')))
+          .height,
+      moreOrLessEquals(generateHeight, epsilon: 0.01),
+    );
   });
 
   testWidgets('generates a palette from a base code, new or old spelling', (
@@ -191,6 +262,7 @@ void main() {
     );
     expect(scope.savedPalettes.palettesOf(MarkerBrand.ohuhuOahu), hasLength(1));
 
+    await openSavedPalettesSheet(tester);
     await tester.tap(find.byKey(const ValueKey<String>('palette-load-p1')));
     await tester.pumpAndSettle();
 
@@ -232,6 +304,7 @@ void main() {
       setup: (AppScope scope) => scope.savedPalettes.save(stored),
     );
 
+    await openSavedPalettesSheet(tester);
     await tester.tap(find.byKey(const ValueKey<String>('palette-load-p9')));
     await tester.pumpAndSettle();
 
@@ -287,6 +360,7 @@ void main() {
           );
         },
       );
+      await openSavedPalettesSheet(tester);
       expect(subtitle(tester, 's1'), 'Wildflower Meadow · 5 colours');
       expect(subtitle(tester, 's2'), 'Wildflower Meadow · 5 colours');
       expect(find.textContaining('Complementary ·'), findsNothing);
@@ -302,6 +376,7 @@ void main() {
             await scope.savedPalettes.save(saved('s4'));
           },
         );
+        await openSavedPalettesSheet(tester);
         expect(
           subtitle(tester, 's3'),
           '${l10n.paletteTypeScenesGroup} · 5 colours',
@@ -328,8 +403,8 @@ void main() {
       setup: (AppScope scope) => scope.savedPalettes.save(stored),
     );
 
-    await tester.tap(find.byKey(const ValueKey<String>('palette-delete-p2')));
-    await tester.pumpAndSettle();
+    await openSavedPalettesSheet(tester);
+    await tapOverflowItem(tester, 'palette-saved-menu-p2', 'palette-delete-p2');
     await tester.tap(
       find.byKey(const ValueKey<String>('palette-delete-confirm')),
     );

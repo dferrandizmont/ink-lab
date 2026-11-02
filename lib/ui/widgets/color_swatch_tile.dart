@@ -121,9 +121,11 @@ class OwnColorMark extends StatelessWidget {
 /// `surface` card, radius 10, 1 px `line` (or `action` when [selected]):
 /// a 72-high colour block with a favourite star in `inkOn(swatch)`, then the
 /// code (`code`) with an owned check, the name (`secondary`, 2 lines) and the
-/// hex (`data`, `fg2`). When the parent constrains the height (a fixed grid
-/// extent or [height]), the colour block shrinks and the name and hex drop out
-/// as needed instead of overflowing.
+/// hex (`data`, `fg2`). The grid does not show the hex ([showHex] false):
+/// it stays in the list and in the detail sheet, and the cells are shorter
+/// without it. When the parent constrains the height (a fixed grid extent or
+/// [height]), the colour block shrinks and the name and hex drop out as needed
+/// instead of overflowing.
 class ColorSwatchTile extends StatelessWidget {
   const ColorSwatchTile({
     super.key,
@@ -170,6 +172,9 @@ class ColorSwatchTile extends StatelessWidget {
   final bool dried;
 
   /// Whether to show the hex line.
+  ///
+  /// The grid leaves it out (the list and the detail sheet keep it): the
+  /// cells are lower and more colours fit on the screen.
   final bool showHex;
 
   /// Called when the swatch is tapped.
@@ -197,14 +202,18 @@ class ColorSwatchTile extends StatelessWidget {
   ///
   /// The text lines grow with the system font scale, so the cell does too:
   /// with fixed lines a second name line would be cut at the card's bottom edge
-  /// at large text sizes.
-  static double gridCellHeight(BuildContext context) =>
+  /// at large text sizes. A cell without the hex (the grid) is one line
+  /// shorter.
+  static double gridCellHeight(
+    BuildContext context, {
+    bool showHex = true,
+  }) =>
       InkGeometry.swatchBlockHeight +
       _bodyTop +
       _bodyBottom +
       _line(context, _codeLine) +
       2 * _line(context, _nameLine) +
-      _line(context, _hexLine);
+      (showHex ? _line(context, _hexLine) : 0);
 
   /// [height], a line height at scale 1, as the system text scale makes it.
   static double _line(BuildContext context, double height) =>

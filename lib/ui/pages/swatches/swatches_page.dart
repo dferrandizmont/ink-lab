@@ -16,6 +16,7 @@ import '../../widgets/empty_state.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
+import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/ink_search_field.dart';
 import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
@@ -240,6 +241,10 @@ class _SwatchesPageState extends State<SwatchesPage> {
       _scopeBrand = state.brand;
       _ownedOnly = owned.isNotEmpty;
     }
+    // The owned check of a grid cell only means something when the whole
+    // range is on screen: with "Mine" (or "Favourites") every cell of the
+    // grid would carry it.
+    final bool showOwnedMark = !_favoritesOnly && !_ownedOnly;
     final List<MarkerColor> visible = candidates
         .where(
           (MarkerColor color) =>
@@ -258,7 +263,12 @@ class _SwatchesPageState extends State<SwatchesPage> {
         InkPageHeader(
           title: context.l10n.swatchesTitle,
           trailing: context.l10n.swatchesCountOf(visible.length, total),
-          subtitle: CollectionSummary.of(state, colors).full(context.l10n),
+          // The count of the range is on the title line already: the subtitle
+          // says the brand and its series, never a number.
+          subtitle: CollectionSummary.of(state, colors).headline(),
+          // The series of the collection change the subtitle: the header
+          // reserves the room of the tallest one, so nothing below moves.
+          reserveSubtitleFor: _subtitleVariants(state.brand),
         ),
         if (owned.isEmpty) _wholeRangeNotice(context, state),
         Padding(
@@ -328,7 +338,10 @@ class _SwatchesPageState extends State<SwatchesPage> {
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       // Three columns on a phone; wider screens add more.
                       maxCrossAxisExtent: 130,
-                      mainAxisExtent: ColorSwatchTile.gridCellHeight(context),
+                      mainAxisExtent: ColorSwatchTile.gridCellHeight(
+                        context,
+                        showHex: false,
+                      ),
                       crossAxisSpacing: InkSpacing.block,
                       mainAxisSpacing: InkSpacing.block,
                     ),
@@ -348,10 +361,16 @@ class _SwatchesPageState extends State<SwatchesPage> {
                         name: state.nameDisplayMode == NameDisplayMode.oldOnly
                             ? color.oldName
                             : color.newName,
-                        owned: isOwned(color),
+                        // The owned check only says something when the whole
+                        // range is on screen: with "Mine" (or "Favourites")
+                        // every cell would carry it.
+                        owned: showOwnedMark && isOwned(color),
                         favorite: state.favorites.contains(color.colorId),
                         ownColor: color.hasOwnColor,
                         dried: scope.dried.contains(color.colorId),
+                        // The hex stays in the list and in the detail sheet:
+                        // the grid cells are lower without it.
+                        showHex: false,
                         onTap: () =>
                             _openDetail(context, scope, color, candidates),
                       );
@@ -363,6 +382,28 @@ class _SwatchesPageState extends State<SwatchesPage> {
         ),
       ],
     );
+  }
+
+  /// Every subtitle the header can show for [brand]: the brand alone and the
+  /// brand with each combination of its series.
+  ///
+  /// The series of the collection change when the collection changes, and
+  /// the header must not grow when they do.
+  List<String> _subtitleVariants(MarkerBrand brand) {
+    final List<MarkerLine> lines = brand.lines;
+    return <String>[
+      for (int mask = 0; mask < (1 << lines.length); mask++)
+        // The counts do not matter for the headline ("Ohuhu · Oahu").
+        CollectionSummary(
+          brand: brand,
+          series: <MarkerLine>[
+            for (int i = 0; i < lines.length; i++)
+              if (mask & (1 << i) != 0) lines[i],
+          ],
+          setCount: 0,
+          markerCount: 0,
+        ).headline(),
+    ];
   }
 
   /// Slim notice under the header while no collection is set up: the page
@@ -839,9 +880,23 @@ class _SwatchesPageState extends State<SwatchesPage> {
       return label == null ? null : context.l10n.cardLocationLabel(label);
     }
 
-    await showInkSheet<void>(
+    // The sheet opens at half height and can be dragged up to the full
+    // screen; the controller lets it go back to half when the marker
+    // changes.
+    final DraggableScrollableController sheetController =
+        DraggableScrollableController();
+    // The entries of the "⋯" menu, which lives in the frame of the sheet.
+    final InkMenuItemsNotifier menuItems = InkMenuItemsNotifier();
+
+    await showInkDraggableSheet<void>(
       context: context,
-      builder: (BuildContext sheetContext) {
+      controller: sheetController,
+      initial: 0.5,
+      snaps: const <double>[0.5],
+      max: 1.0,
+      min: 0.25,
+      actions: <Widget>[_SwatchOverflowMenu(items: menuItems)],
+      builder: (BuildContext sheetContext, ScrollController scroll) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setSheetState) {
             return SwatchDetailSheet(
@@ -993,10 +1048,45 @@ class _SwatchesPageState extends State<SwatchesPage> {
                   ),
                 );
               },
+              scrollController: scroll,
+              sheetController: sheetController,
+              menuItems: menuItems,
             );
           },
         );
       },
+    ).whenComplete(sheetController.dispose);
+  }
+}
+
+/// The "⋯" of the swatch sheet: it lives in the frame of the sheet, next to
+/// the close button, and shows the entries the sheet publishes.
+class _SwatchOverflowMenu extends StatefulWidget {
+  const _SwatchOverflowMenu({required this.items});
+
+  /// The entries of the menu. The sheet fills this list.
+  final InkMenuItemsNotifier items;
+
+  @override
+  State<_SwatchOverflowMenu> createState() => _SwatchOverflowMenuState();
+}
+
+class _SwatchOverflowMenuState extends State<_SwatchOverflowMenu> {
+  @override
+  void dispose() {
+    widget.items.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<List<InkMenuItem>>(
+      valueListenable: widget.items,
+      builder: (BuildContext context, List<InkMenuItem> items, Widget? child) =>
+          InkOverflowMenu(
+            key: const ValueKey<String>('swatch-overflow'),
+            items: items,
+          ),
     );
   }
 }
@@ -1030,13 +1120,17 @@ class _LoadingBody extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
             gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 130,
-              mainAxisExtent: ColorSwatchTile.gridCellHeight(context),
+              mainAxisExtent: ColorSwatchTile.gridCellHeight(
+                context,
+                showHex: false,
+              ),
               crossAxisSpacing: InkSpacing.block,
               mainAxisSpacing: InkSpacing.block,
             ),
             itemCount: 12,
-            itemBuilder: (BuildContext context, int index) =>
-                SkeletonBlock(height: ColorSwatchTile.gridCellHeight(context)),
+            itemBuilder: (BuildContext context, int index) => SkeletonBlock(
+              height: ColorSwatchTile.gridCellHeight(context, showHex: false),
+            ),
           ),
         ),
       ],

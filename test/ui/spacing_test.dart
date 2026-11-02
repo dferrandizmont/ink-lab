@@ -108,17 +108,19 @@ void main() {
     final Finder best = find.byType(BestMatchTile);
     final Finder camera = find.byKey(const ValueKey<String>('match-camera'));
     final Finder gallery = find.byKey(const ValueKey<String>('match-gallery'));
+    final Finder actions = find.byKey(const ValueKey<String>('match-actions'));
 
+    // The row of actions sits under the photo, the sampled colour under it.
     expect(
-      _gapBelow(tester, canvas, sampled),
+      _gapBelow(tester, canvas, camera),
+      greaterThanOrEqualTo(InkSpacing.block),
+    );
+    expect(
+      _gapBelow(tester, actions, sampled),
       greaterThanOrEqualTo(InkSpacing.block),
     );
     expect(
       _gapBelow(tester, sampled, best),
-      greaterThanOrEqualTo(InkSpacing.block),
-    );
-    expect(
-      _gapBelow(tester, find.byType(MatchResultTile).last, camera),
       greaterThanOrEqualTo(InkSpacing.block),
     );
     expect(
@@ -141,7 +143,9 @@ void main() {
     await pumpIdeas(tester);
 
     final Finder chips = find.byType(InkChipRow);
-    final Finder label = find.text(AppTypography.caps(l10n.ideasFeaturedLabel));
+    final Finder label = find.textContaining(
+      AppTypography.caps(l10n.ideasFeaturedLabel),
+    );
     final Finder card = find.ancestor(of: label, matching: find.byType(Card));
     expect(
       _gapBelow(tester, chips, card),
@@ -209,36 +213,39 @@ void main() {
     );
   });
 
-  testWidgets('Swatches: detail sheet keeps 24 padding and 8 between buttons', (
-    WidgetTester tester,
-  ) async {
-    await pumpSwatches(tester);
-    await tester.tap(find.text('B08'));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Swatches: detail sheet keeps 24 padding and 8 between its rows',
+    (WidgetTester tester) async {
+      await pumpSwatches(tester);
+      await tester.tap(find.text('B08'));
+      await tester.pumpAndSettle();
 
-    final Rect copy = tester.getRect(
-      find.widgetWithText(OutlinedButton, l10n.swatchesCopyHex),
-    );
-    final Rect add = tester.getRect(
-      find.widgetWithText(FilledButton, l10n.swatchesAddToPalette),
-    );
-    // The buttons share the row while they fit, else the second one wraps
-    // below the first: 8 apart either way.
-    final bool sameRow = add.top < copy.bottom;
-    expect(
-      sameRow ? add.left - copy.right : add.top - copy.bottom,
-      greaterThanOrEqualTo(InkSpacing.s8),
-    );
-    expect(add.right, lessThanOrEqualTo(390 - InkSpacing.sheet));
-    expect(
-      _gapBelow(
-        tester,
+      // The sheet has one primary action, at the width of the sheet.
+      final Rect add = tester.getRect(
         find.widgetWithText(FilledButton, l10n.swatchesAddToPalette),
-        find.text(l10n.swatchesClosestAlternatives),
-      ),
-      greaterThanOrEqualTo(InkSpacing.block),
-    );
-  });
+      );
+      expect(add.left, greaterThanOrEqualTo(InkSpacing.sheet));
+      expect(add.right, lessThanOrEqualTo(390 - InkSpacing.sheet));
+      // The action and the "My colour" row are 8 apart.
+      expect(
+        _gapBelow(
+          tester,
+          find.widgetWithText(FilledButton, l10n.swatchesAddToPalette),
+          find.byKey(const ValueKey<String>('swatch-my-colour-row')),
+        ),
+        greaterThanOrEqualTo(InkSpacing.group),
+      );
+      // And the row and the alternatives too (the rows have their own air).
+      expect(
+        _gapBelow(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-my-colour-row')),
+          find.byKey(const ValueKey<String>('swatch-alternatives')),
+        ),
+        greaterThanOrEqualTo(InkSpacing.group),
+      );
+    },
+  );
 
   testWidgets('Settings: groups are 32 apart and rows keep 16 x 12', (
     WidgetTester tester,
@@ -291,6 +298,7 @@ void main() {
     await pumpSection(
       tester,
       provider: AiProvider.openRouter,
+      enabled: true,
       client: MockClient(
         (http.Request _) async =>
             jsonResponse(<String, Object>{'data': <Object>[]}),

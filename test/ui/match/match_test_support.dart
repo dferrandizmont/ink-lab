@@ -90,7 +90,7 @@ AppScope matchScope({
 ///
 /// [image] is what the injected decoder returns; [decoder] overrides it for
 /// error cases. [brand] and [ownedMarkerCodes] configure the scope before the
-/// widget tree is built.
+/// widget tree is built. [size] is the viewport of the phone.
 Future<AppScope> pumpMatch(
   WidgetTester tester, {
   required ImagePickerService picker,
@@ -98,8 +98,9 @@ Future<AppScope> pumpMatch(
   PhotoDecoder? decoder,
   MarkerBrand brand = MarkerBrand.ohuhuOahu,
   Set<String>? ownedMarkerCodes,
+  Size size = const Size(600, 3200),
 }) async {
-  tester.view.physicalSize = const Size(600, 3200);
+  tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 

@@ -5,6 +5,8 @@ import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
 import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
+import 'package:ink_lab/ui/theme/tokens.dart';
+import 'package:ink_lab/ui/widgets/ink_sheet.dart';
 
 import 'ideas_test_support.dart';
 import '../../support/l10n.dart';
@@ -41,9 +43,15 @@ void main() {
     final IdeaPreset featured = IdeasEngine.featuredFor(DateTime(2026, 10, 29));
     expect(_key('ideas-featured-${featured.id}'), findsOneWidget);
     expect(
-      find.text(AppTypography.caps(l10n.ideasFeaturedLabel)),
+      find.text(
+        AppTypography.caps(
+          '${l10n.ideasFeaturedLabel} · ${l10n.ideasMinutes(featured.minutes)}',
+        ),
+      ),
       findsOneWidget,
     );
+    // The whole featured card is the way to its steps: no separate button.
+    expect(_key('ideas-open-${featured.id}'), findsOneWidget);
     expect(find.text('Streak-free fill'), findsWidgets);
     for (final IdeaCategory c in IdeaCategory.values) {
       expect(_key('ideas-category-${c.name}'), findsOneWidget);
@@ -91,35 +99,75 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(_key('ideas-detail-one_color'), findsOneWidget);
+    // What you practise, what to draw, the tip and the materials are folded
+    // behind "More details".
+    expect(_key('ideas-details-one_color'), findsOneWidget);
+    expect(find.text(AppTypography.caps(l10n.ideasPracticeTitle)), findsNothing);
+    await tester.tap(_key('ideas-details-one_color'));
+    await tester.pumpAndSettle();
     for (final String title in <String>[
       l10n.ideasPracticeTitle,
       l10n.ideasSubjectTitle,
-      l10n.ideasMarkersTitle,
-      l10n.ideasStepsTitle,
       l10n.ideasTipTitle,
       l10n.ideasMaterialsTitle,
     ]) {
       expect(find.text(AppTypography.caps(title)), findsOneWidget);
     }
     expect(find.text(l10n.ideaTipText('one_color')), findsOneWidget);
-    // Every step that uses a marker shows its code.
+
+    // The steps are on view; their roles and the named markers are folded.
+    expect(find.text(AppTypography.caps(l10n.ideasStepsTitle)), findsOneWidget);
     final int bound = preset.stepRoles.where((r) => r != null).length;
     expect(_markerSteps(preset).length, bound);
+    expect(
+      find.text(AppTypography.caps(l10n.roleLabel(IdeaRoles.light))),
+      findsNothing,
+    );
+    await tester.tap(_key('ideas-markers-one_color'));
+    await tester.pumpAndSettle();
     expect(
       find.text(AppTypography.caps(l10n.roleLabel(IdeaRoles.light))),
       findsOneWidget,
     );
 
-    // "Other markers" picks other markers.
+    // "Other markers" lives in the "⋯" menu and picks other markers.
     final List<String> before = _markerSteps(preset);
     var after = before;
     for (var i = 0; i < 4 && after.join() == before.join(); i++) {
-      await tester.ensureVisible(_key('ideas-other-one_color'));
+      await tester.ensureVisible(find.byTooltip(l10n.commonMoreActions));
+      await tester.tap(find.byTooltip(l10n.commonMoreActions));
+      await tester.pumpAndSettle();
       await tester.tap(_key('ideas-other-one_color'));
       await tester.pumpAndSettle();
       after = _markerSteps(preset);
     }
     expect(after, isNot(before));
+  });
+
+  testWidgets('the sheet opens at half height with "Use in Palette" on view', (
+    WidgetTester tester,
+  ) async {
+    await pumpIdeas(tester, size: const Size(360, 740));
+    final IdeaPreset featured = IdeasEngine.featuredFor(DateTime(2026, 10, 29));
+
+    await tester.tap(_key('ideas-open-${featured.id}'));
+    await tester.pumpAndSettle();
+
+    final Rect sheet = tester.getRect(find.byType(InkSheet));
+    // Half of 740.
+    expect(sheet.top, moreOrLessEquals(370, epsilon: 2));
+    // The primary action is on view without scrolling.
+    final Finder apply = _key('ideas-apply-${featured.id}');
+    expect(apply, findsOneWidget);
+    final Rect button = tester.getRect(apply);
+    expect(button.bottom, lessThanOrEqualTo(sheet.bottom + 0.5));
+    expect(button.height, greaterThanOrEqualTo(InkGeometry.target));
+    // The "⋯" menu offers the diary and other markers.
+    await tester.tap(find.byTooltip(l10n.commonMoreActions));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.diaryAdd), findsOneWidget);
+    expect(find.text(l10n.ideasOtherMarkersButton), findsOneWidget);
+    expect(_key('ideas-other-${featured.id}'), findsOneWidget);
   });
 
   testWidgets('"Use in Palette" hands over roles, opens Palette and confirms', (

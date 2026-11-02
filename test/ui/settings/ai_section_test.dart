@@ -98,25 +98,18 @@ void main() {
       );
       await pumpSection(tester, onDevice: platform);
 
+      // With the AI off the card shows the switch and one line: no provider,
+      // no explanation and no fallback.
+      expect(find.text(l10n.settingsAiSubtitle), findsOneWidget);
       expect(
-        _text(tester, 'ai-provider-explanation'),
-        l10n.settingsAiExplainColourTheory,
+        find.byKey(const ValueKey<String>('ai-provider-explanation')),
+        findsNothing,
       );
-      // With the AI off the phone has not been asked about its model, so the
-      // on-device option is not listed yet; the copy still mentions it
-      // because this platform can have one.
-      expect(
-        find.text(l10n.settingsAiEnabledSubtitleColourTheory),
-        findsOneWidget,
-      );
+      expect(find.text(l10n.settingsAiProviderColourTheory), findsNothing);
       expect(find.text(l10n.settingsAiProviderOnDevice), findsNothing);
       expect(find.textContaining('OpenRouter key'), findsNothing);
       expect(find.text('Local'), findsNothing);
-      expect(find.text('Built-in fallback'), findsOneWidget);
-      expect(
-        find.text('If the AI fails, the built-in engine answers instead.'),
-        findsOneWidget,
-      );
+      expect(find.text('Built-in fallback'), findsNothing);
 
       await tester.tap(find.text(l10n.settingsAiEnabled));
       await tester.pumpAndSettle();
@@ -131,7 +124,16 @@ void main() {
       expect(platform.statusCalls, 1);
       expect(find.text(l10n.settingsAiProviderOnDevice), findsOneWidget);
       expect(
+        _text(tester, 'ai-provider-explanation'),
+        l10n.settingsAiExplainColourTheory,
+      );
+      expect(
         find.text(l10n.settingsAiEnabledSubtitleColourTheory),
+        findsOneWidget,
+      );
+      expect(find.text('Built-in fallback'), findsOneWidget);
+      expect(
+        find.text('If the AI fails, the built-in engine answers instead.'),
         findsOneWidget,
       );
     });
@@ -142,6 +144,7 @@ void main() {
       await pumpSection(
         tester,
         provider: AiProvider.onDevice,
+        enabled: true,
         onDevice: FakeOnDevicePlatform(currentStatus: OnDeviceStatus.available),
       );
 
@@ -157,7 +160,11 @@ void main() {
     testWidgets('OpenRouter says where requests go and that photos stay', (
       WidgetTester tester,
     ) async {
-      await pumpSection(tester, provider: AiProvider.openRouter);
+      await pumpSection(
+        tester,
+        provider: AiProvider.openRouter,
+        enabled: true,
+      );
 
       expect(
         _text(tester, 'ai-provider-explanation'),
@@ -339,13 +346,14 @@ void main() {
   });
 
   group('AI off: the on-device model is never asked', () {
-    testWidgets('opening the section, resuming and Check again make no call', (
+    testWidgets('opening the section and resuming make no call', (
       WidgetTester tester,
     ) async {
       final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
         currentStatus: OnDeviceStatus.downloadable,
       );
-      // The stored provider is on-device, so "Check again" is on screen.
+      // The stored provider is on-device, but the AI is off: its block is
+      // not on screen, so there is nothing to check again.
       await pumpSection(
         tester,
         provider: AiProvider.onDevice,
@@ -361,10 +369,7 @@ void main() {
       final Finder again = find.byKey(
         const ValueKey<String>('ai-on-device-check-again'),
       );
-      await tester.ensureVisible(again);
-      await tester.tap(again);
-      await tester.pumpAndSettle();
-      expect(platform.statusCalls, 0);
+      expect(again, findsNothing);
       expect(platform.downloads, 0);
       expect(platform.prompts, isEmpty);
     });
@@ -375,10 +380,7 @@ void main() {
       // The default scope uses UnsupportedOnDeviceAi (iOS, web, desktop).
       await pumpSection(tester);
 
-      expect(
-        find.text(l10n.settingsAiEnabledSubtitleColourTheoryNoOnDevice),
-        findsOneWidget,
-      );
+      expect(find.text(l10n.settingsAiSubtitle), findsOneWidget);
       await tester.tap(find.text(l10n.settingsAiEnabled));
       await tester.pumpAndSettle();
       expect(
@@ -395,10 +397,7 @@ void main() {
       );
       await pumpSection(tester, onDevice: platform);
 
-      expect(
-        find.text(l10n.settingsAiEnabledSubtitleColourTheory),
-        findsOneWidget,
-      );
+      expect(find.text(l10n.settingsAiSubtitle), findsOneWidget);
       await tester.tap(find.text(l10n.settingsAiEnabled));
       await tester.pumpAndSettle();
       expect(find.text(l10n.settingsAiDisclosureColourTheory), findsOneWidget);
@@ -433,7 +432,7 @@ void main() {
     testWidgets('is hidden entirely when the phone has no model', (
       WidgetTester tester,
     ) async {
-      await pumpSection(tester);
+      await pumpSection(tester, enabled: true);
 
       expect(find.text(l10n.settingsAiProviderOnDevice), findsNothing);
       expect(find.textContaining('Gemini Nano'), findsNothing);
@@ -450,6 +449,7 @@ void main() {
         final AppScope scope = await pumpSection(
           tester,
           provider: AiProvider.onDevice,
+          enabled: true,
         );
 
         expect(find.text(l10n.settingsAiProviderOnDevice), findsOneWidget);
@@ -553,7 +553,7 @@ void main() {
   testWidgets('the key field is masked and disables every aid', (
     WidgetTester tester,
   ) async {
-    await pumpSection(tester, provider: AiProvider.openRouter);
+    await pumpSection(tester, provider: AiProvider.openRouter, enabled: true);
 
     final TextField field = tester.widget<TextField>(
       find.byKey(const ValueKey<String>('ai-api-key-field')),
@@ -569,7 +569,7 @@ void main() {
   testWidgets('a saved key is replaced by its mask and never echoed', (
     WidgetTester tester,
   ) async {
-    await pumpSection(tester, provider: AiProvider.openRouter);
+    await pumpSection(tester, provider: AiProvider.openRouter, enabled: true);
 
     await tester.enterText(
       find.byKey(const ValueKey<String>('ai-api-key-field')),
@@ -594,7 +594,7 @@ void main() {
   testWidgets('an invalid key shows an error without the input', (
     WidgetTester tester,
   ) async {
-    await pumpSection(tester, provider: AiProvider.openRouter);
+    await pumpSection(tester, provider: AiProvider.openRouter, enabled: true);
 
     await tester.enterText(
       find.byKey(const ValueKey<String>('ai-api-key-field')),
@@ -617,6 +617,7 @@ void main() {
       tester,
       secrets: const _UnreadableSecretStore(),
       provider: AiProvider.openRouter,
+      enabled: true,
     );
 
     expect(find.text(l10n.settingsAiApiKeyUnreadable), findsOneWidget);
@@ -645,7 +646,7 @@ void main() {
     expect(scope.aiSettings.value.enabled, isTrue);
   });
 
-  testWidgets('with the AI off, test connection and load models are disabled', (
+  testWidgets('with the AI off there is no connection test and no catalog', (
     WidgetTester tester,
   ) async {
     int requests = 0;
@@ -659,13 +660,13 @@ void main() {
       }),
     );
 
-    for (final String key in <String>['ai-test-connection', 'ai-load-models']) {
-      final Finder button = find.byKey(ValueKey<String>(key));
-      await tester.ensureVisible(button);
-      await tester.tap(button, warnIfMissed: false);
-      await tester.pumpAndSettle();
-    }
-
+    // With the AI off the card shows the switch and one line: the aids are
+    // not even on screen.
+    expect(
+      find.byKey(const ValueKey<String>('ai-test-connection')),
+      findsNothing,
+    );
+    expect(find.byKey(const ValueKey<String>('ai-load-models')), findsNothing);
     expect(requests, 0);
   });
 
@@ -871,7 +872,11 @@ void main() {
   testWidgets('a typed id can be used without loading the catalog', (
     WidgetTester tester,
   ) async {
-    final scope = await pumpSection(tester, provider: AiProvider.openRouter);
+    final scope = await pumpSection(
+      tester,
+      provider: AiProvider.openRouter,
+      enabled: true,
+    );
     await tester.tap(find.byKey(const ValueKey<String>('ai-text-model-row')));
     await tester.pumpAndSettle();
     await tester.enterText(
@@ -891,7 +896,7 @@ void main() {
   testWidgets('the free-models note keeps the card inner padding', (
     WidgetTester tester,
   ) async {
-    await pumpSection(tester, provider: AiProvider.openRouter);
+    await pumpSection(tester, provider: AiProvider.openRouter, enabled: true);
 
     final Finder note = find.byKey(
       const ValueKey<String>('ai-free-models-note'),

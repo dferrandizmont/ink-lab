@@ -16,6 +16,7 @@ import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/ink_disclosure.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../collection/collection_page.dart';
@@ -53,6 +54,9 @@ class MatchPage extends StatefulWidget {
 
   /// Number of matches shown: one best match plus five alternates.
   static const int matchLimit = 6;
+
+  /// Number of saved picks shown on the page; the rest are in the picker.
+  static const int recentPicksInView = 6;
 
   /// Photo picker. Production wraps `image_picker`; tests inject a fake.
   final ImagePickerService? picker;
@@ -104,6 +108,10 @@ class _MatchPageState extends State<MatchPage> {
   String? _error;
   String? _notice;
   bool _picking = false;
+
+  /// Whether the best of the whole range is open (the disclosure of the
+  /// range suggestion).
+  bool _rangeOpen = false;
 
   late final ImagePickerService _picker =
       widget.picker ?? PlatformImagePickerService();
@@ -377,6 +385,18 @@ class _MatchPageState extends State<MatchPage> {
     _resample();
   });
 
+  /// Starts choosing the white of the photo.
+  void _startWhite() => setState(() {
+    _choosingWhite = true;
+    _whiteRejection = null;
+  });
+
+  /// Gives up choosing the white of the photo.
+  void _cancelWhite() => setState(() {
+    _choosingWhite = false;
+    _whiteRejection = null;
+  });
+
   Future<void> _record(ColorDistanceMatch match) async {
     final AppScope? scope = _scope;
     final int? colorInt = _sampledColorInt;
@@ -433,10 +453,6 @@ class _MatchPageState extends State<MatchPage> {
   // Build
   // ---------------------------------------------------------------------------
 
-  // ---------------------------------------------------------------------------
-  // Build
-  // ---------------------------------------------------------------------------
-
   @override
   Widget build(BuildContext context) {
     final AppScope? scope = _scopeOf(context);
@@ -483,24 +499,8 @@ class _MatchPageState extends State<MatchPage> {
           ),
         if (_notice != null) _buildNotice(),
         _buildPhoto(),
-        if (_bytes != null && _sampled != null)
-          _Gutter(
-            top: InkSpacing.group,
-            child: WhiteBalanceBar(
-              balance: _balance,
-              choosing: _choosingWhite,
-              rejection: _whiteRejection,
-              onStart: () => setState(() {
-                _choosingWhite = true;
-                _whiteRejection = null;
-              }),
-              onCancel: () => setState(() {
-                _choosingWhite = false;
-                _whiteRejection = null;
-              }),
-              onReset: _resetWhite,
-            ),
-          ),
+        _buildActions(),
+        _buildWhiteBalanceNote(),
         if (_sampledColorInt != null)
           _buildSampled(_sampledColorInt!)
         else if (_sampled != null)
@@ -528,7 +528,6 @@ class _MatchPageState extends State<MatchPage> {
             ),
         ],
         if (rangeSuggestion != null) _buildRangeSuggestion(rangeSuggestion),
-        _buildActions(),
         _buildHistory(scope),
         const _Gutter(top: InkSpacing.section, child: _PrivacyLine()),
       ],
@@ -569,21 +568,31 @@ class _MatchPageState extends State<MatchPage> {
     );
   }
 
+  /// The best marker of the whole range, folded: the summary says its code
+  /// and distance, and opening it shows the marker itself.
   Widget _buildRangeSuggestion(ColorDistanceMatch match) {
     return _Gutter(
       top: InkSpacing.section,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          InkSectionHeading(context.l10n.matchRangeTitle(_brand.label)),
-          const SizedBox(height: InkSpacing.headingGap),
-          BestMatchTile(
+      child: InkDisclosure(
+        key: const ValueKey<String>('match-range'),
+        title: context.l10n.matchBestOfRange(_brand.label),
+        subtitle:
+            '${match.color.newCode} · '
+            '${context.l10n.commonDeltaE(match.deltaE)}',
+        expanded: _rangeOpen,
+        onToggle: () => setState(() => _rangeOpen = !_rangeOpen),
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: InkSpacing.group,
+            bottom: InkSpacing.s8,
+          ),
+          child: BestMatchTile(
             key: ValueKey<String>('match-range-${match.color.newCode}'),
             match: match,
             notOwned: true,
             onRecord: () => _record(match),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -627,45 +636,30 @@ class _MatchPageState extends State<MatchPage> {
   Widget _buildSampled(int colorInt) {
     final InkColors ink = InkColors.of(context);
     final Color sample = Color(0xFF000000 | colorInt);
-    final RgbColor rgb = colorIntToRgb(colorInt);
     return _Gutter(
       top: InkSpacing.block,
-      // The hex and the RGB triple share a row while they fit; otherwise the
-      // RGB drops to its own line instead of being cut.
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: InkSpacing.s8,
-        runSpacing: InkSpacing.s4,
+      // The hex is the colour: the RGB triple would only repeat it.
+      child: Row(
         children: <Widget>[
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                AppTypography.caps(context.l10n.matchSampledLabel),
-                style: AppTypography.capsStyle.copyWith(color: ink.fg2),
-              ),
-              const SizedBox(width: InkSpacing.s8),
-              Container(
-                width: InkGeometry.smallIcon,
-                height: InkGeometry.smallIcon,
-                decoration: BoxDecoration(
-                  color: sample,
-                  borderRadius: InkRadii.xsRadius,
-                  border: Border.all(color: ink.swatchEdge(sample)),
-                ),
-              ),
-              const SizedBox(width: InkSpacing.s8),
-              Text(
-                '#${colorIntToHex(colorInt)}',
-                key: const ValueKey<String>('match-sampled-hex'),
-                style: AppTypography.data.copyWith(color: ink.fg),
-              ),
-            ],
-          ),
           Text(
-            context.l10n.commonRgb(rgb.r, rgb.g, rgb.b),
-            style: AppTypography.data.copyWith(color: ink.fg2),
+            AppTypography.caps(context.l10n.matchSampledLabel),
+            style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+          ),
+          const SizedBox(width: InkSpacing.s8),
+          Container(
+            width: InkGeometry.smallIcon,
+            height: InkGeometry.smallIcon,
+            decoration: BoxDecoration(
+              color: sample,
+              borderRadius: InkRadii.xsRadius,
+              border: Border.all(color: ink.swatchEdge(sample)),
+            ),
+          ),
+          const SizedBox(width: InkSpacing.s8),
+          Text(
+            '#${colorIntToHex(colorInt)}',
+            key: const ValueKey<String>('match-sampled-hex'),
+            style: AppTypography.data.copyWith(color: ink.fg),
           ),
         ],
       ),
@@ -690,7 +684,7 @@ class _MatchPageState extends State<MatchPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          InkSectionHeading(title, trailing: context.l10n.matchDeltaMethod),
+          InkSectionHeading(title),
           const SizedBox(height: InkSpacing.headingGap),
           _EqualColumns(
             columns: MatchPage.matchLimit - 1,
@@ -710,33 +704,129 @@ class _MatchPageState extends State<MatchPage> {
     );
   }
 
+  /// The row of actions, right under the photo: the camera and the gallery,
+  /// and the white balance at the right.
+  ///
+  /// The row is always in the same place, with or without a photo, so taking
+  /// a photo never moves the buttons. When the three do not fit on one line
+  /// (a long translation at a large text size) the white balance drops to its
+  /// own line, right-aligned.
   Widget _buildActions() {
     return _Gutter(
+      key: const ValueKey<String>('match-actions'),
       top: InkSpacing.block,
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: InkButton(
-              key: const ValueKey<String>('match-camera'),
-              label: context.l10n.matchCameraButton,
-              icon: InkIcons.camera,
-              expand: true,
-              onPressed: _picking ? null : () => _pickPhoto(PhotoSource.camera),
+      child: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final Widget buttons = Row(
+            children: <Widget>[
+              Expanded(
+                child: InkButton(
+                  key: const ValueKey<String>('match-camera'),
+                  label: context.l10n.matchCameraButton,
+                  icon: InkIcons.camera,
+                  variant: InkButtonVariant.smallSecondary,
+                  expand: true,
+                  onPressed: _picking
+                      ? null
+                      : () => _pickPhoto(PhotoSource.camera),
+                ),
+              ),
+              const SizedBox(width: InkSpacing.buttonGap),
+              Expanded(
+                child: InkButton(
+                  key: const ValueKey<String>('match-gallery'),
+                  label: context.l10n.matchGalleryButton,
+                  icon: InkIcons.image,
+                  variant: InkButtonVariant.smallSecondary,
+                  expand: true,
+                  onPressed: _picking
+                      ? null
+                      : () => _pickPhoto(PhotoSource.gallery),
+                ),
+              ),
+            ],
+          );
+          final Widget balance = Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: WhiteBalanceAction(
+              onPressed: _sampled == null ? null : _startWhite,
             ),
-          ),
-          const SizedBox(width: InkSpacing.buttonGap),
-          Expanded(
-            child: InkButton.secondary(
-              key: const ValueKey<String>('match-gallery'),
-              label: context.l10n.matchGalleryButton,
-              icon: InkIcons.image,
-              expand: true,
-              onPressed: _picking
-                  ? null
-                  : () => _pickPhoto(PhotoSource.gallery),
-            ),
-          ),
-        ],
+          );
+          if (_actionsFitOnOneLine(context, constraints.maxWidth)) {
+            return Row(
+              children: <Widget>[
+                Expanded(child: buttons),
+                const SizedBox(width: InkSpacing.buttonGap),
+                balance,
+              ],
+            );
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              buttons,
+              const SizedBox(height: InkSpacing.s8),
+              balance,
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  /// Whether the camera, the gallery and the white balance fit on one line.
+  bool _actionsFitOnOneLine(BuildContext context, double width) {
+    final double camera = _buttonWidth(
+      context,
+      context.l10n.matchCameraButton,
+      withIcon: true,
+    );
+    final double gallery = _buttonWidth(
+      context,
+      context.l10n.matchGalleryButton,
+      withIcon: true,
+    );
+    final double balance = _buttonWidth(
+      context,
+      context.l10n.matchWhiteBalanceButton,
+      withIcon: false,
+    );
+    return camera + gallery + balance + 2 * InkSpacing.buttonGap <= width;
+  }
+
+  /// The width a button with [label] takes at the current width and text
+  /// size: its text plus its padding (and its icon, when it has one).
+  double _buttonWidth(
+    BuildContext context,
+    String label, {
+    required bool withIcon,
+  }) {
+    final TextPainter painter = TextPainter(
+      text: TextSpan(
+        text: label,
+        style: AppTypography.button.copyWith(color: InkColors.of(context).fg),
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    final double text = painter.width;
+    painter.dispose();
+    // Small secondary: padding 0 14, icon 16 and gap 8. Text: padding 0 12.
+    final double padding = withIcon ? 28 + InkGeometry.smallIcon + 8 : 24;
+    return text + padding;
+  }
+
+  /// What the white balance of the photo is doing, under the row of actions.
+  Widget _buildWhiteBalanceNote() {
+    return _Gutter(
+      top: InkSpacing.group,
+      child: WhiteBalanceStatus(
+        balance: _balance,
+        choosing: _choosingWhite,
+        rejection: _whiteRejection,
+        onCancel: _cancelWhite,
+        onReset: _resetWhite,
       ),
     );
   }
@@ -787,6 +877,10 @@ class _MatchPageState extends State<MatchPage> {
                 (snapshot.data ?? scope.matchHistory.entries)
                     .where((ColorMatchPick p) => p.brandId == _brand.id)
                     .toList(growable: false);
+            // Only the last six are in view; the rest are in the picker.
+            final List<ColorMatchPick> shown = picks
+                .take(MatchPage.recentPicksInView)
+                .toList(growable: false);
             return _Gutter(
               top: InkSpacing.section,
               child: Column(
@@ -808,14 +902,14 @@ class _MatchPageState extends State<MatchPage> {
                   const SizedBox(height: InkSpacing.headingGap),
                   if (picks.isEmpty)
                     _SecondaryText(context.l10n.matchRecentEmpty)
-                  else
+                  else ...<Widget>[
                     _EqualColumns(
-                      columns: 6,
+                      columns: MatchPage.recentPicksInView,
                       minCell: 44,
                       gap: InkSpacing.s8,
                       rowGap: InkSpacing.buttonGap,
                       children: <Widget>[
-                        for (final ColorMatchPick pick in picks)
+                        for (final ColorMatchPick pick in shown)
                           _RecentPickTile(
                             key: ValueKey<String>('match-pick-${pick.id}'),
                             pick: pick,
@@ -823,10 +917,42 @@ class _MatchPageState extends State<MatchPage> {
                           ),
                       ],
                     ),
+                    if (picks.length > shown.length) ...<Widget>[
+                      const SizedBox(height: InkSpacing.group),
+                      Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: InkButton.text(
+                          key: const ValueKey<String>('match-history-see-all'),
+                          label: context.l10n.matchSeeAll(picks.length),
+                          onPressed: () => _showAllPicks(scope, picks),
+                        ),
+                      ),
+                    ],
+                  ],
                 ],
               ),
             );
           },
+    );
+  }
+
+  /// Every saved pick, in a sheet, for the days with more than six.
+  Future<void> _showAllPicks(AppScope scope, List<ColorMatchPick> picks) {
+    return showInkDraggableSheet<void>(
+      context: context,
+      closeTooltip: context.l10n.matchCloseTooltip,
+      builder: (BuildContext sheetContext, ScrollController scroll) => ListView(
+        controller: scroll,
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          for (final ColorMatchPick pick in picks)
+            _RecentPickRow(
+              key: ValueKey<String>('match-history-row-${pick.id}'),
+              pick: pick,
+              onTap: () => _showPick(scope, pick),
+            ),
+        ],
+      ),
     );
   }
 
@@ -845,9 +971,70 @@ class _MatchPageState extends State<MatchPage> {
   }
 }
 
+/// One saved pick as a row, for the sheet with every pick.
+class _RecentPickRow extends StatelessWidget {
+  const _RecentPickRow({super.key, required this.pick, required this.onTap});
+
+  final ColorMatchPick pick;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    return Semantics(
+      button: true,
+      label:
+          '${context.l10n.matchRecentPickLabel} ${pick.matchedCode} '
+          '${pick.matchedName}',
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: InkRadii.cellRadius,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: InkGeometry.target),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: InkSpacing.s8),
+            child: Row(
+              children: <Widget>[
+                SwatchBlock(
+                  hex: pick.matchedHex,
+                  size: InkGeometry.swatchInline,
+                ),
+                const SizedBox(width: InkSpacing.s12),
+                Expanded(
+                  child: Text(
+                    pick.matchedCode,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: AppTypography.code.copyWith(color: ink.fg),
+                  ),
+                ),
+                const SizedBox(width: InkSpacing.s8),
+                Expanded(
+                  child: Text(
+                    pick.matchedName,
+                    maxLines: 1,
+                    softWrap: false,
+                    style: AppTypography.secondary.copyWith(color: ink.fg2),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Horizontal gutter (and optional vertical gaps) around a block of the page.
 class _Gutter extends StatelessWidget {
-  const _Gutter({required this.child, this.top = 0, this.bottom = 0});
+  const _Gutter({
+    super.key,
+    required this.child,
+    this.top = 0,
+    this.bottom = 0,
+  });
 
   final Widget child;
   final double top;

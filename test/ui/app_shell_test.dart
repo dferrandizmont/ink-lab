@@ -245,7 +245,8 @@ void main() {
 
       await tester.tap(find.text('B08'));
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text(l10n.swatchesBlendingChain));
+      // The blending chain lives in the "⋯" menu of the sheet.
+      await tester.tap(find.byTooltip(l10n.commonMoreActions));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.swatchesBlendingChain));
       await tester.pumpAndSettle();

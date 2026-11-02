@@ -56,6 +56,14 @@ void main() {
       expect(strip.lockedIndices, contains(0));
       expect(find.text('Combinations (5)'), findsOneWidget);
       // The paint order lists the base first and uses the same colours.
+      // It starts folded: open its disclosure first.
+      await tester.ensureVisible(
+        find.byKey(const ValueKey<String>('palette-paint-order')),
+      );
+      await tester.tap(
+        find.byKey(const ValueKey<String>('palette-paint-order')),
+      );
+      await tester.pumpAndSettle();
       expect(
         find.byKey(const ValueKey<String>('palette-step-zone-1')),
         findsOneWidget,

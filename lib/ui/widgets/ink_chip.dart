@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/match_quality.dart';
+import '../../l10n/l10n.dart';
 import '../icons/ink_icons.dart';
 import '../theme/app_typography.dart';
 import '../theme/tokens.dart';
@@ -70,7 +72,7 @@ class InkChip extends StatelessWidget {
               curve: InkMotion.crossFadeCurve,
               height: InkGeometry.chipHeight,
               width: expand ? double.infinity : null,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: InkSpacing.s10),
               decoration: ShapeDecoration(
                 color: fill,
                 shape: RoundedRectangleBorder(
@@ -141,6 +143,11 @@ class InkChipRow extends StatelessWidget {
 
 /// A quality badge (spec §4): 24 high pill, `pale`, padding 0 10, `caps` in
 /// `action`.
+///
+/// It always hugs its label: inside a `Column(crossAxisAlignment: stretch)`
+/// or any other tight box the badge keeps its own width and sits at the
+/// start edge. For a quality that repeats on every row prefer
+/// [InkQualityText].
 class QualityBadge extends StatelessWidget {
   const QualityBadge(this.label, {super.key});
 
@@ -149,17 +156,97 @@ class QualityBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
-    return Container(
-      height: 24,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      alignment: Alignment.center,
-      decoration: ShapeDecoration(
-        color: ink.pale,
-        shape: const RoundedRectangleBorder(borderRadius: InkRadii.xsRadius),
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      widthFactor: 1,
+      heightFactor: 1,
+      child: Container(
+        height: InkGeometry.badgeHeight,
+        padding: const EdgeInsets.symmetric(horizontal: InkSpacing.s10),
+        decoration: ShapeDecoration(
+          color: ink.pale,
+          shape: const RoundedRectangleBorder(borderRadius: InkRadii.xsRadius),
+        ),
+        child: Center(
+          widthFactor: 1,
+          child: Text(
+            AppTypography.caps(label),
+            style: AppTypography.capsStyle.copyWith(color: ink.action),
+          ),
+        ),
       ),
-      child: Text(
-        AppTypography.caps(label),
-        style: AppTypography.capsStyle.copyWith(color: ink.action),
+    );
+  }
+}
+
+/// How many of the four dots of [InkQualityText] are filled for a match at
+/// [deltaE]: nearly exact 4, very close 3, close 2, rough 1, far 0.
+int qualityDotsFor(double deltaE) => switch (MatchQuality.of(deltaE)) {
+  MatchQuality.nearlyExact => 4,
+  MatchQuality.veryClose => 3,
+  MatchQuality.close => 2,
+  MatchQuality.rough => 1,
+  MatchQuality.far => 0,
+};
+
+/// A quiet match quality for rows that repeat it: `ΔE 10,8 · Rough` in
+/// `data` / `fg2` and four 6 dp dots (filled `fg`, empty `line`; the design
+/// is monochrome, so no colour carries the meaning). Screen readers hear
+/// "Rough, ΔE 10,8".
+///
+/// ```dart
+/// InkQualityText(match.deltaE) // ΔE 10,8 · Rough ●○○○
+/// InkQualityText(match.deltaE, showDots: false) // only the text
+/// ```
+///
+/// The text and the dots share a line while they fit and the dots drop below
+/// otherwise (never cut), so give it the row's whole width.
+class InkQualityText extends StatelessWidget {
+  const InkQualityText(this.deltaE, {super.key, this.showDots = true});
+
+  /// The CIELAB distance of the match.
+  final double deltaE;
+
+  /// Draws the four dots after the text.
+  final bool showDots;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    final AppLocalizations l10n = context.l10n;
+    final String quality = l10n.matchQualityLabel(deltaE);
+    final int filled = qualityDotsFor(deltaE);
+    return Semantics(
+      label: '$quality, ${l10n.commonDeltaE(deltaE)}',
+      excludeSemantics: true,
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: InkSpacing.s6,
+        runSpacing: InkSpacing.s2,
+        children: <Widget>[
+          Text(
+            l10n.commonQualityLine(deltaE, quality),
+            style: AppTypography.data.copyWith(color: ink.fg2),
+          ),
+          if (showDots)
+            Row(
+              key: const ValueKey<String>('quality-dots'),
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                for (int i = 0; i < 4; i++) ...<Widget>[
+                  if (i > 0) const SizedBox(width: InkGeometry.qualityDotGap),
+                  Container(
+                    width: InkGeometry.qualityDot,
+                    height: InkGeometry.qualityDot,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: i < filled ? ink.fg : ink.line,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+        ],
       ),
     );
   }

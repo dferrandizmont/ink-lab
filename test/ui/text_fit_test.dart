@@ -34,7 +34,11 @@ import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
 import 'package:ink_lab/ui/shell/app_shell.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
+import 'package:ink_lab/ui/icons/ink_icons.dart';
+import 'package:ink_lab/ui/widgets/ink_button.dart';
 import 'package:ink_lab/ui/widgets/ink_chip.dart';
+import 'package:ink_lab/ui/widgets/ink_disclosure.dart';
+import 'package:ink_lab/ui/widgets/ink_overflow_menu.dart';
 import 'package:ink_lab/ui/widgets/ink_segmented.dart';
 import 'package:ink_lab/ui/widgets/page_header.dart';
 import 'package:ink_lab/ui/widgets/ink_sheet.dart';
@@ -303,10 +307,74 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
+/// Scrolls the page to its end.
+///
+/// A drag over the photo samples a colour instead of scrolling, so the page
+/// is moved through its scrollable.
+Future<void> _scrollToEnd(WidgetTester tester) async {
+  final ScrollableState scroll = tester.state<ScrollableState>(
+    find.byType(Scrollable).first,
+  );
+  scroll.position.jumpTo(scroll.position.maxScrollExtent);
+  await tester.pumpAndSettle();
+}
+
 /// Closes the top route (sheet or dialog).
 Future<void> _close(WidgetTester tester) async {
   final NavigatorState nav = tester.state(find.byType(Navigator).first);
   nav.pop();
+  await tester.pumpAndSettle();
+}
+
+/// The vertical list of a page: a search field and a chip row also scroll,
+/// but sideways, so they are not the list the checks want to walk.
+Finder _verticalList() => find.byWidgetPredicate(
+  (Widget w) =>
+      w is Scrollable &&
+      (w.axisDirection == AxisDirection.down ||
+          w.axisDirection == AxisDirection.up),
+);
+
+/// Opens the folded parts [keys] of the draggable sheet [sheet], scrolling
+/// each into reach first (a sheet's content is lazy, so a part below the fold
+/// is not built yet). Then reads the whole sheet and returns to the top, so
+/// the sheet's header (and its "⋯" menu) stays reachable.
+Future<void> _openSheetParts(
+  WidgetTester tester,
+  Finder sheet,
+  List<String> keys,
+  String where,
+) async {
+  final Finder scrollable = find.descendant(
+    of: sheet,
+    matching: find.byType(Scrollable),
+  );
+  for (final String key in keys) {
+    final Finder target = find.byKey(ValueKey<String>(key));
+    await tester.scrollUntilVisible(target, 80, scrollable: scrollable);
+    await tester.pumpAndSettle();
+    await _tap(tester, target);
+  }
+  _check(tester, where);
+  await _scroll(tester, where, within: scrollable);
+  tester.state<ScrollableState>(scrollable).position.jumpTo(0);
+  await tester.pumpAndSettle();
+}
+
+/// Opens the paint order disclosure (built lazily, so it is scrolled into the
+/// built range first) and returns to the top of the page, so the scans below
+/// see the whole result with its steps.
+Future<void> _openPaintOrder(WidgetTester tester) async {
+  final Finder disclosure = find.byKey(
+    const ValueKey<String>('palette-paint-order'),
+  );
+  await tester.scrollUntilVisible(
+    disclosure,
+    240,
+    scrollable: find.byType(Scrollable).first,
+  );
+  await _tap(tester, disclosure);
+  await tester.drag(find.byType(Scrollable).first, const Offset(0, 9000));
   await tester.pumpAndSettle();
 }
 
@@ -439,6 +507,9 @@ Future<void> _fromPhotoScenario(
   );
   await tester.drag(find.byType(Scrollable).first, const Offset(0, 9000));
   await tester.pumpAndSettle();
+  // The paint order folds behind a disclosure now: open it so its steps are
+  // built and checked.
+  await _openPaintOrder(tester);
   var seen = 0;
   await scrollThrough(tester, find.byType(Scrollable).first, (_) {
     seen += _expectSingleLines(tester, 'photo palette');
@@ -448,6 +519,113 @@ Future<void> _fromPhotoScenario(
 }
 
 typedef _Scenario = Future<void> Function(WidgetTester tester, _Env env);
+
+/// The shared building blocks of the 0.9 UI review (header action, overflow
+/// menu, quality text, disclosure with leading / summary, draggable sheet)
+/// with real translated texts, so every language is checked at once.
+class _FoundationDemo extends StatefulWidget {
+  const _FoundationDemo(this.t);
+
+  final AppLocalizations t;
+
+  @override
+  State<_FoundationDemo> createState() => _FoundationDemoState();
+}
+
+class _FoundationDemoState extends State<_FoundationDemo> {
+  bool _open = false;
+
+  List<InkMenuItem> get _items => <InkMenuItem>[
+    InkMenuItem(
+      key: const ValueKey<String>('demo-copy'),
+      label: widget.t.swatchesCopyHex,
+      icon: InkIcons.copy,
+      onSelected: () {},
+    ),
+    InkMenuItem(
+      label: widget.t.swatchesMyColourWasReset,
+      icon: InkIcons.rotateCcw,
+      onSelected: () {},
+    ),
+    InkMenuItem(
+      label: widget.t.settingsDeleteFavorite,
+      icon: InkIcons.trash2,
+      destructive: true,
+      onSelected: () {},
+    ),
+  ];
+
+  Widget _group() => InkDisclosure(
+    title: widget.t.swatchesBlendingChain,
+    leading: const SizedBox.square(dimension: 20),
+    subtitleWidget: const InkQualityText(10.8),
+    semanticLabel: widget.t.swatchesBlendingChain,
+    expanded: _open,
+    padding: EdgeInsets.zero,
+    onToggle: () => setState(() => _open = !_open),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        const InkQualityText(1.2),
+        QualityBadge(widget.t.matchQualityFair),
+        InkDefinitionRow(label: widget.t.swatchesHex, value: '#EE315E'),
+      ],
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        InkPageHeader(
+          title: widget.t.paletteTitle,
+          subtitle: widget.t.paletteSavedTitle,
+          action: InkOverflowMenu(
+            key: const ValueKey<String>('demo-overflow'),
+            items: _items,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: _group(),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: InkButton.secondary(
+            key: const ValueKey<String>('demo-open-sheet'),
+            label: widget.t.swatchesCopyHex,
+            onPressed: () => showInkDraggableSheet<void>(
+              context: context,
+              actions: <Widget>[InkOverflowMenu(items: _items)],
+              builder: (BuildContext context, ScrollController scroll) =>
+                  ListView(
+                    controller: scroll,
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                      // Room for the menu and the close button.
+                      Padding(
+                        padding: const EdgeInsets.only(right: 104),
+                        child: Text(
+                          widget.t.swatchesBlendingChain,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _group(),
+                      for (int i = 0; i < 12; i++)
+                        InkDefinitionRow(
+                          label: widget.t.swatchesHex,
+                          value: '#EE315E',
+                        ),
+                    ],
+                  ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 final Map<String, _Scenario> _scenarios = <String, _Scenario>{
   'shell: five tabs and the bottom bar': (WidgetTester tester, _Env env) async {
@@ -471,6 +649,46 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
       _check(tester, 'tab $i');
     }
   },
+  'foundation: header action, overflow menu, draggable sheet, quality text':
+      (WidgetTester tester, _Env env) async {
+        await _pump(tester, env, _FoundationDemo(env.t));
+        _check(tester, 'foundation demo');
+        await _tap(tester, find.byKey(const ValueKey<String>('demo-overflow')));
+        _check(tester, 'overflow menu open');
+        await _close(tester);
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('demo-open-sheet')),
+        );
+        _check(tester, 'draggable sheet at 50 %');
+        await _tap(tester, find.text(env.t.swatchesBlendingChain).last);
+        _check(tester, 'draggable sheet, group open');
+        await tester.drag(
+          find.descendant(
+            of: find.byType(InkSheet),
+            matching: find.byType(Scrollable),
+          ),
+          const Offset(0, -800),
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'draggable sheet at 100 %');
+        await _scroll(
+          tester,
+          'draggable sheet at 100 %',
+          within: find.descendant(
+            of: find.byType(InkSheet),
+            matching: find.byType(Scrollable),
+          ),
+        );
+        await _tap(
+          tester,
+          find.descendant(
+            of: find.byType(InkSheet),
+            matching: find.byTooltip(env.t.commonMoreActions),
+          ),
+        );
+        _check(tester, 'sheet overflow menu open');
+      },
   'swatches: page, filters sheet, detail sheet':
       (WidgetTester tester, _Env env) async {
         await _pump(tester, env, SwatchesPage(onBlendingChain: (_) {}));
@@ -487,15 +705,31 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
         await tester.pumpAndSettle();
         await _tap(tester, find.text('B08'));
-        _check(tester, 'swatch detail sheet');
-        await _scroll(
-          tester,
-          'swatch detail sheet',
-          within: find.descendant(
-            of: find.byType(BottomSheet),
-            matching: find.byType(Scrollable),
-          ),
+        final Finder sheetScroll = find.descendant(
+          of: find.byType(BottomSheet),
+          matching: find.byType(Scrollable),
         );
+        // The sheet opens at half the height.
+        _check(tester, 'swatch detail sheet at 50 %');
+        await tester.drag(sheetScroll.first, const Offset(0, -600));
+        await tester.pumpAndSettle();
+        _check(tester, 'swatch detail sheet at 100 %');
+        // The alternatives and the details, open.
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-alternatives')),
+        );
+        _check(tester, 'swatch detail sheet, alternatives open');
+        // The details are at the bottom of the sheet: scroll down to them.
+        await _scroll(tester, 'swatch detail sheet', within: sheetScroll);
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-details')),
+        );
+        _check(tester, 'swatch detail sheet, details open');
+        // The menu of the sheet, with every entry of this marker.
+        await _tap(tester, find.byTooltip(env.t.commonMoreActions));
+        _check(tester, 'swatch detail sheet, menu open');
       },
   'palette: base, harmonies, scenarios, save dialog':
       (WidgetTester tester, _Env env) async {
@@ -653,6 +887,9 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           findsOneWidget,
           reason: '$_tag chain of five',
         );
+        // The paint order folds behind a disclosure: open it so its steps are
+        // built (and stay open for the rest of the scenario).
+        await _openPaintOrder(tester);
         await screens('chain of five');
         // Other chains as options.
         await toTop();
@@ -778,6 +1015,9 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
             const Offset(0, 9000),
           );
           await tester.pumpAndSettle();
+          // The paint order folds behind a disclosure: open it so its steps
+          // are built and checked.
+          await _openPaintOrder(tester);
           var seen = 0;
           await scrollThrough(tester, find.byType(Scrollable).first, (_) {
             seen += _expectSingleLines(tester, id);
@@ -852,22 +1092,32 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           tester,
           find.byKey(const ValueKey<String>('palette-suggest-ai')),
         );
-        final Finder report = find.byKey(
-          const ValueKey<String>('palette-ai-report'),
-        );
-        // The button sits above the action buttons: look upwards first.
+        _check(tester, 'palette with AI result');
+        // Report lives in the result's "⋯" now. The result sits above the
+        // actions: the lazy list builds it only once it is scrolled near.
         await tester.scrollUntilVisible(
-          report,
+          find.byKey(const ValueKey<String>('palette-overflow')),
           -200,
           scrollable: find.byType(Scrollable).first,
         );
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-overflow')),
+        );
+        final Finder report = find.byKey(
+          const ValueKey<String>('palette-ai-report'),
+        );
         expect(report, findsOneWidget, reason: '$_tag report button');
         await tester.pumpAndSettle();
-        _check(tester, 'palette with AI result');
         final RenderParagraph label = tester.renderObject(
           find.descendant(of: report, matching: find.byType(RichText)).first,
         );
-        expect(_lineCount(label), 1, reason: '$_tag report button label');
+        // A menu entry wraps to two lines at most (InkMenuItem), never cut.
+        expect(
+          _lineCount(label),
+          lessThanOrEqualTo(2),
+          reason: '$_tag report button label',
+        );
         expect(label.didExceedMaxLines, isFalse);
         await _tap(tester, report);
         _check(tester, 'AI report dialog');
@@ -909,7 +1159,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         final FakeImagePickerService picker = FakeImagePickerService(
           PhotoPicked(tinyPng),
         );
-        await _pump(
+        final AppScope scope = await _pump(
           tester,
           env,
           MatchPage(
@@ -922,8 +1172,36 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await _tap(tester, find.byKey(const ValueKey<String>('match-canvas')));
         _check(tester, 'match results');
         await _scroll(tester, 'match results');
-        await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
+        // Seven saved picks: six on the page, the rest in the picker.
+        for (int i = 0; i < 7; i++) {
+          await scope.matchHistory.record(
+            ColorMatchPick(
+              id: 'pick-$i',
+              sampledHex: 'FF0000',
+              matchedCode: 'R${101 + i}',
+              matchedName: 'Pick number $i',
+              matchedHex: 'FF0000',
+              deltaE: 1.0 * i,
+              createdAtEpochMs: i,
+            ),
+          );
+        }
         await tester.pumpAndSettle();
+        await _scrollToEnd(tester);
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('match-history-see-all')),
+        );
+        _check(tester, 'match all the picks');
+        await _scroll(
+          tester,
+          'match all the picks',
+          within: find.descendant(
+            of: find.byType(BottomSheet),
+            matching: find.byType(Scrollable),
+          ),
+        );
+        await _close(tester);
         final Finder pick = find.byWidgetPredicate(
           (Widget w) =>
               w.key is ValueKey<String> &&
@@ -933,7 +1211,31 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         if (pick.evaluate().isNotEmpty) {
           await _tap(tester, pick);
           _check(tester, 'match pick sheet');
+          await _close(tester);
         }
+        // The best of the whole range, folded and open.
+        final AppScope withCollection = await _pump(
+          tester,
+          env,
+          MatchPage(
+            picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+            decoder: fixedDecoder(sampledImage(64, 64, <int>[0, 0, 255])),
+          ),
+        );
+        // One owned marker that is not close: the page offers the whole range.
+        await withCollection.settings.setBrand(MarkerBrand.decoTime);
+        await withCollection.settings.setOwnedMarkerCodes(<String>{
+          'decotime:01',
+        });
+        await tester.pumpAndSettle();
+        await _tap(tester, find.byKey(const ValueKey<String>('match-camera')));
+        await _tap(tester, find.byKey(const ValueKey<String>('match-canvas')));
+        _check(tester, 'match with the whole range');
+        await _scroll(tester, 'match with the whole range');
+        await _scrollToEnd(tester);
+        await _tap(tester, find.byKey(const ValueKey<String>('match-range')));
+        _check(tester, 'match with the whole range, open');
+        await _scroll(tester, 'match with the whole range, open');
       },
   'match: white balance, choosing and refusing a point':
       (WidgetTester tester, _Env env) async {
@@ -1006,7 +1308,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         );
         await _tap(
           tester,
-          find.byKey(const ValueKey<String>('swatch-own-set')),
+          find.byKey(const ValueKey<String>('swatch-my-colour-row')),
         );
         _check(tester, 'own colour editor');
         await _tap(
@@ -1035,10 +1337,10 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           tester,
           find.byKey(const ValueKey<String>('own-color-save')),
         );
-        // Back on the sheet: both colours side by side, reset offered.
+        // Back on the sheet: the row shows the colour the user stored.
         _check(tester, 'detail sheet with an own colour');
         expect(
-          find.byKey(const ValueKey<String>('swatch-own-compare')),
+          find.text(env.t.swatchesMyColourValue('#3A7F9C')),
           findsOneWidget,
         );
         await _scroll(
@@ -1058,13 +1360,14 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
         await tester.pumpAndSettle();
         await _tap(tester, find.text('B08'));
-        final Finder sheetScroll = find.descendant(
-          of: find.byType(BottomSheet),
-          matching: find.byType(Scrollable),
-        );
-        await tester.ensureVisible(
-          find.byKey(const ValueKey<String>('swatch-brand-equivalents')),
-        );
+        final Finder sheetScroll = find
+            .descendant(
+              of: find.byType(BottomSheet),
+              matching: find.byType(Scrollable),
+            )
+            .first;
+        // The sheet at the full height: the section is on screen.
+        await tester.drag(sheetScroll, const Offset(0, -600));
         await tester.pumpAndSettle();
         _check(tester, 'in other brands');
         await _scroll(tester, 'in other brands', within: sheetScroll);
@@ -1077,7 +1380,12 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           tester,
           find.byKey(const ValueKey<String>('swatch-equivalents-only-mine')),
         );
-        // A marker of another brand: its brand, no palette actions, a note.
+        // A marker of another brand: no palette actions, a note.
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-equivalents-copic')),
+        );
+        _check(tester, 'in other brands, a group open');
         await _tap(
           tester,
           find.descendant(
@@ -1113,7 +1421,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
       ),
     );
     await tester.pumpAndSettle();
-    // No palette yet: the control sits with the saved ones.
+    // No palette yet: nothing to preview.
     _check(tester, 'colour vision with saved palettes');
     await tester.enterText(
       find.byKey(const ValueKey<String>('palette-base-input')),
@@ -1122,6 +1430,12 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
     await tester.pumpAndSettle();
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();
+    // The preview moved into a sheet, opened from the result's "⋯".
+    await _tap(tester, find.byKey(const ValueKey<String>('palette-overflow')));
+    await _tap(
+      tester,
+      find.byKey(const ValueKey<String>('palette-vision-open')),
+    );
     final Finder control = find.byKey(const ValueKey<String>('palette-vision'));
     for (final String label in <String>[
       env.t.paletteVisionDeuteranopia,
@@ -1151,6 +1465,23 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           find.byKey(const ValueKey<String>('settings-own-colors-reset')),
         );
         _check(tester, 'reset own colours dialog');
+        await _close(tester);
+        // The favourites live behind a sheet: its list has to fit too.
+        await scope.settings.setFavorites(<String>{'ohuhu_oahu:YR114'});
+        await tester.pumpAndSettle();
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('settings-favorites-row')),
+        );
+        _check(tester, 'favourites sheet');
+        await _scroll(
+          tester,
+          'favourites sheet',
+          within: find.descendant(
+            of: find.byKey(const ValueKey<String>('settings-favorites-list')),
+            matching: find.byType(Scrollable),
+          ),
+        );
         await _close(tester);
         await _scroll(tester, 'settings with own colours');
       },
@@ -1187,6 +1518,12 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           find.byKey(const ValueKey<String>('diary-title')),
           'A page of the autumn forest colouring book',
         );
+        // The optional fields live in "More details".
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('diary-details')),
+        );
+        _check(tester, 'diary form, more details');
         await tester.enterText(
           find.byKey(const ValueKey<String>('diary-on-what')),
           'Forest colouring book, page 12',
@@ -1265,6 +1602,14 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           _check(tester, 'diary numbers, unused markers');
           await _scroll(tester, 'diary numbers, unused markers');
         }
+        final Finder palettesToggle = find.byKey(
+          const ValueKey<String>('diary-stats-palettes-toggle'),
+        );
+        if (palettesToggle.evaluate().isNotEmpty) {
+          await _tap(tester, palettesToggle);
+          _check(tester, 'diary numbers, palettes');
+          await _scroll(tester, 'diary numbers, palettes');
+        }
         await _close(tester);
 
         // Open a photo at full screen, then the entry to edit.
@@ -1288,7 +1633,11 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.pumpAndSettle();
         _check(tester, 'diary form, edit');
         await _scroll(tester, 'diary form, edit');
-        await _tap(tester, find.byKey(const ValueKey<String>('diary-delete')));
+        await _tap(tester, find.byTooltip(env.t.commonMoreActions));
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('diary-delete')),
+        );
         _check(tester, 'diary delete dialog');
         await _close(tester);
         await _close(tester);
@@ -1298,13 +1647,36 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         final DateTime today = DateTime(2026, 10, 29);
         await _pump(tester, env, IdeasPage(today: today));
         _check(tester, 'ideas');
-        // The idea of the day: detail, other markers, hand-off notice.
+        // The idea of the day opens at half height; the whole card is the
+        // tap target (no "See steps" button).
         final String featured = IdeasEngine.featuredFor(today).id;
         await _tap(
           tester,
           find.byKey(ValueKey<String>('ideas-open-$featured')),
         );
-        _check(tester, 'idea of the day');
+        _check(tester, 'idea of the day at half height');
+        // Drag to full height, then read the whole sheet with both
+        // disclosures open and the "⋯" menu unfolded.
+        final Finder sheet = find.byKey(
+          ValueKey<String>('ideas-detail-$featured'),
+        );
+        await tester.drag(sheet, const Offset(0, -600));
+        await tester.pumpAndSettle();
+        _check(tester, 'idea of the day at full height');
+        await _openSheetParts(
+          tester,
+          sheet,
+          <String>['ideas-markers-$featured', 'ideas-details-$featured'],
+          'idea of the day, everything open',
+        );
+        // The "⋯" menu: add to diary and other markers.
+        await _tap(tester, find.byTooltip(env.t.commonMoreActions));
+        _check(tester, 'idea of the day, menu');
+        await _tap(
+          tester,
+          find.byKey(ValueKey<String>('ideas-other-$featured')),
+        );
+        _check(tester, 'idea of the day, other markers');
         final Finder apply = find.byKey(
           ValueKey<String>('ideas-apply-$featured'),
         );
@@ -1318,7 +1690,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         } else {
           await _close(tester);
         }
-        await _scroll(tester, 'ideas');
+        await _scroll(tester, 'ideas', within: _verticalList().first);
         // The longest texts: two-colour roles, skin steps, warm/cool roles,
         // five-step ladders and an exercise without palette.
         for (final String id in <String>[
@@ -1330,18 +1702,26 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         ]) {
           await _tap(tester, find.byKey(ValueKey<String>('ideas-preset-$id')));
           _check(tester, 'idea $id');
-          await _scroll(
+          final Finder sheet = find.byKey(ValueKey<String>('ideas-detail-$id'));
+          await tester.drag(sheet, const Offset(0, -600));
+          await tester.pumpAndSettle();
+          await _openSheetParts(
             tester,
-            'idea $id',
-            within: find.descendant(
-              of: find.byKey(ValueKey<String>('ideas-detail-$id')),
-              matching: find.byType(Scrollable),
-            ),
+            sheet,
+            <String>[
+              if (IdeasEngine.byId(id)!.hasPalette) 'ideas-markers-$id',
+              'ideas-details-$id',
+            ],
+            'idea $id, everything open',
           );
+          await _tap(tester, find.byTooltip(env.t.commonMoreActions));
+          _check(tester, 'idea $id, menu');
           final Finder other = find.byKey(ValueKey<String>('ideas-other-$id'));
           if (other.evaluate().isNotEmpty) {
             await _tap(tester, other);
             _check(tester, 'idea $id, other markers');
+          } else {
+            await _close(tester);
           }
           await _close(tester);
         }
@@ -1380,16 +1760,21 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         }
         await tester.pumpAndSettle();
         _check(tester, 'ideas favourites');
-        await _scroll(tester, 'ideas favourites');
+        await _scroll(tester, 'ideas favourites', within: _verticalList().first);
         await _tap(
           tester,
           find.byKey(const ValueKey<String>('ideas-category-all')),
         );
         _check(tester, 'ideas recently viewed');
-        await tester.ensureVisible(
-          find.byKey(const ValueKey<String>('ideas-recent')),
+        final Finder recent = find.byKey(const ValueKey<String>('ideas-recent'));
+        await tester.scrollUntilVisible(
+          recent,
+          200,
+          scrollable: _verticalList().first,
         );
         await tester.pumpAndSettle();
+        _check(tester, 'ideas recently viewed, folded');
+        await _tap(tester, recent);
         _check(tester, 'ideas recently viewed row');
         // The heart in the sheet.
         await _tap(
@@ -1413,6 +1798,9 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
       ),
     );
     _check(tester, 'backup file');
+    // The copy by text, folded: its two buttons have to fit as well.
+    await _tap(tester, find.text(env.t.settingsBackupTextTitle));
+    _check(tester, 'backup file, copy by text');
     // The question before a restore, then a refusal from the archive.
     await _tap(
       tester,
@@ -1562,6 +1950,9 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           env: StabilityEnv(env.locale, env.width, env.scale),
           anchors: <String, Finder>{
             'header': find.byType(InkPageHeader),
+            'saved palettes action': find.byKey(
+              const ValueKey<String>('palette-saved-palettes'),
+            ),
             'type field': find.byKey(
               const ValueKey<String>('palette-type-field'),
             ),
@@ -1590,9 +1981,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
             'brand selector': find.byKey(
               const ValueKey<String>('collection-brand'),
             ),
-            'summary': find.byKey(
-              const ValueKey<String>('collection-summary'),
-            ),
+            'summary': find.byKey(const ValueKey<String>('collection-summary')),
           },
           // The card below the selector is content: its height follows the
           // brand.
@@ -1668,6 +2057,12 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
       (WidgetTester tester, _Env env) async {
         await _pump(tester, env, const CollectionPage());
         _check(tester, 'collection');
+        // The series and the sets start folded (spec §2.6).
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('collection-series')),
+        );
+        _check(tester, 'collection, series open');
         for (final String id in <String>['honolulu', 'kaala']) {
           await _tap(
             tester,
@@ -1675,6 +2070,11 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           );
         }
         _check(tester, 'collection, every series');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('collection-sets')),
+        );
+        _check(tester, 'collection, sets open');
         await _tap(
           tester,
           find.byKey(const ValueKey<String>('collection-set-honolulu_24')),
@@ -1707,6 +2107,9 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.ensureVisible(card);
         await tester.pumpAndSettle();
         _check(tester, 'chart card');
+        // The card starts folded; open it to reach the switch (spec §2.6).
+        await _tap(tester, card);
+        _check(tester, 'chart card, open');
         await _tap(
           tester,
           find.byKey(const ValueKey<String>('collection-chart-colour')),
@@ -1746,11 +2149,21 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           ),
         );
         await tester.pumpAndSettle();
+        // The saved palettes, and their Share, now live in the selector sheet.
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-saved-palettes')),
+        );
+        _check(tester, 'saved palette row');
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('palette-saved-menu-fit')),
+        );
         await tester.ensureVisible(
           find.byKey(const ValueKey<String>('palette-share-fit')),
         );
         await tester.pumpAndSettle();
-        _check(tester, 'saved palette row');
+        _check(tester, 'saved palette row share menu');
         await _scroll(tester, 'saved palette row');
       },
   'collection: loose markers screen, all brands':
@@ -1850,6 +2263,11 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         _check(tester, 'collection, wishlist and dried');
         await _tap(
           tester,
+          find.byKey(const ValueKey<String>('wishlist-disclosure')),
+        );
+        _check(tester, 'collection, wishlist open');
+        await _tap(
+          tester,
           find.byKey(const ValueKey<String>('dried-disclosure')),
         );
         _check(tester, 'collection, dried list open');
@@ -1876,59 +2294,79 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           'Pale Cherry Pink',
           'Light Reddish Violet',
         ];
-        await _pump(
-          tester,
-          env,
-          Builder(
-            builder: (BuildContext context) => GridView.count(
-              crossAxisCount: 3,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              padding: const EdgeInsets.all(16),
-              childAspectRatio: 110 / ColorSwatchTile.gridCellHeight(context),
-              children: <Widget>[
-                for (int i = 0; i < names.length; i++)
-                  ColorSwatchTile(
-                    hex: '#8FB8D0',
-                    code: 'B${i + 1}4',
-                    name: names[i],
-                    owned: i.isEven,
-                    ownColor: i == 0 || i == 3,
-                    dried: i == 1,
-                  ),
-              ],
-            ),
-          ),
-        );
-        _check(tester, 'swatch grid cells');
-        // Every name line fits in its box and inside the card: nothing is
-        // painted past the bottom edge.
-        for (final String name in names) {
-          final Finder paragraph = find.text(name);
-          expect(paragraph, findsOneWidget);
-          final RenderParagraph render = tester.renderObject<RenderParagraph>(
-            paragraph,
-          );
-          final double wanted = render.getMinIntrinsicHeight(render.size.width);
-          if (wanted > render.size.height + 0.5) {
-            _problems.add(
-              '$_tag clipped name: "$name" needs $wanted, has '
-              '${render.size.height}  [swatch grid cells]',
-            );
-          }
-          final Rect tile = tester.getRect(
-            find.ancestor(
-              of: paragraph,
-              matching: find.byType(ColorSwatchTile),
+        Future<void> pumpGrid({required bool showHex}) async {
+          await _pump(
+            tester,
+            env,
+            Builder(
+              builder: (BuildContext context) => GridView.count(
+                crossAxisCount: 3,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                padding: const EdgeInsets.all(16),
+                childAspectRatio:
+                    110 /
+                    ColorSwatchTile.gridCellHeight(context, showHex: showHex),
+                children: <Widget>[
+                  for (int i = 0; i < names.length; i++)
+                    ColorSwatchTile(
+                      hex: '#8FB8D0',
+                      code: 'B${i + 1}4',
+                      name: names[i],
+                      owned: i.isEven,
+                      ownColor: i == 0 || i == 3,
+                      dried: i == 1,
+                      showHex: showHex,
+                    ),
+                ],
+              ),
             ),
           );
-          final Rect text = tester.getRect(paragraph);
-          if (text.top + wanted > tile.bottom + 0.5) {
-            _problems.add(
-              '$_tag name past the card: "$name"  [swatch grid cells]',
+        }
+
+        void checkNames(String where) {
+          // Every name line fits in its box and inside the card: nothing is
+          // painted past the bottom edge.
+          for (final String name in names) {
+            final Finder paragraph = find.text(name);
+            expect(paragraph, findsOneWidget);
+            final RenderParagraph render = tester.renderObject<RenderParagraph>(
+              paragraph,
             );
+            final double wanted = render.getMinIntrinsicHeight(
+              render.size.width,
+            );
+            if (wanted > render.size.height + 0.5) {
+              _problems.add(
+                '$_tag clipped name: "$name" needs $wanted, has '
+                '${render.size.height}  [$where]',
+              );
+            }
+            final Rect tile = tester.getRect(
+              find.ancestor(
+                of: paragraph,
+                matching: find.byType(ColorSwatchTile),
+              ),
+            );
+            final Rect text = tester.getRect(paragraph);
+            if (text.top + wanted > tile.bottom + 0.5) {
+              _problems.add(
+                '$_tag name past the card: "$name"  [$where]',
+              );
+            }
           }
         }
+
+        // The grid of the page: no hex line, so the cells are lower.
+        await pumpGrid(showHex: false);
+        _check(tester, 'swatch grid cells');
+        expect(find.text('#8FB8D0'), findsNothing);
+        checkNames('swatch grid cells');
+
+        // A cell with the hex (the list and the detail sheet keep it).
+        await pumpGrid(showHex: true);
+        _check(tester, 'swatch grid cells with the hex');
+        checkNames('swatch grid cells with the hex');
       },
   'swatches: wishlist and dried out in the detail sheet':
       (WidgetTester tester, _Env env) async {
@@ -1941,19 +2379,35 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           matching: find.byType(Scrollable),
         );
         _check(tester, 'detail sheet, wishlist and dried controls');
+        // The wishlist and the dried-out mark live in the "⋯" menu.
+        await _tap(tester, find.byTooltip(env.t.commonMoreActions));
+        _check(tester, 'detail sheet, menu open');
         await _tap(
           tester,
-          find.byKey(const ValueKey<String>('swatch-wishlist')),
+          find.byKey(const ValueKey<String>('swatch-menu-wishlist')),
         );
         _check(tester, 'detail sheet, on the wishlist');
-        await _tap(tester, find.byKey(const ValueKey<String>('swatch-dried')));
-        _check(tester, 'dried out, wishlist offer already taken');
-        await _tap(tester, find.byKey(const ValueKey<String>('swatch-dried')));
+        await _tap(tester, find.byTooltip(env.t.commonMoreActions));
         await _tap(
           tester,
-          find.byKey(const ValueKey<String>('swatch-wishlist')),
+          find.byKey(const ValueKey<String>('swatch-menu-dried')),
         );
-        await _tap(tester, find.byKey(const ValueKey<String>('swatch-dried')));
+        _check(tester, 'dried out, wishlist offer already taken');
+        await _tap(tester, find.byTooltip(env.t.commonMoreActions));
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-menu-dried')),
+        );
+        await _tap(tester, find.byTooltip(env.t.commonMoreActions));
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-menu-wishlist')),
+        );
+        await _tap(tester, find.byTooltip(env.t.commonMoreActions));
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-menu-dried')),
+        );
         _check(tester, 'dried out, offer to add to the wishlist');
         expect(find.byType(AlertDialog), findsOneWidget);
         await _close(tester);

@@ -18,6 +18,7 @@ Future<void> pumpTile(
   bool selected = false,
   bool favorite = false,
   bool owned = false,
+  bool showHex = true,
   double? height,
   ThemeData? theme,
 }) async {
@@ -38,6 +39,7 @@ Future<void> pumpTile(
               selected: selected,
               favorite: favorite,
               owned: owned,
+              showHex: showHex,
               height: height,
             ),
           ),
@@ -125,6 +127,34 @@ void main() {
     expect(star.filled, isTrue);
     // 72 colour block + 8 + 22 + 40 + 16 + 10 body.
     expect(tester.getSize(find.byType(ColorSwatchTile)).height, 174);
+  });
+
+  testWidgets('a cell without the hex leaves the hex line out', (
+    WidgetTester tester,
+  ) async {
+    await pumpTile(
+      tester,
+      hex: 'ee8354',
+      code: 'YR57',
+      name: 'Tropical Peach',
+      showHex: false,
+    );
+
+    expect(find.text('#EE8354'), findsNothing);
+    // 72 colour block + 12 + 22 + 40 + 12 body.
+    expect(tester.getSize(find.byType(ColorSwatchTile)).height, 158);
+  });
+
+  testWidgets('the grid cell height leaves the hex line out', (
+    WidgetTester tester,
+  ) async {
+    await pumpTile(tester, hex: 'ee8354');
+
+    final BuildContext context = tester.element(find.byType(ColorSwatchTile));
+    expect(
+      ColorSwatchTile.gridCellHeight(context, showHex: false),
+      ColorSwatchTile.gridCellHeight(context) - 16,
+    );
   });
 
   testWidgets('a selected cell is outlined in action', (

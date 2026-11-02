@@ -283,10 +283,13 @@ void main() {
         findsNothing,
       );
       expect(_key('palette-photo-far-note'), findsNothing);
-      // The paint order keeps the same order.
+      // The paint order keeps the same order: open its disclosure.
+      await tester.ensureVisible(_key('palette-paint-order'));
+      await tester.tap(_key('palette-paint-order'));
+      await tester.pumpAndSettle();
       expect(_key('palette-step-zone-1'), findsOneWidget);
       expect(_key('palette-save'), findsOneWidget);
-      expect(_key('palette-clear'), findsOneWidget);
+      expect(_key('palette-overflow'), findsOneWidget);
     });
 
     testWidgets('every size is found at once; a new size only picks a list', (
@@ -406,8 +409,7 @@ void main() {
       );
 
       await _fromPhoto(tester);
-      await tester.ensureVisible(_key('palette-clear'));
-      await tester.tap(_key('palette-clear'));
+      await tapResultItem(tester, 'palette-clear');
       await tester.pumpAndSettle();
       expect(_key('palette-photo-thumb'), findsNothing);
       expect(_key('palette-save'), findsNothing);
@@ -486,6 +488,8 @@ void main() {
         of: _key('palette-saved-subtitle-${saved.single.id}'),
         matching: find.byType(Text),
       );
+      // The saved list lives in its own sheet now.
+      await openSavedPalettesSheet(tester);
       await tester.ensureVisible(subtitle);
       expect(
         tester.widget<Text>(subtitle).data,
@@ -493,7 +497,6 @@ void main() {
       );
 
       // Loading it works like any saved palette: the photo is not kept.
-      await tester.ensureVisible(_key('palette-load-${saved.single.id}'));
       await tester.tap(_key('palette-load-${saved.single.id}'));
       await tester.pumpAndSettle();
       expect(_key('palette-photo-thumb'), findsNothing);
@@ -671,7 +674,10 @@ void main() {
       await startPhoto(tester);
       expect(_key('palette-photo-busy'), findsOneWidget);
 
-      await tester.ensureVisible(_key('palette-clear'));
+      // Clear lives in the result's "⋯"; the read spinner is still on, so
+      // pump frames instead of settling.
+      await tester.tap(_key('palette-overflow'));
+      await pumpFor(tester);
       await tester.tap(_key('palette-clear'));
       await pumpFor(tester);
       // Clear ended the read: no spinner left.

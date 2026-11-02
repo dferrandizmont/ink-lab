@@ -14,6 +14,7 @@ import '../../theme/tokens.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
+import '../../widgets/ink_disclosure.dart';
 import '../../widgets/ink_search_field.dart';
 import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
@@ -238,15 +239,17 @@ class _IdeasPageState extends State<IdeasPage> {
     if (favorites != null) {
       unawaited(favorites.recordViewed(preset.id).catchError((Object _) {}));
     }
-    final IdeaPlan? applied = await showInkSheet<IdeaPlan>(
+    final IdeaPlan? applied = await showInkDraggableSheet<IdeaPlan>(
       context: context,
-      builder: (BuildContext context) => IdeaDetailSheet(
-        initial: initial,
-        candidates: _available,
-        brand: _brand,
-        favorites: favorites,
-        onAddToDiary: _addToDiary,
-      ),
+      builder: (BuildContext context, ScrollController scroll) =>
+          IdeaDetailSheet(
+            initial: initial,
+            candidates: _available,
+            brand: _brand,
+            favorites: favorites,
+            onAddToDiary: _addToDiary,
+            scrollController: scroll,
+          ),
     );
     if (applied == null || !mounted) return;
     _applyToPalette(applied);
@@ -415,13 +418,6 @@ class _IdeasPageState extends State<IdeasPage> {
                       onOpen: () => _open(featured),
                     ),
                   ),
-                if (recent.isNotEmpty)
-                  _RecentRow(
-                    key: const ValueKey<String>('ideas-recent'),
-                    presets: recent,
-                    planFor: _planFor,
-                    onOpen: _open,
-                  ),
                 if (filtered.isEmpty && _favoritesOnly && _query.trim().isEmpty)
                   EmptyState(
                     key: const ValueKey<String>('ideas-favorites-empty'),
@@ -454,6 +450,12 @@ class _IdeasPageState extends State<IdeasPage> {
                       ],
                     ),
                     top: browsing ? InkSpacing.block : 0,
+                  ),
+                if (recent.isNotEmpty)
+                  _RecentSection(
+                    presets: recent,
+                    planFor: _planFor,
+                    onOpen: _open,
                   ),
               ],
             ),
@@ -531,8 +533,9 @@ String ideaMetaLine(
   );
 }
 
-/// The idea of the day: the same preset all day, with its palette and a
-/// button to its steps (design G "Featured" card).
+/// The idea of the day: the same preset all day, with its palette. The whole
+/// card opens the idea (with an arrow as the affordance, design 0.9 §2.9);
+/// the heart, top right, toggles the favourite.
 class _FeaturedCard extends StatelessWidget {
   const _FeaturedCard({
     super.key,
@@ -552,74 +555,100 @@ class _FeaturedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
+    final AppLocalizations l10n = context.l10n;
+    final String summary = l10n.ideaSummary(preset);
+    final String eyebrow = AppTypography.caps(
+      '${l10n.ideasFeaturedLabel} · ${l10n.ideasMinutes(preset.minutes)}',
+    );
     return Card(
-      child: Padding(
-        padding: InkSpacing.card,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: Column(
+      child: Semantics(
+        button: true,
+        child: InkWell(
+          key: ValueKey<String>('ideas-open-${preset.id}'),
+          onTap: onOpen,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: InkGeometry.target),
+            child: Padding(
+              padding: InkSpacing.card,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      // The heart is 44 dp tall; this keeps the caps lines
-                      // centred against it.
-                      const SizedBox(height: InkSpacing.s8),
-                      Text(
-                        AppTypography.caps(context.l10n.ideasFeaturedLabel),
-                        style: AppTypography.capsStyle.copyWith(
-                          color: ink.action,
+                      Expanded(
+                        child: Padding(
+                          // The heart is 44 dp tall; this centres the caps
+                          // line against it.
+                          padding: const EdgeInsets.only(top: InkSpacing.s8),
+                          child: Tooltip(
+                            message: eyebrow,
+                            child: Text(
+                              eyebrow,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.capsStyle.copyWith(
+                                color: ink.action,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: InkSpacing.s4),
-                      Text(
-                        ideaMetaLine(context, preset),
-                        style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+                      IdeaHeartButton(
+                        key: ValueKey<String>(
+                          'ideas-heart-${preset.id}-featured',
+                        ),
+                        favorite: favorite,
+                        onPressed: onToggleFavorite,
                       ),
                     ],
                   ),
-                ),
-                IdeaHeartButton(
-                  key: ValueKey<String>('ideas-heart-${preset.id}-featured'),
-                  favorite: favorite,
-                  onPressed: onToggleFavorite,
-                ),
-              ],
-            ),
-            const SizedBox(height: InkSpacing.group),
-            Semantics(
-              header: true,
-              child: Text(
-                context.l10n.ideaTitle(preset),
-                style: AppTypography.sheetTitle.copyWith(color: ink.fg),
+                  const SizedBox(height: InkSpacing.group),
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      l10n.ideaTitle(preset),
+                      maxLines: 2,
+                      style: AppTypography.sheetTitle.copyWith(color: ink.fg),
+                    ),
+                  ),
+                  const SizedBox(height: InkSpacing.group),
+                  Tooltip(
+                    message: summary,
+                    child: Text(
+                      summary,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTypography.secondary.copyWith(color: ink.fg2),
+                    ),
+                  ),
+                  const SizedBox(height: InkSpacing.block),
+                  Row(
+                    children: <Widget>[
+                      if (plan.palette.isNotEmpty)
+                        Expanded(
+                          child: PaletteStrip(
+                            colors: <String>[
+                              for (final s in plan.palette) s.color.hex,
+                            ],
+                            colorHeight: 32,
+                            radius: InkRadii.control,
+                          ),
+                        )
+                      else
+                        const Spacer(),
+                      const SizedBox(width: InkSpacing.s12),
+                      InkIcon(
+                        InkIcons.chevronRight,
+                        size: InkGeometry.mediumIcon,
+                        color: ink.fg2,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: InkSpacing.group),
-            Text(
-              context.l10n.ideaSummary(preset),
-              style: AppTypography.secondary.copyWith(color: ink.fg2),
-            ),
-            if (plan.palette.isNotEmpty) ...<Widget>[
-              const SizedBox(height: InkSpacing.block),
-              PaletteStrip(
-                colors: <String>[for (final s in plan.palette) s.color.hex],
-                colorHeight: 32,
-                radius: InkRadii.control,
-              ),
-            ],
-            const SizedBox(height: InkSpacing.block),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: InkButton(
-                key: ValueKey<String>('ideas-open-${preset.id}'),
-                label: context.l10n.ideasOpenButton,
-                onPressed: onOpen,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -762,11 +791,10 @@ class IdeaHeartButton extends StatelessWidget {
   }
 }
 
-/// "Recently viewed": the ideas opened last, newest first, as a row of small
-/// cards that scrolls sideways.
-class _RecentRow extends StatelessWidget {
-  const _RecentRow({
-    super.key,
+/// "Recently viewed": the ideas opened last, newest first, in a row of small
+/// cards that scrolls sideways, folded away at the end of the list at first.
+class _RecentSection extends StatefulWidget {
+  const _RecentSection({
     required this.presets,
     required this.planFor,
     required this.onOpen,
@@ -777,36 +805,45 @@ class _RecentRow extends StatelessWidget {
   final ValueChanged<IdeaPreset> onOpen;
 
   @override
+  State<_RecentSection> createState() => _RecentSectionState();
+}
+
+class _RecentSectionState extends State<_RecentSection> {
+  bool _open = false;
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: InkSpacing.block),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
-            child: InkSectionHeading(context.l10n.ideasRecentTitle),
-          ),
-          const SizedBox(height: InkSpacing.headingGap),
-          SingleChildScrollView(
+      child: InkDisclosure(
+        key: const ValueKey<String>('ideas-recent'),
+        title: context.l10n.ideasRecentTitle,
+        expanded: _open,
+        onToggle: () => setState(() => _open = !_open),
+        padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
+        child: Padding(
+          padding: const EdgeInsets.only(top: InkSpacing.group),
+          child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                for (int i = 0; i < presets.length; i++) ...<Widget>[
+                for (int i = 0; i < widget.presets.length; i++) ...<Widget>[
                   if (i > 0) const SizedBox(width: InkSpacing.s8),
                   _RecentCard(
-                    key: ValueKey<String>('ideas-recent-${presets[i].id}'),
-                    preset: presets[i],
-                    plan: planFor(presets[i]),
-                    onTap: () => onOpen(presets[i]),
+                    key: ValueKey<String>(
+                      'ideas-recent-${widget.presets[i].id}',
+                    ),
+                    preset: widget.presets[i],
+                    plan: widget.planFor(widget.presets[i]),
+                    onTap: () => widget.onOpen(widget.presets[i]),
                   ),
                 ],
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

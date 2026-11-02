@@ -12,10 +12,12 @@ import 'package:ink_lab/data/data.dart';
 import 'package:ink_lab/ui/pages/collection/collection_page.dart';
 import 'package:ink_lab/ui/pages/onboarding/onboarding_page.dart';
 import 'package:ink_lab/ui/pages/settings/constants.dart';
+import 'package:ink_lab/ui/pages/settings/favorites_section.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
 import 'package:ink_lab/ui/widgets/ink_chip.dart';
+import 'package:ink_lab/ui/widgets/ink_sheet.dart';
 
 import '../../support/l10n.dart';
 
@@ -127,6 +129,28 @@ Finder labelledField(String label) => find.byWidgetPredicate(
   (Widget widget) =>
       widget is TextField && widget.decoration?.labelText == label,
 );
+
+/// How much the settings list scrolls: the height of its content.
+double _contentHeight(WidgetTester tester) => tester
+    .state<ScrollableState>(_pageScrollable)
+    .position
+    .maxScrollExtent;
+
+/// Opens the folded copy by text of the backup card.
+Future<void> openTextBackup(WidgetTester tester) async {
+  await scrollTo(tester, find.text(l10n.settingsBackupTextTitle));
+  await tester.tap(find.text(l10n.settingsBackupTextTitle));
+  await tester.pumpAndSettle();
+}
+
+/// Turns the AI on, accepting the disclosure it asks for.
+Future<void> enableAi(WidgetTester tester) async {
+  await scrollTo(tester, find.text(l10n.settingsAiEnabled));
+  await tester.tap(find.text(l10n.settingsAiEnabled));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey<String>('ai-disclosure-confirm')));
+  await tester.pumpAndSettle();
+}
 
 void main() {
   testWidgets('the sections come in the agreed order', (
@@ -261,25 +285,127 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await scrollTo(tester, find.text('Sunrise'));
-    expect(find.text('Sunrise'), findsOneWidget);
+    final Finder row = find.byKey(
+      const ValueKey<String>('settings-saved-palettes'),
+    );
+    await scrollTo(tester, row);
+    await tester.tap(row);
+    await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip(l10n.settingsDeletePalette));
+    await tester.tap(
+      find.byKey(const ValueKey<String>('palette-saved-menu-p1')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('palette-delete-p1')));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('palette-delete-confirm')),
+    );
     await tester.pumpAndSettle();
 
     expect(scope.savedPalettes.palettesOf(MarkerBrand.ohuhuOahu), isEmpty);
   });
 
-  testWidgets('a favorite can be removed', (WidgetTester tester) async {
+  testWidgets('a favorite can be removed from the sheet', (
+    WidgetTester tester,
+  ) async {
     final AppScope scope = await pumpSettings(tester);
     await scope.settings.setFavorites(<String>{'ohuhu_oahu:YR114'});
     await tester.pumpAndSettle();
 
-    await scrollTo(tester, find.widgetWithText(ListTile, 'YR114'));
+    // The list is not in the page: the row opens it.
+    expect(find.text('YR114'), findsNothing);
+    await scrollTo(tester, find.byKey(FavoritesSection.rowKey));
+    await tester.tap(find.byKey(FavoritesSection.rowKey));
+    await tester.pumpAndSettle();
+
+    expect(find.text('YR114'), findsOneWidget);
     await tester.tap(find.byTooltip(l10n.settingsDeleteFavorite));
     await tester.pumpAndSettle();
 
     expect(scope.settings.favorites, isEmpty);
+  });
+
+  testWidgets('the favorites row opens the list at half the height', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSettings(tester);
+    await scope.settings.setFavorites(<String>{'ohuhu_oahu:YR114'});
+    await tester.pumpAndSettle();
+
+    await scrollTo(tester, find.byKey(FavoritesSection.rowKey));
+    await tester.tap(find.byKey(FavoritesSection.rowKey));
+    await tester.pumpAndSettle();
+
+    // The sheet opens at the half, with the list inside it.
+    expect(
+      tester.getTopLeft(find.byType(InkSheet)).dy,
+      moreOrLessEquals(844 / 2, epsilon: 2),
+    );
+    expect(
+      find.descendant(
+        of: find.byType(InkSheet),
+        matching: find.text(l10n.settingsFavoritesTitle),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('YR114'), findsOneWidget);
+  });
+
+  testWidgets('the menu of the sheet clears every favorite', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSettings(tester);
+    await scope.settings.setFavorites(<String>{
+      'ohuhu_oahu:YR114',
+      'ohuhu_oahu:YR115',
+    });
+    await tester.pumpAndSettle();
+
+    await scrollTo(tester, find.byKey(FavoritesSection.rowKey));
+    await tester.tap(find.byKey(FavoritesSection.rowKey));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip(l10n.commonMoreActions));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('settings-favorites-clear')),
+    );
+    await tester.pumpAndSettle();
+
+    // It asks first.
+    expect(find.text(l10n.settingsClearFavoritesTitle), findsOneWidget);
+    await tester.tap(
+      find.widgetWithText(FilledButton, l10n.settingsClearFavorites),
+    );
+    await tester.pumpAndSettle();
+
+    expect(scope.settings.favorites, isEmpty);
+    expect(find.text('YR114'), findsNothing);
+  });
+
+  testWidgets('many favorites do not make the page longer', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSettings(tester);
+    final double empty = _contentHeight(tester);
+
+    await scope.settings.setFavorites(<String>{
+      for (int i = 1; i <= 40; i++) 'ohuhu_oahu:YR$i',
+    });
+    await tester.pumpAndSettle();
+
+    // The list is behind the sheet: the page is exactly as long as before.
+    expect(_contentHeight(tester), empty);
+    expect(find.byKey(FavoritesSection.rowKey), findsOneWidget);
+    // The row tells how many there are.
+    expect(
+      find.descendant(
+        of: find.byKey(FavoritesSection.rowKey),
+        matching: find.text('40'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('the name display mode is stored', (WidgetTester tester) async {
@@ -313,7 +439,7 @@ void main() {
     );
 
     await pumpSettings(tester);
-    await scrollTo(tester, find.text(l10n.settingsExportBackup));
+    await openTextBackup(tester);
     await tester.tap(find.text(l10n.settingsExportBackup));
     await tester.pumpAndSettle();
 
@@ -329,7 +455,7 @@ void main() {
   ) async {
     await pumpSettings(tester);
 
-    await scrollTo(tester, find.text(l10n.settingsImportBackup));
+    await openTextBackup(tester);
     await tester.tap(find.text(l10n.settingsImportBackup));
     await tester.pumpAndSettle();
 
@@ -360,7 +486,7 @@ void main() {
       },
     });
 
-    await scrollTo(tester, find.text(l10n.settingsImportBackup));
+    await openTextBackup(tester);
     await tester.tap(find.text(l10n.settingsImportBackup));
     await tester.pumpAndSettle();
 
@@ -433,6 +559,16 @@ void main() {
     await pumpSettings(tester, noOnDevice: true);
 
     await scrollTo(tester, find.text(l10n.settingsAiEnabled));
+    // With the AI off the card shows the switch and one line, nothing else.
+    expect(find.text(l10n.settingsAiSubtitle), findsOneWidget);
+    expect(
+      find.text(l10n.settingsAiEnabledSubtitleColourTheoryNoOnDevice),
+      findsNothing,
+    );
+    expect(find.text(l10n.settingsAiProvider), findsNothing);
+
+    await enableAi(tester);
+
     expect(
       find.text(l10n.settingsAiEnabledSubtitleColourTheoryNoOnDevice),
       findsOneWidget,
@@ -493,6 +629,8 @@ void main() {
 
   testWidgets('the API key field is masked', (WidgetTester tester) async {
     await pumpSettings(tester);
+    // The provider (and its key) only come with the AI.
+    await enableAi(tester);
 
     await scrollTo(tester, find.text(l10n.settingsAiProviderOpenRouter));
     await tester.tap(find.text(l10n.settingsAiProviderOpenRouter));

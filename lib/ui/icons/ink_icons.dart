@@ -67,7 +67,10 @@ enum InkIcons {
   dropletOff,
 
   /// Feather bookmark: the wishlist.
-  bookmark;
+  bookmark,
+
+  /// Feather more-horizontal: three dots in a row (the overflow "⋯" menu).
+  moreHorizontal;
 
   static const InkIcons edit_3 = edit3;
   static const InkIcons trash_2 = trash2;
@@ -434,6 +437,11 @@ class InkIconPainter extends CustomPainter {
             ..close(),
           fillable: true,
         );
+      case InkIcons.moreHorizontal:
+        // Three dots of radius 1 drawn with the 2 stroke: 4 dp discs.
+        circle(5, 12, 1);
+        circle(12, 12, 1);
+        circle(19, 12, 1);
     }
     canvas.restore();
   }

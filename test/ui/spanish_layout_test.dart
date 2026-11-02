@@ -126,6 +126,20 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Sugerir con IA'), findsOneWidget);
+      // With the AI off the card shows the switch and one line: no provider.
+      expect(
+        find.text('La IA solo sugiere paletas. Nunca cambia tu colección.'),
+        findsOneWidget,
+      );
+      expect(find.text('Teoría del color'), findsNothing);
+
+      // Turning it on brings the provider.
+      await tester.tap(find.text('Sugerir con IA'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey<String>('ai-disclosure-confirm')),
+      );
+      await tester.pumpAndSettle();
       expect(find.text('Teoría del color'), findsWidgets);
       expect(find.text('OpenRouter'), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -167,7 +181,10 @@ void main() {
     ) async {
       await _pumpSpanish(tester, const PalettePage());
       expect(find.text(AppTypography.caps('Rotulador base')), findsWidgets);
-      expect(find.text('Paletas guardadas'), findsWidgets);
+      expect(
+        find.byKey(const ValueKey<String>('palette-saved-palettes')),
+        findsOneWidget,
+      );
 
       await tester.enterText(
         find.byKey(const ValueKey<String>('palette-base-input')),

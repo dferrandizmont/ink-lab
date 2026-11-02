@@ -141,12 +141,12 @@ void main() {
       await _closeSheet(tester);
       expect(scope.ideaFavorites.recent, <String>['neon', 'one_color']);
 
-      // The row shows them newest first.
+      // The row shows them newest first, folded away until asked for.
       await tester.ensureVisible(_key('ideas-recent'));
-      expect(
-        find.text(l10n.ideasRecentTitle),
-        findsOneWidget,
-      );
+      expect(find.text(l10n.ideasRecentTitle), findsOneWidget);
+      expect(_key('ideas-recent-neon'), findsNothing);
+      await tester.tap(_key('ideas-recent'));
+      await tester.pumpAndSettle();
       final double newest = tester.getTopLeft(_key('ideas-recent-neon')).dx;
       final double older = tester.getTopLeft(_key('ideas-recent-one_color')).dx;
       expect(newest, lessThan(older));

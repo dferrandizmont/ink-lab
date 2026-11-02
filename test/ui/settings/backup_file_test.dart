@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show MethodCall, SystemChannels;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/app_version.dart';
@@ -154,12 +155,53 @@ void main() {
   ) async {
     await _pump(tester);
 
-    expect(find.text(l10n.settingsExportBackup), findsOneWidget);
-    expect(find.text(l10n.settingsImportBackup), findsOneWidget);
-    expect(find.text(l10n.settingsBackupFileTitle), findsOneWidget);
-    expect(find.text(l10n.settingsBackupFileCaption), findsOneWidget);
+    // The file is the primary action of the card; the copy by text is
+    // folded, so it is not in the way.
     expect(find.text(l10n.settingsSaveBackupFile), findsOneWidget);
     expect(find.text(l10n.settingsRestoreBackupFile), findsOneWidget);
+    expect(find.text(l10n.settingsBackupFileCaption), findsOneWidget);
+    expect(find.text(l10n.settingsBackupTextTitle), findsOneWidget);
+    expect(find.text(l10n.settingsExportBackup), findsNothing);
+    expect(find.text(l10n.settingsImportBackup), findsNothing);
+
+    await tester.tap(find.text(l10n.settingsBackupTextTitle));
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.settingsExportBackup), findsOneWidget);
+    expect(find.text(l10n.settingsImportBackup), findsOneWidget);
+  });
+
+  testWidgets('the copy by text is exported from the folded block', (
+    WidgetTester tester,
+  ) async {
+    String? copied;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (MethodCall call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied = (call.arguments as Map<Object?, Object?>)['text'] as String;
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+
+    await _pump(tester);
+    await tester.tap(find.text(l10n.settingsBackupTextTitle));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.settingsExportBackup));
+    await tester.pumpAndSettle();
+
+    expect(copied, isNotNull);
+    final Map<String, Object?> backup =
+        jsonDecode(copied!) as Map<String, Object?>;
+    expect(backup['version'], 1);
+    expect(find.text(l10n.settingsBackupExported), findsOneWidget);
   });
 
   testWidgets(
