@@ -24,6 +24,7 @@ import '../diary/artwork_diary_view.dart';
 import '../diary/artwork_entry_page.dart';
 import '../match/image_picker_service.dart';
 import '../palette/palette_draft.dart';
+import 'idea_deep_link.dart';
 import 'idea_detail_sheet.dart';
 
 /// Composition root above the page, or `null` in isolated previews/tests.
@@ -98,6 +99,12 @@ class _IdeasPageState extends State<IdeasPage> {
   final int _sessionSeed = DateTime.now().millisecondsSinceEpoch & 0x7fffffff;
 
   @override
+  void initState() {
+    super.initState();
+    ideaDeepLink.addListener(_openIdeaFromLink);
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final scope = _scopeOf(context);
@@ -137,6 +144,7 @@ class _IdeasPageState extends State<IdeasPage> {
 
   @override
   void dispose() {
+    ideaDeepLink.removeListener(_openIdeaFromLink);
     _settingsSubscription?.cancel();
     _ownColorsSubscription?.cancel();
     _driedSubscription?.cancel();
@@ -192,6 +200,20 @@ class _IdeasPageState extends State<IdeasPage> {
       _plans.clear();
       _loading = false;
     });
+    // A widget tap that arrived while the page was loading.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _openIdeaFromLink());
+  }
+
+  /// Opens the idea the home-screen widget asked for ([ideaDeepLink]), once
+  /// the page has its markers; an unknown id is dropped.
+  void _openIdeaFromLink() {
+    final String? id = ideaDeepLink.value;
+    if (id == null || _loading || !mounted) return;
+    ideaDeepLink.value = null;
+    final IdeaPreset? preset = IdeasEngine.byId(id);
+    if (preset == null) return;
+    if (_view != _IdeasView.ideas) setState(() => _view = _IdeasView.ideas);
+    unawaited(_open(preset));
   }
 
   /// The first seed of [preset]: random markers change every session, the
@@ -866,9 +888,9 @@ class _RecentCard extends StatelessWidget {
     final InkColors ink = InkColors.of(context);
     // Wider with the text scale, so a large font does not wrap the title into
     // a tall, narrow card.
-    final double scale = MediaQuery.textScalerOf(
-      context,
-    ).scale(1).clamp(1.0, 1.3);
+    final double scale = MediaQuery.textScalerOf(context)
+        .scale(1)
+        .clamp(1.0, 1.3);
     return SizedBox(
       width: 168 * scale,
       child: Semantics(

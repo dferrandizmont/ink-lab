@@ -583,3 +583,25 @@ tool/data/test_generate_finecolour.py
 tool/data/baseline/finecolour_colors_source.js
 tool/data/baseline/finecolour_colors_source.LICENSE
 test/ui/onboarding/finecolour_onboarding_test.dart
+
+# "Idea of the day" home-screen widget (Android)
+lib/data/idea_widget_sync.dart
+lib/ui/pages/ideas/idea_deep_link.dart
+test/data/idea_widget_sync_test.dart
+test/ui/ideas/idea_deep_link_test.dart
+android/app/src/main/kotlin/dev/inklab/ink_lab/IdeaWidgetProvider.kt
+android/app/src/main/res/drawable-v31/idea_widget_background.xml
+android/app/src/main/res/drawable/idea_widget_background.xml
+android/app/src/main/res/drawable/idea_widget_chip_edge.xml
+android/app/src/main/res/drawable/idea_widget_chip_fill.xml
+android/app/src/main/res/drawable/idea_widget_preview.xml
+android/app/src/main/res/layout/idea_widget.xml
+android/app/src/main/res/layout/idea_widget_preview.xml
+android/app/src/main/res/values-night/colors.xml
+android/app/src/main/res/values/strings.xml
+android/app/src/main/res/values-de/strings.xml
+android/app/src/main/res/values-es/strings.xml
+android/app/src/main/res/values-fr/strings.xml
+android/app/src/main/res/values-it/strings.xml
+android/app/src/main/res/values-pt/strings.xml
+android/app/src/main/res/xml/idea_widget_info.xml

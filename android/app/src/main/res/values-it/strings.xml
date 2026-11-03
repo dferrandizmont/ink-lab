@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="idea_widget_label">Idea del giorno</string>
+    <string name="idea_widget_description">Ogni giorno, un esercizio di disegno con i tuoi pennarelli.</string>
+    <string name="idea_widget_empty">Apri Ink Lab per vedere la tua idea del giorno</string>
+    <string name="idea_widget_preview_caption">Idea del giorno · 10 min</string>
+    <string name="idea_widget_preview_title">Campitura senza righe</string>
+    <string name="idea_widget_preview_summary">Riempi un quadrato con un solo pennarello senza righe visibili.</string>
+</resources>

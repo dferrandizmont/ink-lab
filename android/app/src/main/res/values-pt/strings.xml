@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="idea_widget_label">Ideia do dia</string>
+    <string name="idea_widget_description">Todos os dias, um exercício de desenho com os teus marcadores.</string>
+    <string name="idea_widget_empty">Abre o Ink Lab para ver a tua ideia do dia</string>
+    <string name="idea_widget_preview_caption">Ideia do dia · 10 min</string>
+    <string name="idea_widget_preview_title">Preenchimento sem riscos</string>
+    <string name="idea_widget_preview_summary">Preenche um quadrado com um só marcador sem que se notem os riscos.</string>
+</resources>

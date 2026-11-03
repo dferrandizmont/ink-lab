@@ -113,6 +113,9 @@ Touche une capture pour l’agrandir.
   autre appli sous forme d’image.
 - **L’IA, si tu veux.** Des suggestions de palettes en option : Gemini Nano sur
   l’appareil, ou OpenRouter avec ta propre clé.
+- **Widget « Idée du jour ».** Un widget Android pour l’écran d’accueil avec
+  l’exercice du jour, dans les couleurs de tes marqueurs. Il change chaque jour
+  tout seul, et un appui ouvre l’idée.
 
 </details>
 
@@ -134,10 +137,11 @@ ailleurs.
 
 ## Nouveautés
 
-La version 0.9.2 est sortie. La série 0.9 a mis de l’ordre dans l’appli : une
-fiche de marqueur plus calme, des écrans mieux rangés et des correctifs pour les
-grandes tailles de texte. La liste complète est dans [CHANGELOG.md](CHANGELOG.md)
-et dans les [versions](https://github.com/dferrandizmont/ink-lab/releases).
+La version 0.10.0 est sortie. Nouveauté : un widget Android pour l’écran
+d’accueil avec l’idée du jour, dans les couleurs de tes marqueurs. La série 0.9
+a mis de l’ordre dans l’appli. La liste complète est dans
+[CHANGELOG.md](CHANGELOG.md) et dans les
+[versions](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contribuer
 

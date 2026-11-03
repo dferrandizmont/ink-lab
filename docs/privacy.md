@@ -64,6 +64,13 @@ favoritas y las vistas hace poco (`idea_favorites`, `idea_recent`: solo ids de i
 de usuario. La clave de OpenRouter, si el usuario la guarda, va aparte: Android Keystore (`flutter_secure_storage`) o
 Keychain de iOS «solo este dispositivo» (`lib/data/secure_secret_store.dart`).
 
+El widget de Android para la pantalla de inicio («Idea del día») lee su propio fichero privado de preferencias,
+`HomeWidgetPreferences` (clave `ideas`), que escribe la app: el catálogo de ideas en el idioma de la app (título,
+resumen, categoría y minutos) y hasta cinco colores hex por idea, elegidos entre los rotuladores del usuario
+(`lib/data/idea_widget_sync.dart`). Sin identificadores, notas, fotos ni datos del diario. El widget se actualiza solo
+con una alarma no exacta a medianoche (sin permiso de alarmas exactas); los permisos de WorkManager que añadiría la
+librería del widget (`WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED`, `FOREGROUND_SERVICE`) se quitan del manifiesto.
+
 Las fotos del diario no están en `shared_preferences`: son ficheros en `getApplicationDocumentsDirectory()/artworks/` (la
 carpeta `artworks/` del directorio de documentos de la app), como máximo 4 por entrada, y se copian reducidas a 2048
 píxeles de lado al añadirlas (`lib/main.dart`, `lib/data/artwork_photo_store.dart`). El diario guarda solo el **nombre**

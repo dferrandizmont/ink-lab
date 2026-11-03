@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="idea_widget_label">Idée du jour</string>
+    <string name="idea_widget_description">Chaque jour, un exercice de dessin avec tes marqueurs.</string>
+    <string name="idea_widget_empty">Ouvre Ink Lab pour découvrir ton idée du jour</string>
+    <string name="idea_widget_preview_caption">Idée du jour · 10 min</string>
+    <string name="idea_widget_preview_title">Aplat sans traces</string>
+    <string name="idea_widget_preview_summary">Remplis un carré avec un seul marqueur sans traces visibles.</string>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- "Idea of the day" widget: the app's dark tokens (lib/ui/theme/tokens.dart). -->
+    <color name="idea_widget_bg">#202320</color>
+    <color name="idea_widget_fg">#F2F3EF</color>
+    <color name="idea_widget_fg2">#B7BDB3</color>
+    <color name="idea_widget_line">#363B36</color>
+</resources>

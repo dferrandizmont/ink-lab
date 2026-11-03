@@ -7,6 +7,12 @@
     <!-- Needed only by the optional bring-your-own-key AI advisor. The
          on-device path uses no network. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- The home_widget plugin pulls in WorkManager for background callbacks,
+         which Ink Lab never uses (the "Idea of the day" widget needs no
+         background work). Keep its permissions and its start-up out of the app. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" tools:node="remove" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" tools:node="remove" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove" />
     <application
         android:label="Ink Lab"
         android:name="${applicationName}"
@@ -38,6 +44,33 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- "Idea of the day" home-screen widget. Not exported: the system
+             binds it and delivers the date and time-zone broadcasts, no other
+             app can reach it. No permission is needed (see IdeaWidgetProvider). -->
+        <receiver
+            android:name=".IdeaWidgetProvider"
+            android:exported="false"
+            android:label="@string/idea_widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/idea_widget_info" />
+        </receiver>
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

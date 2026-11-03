@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- White rounded fill; the widget paints it with the marker colour through a
+     colour filter (RemoteViews cannot change a shape's colour any other way). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#FFFFFFFF" />
+    <corners android:radius="5dp" />
+</shape>

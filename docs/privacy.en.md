@@ -62,6 +62,13 @@ saves it, is kept apart:
 Android Keystore (`flutter_secure_storage`) or iOS Keychain "this device only"
 (`lib/data/secure_secret_store.dart`).
 
+The Android home-screen widget ("Idea of the day") reads its own private preferences file, `HomeWidgetPreferences`
+(key `ideas`), which the app writes: the ideas catalogue in the app language (title, summary, category, minutes) and
+up to five hex colours per idea, picked from the user's markers (`lib/data/idea_widget_sync.dart`). No identifiers,
+notes, photos or diary data. The widget refreshes itself with an inexact alarm at midnight (no exact-alarm
+permission); the WorkManager permissions the widget library would add (`WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED`,
+`FOREGROUND_SERVICE`) are removed from the manifest.
+
 The diary's photos are not in `shared_preferences`: they are files in `getApplicationDocumentsDirectory()/artworks/` (the
 `artworks/` folder of the app's documents directory), at most 4 per entry, copied reduced to 2048 pixels per side when
 they are added (`lib/main.dart`, `lib/data/artwork_photo_store.dart`). The diary only stores the **file name**, never a

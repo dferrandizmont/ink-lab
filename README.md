@@ -13,9 +13,9 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Buy_me_a_coffee-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/danielmfdev)
 
 A swatch and palette companion for people who draw with alcohol markers. Look up
-a colour code, find the marker you own closest to a photo and build colour-theory
-palettes with only your markers. Android app with light and dark themes, a tablet
-side rail and six languages.
+a colour code, match a photo to your markers and build colour-theory palettes
+with them. Android app with light and dark themes, a tablet side rail and six
+languages.
 
 **Free · No ads · No account · Works offline · Open source**
 
@@ -40,8 +40,8 @@ Android on GitHub, and in closed testing on Google Play. iOS is coming.
 2. Accept the test: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
 3. Install the app from Google Play. It updates itself.
 
-Stay for 14 days: Google requires 12 testers for 14 days before public release.
-Feedback: inklab@mainshai.com.
+Stay 14 days: Google requires 12 testers for 14 days before release. Feedback:
+inklab@mainshai.com.
 
 </details>
 
@@ -51,8 +51,7 @@ Feedback: inklab@mainshai.com.
 1. Download the APK and `SHA256SUMS.txt` of the [latest
    release](https://github.com/dferrandizmont/ink-lab/releases/latest). Verify with
    `sha256sum -c SHA256SUMS.txt`.
-2. Allow installing apps from unknown sources when your phone asks, then open
-   the APK.
+2. Allow installing apps from unknown sources when asked, then open the APK.
 
 </details>
 
@@ -82,12 +81,12 @@ Tap a screenshot to enlarge it.
 
 ## Features
 
-- **Artwork diary.** A log of what you paint, with its photos, the markers you
-  used and the numbers behind it.
+- **Artwork diary.** A log of what you paint, with photos, the markers you used
+  and the numbers behind it.
 - **Four brands.** Ohuhu (503 colours), DecoTime (313), Copic (358) and Finecolour
   (480), with the closest marker of every other brand under «In other brands».
-- **Match.** Tap a point in a photo to find the marker you own closest to it, and
-  fix the white balance.
+- **Match.** Tap a point in a photo to find your closest marker, and fix the
+  white balance.
 - **Palettes and scenes.** Colour-theory harmonies, blending chains, and 67
   ready-made scenes in 11 categories.
 - **Backup.** Save everything in a `.zip` file, with the diary photos inside.
@@ -96,49 +95,50 @@ Tap a screenshot to enlarge it.
 <details>
 <summary>More features</summary>
 
-- **Colour vision.** Preview a palette as a person with protanopia, deuteranopia,
+- **Colour vision.** Preview a palette as someone with protanopia, deuteranopia,
   tritanopia or achromatopsia sees it.
 - **Printable swatch chart.** A4 pages with a labelled box for each marker you own.
 - **Ideas.** Exercises and techniques with their own palettes, and your favourites.
-- **Swatches and your own colours.** Codes, names and hex values, plus the colour
-  your marker really gives.
+- **Swatches and your own colours.** Codes, names and hex values, plus your
+  marker’s real colour.
 - **Share.** Send a palette, a chart or a diary entry to another app as an image.
-- **AI, if you want it.** Optional palette suggestions: Gemini Nano on the phone,
-  or OpenRouter with your own key.
+- **AI, if you want it.** Optional palette suggestions: Gemini Nano on the phone
+  or OpenRouter with your key.
+- **Idea of the day widget.** Android only: today’s exercise in your marker
+  colours, on the home screen. It changes daily and opens the idea on a tap.
 
 </details>
 
 ## Privacy
 
-Data stays on your phone: no accounts, no server of ours, no analytics, no ads or
+Data stays on your phone: no accounts, no server, no analytics, no ads or
 tracking, and without AI no network use. On-device AI’s ML Kit sends Google usage
 diagnostics, never prompts, colours or photos. Camera and gallery access is only
-for photo matching, scenes, your own marker colours and the diary; those photos
-are processed on the device, and the diary’s stay in the app’s private folder,
-never uploaded. Sharing a palette, a chart or the `.zip` backup hands the file to
-the app you pick, and nothing else.
+for photo matching, scenes, your own colours and the diary; those photos are
+processed on the device and the diary’s stay in the app’s private folder. Sharing
+a palette, a chart or the `.zip` backup hands the file to the app you pick.
 
 [Website](https://inklab.mainshai.com) · [Privacy policy](https://inklab.mainshai.com/privacy/) ·
 [Technical details](docs/privacy.en.md) · Support: **inklab@mainshai.com**.
 
 ## What's new
 
-Version 0.9.2 is out. The 0.9 series tidied the app up: a calmer marker sheet,
-better-ordered screens and fixes for large system text. Full list in
-[CHANGELOG.md](CHANGELOG.md) and in the
+Version 0.10.0 is out. New: an Android home-screen widget with the idea of the
+day, in the colours of your own markers. The 0.9 series tidied the app up. Full
+list in [CHANGELOG.md](CHANGELOG.md) and in the
 [releases](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contributing
 
-Bug reports, ideas and translations are welcome. How to build, test and
-contribute: [CONTRIBUTING.md](CONTRIBUTING.md).
+Bug reports, ideas and translations are welcome. How to build and contribute:
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
 Code under [MIT](LICENSE), Copyright (c) 2026 Daniel Mont Ferrandiz. Own
-documentation and texts: [CC BY-SA 4.0](LICENSE-CONTENT.md). The catalogue data
-are third-party factual references outside both licences; the typefaces (SIL
-OFL 1.1) and other third-party material keep their own terms.
+documentation and texts: [CC BY-SA 4.0](LICENSE-CONTENT.md). Catalogue data are
+third-party references outside both licences; the typefaces (SIL OFL 1.1) and
+other third-party material keep their own terms.
 
 An independent project: **not affiliated with, sponsored by or endorsed by Ohuhu,
 DecoTime, Copic or Finecolour**. "Ohuhu", "Oahu", "DecoTime", "Copic" and "Finecolour" are trademarks of their owners.

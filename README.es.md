@@ -108,6 +108,9 @@ Pulsa una captura para ampliarla.
   como imagen.
 - **IA, si quieres.** Sugerencias de paletas opcionales: Gemini Nano en el móvil u
   OpenRouter con tu propia clave.
+- **Widget «Idea del día».** Un widget de Android para la pantalla de inicio
+  con el ejercicio de hoy, en los colores de tus rotuladores. Cambia solo cada
+  día y al tocarlo se abre la idea.
 
 </details>
 
@@ -127,9 +130,9 @@ entrega a la app que elijas, y nada más.
 
 ## Novedades
 
-La versión 0.9.2 ya está fuera. La serie 0.9 ordenó la app: una ficha de
-rotulador más tranquila, pantallas mejor ordenadas y ajustes para el texto grande
-del sistema. La lista completa está en [CHANGELOG.md](CHANGELOG.md) y en las
+La versión 0.10.0 ya está fuera. Novedad: un widget de Android para la pantalla
+de inicio con la idea del día, en los colores de tus rotuladores. La serie 0.9
+ordenó la app. La lista completa está en [CHANGELOG.md](CHANGELOG.md) y en las
 [versiones](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contribuir

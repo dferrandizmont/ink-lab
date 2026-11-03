@@ -111,6 +111,9 @@ Toca numa captura para a ampliar.
   app como imagem.
 - **IA, se quiseres.** Sugestões de paletas opcionais: Gemini Nano no telemóvel ou
   OpenRouter com a tua própria chave.
+- **Widget «Ideia do dia».** Um widget de Android para o ecrã principal com o
+  exercício de hoje, nas cores dos teus marcadores. Muda sozinho todos os dias e
+  um toque abre a ideia.
 
 </details>
 
@@ -130,8 +133,8 @@ que escolheres, e mais nada.
 
 ## Novidades
 
-A versão 0.9.2 já cá está. A série 0.9 arrumou a app: uma ficha de marcador mais
-calma, ecrãs mais bem ordenados e correções para o texto grande do sistema. A
+A versão 0.10.0 já cá está. Novidade: um widget de Android para o ecrã principal
+com a ideia do dia, nas cores dos teus marcadores. A série 0.9 arrumou a app. A
 lista completa está em [CHANGELOG.md](CHANGELOG.md) e nas
 [versões](https://github.com/dferrandizmont/ink-lab/releases).
 

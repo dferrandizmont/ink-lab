@@ -10,6 +10,7 @@ import '../../core/palette_advisor.dart' show PaletteSuggestion;
 import '../../l10n/l10n.dart';
 import '../icons/ink_icons.dart';
 import '../pages/collection/collection_page.dart';
+import '../pages/ideas/idea_deep_link.dart';
 import '../pages/ideas/ideas_page.dart';
 import '../pages/match/match_page.dart';
 import '../pages/palette/palette_draft.dart';
@@ -160,6 +161,22 @@ class _AppShellState extends State<AppShell> {
   String _brandId = '';
 
   @override
+  void initState() {
+    super.initState();
+    // The home-screen widget opens an idea: show the Ideas tab. A tap that
+    // launched the app is already waiting here.
+    ideaDeepLink.addListener(_onIdeaDeepLink);
+    if (ideaDeepLink.value != null) {
+      _selectedIndex = _ideasIndex;
+      _visited.add(_ideasIndex);
+    }
+  }
+
+  void _onIdeaDeepLink() {
+    if (ideaDeepLink.value != null && mounted) _goTo(_ideasIndex);
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final AppScope? scope = context
@@ -194,6 +211,7 @@ class _AppShellState extends State<AppShell> {
 
   @override
   void dispose() {
+    ideaDeepLink.removeListener(_onIdeaDeepLink);
     _brandSubscription?.cancel();
     super.dispose();
   }

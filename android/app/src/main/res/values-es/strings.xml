@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="idea_widget_label">Idea del día</string>
+    <string name="idea_widget_description">Un ejercicio de dibujo con tus rotuladores, cada día.</string>
+    <string name="idea_widget_empty">Abre Ink Lab para ver tu idea del día</string>
+    <string name="idea_widget_preview_caption">Idea del día · 10 min</string>
+    <string name="idea_widget_preview_title">Relleno sin rayas</string>
+    <string name="idea_widget_preview_summary">Rellena un cuadrado con un solo rotulador sin que se noten las rayas.</string>
+</resources>

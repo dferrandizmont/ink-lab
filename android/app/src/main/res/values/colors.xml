@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#F5F5F3</color>
+    <!-- "Idea of the day" widget: the app's light tokens (lib/ui/theme/tokens.dart). -->
+    <color name="idea_widget_bg">#FFFFFF</color>
+    <color name="idea_widget_fg">#20211F</color>
+    <color name="idea_widget_fg2">#5C5F59</color>
+    <color name="idea_widget_line">#D5D7D1</color>
 </resources>

@@ -8,6 +8,12 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
+## 0.10.0 · 2026-11-03
+
+- Home-screen widget (Android): "Idea of the day" shows today's drawing exercise with the colours of your own markers.
+  It changes by itself every day, even if you do not open the app, and a tap opens that idea in Ideas. It resizes: a
+  short widget keeps just the title. No new permissions; nothing leaves the phone.
+
 ## 0.9.2 · 2026-11-03
 
 - Swatches with large system text: the grid shows two columns instead of three when the names would not fit, so

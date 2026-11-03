@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="idea_widget_app_name" translatable="false">Ink Lab</string>
+    <string name="idea_widget_label">Idea of the day</string>
+    <string name="idea_widget_description">A drawing exercise for your markers, every day.</string>
+    <string name="idea_widget_empty">Open Ink Lab to get your idea of the day</string>
+    <string name="idea_widget_preview_caption">Idea of the day · 10 min</string>
+    <string name="idea_widget_preview_title">Streak-free fill</string>
+    <string name="idea_widget_preview_summary">Fill a square with one marker without visible streaks.</string>
+</resources>

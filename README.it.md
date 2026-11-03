@@ -108,6 +108,9 @@ Tocca una schermata per ingrandirla.
   un’altra app come immagine.
 - **IA, se vuoi.** Suggerimenti di palette opzionali: Gemini Nano sul telefono o
   OpenRouter con la tua chiave.
+- **Widget «Idea del giorno».** Un widget Android per la schermata iniziale con
+  l’esercizio di oggi, nei colori dei tuoi pennarelli. Cambia da solo ogni giorno
+  e un tocco apre l’idea.
 
 </details>
 
@@ -128,9 +131,9 @@ all’app che scegli, e da nessun’altra parte.
 
 ## Novità
 
-La versione 0.9.2 è uscita. La serie 0.9 ha messo in ordine l’app: una scheda del
-pennarello più calma, schermate più ordinate e correzioni per il testo grande di
-sistema. L’elenco completo è in [CHANGELOG.md](CHANGELOG.md) e nelle
+La versione 0.10.0 è uscita. Novità: un widget Android per la schermata iniziale
+con l’idea del giorno, nei colori dei tuoi pennarelli. La serie 0.9 ha messo in
+ordine l’app. L’elenco completo è in [CHANGELOG.md](CHANGELOG.md) e nelle
 [versioni](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contribuire

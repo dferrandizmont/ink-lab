@@ -110,6 +110,9 @@ Tippe auf einen Screenshot, um ihn zu vergrößern.
   als Bild an eine andere App.
 - **KI, wenn du willst.** Optionale Palettenvorschläge: Gemini Nano auf dem
   Handy oder OpenRouter mit deinem eigenen Schlüssel.
+- **Widget „Idee des Tages“.** Ein Android-Widget für den Startbildschirm mit der
+  heutigen Übung in den Farben deiner Marker. Es wechselt jeden Tag von selbst,
+  und ein Tippen öffnet die Idee.
 
 </details>
 
@@ -130,10 +133,10 @@ weiter.
 
 ## Neuerungen
 
-Version 0.9.2 ist da. Die 0.9-Reihe hat die App aufgeräumt: ein ruhigeres Blatt
-für den Marker, ordentlichere Bildschirme und Korrekturen für große Systemschrift.
-Die vollständige Liste steht in [CHANGELOG.md](CHANGELOG.md) und in den
-[Releases](https://github.com/dferrandizmont/ink-lab/releases).
+Version 0.10.0 ist da. Neu: ein Android-Widget für den Startbildschirm mit der
+Idee des Tages, in den Farben deiner Marker. Die 0.9-Reihe hat die App
+aufgeräumt. Die vollständige Liste steht in [CHANGELOG.md](CHANGELOG.md) und in
+den [Releases](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Mitwirken
 

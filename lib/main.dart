@@ -1,3 +1,4 @@
+import 'dart:async' show unawaited;
 import 'dart:io' show Directory;
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ import 'app_scope.dart';
 import 'core/marker_repository.dart';
 import 'core/palette_generator.dart' show PaletteGenerator;
 import 'data/data.dart';
+import 'data/idea_widget_sync.dart';
+import 'ui/pages/ideas/idea_deep_link.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +55,15 @@ Future<void> main() async {
     wishlist: wishlist,
     markers: markers,
   ).start();
+  // The "Idea of the day" home-screen widget (Android): keep its data current
+  // and open the idea it was tapped on. Both do nothing elsewhere.
+  IdeaWidgetSync(
+    settings: settings,
+    markers: markers,
+    ownColors: ownColors,
+    dried: dried,
+  ).start();
+  unawaited(listenToIdeaWidgetLinks());
   runApp(
     AppScope(
       settings: settings,

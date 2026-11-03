@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="idea_widget_label">Idee des Tages</string>
+    <string name="idea_widget_description">Jeden Tag eine Zeichenübung für deine Marker.</string>
+    <string name="idea_widget_empty">Öffne Ink Lab, um deine Idee des Tages zu sehen</string>
+    <string name="idea_widget_preview_caption">Idee des Tages · 10 Min.</string>
+    <string name="idea_widget_preview_title">Streifenfreie Fläche</string>
+    <string name="idea_widget_preview_summary">Fülle ein Quadrat mit einem Marker ohne sichtbare Streifen.</string>
+</resources>
