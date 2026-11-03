@@ -199,7 +199,7 @@ void main() {
     });
   });
 
-  group('UnsupportedOnDeviceAi (iOS stub)', () {
+  group('UnsupportedOnDeviceAi (web and desktop stub)', () {
     test('always reports unavailable and fails closed', () async {
       const UnsupportedOnDeviceAi platform = UnsupportedOnDeviceAi();
       expect(await platform.status(), OnDeviceStatus.unavailable);
@@ -210,17 +210,22 @@ void main() {
       );
     });
 
-    test('is chosen off Android', () {
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    test('is chosen off Android and iOS', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
       addTearDown(() => debugDefaultTargetPlatformOverride = null);
       expect(defaultOnDeviceAiPlatform(), isA<UnsupportedOnDeviceAi>());
     });
 
-    test('the channel is chosen on Android', () {
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      addTearDown(() => debugDefaultTargetPlatformOverride = null);
-      expect(defaultOnDeviceAiPlatform(), isA<MethodChannelOnDeviceAi>());
-    });
+    for (final TargetPlatform platform in <TargetPlatform>[
+      TargetPlatform.android,
+      TargetPlatform.iOS,
+    ]) {
+      test('the channel is chosen on ${platform.name}', () {
+        debugDefaultTargetPlatformOverride = platform;
+        addTearDown(() => debugDefaultTargetPlatformOverride = null);
+        expect(defaultOnDeviceAiPlatform(), isA<MethodChannelOnDeviceAi>());
+      });
+    }
   });
 
   group('PlatformOnDevicePaletteAdvisor', () {

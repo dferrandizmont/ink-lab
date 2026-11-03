@@ -373,6 +373,41 @@ class AppLocalizationsDe extends AppLocalizations {
       'Android bereitet das Modell vor. Das kann dauern und auf WLAN und Laden warten. Du kannst diesen Bildschirm verlassen; der Download läuft im Hintergrund weiter.';
 
   @override
+  String get settingsAiEnabledSubtitleOnDeviceIos =>
+      'Apple Intelligence auf diesem Handy';
+
+  @override
+  String get settingsAiExplainOnDeviceIos =>
+      'Apples Modell läuft auf diesem Handy, und deine Anfragen bleiben darauf.';
+
+  @override
+  String get settingsAiDisclosureOnDeviceIos =>
+      'Anfragen an das Modell auf dem Gerät (Apple Intelligence) beantwortet Apples Modell auf diesem Handy: Dein Szenario und deine Farbcodes verlassen es nie, und es ist kein Schlüssel nötig. iOS installiert und verwaltet das Modell mit Apple Intelligence; die App lädt nichts herunter und nutzt dafür keinen anderen Dienst, es wird also nichts gesendet.';
+
+  @override
+  String get settingsAiOnDeviceNameIos => 'Auf dem Gerät (Apple Intelligence)';
+
+  @override
+  String get settingsAiOnDevicePrivacyIos =>
+      'Deine Anfragen bleiben auf diesem Handy. Es wird nichts gesendet, weder Eingaben noch Farben oder Fotos.';
+
+  @override
+  String get settingsAiOnDevicePreparingIos =>
+      'iOS bereitet das Modell von Apple Intelligence vor. Das kann dauern. Du kannst diesen Bildschirm verlassen; es läuft im Hintergrund weiter.';
+
+  @override
+  String get settingsAiDisclosureIos =>
+      'Ist dies eingeschaltet und du bittest OpenRouter um einen Vorschlag, sendet die App mit deinem eigenen API-Schlüssel an openrouter.ai und den Modellanbieter: die Marke, den Palettenmodus und die Szene, Code und Name des Basismarkers und ob er gesperrt ist, die Palettengröße, die Codes und Hex-Farben der infrage kommenden Marker, die Modelleinstellungen und die festen Anweisungen der App. Fotos werden nie gesendet: Diese Funktion hat keinen Bild-Upload. Bei ausgeschaltetem Schalter wird gar nichts gesendet.';
+
+  @override
+  String get settingsAiDisclosureColourTheoryIos =>
+      'Ist Farbtheorie gewählt, kommen die Paletten aus der eingebauten Engine: Es wird keine KI genutzt, und sie bleiben auf deinem Handy. Wähle Auf dem Gerät oder OpenRouter, um eine KI zu nutzen.';
+
+  @override
+  String get settingsAiDisclosureColourTheoryNoOnDeviceIos =>
+      'Ist Farbtheorie gewählt, kommen die Paletten aus der eingebauten Engine: Es wird keine KI genutzt, und sie bleiben auf deinem Handy. Wähle OpenRouter, um eine KI zu nutzen.';
+
+  @override
   String get settingsAiOnDeviceCheckAgain => 'Erneut prüfen';
 
   @override

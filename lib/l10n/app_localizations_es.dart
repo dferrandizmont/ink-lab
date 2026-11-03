@@ -373,6 +373,42 @@ class AppLocalizationsEs extends AppLocalizations {
       'Android está preparando el modelo. Puede tardar y esperar a tener Wi‑Fi y carga. Puedes salir de esta pantalla; la descarga continúa en segundo plano.';
 
   @override
+  String get settingsAiEnabledSubtitleOnDeviceIos =>
+      'Apple Intelligence en este teléfono';
+
+  @override
+  String get settingsAiExplainOnDeviceIos =>
+      'El modelo de Apple funciona en este teléfono y tus peticiones no salen de él.';
+
+  @override
+  String get settingsAiDisclosureOnDeviceIos =>
+      'Las peticiones En el dispositivo (Apple Intelligence) las responde el modelo de Apple en este teléfono: tu escenario y los códigos de color nunca salen de él y no hace falta clave. iOS instala y gestiona el modelo con Apple Intelligence; la app no descarga nada ni usa ningún otro servicio para ello, así que no se envía nada.';
+
+  @override
+  String get settingsAiOnDeviceNameIos =>
+      'IA en el dispositivo (Apple Intelligence)';
+
+  @override
+  String get settingsAiOnDevicePrivacyIos =>
+      'Tus peticiones no salen de este teléfono. No se envía nada: ni tus peticiones, ni colores, ni fotos.';
+
+  @override
+  String get settingsAiOnDevicePreparingIos =>
+      'iOS está preparando el modelo de Apple Intelligence. Puede tardar. Puedes salir de esta pantalla; sigue en segundo plano.';
+
+  @override
+  String get settingsAiDisclosureIos =>
+      'Con esto activado, cuando pidas una sugerencia a OpenRouter, la app envía a openrouter.ai y al proveedor del modelo, con tu propia clave de API: la marca, el modo de paleta y la escena, el código y el nombre del rotulador base y si está fijado, el tamaño de la paleta, los códigos y colores hex de los rotuladores candidatos, los ajustes del modelo y las instrucciones fijas de la app. Las fotos nunca se envían: esta función no sube imágenes. No se envía nada mientras este interruptor esté desactivado.';
+
+  @override
+  String get settingsAiDisclosureColourTheoryIos =>
+      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu teléfono. Elige En el dispositivo u OpenRouter para usar una IA.';
+
+  @override
+  String get settingsAiDisclosureColourTheoryNoOnDeviceIos =>
+      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu teléfono. Elige OpenRouter para usar una IA.';
+
+  @override
   String get settingsAiOnDeviceCheckAgain => 'Comprobar de nuevo';
 
   @override

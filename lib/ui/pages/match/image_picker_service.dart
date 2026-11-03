@@ -82,6 +82,9 @@ final class PlatformImagePickerService implements ImagePickerService {
         maxWidth: 2048,
         maxHeight: 2048,
         imageQuality: _imageQuality,
+        // No EXIF is needed, so iOS can use PHPicker without asking for
+        // access to the whole photo library.
+        requestFullMetadata: false,
       );
       if (file == null) return const PhotoPickCancelled();
       final Uint8List bytes = await file.readAsBytes();

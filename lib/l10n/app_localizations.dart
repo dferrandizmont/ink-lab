@@ -748,6 +748,60 @@ abstract class AppLocalizations {
   /// **'Android is preparing the model. This can take a while and may wait for Wi‑Fi and charging. You can leave this screen; the download continues in the background.'**
   String get settingsAiOnDevicePreparing;
 
+  /// No description provided for @settingsAiEnabledSubtitleOnDeviceIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Intelligence on this phone'**
+  String get settingsAiEnabledSubtitleOnDeviceIos;
+
+  /// No description provided for @settingsAiExplainOnDeviceIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple\'s model runs on this phone and your requests stay on it.'**
+  String get settingsAiExplainOnDeviceIos;
+
+  /// No description provided for @settingsAiDisclosureOnDeviceIos.
+  ///
+  /// In en, this message translates to:
+  /// **'On-device (Apple Intelligence) requests are answered by Apple\'s model on this phone: your scenario and colour codes never leave it, and no key is needed. iOS installs and manages the model with Apple Intelligence; the app downloads nothing and uses no other service for it, so nothing is sent.'**
+  String get settingsAiDisclosureOnDeviceIos;
+
+  /// No description provided for @settingsAiOnDeviceNameIos.
+  ///
+  /// In en, this message translates to:
+  /// **'On-device (Apple Intelligence)'**
+  String get settingsAiOnDeviceNameIos;
+
+  /// No description provided for @settingsAiOnDevicePrivacyIos.
+  ///
+  /// In en, this message translates to:
+  /// **'Your requests stay on this phone. Nothing is sent, not your prompts, colours or photos.'**
+  String get settingsAiOnDevicePrivacyIos;
+
+  /// No description provided for @settingsAiOnDevicePreparingIos.
+  ///
+  /// In en, this message translates to:
+  /// **'iOS is preparing the Apple Intelligence model. This can take a while. You can leave this screen; it continues in the background.'**
+  String get settingsAiOnDevicePreparingIos;
+
+  /// No description provided for @settingsAiDisclosureIos.
+  ///
+  /// In en, this message translates to:
+  /// **'When this is on and you ask OpenRouter for a suggestion, the app sends openrouter.ai and the model provider, with your own API key: the brand, palette mode and scene, the base marker\'s code and name and whether it is locked, the palette size, the codes and hex colours of the candidate markers, the model settings and the app\'s fixed instructions. Photos are never sent: this feature has no image upload. Nothing at all is sent while this switch is off.'**
+  String get settingsAiDisclosureIos;
+
+  /// No description provided for @settingsAiDisclosureColourTheoryIos.
+  ///
+  /// In en, this message translates to:
+  /// **'With Colour theory selected, palettes come from the built-in engine: no AI is used and they stay on your phone. Choose On-device or OpenRouter to use an AI.'**
+  String get settingsAiDisclosureColourTheoryIos;
+
+  /// No description provided for @settingsAiDisclosureColourTheoryNoOnDeviceIos.
+  ///
+  /// In en, this message translates to:
+  /// **'With Colour theory selected, palettes come from the built-in engine: no AI is used and they stay on your phone. Choose OpenRouter to use an AI.'**
+  String get settingsAiDisclosureColourTheoryNoOnDeviceIos;
+
   /// No description provided for @settingsAiOnDeviceCheckAgain.
   ///
   /// In en, this message translates to:

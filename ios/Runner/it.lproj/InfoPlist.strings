@@ -1,0 +1,3 @@
+/* Italian permission texts; the English originals are in Info.plist. */
+"NSCameraUsageDescription" = "Ink Lab usa la fotocamera per trovare i colori tra i tuoi pennarelli e aggiungere foto delle tue opere al diario. Le foto restano sul tuo dispositivo e non vengono mai caricate.";
+"NSPhotoLibraryUsageDescription" = "Ink Lab ti permette di scegliere foto per trovare i loro colori tra i tuoi pennarelli e aggiungere le tue opere al diario. Le foto restano sul tuo dispositivo e non vengono mai caricate.";

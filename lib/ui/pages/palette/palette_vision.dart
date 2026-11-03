@@ -59,6 +59,9 @@ class PaletteVisionControl extends StatelessWidget {
       ...ColorVisionType.values,
     ];
     return Column(
+      // As tall as its content: in the sheet the page above must stay in
+      // sight, since that is where the preview shows.
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         InkSectionHeading(context.l10n.paletteVisionTitle),

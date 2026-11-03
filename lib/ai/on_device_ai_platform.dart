@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 const String onDeviceModelId = 'on-device';
 
 /// State of the operating system's on-device model (Gemini Nano through
-/// Android AICore today; Apple Foundation Models later on iOS).
+/// Android AICore, Apple Foundation Models on iOS 26+).
 enum OnDeviceStatus {
   /// Not supported on this device, or the platform has no on-device model.
   unavailable,
@@ -102,8 +102,7 @@ abstract interface class OnDeviceAiPlatform {
 /// Generation timeout, matching the native side.
 const Duration defaultOnDeviceTimeout = Duration(seconds: 30);
 
-/// The platform for which no on-device model exists (iOS for now, web,
-/// desktop): always unavailable, so the UI never offers the provider.
+/// The platform for which no on-device model exists (web, desktop): always unavailable, so the UI never offers the provider.
 final class UnsupportedOnDeviceAi implements OnDeviceAiPlatform {
   const UnsupportedOnDeviceAi();
 
@@ -265,10 +264,12 @@ OnDeviceDownloadEvent? _parseEvent(Object? raw) {
   };
 }
 
-/// The platform implementation for the running OS: the Android channel on
-/// Android, the "unavailable" stub everywhere else (iOS lands later).
+/// The platform implementation for the running OS: the native channel on
+/// Android and iOS, the "unavailable" stub everywhere else.
 OnDeviceAiPlatform defaultOnDeviceAiPlatform() {
-  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS)) {
     return MethodChannelOnDeviceAi();
   }
   return const UnsupportedOnDeviceAi();

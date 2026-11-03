@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:share_plus/share_plus.dart';
 
@@ -43,7 +44,20 @@ final class SystemShareSink implements ShareSink {
           for (final ShareImage image in images) image.name,
         ],
         subject: subject,
+        sharePositionOrigin: systemShareOrigin(),
       ),
     );
   }
+}
+
+/// Where the system share sheet points from. On iPad and Mac the sheet is a
+/// popover and needs a non-empty rect or it closes at once; phones ignore it.
+/// The bottom centre of the window stands in for the tapped button.
+Rect systemShareOrigin() {
+  final PlatformDispatcher dispatcher = PlatformDispatcher.instance;
+  final FlutterView? view =
+      dispatcher.implicitView ?? dispatcher.views.firstOrNull;
+  if (view == null) return const Rect.fromLTWH(0, 0, 1, 1);
+  final Size size = view.physicalSize / view.devicePixelRatio;
+  return Rect.fromLTWH(size.width / 2, size.height - 1, 1, 1);
 }

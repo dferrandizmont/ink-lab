@@ -1,0 +1,3 @@
+/* German permission texts; the English originals are in Info.plist. */
+"NSCameraUsageDescription" = "Ink Lab nutzt die Kamera, um Farben mit deinen Markern abzugleichen und Fotos deiner Werke zum Tagebuch hinzuzufügen. Die Fotos bleiben auf deinem Gerät und werden nie hochgeladen.";
+"NSPhotoLibraryUsageDescription" = "Mit Ink Lab kannst du Fotos auswählen, um ihre Farben mit deinen Markern abzugleichen und deine Werke zum Tagebuch hinzuzufügen. Die Fotos bleiben auf deinem Gerät und werden nie hochgeladen.";

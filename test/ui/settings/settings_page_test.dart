@@ -131,10 +131,8 @@ Finder labelledField(String label) => find.byWidgetPredicate(
 );
 
 /// How much the settings list scrolls: the height of its content.
-double _contentHeight(WidgetTester tester) => tester
-    .state<ScrollableState>(_pageScrollable)
-    .position
-    .maxScrollExtent;
+double _contentHeight(WidgetTester tester) =>
+    tester.state<ScrollableState>(_pageScrollable).position.maxScrollExtent;
 
 /// Opens the folded copy by text of the backup card.
 Future<void> openTextBackup(WidgetTester tester) async {
@@ -720,6 +718,15 @@ void main() {
     expect(find.text(l10n.settingsOwnColorsCount(0)), findsOneWidget);
     expect(reset, findsNothing);
   });
+
+  testWidgets('iOS leaves the Google Play beta row out', (
+    WidgetTester tester,
+  ) async {
+    await pumpSettings(tester);
+    await scrollTo(tester, find.text(l10n.settingsDisclaimer));
+    expect(find.byKey(const ValueKey<String>('settings-beta')), findsNothing);
+    expect(find.text(l10n.settingsJoinBeta), findsNothing);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 
   testWidgets('the beta row shows the group and copies the link', (
     WidgetTester tester,

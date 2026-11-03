@@ -316,6 +316,59 @@ void main() {
       },
     );
 
+    test(
+      'verifyKey sends a bearer GET to auth/key without redirects',
+      () async {
+        http.Request? seen;
+        final client = OpenRouterClient(
+          client: MockClient((request) async {
+            seen = request;
+            return http.Response('{"data":{}}', 200);
+          }),
+        );
+
+        await client.verifyKey(apiKey: ' sk-or-v1-abc ');
+
+        expect(seen!.method, 'GET');
+        expect(seen!.url.toString(), 'https://openrouter.ai/api/v1/auth/key');
+        expect(seen!.headers['Authorization'], 'Bearer sk-or-v1-abc');
+        expect(seen!.followRedirects, isFalse);
+      },
+    );
+
+    test(
+      'verifyKey maps 401 without echoing the key and refuses redirects',
+      () async {
+        const secret = 'sk-or-v1-SECRET';
+        final rejected = OpenRouterClient(
+          client: MockClient(
+            (_) async => errorResponse('bad key $secret', 401),
+          ),
+        );
+        await expectLater(
+          rejected.verifyKey(apiKey: secret),
+          throwsA(
+            isA<OpenRouterHttpException>()
+                .having((e) => e.statusCode, 'status', 401)
+                .having((e) => e.toString(), 'text', isNot(contains(secret))),
+          ),
+        );
+
+        bool? follow;
+        final redirected = OpenRouterClient(
+          client: MockClient((request) async {
+            follow = request.followRedirects;
+            return http.Response('', 307);
+          }),
+        );
+        await expectLater(
+          redirected.verifyKey(apiKey: secret),
+          throwsA(isA<OpenRouterHttpException>()),
+        );
+        expect(follow, isFalse);
+      },
+    );
+
     test('aborts an oversized chat response while streaming', () async {
       final chunk = List<int>.filled(512 * 1024, 0x61);
       final client = OpenRouterClient(

@@ -63,24 +63,28 @@ class AboutSection extends StatelessWidget {
             onPressed: () => _copyPrivacyLink(context),
           ),
         ),
-        const Divider(),
-        ListTile(
-          key: const ValueKey<String>('settings-beta'),
-          contentPadding: const EdgeInsets.only(
-            left: InkSpacing.cardH,
-            right: 4,
+        // The beta is a Google Play test; the App Store does not allow links
+        // to other stores, so iOS leaves the row out.
+        if (Theme.of(context).platform != TargetPlatform.iOS) ...<Widget>[
+          const Divider(),
+          ListTile(
+            key: const ValueKey<String>('settings-beta'),
+            contentPadding: const EdgeInsets.only(
+              left: InkSpacing.cardH,
+              right: 4,
+            ),
+            title: Text(context.l10n.settingsJoinBeta),
+            subtitle: Text(
+              SettingsConstants.betaGroupUrl,
+              style: AppTypography.data.copyWith(color: ink.fg2),
+            ),
+            trailing: InkIconButton(
+              icon: InkIcons.copy,
+              tooltip: context.l10n.settingsCopyRepository,
+              onPressed: () => _copyBetaLink(context),
+            ),
           ),
-          title: Text(context.l10n.settingsJoinBeta),
-          subtitle: Text(
-            SettingsConstants.betaGroupUrl,
-            style: AppTypography.data.copyWith(color: ink.fg2),
-          ),
-          trailing: InkIconButton(
-            icon: InkIcons.copy,
-            tooltip: context.l10n.settingsCopyRepository,
-            onPressed: () => _copyBetaLink(context),
-          ),
-        ),
+        ],
         const Divider(),
         SettingsCaption(context.l10n.settingsDisclaimer),
       ],

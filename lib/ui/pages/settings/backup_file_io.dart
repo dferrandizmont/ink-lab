@@ -5,6 +5,8 @@ import 'package:file_selector/file_selector.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../share/share_sink.dart';
+
 /// A backup file the user picked, not read yet.
 final class BackupFilePick {
   const BackupFilePick({
@@ -85,6 +87,7 @@ final class SystemBackupFileIo implements BackupFileIo {
           XFile(file.path, mimeType: 'application/zip', name: fileName),
         ],
         fileNameOverrides: <String>[fileName],
+        sharePositionOrigin: systemShareOrigin(),
       ),
     );
   }

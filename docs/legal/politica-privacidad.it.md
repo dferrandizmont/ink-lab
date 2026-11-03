@@ -1,7 +1,7 @@
 # Informativa sulla privacy di Ink Lab
 
 
-Ultimo aggiornamento: 2026-11-01
+Ultimo aggiornamento: 2026-11-03
 
 Traduzione di cortesia. Fa fede la [versione spagnola](https://inklab.mainshai.com/es/privacy/).
 
@@ -102,6 +102,10 @@ e puoi scegliere tra:
   (https://policies.google.com/privacy). Se il modello non è sul telefono, Android lo scarica una volta tramite i
   servizi Google; questo download e il modello sono disciplinati dai termini di Google. Su iPhone non ci sono né IA sul
   dispositivo né ML Kit.
+- **Su iPhone (Apple Intelligence, con iOS 26 o successivo su un iPhone compatibile):** il tuo scenario e i codici colore
+  vengono elaborati sul telefono dal modello di Apple incluso in Apple Intelligence, tramite il framework Foundation
+  Models di Apple. L'app non scarica il modello (lo installa e lo gestisce iOS), non usa altri servizi per questa opzione
+  e non invia nulla: né le tue richieste, né i tuoi colori, né le tue foto.
 - **OpenRouter con la tua chiave:** solo se scegli OpenRouter, salvi la tua chiave e tocchi «Suggerisci con l’IA» in
   «Palette», l'app invia, **dal tuo telefono direttamente a `openrouter.ai`, tramite HTTPS e con la tua chiave e il tuo
   account**: il marchio (identificativo e nome), la modalità della palette, il nome della scena (in inglese), il codice

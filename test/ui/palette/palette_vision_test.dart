@@ -49,6 +49,20 @@ void main() {
   setUpAll(loadAppFonts);
 
   group('Palette: colour vision preview', () {
+    testWidgets('the sheet is as tall as its content, so the palette shows', (
+      WidgetTester tester,
+    ) async {
+      await pumpPalette(tester);
+      await enterBaseCode(tester, 'B08');
+      await tapResultItem(tester, 'palette-vision-open');
+      await _choose(tester, colorVisionLabelOf(ColorVisionType.protanopia));
+
+      final double screen =
+          tester.view.physicalSize.height / tester.view.devicePixelRatio;
+      final double control = tester.getSize(_key('palette-vision')).height;
+      expect(control, lessThan(screen / 3));
+    });
+
     testWidgets('is offered once there is a palette, starting at Normal', (
       WidgetTester tester,
     ) async {

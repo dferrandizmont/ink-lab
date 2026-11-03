@@ -22,4 +22,5 @@ export 'own_color_repository.dart';
 export 'saved_palette_repository.dart';
 export 'secure_secret_store.dart';
 export 'secret_store.dart';
+export 'secrets_install_guard.dart';
 export 'wishlist_ownership_sync.dart';

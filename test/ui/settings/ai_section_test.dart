@@ -157,14 +157,50 @@ void main() {
       expect(find.textContaining('OpenRouter key'), findsNothing);
     });
 
-    testWidgets('OpenRouter says where requests go and that photos stay', (
+    testWidgets('iOS colour theory disclosure leaves Android and ML Kit out', (
       WidgetTester tester,
     ) async {
       await pumpSection(
         tester,
-        provider: AiProvider.openRouter,
-        enabled: true,
+        onDevice: FakeOnDevicePlatform(currentStatus: OnDeviceStatus.available),
       );
+
+      await tester.tap(find.text(l10n.settingsAiEnabled));
+      await tester.pumpAndSettle();
+      expect(
+        find.text(l10n.settingsAiDisclosureColourTheoryIos),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Android'), findsNothing);
+      expect(find.textContaining('ML Kit'), findsNothing);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+    testWidgets('iOS on-device names Apple Intelligence, not Gemini Nano', (
+      WidgetTester tester,
+    ) async {
+      await pumpSection(
+        tester,
+        provider: AiProvider.onDevice,
+        enabled: true,
+        onDevice: FakeOnDevicePlatform(currentStatus: OnDeviceStatus.available),
+      );
+
+      expect(
+        _text(tester, 'ai-provider-explanation'),
+        l10n.settingsAiExplainOnDeviceIos,
+      );
+      expect(
+        find.text(l10n.settingsAiEnabledSubtitleOnDeviceIos),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Gemini'), findsNothing);
+      expect(find.textContaining('ML Kit'), findsNothing);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+    testWidgets('OpenRouter says where requests go and that photos stay', (
+      WidgetTester tester,
+    ) async {
+      await pumpSection(tester, provider: AiProvider.openRouter, enabled: true);
 
       expect(
         _text(tester, 'ai-provider-explanation'),
@@ -377,7 +413,7 @@ void main() {
     testWidgets('a platform without an on-device model never mentions it', (
       WidgetTester tester,
     ) async {
-      // The default scope uses UnsupportedOnDeviceAi (iOS, web, desktop).
+      // The default scope uses UnsupportedOnDeviceAi (web, desktop).
       await pumpSection(tester);
 
       expect(find.text(l10n.settingsAiSubtitle), findsOneWidget);
@@ -692,7 +728,8 @@ void main() {
     await tester.tap(button);
     await tester.pumpAndSettle();
 
-    expect(requests, 1);
+    // The key check, then the catalog for the count.
+    expect(requests, 2);
     expect(
       find.byKey(const ValueKey<String>('ai-connection-ok')),
       findsOneWidget,

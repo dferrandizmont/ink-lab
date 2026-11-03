@@ -8,6 +8,21 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
+## 0.10.1 · 2026-11-03
+
+First iPhone build, tested on an iPhone XR (iOS 18) and in the simulator:
+
+- iPhone: on-device AI with Apple Intelligence (iOS 26 or later on a compatible iPhone). Palette suggestions are made
+  on the phone by Apple's model; nothing is sent and no key is needed. Settings names Apple Intelligence on iOS.
+- iPhone: the camera and photo permission texts are translated into German, French, Portuguese and Italian.
+- iPhone: choosing a photo from the library no longer asks for access to the whole photo library.
+- iPhone: the Google Play beta link is not shown on iOS.
+- Sharing (palette image, diary entry, swatch chart, backup) gives the share sheet a position, as iPad and Mac need.
+- iPhone: an OpenRouter key saved before the app was deleted no longer comes back after reinstalling it.
+- Palette: the "Colour vision" sheet is only as tall as its options, so the palette it previews stays in sight
+  (it covered the whole screen).
+- Settings: "Test connection" now checks the OpenRouter key itself; before, a wrong key still said "Connection OK".
+
 ## 0.10.0 · 2026-11-03
 
 - Home-screen widget (Android): "Idea of the day" shows today's drawing exercise with the colours of your own markers.

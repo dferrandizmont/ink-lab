@@ -245,10 +245,15 @@ ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md
 ios/Runner/Base.lproj/LaunchScreen.storyboard
 ios/Runner/Base.lproj/Main.storyboard
 ios/Runner/Info.plist
+ios/Runner/OnDeviceAiChannel.swift
 ios/Runner/PrivacyInfo.xcprivacy
 ios/Runner/Runner-Bridging-Header.h
 ios/Runner/SceneDelegate.swift
+ios/Runner/de.lproj/InfoPlist.strings
 ios/Runner/es.lproj/InfoPlist.strings
+ios/Runner/fr.lproj/InfoPlist.strings
+ios/Runner/it.lproj/InfoPlist.strings
+ios/Runner/pt.lproj/InfoPlist.strings
 ios/RunnerTests/RunnerTests.swift
 l10n.yaml
 lib/ai/ai.dart
@@ -312,6 +317,7 @@ lib/data/own_color_repository.dart
 lib/data/replay_stream.dart
 lib/data/saved_palette_repository.dart
 lib/data/secret_store.dart
+lib/data/secrets_install_guard.dart
 lib/data/secure_secret_store.dart
 lib/data/wishlist_ownership_sync.dart
 lib/l10n/app_de.arb
@@ -439,6 +445,7 @@ test/data/language_and_provider_migration_test.dart
 test/data/own_color_repository_test.dart
 test/data/replay_stream_test.dart
 test/data/saved_palette_repository_test.dart
+test/data/secrets_install_guard_test.dart
 test/data/secure_secret_store_test.dart
 test/data/wishlist_ownership_sync_test.dart
 test/l10n/arb_parity_test.dart

@@ -44,7 +44,9 @@ English version: [`privacy.en.md`](privacy.en.md).
   terceros. No incluye el contenido de la petición, los colores ni fotos (solo tamaños). El desarrollador no recibe
   esos datos; Google los trata según su [política de privacidad](https://policies.google.com/privacy). Si el modelo no
   está en el móvil, Android lo descarga una vez y lo comparte entre apps; esa descarga la hace el sistema (servicios de
-  Google), no la app. iOS aún no tiene modelo en el dispositivo ni ML Kit.
+  Google), no la app. En iOS 26+ la opción «En el dispositivo» usa Apple Intelligence (framework Foundation
+  Models, `ios/Runner/OnDeviceAiChannel.swift`): el modelo lo instala y gestiona iOS, la app no descarga nada, no hay
+  ML Kit ni otro SDK y no sale nada del teléfono.
 - **Sin analítica ni dependencias de rastreo propias:** `pubspec.yaml` no incluye SDK de analítica, publicidad ni
   informes de errores. La única telemetría es la de ML Kit hacia Google descrita arriba, solo con la IA activada. La app
   no usa el identificador publicitario.
@@ -163,7 +165,8 @@ correo, el informe se copia al portapapeles. La política de privacidad se publi
 `docs/legal/politica-privacidad.md` (`docs/legal/LEEME.md`).
 
 ## Declaraciones en tiendas
-- App Store, App Privacy: la app no recoge datos y no hace seguimiento (iOS no tiene ML Kit). Si se quiere ser prudente por la IA opcional
+- App Store, App Privacy: la app no recoge datos y no hace seguimiento (iOS no tiene ML Kit; Apple Intelligence funciona en
+  el dispositivo y no envía nada). Si se quiere ser prudente por la IA opcional
   con OpenRouter (un tercero integrado por el usuario con su propia clave), se puede declarar el envío opcional de
   «otros datos de uso» sin vincular a la identidad ni usar para seguimiento.
 - Google Play, Seguridad de los datos: hay que declarar los datos que recoge el SDK ML Kit (identificadores del

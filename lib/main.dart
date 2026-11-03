@@ -1,5 +1,5 @@
 import 'dart:async' show unawaited;
-import 'dart:io' show Directory;
+import 'dart:io' show Directory, Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -45,6 +45,10 @@ Future<void> main() async {
     ideaFavorites.load(),
   ]);
   final secrets = SecureSecretStore();
+  // The iOS Keychain outlives the app: drop a key a deleted copy left.
+  if (Platform.isIOS) {
+    await clearSecretsLeftByEarlierInstall(store: store, secrets: secrets);
+  }
   final markers = MarkerRepository(loadAsset: rootBundle.loadString)
     ..ownColors = OwnColorOverlay(settings: settings, colors: ownColors);
   // Saved palettes and AI requests name their scene: have the catalogue ready.

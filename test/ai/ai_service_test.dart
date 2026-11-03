@@ -232,6 +232,61 @@ void main() {
       expect((result as AiConnectionOk).modelCount, 2);
     });
 
+    test('rejects a fake key even though the catalog is public', () async {
+      final paths = <String>[];
+      final client = MockClient((request) async {
+        paths.add(request.url.path);
+        // Like OpenRouter: the catalog ignores the key, auth/key checks it.
+        if (request.url.path.endsWith('/auth/key')) {
+          return errorResponse('User not found.', 401);
+        }
+        return jsonResponse({'data': <Object>[]});
+      });
+      final service = serviceFor(
+        repository(value: settings()),
+        InMemorySecretStore({openRouterApiKeyName: 'sk-or-v1-fake'}),
+        client,
+      );
+
+      final result = await service.testConnection();
+
+      expect(
+        (result as AiConnectionFailure).reason,
+        PaletteFailureReason.unauthorized,
+      );
+      expect(paths, ['/api/v1/auth/key']); // never reaches the catalog
+    });
+
+    test('verifies the key before counting the catalog', () async {
+      final paths = <String>[];
+      final client = MockClient((request) async {
+        paths.add(request.url.path);
+        if (request.url.path.endsWith('/auth/key')) {
+          return jsonResponse({
+            'data': {'label': 'k'},
+          });
+        }
+        return jsonResponse({
+          'data': [
+            {
+              'id': 'a:free',
+              'pricing': {'prompt': '0', 'completion': '0'},
+            },
+          ],
+        });
+      });
+      final service = serviceFor(
+        repository(value: settings()),
+        InMemorySecretStore({openRouterApiKeyName: _key}),
+        client,
+      );
+
+      final result = await service.testConnection();
+
+      expect((result as AiConnectionOk).modelCount, 1);
+      expect(paths, ['/api/v1/auth/key', '/api/v1/models']);
+    });
+
     test('maps a 401 without leaking the key', () async {
       final service = serviceFor(
         repository(value: settings()),
@@ -337,7 +392,7 @@ void main() {
       await repo.replace(settings(enabled: true));
 
       expect(await service.testConnection(), isA<AiConnectionOk>());
-      expect(requests, 1);
+      expect(requests, 2); // key check, then the catalog
     });
   });
 

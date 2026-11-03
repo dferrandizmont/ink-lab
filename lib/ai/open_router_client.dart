@@ -303,6 +303,7 @@ final class OpenRouterClient {
   /// Response size caps, in bytes.
   static const int maxChatResponseBytes = 2 * 1024 * 1024;
   static const int maxModelsResponseBytes = 8 * 1024 * 1024;
+  static const int maxKeyCheckResponseBytes = 64 * 1024;
 
   static const String _pinnedHost = 'openrouter.ai';
 
@@ -345,6 +346,23 @@ final class OpenRouterClient {
       ...path.split('/'),
     ],
   );
+
+  /// Checks [apiKey] against the authenticated key endpoint, which (unlike
+  /// the public catalog) rejects an invalid key with a 401. The body is
+  /// ignored: it describes the account and is never read, logged or returned.
+  Future<void> verifyKey({required String apiKey}) async {
+    final key = apiKey.trim();
+    final request = http.Request('GET', _endpoint('auth/key'))
+      ..followRedirects = false
+      ..headers['Accept'] = 'application/json'
+      ..headers['Authorization'] = 'Bearer $key';
+    final response = await _send(
+      request,
+      apiKey: key,
+      maxBytes: maxKeyCheckResponseBytes,
+    );
+    _throwForStatus(response.statusCode, response.body, key);
+  }
 
   /// Lists the models suited to this feature, keeping only entries allowed by
   /// [filter], recommended first (see [fetchModelCatalog]).

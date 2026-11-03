@@ -39,6 +39,9 @@ class AiSettingsSection extends StatefulWidget {
 
 class _AiSettingsSectionState extends State<AiSettingsSection>
     with WidgetsBindingObserver {
+  /// iOS names Apple Intelligence where Android names Gemini Nano and ML Kit.
+  bool get _ios => Theme.of(context).platform == TargetPlatform.iOS;
+
   final TextEditingController _textModel = TextEditingController();
   final TextEditingController _maxTokens = TextEditingController();
   final TextEditingController _apiKey = TextEditingController();
@@ -111,12 +114,22 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
       return;
     }
     final String disclosure = switch (_effectiveProvider) {
-      AiProvider.local =>
-        _onDeviceMentioned
-            ? context.l10n.settingsAiDisclosureColourTheory
-            : context.l10n.settingsAiDisclosureColourTheoryNoOnDevice,
-      AiProvider.onDevice => context.l10n.settingsAiDisclosureOnDevice,
-      AiProvider.openRouter => context.l10n.settingsAiDisclosure,
+      AiProvider.local => switch ((_onDeviceMentioned, _ios)) {
+        (true, true) => context.l10n.settingsAiDisclosureColourTheoryIos,
+        (true, false) => context.l10n.settingsAiDisclosureColourTheory,
+        (false, true) =>
+          context.l10n.settingsAiDisclosureColourTheoryNoOnDeviceIos,
+        (false, false) =>
+          context.l10n.settingsAiDisclosureColourTheoryNoOnDevice,
+      },
+      AiProvider.onDevice =>
+        (_ios
+            ? context.l10n.settingsAiDisclosureOnDeviceIos
+            : context.l10n.settingsAiDisclosureOnDevice),
+      AiProvider.openRouter =>
+        (_ios
+            ? context.l10n.settingsAiDisclosureIos
+            : context.l10n.settingsAiDisclosure),
     };
     final bool? confirmed = await showDialog<bool>(
       context: context,
@@ -215,7 +228,9 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
                               .l10n
                               .settingsAiEnabledSubtitleColourTheoryNoOnDevice,
                   AiProvider.onDevice =>
-                    context.l10n.settingsAiEnabledSubtitleOnDevice,
+                    (_ios
+                        ? context.l10n.settingsAiEnabledSubtitleOnDeviceIos
+                        : context.l10n.settingsAiEnabledSubtitleOnDevice),
                   AiProvider.openRouter =>
                     context.l10n.settingsAiEnabledSubtitleOpenRouter,
                 }
@@ -244,7 +259,9 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
                   if (onDeviceOffered)
                     SettingsRadioRow(
                       label: context.l10n.settingsAiProviderOnDevice,
-                      semantic: context.l10n.settingsAiOnDeviceName,
+                      semantic: (_ios
+                          ? context.l10n.settingsAiOnDeviceNameIos
+                          : context.l10n.settingsAiOnDeviceName),
                       selected: selectedProvider == AiProvider.onDevice,
                       onTap: () => _controller.setProvider(AiProvider.onDevice),
                     ),
@@ -259,7 +276,10 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
           ),
           SettingsCaption(switch (selectedProvider) {
             AiProvider.local => context.l10n.settingsAiExplainColourTheory,
-            AiProvider.onDevice => context.l10n.settingsAiExplainOnDevice,
+            AiProvider.onDevice =>
+              (_ios
+                  ? context.l10n.settingsAiExplainOnDeviceIos
+                  : context.l10n.settingsAiExplainOnDevice),
             AiProvider.openRouter => context.l10n.settingsAiExplainOpenRouter,
           }, textKey: const ValueKey<String>('ai-provider-explanation')),
           if (onDevice) _buildOnDevice(),
@@ -292,7 +312,9 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            context.l10n.settingsAiOnDeviceName,
+            (_ios
+                ? context.l10n.settingsAiOnDeviceNameIos
+                : context.l10n.settingsAiOnDeviceName),
             style: AppTypography.body.copyWith(color: ink.fg),
           ),
           const SizedBox(height: InkSpacing.s4),
@@ -347,7 +369,9 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
             // start (AICore keeps it queued): explain the wait calmly.
             const SizedBox(height: InkSpacing.s8),
             Text(
-              context.l10n.settingsAiOnDevicePreparing,
+              (_ios
+                  ? context.l10n.settingsAiOnDevicePreparingIos
+                  : context.l10n.settingsAiOnDevicePreparing),
               key: const ValueKey<String>('ai-on-device-preparing'),
               style: note,
             ),
@@ -370,7 +394,12 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
             ),
           ],
           const SizedBox(height: InkSpacing.s8),
-          Text(context.l10n.settingsAiOnDevicePrivacy, style: note),
+          Text(
+            (_ios
+                ? context.l10n.settingsAiOnDevicePrivacyIos
+                : context.l10n.settingsAiOnDevicePrivacy),
+            style: note,
+          ),
         ],
       ),
     );

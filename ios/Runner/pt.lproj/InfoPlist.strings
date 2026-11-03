@@ -1,0 +1,3 @@
+/* Portuguese permission texts; the English originals are in Info.plist. */
+"NSCameraUsageDescription" = "O Ink Lab usa a câmara para encontrar as cores nos teus marcadores e adicionar fotos das tuas obras ao diário. As fotos ficam no teu dispositivo e nunca são enviadas.";
+"NSPhotoLibraryUsageDescription" = "O Ink Lab permite-te escolher fotos para encontrar as suas cores nos teus marcadores e adicionar as tuas obras ao diário. As fotos ficam no teu dispositivo e nunca são enviadas.";

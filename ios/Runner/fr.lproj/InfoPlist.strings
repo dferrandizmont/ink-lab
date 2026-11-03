@@ -1,0 +1,3 @@
+/* French permission texts; the English originals are in Info.plist. */
+"NSCameraUsageDescription" = "Ink Lab utilise l’appareil photo pour trouver les couleurs parmi tes marqueurs et ajouter des photos de tes œuvres au journal. Les photos restent sur ton appareil et ne sont jamais envoyées.";
+"NSPhotoLibraryUsageDescription" = "Ink Lab te permet de choisir des photos pour trouver leurs couleurs parmi tes marqueurs et ajouter tes œuvres au journal. Les photos restent sur ton appareil et ne sont jamais envoyées.";

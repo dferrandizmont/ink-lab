@@ -1,7 +1,7 @@
 # Datenschutzerklärung von Ink Lab
 
 
-Zuletzt aktualisiert: 2026-11-01
+Zuletzt aktualisiert: 2026-11-03
 
 Unverbindliche Übersetzung. Maßgeblich ist die [spanische Fassung](https://inklab.mainshai.com/es/privacy/).
 
@@ -107,6 +107,10 @@ Handy verlassen würde, und Sie können wählen zwischen:
   (https://policies.google.com/privacy). Ist das Modell nicht auf dem Handy, lädt Android es einmalig über die
   Google-Dienste herunter; dieser Download und das Modell unterliegen den Bedingungen von Google. Auf dem iPhone gibt es
   weder KI auf dem Gerät noch ML Kit.
+- **Auf dem iPhone (Apple Intelligence, ab iOS 26 auf einem kompatiblen iPhone):** Ihr Szenario und Ihre Farbcodes
+  werden auf Ihrem Handy von Apples Modell verarbeitet, das mit Apple Intelligence geliefert wird, über Apples
+  Framework Foundation Models. Die App lädt das Modell nicht herunter (iOS installiert und verwaltet es), nutzt für diese
+  Option keinen anderen Dienst und sendet nichts: weder Ihre Anfragen noch Ihre Farben oder Fotos.
 - **OpenRouter mit Ihrem Schlüssel:** Nur wenn Sie OpenRouter wählen, Ihren Schlüssel speichern und in „Palette“ auf
   „Mit KI vorschlagen“ tippen, sendet die App **von Ihrem Handy direkt an `openrouter.ai`, über HTTPS und mit Ihrem eigenen
   Schlüssel und Ihrem eigenen Konto**: die Marke (Kennung und Name), den Palettenmodus, den Namen der Szene (auf

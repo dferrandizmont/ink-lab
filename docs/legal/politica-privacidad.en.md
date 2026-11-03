@@ -1,7 +1,7 @@
 # Ink Lab privacy policy
 
 
-Last updated: 2026-11-01
+Last updated: 2026-11-03
 
 Courtesy translation. The [Spanish version](https://inklab.mainshai.com/es/privacy/) is the one that
 applies.
@@ -97,6 +97,10 @@ between:
   its own terms and privacy policy (https://policies.google.com/privacy). If the model is not on the phone, Android
   downloads it once through Google services; that download and the model are governed by Google's terms. On iPhone
   there is no on-device AI and no ML Kit.
+- **On the iPhone (Apple Intelligence, on iOS 26 or later and a compatible iPhone):** your scenario and colour codes are
+  processed on your phone by Apple's model that comes with Apple Intelligence, through Apple's Foundation Models
+  framework. The app does not download the model (iOS installs and manages it), uses no other service for this option
+  and sends nothing: not your requests, your colours or your photos.
 - **OpenRouter with your key:** only if you choose OpenRouter, save your key and tap "Suggest with AI" in Palette, the
   app sends, **from your phone straight to `openrouter.ai`, over HTTPS and with your own key and your own account**: the
   brand (id and name), the palette mode, the scene name (in English), the code and name of the base marker (if any) and

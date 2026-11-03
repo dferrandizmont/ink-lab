@@ -223,7 +223,8 @@ final class AiService {
     );
   }
 
-  /// Probes the provider with the stored key by listing its catalog.
+  /// Probes the provider with the stored key: first verifies it (the catalog
+  /// is public and would accept any key), then lists the catalog for the count.
   ///
   /// The returned result carries no key: failures are mapped to a typed
   /// [PaletteFailureReason] and a key-free message.
@@ -237,7 +238,9 @@ final class AiService {
       return AiConnectionFailure(PaletteFailureReason.missingKey);
     }
     try {
-      final models = await _client().fetchModels(
+      final client = _client();
+      await client.verifyKey(apiKey: key);
+      final models = await client.fetchModels(
         apiKey: key,
         filter: AiModelFilter.both,
       );
