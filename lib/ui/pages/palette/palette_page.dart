@@ -2593,6 +2593,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     InkMenuItem(
       key: const ValueKey<String>('palette-vision-open'),
       label: context.l10n.paletteVisionTitle,
+      icon: InkIcons.eye,
       onSelected: _openVision,
     ),
     if (_aiUsed)

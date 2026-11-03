@@ -33,6 +33,7 @@ import 'package:ink_lab/ui/pages/settings/settings_widgets.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
 import 'package:ink_lab/ui/shell/app_shell.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
+import 'package:ink_lab/ui/theme/tokens.dart';
 import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
 import 'package:ink_lab/ui/icons/ink_icons.dart';
 import 'package:ink_lab/ui/widgets/ink_button.dart';
@@ -2293,32 +2294,30 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           'Warm Gray No.7',
           'Pale Cherry Pink',
           'Light Reddish Violet',
+          'Cotton Candy Blue',
+          'Turquoise',
         ];
         Future<void> pumpGrid({required bool showHex}) async {
           await _pump(
             tester,
             env,
             Builder(
-              builder: (BuildContext context) => GridView.count(
-                crossAxisCount: 3,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
+              builder: (BuildContext context) => GridView.builder(
                 padding: const EdgeInsets.all(16),
-                childAspectRatio:
-                    110 /
-                    ColorSwatchTile.gridCellHeight(context, showHex: showHex),
-                children: <Widget>[
-                  for (int i = 0; i < names.length; i++)
-                    ColorSwatchTile(
-                      hex: '#8FB8D0',
-                      code: 'B${i + 1}4',
-                      name: names[i],
-                      owned: i.isEven,
-                      ownColor: i == 0 || i == 3,
-                      dried: i == 1,
-                      showHex: showHex,
-                    ),
-                ],
+                gridDelegate: ColorSwatchTile.gridDelegate(
+                  context,
+                  showHex: showHex,
+                ),
+                itemCount: names.length,
+                itemBuilder: (BuildContext context, int i) => ColorSwatchTile(
+                  hex: '#8FB8D0',
+                  code: 'B${i + 1}4',
+                  name: names[i],
+                  owned: i.isEven,
+                  ownColor: i == 0 || i == 3,
+                  dried: i == 1,
+                  showHex: showHex,
+                ),
               ),
             ),
           );
@@ -2353,6 +2352,25 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
               _problems.add(
                 '$_tag name past the card: "$name"  [$where]',
               );
+            }
+            // No word may be wider than the name's text box: a word that does
+            // not fit cannot wrap and is cut, which is exactly what the grid
+            // must avoid ("Turquoi / se").
+            final TextSpan span = render.text as TextSpan;
+            final TextPainter painter = TextPainter(
+              textDirection: TextDirection.ltr,
+              textScaler: render.textScaler,
+              maxLines: 1,
+            );
+            for (final String word in name.split(' ')) {
+              painter.text = TextSpan(text: word, style: span.style);
+              painter.layout();
+              if (painter.width > render.size.width + 0.5) {
+                _problems.add(
+                  '$_tag word wider than its box: "$word" of "$name" needs '
+                  '${painter.width}, has ${render.size.width}  [$where]',
+                );
+              }
             }
           }
         }
@@ -2500,6 +2518,54 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
 
 void main() {
   setUpAll(loadAppFonts);
+
+  group('SwatchGridDelegate', () {
+    // The count the delegate picks for a device of [deviceWidth] dp with the
+    // system text at [scale]. The grid is inset by the page margin on both
+    // sides, so the sliver's cross-axis extent is narrower than the screen.
+    int columns(double deviceWidth, double scale) {
+      final SliverGridDelegate delegate = SwatchGridDelegate(
+        textScale: scale,
+        showHex: false,
+        cellHeight: 100,
+      );
+      final SliverGridLayout layout = delegate.getLayout(
+        SliverConstraints(
+          axisDirection: AxisDirection.down,
+          growthDirection: GrowthDirection.forward,
+          userScrollDirection: ScrollDirection.idle,
+          scrollOffset: 0,
+          precedingScrollExtent: 0,
+          overlap: 0,
+          remainingPaintExtent: 600,
+          crossAxisExtent: deviceWidth - 2 * InkSpacing.pageMargin,
+          crossAxisDirection: AxisDirection.right,
+          viewportMainAxisExtent: 600,
+          remainingCacheExtent: 600,
+          cacheOrigin: 0,
+        ),
+      );
+      return (layout as SliverGridRegularTileLayout).crossAxisCount;
+    }
+
+    test('412 dp: 3 columns at normal text, 2 at 1.3', () {
+      expect(columns(412, 1.0), 3);
+      expect(columns(412, 1.3), 2);
+    });
+
+    test('360 dp: 3 columns at normal text, 2 at 1.3', () {
+      expect(columns(360, 1.0), 3);
+      expect(columns(360, 1.3), 2);
+    });
+
+    test('a wide screen keeps the old max-extent count', () {
+      // What the grid had before this delegate: as many 130 dp cells as fit.
+      final int old = ((800 - 2 * InkSpacing.pageMargin) /
+              (130 + InkSpacing.block))
+          .ceil();
+      expect(columns(800, 1.0), old);
+    });
+  });
 
   for (final Locale locale in AppLocalizations.supportedLocales) {
     for (final double width in const <double>[360, 412]) {

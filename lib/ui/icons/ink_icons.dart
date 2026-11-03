@@ -70,7 +70,10 @@ enum InkIcons {
   bookmark,
 
   /// Feather more-horizontal: three dots in a row (the overflow "⋯" menu).
-  moreHorizontal;
+  moreHorizontal,
+
+  /// Feather eye: the outline with its pupil (palette "Colour vision").
+  eye;
 
   static const InkIcons edit_3 = edit3;
   static const InkIcons trash_2 = trash2;
@@ -442,6 +445,17 @@ class InkIconPainter extends CustomPainter {
         circle(5, 12, 1);
         circle(12, 12, 1);
         circle(19, 12, 1);
+      case InkIcons.eye:
+        draw(
+          Path()
+            ..moveTo(1, 12)
+            ..cubicTo(1, 12, 5, 4, 12, 4)
+            ..cubicTo(19, 4, 23, 12, 23, 12)
+            ..cubicTo(23, 12, 19, 20, 12, 20)
+            ..cubicTo(5, 20, 1, 12, 1, 12)
+            ..close(),
+        );
+        circle(12, 12, 3);
     }
     canvas.restore();
   }

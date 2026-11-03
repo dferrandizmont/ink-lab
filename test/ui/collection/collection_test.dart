@@ -8,6 +8,7 @@ import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
+import 'package:ink_lab/ui/icons/ink_icons.dart';
 import 'package:ink_lab/ui/pages/collection/collection_page.dart';
 import 'package:ink_lab/ui/pages/collection/loose_markers_page.dart';
 import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
@@ -18,6 +19,7 @@ import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
 import 'package:ink_lab/ui/shell/app_shell.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
+import 'package:ink_lab/ui/widgets/section_card.dart';
 
 import '../../support/l10n.dart';
 
@@ -80,6 +82,17 @@ Future<void> _openGroup(WidgetTester tester, String key) async {
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
   await tester.tap(finder);
+  await tester.pumpAndSettle();
+}
+
+/// Opens the brand picker row and taps the row of [brand].
+Future<void> _pickBrand(WidgetTester tester, MarkerBrand brand) async {
+  final Finder row = _key('collection-brand');
+  await tester.ensureVisible(row);
+  await tester.pumpAndSettle();
+  await tester.tap(row);
+  await tester.pumpAndSettle();
+  await tester.tap(_key('brand-${brand.id}'));
   await tester.pumpAndSettle();
 }
 
@@ -333,9 +346,7 @@ void main() {
         await scope.settings.setBrand(MarkerBrand.decoTime);
         await tester.pumpAndSettle();
         expect(find.text(l10n.collectionDecoHint), findsOneWidget);
-        await tester.ensureVisible(find.text('Finecolour'));
-        await tester.tap(find.text('Finecolour'));
-        await tester.pumpAndSettle();
+        await _pickBrand(tester, MarkerBrand.finecolour);
         await tester.ensureVisible(_key('collection-reset'));
         await tester.tap(_key('collection-reset'));
         await tester.pumpAndSettle();
@@ -352,9 +363,8 @@ void main() {
       },
     );
 
-    testWidgets('the active brand is in view on a narrow phone, large text', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('the brand picker lists every brand on a narrow phone, '
+        'large text', (WidgetTester tester) async {
       final AppScope scope = await _pumpCollection(
         tester,
         size: const Size(360, 800),
@@ -364,44 +374,45 @@ void main() {
           onboardingCompleted: true,
         ),
       );
-      final Finder control = _key('collection-brand');
-      final Finder viewport = find.descendant(
-        of: control,
-        matching: find.byType(SingleChildScrollView),
+      // The row shows the active brand and never clips it: the list that can
+      // grow lives behind the picker.
+      final InkListRow row = tester.widget<InkListRow>(
+        _key('collection-brand'),
       );
-      final ScrollableState scrollable = tester.state<ScrollableState>(
-        find.descendant(of: control, matching: find.byType(Scrollable)),
-      );
-      // The brands do not fit, so the control really scrolls.
-      expect(scrollable.position.maxScrollExtent, greaterThan(0));
+      expect(row.value, MarkerBrand.finecolour.label);
 
-      void expectInView(MarkerBrand brand) {
-        final Rect shown = tester.getRect(viewport);
-        final Rect segment = tester.getRect(
-          find.descendant(of: control, matching: find.text(brand.label)),
-        );
-        expect(
-          segment.left,
-          greaterThanOrEqualTo(shown.left),
-          reason: '${brand.label} is cut off on the left',
-        );
-        expect(
-          segment.right,
-          lessThanOrEqualTo(shown.right),
-          reason: '${brand.label} is cut off on the right',
-        );
+      await tester.ensureVisible(_key('collection-brand'));
+      await tester.tap(_key('collection-brand'));
+      await tester.pumpAndSettle();
+
+      expect(_key('brand-list'), findsOneWidget);
+      double? previousTop;
+      for (final MarkerBrand brand in MarkerBrand.values) {
+        final Finder option = _key('brand-${brand.id}');
+        expect(option, findsOneWidget, reason: brand.label);
+        final double top = tester.getTopLeft(option).dy;
+        expect(top, greaterThanOrEqualTo(0), reason: brand.label);
+        expect(top, lessThan(800), reason: brand.label);
+        if (previousTop != null) {
+          expect(top, greaterThan(previousTop), reason: brand.label);
+        }
+        previousTop = top;
       }
+      // Only the active brand is ticked.
+      Finder tick(MarkerBrand brand) => find.descendant(
+        of: _key('brand-${brand.id}'),
+        matching: find.byWidgetPredicate(
+          (Widget w) => w is InkIcon && w.icon == InkIcons.check,
+        ),
+      );
+      expect(tick(MarkerBrand.finecolour), findsOneWidget);
+      expect(tick(MarkerBrand.ohuhuOahu), findsNothing);
 
-      // On the first build the active brand is already in view.
-      expectInView(MarkerBrand.finecolour);
-
-      // And it follows the selection both ways.
-      await scope.settings.setBrand(MarkerBrand.ohuhuOahu);
+      // Picking a brand applies it at once and closes the sheet.
+      await tester.tap(_key('brand-ohuhu_oahu'));
       await tester.pumpAndSettle();
-      expectInView(MarkerBrand.ohuhuOahu);
-      await scope.settings.setBrand(MarkerBrand.finecolour);
-      await tester.pumpAndSettle();
-      expectInView(MarkerBrand.finecolour);
+      expect(scope.settings.brand, MarkerBrand.ohuhuOahu);
+      expect(_key('brand-list'), findsNothing);
     });
 
     testWidgets('reset asks first and only clears the active brand', (

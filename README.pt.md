@@ -37,8 +37,6 @@ Android no GitHub e em teste fechado no Google Play. O iOS chegará mais tarde.
 <details>
 <summary>Entrar na beta do Google Play</summary>
 
-Qualquer pessoa pode entrar no teste fechado:
-
 1. Junta-te ao grupo [ink-lab-testers](https://groups.google.com/g/ink-lab-testers). Inicia sessão na Google e carrega em «Aderir ao grupo».
 2. Aceita o teste: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
 3. Instala a app a partir do Google Play. Atualiza-se sozinha.
@@ -62,20 +60,21 @@ Comentários: inklab@mainshai.com.
 ## Capturas de ecrã
 
 <p>
-  <a href="docs/readme/pt/01-swatches.png"><img src="docs/readme/pt/01-swatches.png" width="19%" alt="Amostras com código, nome e cor"></a>
-  <a href="docs/readme/pt/03-match.png"><img src="docs/readme/pt/03-match.png" width="19%" alt="Uma cor de uma fotografia comparada com o marcador mais próximo"></a>
-  <a href="docs/readme/pt/04-palette.png"><img src="docs/readme/pt/04-palette.png" width="19%" alt="Uma paleta com o seu tipo, a sua cena e as suas cores"></a>
-  <a href="docs/readme/pt/06-photo-scene.png"><img src="docs/readme/pt/06-photo-scene.png" width="19%" alt="Uma cena feita a partir de uma fotografia com os teus marcadores"></a>
-  <a href="docs/readme/pt/07-ideas.png"><img src="docs/readme/pt/07-ideas.png" width="19%" alt="Ideias com uma técnica e uma paleta"></a>
+  <a href="docs/readme/pt/01-swatches.png"><img src="docs/readme/pt/01-swatches.png" width="19%" alt="Amostras: as cores da marca, cada uma com o seu código e o seu nome"></a>
+  <a href="docs/readme/pt/02-swatch-detail.png"><img src="docs/readme/pt/02-swatch-detail.png" width="19%" alt="O detalhe de um marcador: o seu hex, as alternativas mais próximas e a mesma cor noutras marcas"></a>
+  <a href="docs/readme/pt/03-match.png"><img src="docs/readme/pt/03-match.png" width="19%" alt="Uma cor tocada numa fotografia, comparada com o marcador mais próximo da tua coleção"></a>
+  <a href="docs/readme/pt/04-palette.png"><img src="docs/readme/pt/04-palette.png" width="19%" alt="Uma paleta de cena, com a função e o código de cada cor"></a>
+  <a href="docs/readme/pt/05-diary.png"><img src="docs/readme/pt/05-diary.png" width="19%" alt="O diário de desenhos: um resumo do teu trabalho e as últimas entradas"></a>
 </p>
 
 <details>
 <summary>Mais capturas de ecrã</summary>
 
 <p>
-  <a href="docs/readme/pt/02-swatch-detail.png"><img src="docs/readme/pt/02-swatch-detail.png" width="19%" alt="Detalhe de um marcador com os seus códigos e o seu hex"></a>
-  <a href="docs/readme/pt/05-scenes.png"><img src="docs/readme/pt/05-scenes.png" width="19%" alt="A lista de cenas, por categoria"></a>
-  <a href="docs/readme/pt/08-settings-dark.png"><img src="docs/readme/pt/08-settings-dark.png" width="19%" alt="Definições no tema escuro"></a>
+  <a href="docs/readme/pt/06-photo-scene.png"><img src="docs/readme/pt/06-photo-scene.png" width="19%" alt="Uma paleta criada a partir das cores da tua própria fotografia"></a>
+  <a href="docs/readme/pt/07-ideas.png"><img src="docs/readme/pt/07-ideas.png" width="19%" alt="Ideias: exercícios e técnicas, com as suas paletas e as tuas favoritas"></a>
+  <a href="docs/readme/pt/08-collection.png"><img src="docs/readme/pt/08-collection.png" width="19%" alt="A minha coleção: o que tens e o que comprar a seguir"></a>
+  <a href="docs/readme/pt/09-settings-dark.png"><img src="docs/readme/pt/09-settings-dark.png" width="19%" alt="Definições no tema escuro"></a>
 </p>
 
 </details>
@@ -84,55 +83,57 @@ Toca numa captura para a ampliar.
 
 ## Funcionalidades
 
-- **Os meus marcadores.** Um guia inicial monta a coleção de cada marca a partir
-  das tuas séries, conjuntos e marcadores avulsos.
-- **Comparar com uma fotografia.** Toca num ponto para encontrar o teu marcador
-  mais próximo; corrige os brancos para que as cores recolhidas sejam fiéis.
-- **A tua própria cor.** A cor do catálogo é uma aproximação; define a cor que o
-  teu marcador dá mesmo, pelo hex ou por uma fotografia.
-- **Paletas e cadeias de mistura.** Harmonias baseadas na teoria da cor e
-  cadeias de mistura de três a cinco marcadores, do mais claro ao mais escuro.
-- **Cenas.** 67 receitas em 11 categorias, cada uma com os seus papéis de cor.
-- **Diário de desenhos.** Um registo do que pintas: data, papel, marcadores,
-  notas e até quatro fotos.
-- **Quatro marcas.** Ohuhu (503 cores), DecoTime (313), Copic (358) e Finecolour (480), com seleção
-  individual de marcadores.
+- **Diário de desenhos.** Um registo do que pintas, com as suas fotos, os
+  marcadores que usaste e os números por trás.
+- **Quatro marcas.** Ohuhu (503 cores), DecoTime (313), Copic (358) e Finecolour
+  (480), com o marcador mais próximo de cada outra marca em «Noutras marcas».
+- **Comparar.** Toca num ponto de uma fotografia para encontrar o marcador da tua
+  coleção mais próximo, e corrige os brancos.
+- **Paletas e cenas.** Harmonias de teoria da cor, cadeias de mistura e 67 cenas
+  prontas em 11 categorias.
+- **Cópia de segurança.** Guarda tudo num ficheiro `.zip`, com as fotos do
+  diário lá dentro.
+- **Compras.** Uma lista de desejos, os marcadores secos e o que comprar a
+  seguir.
 
 <details>
 <summary>Mais funcionalidades</summary>
 
-- **Amostras.** Códigos, nomes e valores hex, com pesquisa, filtros e favoritos.
-- **Cena a partir de uma fotografia.** Converte as cores principais de uma
-  fotografia nos teus marcadores mais próximos.
-- **Partilhar e imprimir.** Partilha uma paleta como imagem ou cria uma carta de
-  amostras A4 para imprimir.
-- **Lista de desejos e secos.** Guarda os marcadores que queres comprar e marca
-  os gastos como secos para a app os omitir.
-- **Ideias e IA.** Desafios e técnicas, mais o Gemini Nano opcional em
-  dispositivos Android compatíveis ou o OpenRouter com a tua própria chave de API.
-- **Cópia de segurança.** Exporta e importa os teus dados como texto JSON, sem fotos.
+- **Visão das cores.** Pré-visualiza uma paleta como a vê alguém com protanopia,
+  deuteranopia, tritanopia ou acromatopsia.
+- **Carta de amostras para imprimir.** Páginas A4 com uma caixa etiquetada para
+  cada marcador que tens.
+- **Ideias.** Exercícios e técnicas com as suas próprias paletas, e as tuas
+  favoritas.
+- **Amostras e a tua própria cor.** Códigos, nomes e valores hex, mais a cor que
+  o teu marcador dá mesmo.
+- **Partilhar.** Envia uma paleta, uma carta ou uma entrada do diário a outra
+  app como imagem.
+- **IA, se quiseres.** Sugestões de paletas opcionais: Gemini Nano no telemóvel ou
+  OpenRouter com a tua própria chave.
 
 </details>
 
 ## Privacidade
 
-Os teus dados ficam no telemóvel: sem conta, servidor nosso, análise de utilização
-própria, anúncios ou rastreio; sem IA, a rede nunca é usada. O ML Kit da IA no
-dispositivo envia à Google diagnósticos de utilização, nunca pedidos, cores ou
-fotos. O acesso à câmara e à galeria só serve para comparar cores, criar cenas,
-definir a tua própria cor e juntar fotos ao diário; as fotos de comparação e de
-cenas são processadas no dispositivo, e as do diário ficam na pasta privada da app
-e nunca são enviadas. Quando partilhas uma paleta ou uma carta, a imagem só vai
-para a app que escolheres.
+Os teus dados ficam no telemóvel: sem conta, servidor nosso, análise, anúncios ou
+rastreio; sem IA, a rede nunca é usada. O ML Kit da IA no dispositivo envia à
+Google diagnósticos de utilização, nunca pedidos, cores ou fotos. O acesso à
+câmara e à galeria só serve para comparar cores, criar cenas, definir a tua
+própria cor e juntar fotos ao diário; essas fotos são processadas no dispositivo,
+e as do diário ficam na pasta privada da app e nunca são enviadas. Quando
+partilhas uma paleta, uma carta ou a cópia `.zip`, o ficheiro só vai para a app
+que escolheres, e mais nada.
 
 [Site](https://inklab.mainshai.com/pt/) · [Política de privacidade](https://inklab.mainshai.com/pt/privacy/) ·
 [Detalhe técnico](docs/privacy.en.md) · Apoio: **inklab@mainshai.com**.
 
 ## Novidades
 
-A 0.7.0 traz o diário de desenhos, as cadeias de mistura, as tuas próprias cores
-com a correção de brancos, a lista de desejos, os marcadores secos, as cartas
-para imprimir e a partilha. A lista completa está em [CHANGELOG.md](CHANGELOG.md).
+A versão 0.9.2 já cá está. A série 0.9 arrumou a app: uma ficha de marcador mais
+calma, ecrãs mais bem ordenados e correções para o texto grande do sistema. A
+lista completa está em [CHANGELOG.md](CHANGELOG.md) e nas
+[versões](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contribuir
 
@@ -141,13 +142,12 @@ Erros, ideias e traduções são bem-vindos. Como compilar, testar e contribuir:
 
 ## Licença
 
-Código sob [MIT](LICENSE), Copyright (c) 2026 Daniel Mont Ferrandiz. Documentação
-e textos próprios: [CC BY-SA 4.0](LICENSE-CONTENT.md). Os dados dos catálogos são
+Código sob [MIT](LICENSE), Copyright (c) 2026 Daniel Mont Ferrandiz. Documentação e
+textos próprios: [CC BY-SA 4.0](LICENSE-CONTENT.md). Os dados dos catálogos são
 referências factuais de terceiros e ficam fora de ambas as licenças; os tipos de
-letra (SIL OFL 1.1) e outros materiais de terceiros mantêm as suas condições,
-listadas em [NOTICE.md](NOTICE.md).
+letra (SIL OFL 1.1) e outros materiais de terceiros mantêm as suas condições.
 
 Um projeto independente: **sem qualquer relação com a Ohuhu, a DecoTime, a Copic ou a Finecolour, sem patrocínio nem apoio**. «Ohuhu», «Oahu», «DecoTime», «Copic» e «Finecolour» são marcas dos seus proprietários.
-As fontes e os avisos completos estão em [NOTICE.md](NOTICE.md).
+Avisos completos: [NOTICE.md](NOTICE.md).
 
 Para comunicar uma vulnerabilidade: [SECURITY.md](SECURITY.md).

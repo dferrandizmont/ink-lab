@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
@@ -785,6 +786,66 @@ void main() {
         reason: 'the star is under the ✕ of the frame',
       );
     });
+
+    for (final (double width, double scale) in <(double, double)>[
+      (412, 1.0),
+      (412, 1.3),
+      (360, 1.0),
+      (360, 1.3),
+    ]) {
+      testWidgets(
+        'the name is never ellipsised and the star clears the frame '
+        '(${width.toInt()}dp x$scale)',
+        (WidgetTester tester) async {
+          // The real Ohuhu B08 (Ohuhu) that was cut on the phone.
+          final MarkerColor marker = MarkerColor(
+            newCode: 'B08',
+            newName: 'Cotton Candy Blue',
+            oldCode: 'B08',
+            oldName: 'Cotton Candy Blue',
+            hex: '#82DCFA',
+            sets: <String>[],
+          );
+          await openDetailSheetFor(
+            tester,
+            marker,
+            size: Size(width, 740),
+            scale: scale,
+            locale: const Locale('en'),
+          );
+
+          // Three lines are allowed so a long name is never cut when two
+          // would do; this one does not even need them.
+          final RenderParagraph name = tester.renderObject(
+            find
+                .descendant(
+                  of: find.byKey(const ValueKey<String>('swatch-header')),
+                  matching: find.text('Cotton Candy Blue'),
+                )
+                .first,
+          );
+          expect(name.didExceedMaxLines, isFalse, reason: 'the name is cut');
+
+          final Rect star = tester.getRect(
+            find.byTooltip(l10n.swatchesAddFavorite),
+          );
+          final Rect overflow = tester.getRect(
+            find.byKey(const ValueKey<String>('swatch-overflow')),
+          );
+          final Rect close = tester.getRect(find.byTooltip(l10n.commonClose));
+          expect(
+            star.overlaps(overflow),
+            isFalse,
+            reason: 'the star is under the "⋯" of the frame',
+          );
+          expect(
+            star.overlaps(close),
+            isFalse,
+            reason: 'the star is under the ✕ of the frame',
+          );
+        },
+      );
+    }
 
     testWidgets('the "⋯" menu holds the actions of this marker', (
       WidgetTester tester,

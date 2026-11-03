@@ -36,8 +36,6 @@ Android en GitHub y en prueba cerrada en Google Play. iOS, más adelante.
 <details>
 <summary>Únete a la beta de Google Play</summary>
 
-Cualquiera puede apuntarse a la prueba cerrada:
-
 1. Únete al grupo de testers: [ink-lab-testers](https://groups.google.com/g/ink-lab-testers). Con tu cuenta de Google, pulsa «Unirse al grupo».
 2. Acepta la prueba: [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
 3. Instala la app desde Google Play. Se actualizará sola.
@@ -61,20 +59,21 @@ Comentarios: inklab@mainshai.com.
 ## Capturas
 
 <p>
-  <a href="docs/readme/es/01-swatches.png"><img src="docs/readme/es/01-swatches.png" width="19%" alt="Muestras con código, nombre y color"></a>
-  <a href="docs/readme/es/03-match.png"><img src="docs/readme/es/03-match.png" width="19%" alt="Color de una foto emparejado con el rotulador más cercano"></a>
-  <a href="docs/readme/es/04-palette.png"><img src="docs/readme/es/04-palette.png" width="19%" alt="Paleta con su tipo, su escena y sus colores"></a>
-  <a href="docs/readme/es/06-photo-scene.png"><img src="docs/readme/es/06-photo-scene.png" width="19%" alt="Escena hecha desde una foto con tus rotuladores"></a>
-  <a href="docs/readme/es/07-ideas.png"><img src="docs/readme/es/07-ideas.png" width="19%" alt="Ideas con técnica y paleta"></a>
+  <a href="docs/readme/es/01-swatches.png"><img src="docs/readme/es/01-swatches.png" width="19%" alt="Muestras: los colores de la marca, cada uno con su código y su nombre"></a>
+  <a href="docs/readme/es/02-swatch-detail.png"><img src="docs/readme/es/02-swatch-detail.png" width="19%" alt="El detalle de un rotulador: su hex, sus alternativas más cercanas y el mismo color en otras marcas"></a>
+  <a href="docs/readme/es/03-match.png"><img src="docs/readme/es/03-match.png" width="19%" alt="Un color tocado en una foto, emparejado con el rotulador más cercano de tu colección"></a>
+  <a href="docs/readme/es/04-palette.png"><img src="docs/readme/es/04-palette.png" width="19%" alt="Una paleta de escena, con el rol y el código de cada color"></a>
+  <a href="docs/readme/es/05-diary.png"><img src="docs/readme/es/05-diary.png" width="19%" alt="El diario de dibujos: un resumen de tu trabajo y las últimas entradas"></a>
 </p>
 
 <details>
 <summary>Más capturas</summary>
 
 <p>
-  <a href="docs/readme/es/02-swatch-detail.png"><img src="docs/readme/es/02-swatch-detail.png" width="19%" alt="Detalle de un rotulador con sus códigos y su hex"></a>
-  <a href="docs/readme/es/05-scenes.png"><img src="docs/readme/es/05-scenes.png" width="19%" alt="La lista de escenas, por categorías"></a>
-  <a href="docs/readme/es/08-settings-dark.png"><img src="docs/readme/es/08-settings-dark.png" width="19%" alt="Ajustes con el tema oscuro"></a>
+  <a href="docs/readme/es/06-photo-scene.png"><img src="docs/readme/es/06-photo-scene.png" width="19%" alt="Una paleta creada con los colores de tu propia foto"></a>
+  <a href="docs/readme/es/07-ideas.png"><img src="docs/readme/es/07-ideas.png" width="19%" alt="Ideas: ejercicios y técnicas, con sus paletas y tus favoritas"></a>
+  <a href="docs/readme/es/08-collection.png"><img src="docs/readme/es/08-collection.png" width="19%" alt="Mi colección: lo que tienes y qué comprar ahora"></a>
+  <a href="docs/readme/es/09-settings-dark.png"><img src="docs/readme/es/09-settings-dark.png" width="19%" alt="Ajustes con el tema oscuro"></a>
 </p>
 
 </details>
@@ -83,55 +82,55 @@ Pulsa una captura para ampliarla.
 
 ## Funciones
 
-- **Mis rotuladores.** Una guía inicial prepara la colección de cada marca con tus
-  series, sets y rotuladores sueltos.
-- **Emparejar con una foto.** Toca un punto para encontrar tu rotulador más
-  cercano; corrige los blancos para que los colores que muestreas sean fieles.
-- **Tu propio color.** El color del catálogo es una estimación; define el color
-  que tu rotulador da de verdad, con su hex o una foto.
-- **Paletas y cadenas de mezcla.** Armonías de teoría del color y cadenas de
-  mezcla de tres a cinco rotuladores, del más claro al más oscuro.
-- **Escenas.** 67 recetas en 11 categorías, cada una con los papeles de sus colores.
-- **Diario de dibujos.** Un registro de lo que pintas: fecha, papel, rotuladores,
-  notas y hasta cuatro fotos.
-- **Cuatro marcas.** Ohuhu (503 colores), DecoTime (313), Copic (358) y Finecolour (480), con
-  selección individual de rotuladores.
+- **Diario de dibujos.** Un registro de lo que pintas, con sus fotos, los
+  rotuladores que usaste y los números que hay detrás.
+- **Cuatro marcas.** Ohuhu (503 colores), DecoTime (313), Copic (358) y Finecolour
+  (480), con el rotulador más cercano de cada otra marca en «En otras marcas».
+- **Emparejar.** Toca un punto de una foto para encontrar el rotulador de tu
+  colección más cercano, y corrige los blancos.
+- **Paletas y escenas.** Armonías de teoría del color, degradados y 67
+  escenas listas en 11 categorías.
+- **Copia de seguridad.** Guarda todo en un archivo `.zip`, con las fotos del
+  diario dentro.
+- **Compras.** Una lista de deseos, los rotuladores secos y qué comprar ahora.
 
 <details>
 <summary>Más funciones</summary>
 
-- **Muestras.** Códigos, nombres y valores hex, con búsqueda, filtros y favoritos.
-- **Escena desde una foto.** Convierte los colores principales de una foto en tus
-  rotuladores más cercanos.
-- **Compartir e imprimir.** Comparte una paleta como imagen o crea una carta de
-  muestras imprimible en A4.
-- **Lista de deseos y secos.** Guarda los rotuladores que quieres comprar y marca
-  los gastados como secos para que la app los omita.
-- **Ideas e IA.** Retos y técnicas, con IA opcional: Gemini Nano en dispositivos
-  Android compatibles u OpenRouter con tu propia clave de API.
-- **Copia de seguridad.** Exporta e importa tus datos como texto JSON, sin fotos.
+- **Visión del color.** Previsualiza una paleta como la ve alguien con protanopía,
+  deuteranopía, tritanopía o acromatopsia.
+- **Carta de muestras para imprimir.** Páginas A4 con una casilla rotulada para
+  cada rotulador que tienes.
+- **Ideas.** Ejercicios y técnicas con sus propias paletas, y tus favoritas.
+- **Muestras y tu propio color.** Códigos, nombres y valores hex, más el color
+  que tu rotulador da de verdad.
+- **Compartir.** Manda una paleta, una carta o una entrada del diario a otra app
+  como imagen.
+- **IA, si quieres.** Sugerencias de paletas opcionales: Gemini Nano en el móvil u
+  OpenRouter con tu propia clave.
 
 </details>
 
 ## Privacidad
 
-Los datos se guardan en el móvil: sin cuentas, servidor propio, analítica propia,
-anuncios ni rastreo; sin IA, no se usa la red. ML Kit de la IA en el móvil envía
-a Google diagnósticos de uso, nunca peticiones, colores ni fotos. La cámara y la
-galería solo sirven para emparejar colores, crear escenas, definir tu propio color
-y añadir fotos al diario; las fotos de emparejar y escenas se procesan en el
+Los datos se guardan en el móvil: sin cuentas, servidor propio, analítica,
+anuncios ni rastreo; sin IA, no se usa la red. El ML Kit de la IA en el móvil
+envía a Google diagnósticos de uso, nunca peticiones, colores ni fotos. El acceso
+a la cámara y la galería solo sirve para emparejar colores, crear escenas, definir
+tu propio color y añadir fotos al diario; esas fotos se procesan en el
 dispositivo, y las del diario se guardan en la carpeta privada de la app y nunca
-se suben. Al compartir una paleta o una carta, la imagen solo se entrega a la
-app que elijas.
+se suben. Al compartir una paleta, una carta o la copia `.zip`, el archivo solo se
+entrega a la app que elijas, y nada más.
 
 [Web](https://inklab.mainshai.com/es/) · [Política de privacidad](https://inklab.mainshai.com/es/privacy/) ·
 [Detalle técnico](docs/privacy.md) · Soporte: **inklab@mainshai.com**.
 
 ## Novedades
 
-La 0.7.0 añade el diario de dibujos, las cadenas de mezcla, tus propios colores
-con la corrección de blancos, la lista de deseos, los rotuladores secos, las
-cartas imprimibles y el compartir. Lista completa en [CHANGELOG.md](CHANGELOG.md).
+La versión 0.9.2 ya está fuera. La serie 0.9 ordenó la app: una ficha de
+rotulador más tranquila, pantallas mejor ordenadas y ajustes para el texto grande
+del sistema. La lista completa está en [CHANGELOG.md](CHANGELOG.md) y en las
+[versiones](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contribuir
 
@@ -144,10 +143,10 @@ Código [MIT](LICENSE), Copyright (c) 2026 Daniel Mont Ferrandiz. Documentación
 textos propios: [CC BY-SA 4.0](LICENSE-CONTENT.es.md). Los datos de los catálogos
 son referencias factuales de terceros y quedan fuera de ambas licencias; las
 fuentes tipográficas (SIL OFL 1.1) y los materiales de terceros conservan sus
-licencias, detalladas en [NOTICE.md](NOTICE.md).
+licencias.
 
 Proyecto independiente: **no está afiliado, patrocinado ni respaldado por Ohuhu
 ni por DecoTime ni por Copic ni por Finecolour**. «Ohuhu», «Oahu», «DecoTime», «Copic» y «Finecolour» son marcas de sus propietarios.
-Las fuentes públicas y los avisos completos están en [NOTICE.md](NOTICE.md).
+Avisos completos: [NOTICE.md](NOTICE.md).
 
 Para comunicar una vulnerabilidad: [SECURITY.es.md](SECURITY.es.md).

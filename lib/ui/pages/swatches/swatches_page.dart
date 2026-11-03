@@ -335,15 +335,9 @@ class _SwatchesPageState extends State<SwatchesPage> {
                     InkSpacing.pageBottom,
                   ),
                   sliver: SliverGrid(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      // Three columns on a phone; wider screens add more.
-                      maxCrossAxisExtent: 130,
-                      mainAxisExtent: ColorSwatchTile.gridCellHeight(
-                        context,
-                        showHex: false,
-                      ),
-                      crossAxisSpacing: InkSpacing.block,
-                      mainAxisSpacing: InkSpacing.block,
+                    gridDelegate: ColorSwatchTile.gridDelegate(
+                      context,
+                      showHex: false,
                     ),
                     delegate: SliverChildBuilderDelegate((
                       BuildContext context,
@@ -1118,14 +1112,9 @@ class _LoadingBody extends StatelessWidget {
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 130,
-              mainAxisExtent: ColorSwatchTile.gridCellHeight(
-                context,
-                showHex: false,
-              ),
-              crossAxisSpacing: InkSpacing.block,
-              mainAxisSpacing: InkSpacing.block,
+            gridDelegate: ColorSwatchTile.gridDelegate(
+              context,
+              showHex: false,
             ),
             itemCount: 12,
             itemBuilder: (BuildContext context, int index) => SkeletonBlock(

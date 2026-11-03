@@ -10,11 +10,11 @@ import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
-import '../../widgets/ink_segmented.dart';
 import '../../widgets/section_card.dart';
 import '../../share/share_sink.dart';
 import '../settings/dialogs.dart';
 import '../settings/settings_widgets.dart';
+import 'brand_picker.dart';
 import 'collection_pickers.dart';
 import 'collection_summary.dart';
 import 'collection_summary_card.dart';
@@ -27,7 +27,7 @@ import 'wishlist_card.dart';
 /// "My collection": the one place where the user says which markers they
 /// own (see `AppSettings`).
 ///
-/// Three `caps` groups, as in Settings. *What you own* keeps the brand switch
+/// Three `caps` groups, as in Settings. *What you own* keeps the brand picker
 /// and the summary, and folds the series, the sets and the loose markers into
 /// summary rows. *Shopping* holds what to buy next, the wishlist and the dried
 /// out markers. *Tools* keeps the printable swatch chart, and "Reset
@@ -135,21 +135,14 @@ class _CollectionPageState extends State<CollectionPage> {
           SettingsGroup(
             title: context.l10n.collectionOwnedGroup,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: InkSpacing.cardH,
-                  vertical: InkSpacing.cardV,
-                ),
-                child: InkScrollableSegmented<MarkerBrand>(
-                  key: const ValueKey<String>('collection-brand'),
-                  semanticLabel: context.l10n.settingsBrandTitle,
-                  segments: <InkSegment<MarkerBrand>>[
-                    for (final MarkerBrand b in MarkerBrand.values)
-                      InkSegment<MarkerBrand>(value: b, label: b.label),
-                  ],
-                  selected: brand,
-                  onChanged: (MarkerBrand b) => scope.settings.setBrand(b),
-                ),
+              // The brand list can keep growing, so it lives behind a
+              // picker, never inline.
+              InkListRow(
+                key: const ValueKey<String>('collection-brand'),
+                label: context.l10n.settingsBrandTitle,
+                value: brand.label,
+                chevron: true,
+                onTap: () => showBrandPicker(context, scope: scope),
               ),
               KeyedSubtree(
                 key: const ValueKey<String>('collection-summary'),

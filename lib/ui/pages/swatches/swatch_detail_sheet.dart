@@ -371,39 +371,38 @@ class _SwatchDetailSheetState extends State<SwatchDetailSheet> {
                   ),
                 ),
                 const SizedBox(height: InkSpacing.s4),
-                // The same room as the code line: the star is a button, and
-                // it must never end up under the "⋯" or the ✕ of the frame.
-                Padding(
-                  padding: const EdgeInsets.only(right: _headerClearance),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: Tooltip(
-                          message: color.newName,
-                          excludeFromSemantics: true,
-                          child: Text(
-                            color.newName,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTypography.sheetTitle.copyWith(
-                              color: ink.fg,
-                            ),
+                // No clearance here: the star sits below the "⋯" menu and the
+                // ✕ of the frame (the code line is in between), so only that
+                // first line needs the room. The name takes the full width and
+                // the star stays at the end of its own row.
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Tooltip(
+                        message: color.newName,
+                        excludeFromSemantics: true,
+                        child: Text(
+                          color.newName,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTypography.sheetTitle.copyWith(
+                            color: ink.fg,
                           ),
                         ),
                       ),
-                      const SizedBox(width: InkSpacing.group),
-                      InkIconButton(
-                        icon: InkIcons.star,
-                        outlined: true,
-                        selected: widget.favorite,
-                        tooltip: widget.favorite
-                            ? l10n.swatchesRemoveFavorite
-                            : l10n.swatchesAddFavorite,
-                        onPressed: widget.onToggleFavorite,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: InkSpacing.group),
+                    InkIconButton(
+                      icon: InkIcons.star,
+                      outlined: true,
+                      selected: widget.favorite,
+                      tooltip: widget.favorite
+                          ? l10n.swatchesRemoveFavorite
+                          : l10n.swatchesAddFavorite,
+                      onPressed: widget.onToggleFavorite,
+                    ),
+                  ],
                 ),
                 // The hex line: one text high, with the tap target around
                 // it, so it is a full row high without a forced height.

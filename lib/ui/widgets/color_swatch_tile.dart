@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../../core/color_utils.dart';
 import '../icons/ink_icons.dart';
@@ -219,6 +222,19 @@ class ColorSwatchTile extends StatelessWidget {
   static double _line(BuildContext context, double height) =>
       MediaQuery.textScalerOf(context).scale(height);
 
+  /// The grid delegate for a grid of [ColorSwatchTile]s, from the system text
+  /// scale and whether the cells show the hex (the grid leaves it out).
+  ///
+  /// See [SwatchGridDelegate] for how the column count is chosen.
+  static SliverGridDelegate gridDelegate(
+    BuildContext context, {
+    bool showHex = false,
+  }) => SwatchGridDelegate(
+    textScale: MediaQuery.textScalerOf(context).scale(1.0),
+    showHex: showHex,
+    cellHeight: gridCellHeight(context, showHex: showHex),
+  );
+
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
@@ -389,6 +405,67 @@ class ColorSwatchTile extends StatelessWidget {
       ),
     );
   }
+}
+
+/// The grid delegate of the Swatches grid.
+///
+/// A [SliverGridDelegateWithMaxCrossAxisExtent] fits as many 130 dp cells as
+/// the width allows: three columns on any phone. At large system text those
+/// cells become too narrow and the colour names break inside words
+/// ("Turquoi / se"). This delegate keeps the same count as before when the
+/// text is normal (so a 1.0 layout is identical, tablets included) and drops
+/// columns as the text grows, so every name still has a cell as wide as the
+/// narrowest cell of the old grid (98 dp on a 360 dp phone) for the current
+/// text scale.
+class SwatchGridDelegate extends SliverGridDelegate {
+  const SwatchGridDelegate({
+    required this.textScale,
+    required this.showHex,
+    required this.cellHeight,
+  });
+
+  /// The system text scale ([MediaQuery.textScalerOf]).
+  final double textScale;
+
+  /// Whether the cells show the hex line (the grid leaves it out).
+  final bool showHex;
+
+  /// The height of a cell, from [ColorSwatchTile.gridCellHeight].
+  final double cellHeight;
+
+  /// The cell extent the grid used before (its three-column maximum).
+  static const double _maxCellExtent = 130;
+
+  /// The narrowest cell of the old grid (a 360 dp phone): below this, long
+  /// names break inside words.
+  static const double _narrowestCell = 98;
+
+  /// The gap between cells.
+  static const double _spacing = InkSpacing.block;
+
+  @override
+  SliverGridLayout getLayout(SliverConstraints constraints) {
+    final double extent = constraints.crossAxisExtent;
+    // Exactly today's count: what the max-extent delegate would pick.
+    final int byExtent = (extent / (_maxCellExtent + _spacing)).ceil();
+    // The most columns that still leaves every cell as wide as the narrowest
+    // cell of the old grid, at the current text scale.
+    final int byText =
+        ((extent + _spacing) / (_narrowestCell * textScale + _spacing)).floor();
+    final int count = math.max(2, math.min(byExtent, byText));
+    return SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: count,
+      mainAxisExtent: cellHeight,
+      crossAxisSpacing: _spacing,
+      mainAxisSpacing: _spacing,
+    ).getLayout(constraints);
+  }
+
+  @override
+  bool shouldRelayout(covariant SwatchGridDelegate oldDelegate) =>
+      oldDelegate.textScale != textScale ||
+      oldDelegate.showHex != showHex ||
+      oldDelegate.cellHeight != cellHeight;
 }
 
 class _ColourBlock extends StatelessWidget {

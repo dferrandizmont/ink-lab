@@ -8,6 +8,21 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
+## 0.9.2 · 2026-11-03
+
+- Swatches with large system text: the grid shows two columns instead of three when the names would not fit, so
+  colour names are no longer split inside a word ("Turquoi / se") or cut short. At normal text size nothing changes.
+
+## 0.9.1 · 2026-11-02
+
+Fixes found testing 0.9.0 on a real phone:
+
+- The marker sheet no longer cuts long names ("Cotton Candy Blue" showed as "Cotton Can…" at normal text size): the
+  name now uses the full width under the menu and close buttons, up to three lines.
+- My collection: the brand is chosen from a list ("Brand  Ohuhu ›"), like the language, instead of a row of tabs that
+  looked cut off with four brands.
+- Palette: "Colour vision" in the ⋯ menu has its icon, aligned with Share and Clear.
+
 ## 0.9.0 · 2026-11-02
 
 - Ideas, tidied up: the list's featured card is now one big tap target (no separate "Open" button) and "Recently viewed"

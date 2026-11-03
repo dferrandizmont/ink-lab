@@ -64,6 +64,12 @@ Future<void> _pickType(WidgetTester tester, String rowKey) async {
   await tester.pumpAndSettle();
 }
 
+/// The vertical list of a page: the chip rows and the search field also scroll,
+/// but sideways, so they are not the list to walk.
+Finder _verticalScrollable() => find.byWidgetPredicate(
+  (Widget w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+);
+
 void main() {
   stabilityTest('ideas: Ideas | Diary keeps the header and the control', (
     WidgetTester tester,
@@ -237,8 +243,15 @@ void main() {
     await pumpStability(tester, env, SwatchesPage(onBlendingChain: (_) {}));
     // The whole range, so there is a swatch to open.
     await _tapIn(tester, find.byType(InkChipRow), env.t.swatchesAllFilter);
+    await tester.pumpAndSettle();
+    // With larger text the grid shows fewer columns and builds fewer cells at
+    // once, so the marker may start below the built range: scroll to it.
     final Finder swatch = find.text('B08');
-    await tester.ensureVisible(swatch);
+    await tester.scrollUntilVisible(
+      swatch,
+      200,
+      scrollable: _verticalScrollable(),
+    );
     await tester.pumpAndSettle();
     await tester.tap(swatch);
     await tester.pumpAndSettle();
