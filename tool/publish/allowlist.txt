@@ -7,6 +7,9 @@
 # docs/design-mockups/ y docs/release/ (internos); .claude, APK/AAB y keystores.
 # Sin gradlew ni el JAR del wrapper (no estan versionados): Flutter los repone al compilar.
 .gitattributes
+.github/ISSUE_TEMPLATE/bug_report.yml
+.github/ISSUE_TEMPLATE/data_fix.yml
+.github/ISSUE_TEMPLATE/feature_request.yml
 .github/PULL_REQUEST_TEMPLATE.md
 .github/workflows/ci.yml
 .gitignore
@@ -97,18 +100,6 @@ android/settings.gradle.kts
 assets/brand/icon-foreground.svg
 assets/brand/icon-monochrome.svg
 assets/brand/icon.svg
-assets/brand/options/option-1-dual-tip-mono.svg
-assets/brand/options/option-1-dual-tip.svg
-assets/brand/options/option-2-ink-cross-mono.svg
-assets/brand/options/option-2-ink-cross.svg
-assets/brand/options/option-3-matched-mono.svg
-assets/brand/options/option-3-matched.svg
-assets/brand/options/option-4-three-passes-mono.svg
-assets/brand/options/option-4-three-passes.svg
-assets/brand/options/option-5-loupe-mono.svg
-assets/brand/options/option-5-loupe.svg
-assets/brand/options/option-6-il-strokes-mono.svg
-assets/brand/options/option-6-il-strokes.svg
 assets/brand/png/icon-1024.png
 assets/brand/png/icon-foreground.png
 assets/brand/png/icon-monochrome.png
@@ -283,7 +274,6 @@ lib/core/marker_repository.dart
 lib/core/model/ai_palette.dart
 lib/core/model/app_settings.dart
 lib/core/model/color_match_pick.dart
-lib/core/model/drawing_scenario.dart
 lib/core/model/marker_brand.dart
 lib/core/model/marker_color.dart
 lib/core/model/marker_line.dart
@@ -358,18 +348,14 @@ lib/ui/pages/settings/ai_section.dart
 lib/ui/pages/settings/appearance_section.dart
 lib/ui/pages/settings/backup_file_io.dart
 lib/ui/pages/settings/backup_section.dart
-lib/ui/pages/settings/brand_section.dart
 lib/ui/pages/settings/constants.dart
 lib/ui/pages/settings/dialogs.dart
 lib/ui/pages/settings/favorites_section.dart
 lib/ui/pages/settings/labels_section.dart
 lib/ui/pages/settings/language_section.dart
 lib/ui/pages/settings/own_colors_section.dart
-lib/ui/pages/settings/owned_markers_section.dart
-lib/ui/pages/settings/packs_section.dart
 lib/ui/pages/settings/saved_palettes_section.dart
 lib/ui/pages/settings/settings_page.dart
-lib/ui/pages/settings/settings_target.dart
 lib/ui/pages/settings/settings_widgets.dart
 lib/ui/pages/swatches/brand_equivalents_index.dart
 lib/ui/pages/swatches/brand_equivalents_section.dart
@@ -479,7 +465,6 @@ test/ui/round3_regressions_test.dart
 test/ui/settings/ai_section_test.dart
 test/ui/settings/backup_file_test.dart
 test/ui/settings/language_picker_test.dart
-test/ui/settings/packs_section_test.dart
 test/ui/settings/settings_page_test.dart
 test/ui/share/diary_entry_share_test.dart
 test/ui/share/share_flows_test.dart

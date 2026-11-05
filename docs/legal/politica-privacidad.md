@@ -1,7 +1,7 @@
 # Política de privacidad de Ink Lab
 
 
-Última actualización: 2026-11-03
+Última actualización: 2026-11-05
 
 Ink Lab es una app para quien dibuja con rotuladores de alcohol: consulta las muestras de color, empareja el color de
 una foto con un rotulador de tu colección y construye paletas con teoría del color. Es una app independiente: no está
@@ -95,7 +95,8 @@ conexión de red y no llama a ML Kit. Si la activas, antes te enseña qué saldr
   contenido de tus peticiones, tus colores ni tus fotos, solo su tamaño. El desarrollador no recibe esos datos: los trata
   Google según sus propias condiciones y su política de privacidad (https://policies.google.com/privacy). Si el modelo
   no está en el móvil, Android lo descarga una vez a través de los servicios de Google; esa descarga y el modelo se
-  rigen por las condiciones de Google. En iPhone no hay IA en el móvil ni ML Kit.
+  rigen por las condiciones de Google. En iPhone no se usa ML Kit: la IA en el móvil es Apple Intelligence (ver el
+  apartado siguiente).
 - **En el iPhone (Apple Intelligence, en iOS 26 o posterior y iPhone compatible):** tu escenario y los códigos de color
   los procesa en tu teléfono el modelo de Apple que viene con Apple Intelligence, mediante el framework Foundation Models
   de Apple. La app no descarga el modelo (lo instala y gestiona iOS), no usa ningún otro servicio para esta opción y no

@@ -1,0 +1,67 @@
+name: Feature request
+description: Suggest an improvement or a new feature
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement.
+
+        A feature request is strongest when it starts from the problem you are
+        trying to solve, rather than from a solution.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe the situation you are in today, not the feature you want.
+      placeholder: When I own only 24 markers, I want to know which combinations are possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like Ink Lab to do?
+      description: A rough sketch is enough. Screenshots or mockups are welcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you have considered
+      description: Including workarounds you use today.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the app is this about?
+      options:
+        - Swatches
+        - Palettes
+        - Ideas
+        - Backup / data
+        - Settings / AI configuration
+        - Accessibility or usability
+        - Something else
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Who benefits from this?
+      options:
+        - label: Anyone who owns markers
+        - label: People with a limited collection of markers
+        - label: People who work with a single brand
+        - label: People who work offline only
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: Links, references, or the technique you have in mind.

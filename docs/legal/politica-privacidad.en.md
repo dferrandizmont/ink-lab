@@ -1,7 +1,7 @@
 # Ink Lab privacy policy
 
 
-Last updated: 2026-11-03
+Last updated: 2026-11-05
 
 Courtesy translation. The [Spanish version](https://inklab.mainshai.com/es/privacy/) is the one that
 applies.
@@ -96,7 +96,7 @@ between:
   prompts, your colours or your photos, only their size. The developer does not receive it: Google processes it under
   its own terms and privacy policy (https://policies.google.com/privacy). If the model is not on the phone, Android
   downloads it once through Google services; that download and the model are governed by Google's terms. On iPhone
-  there is no on-device AI and no ML Kit.
+  ML Kit is not used: on-device AI there is Apple Intelligence (see the next item).
 - **On the iPhone (Apple Intelligence, on iOS 26 or later and a compatible iPhone):** your scenario and colour codes are
   processed on your phone by Apple's model that comes with Apple Intelligence, through Apple's Foundation Models
   framework. The app does not download the model (iOS installs and manages it), uses no other service for this option

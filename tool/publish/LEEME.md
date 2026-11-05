@@ -56,8 +56,7 @@ Exclusiones revisadas:
 | Ficheros o grupo | Motivo |
 |---|---|
 | `.mcp.json`, `.claude/`, `.shots/`, `.handoff.md`, `.plan-gratis.md`, `CLAUDE.md`, `AGENTS.md` | Configuración, entorno y guías internas |
-| `docs/HANDOFF.md` | Traspaso interno entre sesiones de trabajo |
-| `docs/DESIGN_SPEC.md`, `docs/design-mockups/` | Especificación y maquetas de diseño internas; algunos comentarios del código aún las citan |
+| `docs/DESIGN_SPEC.md` | Especificación de diseño interna; algunos comentarios del código aún la citan |
 | `docs/release/` (`STORE_RELEASE.md`, `MAC_IOS_SETUP.md`) | Plan interno de tiendas, decisiones pendientes y pasos del Mac; algunos comentarios del código aún los citan |
 | `docs/ROADMAP.md` | Calendario interno y desactualizado; hay que refrescarlo antes de publicarlo |
 | APK/AAB, keystores, `key.properties`, `.env*` | No son fuentes públicas; las claves nunca van al repositorio |

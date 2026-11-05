@@ -11,8 +11,11 @@ final class FakeOnDevicePlatform implements OnDeviceAiPlatform {
     this.hang = false,
     this.downloadEvents = const <OnDeviceDownloadEvent>[],
     this.statusAfterDownload = OnDeviceStatus.available,
+    List<OnDeviceStatus>? statusesAfterDownload,
     this.responder,
-  });
+  }) : _statusesAfterDownload = List<OnDeviceStatus>.of(
+         statusesAfterDownload ?? const <OnDeviceStatus>[],
+       );
 
   OnDeviceStatus currentStatus;
   String output;
@@ -32,6 +35,8 @@ final class FakeOnDevicePlatform implements OnDeviceAiPlatform {
   /// so a test decides when (and whether) progress arrives.
   StreamController<OnDeviceDownloadEvent>? downloadController;
   final OnDeviceStatus statusAfterDownload;
+  final List<OnDeviceStatus> _statusesAfterDownload;
+  bool _downloadCompleted = false;
 
   final List<String> prompts = <String>[];
   int downloads = 0;
@@ -41,15 +46,22 @@ final class FakeOnDevicePlatform implements OnDeviceAiPlatform {
   @override
   Future<OnDeviceStatus> status() async {
     statusCalls++;
+    if (_downloadCompleted && _statusesAfterDownload.isNotEmpty) {
+      return _statusesAfterDownload.removeAt(0);
+    }
     return currentStatus;
   }
 
   @override
   Stream<OnDeviceDownloadEvent> download() async* {
     downloads++;
+    _downloadCompleted = false;
     final StreamController<OnDeviceDownloadEvent>? live = downloadController;
     if (live != null) {
-      yield* live.stream;
+      yield* live.stream.map((OnDeviceDownloadEvent event) {
+        if (event is OnDeviceDownloadCompleted) _downloadCompleted = true;
+        return event;
+      });
       if (currentStatus == OnDeviceStatus.downloadable ||
           currentStatus == OnDeviceStatus.downloading) {
         currentStatus = statusAfterDownload;
@@ -62,6 +74,7 @@ final class FakeOnDevicePlatform implements OnDeviceAiPlatform {
     if (downloadEvents.any(
       (OnDeviceDownloadEvent e) => e is OnDeviceDownloadCompleted,
     )) {
+      _downloadCompleted = true;
       currentStatus = statusAfterDownload;
     }
   }

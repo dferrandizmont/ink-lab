@@ -494,6 +494,14 @@ void main() {
     AiSettingsController controllerOver(
       FakeOnDevicePlatform platform, {
       bool enabled = true,
+      bool downloadAlreadyRunning = false,
+      List<Duration> settleDelays = const <Duration>[
+        Duration.zero,
+        Duration.zero,
+        Duration.zero,
+        Duration.zero,
+        Duration.zero,
+      ],
     }) {
       final StoredAiSettingsRepository repo = StoredAiSettingsRepository(
         InMemoryKeyValueStore(),
@@ -507,10 +515,13 @@ void main() {
         clientFactory: () => throw StateError('no HTTP'),
         onDevice: platform,
       );
+      addTearDown(service.dispose);
+      if (downloadAlreadyRunning) service.onDeviceDownload.start();
       return AiSettingsController(
         settings: repo,
         secrets: secrets,
         service: service,
+        onDeviceSettleDelays: settleDelays,
       );
     }
 
@@ -566,6 +577,269 @@ void main() {
         expect(controller.onDeviceStatus, OnDeviceStatus.downloadable);
       },
     );
+
+    for (final bool reattached in <bool>[false, true]) {
+      test(
+        'settles after completion${reattached ? ' when reattached' : ''}',
+        () async {
+          final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+            currentStatus: OnDeviceStatus.downloadable,
+            downloadEvents: const <OnDeviceDownloadEvent>[
+              OnDeviceDownloadCompleted(),
+            ],
+            statusesAfterDownload: <OnDeviceStatus>[
+              OnDeviceStatus.downloadable,
+              OnDeviceStatus.downloading,
+              OnDeviceStatus.available,
+            ],
+          );
+          final AiSettingsController controller = controllerOver(
+            platform,
+            downloadAlreadyRunning: reattached,
+          );
+          addTearDown(controller.dispose);
+          await controller.initialize();
+          final List<OnDeviceStatus> observed = <OnDeviceStatus>[];
+          controller.addListener(() => observed.add(controller.onDeviceStatus));
+
+          if (reattached) {
+            await pumpEventQueue();
+          } else {
+            await controller.downloadOnDevice();
+          }
+
+          expect(controller.onDeviceStatus, OnDeviceStatus.available);
+          expect(observed, isNot(contains(OnDeviceStatus.downloadable)));
+          expect(platform.statusCalls, reattached ? 3 : 4);
+          expect(platform.downloads, 1);
+          expect(controller.onDeviceDownloadFailed, isFalse);
+        },
+      );
+    }
+
+    for (final OnDeviceStatus residual in <OnDeviceStatus>[
+      OnDeviceStatus.unavailable,
+      OnDeviceStatus.downloadable,
+      OnDeviceStatus.downloading,
+    ]) {
+      test(
+        'keeps the provider preparing after residual ${residual.name}',
+        () async {
+          final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+            currentStatus: OnDeviceStatus.downloadable,
+            downloadEvents: const <OnDeviceDownloadEvent>[
+              OnDeviceDownloadCompleted(),
+            ],
+            statusesAfterDownload: <OnDeviceStatus>[
+              OnDeviceStatus.downloading,
+              OnDeviceStatus.downloadable,
+              residual,
+              OnDeviceStatus.available,
+            ],
+          );
+          final AiSettingsController controller = controllerOver(
+            platform,
+            settleDelays: const <Duration>[Duration.zero, Duration.zero],
+          );
+          addTearDown(controller.dispose);
+          await controller.initialize();
+          final int before = platform.statusCalls;
+
+          await controller.downloadOnDevice();
+
+          expect(
+            platform.statusCalls - before,
+            3,
+          ); // Immediate read + two retries.
+          expect(controller.onDeviceStatus, OnDeviceStatus.downloading);
+          expect(controller.onDeviceSupported, isTrue);
+          expect(controller.onDeviceSettling, isFalse);
+          expect(controller.onDeviceDownloadFailed, isFalse);
+          expect(platform.downloads, 1);
+        },
+      );
+    }
+
+    test('transient unavailable then available settles to available', () async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.downloadable,
+        downloadEvents: const <OnDeviceDownloadEvent>[
+          OnDeviceDownloadCompleted(),
+        ],
+        statusesAfterDownload: <OnDeviceStatus>[
+          OnDeviceStatus.unavailable,
+          OnDeviceStatus.available,
+        ],
+      );
+      final AiSettingsController controller = controllerOver(platform);
+      addTearDown(controller.dispose);
+      await controller.initialize();
+      final int before = platform.statusCalls;
+
+      await controller.downloadOnDevice();
+
+      expect(platform.statusCalls - before, 2);
+      expect(controller.onDeviceStatus, OnDeviceStatus.available);
+      expect(platform.downloads, 1);
+    });
+
+    testWidgets('refresh during settle keeps unavailable preparing', (
+      tester,
+    ) async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.downloadable,
+        downloadEvents: const <OnDeviceDownloadEvent>[
+          OnDeviceDownloadCompleted(),
+        ],
+        statusesAfterDownload: <OnDeviceStatus>[
+          OnDeviceStatus.downloadable,
+          OnDeviceStatus.unavailable,
+          OnDeviceStatus.available,
+        ],
+      );
+      final AiSettingsController controller = controllerOver(
+        platform,
+        settleDelays: const <Duration>[Duration(seconds: 1)],
+      );
+      addTearDown(controller.dispose);
+      await controller.initialize();
+      final Future<void> download = controller.downloadOnDevice();
+      await tester.pump();
+      expect(controller.onDeviceSettling, isTrue);
+
+      await controller.refreshOnDevice();
+      expect(controller.onDeviceStatus, OnDeviceStatus.downloading);
+      expect(controller.onDeviceSupported, isTrue);
+      await controller.downloadOnDevice();
+      expect(platform.downloads, 1);
+
+      await tester.pump(const Duration(seconds: 1));
+      await download;
+      expect(controller.onDeviceStatus, OnDeviceStatus.available);
+      expect(controller.onDeviceSettling, isFalse);
+    });
+
+    test(
+      'ignores another download before the completion waiter resumes',
+      () async {
+        final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+          currentStatus: OnDeviceStatus.downloadable,
+          downloadEvents: const <OnDeviceDownloadEvent>[
+            OnDeviceDownloadCompleted(),
+          ],
+        );
+        final AiSettingsController controller = controllerOver(platform);
+        addTearDown(controller.dispose);
+        await controller.initialize();
+        bool triedAgain = false;
+        controller.addListener(() {
+          if (!controller.onDeviceDownloadRunning && !triedAgain) {
+            triedAgain = true;
+            unawaited(controller.downloadOnDevice());
+          }
+        });
+
+        await controller.downloadOnDevice();
+
+        expect(triedAgain, isTrue);
+        expect(platform.downloads, 1);
+        expect(controller.onDeviceStatus, OnDeviceStatus.available);
+      },
+    );
+
+    testWidgets('AI off during settling stops all later status reads', (
+      tester,
+    ) async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.downloadable,
+        downloadEvents: const <OnDeviceDownloadEvent>[
+          OnDeviceDownloadCompleted(),
+        ],
+        statusesAfterDownload: <OnDeviceStatus>[
+          OnDeviceStatus.downloadable,
+          OnDeviceStatus.downloading,
+          OnDeviceStatus.available,
+        ],
+      );
+      final AiSettingsController controller = controllerOver(
+        platform,
+        settleDelays: const <Duration>[
+          Duration(seconds: 1),
+          Duration(seconds: 2),
+        ],
+      );
+      addTearDown(controller.dispose);
+      await controller.initialize();
+      final Future<void> download = controller.downloadOnDevice();
+      await tester.pump();
+      expect(controller.onDeviceStatus, OnDeviceStatus.downloading);
+      expect(controller.onDeviceDownloadRunning, isFalse);
+      final int beforeOff = platform.statusCalls;
+
+      await controller.setEnabled(false);
+      await tester.pump();
+      expect(controller.onDeviceStatus, OnDeviceStatus.unavailable);
+      await tester.pump(const Duration(seconds: 20));
+      await download;
+
+      expect(controller.onDeviceStatus, OnDeviceStatus.unavailable);
+      expect(platform.statusCalls, beforeOff);
+      expect(platform.downloads, 1);
+    });
+
+    testWidgets('disposing during settling stops all later status reads', (
+      tester,
+    ) async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.downloadable,
+        downloadEvents: const <OnDeviceDownloadEvent>[
+          OnDeviceDownloadCompleted(),
+        ],
+        statusAfterDownload: OnDeviceStatus.downloadable,
+      );
+      final AiSettingsController controller = controllerOver(
+        platform,
+        settleDelays: const <Duration>[Duration(seconds: 1)],
+      );
+      await controller.initialize();
+      final Future<void> download = controller.downloadOnDevice();
+      await tester.pump();
+      expect(controller.onDeviceStatus, OnDeviceStatus.downloading);
+      final int beforeDispose = platform.statusCalls;
+
+      controller.dispose();
+      await tester.pump(const Duration(seconds: 20));
+      await download;
+      await controller.refreshOnDevice();
+
+      expect(platform.statusCalls, beforeDispose);
+      expect(platform.downloads, 1);
+    });
+
+    for (final OnDeviceStatus status in <OnDeviceStatus>[
+      OnDeviceStatus.downloading,
+      OnDeviceStatus.available,
+    ]) {
+      test('failed download trusts OS ${status.name} with one read', () async {
+        final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+          currentStatus: status,
+          downloadEvents: const <OnDeviceDownloadEvent>[
+            OnDeviceDownloadFailed('AICore download failed'),
+          ],
+        );
+        final AiSettingsController controller = controllerOver(platform);
+        addTearDown(controller.dispose);
+        await controller.initialize();
+        final int before = platform.statusCalls;
+
+        await controller.downloadOnDevice();
+
+        expect(platform.statusCalls - before, 1);
+        expect(controller.onDeviceStatus, status);
+        expect(controller.onDeviceDownloadFailed, isTrue);
+        expect(platform.downloads, 1);
+      });
+    }
 
     test(
       'AI off: initialize makes no call and reports it unavailable',
@@ -655,6 +929,105 @@ void main() {
 
         expect(controller.onDeviceStatus, OnDeviceStatus.unavailable);
         expect(controller.onDeviceSupported, isFalse);
+      },
+    );
+  });
+
+  group('OnDeviceDownloadTracker diagnostics', () {
+    test('keeps the failure on idle cancel and clears it on start', () async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        downloadEvents: const <OnDeviceDownloadEvent>[
+          OnDeviceDownloadFailed('AICore needs Wi-Fi'),
+        ],
+      );
+      final OnDeviceDownloadTracker tracker = OnDeviceDownloadTracker(platform);
+      addTearDown(tracker.dispose);
+
+      tracker.start();
+      await tracker.done;
+      expect(tracker.failed, isTrue);
+      expect(tracker.lastError, 'AICore needs Wi-Fi');
+
+      tracker.start();
+      expect(tracker.lastError, isNull);
+      expect(tracker.failed, isFalse);
+      await tracker.done;
+      expect(tracker.lastError, 'AICore needs Wi-Fi');
+
+      tracker.cancel(); // Even after the failed stream has ended.
+      expect(tracker.lastError, 'AICore needs Wi-Fi');
+      expect(tracker.failed, isTrue);
+      expect(platform.cancelDownloads, 0);
+    });
+
+    test(
+      'tracks completion, clearing it only on start or active cancel',
+      () async {
+        final StreamController<OnDeviceDownloadEvent> live =
+            StreamController<OnDeviceDownloadEvent>();
+        addTearDown(live.close);
+        final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+          downloadEvents: <OnDeviceDownloadEvent>[],
+        )..downloadController = live;
+        final OnDeviceDownloadTracker tracker = OnDeviceDownloadTracker(
+          platform,
+        );
+        addTearDown(tracker.dispose);
+        expect(tracker.completed, isFalse);
+        tracker.start();
+        live.add(const OnDeviceDownloadCompleted());
+        await pumpEventQueue();
+        expect(tracker.completed, isTrue);
+        tracker.cancel();
+        expect(tracker.completed, isFalse);
+
+        platform.downloadController = null;
+        platform.downloadEvents.add(const OnDeviceDownloadCompleted());
+        tracker.start();
+        expect(tracker.completed, isFalse);
+        await tracker.done;
+        expect(tracker.completed, isTrue);
+        tracker.cancel();
+        expect(tracker.completed, isTrue);
+        expect(platform.cancelDownloads, 1);
+
+        tracker.start();
+        expect(tracker.completed, isFalse);
+        await tracker.done;
+      },
+    );
+
+    test(
+      'keeps a stream error description and clears it when cancelling',
+      () async {
+        final StreamController<OnDeviceDownloadEvent> live =
+            StreamController<OnDeviceDownloadEvent>();
+        addTearDown(live.close);
+        final FakeOnDevicePlatform platform = FakeOnDevicePlatform()
+          ..downloadController = live;
+        final OnDeviceDownloadTracker tracker = OnDeviceDownloadTracker(
+          platform,
+        );
+        addTearDown(tracker.dispose);
+        tracker.start();
+        live.addError(StateError('AICore disconnected'));
+        await tracker.done;
+        expect(tracker.failed, isTrue);
+        expect(tracker.lastError, contains('AICore disconnected'));
+
+        final StreamController<OnDeviceDownloadEvent> retry =
+            StreamController<OnDeviceDownloadEvent>();
+        addTearDown(retry.close);
+        platform.downloadController = retry;
+        tracker.start();
+        expect(tracker.lastError, isNull);
+        await pumpEventQueue();
+        expect(retry.hasListener, isTrue);
+        tracker.cancel();
+        await tracker.done;
+        expect(tracker.lastError, isNull);
+        expect(tracker.active, isFalse);
+        expect(platform.cancelDownloads, 1);
       },
     );
   });

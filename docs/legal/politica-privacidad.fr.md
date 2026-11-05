@@ -1,7 +1,7 @@
 # Politique de confidentialité d'Ink Lab
 
 
-Dernière mise à jour : 2026-11-03
+Dernière mise à jour : 2026-11-05
 
 Traduction de courtoisie. Seule la [version espagnole](https://inklab.mainshai.com/es/privacy/) fait foi.
 
@@ -108,7 +108,8 @@ d'abord ce qui quitterait le téléphone, et vous pouvez choisir entre :
   vos couleurs ni vos photos, seulement leur taille. Le développeur ne reçoit pas ces données : Google les traite selon
   ses propres conditions et sa politique de confidentialité (https://policies.google.com/privacy). Si le modèle n'est
   pas sur le téléphone, Android le télécharge une seule fois via les services Google ; ce téléchargement et le modèle
-  sont régis par les conditions de Google. Sur iPhone, il n'y a ni IA sur l'appareil ni ML Kit.
+  sont régis par les conditions de Google. Sur iPhone, ML Kit n'est pas utilisé : l'IA sur l'appareil y est Apple
+  Intelligence (voir le point suivant).
 - **Sur l'iPhone (Apple Intelligence, sous iOS 26 ou ultérieur sur un iPhone compatible) :** votre scénario et vos codes
   couleur sont traités sur votre téléphone par le modèle d'Apple fourni avec Apple Intelligence, via le framework
   Foundation Models d'Apple. L'application ne télécharge pas le modèle (iOS l'installe et le gère), n'utilise aucun autre

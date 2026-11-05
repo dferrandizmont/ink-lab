@@ -14,8 +14,12 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+# Pushes and pull requests run the jobs only in dferrandizmont/ink-lab.
+# Any other copy (forks, mirrors) runs them only when started by hand, so it
+# spends no Actions minutes by surprise.
 jobs:
   legal:
+    if: github.repository == 'dferrandizmont/ink-lab' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -26,6 +30,7 @@ jobs:
 
   app:
     name: Analyze and test
+    if: github.repository == 'dferrandizmont/ink-lab' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

@@ -43,10 +43,18 @@ final class AiSettingsController extends ChangeNotifier {
     required SecretStore secrets,
     required AiService service,
     Stream<AiSettings>? changes,
+    List<Duration> onDeviceSettleDelays = const <Duration>[
+      Duration(seconds: 1),
+      Duration(seconds: 2),
+      Duration(seconds: 3),
+      Duration(seconds: 4),
+      Duration(seconds: 5),
+    ],
   }) {
     _settings = settings;
     _secrets = secrets;
     _service = service;
+    _onDeviceSettleDelays = List<Duration>.unmodifiable(onDeviceSettleDelays);
     _value = settings.value;
     _subscription = (changes ?? settings.changes).listen(_onSettings);
     _download.addListener(_notify);
@@ -55,6 +63,7 @@ final class AiSettingsController extends ChangeNotifier {
   late final AiSettingsRepository _settings;
   late final SecretStore _secrets;
   late final AiService _service;
+  late final List<Duration> _onDeviceSettleDelays;
   late final StreamSubscription<AiSettings> _subscription;
 
   late final ApiKeyProvider _keys = ApiKeyProvider(_secrets);
@@ -82,6 +91,7 @@ final class AiSettingsController extends ChangeNotifier {
   /// Bumped whenever the AI is switched off, so a status read that was
   /// already in flight is ignored when it lands.
   int _onDeviceEpoch = 0;
+  int? _onDeviceSettleEpoch;
   late final OnDeviceDownloadTracker _download = _service.onDeviceDownload;
 
   // Non-secret settings, mirrored for convenient reads.
@@ -171,6 +181,9 @@ final class AiSettingsController extends ChangeNotifier {
   /// only knows about from the operating system status).
   bool get onDeviceDownloadRunning => _download.active;
 
+  /// Whether completion is being awaited or readiness is being rechecked.
+  bool get onDeviceSettling => _onDeviceSettleEpoch == _onDeviceEpoch;
+
   /// Whether the last on-device model download failed.
   bool get onDeviceDownloadFailed => _download.failed;
 
@@ -181,13 +194,12 @@ final class AiSettingsController extends ChangeNotifier {
   }
 
   Future<void> _probeOnDevice() async {
-    if (!enabled) return;
-    await refreshOnDevice();
-    // A download requested before this screen was built is still running.
-    if (!_disposed && enabled && _download.active) {
-      _onDeviceStatus = OnDeviceStatus.downloading;
-      _notify();
-      unawaited(_download.done.then((_) => refreshOnDevice()));
+    if (_disposed || !enabled || onDeviceSettling) return;
+    // Reattach to a running download or recheck one completed off-screen.
+    if (_download.active || _download.completed) {
+      unawaited(_afterOnDeviceDownload(_onDeviceEpoch));
+    } else {
+      await refreshOnDevice();
     }
   }
 
@@ -195,29 +207,89 @@ final class AiSettingsController extends ChangeNotifier {
   /// AI is off: no call reaches the platform, and a result that arrives after
   /// the AI was switched off is dropped.
   Future<void> refreshOnDevice() async {
-    if (!enabled) return;
+    if (_disposed || !enabled) return;
     final int epoch = _onDeviceEpoch;
-    OnDeviceStatus status;
-    try {
-      status = await _service.onDeviceStatus();
-    } catch (_) {
-      status = OnDeviceStatus.unavailable;
-    }
-    if (_disposed || epoch != _onDeviceEpoch || !enabled) return;
-    _onDeviceStatus = status;
+    final OnDeviceStatus status = await _readOnDeviceStatus();
+    if (!_canReadOnDevice(epoch)) return;
+    _onDeviceStatus =
+        _onDeviceSettleEpoch == epoch && status != OnDeviceStatus.available
+        ? OnDeviceStatus.downloading
+        : status;
     _notify();
   }
+
+  Future<OnDeviceStatus> _readOnDeviceStatus() async {
+    try {
+      return await _service.onDeviceStatus();
+    } catch (_) {
+      return OnDeviceStatus.unavailable;
+    }
+  }
+
+  bool _canReadOnDevice(int epoch) =>
+      !_disposed && enabled && epoch == _onDeviceEpoch;
 
   /// Starts the on-device model download. It is owned by the app, not by this
   /// controller: leaving the screen does not cancel it. Progress is read from
   /// the tracker; the state is re-read when it finishes either way.
   Future<void> downloadOnDevice() async {
-    if (!enabled || _download.active) return;
+    if (_disposed ||
+        !enabled ||
+        _download.active ||
+        _onDeviceSettleEpoch == _onDeviceEpoch) {
+      return;
+    }
+    final int epoch = _onDeviceEpoch;
+    _onDeviceSettleEpoch = epoch;
     _onDeviceStatus = OnDeviceStatus.downloading;
     _download.start();
     _notify();
-    await _download.done;
-    await refreshOnDevice();
+    await _afterOnDeviceDownload(epoch);
+  }
+
+  Future<void> _afterOnDeviceDownload(int epoch) async {
+    _onDeviceSettleEpoch = epoch;
+    _onDeviceStatus = OnDeviceStatus.downloading;
+    _notify();
+    try {
+      await _download.done;
+      if (!_canReadOnDevice(epoch)) return;
+      if (_download.failed) {
+        // The OS may still be downloading (or already ready) after a failure.
+        final OnDeviceStatus status = await _readOnDeviceStatus();
+        if (_canReadOnDevice(epoch)) {
+          _onDeviceStatus = status;
+          _notify();
+        }
+        return;
+      }
+      // Read once immediately, then give AICore time to publish readiness.
+      for (
+        int attempt = 0;
+        attempt <= _onDeviceSettleDelays.length;
+        attempt++
+      ) {
+        if (attempt > 0) {
+          await Future<void>.delayed(_onDeviceSettleDelays[attempt - 1]);
+        }
+        if (!_canReadOnDevice(epoch)) return;
+        final OnDeviceStatus status = await _readOnDeviceStatus();
+        if (!_canReadOnDevice(epoch)) return;
+        if (status == OnDeviceStatus.available ||
+            attempt == _onDeviceSettleDelays.length) {
+          _onDeviceStatus = status == OnDeviceStatus.available
+              ? OnDeviceStatus.available
+              : OnDeviceStatus.downloading;
+          _notify();
+          return;
+        }
+      }
+    } finally {
+      if (_onDeviceSettleEpoch == epoch) {
+        _onDeviceSettleEpoch = null;
+        _notify();
+      }
+    }
   }
 
   Future<void> refreshKey() async {

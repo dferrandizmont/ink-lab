@@ -307,6 +307,8 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
     final OnDeviceStatus status = _controller.onDeviceStatus;
     final TextStyle note = AppTypography.secondary.copyWith(color: ink.fg2);
     final bool downloading = status == OnDeviceStatus.downloading;
+    final bool busy =
+        _controller.onDeviceDownloadRunning || _controller.onDeviceSettling;
     return _Block(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,16 +336,18 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
           if (status == OnDeviceStatus.downloadable || downloading) ...<Widget>[
             const SizedBox(height: InkSpacing.group),
             _ActionWithProgress(
-              busy: downloading,
+              busy: busy,
               button: InkButton.secondary(
                 key: const ValueKey<String>('ai-on-device-download'),
                 label: context.l10n.settingsAiOnDeviceDownload,
                 icon: InkIcons.download,
-                onPressed: downloading ? null : _controller.downloadOnDevice,
+                onPressed: busy ? null : _controller.downloadOnDevice,
               ),
             ),
           ],
-          if (downloading && _controller.onDeviceBytes > 0) ...<Widget>[
+          if (downloading &&
+              _controller.onDeviceDownloadRunning &&
+              _controller.onDeviceBytes > 0) ...<Widget>[
             const SizedBox(height: InkSpacing.s8),
             Text(
               context.l10n.onDeviceProgressText(
@@ -365,8 +369,8 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
           ] else if (downloading &&
               (_controller.onDeviceStalled ||
                   !_controller.onDeviceDownloadRunning)) ...<Widget>[
-            // No progress event for a while, or a download the app did not
-            // start (AICore keeps it queued): explain the wait calmly.
+            // No progress, a queued OS download, or a completed download that
+            // AICore is still preparing: explain the wait calmly.
             const SizedBox(height: InkSpacing.s8),
             Text(
               (_ios

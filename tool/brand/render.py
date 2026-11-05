@@ -9,7 +9,6 @@ repo root:
 
 Outputs
     assets/brand/icon.svg, icon-foreground.svg, icon-monochrome.svg
-    assets/brand/options/*.svg are static round-2 concept references
     assets/brand/png/*.png           inputs for flutter_launcher_icons / splash
     docs/readme/<lang>/header.png for en, es, de, fr, pt, it
     docs/release/store/feature-graphic.png (en), feature-graphic-<lang>.png

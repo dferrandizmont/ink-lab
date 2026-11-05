@@ -31,6 +31,8 @@ final class OnDeviceDownloadTracker extends ChangeNotifier {
 
   bool _active = false;
   bool _failed = false;
+  bool _completed = false;
+  String? _lastError;
   bool _stalled = false;
   bool _gotProgress = false;
   int _bytes = 0;
@@ -41,6 +43,12 @@ final class OnDeviceDownloadTracker extends ChangeNotifier {
 
   /// Whether the last download failed.
   bool get failed => _failed;
+
+  /// Whether the platform reported that the last download completed.
+  bool get completed => _completed;
+
+  /// Description of the last failure, for diagnostics only.
+  String? get lastError => _lastError;
 
   /// Whether the download has been silent for [noProgressAfter].
   bool get stalled => _stalled;
@@ -62,6 +70,8 @@ final class OnDeviceDownloadTracker extends ChangeNotifier {
     if (_active) return;
     _active = true;
     _failed = false;
+    _completed = false;
+    _lastError = null;
     _stalled = false;
     _gotProgress = false;
     _bytes = 0;
@@ -99,23 +109,33 @@ final class OnDeviceDownloadTracker extends ChangeNotifier {
               _bytes = bytes;
               if (totalBytes > 0) _totalBytes = totalBytes;
               notifyListeners();
-            case OnDeviceDownloadFailed():
+            case OnDeviceDownloadFailed(:final message):
               _failed = true;
+              _lastError = message;
             case OnDeviceDownloadCompleted():
-              break;
+              _completed = true;
           }
         },
-        onError: (Object _) {
+        onError: (Object error) {
           _failed = true;
+          _lastError = _describeError(error);
           finish();
         },
         onDone: finish,
         cancelOnError: true,
       );
-    } catch (_) {
+    } catch (error) {
       _failed = true;
+      _lastError = _describeError(error);
       finish();
     }
+  }
+
+  String _describeError(Object error) {
+    final String description = error.toString().split('\n').first;
+    return description.length <= 240
+        ? description
+        : '${description.substring(0, 240)}…';
   }
 
   /// Stops the running download (for example when the AI is turned off): the
@@ -123,6 +143,8 @@ final class OnDeviceDownloadTracker extends ChangeNotifier {
   /// Does nothing when no download runs.
   void cancel() {
     if (!_active) return;
+    _lastError = null;
+    _completed = false;
     _active = false;
     _failed = false;
     _stalled = false;

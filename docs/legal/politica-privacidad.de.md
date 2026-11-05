@@ -1,7 +1,7 @@
 # Datenschutzerklärung von Ink Lab
 
 
-Zuletzt aktualisiert: 2026-11-03
+Zuletzt aktualisiert: 2026-11-05
 
 Unverbindliche Übersetzung. Maßgeblich ist die [spanische Fassung](https://inklab.mainshai.com/es/privacy/).
 
@@ -105,8 +105,8 @@ Handy verlassen würde, und Sie können wählen zwischen:
   enthält nicht den Inhalt Ihrer Anfragen, Ihre Farben oder Ihre Fotos, nur deren Größe. Der Entwickler erhält diese
   Daten nicht: Google verarbeitet sie nach seinen eigenen Bedingungen und seiner Datenschutzerklärung
   (https://policies.google.com/privacy). Ist das Modell nicht auf dem Handy, lädt Android es einmalig über die
-  Google-Dienste herunter; dieser Download und das Modell unterliegen den Bedingungen von Google. Auf dem iPhone gibt es
-  weder KI auf dem Gerät noch ML Kit.
+  Google-Dienste herunter; dieser Download und das Modell unterliegen den Bedingungen von Google. Auf dem iPhone wird
+  ML Kit nicht verwendet: Die KI auf dem Gerät ist dort Apple Intelligence (siehe nächster Punkt).
 - **Auf dem iPhone (Apple Intelligence, ab iOS 26 auf einem kompatiblen iPhone):** Ihr Szenario und Ihre Farbcodes
   werden auf Ihrem Handy von Apples Modell verarbeitet, das mit Apple Intelligence geliefert wird, über Apples
   Framework Foundation Models. Die App lädt das Modell nicht herunter (iOS installiert und verwaltet es), nutzt für diese

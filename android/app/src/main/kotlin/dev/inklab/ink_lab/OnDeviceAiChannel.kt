@@ -1,12 +1,14 @@
 package dev.inklab.ink_lab
 
 import android.os.Build
+import android.util.Log
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -201,7 +203,7 @@ internal object OnDeviceDownloads {
     fun start(nano: GeminiNanoClient) {
         if (job?.isActive == true) return
         last = null
-        job = appScope.launch {
+        val currentJob = appScope.launch(start = CoroutineStart.LAZY) {
             try {
                 nano.download { event ->
                     last = event
@@ -210,8 +212,13 @@ internal object OnDeviceDownloads {
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {
+                Log.w("InkLabOnDevice", "${e.javaClass.simpleName}: ${e.message.orEmpty()}")
                 sink?.success(mapOf("type" to "failed", "message" to (e.message ?: "")))
+            } finally {
+                if (job === coroutineContext[Job]) nano.reset()
             }
         }
+        job = currentJob
+        currentJob.start()
     }
 }

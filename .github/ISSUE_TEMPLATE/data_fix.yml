@@ -1,0 +1,106 @@
+name: Marker set / data fix
+description: Report a wrong colour, name or code, or propose a new marker set
+title: "[Data]: "
+labels:
+  - data
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for **colour data** problems: a wrong hex value, a wrong
+        name, a wrong code, a marker that belongs to the wrong set, or a
+        request to add a new marker set.
+
+        Please do not open a pull request that hand-edits the generated JSON —
+        the datasets are regenerated from the scripts in `tools/`, so the fix
+        has to land there. See `CONTRIBUTING.md`.
+
+  - type: radio
+    id: kind
+    attributes:
+      label: What is this about?
+      options:
+        - A wrong value in an existing dataset
+        - A new marker set or collection to add
+        - A new brand to support
+    validations:
+      required: true
+
+  - type: dropdown
+    id: brand
+    attributes:
+      label: Brand
+      options:
+        - Ohuhu Oahu
+        - DecoTime
+        - Copic
+        - Finecolour
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: set
+    attributes:
+      label: Set or collection
+      description: The pack or set the marker belongs to, if you know it.
+      placeholder: "classic_120"
+
+  - type: input
+    id: code
+    attributes:
+      label: Marker code
+      description: The code as printed on the marker.
+      placeholder: "34"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: field
+    attributes:
+      label: Which value is wrong?
+      options:
+        - Hex / colour value
+        - Name
+        - Code (new or legacy code is wrong)
+        - Set membership
+        - The marker is missing entirely
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current value in the app
+      description: What Ink Lab shows today.
+      placeholder: "#F5F5DC"
+
+  - type: textarea
+    id: correct
+    attributes:
+      label: Correct value
+      description: What it should be, and how you know.
+      placeholder: "#F4E76B — sampled from the swatch on my marker"
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Public reference
+      description: A link to a public source that supports the correction, if you have one.
+      placeholder: "https://example.org/colour-cards"
+
+  - type: checkboxes
+    id: physical
+    attributes:
+      label: Physical marker
+      options:
+        - label: I own the marker and can compare it with the app
+        - label: I have a photo of the swatch I can attach
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: "For a new set: the brand, the set name and where the colour list comes from."

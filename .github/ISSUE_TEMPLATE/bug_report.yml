@@ -1,0 +1,93 @@
+name: Bug report
+description: Something does not work as expected
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug.
+
+        Please do not report security issues here — use the private channel
+        described in `SECURITY.md` instead.
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      description: The version shown in Settings (version name and build number).
+      placeholder: "0.1.0 (1)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Android
+        - iOS
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Device and OS version
+      description: Phone model, Android version or iOS version.
+      placeholder: "Pixel 8, Android 15"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you see? Include the exact wording of any error message.
+      placeholder: The palette tab shows "No markers found" although I own 24 markers.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps, starting from a freshly opened app.
+      placeholder: |
+        1. Open the Swatches tab
+        2. Select the "Ohuhu Oahu" collection
+        3. Tap the favourite star on code 120
+    validations:
+      required: true
+
+  - type: textarea
+    id: visual
+    attributes:
+      label: Screenshot or recording
+      description: Drag an image here, or paste a link. Leave empty if not visual.
+
+  - type: checkboxes
+    id: ai
+    attributes:
+      label: AI-related
+      options:
+        - label: This happens in an AI suggestion feature
+        - label: This happens with the on-device AI advisor
+        - label: This happens with the bring-your-own-key (cloud) advisor
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the existing issues and found no duplicate
+        - label: I am using the latest released version

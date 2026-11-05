@@ -12,6 +12,7 @@ import 'package:ink_lab/data/data.dart';
 import 'package:ink_lab/ui/pages/settings/ai_section.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
+import 'package:ink_lab/ui/widgets/ink_button.dart';
 import 'package:ink_lab/ui/widgets/ink_chip.dart';
 import 'package:ink_lab/ui/widgets/section_card.dart';
 
@@ -236,6 +237,152 @@ void main() {
       );
     }
 
+    testWidgets('keeps preparing and disables download until AICore is ready', (
+      WidgetTester tester,
+    ) async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.downloadable,
+        downloadEvents: const <OnDeviceDownloadEvent>[
+          OnDeviceDownloadStarted(totalBytes: 1024),
+          OnDeviceDownloadProgress(1024, totalBytes: 1024),
+          OnDeviceDownloadCompleted(),
+        ],
+        statusesAfterDownload: <OnDeviceStatus>[
+          OnDeviceStatus.downloadable,
+          OnDeviceStatus.downloading,
+          OnDeviceStatus.available,
+        ],
+      );
+      final AppScope scope = await pumpSection(
+        tester,
+        provider: AiProvider.onDevice,
+        enabled: true,
+        onDevice: platform,
+      );
+      await tester.tap(find.byKey(downloadKey));
+      await tester.pump();
+
+      expect(scope.aiService.onDeviceDownload.active, isFalse);
+      expect(find.byKey(preparingKey), findsOneWidget);
+      expect(
+        tester.widget<InkButton>(find.byKey(downloadKey)).onPressed,
+        isNull,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('ai-on-device-progress')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('ai-on-device-error')),
+        findsNothing,
+      );
+
+      // Check again must not re-enable Download while AICore is settling.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('ai-on-device-check-again')),
+      );
+      await tester.pump();
+      expect(find.byKey(preparingKey), findsOneWidget);
+      expect(
+        tester.widget<InkButton>(find.byKey(downloadKey)).onPressed,
+        isNull,
+      );
+
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump();
+      expect(find.text(l10n.settingsAiOnDeviceReady), findsOneWidget);
+      expect(find.byKey(downloadKey), findsNothing);
+      expect(find.byKey(preparingKey), findsNothing);
+      expect(platform.downloads, 1);
+    });
+
+    for (final OnDeviceStatus residual in <OnDeviceStatus>[
+      OnDeviceStatus.unavailable,
+      OnDeviceStatus.downloadable,
+      OnDeviceStatus.downloading,
+    ]) {
+      testWidgets('enables Download after residual ${residual.name} settles', (
+        WidgetTester tester,
+      ) async {
+        final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+          currentStatus: OnDeviceStatus.downloadable,
+          downloadEvents: const <OnDeviceDownloadEvent>[
+            OnDeviceDownloadCompleted(),
+          ],
+          statusAfterDownload: residual,
+        );
+        await pumpSection(
+          tester,
+          provider: AiProvider.onDevice,
+          enabled: true,
+          onDevice: platform,
+        );
+        await tester.tap(find.byKey(downloadKey));
+        await tester.pump();
+        expect(
+          tester.widget<InkButton>(find.byKey(downloadKey)).onPressed,
+          isNull,
+        );
+
+        for (final int seconds in <int>[1, 2, 3, 4, 5]) {
+          await tester.pump(Duration(seconds: seconds));
+        }
+        await tester.pump();
+
+        expect(find.text(l10n.settingsAiProviderOnDevice), findsOneWidget);
+        expect(find.text(l10n.settingsAiOnDeviceDownloading), findsOneWidget);
+        expect(find.byKey(preparingKey), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey<String>('ai-on-device-check-again')),
+          findsOneWidget,
+        );
+        expect(
+          tester.widget<InkButton>(find.byKey(downloadKey)).onPressed,
+          isNotNull,
+        );
+        expect(platform.downloads, 1);
+      });
+    }
+
+    testWidgets('reentry after completion runs the settle loop again', (
+      WidgetTester tester,
+    ) async {
+      final (platform, live) = liveFake(OnDeviceStatus.downloadable);
+      final AppScope scope = await pumpSection(
+        tester,
+        provider: AiProvider.onDevice,
+        enabled: true,
+        onDevice: platform,
+      );
+      await tester.tap(find.byKey(downloadKey));
+      await tester.pump();
+      await tester.pumpWidget(const SizedBox.shrink());
+
+      live.add(const OnDeviceDownloadCompleted());
+      await live.close();
+      await tester.pump();
+      expect(scope.aiService.onDeviceDownload.completed, isTrue);
+      expect(scope.aiService.onDeviceDownload.active, isFalse);
+      platform.currentStatus = OnDeviceStatus.unavailable;
+      final int before = platform.statusCalls;
+
+      await tester.pumpWidget(sectionApp(scope));
+      await tester.pump();
+      expect(find.byKey(preparingKey), findsOneWidget);
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsOneWidget);
+      expect(
+        tester.widget<InkButton>(find.byKey(downloadKey)).onPressed,
+        isNull,
+      );
+
+      platform.currentStatus = OnDeviceStatus.available;
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump();
+      expect(find.text(l10n.settingsAiOnDeviceReady), findsOneWidget);
+      expect(platform.statusCalls - before, 2);
+      expect(platform.downloads, 1);
+    });
+
     testWidgets('shows bytes, total and percentage from the plugin', (
       WidgetTester tester,
     ) async {
@@ -322,6 +469,10 @@ void main() {
       );
       // A download the app did not start: the calm line shows at once.
       expect(find.byKey(preparingKey), findsOneWidget);
+      expect(
+        tester.widget<InkButton>(find.byKey(downloadKey)).onPressed,
+        isNotNull,
+      );
       final int before = platform.statusCalls;
 
       platform.currentStatus = OnDeviceStatus.available;

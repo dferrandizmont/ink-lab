@@ -54,8 +54,7 @@ Excluded:
 | Files or group | Reason |
 |---|---|
 | `.mcp.json`, `.claude/`, `.shots/`, `.handoff.md`, `.plan-gratis.md`, `CLAUDE.md`, `AGENTS.md` | Internal configuration and agent instructions |
-| `docs/HANDOFF.md` | Internal handoff between work sessions |
-| `docs/DESIGN_SPEC.md`, `docs/design-mockups/` | Internal design specification and mockups; some code comments still cite them |
+| `docs/DESIGN_SPEC.md` | Internal design specification; some code comments still cite it |
 | `docs/release/` (`STORE_RELEASE.md`, `MAC_IOS_SETUP.md`) | Internal store plan, pending decisions and Mac steps; some code comments still cite them |
 | `docs/ROADMAP.md` | Internal schedule, out of date; refresh it before publishing |
 | APK/AAB, keystores, `key.properties`, `.env*` | Not public sources; keys never go in the repository |

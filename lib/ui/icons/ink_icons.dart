@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 /// Line icons drawn on a 24×24 grid, stroke 2, round caps and joins.
 ///
-/// Geometry follows Feather (MIT, Cole Bemis; see NOTICE.md) and the
-/// design G mockups.
+/// Geometry follows Feather (MIT, Cole Bemis; see NOTICE.md) and design G
+/// (docs/DESIGN_SPEC.md).
 enum InkIcons {
   /// Swatches tab: 2×2 squares.
   grid,

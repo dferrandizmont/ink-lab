@@ -8,6 +8,12 @@ will be the production launch in the stores. Every version ships on
 [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
 so they can skip numbers.
 
+## 0.10.2 · 2026-11-05
+
+- On-device AI (Android): after downloading Gemini Nano, the app now waits for Android to finish preparing the model
+  instead of showing the Download button again; before, it only worked after restarting the app (reported by a tester
+  on a Pixel 9 Pro XL). A slow or transient status answer no longer hides the on-device option.
+
 ## 0.10.1 · 2026-11-03
 
 First iPhone build, tested on an iPhone XR (iOS 18) and in the simulator:
