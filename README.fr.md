@@ -28,12 +28,10 @@ L’IA est facultative et désactivée par défaut.
 <p>
   <a href="https://play.google.com/apps/testing/es.inklab.app"><img src="https://img.shields.io/badge/Google_Play-B%C3%AAta-414141?logo=googleplay&amp;style=for-the-badge" alt="Bêta sur Google Play"></a>
   <a href="https://github.com/dferrandizmont/ink-lab/releases/latest"><img src="https://img.shields.io/badge/Disponible_sur-GitHub-181717?logo=github&amp;style=for-the-badge" alt="Disponible sur GitHub"></a>
-  <!--
-  <a href="[APP_STORE_LINK]"><img src="https://img.shields.io/badge/App_Store-T%C3%A9l%C3%A9charger-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Disponible sur l’App Store"></a>
-  -->
+  <a href="https://apps.apple.com/app/ink-lab-marker-palettes/id6830184034"><img src="https://img.shields.io/badge/App_Store-T%C3%A9l%C3%A9charger-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Disponible sur l’App Store"></a>
 </p>
 
-Android sur GitHub et en test fermé sur Google Play. iOS arrivera plus tard.
+iPhone sur l’App Store. Android sur GitHub et en test fermé sur Google Play.
 
 <details>
 <summary>Rejoindre la bêta Google Play</summary>

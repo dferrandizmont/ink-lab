@@ -27,12 +27,10 @@ Die KI ist optional und standardmäßig aus.
 <p>
   <a href="https://play.google.com/apps/testing/es.inklab.app"><img src="https://img.shields.io/badge/Google_Play-Beta-414141?logo=googleplay&amp;style=for-the-badge" alt="Beta bei Google Play"></a>
   <a href="https://github.com/dferrandizmont/ink-lab/releases/latest"><img src="https://img.shields.io/badge/Verf%C3%BCgbar_auf-GitHub-181717?logo=github&amp;style=for-the-badge" alt="Verfügbar auf GitHub"></a>
-  <!--
-  <a href="[APP_STORE_LINK]"><img src="https://img.shields.io/badge/App_Store-Herunterladen-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Im App Store verfügbar"></a>
-  -->
+  <a href="https://apps.apple.com/app/ink-lab-marker-palettes/id6830184034"><img src="https://img.shields.io/badge/App_Store-Herunterladen-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Im App Store verfügbar"></a>
 </p>
 
-Android auf GitHub und in geschlossener Testphase bei Google Play. iOS kommt später.
+iPhone im App Store. Android auf GitHub und in geschlossener Testphase bei Google Play.
 
 <details>
 <summary>Der Google-Play-Beta beitreten</summary>
