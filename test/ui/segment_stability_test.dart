@@ -13,6 +13,7 @@ import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
 import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
+import 'package:ink_lab/ui/widgets/ink_adaptive.dart';
 import 'package:ink_lab/ui/widgets/ink_chip.dart';
 import 'package:ink_lab/ui/widgets/ink_sheet.dart';
 import 'package:ink_lab/ui/widgets/ink_search_field.dart';
@@ -66,9 +67,13 @@ Future<void> _pickType(WidgetTester tester, String rowKey) async {
 
 /// The vertical list of a page: the chip rows and the search field also scroll,
 /// but sideways, so they are not the list to walk.
-Finder _verticalScrollable() => find.byWidgetPredicate(
-  (Widget w) => w is Scrollable && w.axisDirection == AxisDirection.down,
-);
+/// On a wide tablet the Swatches detail pane has a vertical list of its own;
+/// the page's is the first one.
+Finder _verticalScrollable() => find
+    .byWidgetPredicate(
+      (Widget w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+    )
+    .first;
 
 void main() {
   stabilityTest('ideas: Ideas | Diary keeps the header and the control', (
@@ -256,25 +261,41 @@ void main() {
     await tester.tap(swatch);
     await tester.pumpAndSettle();
     // The sheet at the full height: its header, its action and the row of
-    // the own colour are on screen together with the groups below.
-    await tester.drag(
-      find
-          .descendant(
-            of: find.byType(InkSheet),
-            matching: find.byType(Scrollable),
-          )
-          .first,
-      const Offset(0, -600),
-    );
-    await tester.pumpAndSettle();
-    // The header of the group of a brand: the group itself grows with its
-    // results, and tapping one of those would open another marker.
-    final Finder groupHeader = find
+    // the own colour are on screen at the top, and the groups of the other
+    // brands are far below them.
+    // On a wide tablet the detail opens in the pane next to the grid.
+    final Finder sheetScrollable = find
         .descendant(
-          of: _key('swatch-equivalents-copic'),
-          matching: find.byType(InkWell),
+          of: find.byWidgetPredicate(
+            (Widget w) => w is InkSheet || w is InkDetailPane,
+          ),
+          matching: find.byType(Scrollable),
         )
         .first;
+    await tester.drag(sheetScrollable, const Offset(0, -600));
+    await tester.pumpAndSettle();
+    final ScrollPosition position = tester
+        .state<ScrollableState>(sheetScrollable)
+        .position;
+    // The pane of a wide tablet does not grow: the drag scrolled it. Every
+    // segment is measured at the top.
+    position.jumpTo(0);
+    await tester.pumpAndSettle();
+    // Switches something far below the anchors and comes back to the top,
+    // where they are measured: nothing above may have moved.
+    Future<void> tapBelow(Finder target) async {
+      await tester.scrollUntilVisible(target, 200, scrollable: sheetScrollable);
+      await tester.pumpAndSettle();
+      // The header of the group: the centre of an open group is one of its
+      // results, and tapping that would open another marker.
+      await tester.tap(
+        find.descendant(of: target, matching: find.byType(InkWell)).first,
+      );
+      await tester.pumpAndSettle();
+      position.jumpTo(0);
+      await tester.pumpAndSettle();
+    }
+
     await expectStableAcrossSegments(
       tester,
       env: env,
@@ -285,15 +306,21 @@ void main() {
       },
       segments: <StabilitySegment>[
         (name: 'every brand', activate: () async {}),
-        (name: 'a group open', activate: () => tester.tap(groupHeader)),
-        (name: 'the group closed', activate: () => tester.tap(groupHeader)),
+        (
+          name: 'all brands open',
+          activate: () => tapBelow(_key('swatch-equivalents-all')),
+        ),
+        (
+          name: 'all brands closed',
+          activate: () => tapBelow(_key('swatch-equivalents-all')),
+        ),
         (
           name: 'only mine',
-          activate: () => tester.tap(_key('swatch-equivalents-only-mine')),
+          activate: () => tapBelow(_key('swatch-equivalents-only-mine')),
         ),
         (
           name: 'every brand again',
-          activate: () => tester.tap(_key('swatch-equivalents-only-mine')),
+          activate: () => tapBelow(_key('swatch-equivalents-only-mine')),
         ),
       ],
     );

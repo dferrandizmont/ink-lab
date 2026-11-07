@@ -48,6 +48,37 @@ final class BrandEquivalentsIndex {
         color.colorId,
   };
 
+  /// The markers of every brand the user owns and can use, in the order of
+  /// the brands: the ones in [driedIds] are left out. The user's own colours
+  /// are already in the hex of each marker.
+  List<MarkerColor> ownedUsable(
+    AppSettings settings, {
+    Set<String> driedIds = const <String>{},
+  }) => <MarkerColor>[
+    for (final MapEntry<MarkerBrand, List<MarkerColor>> entry
+        in _byBrand.entries)
+      ...ownedColors(
+        colors: entry.value,
+        brand: entry.key,
+        ownedSetIds: settings.ownedSetIds,
+        ownedMarkerCodes: settings.extraMarkerIds,
+        driedColorIds: driedIds,
+      ),
+  ];
+
+  /// The ids of the brands the user owns at least one marker of.
+  Set<String> ownedBrandIds(AppSettings settings) => <String>{
+    for (final MapEntry<MarkerBrand, List<MarkerColor>> entry
+        in _byBrand.entries)
+      if (ownedColors(
+        colors: entry.value,
+        brand: entry.key,
+        ownedSetIds: settings.ownedSetIds,
+        ownedMarkerCodes: settings.extraMarkerIds,
+      ).isNotEmpty)
+        entry.key.id,
+  };
+
   /// The closest markers of the other brands to [marker], [limit] per brand.
   ///
   /// With [onlyMine] only the markers the user owns compete, and the ones

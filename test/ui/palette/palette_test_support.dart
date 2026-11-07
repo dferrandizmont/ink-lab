@@ -8,6 +8,7 @@ import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
+import 'package:ink_lab/ui/screen_awake.dart';
 import 'package:ink_lab/ui/share/share_sink.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 
@@ -30,8 +31,11 @@ AppScope paletteScope({
   AiService? aiService,
   Future<bool> Function(Uri uri)? launchEmail,
   ShareSink? shareSink,
+  ScreenAwake? screenAwake,
+  StoreReviewer? storeReviewer,
 }) => AppScope.inMemory(
   markers: diskMarkerRepository(),
+  storeReviewer: storeReviewer,
   secrets: secrets,
   aiSettings: aiSettings,
   aiService: aiService,
@@ -42,10 +46,26 @@ AppScope paletteScope({
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),
     home: Scaffold(
-      body: PalettePage(launchEmail: launchEmail, shareSink: shareSink),
+      body: PalettePage(
+        launchEmail: launchEmail,
+        shareSink: shareSink,
+        screenAwake: screenAwake ?? const _NoScreenAwake(),
+      ),
     ),
   ),
 );
+
+/// A screen-awake seam that does nothing, so a test never reaches the
+/// wakelock plugin.
+class _NoScreenAwake implements ScreenAwake {
+  const _NoScreenAwake();
+
+  @override
+  Future<void> enable() async {}
+
+  @override
+  Future<void> disable() async {}
+}
 
 /// Pumps the palette page inside a fresh in-memory scope.
 ///
@@ -62,6 +82,8 @@ Future<AppScope> pumpPalette(
   AiService? aiService,
   Future<bool> Function(Uri uri)? launchEmail,
   ShareSink? shareSink,
+  ScreenAwake? screenAwake,
+  StoreReviewer? storeReviewer,
 }) async {
   tester.view.physicalSize = const Size(600, 3000);
   tester.view.devicePixelRatio = 1.0;
@@ -73,6 +95,8 @@ Future<AppScope> pumpPalette(
     aiService: aiService,
     launchEmail: launchEmail,
     shareSink: shareSink,
+    screenAwake: screenAwake,
+    storeReviewer: storeReviewer,
   );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);

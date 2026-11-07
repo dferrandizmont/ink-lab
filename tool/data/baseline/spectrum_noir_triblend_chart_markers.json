@@ -1,0 +1,386 @@
+[
+  {
+    "name": "Dark Red Blend",
+    "tones": [
+      "DR1",
+      "DR3",
+      "DR4"
+    ]
+  },
+  {
+    "name": "Dark Red Shades",
+    "tones": [
+      "DR5",
+      "DR6",
+      "DR7"
+    ]
+  },
+  {
+    "name": "Coral Blend",
+    "tones": [
+      "CR1",
+      "CR3",
+      "CR6"
+    ]
+  },
+  {
+    "name": "Coral Shades",
+    "tones": [
+      "CR7",
+      "CR8",
+      "CR10"
+    ]
+  },
+  {
+    "name": "Orange Blend",
+    "tones": [
+      "OR1",
+      "OR2",
+      "OR3"
+    ]
+  },
+  {
+    "name": "Burnt Orange Blend",
+    "tones": [
+      "BO1",
+      "BO2",
+      "BO4"
+    ]
+  },
+  {
+    "name": "Gold Yellow Blend",
+    "tones": [
+      "GY2",
+      "GY3",
+      "GY5"
+    ]
+  },
+  {
+    "name": "Light Yellow Blend",
+    "tones": [
+      "LY1",
+      "LY2",
+      "LY3"
+    ]
+  },
+  {
+    "name": "Citrus Blend",
+    "tones": [
+      "CT1",
+      "CT2",
+      "CT3"
+    ]
+  },
+  {
+    "name": "Yellow Green Blend",
+    "tones": [
+      "YG1",
+      "YG2",
+      "YG3"
+    ]
+  },
+  {
+    "name": "Citrus Green Blend",
+    "tones": [
+      "CG1",
+      "CG2",
+      "CG3"
+    ]
+  },
+  {
+    "name": "Light Green Blend",
+    "tones": [
+      "LG1",
+      "LG3",
+      "LG5"
+    ]
+  },
+  {
+    "name": "Dull Green Blend",
+    "tones": [
+      "DG1",
+      "DG2",
+      "DG3"
+    ]
+  },
+  {
+    "name": "Alpine Green Blend",
+    "tones": [
+      "AG1",
+      "AG3",
+      "AG5"
+    ]
+  },
+  {
+    "name": "Jade Green Blend",
+    "tones": [
+      "JG1",
+      "JG2",
+      "JG3"
+    ]
+  },
+  {
+    "name": "Jade Green Shades",
+    "tones": [
+      "JG4",
+      "JG5",
+      "JG7"
+    ]
+  },
+  {
+    "name": "Green Turquoise Blend",
+    "tones": [
+      "GT1",
+      "GT2",
+      "GT3"
+    ]
+  },
+  {
+    "name": "Aqua Blue Blend",
+    "tones": [
+      "AB1",
+      "AB2",
+      "AB3"
+    ]
+  },
+  {
+    "name": "Blue Turquoise Blend",
+    "tones": [
+      "BT3",
+      "BT4",
+      "BT5"
+    ]
+  },
+  {
+    "name": "Blue Turquoise Shades",
+    "tones": [
+      "BT7",
+      "BT8",
+      "BT9"
+    ]
+  },
+  {
+    "name": "Ice Blue Blend",
+    "tones": [
+      "IB1",
+      "IB2",
+      "IB3"
+    ]
+  },
+  {
+    "name": "Vintage Blue Blend",
+    "tones": [
+      "VB1",
+      "VB2",
+      "VB3"
+    ]
+  },
+  {
+    "name": "True Blue Blend",
+    "tones": [
+      "TB2",
+      "TB3",
+      "TB4"
+    ]
+  },
+  {
+    "name": "True Blue Shades",
+    "tones": [
+      "TB5",
+      "TB6",
+      "TB9"
+    ]
+  },
+  {
+    "name": "Lavender Blend",
+    "tones": [
+      "LV1",
+      "LV2",
+      "LV3"
+    ]
+  },
+  {
+    "name": "Hydrangea Blend",
+    "tones": [
+      "HB1",
+      "HB2",
+      "HB3"
+    ]
+  },
+  {
+    "name": "Purple Blend",
+    "tones": [
+      "PL2",
+      "PL3",
+      "PL4"
+    ]
+  },
+  {
+    "name": "Dusty Purple Blend",
+    "tones": [
+      "DP1",
+      "DP2",
+      "DP3"
+    ]
+  },
+  {
+    "name": "Pink Violet Blend",
+    "tones": [
+      "PV2",
+      "PV3",
+      "PV4"
+    ]
+  },
+  {
+    "name": "Bright Pink Blend",
+    "tones": [
+      "BP1",
+      "BP2",
+      "BP3"
+    ]
+  },
+  {
+    "name": "Bright Pink Shades",
+    "tones": [
+      "BP4",
+      "BP6",
+      "BP7"
+    ]
+  },
+  {
+    "name": "Magenta Blend",
+    "tones": [
+      "MG1",
+      "MG2",
+      "MG3"
+    ]
+  },
+  {
+    "name": "Pale Pink Blend",
+    "tones": [
+      "PP1",
+      "PP2",
+      "PP3"
+    ]
+  },
+  {
+    "name": "Pale Pink Shades",
+    "tones": [
+      "PP4",
+      "PP5",
+      "PP6"
+    ]
+  },
+  {
+    "name": "Antique Pink Blend",
+    "tones": [
+      "AP2",
+      "AP3",
+      "AP4"
+    ]
+  },
+  {
+    "name": "Fair Skin Blend",
+    "tones": [
+      "FS6",
+      "FS7",
+      "FS8"
+    ]
+  },
+  {
+    "name": "Tan Blend",
+    "tones": [
+      "TN1",
+      "TN2",
+      "TN4"
+    ]
+  },
+  {
+    "name": "Tan Shades",
+    "tones": [
+      "TN6",
+      "TN8",
+      "TN9"
+    ]
+  },
+  {
+    "name": "Gold Brown Blend",
+    "tones": [
+      "GB1",
+      "GB3",
+      "GB5"
+    ]
+  },
+  {
+    "name": "Gold Brown Shades",
+    "tones": [
+      "GB6",
+      "GB7",
+      "GB10"
+    ]
+  },
+  {
+    "name": "Muted Brown Blend",
+    "tones": [
+      "MB1",
+      "MB2",
+      "MB4"
+    ]
+  },
+  {
+    "name": "Red Brown Blend",
+    "tones": [
+      "RB1",
+      "RB2",
+      "RB3"
+    ]
+  },
+  {
+    "name": "Earth Brown Blend",
+    "tones": [
+      "EB1",
+      "EB2",
+      "EB3"
+    ]
+  },
+  {
+    "name": "Earth Brown Shades",
+    "tones": [
+      "EB5",
+      "EB6",
+      "EB7"
+    ]
+  },
+  {
+    "name": "Brown Grey Blend",
+    "tones": [
+      "BG2",
+      "BG3",
+      "BG4"
+    ]
+  },
+  {
+    "name": "Brown Grey Shades",
+    "tones": [
+      "BG5",
+      "BG6",
+      "BG7"
+    ]
+  },
+  {
+    "name": "Ice Grey Blend",
+    "tones": [
+      "IG2",
+      "IG4",
+      "IG5"
+    ]
+  },
+  {
+    "name": "Ice Grey Shades",
+    "tones": [
+      "IG6",
+      "IG8",
+      "IG9"
+    ]
+  }
+]

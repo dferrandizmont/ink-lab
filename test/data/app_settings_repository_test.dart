@@ -73,6 +73,104 @@ void main() {
     });
   });
 
+  group('onboarding draft', () {
+    final draft = OnboardingDraft(
+      step: 'sets',
+      brandId: 'ohuhu_oahu',
+      seriesIds: const {'oahu', 'honolulu'},
+      setIds: const {'classic_160', 'skin_36'},
+      extraMarkerIds: const {'ohuhu_oahu:R1'},
+    );
+
+    test('is empty on a fresh install', () async {
+      final h = await harness();
+      expect(h.appSettings.onboardingDraft, isNull);
+    });
+
+    test('persists, survives a reopen and is removed with null', () async {
+      final h = await harness();
+      await h.appSettings.setOnboardingDraft(draft);
+      expect(h.appSettings.onboardingDraft, draft);
+      expect(
+        await h.store.containsKey(
+          StoredAppSettingsRepository.keyOnboardingDraft,
+        ),
+        isTrue,
+      );
+
+      final reopened = StoredAppSettingsRepository(h.store);
+      await reopened.load();
+      expect(reopened.onboardingDraft, draft);
+
+      await reopened.setOnboardingDraft(null);
+      expect(reopened.onboardingDraft, isNull);
+      expect(
+        await h.store.containsKey(
+          StoredAppSettingsRepository.keyOnboardingDraft,
+        ),
+        isFalse,
+      );
+      final again = StoredAppSettingsRepository(h.store);
+      await again.load();
+      expect(again.onboardingDraft, isNull);
+    });
+
+    test('is not part of the snapshot, the stream or a backup', () async {
+      final h = await harness();
+      final before = h.appSettings.state;
+      final seen = <AppSettingsState>[];
+      final subscription = h.appSettings.changes.listen(seen.add);
+      await pumpEventQueue();
+      seen.clear();
+      await h.appSettings.setOnboardingDraft(draft);
+      await pumpEventQueue();
+      await subscription.cancel();
+      expect(seen, isEmpty);
+      expect(h.appSettings.state, before);
+      expect(
+        h.appSettings.state.toJson().containsKey('onboardingDraft'),
+        isFalse,
+      );
+    });
+
+    test('a damaged value loads as no draft', () async {
+      for (final raw in <String>[
+        '',
+        'not json',
+        '[1, 2]',
+        '{"brand": "ohuhu_oahu"}',
+        '{"step": 3, "brand": "ohuhu_oahu"}',
+      ]) {
+        final h = await harness({
+          StoredAppSettingsRepository.keyOnboardingDraft: raw,
+        });
+        expect(h.appSettings.onboardingDraft, isNull, reason: raw);
+      }
+    });
+
+    test('unusable ids inside the lists are dropped', () async {
+      final h = await harness({
+        StoredAppSettingsRepository.keyOnboardingDraft:
+            '{"step":"series","brand":"copic","series":["oahu",3,""," "],'
+            '"sets":"nope"}',
+      });
+      final loaded = h.appSettings.onboardingDraft;
+      expect(loaded, isNotNull);
+      expect(loaded!.step, 'series');
+      expect(loaded.brandId, 'copic');
+      expect(loaded.seriesIds, {'oahu'});
+      expect(loaded.setIds, isEmpty);
+      expect(loaded.extraMarkerIds, isEmpty);
+    });
+
+    test('restoring a backup leaves the draft alone', () async {
+      final h = await harness();
+      await h.appSettings.setOnboardingDraft(draft);
+      await h.appSettings.restore(AppSettingsState(onboardingCompleted: true));
+      expect(h.appSettings.onboardingDraft, draft);
+    });
+  });
+
   test('changes replays the current snapshot then emits updates', () async {
     final h = await harness();
     final seen = <AppSettingsState>[];

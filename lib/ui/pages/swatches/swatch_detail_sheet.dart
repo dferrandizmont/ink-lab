@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/color_utils.dart';
 import '../../../core/models.dart';
+import '../../../data/marker_extras_repository.dart' show InkLevel;
 import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
@@ -12,6 +15,10 @@ import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
 import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/ink_sheet.dart';
+import 'blend_section.dart';
+import 'ink_level_section.dart';
+import 'swatch_neighbours_section.dart';
+import 'swatch_photo_row.dart';
 
 /// A colour close to the one a [SwatchDetailSheet] describes.
 @immutable
@@ -67,9 +74,17 @@ List<SwatchAlternative> closestAlternatives(
 /// details are one gesture away.
 ///
 /// The sheet has one primary action (the `InkButton`) and one row ("My
-/// colour"). Everything else is a disclosure or an entry of the "⋯" menu,
-/// which lives in the frame of the sheet, next to the close button: the
-/// sheet publishes its entries in [menuItems] and the page shows them there.
+/// colour"). Below the closest alternatives come, in this order: the ink level
+/// and refill note of an owned marker (or, for one the user does not own, the
+/// near-duplicates they already have), the photo of the real swatch, "Shadow
+/// and light", "Blend with…", "In other brands" and the details. Everything
+/// else is a disclosure or an entry of the "⋯" menu, which lives in the frame
+/// of the sheet, next to the close button: the sheet publishes its entries in
+/// [menuItems] and the page shows them there.
+///
+/// No section changes the size of the ones above it: the chips and the rows
+/// of a section are there in every state, and the texts that depend on a
+/// state share the room of the longest one.
 class SwatchDetailSheet extends StatefulWidget {
   const SwatchDetailSheet({
     super.key,
@@ -88,6 +103,16 @@ class SwatchDetailSheet extends StatefulWidget {
     this.onResetOwnColor,
     this.onToggleWishlist,
     this.onToggleDried,
+    this.inkLevel = InkLevel.full,
+    this.onInkLevelChanged,
+    this.refillNote,
+    this.onEditRefillNote,
+    this.photo,
+    this.hasPhoto = false,
+    this.onSwatchPhoto,
+    this.ownedMarkers,
+    this.blendCatalogue = const <MarkerColor>[],
+    this.onSelectNeighbour,
     this.wished = false,
     this.dried = false,
     this.owned = false,
@@ -147,6 +172,43 @@ class SwatchDetailSheet extends StatefulWidget {
 
   /// Called when the user marks the marker as dried out, or as usable again.
   final VoidCallback? onToggleDried;
+
+  /// How much ink the marker has left. Only offered for a marker the user
+  /// owns, and only with [onInkLevelChanged].
+  final InkLevel inkLevel;
+
+  /// Called when the user picks another ink level.
+  final ValueChanged<InkLevel>? onInkLevelChanged;
+
+  /// The refill note of the marker, or `null`.
+  final String? refillNote;
+
+  /// Called when the user wants to write or change the refill note.
+  final VoidCallback? onEditRefillNote;
+
+  /// The photo of the real paper swatch, once loaded.
+  final Uint8List? photo;
+
+  /// Whether the marker has a photo of its real swatch.
+  final bool hasPhoto;
+
+  /// Called when the user taps the "Real swatch" row. Without it the row is
+  /// not shown.
+  final VoidCallback? onSwatchPhoto;
+
+  /// The markers the user owns and can use, of every brand. They feed
+  /// "Shadow and light", "Blend with…" and the near-duplicates of a marker
+  /// the user does not own; without them those sections are not shown. Give
+  /// the sheet the same future until the collection changes: the sections
+  /// measure again when it is another one.
+  final Future<List<MarkerColor>>? ownedMarkers;
+
+  /// The range the user could buy from, to fill a gap in "Blend with…".
+  final List<MarkerColor> blendCatalogue;
+
+  /// Called when a marker in "Shadow and light", the near-duplicates or the
+  /// blend is tapped: the page opens its detail.
+  final ValueChanged<MarkerColor>? onSelectNeighbour;
 
   /// Whether the marker is on the wishlist.
   final bool wished;
@@ -227,25 +289,33 @@ class _SwatchDetailSheetState extends State<SwatchDetailSheet> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.color.colorId == widget.color.colorId) return;
     // Another marker: the sheet starts again at the top and at half height.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final ScrollController? scroll = widget.scrollController;
-      if (scroll != null && scroll.hasClients) {
-        if (InkMotion.accessible(context, InkMotion.sheetIn) == Duration.zero) {
-          scroll.jumpTo(0);
-        } else {
-          scroll.animateTo(
-            0,
-            duration: InkMotion.sheetIn,
-            curve: InkMotion.sheetInCurve,
-          );
-        }
-      }
-      final DraggableScrollableController? sheet = widget.sheetController;
-      if (sheet != null && sheet.isAttached && sheet.size > 0.5) {
-        sheet.moveTo(context, 0.5);
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _backToTop());
+  }
+
+  /// Takes the content back to its top and the sheet back to half height.
+  ///
+  /// The content jumps to its top at once; it is another marker's content, so
+  /// there is nothing to scroll back through. Animating it while the sheet
+  /// is resized does not work: the resize cancels the scroll half way and the
+  /// content stays scrolled (a few hundred pixels down) in a sheet at half
+  /// height. That is a state the sheet never has when the user drives it, and
+  /// the next drag down first scrolls the content up and then keeps going,
+  /// shrinking the sheet until it closes.
+  Future<void> _backToTop() async {
+    if (!mounted) return;
+    final ScrollController? scroll = widget.scrollController;
+    if (scroll != null && scroll.hasClients && scroll.position.pixels > 0) {
+      scroll.jumpTo(0);
+    }
+    final DraggableScrollableController? sheet = widget.sheetController;
+    if (sheet != null && sheet.isAttached && sheet.size > 0.5) {
+      await sheet.moveTo(context, 0.5);
+    }
+    if (!mounted) return;
+    // The resize can leave the content off its top: put it back for certain.
+    if (scroll != null && scroll.hasClients && scroll.position.pixels > 0) {
+      scroll.jumpTo(0);
+    }
   }
 
   /// The entries of the "⋯" menu, in the order of the spec: copy the hex,
@@ -626,6 +696,12 @@ class _SwatchDetailSheetState extends State<SwatchDetailSheet> {
     );
   }
 
+  void _selectNeighbour(MarkerColor other) {
+    final ValueChanged<MarkerColor>? select =
+        widget.onSelectNeighbour ?? widget.onSelectAlternative;
+    select?.call(other);
+  }
+
   /// The details of the marker: brand, lines, sets, place and old name.
   Widget _buildDetails(
     BuildContext context,
@@ -685,7 +761,9 @@ class _SwatchDetailSheetState extends State<SwatchDetailSheet> {
       padding: EdgeInsets.zero,
       children: <Widget>[
         _buildHeader(context),
-        if (widget.dried) ...<Widget>[
+        // With the ink level on the sheet the note lives under its chips,
+        // where it does not move anything when the level changes.
+        if (widget.dried && widget.onInkLevelChanged == null) ...<Widget>[
           const SizedBox(height: InkSpacing.group),
           Text(
             l10n.driedNote,
@@ -709,6 +787,50 @@ class _SwatchDetailSheetState extends State<SwatchDetailSheet> {
         ],
         const SizedBox(height: InkSpacing.group),
         _buildAlternatives(context),
+        // The ink of a marker the user has; for one they do not have, how
+        // many near-duplicates they own already.
+        if (widget.onInkLevelChanged != null &&
+            (widget.owned || widget.dried)) ...<Widget>[
+          const SizedBox(height: InkSpacing.block),
+          InkLevelSection(
+            level: widget.inkLevel,
+            onChanged: widget.onInkLevelChanged,
+            note: widget.refillNote,
+            onEditNote: widget.onEditRefillNote,
+          ),
+        ] else if (!widget.owned && widget.ownedMarkers != null) ...<Widget>[
+          const SizedBox(height: InkSpacing.block),
+          NearDuplicatesSection(
+            marker: color,
+            owned: widget.ownedMarkers!,
+            onSelect: _selectNeighbour,
+          ),
+        ],
+        if (widget.onSwatchPhoto != null) ...<Widget>[
+          const SizedBox(height: InkSpacing.group),
+          SwatchPhotoRow(
+            hex: color.hex,
+            own: color.hasOwnColor,
+            hasPhoto: widget.hasPhoto,
+            photo: widget.photo,
+            onTap: widget.onSwatchPhoto,
+          ),
+        ],
+        if (widget.ownedMarkers != null) ...<Widget>[
+          const SizedBox(height: InkSpacing.s24),
+          ShadowLightSection(
+            marker: color,
+            owned: widget.ownedMarkers!,
+            onSelect: _selectNeighbour,
+          ),
+          const SizedBox(height: InkSpacing.block),
+          BlendSection(
+            marker: color,
+            owned: widget.ownedMarkers!,
+            catalogue: widget.blendCatalogue,
+            onSelect: _selectNeighbour,
+          ),
+        ],
         if (widget.brandEquivalents != null) ...<Widget>[
           const SizedBox(height: InkSpacing.s24),
           widget.brandEquivalents!,

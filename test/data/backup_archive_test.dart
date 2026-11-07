@@ -96,6 +96,53 @@ Matcher refused(BackupArchiveReason reason) => throwsA(
 );
 
 void main() {
+  test(
+    'ZIP preserves a migrated file diary and persists the restored diary',
+    () async {
+      final temp = Directory.systemTemp.createTempSync('ink_lab_backup_diary');
+      addTearDown(() => temp.deleteSync(recursive: true));
+      final sourceStorage = FileArtworkDiaryStorage(
+        directory: () => Directory('${temp.path}/source'),
+      );
+      final source = await harness({
+        StoredArtworkDiaryRepository.storageKey: jsonEncode([
+          entry(photos: ['a.jpg']).toJson(),
+        ]),
+      }, sourceStorage);
+      source.photos.put('a.jpg', photoBytes());
+      expect(
+        await source.store.containsKey(StoredArtworkDiaryRepository.storageKey),
+        isFalse,
+      );
+      final archive = await service(source).exportArchive();
+      final document = jsonDecode(
+        utf8.decode(
+          ZipDecoder().decodeBytes(archive).find('backup.json')!.content,
+        ),
+      ) as Map<String, dynamic>;
+      final Map<String, dynamic> diary =
+          (document['artworkDiary'] as List).single as Map<String, dynamic>;
+      expect(diary['id'], 'e1');
+
+      final targetStorage = FileArtworkDiaryStorage(
+        directory: () => Directory('${temp.path}/target'),
+      );
+      final target = await harness(null, targetStorage);
+      await service(target).importArchive(archive);
+      final reloaded = StoredArtworkDiaryRepository(
+        target.store,
+        photos: target.photos,
+        storage: targetStorage,
+      );
+      await reloaded.load();
+      expect(reloaded.entries, source.artworkDiary.entries);
+      expect(await reloaded.photoBytes('a.jpg'), photoBytes());
+      expect(
+        await target.store.containsKey(StoredArtworkDiaryRepository.storageKey),
+        isFalse,
+      );
+    },
+  );
   group('the backup archive', () {
     test('carries the document, the manifest and the diary photos', () async {
       final Harness source = await harness();
@@ -209,8 +256,9 @@ void main() {
       target.photos.put('a.jpg', mine);
       final StoredArtworkDiaryRepository failingDiary =
           StoredArtworkDiaryRepository(
-            FailingStore(target.store, StoredArtworkDiaryRepository.storageKey),
+            target.store,
             photos: target.photos,
+            storage: RefusingDiaryStorage(),
           );
       await failingDiary.load();
       final BackupArchiveService failing = BackupArchiveService(
@@ -586,56 +634,15 @@ Uint8List breakData(Uint8List bytes, String name) {
   return copy;
 }
 
-/// A store that refuses to write the key it was given.
-final class FailingStore implements KeyValueStore {
-  FailingStore(this.inner, this.failingKey);
-
-  final KeyValueStore inner;
-  final String failingKey;
+/// A diary document store that refuses writes, like a full disk.
+final class RefusingDiaryStorage implements ArtworkDiaryStorage {
+  @override
+  Future<String?> read({bool backup = false}) async => null;
 
   @override
-  Future<void> setString(String key, String value) async {
-    if (key == failingKey) throw StateError('the disk is full');
-    await inner.setString(key, value);
+  Future<void> write(String json, {bool backup = false}) async {
+    throw const FileSystemException('the disk is full');
   }
-
-  @override
-  Future<String?> getString(String key) => inner.getString(key);
-
-  @override
-  Future<bool?> getBool(String key) => inner.getBool(key);
-
-  @override
-  Future<void> setBool(String key, bool value) => inner.setBool(key, value);
-
-  @override
-  Future<int?> getInt(String key) => inner.getInt(key);
-
-  @override
-  Future<void> setInt(String key, int value) => inner.setInt(key, value);
-
-  @override
-  Future<double?> getDouble(String key) => inner.getDouble(key);
-
-  @override
-  Future<void> setDouble(String key, double value) =>
-      inner.setDouble(key, value);
-
-  @override
-  Future<List<String>?> getStringList(String key) => inner.getStringList(key);
-
-  @override
-  Future<void> setStringList(String key, List<String> value) =>
-      inner.setStringList(key, value);
-
-  @override
-  Future<bool> containsKey(String key) => inner.containsKey(key);
-
-  @override
-  Future<void> remove(String key) => inner.remove(key);
-
-  @override
-  Future<Set<String>> keys() => inner.keys();
 }
 
 /// A photo store that refuses to write the photos whose name it was given.

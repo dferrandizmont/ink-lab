@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../app_scope.dart';
 import '../../../core/brand_equivalents.dart';
 import '../../../core/collection_selection.dart';
+import '../../../core/color_utils.dart';
+import '../../../core/hex_search.dart';
 import '../../../core/models.dart';
 import '../../../core/own_colors.dart';
 import '../../../core/swatch_card_location.dart';
@@ -13,6 +17,7 @@ import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/empty_state.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
@@ -27,11 +32,14 @@ import '../collection/collection_page.dart';
 import '../collection/collection_summary.dart';
 import '../match/color_sampling.dart';
 import '../match/image_picker_service.dart';
+import '../../shell/app_shortcuts.dart' show swatchesSearchFocus;
 import '../settings/dialogs.dart';
 import 'brand_equivalents_index.dart';
 import 'brand_equivalents_section.dart';
+import 'ink_level_section.dart' show showRefillNoteDialog;
 import 'own_color_page.dart';
 import 'swatch_detail_sheet.dart';
+import 'swatch_photo_row.dart';
 import '../../../l10n/l10n.dart';
 
 /// The swatch browser (design G, spec §6 "Swatches").
@@ -100,10 +108,53 @@ class _SwatchesPageState extends State<SwatchesPage> {
   Stream<Map<String, String>>? _ownColorChanges;
   Stream<Set<String>>? _driedChanges;
 
+  /// The picker of the photo of a real swatch: pictures scaled to about
+  /// 1024 px. Tests inject their own through [SwatchesPage.picker].
+  late final ImagePickerService _swatchPicker =
+      widget.picker ?? PlatformImagePickerService.limited();
+
   /// The other brands' colours, prepared once for "In other brands" and
   /// prepared again when the effective colours change.
   Future<BrandEquivalentsIndex>? _equivalentsIndex;
   int? _equivalentsRevision;
+
+  /// Whether the last layout had room for the detail next to the grid
+  /// ([InkLayout.isTwoPane]); a tapped marker then opens there instead of in
+  /// a sheet.
+  bool _twoPane = false;
+
+  /// The detail on screen in the pane, or `null` while no marker is chosen.
+  _PaneDetail? _pane;
+
+  /// The scroll position of the pane (its own: the grid has the primary one).
+  final ScrollController _paneScroll = ScrollController();
+
+  /// The id of the marker the pane shows, outlined in the grid.
+  final ValueNotifier<String?> _paneShown = ValueNotifier<String?>(null);
+
+  /// The marker whose detail is open (in the pane or in the sheet) and the
+  /// colours its alternatives come from, or `null` when none is. It outlives
+  /// the pane: a rotation to a narrow page hides the pane but keeps this, so
+  /// the way back to two panes shows the same marker again.
+  ({MarkerColor color, List<MarkerColor> pool})? _selection;
+
+  /// Takes the detail sheet out of the screen so its marker can move to the
+  /// pane; `null` while no sheet is open. Answers `false` when the sheet is
+  /// not the top route (a dialog or the photo viewer is over it): it then
+  /// stays, and the move is tried again a moment later.
+  bool Function()? _handSheetToPane;
+
+  /// The pending retry of a move that had to wait for the route above the
+  /// sheet to close.
+  Timer? _handOverRetry;
+
+  /// The brand the page was last showing: another brand forgets the marker.
+  MarkerBrand? _brand;
+  StreamSubscription<AppSettingsState>? _brandWatch;
+
+  /// Whether the detail is being moved between the sheet, the pane and back,
+  /// so a second layout pass does not start the move twice.
+  bool _movingDetail = false;
 
   @override
   void didChangeDependencies() {
@@ -120,13 +171,107 @@ class _SwatchesPageState extends State<SwatchesPage> {
       _settingsChanges = scope.settings.changes;
       _ownColorChanges = scope.ownColors.changes;
       _driedChanges = scope.dried.changes;
+      _brand = scope.settings.brand;
+      unawaited(_brandWatch?.cancel());
+      _brandWatch = scope.settings.changes.listen(_onSettings);
     }
+  }
+
+  /// Another brand in Settings: the marker of the old one is not the user's
+  /// choice any more, in the pane or kept for the next rotation.
+  void _onSettings(AppSettingsState state) {
+    if (state.brand == _brand) return;
+    _brand = state.brand;
+    _selection = null;
+    _closePane();
   }
 
   @override
   void dispose() {
+    _handOverRetry?.cancel();
+    unawaited(_brandWatch?.cancel());
+    _pane?.closed();
     _searchController.dispose();
+    _paneScroll.dispose();
+    _paneShown.dispose();
     super.dispose();
+  }
+
+  /// Closes the detail of the pane: the user is done with that marker.
+  void _closePane() {
+    if (_pane == null) return;
+    _selection = null;
+    _hidePane();
+  }
+
+  /// Takes the detail out of the pane without forgetting its marker.
+  void _hidePane() {
+    if (_pane == null) return;
+    _pane?.closed();
+    _paneShown.value = null;
+    if (mounted) setState(() => _pane = null);
+  }
+
+  /// Keeps the open detail in step with the layout, after the frame:
+  ///
+  /// * narrow page, detail in the pane: the pane goes (rotation, Split View),
+  ///   its marker is remembered;
+  /// * wide page, a sheet open: the sheet closes and its marker opens in the
+  ///   pane (a modal sheet over two panes would leave the pane empty);
+  /// * wide page, a marker remembered and no pane: it opens in the pane.
+  void _syncDetailWithLayout(AppScope scope, {required bool twoPane}) {
+    if (!twoPane) {
+      if (_pane != null) _hidePane();
+      return;
+    }
+    final ({MarkerColor color, List<MarkerColor> pool})? selection = _selection;
+    if (selection == null || _pane != null || _movingDetail) return;
+    final bool Function()? handOver = _handSheetToPane;
+    if (handOver != null && !handOver()) {
+      // Something is open over the sheet (a confirmation, the photo): wait
+      // for it instead of pulling the sheet from under it.
+      _handOverRetry?.cancel();
+      _handOverRetry = Timer(InkMotion.sheetIn, () {
+        if (mounted && _twoPane) _syncDetailWithLayout(scope, twoPane: true);
+      });
+      return;
+    }
+    _movingDetail = true;
+    _openDetail(
+      context,
+      scope,
+      selection.color,
+      selection.pool,
+      forPane: true,
+    ).whenComplete(() => _movingDetail = false);
+  }
+
+  /// The detail pane of the two-pane layout: the marker chosen in the grid,
+  /// or a short hint while there is none. Its overflow menu is keyed by the
+  /// detail, so a new marker gets a new menu (and the old one is disposed).
+  Widget _buildPane(BuildContext context) {
+    final _PaneDetail? pane = _pane;
+    if (pane == null) {
+      return InkDetailPane(
+        key: const ValueKey<String>('swatches-detail-pane'),
+        child: EmptyState(
+          key: const ValueKey<String>('swatches-detail-pane-empty'),
+          icon: InkIcons.droplet,
+          title: context.l10n.swatchesDetailPaneEmpty,
+        ),
+      );
+    }
+    return InkDetailPane(
+      key: const ValueKey<String>('swatches-detail-pane'),
+      onClose: _closePane,
+      actions: <Widget>[
+        _SwatchOverflowMenu(key: ObjectKey(pane), items: pane.menuItems),
+      ],
+      child: KeyedSubtree(
+        key: ObjectKey(pane),
+        child: pane.builder(context, _paneScroll),
+      ),
+    );
   }
 
   @override
@@ -147,6 +292,50 @@ class _SwatchesPageState extends State<SwatchesPage> {
         ),
       );
     }
+    // Wide pages show the detail of the marker next to the grid. The grid is
+    // the first child of the row at every width, so crossing the breakpoint
+    // keeps its scroll position and the search text.
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final bool twoPane = InkLayout.isTwoPane(constraints.maxWidth);
+        final bool detailOutOfStep = twoPane
+            ? _selection != null && _pane == null
+            : _pane != null;
+        if (detailOutOfStep) {
+          // The page changed width (rotation, Split View): the detail moves
+          // between the sheet and the pane, keeping its marker.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _twoPane == twoPane) {
+              _syncDetailWithLayout(scope, twoPane: twoPane);
+            }
+          });
+        }
+        _twoPane = twoPane;
+        return PopScope(
+          // Back closes the detail in the pane first; only a second Back
+          // leaves the app. Every visited tab lives in the shell, so a hidden
+          // Swatches tab must not take the Back of the tab on screen.
+          canPop: _pane == null || !Visibility.of(context),
+          onPopInvokedWithResult: (bool didPop, Object? result) {
+            if (!didPop) _closePane();
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(child: _buildStreams(context, scope)),
+              if (twoPane)
+                SizedBox(
+                  width: InkLayout.detailPaneWidth,
+                  child: _buildPane(context),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildStreams(BuildContext context, AppScope scope) {
     return StreamBuilder<AppSettingsState>(
       stream: _settingsChanges,
       initialData: scope.settings.state,
@@ -245,16 +434,33 @@ class _SwatchesPageState extends State<SwatchesPage> {
     // range is on screen: with "Mine" (or "Favourites") every cell of the
     // grid would carry it.
     final bool showOwnedMark = !_favoritesOnly && !_ownedOnly;
-    final List<MarkerColor> visible = candidates
-        .where(
-          (MarkerColor color) =>
-              _matches(color, state) &&
-              _inSelectedLines(color) &&
-              (_selectedPackId == null ||
-                  color.sets.contains(_selectedPackId)) &&
-              (!_ownedOnly || isOwned(color)),
-        )
+    bool inView(MarkerColor color) =>
+        _inSelectedLines(color) &&
+        (_selectedPackId == null || color.sets.contains(_selectedPackId)) &&
+        (!_ownedOnly || isOwned(color));
+    List<MarkerColor> visible = candidates
+        .where((MarkerColor color) => _matches(color, state) && inView(color))
         .toList();
+    // A search text that is a hex colour (`#2D6E9C`, `2d6e9c`) shows the
+    // closest markers first, then whatever else the text finds.
+    final int? hexTarget = hexSearchColor(_query, candidates);
+    if (hexTarget != null) {
+      final List<MarkerColor> nearest = nearestMarkers(
+        hexTarget,
+        candidates.where(
+          (MarkerColor color) =>
+              _matches(color, state, ignoreQuery: true) && inView(color),
+        ),
+      );
+      final Set<String> shown = <String>{
+        for (final MarkerColor color in nearest) color.colorId,
+      };
+      visible = <MarkerColor>[
+        ...nearest,
+        for (final MarkerColor color in visible)
+          if (!shown.contains(color.colorId)) color,
+      ];
+    }
 
     return Column(
       key: SwatchesPage.pageKey,
@@ -277,6 +483,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
           ),
           child: InkSearchField(
             controller: _searchController,
+            focusNode: swatchesSearchFocus,
             hintText: context.l10n.swatchesSearchHint,
             semanticLabel: context.l10n.swatchesSearchHint,
             onChanged: (String value) => setState(() => _query = value.trim()),
@@ -288,6 +495,8 @@ class _SwatchesPageState extends State<SwatchesPage> {
         Expanded(
           child: CustomScrollView(
             slivers: <Widget>[
+              if (hexTarget != null && visible.isNotEmpty)
+                SliverToBoxAdapter(child: _closestTo(context, hexTarget)),
               if (visible.isEmpty)
                 SliverFillRemaining(
                   hasScrollBody: false,
@@ -295,7 +504,9 @@ class _SwatchesPageState extends State<SwatchesPage> {
                 )
               else if (_listLayout)
                 SliverPadding(
-                  padding: const EdgeInsets.only(bottom: InkSpacing.pageBottom),
+                  padding: EdgeInsets.only(
+                    bottom: InkSpacing.pageBottomOf(context),
+                  ),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((
                       BuildContext context,
@@ -328,11 +539,11 @@ class _SwatchesPageState extends State<SwatchesPage> {
                 )
               else
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(
+                  padding: EdgeInsets.fromLTRB(
                     InkSpacing.pageMargin,
                     0,
                     InkSpacing.pageMargin,
-                    InkSpacing.pageBottom,
+                    InkSpacing.pageBottomOf(context),
                   ),
                   sliver: SliverGrid(
                     gridDelegate: ColorSwatchTile.gridDelegate(
@@ -365,6 +576,8 @@ class _SwatchesPageState extends State<SwatchesPage> {
                         // The hex stays in the list and in the detail sheet:
                         // the grid cells are lower without it.
                         showHex: false,
+                        // The marker of the detail pane, on wide pages.
+                        selected: _twoPane && _paneShown.value == color.colorId,
                         onTap: () =>
                             _openDetail(context, scope, color, candidates),
                       );
@@ -525,11 +738,53 @@ class _SwatchesPageState extends State<SwatchesPage> {
   bool _inSelectedLines(MarkerColor color) =>
       _selectedLines.isEmpty || _selectedLines.any(color.inLine);
 
-  bool _matches(MarkerColor color, AppSettingsState state) {
+  /// "Closest to #2D6E9C", with the colour, over the markers of a hex search.
+  Widget _closestTo(BuildContext context, int colorInt) {
+    final InkColors ink = InkColors.of(context);
+    final Color color = Color(colorInt);
+    final String hex = '#${colorIntToHex(colorInt)}';
+    return Padding(
+      key: const ValueKey<String>('swatches-closest-to'),
+      padding: const EdgeInsets.fromLTRB(
+        InkSpacing.pageMargin,
+        0,
+        InkSpacing.pageMargin,
+        InkSpacing.group,
+      ),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: InkGeometry.smallIcon,
+            height: InkGeometry.smallIcon,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: InkRadii.xsRadius,
+              border: Border.all(color: ink.swatchEdge(color)),
+            ),
+          ),
+          const SizedBox(width: InkSpacing.s8),
+          Expanded(
+            child: Text(
+              context.l10n.swatchesClosestTo(hex),
+              style: AppTypography.secondary.copyWith(color: ink.fg2),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Whether [color] passes the favourites switch and the search text; with
+  /// [ignoreQuery] only the favourites switch counts.
+  bool _matches(
+    MarkerColor color,
+    AppSettingsState state, {
+    bool ignoreQuery = false,
+  }) {
     if (_favoritesOnly && !state.favorites.contains(color.colorId)) {
       return false;
     }
-    if (_query.isEmpty) return true;
+    if (ignoreQuery || _query.isEmpty) return true;
     final String needle = _query.toLowerCase();
     final String bareNeedle = needle.startsWith('#')
         ? needle.substring(1)
@@ -543,7 +798,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
 
   /// The packs that hold at least one colour of the loaded catalogue.
   ///
-  /// Only Ohuhu has packs; DecoTime, Copic and Finecolour are organised by ownership
+  /// Only Ohuhu has packs; every other brand is organised by ownership
   /// instead.
   List<String> _availablePacks(List<MarkerColor> colors, MarkerBrand brand) {
     if (!brand.hasRetailSets) return const <String>[];
@@ -600,7 +855,10 @@ class _SwatchesPageState extends State<SwatchesPage> {
       ],
     );
     Widget caption(String text) => Padding(
-      padding: const EdgeInsets.only(top: InkSpacing.block, bottom: 4),
+      padding: const EdgeInsets.only(
+        top: InkSpacing.block,
+        bottom: InkSpacing.s4,
+      ),
       child: Text(
         AppTypography.caps(text),
         style: AppTypography.capsStyle.copyWith(color: ink.fg2),
@@ -754,7 +1012,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
                       ),
                     ),
                   ],
-                  SizedBox(height: InkSpacing.s24),
+                  const SizedBox(height: InkSpacing.s24),
                   group(
                     context.l10n.swatchesLabelLayout,
                     InkSegmented<bool>(
@@ -849,12 +1107,44 @@ class _SwatchesPageState extends State<SwatchesPage> {
     );
   }
 
+  /// The markers the user owns and can use, of every brand: what "Shadow
+  /// and light", "Blend with…" and the near-duplicates measure against.
+  Future<List<MarkerColor>> _ownedMarkers(AppScope scope) async {
+    final BrandEquivalentsIndex index = await _indexFor(scope);
+    return index.ownedUsable(
+      scope.settings.settings,
+      driedIds: scope.dried.ids,
+    );
+  }
+
+  /// The ids of the brands the user owns at least one marker of.
+  Future<Set<String>> _ownedBrands(AppScope scope) async {
+    final BrandEquivalentsIndex index = await _indexFor(scope);
+    return index.ownedBrandIds(scope.settings.settings);
+  }
+
+  /// Changes whenever the collection (or what is dried out) does, so the
+  /// sections that measure against it measure again.
+  Object _collectionSignature(AppScope scope) {
+    final AppSettings settings = scope.settings.settings;
+    return Object.hash(
+      scope.markers.colorRevision,
+      scope.dried.revision,
+      Object.hashAll(settings.ownedSetIds.toList()..sort()),
+      Object.hashAll(settings.extraMarkerIds.toList()..sort()),
+    );
+  }
+
   Future<void> _openDetail(
     BuildContext context,
     AppScope scope,
     MarkerColor color,
-    List<MarkerColor> candidates,
-  ) async {
+    List<MarkerColor> candidates, {
+    bool? forPane,
+  }) async {
+    // Where the detail goes is decided now, not after the catalogue is read:
+    // a page that changes width meanwhile is put right by the layout pass.
+    final bool inPane = forPane ?? _twoPane;
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     final AppLocalizations l10n = context.l10n;
     MarkerColor current = color;
@@ -874,13 +1164,364 @@ class _SwatchesPageState extends State<SwatchesPage> {
       return label == null ? null : context.l10n.cardLocationLabel(label);
     }
 
+    // On a wide page the detail opens in the pane next to the grid.
     // The sheet opens at half height and can be dragged up to the full
     // screen; the controller lets it go back to half when the marker
     // changes.
-    final DraggableScrollableController sheetController =
-        DraggableScrollableController();
+    final DraggableScrollableController? sheetController = inPane
+        ? null
+        : DraggableScrollableController();
     // The entries of the "⋯" menu, which lives in the frame of the sheet.
     final InkMenuItemsNotifier menuItems = InkMenuItemsNotifier();
+
+    // The markers the user owns, measured again only when the collection
+    // changes, and the photo of the real swatch of the marker on screen.
+    Future<List<MarkerColor>>? ownedFuture;
+    Object? ownedSignature;
+    Uint8List? photoBytes;
+    String? photoKey;
+    bool sheetClosed = false;
+    // Whether the sheet was taken away because the page got wide: the marker
+    // then goes on in the pane instead of being forgotten.
+    bool handedToPane = false;
+    // This sheet's hand-over: the field may hold another sheet's by the time
+    // this one is gone.
+    bool Function()? mine;
+
+    Widget detail(BuildContext sheetContext, ScrollController scroll) {
+      if (!inPane && !sheetClosed) {
+        final ModalRoute<Object?>? route = ModalRoute.of(sheetContext);
+        final NavigatorState? navigator = route?.navigator;
+        if (route != null && navigator != null) {
+          mine ??= () {
+            if (!route.isCurrent) return false;
+            handedToPane = true;
+            navigator.removeRoute(route);
+            return true;
+          };
+          _handSheetToPane = mine;
+        }
+      }
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setSheetState) {
+          // Remembered, so a change of layout can show it again.
+          if (!sheetClosed) _selection = (color: current, pool: pool);
+          if (inPane) {
+            // Outline the marker on screen in the grid (after the frame:
+            // the grid is another part of the tree).
+            final String shown = current.colorId;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (sheetClosed || !mounted || _paneShown.value == shown) {
+                return;
+              }
+              _paneShown.value = shown;
+              setState(() {});
+            });
+          }
+          final Object signature = _collectionSignature(scope);
+          if (ownedFuture == null || signature != ownedSignature) {
+            ownedSignature = signature;
+            ownedFuture = _ownedMarkers(scope);
+          }
+          final String? photoName = scope.markerExtras.photoNameOf(
+            current.colorId,
+          );
+          // Load the photo of the marker on screen; a stale answer (another
+          // marker, another photo, a closed sheet) is dropped.
+          final String? wantedPhoto = photoName == null
+              ? null
+              : '${current.colorId}/$photoName';
+          if (wantedPhoto != photoKey) {
+            photoKey = wantedPhoto;
+            photoBytes = null;
+            if (wantedPhoto != null) {
+              scope.markerExtras.photoBytes(current.colorId).then((
+                Uint8List? bytes,
+              ) {
+                if (sheetClosed || photoKey != wantedPhoto) return;
+                photoBytes = bytes;
+                setSheetState(() {});
+              });
+            }
+          }
+
+          // Moves the sheet to another marker, of this brand or another.
+          Future<void> selectMarker(MarkerColor other) async {
+            if (other.brandId != current.brandId) {
+              final MarkerBrand brand = MarkerBrand.fromId(other.brandId);
+              final List<MarkerColor> all = await scope.markers.loadColors(
+                brand,
+              );
+              pool = swatchCandidateColors(colors: all, brand: brand);
+            }
+            if (!context.mounted) return;
+            setSheetState(() => current = other);
+          }
+
+          // A marker that ran dry is one to buy again: offer the list.
+          Future<void> afterLevelChange(
+            MarkerColor marker,
+            InkLevel before,
+            InkLevel after,
+          ) async {
+            if (!context.mounted) return;
+            setSheetState(() {});
+            if (after != InkLevel.dried || before == InkLevel.dried) return;
+            if (scope.wishlist.contains(marker.colorId)) return;
+            final bool add = await confirmAction(
+              context,
+              title: l10n.wishlistOfferTitle,
+              body: l10n.wishlistOfferBody(marker.newCode),
+              confirmLabel: l10n.wishlistAdd,
+            );
+            if (!add) return;
+            await scope.wishlist.add(marker.colorId);
+            if (context.mounted) setSheetState(() {});
+          }
+
+          Future<void> pickSwatchPhoto(
+            MarkerColor marker,
+            PhotoSource source,
+          ) async {
+            final PhotoPickResult result = await _swatchPicker.pick(source);
+            String? message;
+            switch (result) {
+              case PhotoPicked(:final Uint8List bytes):
+                final bool saved = await scope.markerExtras.setPhoto(
+                  marker.colorId,
+                  bytes,
+                );
+                message = saved
+                    ? l10n.swatchPhotoSaved
+                    : l10n.swatchPhotoSaveFailed;
+              case PhotoPickCancelled():
+                break;
+              case PhotoPickDenied(source: final PhotoSource denied):
+                message = denied == PhotoSource.camera
+                    ? l10n.matchCameraDenied
+                    : l10n.matchGalleryDenied;
+              case PhotoPickFailed():
+                message = l10n.matchPickFailed;
+            }
+            if (context.mounted) setSheetState(() {});
+            if (message != null) {
+              messenger
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(content: Text(message)));
+            }
+          }
+
+          return SwatchDetailSheet(
+            color: current,
+            favorite: scope.settings.isFavorite(current.colorId),
+            lineLabels: MarkerBrand.fromId(current.brandId)
+                .rangeLabels(current.lines),
+            // Human labels only: a raw id ("decotime_base") is never shown.
+            packLabels: <String>[
+              for (final String id in current.sets) ?l10n.setLabel(id),
+            ],
+            cardLocation: cardLocationOf(current),
+            alternatives: closestAlternatives(current, pool),
+            onSelectAlternative: (MarkerColor other) =>
+                setSheetState(() => current = other),
+            // The sheet moves to the marker of the other brand, as it does
+            // for an alternative; its own alternatives are then the markers
+            // of that brand.
+            onSelectNeighbour: selectMarker,
+            ownedMarkers: ownedFuture,
+            blendCatalogue: pool,
+            brandEquivalents: BrandEquivalentsSection(
+              marker: current,
+              loader: (MarkerColor marker, {required bool onlyMine}) =>
+                  _equivalentsOf(scope, marker, onlyMine: onlyMine),
+              ownedBrands: () => _ownedBrands(scope),
+              onSelect: selectMarker,
+            ),
+            inkLevel: scope.markerExtras.levelOf(current.colorId),
+            onInkLevelChanged: (InkLevel level) async {
+              final MarkerColor marker = current;
+              final InkLevel before = scope.markerExtras.levelOf(
+                marker.colorId,
+              );
+              await scope.markerExtras.setLevel(marker.colorId, level);
+              await afterLevelChange(marker, before, level);
+            },
+            refillNote: scope.markerExtras.noteOf(current.colorId),
+            onEditRefillNote: () async {
+              final MarkerColor marker = current;
+              final String? text = await showRefillNoteDialog(
+                context,
+                current: scope.markerExtras.noteOf(marker.colorId),
+              );
+              if (text == null) return;
+              await scope.markerExtras.setNote(marker.colorId, text);
+              if (context.mounted) setSheetState(() {});
+            },
+            hasPhoto: photoName != null,
+            photo: photoBytes,
+            onSwatchPhoto: () async {
+              final MarkerColor marker = current;
+              final SwatchPhotoAction? action = await showSwatchPhotoActions(
+                context,
+                hasPhoto:
+                    scope.markerExtras.photoNameOf(marker.colorId) != null,
+              );
+              if (action == null || !context.mounted) return;
+              switch (action) {
+                case SwatchPhotoAction.take:
+                  await pickSwatchPhoto(marker, PhotoSource.camera);
+                case SwatchPhotoAction.choose:
+                  await pickSwatchPhoto(marker, PhotoSource.gallery);
+                case SwatchPhotoAction.view:
+                  final Uint8List? bytes = await scope.markerExtras.photoBytes(
+                    marker.colorId,
+                  );
+                  if (bytes != null && context.mounted) {
+                    await showSwatchPhotoViewer(context, bytes);
+                  }
+                case SwatchPhotoAction.remove:
+                  await scope.markerExtras.removePhoto(marker.colorId);
+                  if (!context.mounted) return;
+                  setSheetState(() {});
+                  messenger
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(content: Text(l10n.swatchPhotoRemoved)),
+                    );
+              }
+            },
+            // A code alone is ambiguous across brands, and a palette only
+            // holds the brand chosen in Settings.
+            brandLabel: current.brandId == scope.settings.brand.id
+                ? null
+                : MarkerBrand.fromId(current.brandId).label,
+            showPaletteActions: current.brandId == scope.settings.brand.id,
+            onSetOwnColor: () async {
+              final String? hex = await OwnColorPage.open(
+                context,
+                current,
+                picker: widget.picker,
+                decoder: widget.decoder,
+              );
+              if (hex == null) return;
+              await _storeOwnColor(scope, current, hex);
+              final List<MarkerColor> all = await scope.markers.loadColors(
+                MarkerBrand.fromId(current.brandId),
+              );
+              current =
+                  <MarkerColor>[
+                    for (final MarkerColor c in all)
+                      if (c.colorId == current.colorId) c,
+                  ].firstOrNull ??
+                  current;
+              pool = swatchCandidateColors(
+                colors: all,
+                brand: MarkerBrand.fromId(current.brandId),
+              );
+              if (!context.mounted) return;
+              setSheetState(() {});
+              messenger
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text(l10n.swatchesMyColourSaved)),
+                );
+            },
+            onResetOwnColor: () async {
+              await scope.ownColors.remove(current.colorId);
+              final List<MarkerColor> all = await scope.markers.loadColors(
+                MarkerBrand.fromId(current.brandId),
+              );
+              current =
+                  <MarkerColor>[
+                    for (final MarkerColor c in all)
+                      if (c.colorId == current.colorId) c,
+                  ].firstOrNull ??
+                  current;
+              pool = swatchCandidateColors(
+                colors: all,
+                brand: MarkerBrand.fromId(current.brandId),
+              );
+              if (!context.mounted) return;
+              setSheetState(() {});
+              messenger
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  SnackBar(content: Text(l10n.swatchesMyColourWasReset)),
+                );
+            },
+            wished: scope.wishlist.contains(current.colorId),
+            dried: scope.dried.contains(current.colorId),
+            owned: _isOwnedNow(scope, current),
+            onToggleWishlist: () async {
+              await scope.wishlist.toggle(current.colorId);
+              if (context.mounted) setSheetState(() {});
+            },
+            onToggleDried: () async {
+              final MarkerColor marker = current;
+              final InkLevel before = scope.markerExtras.levelOf(
+                marker.colorId,
+              );
+              final InkLevel after = before == InkLevel.dried
+                  ? InkLevel.full
+                  : InkLevel.dried;
+              await scope.markerExtras.setLevel(marker.colorId, after);
+              await afterLevelChange(marker, before, after);
+            },
+            onToggleFavorite: () {
+              scope.settings.toggleFavorite(current.colorId);
+              setSheetState(() {});
+            },
+            onCopyHex: () async {
+              await Clipboard.setData(
+                ClipboardData(text: displayHex(current.hex)),
+              );
+              messenger.showSnackBar(
+                SnackBar(content: Text(l10n.swatchesHexCopied)),
+              );
+            },
+            onBlendingChain: widget.onBlendingChain == null
+                ? null
+                : () {
+                    if (!inPane) Navigator.of(sheetContext).maybePop();
+                    widget.onBlendingChain!(current);
+                  },
+            onAddToPalette: () async {
+              final ValueChanged<MarkerColor>? hook = widget.onAddToPalette;
+              if (hook != null) {
+                if (!inPane) Navigator.of(sheetContext).maybePop();
+                hook(current);
+                return;
+              }
+              await Clipboard.setData(ClipboardData(text: current.newCode));
+              messenger.showSnackBar(
+                SnackBar(
+                  content: Text(l10n.swatchesCodeCopied(current.newCode)),
+                ),
+              );
+            },
+            scrollController: scroll,
+            sheetController: sheetController,
+            menuItems: menuItems,
+          );
+        },
+      );
+    }
+
+    // Remembered from the start: the detail may be hidden (a narrow page)
+    // before it is ever built.
+    _selection = (color: current, pool: pool);
+    if (inPane) {
+      _pane?.closed();
+      if (_paneScroll.hasClients) _paneScroll.jumpTo(0);
+      setState(() {
+        _pane = _PaneDetail(
+          builder: detail,
+          menuItems: menuItems,
+          closed: () => sheetClosed = true,
+        );
+      });
+      return;
+    }
 
     await showInkDraggableSheet<void>(
       context: context,
@@ -890,173 +1531,38 @@ class _SwatchesPageState extends State<SwatchesPage> {
       max: 1.0,
       min: 0.25,
       actions: <Widget>[_SwatchOverflowMenu(items: menuItems)],
-      builder: (BuildContext sheetContext, ScrollController scroll) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setSheetState) {
-            return SwatchDetailSheet(
-              color: current,
-              favorite: scope.settings.isFavorite(current.colorId),
-              lineLabels: <String>[
-                for (final String id in current.lines)
-                  ?MarkerLine.fromId(id)?.label,
-              ],
-              // Human labels only: a raw id ("decotime_base") is never shown.
-              packLabels: <String>[
-                for (final String id in current.sets) ?l10n.setLabel(id),
-              ],
-              cardLocation: cardLocationOf(current),
-              alternatives: closestAlternatives(current, pool),
-              onSelectAlternative: (MarkerColor other) =>
-                  setSheetState(() => current = other),
-              brandEquivalents: BrandEquivalentsSection(
-                marker: current,
-                loader: (MarkerColor marker, {required bool onlyMine}) =>
-                    _equivalentsOf(scope, marker, onlyMine: onlyMine),
-                onSelect: (MarkerColor other) async {
-                  // The sheet moves to the marker of the other brand, as it
-                  // does for an alternative; its own alternatives are then
-                  // the markers of that brand.
-                  if (other.brandId != current.brandId) {
-                    final MarkerBrand brand = MarkerBrand.fromId(other.brandId);
-                    final List<MarkerColor> all = await scope.markers
-                        .loadColors(brand);
-                    pool = swatchCandidateColors(colors: all, brand: brand);
-                  }
-                  if (!context.mounted) return;
-                  setSheetState(() => current = other);
-                },
-              ),
-              // A code alone is ambiguous across brands, and a palette only
-              // holds the brand chosen in Settings.
-              brandLabel: current.brandId == scope.settings.brand.id
-                  ? null
-                  : MarkerBrand.fromId(current.brandId).label,
-              showPaletteActions: current.brandId == scope.settings.brand.id,
-              onSetOwnColor: () async {
-                final String? hex = await OwnColorPage.open(
-                  context,
-                  current,
-                  picker: widget.picker,
-                  decoder: widget.decoder,
-                );
-                if (hex == null) return;
-                await _storeOwnColor(scope, current, hex);
-                final List<MarkerColor> all = await scope.markers.loadColors(
-                  MarkerBrand.fromId(current.brandId),
-                );
-                current =
-                    <MarkerColor>[
-                      for (final MarkerColor c in all)
-                        if (c.colorId == current.colorId) c,
-                    ].firstOrNull ??
-                    current;
-                pool = swatchCandidateColors(
-                  colors: all,
-                  brand: MarkerBrand.fromId(current.brandId),
-                );
-                if (!context.mounted) return;
-                setSheetState(() {});
-                messenger
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(content: Text(l10n.swatchesMyColourSaved)),
-                  );
-              },
-              onResetOwnColor: () async {
-                await scope.ownColors.remove(current.colorId);
-                final List<MarkerColor> all = await scope.markers.loadColors(
-                  MarkerBrand.fromId(current.brandId),
-                );
-                current =
-                    <MarkerColor>[
-                      for (final MarkerColor c in all)
-                        if (c.colorId == current.colorId) c,
-                    ].firstOrNull ??
-                    current;
-                pool = swatchCandidateColors(
-                  colors: all,
-                  brand: MarkerBrand.fromId(current.brandId),
-                );
-                if (!context.mounted) return;
-                setSheetState(() {});
-                messenger
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(content: Text(l10n.swatchesMyColourWasReset)),
-                  );
-              },
-              wished: scope.wishlist.contains(current.colorId),
-              dried: scope.dried.contains(current.colorId),
-              owned: _isOwnedNow(scope, current),
-              onToggleWishlist: () async {
-                await scope.wishlist.toggle(current.colorId);
-                if (context.mounted) setSheetState(() {});
-              },
-              onToggleDried: () async {
-                final MarkerColor marker = current;
-                final bool wasDried = scope.dried.contains(marker.colorId);
-                await scope.dried.toggle(marker.colorId);
-                if (!context.mounted) return;
-                setSheetState(() {});
-                // A marker that ran dry is one to buy again: offer the list.
-                if (wasDried || scope.wishlist.contains(marker.colorId)) return;
-                final bool add = await confirmAction(
-                  context,
-                  title: l10n.wishlistOfferTitle,
-                  body: l10n.wishlistOfferBody(marker.newCode),
-                  confirmLabel: l10n.wishlistAdd,
-                );
-                if (!add) return;
-                await scope.wishlist.add(marker.colorId);
-                if (context.mounted) setSheetState(() {});
-              },
-              onToggleFavorite: () {
-                scope.settings.toggleFavorite(current.colorId);
-                setSheetState(() {});
-              },
-              onCopyHex: () async {
-                await Clipboard.setData(
-                  ClipboardData(text: displayHex(current.hex)),
-                );
-                messenger.showSnackBar(
-                  SnackBar(content: Text(l10n.swatchesHexCopied)),
-                );
-              },
-              onBlendingChain: widget.onBlendingChain == null
-                  ? null
-                  : () {
-                      Navigator.of(sheetContext).maybePop();
-                      widget.onBlendingChain!(current);
-                    },
-              onAddToPalette: () async {
-                final ValueChanged<MarkerColor>? hook = widget.onAddToPalette;
-                if (hook != null) {
-                  Navigator.of(sheetContext).maybePop();
-                  hook(current);
-                  return;
-                }
-                await Clipboard.setData(ClipboardData(text: current.newCode));
-                messenger.showSnackBar(
-                  SnackBar(
-                    content: Text(l10n.swatchesCodeCopied(current.newCode)),
-                  ),
-                );
-              },
-              scrollController: scroll,
-              sheetController: sheetController,
-              menuItems: menuItems,
-            );
-          },
-        );
-      },
-    ).whenComplete(sheetController.dispose);
+      builder: detail,
+    ).whenComplete(() {
+      sheetClosed = true;
+      sheetController!.dispose();
+      if (identical(_handSheetToPane, mine)) _handSheetToPane = null;
+      if (!handedToPane) _selection = null;
+    });
   }
+}
+
+/// A marker's detail shown in the pane of the two-pane layout.
+class _PaneDetail {
+  _PaneDetail({
+    required this.builder,
+    required this.menuItems,
+    required this.closed,
+  });
+
+  /// Builds the detail (the same content as the sheet's).
+  final Widget Function(BuildContext context, ScrollController scroll) builder;
+
+  /// The entries of the pane's "⋯" menu.
+  final InkMenuItemsNotifier menuItems;
+
+  /// Tells the detail it is gone (stale photo loads are dropped).
+  final VoidCallback closed;
 }
 
 /// The "⋯" of the swatch sheet: it lives in the frame of the sheet, next to
 /// the close button, and shows the entries the sheet publishes.
 class _SwatchOverflowMenu extends StatefulWidget {
-  const _SwatchOverflowMenu({required this.items});
+  const _SwatchOverflowMenu({super.key, required this.items});
 
   /// The entries of the menu. The sheet fills this list.
   final InkMenuItemsNotifier items;
@@ -1112,10 +1618,7 @@ class _LoadingBody extends StatelessWidget {
           child: GridView.builder(
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
-            gridDelegate: ColorSwatchTile.gridDelegate(
-              context,
-              showHex: false,
-            ),
+            gridDelegate: ColorSwatchTile.gridDelegate(context, showHex: false),
             itemCount: 12,
             itemBuilder: (BuildContext context, int index) => SkeletonBlock(
               height: ColorSwatchTile.gridCellHeight(context, showHex: false),

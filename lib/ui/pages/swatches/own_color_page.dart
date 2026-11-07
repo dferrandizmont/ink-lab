@@ -9,6 +9,7 @@ import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/page_header.dart';
@@ -191,7 +192,7 @@ class _OwnColorPageState extends State<OwnColorPage> {
     _sampleColor = Color(0xFF000000 | colorInt);
     _hex.value = TextEditingValue(
       text: colorIntToHex(colorInt),
-      selection: TextSelection.collapsed(offset: 6),
+      selection: const TextSelection.collapsed(offset: 6),
     );
   }
 
@@ -207,182 +208,186 @@ class _OwnColorPageState extends State<OwnColorPage> {
     final bool invalid = _hex.text.trim().isNotEmpty && chosen == null;
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.ownColorTitle(color.newCode))),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          key: const ValueKey<String>('own-color-page'),
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: const EdgeInsets.fromLTRB(
-            InkSpacing.gutter,
-            InkSpacing.group,
-            InkSpacing.gutter,
-            InkSpacing.pageBottom,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // The help of this page, which used to sit in the swatch sheet.
-              Text(
-                context.l10n.swatchesMyColourHelp,
-                style: AppTypography.secondary.copyWith(color: ink.fg2),
-              ),
-              const SizedBox(height: InkSpacing.group),
-              Text(
-                color.newName,
-                style: AppTypography.secondary.copyWith(color: ink.fg2),
-              ),
-              const SizedBox(height: InkSpacing.block),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: _Compare(
-                      label: context.l10n.swatchesCatalogueLabel,
-                      hex: color.originalHex,
-                    ),
-                  ),
-                  const SizedBox(width: InkSpacing.buttonGap),
-                  Expanded(
-                    child: _Compare(
-                      key: const ValueKey<String>('own-color-preview'),
-                      label: context.l10n.swatchesMineLabel,
-                      hex: chosen,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: InkSpacing.block),
-              TextField(
-                key: const ValueKey<String>('own-color-hex'),
-                controller: _hex,
-                autocorrect: false,
-                enableSuggestions: false,
-                textCapitalization: TextCapitalization.characters,
-                keyboardType: TextInputType.visiblePassword,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp('[0-9a-fA-F#]')),
-                  LengthLimitingTextInputFormatter(7),
-                ],
-                style: AppTypography.code.copyWith(color: ink.fg),
-                onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  labelText: context.l10n.ownColorHexLabel,
-                  prefixText: '#',
-                  errorText: invalid ? context.l10n.ownColorHexInvalid : null,
-                  errorMaxLines: 3,
+      body: InkReadableWidth(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            key: const ValueKey<String>('own-color-page'),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.fromLTRB(
+              InkSpacing.gutter,
+              InkSpacing.group,
+              InkSpacing.gutter,
+              InkSpacing.pageBottom,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                // The help of this page, which used to sit in the swatch sheet.
+                Text(
+                  context.l10n.swatchesMyColourHelp,
+                  style: AppTypography.secondary.copyWith(color: ink.fg2),
                 ),
-              ),
-              const SizedBox(height: InkSpacing.section),
-              InkSectionHeading(context.l10n.ownColorPhotoTitle),
-              const SizedBox(height: InkSpacing.group),
-              Text(
-                context.l10n.ownColorPhotoHelp,
-                style: AppTypography.secondary.copyWith(color: ink.fg2),
-              ),
-              const SizedBox(height: InkSpacing.block),
-              _buildPhoto(context),
-              if (_bytes != null && _sampled != null) ...<Widget>[
                 const SizedBox(height: InkSpacing.group),
-                WhiteBalanceBar(
-                  balance: _balance,
-                  choosing: _choosingWhite,
-                  rejection: _whiteRejection,
-                  onStart: () => setState(() {
-                    _choosingWhite = true;
-                    _whiteRejection = null;
-                  }),
-                  onCancel: () => setState(() {
-                    _choosingWhite = false;
-                    _whiteRejection = null;
-                  }),
-                  onReset: () => setState(() {
-                    _balance = null;
-                    _whiteRejection = null;
-                    _resample();
-                  }),
+                Text(
+                  color.newName,
+                  style: AppTypography.secondary.copyWith(color: ink.fg2),
                 ),
-                if (!_choosingWhite && _pick == null) ...<Widget>[
-                  const SizedBox(height: InkSpacing.group),
-                  Text(
-                    context.l10n.ownColorPhotoTap,
-                    style: AppTypography.secondary.copyWith(color: ink.fg2),
-                  ),
-                ],
-              ],
-              if (_error != null) ...<Widget>[
-                const SizedBox(height: InkSpacing.group),
+                const SizedBox(height: InkSpacing.block),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    InkIcon(
-                      InkIcons.alertCircle,
-                      size: InkGeometry.smallIcon,
-                      color: ink.error,
-                    ),
-                    const SizedBox(width: InkSpacing.s8),
                     Expanded(
-                      child: Text(
-                        _error!,
-                        style: AppTypography.secondary.copyWith(color: ink.fg),
+                      child: _Compare(
+                        label: context.l10n.swatchesCatalogueLabel,
+                        hex: color.originalHex,
+                      ),
+                    ),
+                    const SizedBox(width: InkSpacing.buttonGap),
+                    Expanded(
+                      child: _Compare(
+                        key: const ValueKey<String>('own-color-preview'),
+                        label: context.l10n.swatchesMineLabel,
+                        hex: chosen,
                       ),
                     ),
                   ],
                 ),
-              ],
-              const SizedBox(height: InkSpacing.block),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: InkButton.secondary(
-                      key: const ValueKey<String>('own-color-camera'),
-                      label: context.l10n.matchCameraButton,
-                      icon: InkIcons.camera,
-                      expand: true,
-                      onPressed: _picking
-                          ? null
-                          : () => _pickPhoto(PhotoSource.camera),
-                    ),
+                const SizedBox(height: InkSpacing.block),
+                TextField(
+                  key: const ValueKey<String>('own-color-hex'),
+                  controller: _hex,
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  textCapitalization: TextCapitalization.characters,
+                  keyboardType: TextInputType.visiblePassword,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp('[0-9a-fA-F#]')),
+                    LengthLimitingTextInputFormatter(7),
+                  ],
+                  style: AppTypography.code.copyWith(color: ink.fg),
+                  onChanged: (_) => setState(() {}),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.ownColorHexLabel,
+                    prefixText: '#',
+                    errorText: invalid ? context.l10n.ownColorHexInvalid : null,
+                    errorMaxLines: 3,
                   ),
-                  const SizedBox(width: InkSpacing.buttonGap),
-                  Expanded(
-                    child: InkButton.secondary(
-                      key: const ValueKey<String>('own-color-gallery'),
-                      label: context.l10n.matchGalleryButton,
-                      icon: InkIcons.image,
-                      expand: true,
-                      onPressed: _picking
-                          ? null
-                          : () => _pickPhoto(PhotoSource.gallery),
-                    ),
+                ),
+                const SizedBox(height: InkSpacing.section),
+                InkSectionHeading(context.l10n.ownColorPhotoTitle),
+                const SizedBox(height: InkSpacing.group),
+                Text(
+                  context.l10n.ownColorPhotoHelp,
+                  style: AppTypography.secondary.copyWith(color: ink.fg2),
+                ),
+                const SizedBox(height: InkSpacing.block),
+                _buildPhoto(context),
+                if (_bytes != null && _sampled != null) ...<Widget>[
+                  const SizedBox(height: InkSpacing.group),
+                  WhiteBalanceBar(
+                    balance: _balance,
+                    choosing: _choosingWhite,
+                    rejection: _whiteRejection,
+                    onStart: () => setState(() {
+                      _choosingWhite = true;
+                      _whiteRejection = null;
+                    }),
+                    onCancel: () => setState(() {
+                      _choosingWhite = false;
+                      _whiteRejection = null;
+                    }),
+                    onReset: () => setState(() {
+                      _balance = null;
+                      _whiteRejection = null;
+                      _resample();
+                    }),
                   ),
-                ],
-              ),
-              const SizedBox(height: InkSpacing.group),
-              Row(
-                children: <Widget>[
-                  InkIcon(
-                    InkIcons.lock,
-                    size: InkGeometry.smallIcon,
-                    color: ink.fg2,
-                  ),
-                  const SizedBox(width: InkSpacing.s8),
-                  Expanded(
-                    child: Text(
-                      context.l10n.matchPrivacyCaption,
+                  if (!_choosingWhite && _pick == null) ...<Widget>[
+                    const SizedBox(height: InkSpacing.group),
+                    Text(
+                      context.l10n.ownColorPhotoTap,
                       style: AppTypography.secondary.copyWith(color: ink.fg2),
                     ),
+                  ],
+                ],
+                if (_error != null) ...<Widget>[
+                  const SizedBox(height: InkSpacing.group),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      InkIcon(
+                        InkIcons.alertCircle,
+                        size: InkGeometry.smallIcon,
+                        color: ink.error,
+                      ),
+                      const SizedBox(width: InkSpacing.s8),
+                      Expanded(
+                        child: Text(
+                          _error!,
+                          style: AppTypography.secondary.copyWith(
+                            color: ink.fg,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              ),
-              const SizedBox(height: InkSpacing.section),
-              InkButton(
-                key: const ValueKey<String>('own-color-save'),
-                label: context.l10n.ownColorSave,
-                expand: true,
-                onPressed: chosen == null
-                    ? null
-                    : () => Navigator.of(context).pop(chosen),
-              ),
-            ],
+                const SizedBox(height: InkSpacing.block),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: InkButton.secondary(
+                        key: const ValueKey<String>('own-color-camera'),
+                        label: context.l10n.matchCameraButton,
+                        icon: InkIcons.camera,
+                        expand: true,
+                        onPressed: _picking
+                            ? null
+                            : () => _pickPhoto(PhotoSource.camera),
+                      ),
+                    ),
+                    const SizedBox(width: InkSpacing.buttonGap),
+                    Expanded(
+                      child: InkButton.secondary(
+                        key: const ValueKey<String>('own-color-gallery'),
+                        label: context.l10n.matchGalleryButton,
+                        icon: InkIcons.image,
+                        expand: true,
+                        onPressed: _picking
+                            ? null
+                            : () => _pickPhoto(PhotoSource.gallery),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: InkSpacing.group),
+                Row(
+                  children: <Widget>[
+                    InkIcon(
+                      InkIcons.lock,
+                      size: InkGeometry.smallIcon,
+                      color: ink.fg2,
+                    ),
+                    const SizedBox(width: InkSpacing.s8),
+                    Expanded(
+                      child: Text(
+                        context.l10n.matchPrivacyCaption,
+                        style: AppTypography.secondary.copyWith(color: ink.fg2),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: InkSpacing.section),
+                InkButton(
+                  key: const ValueKey<String>('own-color-save'),
+                  label: context.l10n.ownColorSave,
+                  expand: true,
+                  onPressed: chosen == null
+                      ? null
+                      : () => Navigator.of(context).pop(chosen),
+                ),
+              ],
+            ),
           ),
         ),
       ),

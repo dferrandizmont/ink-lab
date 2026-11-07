@@ -3,10 +3,134 @@
 What changes in each version of Ink Lab, newest first. The "Unreleased" section fills up as changes land and becomes
 the next version on the day it ships.
 
-Numbering: the last number goes up with fixes (0.3.1 → 0.3.2), the middle one with new features (→ 0.4.0), and 1.0.0
-will be the production launch in the stores. Every version ships on
-[GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play and the App Store may get several at once,
-so they can skip numbers.
+Numbering: 1.0.0 is the first stable version. From there it follows semantic versioning: the last number goes up with
+fixes (1.0.0 → 1.0.1), the middle one with new features (→ 1.1.0), and the first one with incompatible changes or a big
+redesign (→ 2.0.0). Every version ships on [GitHub](https://github.com/dferrandizmont/ink-lab/releases); Google Play
+and the App Store may get several at once, so they can skip numbers.
+
+## Unreleased
+
+## 1.0.0 · 2026-11-07
+
+The first stable version. It is everything in 0.11.0 (below), which never reached the stores, plus the fixes found while
+testing it. From here on, versions follow semantic versioning.
+
+What it brings from 0.11.0: eleven new brands (fifteen in all), a fuller marker detail with ink level, real-swatch
+photo, shadow and light and blends, palette and collection tools, home-screen shortcuts, and layouts for tablets and
+iPad. The full list is in the 0.11.0 section below.
+
+Fixes since 0.11.0:
+
+- «Export and import» shows consistent counts.
+- On a tablet, the selection is no longer lost when you rotate the device.
+- The marker detail sheet works when you rotate to the two-pane layout.
+- Importing a palette from text gives consistent counts.
+- The date of the last backup is shown correctly.
+- The sheet of the colour map is fixed.
+- The adjustment chips fit on a tablet in landscape.
+- The first-run setup fits in landscape.
+- Bottom sheets (filters, marker detail, pickers) keep their last row above the Android navigation bar; with
+  three-button navigation it covered the end of the sheet. Reported by a tester.
+- Pages, tablet tabs and the detail pane also keep their last row above the Android navigation bar.
+- The colour map's marker sheet opens at the height of its content instead of full screen.
+- The palette's import note goes away when you leave the tab.
+- Import by code counts junk text (very long tokens, markup, symbols) as "Not recognised" instead of ignoring it.
+- On a tablet, Back closes the marker detail pane before leaving the app.
+- Settings: the backup button is now "Share backup file", and its note names all the photos in the ZIP (diary,
+  swatches and recipes).
+
+## 0.11.0 · 2026-11-07
+
+Fifteen brands, a fuller marker detail, new palette and collection tools, and layouts for tablets and iPad.
+
+Brands:
+
+- Eleven new marker brands, fifteen in all: Touch Twin (202), Promarker (148), Promarker Brush (72), Prismacolor
+  Premier (200), Spectrum Noir (216), Arrtx (328), ZIG Kurecolor (136), Graph'it (168), Marvy Le Plume (144), Blick
+  Studio Brush (96) and Artist's Loft (56). They work everywhere: setup, My collection, Match, Palette, the purchase
+  ideas, backups and «In other brands».
+- Copic now lists its product lines (Sketch, Ciao and Classic) in the catalogue; nothing changes in how your Copic
+  markers, favourites, palettes or backups work.
+- Colours with no published name (the 90 Arrtx OROS 160 colours and 122 Marvy Le Plume colours) show their code.
+- Choosing a brand (in the first-run setup and in My collection) is a list with a search field, a «Popular» group and
+  «More brands» in alphabetical order. The diary numbers only read the brands you own markers of.
+
+Marker detail:
+- Marker detail: an owned marker now has an ink level (full, running out or dried out) and an optional refill note
+  (up to 80 characters). Running-out markers are still used everywhere; they appear in a «Running out» group of the
+  wishlist card so you remember to buy or refill them. Dried out works as before.
+- Marker detail: attach a photo of your real paper swatch (camera or gallery, scaled to about 1024 px) next to the
+  screen colour. It stays on the phone, in a private folder, and travels in the backup file with the notes and ink
+  levels.
+- Marker detail: «Shadow and light» shows the closest darker and lighter marker of your collection in the same colour,
+  and «Blend with…» draws the gradient to another of your markers with the ones you own in between (and the closest one
+  you lack when there is a big gap).
+- Marker detail: for a marker you do not own, «You already have N markers very close to this»; the wishlist flags the
+  same near-duplicates.
+- «In other brands» with fifteen brands: the brands you own come first, and one «All brands» list holds the closest
+  marker of every brand, closest first.
+
+Palette:
+
+- The base marker hint shows two codes of markers you own, instead of a fixed example.
+- Regenerate works for every palette type: each tap picks other markers among the best ones for every role, and a
+  blending chain moves to its next alternative. Before, it often gave the same palette again.
+- The secondary buttons fill the width, side by side or stacked when a label would not fit, and the «Add by family»
+  chips are a two-column grid.
+- Easel mode: the palette in large swatches, to keep next to the paper; the screen stays on while it is open.
+- «Colour vision» has a greyscale «Values» view, to compare how light or dark the colours are.
+- Share as text: the palette as a readable list (code, name and role) plus one line that Ink Lab reads back. «Import
+  from text» loads a shared palette or any pasted list of codes, and names the codes it does not know.
+
+Match and Swatches:
+
+- Match starts with one line about what it does and two large buttons, take a photo or choose one; the photo then
+  takes their place.
+- Match has the same greyscale «Values» view for the photo and the swatches.
+- Screen readers: the photo says the sampled colour (hex, code, name and closeness), each new sample is announced, and
+  actions move the sample point without dragging.
+- Swatches: a hex code (3 or 6 digits, with or without #) shows the 12 closest markers first.
+
+My collection › Tools:
+
+- «Colour map»: your markers by hue and lightness, with the empty cells marked, the greys in a strip of their own and,
+  if you want, the whole range of your brands behind them.
+- «Translate a recipe»: paste the codes of a tutorial in any brand and get the closest marker you own for each, or a
+  note when nothing is close. Copy or share the result as text.
+- «My recipes»: your own blends, with a title, the markers in order, a note and an optional photo. They are kept on the
+  phone and travel in both backups (the photos only in the ZIP file).
+- «Export and import»: your collection as CSV or as a short text list, and a list of codes in, with a preview of what is
+  new, already owned or unknown before anything is added.
+
+First-run setup:
+
+- «Next» is a full-width button with «Back» under it, so nothing moves between steps.
+- The setup remembers the step and the choices if you leave the app, until you press Start or Skip.
+
+Settings:
+
+- About: open-source licences, and «Send feedback», which opens your email app with the app version, the platform
+  and the system version.
+- A local error log: unexpected errors are written to a small file on the phone, without web-address parameters, keys,
+  email addresses or folder names. Nothing is sent by itself; you can share or clear it in About.
+- The backup card shows when you last saved a backup file and suggests a new one after 30 days.
+
+Other:
+
+- Home-screen shortcuts to Match, New palette and Search swatches (long press on the icon on Android, quick actions on
+  iPhone and iPad).
+- After the third saved palette or the first diary entry, the app asks once for a rating in Google Play or the App
+  Store. The store shows its own dialog; Ink Lab receives nothing and never asks again.
+- The diary is kept in a file of its own, written safely with a copy of the previous version; existing diaries move
+  there by themselves.
+- Layouts for tablets and iPad.
+
+Fixes:
+
+- Regenerate did nothing for most palette types.
+- After choosing another marker in the detail sheet, dragging the sheet could dismiss it (the content stayed scrolled
+  while the sheet went back to half height).
+- Diary: the «finished» part of the status bar had too little contrast.
 
 ## 0.10.2 · 2026-11-05
 

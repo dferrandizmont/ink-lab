@@ -1,0 +1,2022 @@
+[
+  {
+    "code": "0",
+    "name": "Colorless Blender",
+    "hex": "ffffff",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y164",
+    "name": "Anise",
+    "hex": "f7f3ab",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG179",
+    "name": "Aqua Mint",
+    "hex": "bfe3da",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP87",
+    "name": "Azalea Purple",
+    "hex": "d623a5",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B66",
+    "name": "Baby Blue",
+    "hex": "16c7e2",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR133",
+    "name": "Baby Skin Pink",
+    "hex": "ffedd7",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR29",
+    "name": "Barely Beige",
+    "hex": "fee9db",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "120",
+    "name": "Black",
+    "hex": "000000",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG1",
+    "name": "Blue Grey 1",
+    "hex": "dde5e9",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG3",
+    "name": "Blue Grey 3",
+    "hex": "c6ced6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG5",
+    "name": "Blue Grey 5",
+    "hex": "a2acb3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG7",
+    "name": "Blue Grey 7",
+    "hex": "859197",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG9",
+    "name": "Blue Grey 9",
+    "hex": "55626e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB273",
+    "name": "Blue Berry",
+    "hex": "a5b0ce",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R136",
+    "name": "Blush",
+    "hex": "fccaca",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR94",
+    "name": "Brick Brown",
+    "hex": "a34f39",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB74",
+    "name": "Brilliant Blue",
+    "hex": "4d8dc0",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR99",
+    "name": "Bronze",
+    "hex": "81654b",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y42",
+    "name": "Bronze Green",
+    "hex": "979e81",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR111",
+    "name": "Brown",
+    "hex": "e8a189",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR104",
+    "name": "Brown Grey",
+    "hex": "d2ba93",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR93",
+    "name": "Burnt Orange",
+    "hex": "a96f4e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR95",
+    "name": "Burnt Sienna",
+    "hex": "997156",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y141",
+    "name": "Buttercup Yellow",
+    "hex": "fed4af",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y45",
+    "name": "Canaria Yellow",
+    "hex": "fef3a3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R11",
+    "name": "Carmine",
+    "hex": "ef2a47",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B63",
+    "name": "Cerulean Blue",
+    "hex": "00b1c1",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B262",
+    "name": "Cerulean Blue Light",
+    "hex": "00bde4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R5",
+    "name": "Cherry Pink",
+    "hex": "f15994",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR98",
+    "name": "Chestnut Brown",
+    "hex": "5d3b35",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR92",
+    "name": "Chocolate",
+    "hex": "8a5a4a",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR116",
+    "name": "Clay",
+    "hex": "c2b59f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB71",
+    "name": "Cobalt Blue",
+    "hex": "297ab7",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G242",
+    "name": "Cobalt Green Pale",
+    "hex": "a8c79f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG0.5",
+    "name": "Cool Grey 0.5",
+    "hex": "edecf1",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG1",
+    "name": "Cool Grey 1",
+    "hex": "dfdfe6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG2",
+    "name": "Cool Grey 2",
+    "hex": "d0d3da",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG3",
+    "name": "Cool Grey 3",
+    "hex": "c4c7cf",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG4",
+    "name": "Cool Grey 4",
+    "hex": "b8bac2",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG5",
+    "name": "Cool Grey 5",
+    "hex": "acaeb4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG6",
+    "name": "Cool Grey 6",
+    "hex": "9da0a7",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG7",
+    "name": "Cool Grey 7",
+    "hex": "909397",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG8",
+    "name": "Cool Grey 8",
+    "hex": "7b8389",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "CG9",
+    "name": "Cool Grey 9",
+    "hex": "62676e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG178",
+    "name": "Cool Shadow",
+    "hex": "d3ebe6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R16",
+    "name": "Coral Pink",
+    "hex": "f4928d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R12",
+    "name": "Coral Red",
+    "hex": "f25b6a",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP7",
+    "name": "Cosmos",
+    "hex": "f7b1b8",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y36",
+    "name": "Cream",
+    "hex": "ffdd9d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB75",
+    "name": "Dark Blue Light",
+    "hex": "b7b4d6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG51",
+    "name": "Dark Green",
+    "hex": "328371",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR31",
+    "name": "Dark Yellow",
+    "hex": "f1be2f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG52",
+    "name": "Deep Green",
+    "hex": "3a8f77",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G43",
+    "name": "Deep Olive Green",
+    "hex": "8ba586",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R10",
+    "name": "Deep Red",
+    "hex": "f0002e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P81",
+    "name": "Deep Violet",
+    "hex": "914bac",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR32",
+    "name": "Deep Yellow",
+    "hex": "f1cc2f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY173",
+    "name": "Dim Green",
+    "hex": "f4fbde",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP293",
+    "name": "Dull Cosmos Purple",
+    "hex": "e8c1ca",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G55",
+    "name": "Emerald Green",
+    "hex": "00b78e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR115",
+    "name": "Flax",
+    "hex": "dbcab5",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R139",
+    "name": "Flesh",
+    "hex": "fccfc3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "F121",
+    "name": "Fluorescent Coral Red",
+    "hex": "f15a7e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "F124",
+    "name": "Fluorescent Green",
+    "hex": "cade79",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "F122",
+    "name": "Fluorescent Orange",
+    "hex": "f48f33",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "F126",
+    "name": "Fluorescent Pink",
+    "hex": "f169b0",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "F125",
+    "name": "Fluorescent Rose",
+    "hex": "ec37a9",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "F123",
+    "name": "Fluorescent Yellow",
+    "hex": "f7ee27",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG50",
+    "name": "Forest Green",
+    "hex": "2b8c8d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R22",
+    "name": "French Vermilion",
+    "hex": "f47935",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y44",
+    "name": "Fresh Green",
+    "hex": "e8d031",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B182",
+    "name": "Frost Blue",
+    "hex": "ceebed",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R28",
+    "name": "Fruit Pink",
+    "hex": "fcd7cb",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R15",
+    "name": "Geranium",
+    "hex": "d8354e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y222",
+    "name": "Golden Yellow",
+    "hex": "ffcc21",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY47",
+    "name": "Grass Green",
+    "hex": "8ac765",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY163",
+    "name": "Green Bice",
+    "hex": "fdf49d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G243",
+    "name": "Green Deep",
+    "hex": "00b982",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GG1",
+    "name": "Green Grey 1",
+    "hex": "e1e6e6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GG3",
+    "name": "Green Grey 3",
+    "hex": "c9cdcb",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GG5",
+    "name": "Green Grey 5",
+    "hex": "a9adab",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GG7",
+    "name": "Green Grey 7",
+    "hex": "8d918f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GG9",
+    "name": "Green Grey 9",
+    "hex": "5a625d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB272",
+    "name": "Greyish Blue Pale",
+    "hex": "c1d4e8",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G241",
+    "name": "Greyish Green Deep",
+    "hex": "869585",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY232",
+    "name": "Greyish Green Pale",
+    "hex": "bfc1b4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY233",
+    "name": "Greyish Olive Green",
+    "hex": "b7c1ad",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B65",
+    "name": "Ice Blue",
+    "hex": "00b2b7",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B64",
+    "name": "Indian Blue",
+    "hex": "0097af",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B171",
+    "name": "Jade Green",
+    "hex": "d2eada",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P83",
+    "name": "Lavender",
+    "hex": "ab91b3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY234",
+    "name": "Leaf Green",
+    "hex": "acd25e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR112",
+    "name": "Leather Brown",
+    "hex": "e2b09a",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y35",
+    "name": "Lemon Yellow",
+    "hex": "fdf16f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB271",
+    "name": "Light Blue",
+    "hex": "90caee",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R140",
+    "name": "Light Orange",
+    "hex": "f8b4a7",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R138",
+    "name": "Light Pink",
+    "hex": "f9c8d8",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P82",
+    "name": "Light Violet",
+    "hex": "a35baf",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY175",
+    "name": "Lime Green",
+    "hex": "c7dbb5",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP292",
+    "name": "Magenta Deep",
+    "hex": "f059a4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR96",
+    "name": "Mahogany",
+    "hex": "a98156",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR24",
+    "name": "Marigold",
+    "hex": "f9af31",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B62",
+    "name": "Marine Blue",
+    "hex": "5193a9",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P146",
+    "name": "Mauve Shadow",
+    "hex": "e3cce3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP137",
+    "name": "Medium Pink",
+    "hex": "f4cedc",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR33",
+    "name": "Melon Yellow",
+    "hex": "fec422",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY166",
+    "name": "Mignonette",
+    "hex": "ebf1c5",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR132",
+    "name": "Milky White",
+    "hex": "fff7eb",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B143",
+    "name": "Mint Blue",
+    "hex": "cae8e2",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G56",
+    "name": "Mint Green",
+    "hex": "00bf97",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G58",
+    "name": "Mint Green Light",
+    "hex": "59c7ad",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR91",
+    "name": "Natural Oak",
+    "hex": "965143",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R2",
+    "name": "Old Red",
+    "hex": "a8254d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y41",
+    "name": "Olive Green",
+    "hex": "c5b767",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y225",
+    "name": "Olive Green Dark",
+    "hex": "8a8d66",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y224",
+    "name": "Olive Pale",
+    "hex": "bcb44e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR23",
+    "name": "Orange",
+    "hex": "f69f31",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB144",
+    "name": "Pale Baby Blue",
+    "hex": "dbe6f5",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB77",
+    "name": "Pale Blue",
+    "hex": "d4c8e2",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB185",
+    "name": "Pale Blue Light",
+    "hex": "bde1f7",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR114",
+    "name": "Pale Camel",
+    "hex": "eacbaf",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R135",
+    "name": "Pale Cherry Pink",
+    "hex": "fde1dd",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR142",
+    "name": "Pale Cream",
+    "hex": "fedbb5",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY59",
+    "name": "Pale Green",
+    "hex": "afd8af",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY167",
+    "name": "Pale Green Light",
+    "hex": "d5e9c9",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P145",
+    "name": "Pale Lavender",
+    "hex": "e6e3f1",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P147",
+    "name": "Pale Lilac",
+    "hex": "ecc0d9",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP9",
+    "name": "Pale Pink",
+    "hex": "f8bec4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP196",
+    "name": "Pale Pink Light",
+    "hex": "fcdcdf",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP89",
+    "name": "Pale Purple",
+    "hex": "d996d1",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y38",
+    "name": "Pale Yellow",
+    "hex": "fef6b2",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B67",
+    "name": "Pastel Blue",
+    "hex": "97d6e2",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y49",
+    "name": "Pastel Green",
+    "hex": "ede792",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR26",
+    "name": "Pastel Peach",
+    "hex": "eabb98",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP17",
+    "name": "Pastel Pink",
+    "hex": "e5a2c3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P84",
+    "name": "Pastel Violet",
+    "hex": "e0aef6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y37",
+    "name": "Pastel Yellow",
+    "hex": "fdf395",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R18",
+    "name": "Peach",
+    "hex": "fac2c0",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B263",
+    "name": "Peacock Blue",
+    "hex": "1ea5d3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GB61",
+    "name": "Peacock Green",
+    "hex": "00a1a4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR113",
+    "name": "Peanut",
+    "hex": "f5e2c6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR109",
+    "name": "Pearl White",
+    "hex": "fff6e2",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P282",
+    "name": "Peony Purple",
+    "hex": "c992b3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR103",
+    "name": "Potato Brown",
+    "hex": "d39d4f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB183",
+    "name": "Phthalo Blue",
+    "hex": "acc8e9",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR27",
+    "name": "Powder Pink",
+    "hex": "fee5d8",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B261",
+    "name": "Primary Cyan",
+    "hex": "02a4c0",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP291",
+    "name": "Primary Magenta",
+    "hex": "f15b9d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y221",
+    "name": "Primary Yellow",
+    "hex": "feee00",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P283",
+    "name": "Purple Deep",
+    "hex": "83457b",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP88",
+    "name": "Purple Grey",
+    "hex": "e0a1c3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB69",
+    "name": "Prussian Blue",
+    "hex": "2f5d97",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y169",
+    "name": "Putty",
+    "hex": "e1d4a9",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR134",
+    "name": "Raw Silk",
+    "hex": "ffeed3",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR102",
+    "name": "Raw Umber",
+    "hex": "947149",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR97",
+    "name": "Rose Beige",
+    "hex": "cfa17d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R8",
+    "name": "Rose Pink",
+    "hex": "f6a5af",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R3",
+    "name": "Rose Red",
+    "hex": "d9138c",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB70",
+    "name": "Royal Blue",
+    "hex": "0c8abe",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR25",
+    "name": "Salmon Pink",
+    "hex": "fed4ba",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR107",
+    "name": "Sand",
+    "hex": "f5d0b2",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY235",
+    "name": "Sap Green",
+    "hex": "95a87a",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R13",
+    "name": "Scarlet",
+    "hex": "f2858f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY231",
+    "name": "Seaweed Green",
+    "hex": "89956f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R131",
+    "name": "Skin White",
+    "hex": "ffe8df",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB76",
+    "name": "Sky Blue",
+    "hex": "a0bce1",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY172",
+    "name": "Spectrum Green",
+    "hex": "cfe8cd",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY174",
+    "name": "Spring Dim Green",
+    "hex": "e2edc4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY236",
+    "name": "Spring Green",
+    "hex": "b3d57b",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y223",
+    "name": "Straw Yellow",
+    "hex": "d7c7ac",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP198",
+    "name": "Tender Pink",
+    "hex": "f6afbf",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR21",
+    "name": "Terra Cotta",
+    "hex": "dd923b",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "YR211",
+    "name": "Tiger Lily",
+    "hex": "f48742",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "B68",
+    "name": "Turquoise Blue",
+    "hex": "9cd4ca",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG53",
+    "name": "Turquoise Green",
+    "hex": "00a097",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG57",
+    "name": "Turquoise Green Light",
+    "hex": "4bbbac",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R14",
+    "name": "Vermilion",
+    "hex": "f25d41",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BG251",
+    "name": "Verona Blue",
+    "hex": "8dbbb6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P281",
+    "name": "Violet",
+    "hex": "9a69a6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "PB274",
+    "name": "Violet Dark",
+    "hex": "575aaf",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G54",
+    "name": "Viridian",
+    "hex": "00a38b",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "G46",
+    "name": "Vivid Green",
+    "hex": "45c282",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP6",
+    "name": "Vivid Pink",
+    "hex": "f17eb4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "P85",
+    "name": "Vivid Purple",
+    "hex": "ab3da7",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R4",
+    "name": "Vivid Red",
+    "hex": "f14989",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "RP86",
+    "name": "Vivid Reddish Purple",
+    "hex": "de41aa",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR100",
+    "name": "Walnut",
+    "hex": "ab9752",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG0.5",
+    "name": "Warm Grey 0.5",
+    "hex": "f3efec",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG1",
+    "name": "Warm Grey 1",
+    "hex": "e8e0de",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG2",
+    "name": "Warm Grey 2",
+    "hex": "ded4d1",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG3",
+    "name": "Warm Grey 3",
+    "hex": "cdc5c4",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG4",
+    "name": "Warm Grey 4",
+    "hex": "beb9b6",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG5",
+    "name": "Warm Grey 5",
+    "hex": "b1aba9",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG6",
+    "name": "Warm Grey 6",
+    "hex": "a39e9d",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG7",
+    "name": "Warm Grey 7",
+    "hex": "958f8e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG8",
+    "name": "Warm Grey 8",
+    "hex": "877d79",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "WG9",
+    "name": "Warm Grey 9",
+    "hex": "6a625e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY237",
+    "name": "Willow Green",
+    "hex": "bbc7a5",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "R1",
+    "name": "Wine Red",
+    "hex": "a03b5e",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "Y34",
+    "name": "Yellow",
+    "hex": "fedd00",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "GY48",
+    "name": "Yellow Green",
+    "hex": "cedf4f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  },
+  {
+    "code": "BR101",
+    "name": "Yellow Ochre",
+    "hex": "caa13f",
+    "sets": [],
+    "lines": [
+      "touchTwinMarker",
+      "touchTwinBrush"
+    ]
+  }
+]

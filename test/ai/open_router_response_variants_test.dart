@@ -62,7 +62,7 @@ void main() {
     });
 
     test('prose before and after the JSON, with stray braces', () async {
-      final text =
+      const text =
           'Sure! Here is the {palette} you asked for:\n$body\n'
           'Hope {this} helps.';
       expect(await codesFor(completionResponse(text)), ['B315', 'R101']);
@@ -146,7 +146,7 @@ void main() {
     });
 
     test('skips an unrelated JSON object before the palette', () async {
-      final text = 'Meta: {"thinking":true}\n$body';
+      const text = 'Meta: {"thinking":true}\n$body';
       expect(await codesFor(completionResponse(text)), ['B315', 'R101']);
     });
 

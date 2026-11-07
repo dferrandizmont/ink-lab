@@ -237,6 +237,15 @@ abstract final class InkSpacing {
   /// Minimum bottom padding of a scrollable page, above the nav.
   static const double pageBottom = 24;
 
+  /// [pageBottom] plus the system navigation bar under the page. Android
+  /// draws edge to edge, and an explicit `padding` on a scrollable replaces
+  /// the one it would take from the system, so a page that has no bar of the
+  /// app under it (a pushed page, a tablet page beside the rail) adds it
+  /// here. Under the app's own bar the Scaffold has already removed it, so
+  /// this is [pageBottom] there.
+  static double pageBottomOf(BuildContext context) =>
+      pageBottom + MediaQuery.paddingOf(context).bottom;
+
   /// Inner padding of cards and list rows: at least 16 x 12.
   static const double cardH = 16, cardV = 12;
   static const EdgeInsets card = EdgeInsets.symmetric(
@@ -308,6 +317,11 @@ abstract final class InkGeometry {
   /// Minimum touch target.
   static const double target = 44;
 
+  /// The 48 dp touch target of Android's guideline: used by the controls that
+  /// are small on screen and used while looking at something else (the Match
+  /// tiles and the loupe controls).
+  static const double androidTarget = 48;
+
   /// Visual height of chips and small buttons (inside a 44 hit area).
   static const double chipHeight = 36;
 
@@ -325,6 +339,18 @@ abstract final class InkGeometry {
 
   /// Swatch of a list row (code + name beside it) and of an inline code.
   static const double swatchRow = 36, swatchInline = 20;
+
+  /// The small swatches, all drawn with [InkRadii.xs]: a chip beside a field
+  /// value (16), a picker option or the base-marker field (24) and the swatch
+  /// of a marker row in a sheet (32).
+  static const double swatchXs = 16, swatchSm = 24, swatchMd = 32;
+
+  /// A photo thumbnail of the diary and of a recipe card.
+  static const double thumbLarge = 64;
+
+  /// The slot at the end of a picker row that holds the "selected" check (the
+  /// same width in every row, so the check does not move the text).
+  static const double checkSlot = 32;
   static const double grabberWidth = 36, grabberHeight = 4;
 
   /// A tall row of a sheet or a card ("My colour", a summary row).
@@ -340,6 +366,29 @@ abstract final class InkGeometry {
 
   /// The dots of a match quality meter and the gap between them.
   static const double qualityDot = 6, qualityDotGap = 3;
+
+  /// The dot inside a selected radio ring (the ring is [mediumIcon]).
+  static const double radioDot = 10;
+
+  /// A row of the paint order: its minimum height, the width of the step
+  /// number and the size of the colour dot.
+  static const double stepRowHeight = 22, stepNumberWidth = 12, stepDot = 12;
+}
+
+/// Alpha values of the things drawn over something else.
+abstract final class InkOpacity {
+  /// A `surface` button laid over a photo: the photo shows through, the glyph
+  /// stays readable.
+  static const double overPhoto = 0.85;
+
+  /// The hatching of the colour map, over its grid.
+  static const double hatch = 0.45;
+
+  /// The markers of the whole range in the colour map, under the owned ones.
+  static const double faint = 0.4;
+
+  /// The outline of the shape of a palette type.
+  static const double outline = 0.6;
 }
 
 /// Motion tokens (spec §5).

@@ -84,7 +84,7 @@ class LanguagePickerSheet extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(right: InkSpacing.sheetCloseClearance),
+          padding: const EdgeInsets.only(right: InkSpacing.sheetCloseClearance),
           child: Semantics(
             header: true,
             child: Text(
@@ -158,7 +158,7 @@ class _LanguageRow extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: 32,
+                  width: InkGeometry.checkSlot,
                   child: selected
                       ? Align(
                           alignment: Alignment.centerRight,

@@ -1,0 +1,137 @@
+code,name,x,y
+100,Pale Yellow,103.0,38.0
+102,Lemon Yellow,201.2,38.0
+103,Jasmine,299.4,38.0
+104,Mid Yellow,397.6,38.0
+106,Yellow,495.8,38.0
+120,Barium Yellow,594.0,38.0
+125,Yellow Green,692.2,38.0
+140,Mellow Yellow,790.4,38.0
+153,Ochre,888.6,38.0
+201,Pink Haze,986.8,38.0
+202,Pale Pink,1085.0,38.0
+204,Light Carmine,1183.2,38.0
+208,Carmine Red,1281.4,38.0
+215,Scarlet Red,1379.6,38.0
+217,Cadmium Red,1477.8,38.0
+218,Red,1576.0,38.0
+222,Light Pink,1674.2,38.0
+225,Pink,103.0,182.0
+229,Dark Pink,201.2,182.0
+262,Pale Rose,299.4,182.0
+264,Geranium Red,397.6,182.0
+266,Wine Red,495.8,182.0
+268,Deep Red,594.0,182.0
+285,Blood Red,692.2,182.0
+303,Light Blue,790.4,182.0
+305,Cobalt Blue,888.6,182.0
+315,Persian Blue,986.8,182.0
+317,Blue,1085.0,182.0
+319,Menthol Violet,1183.2,182.0
+320,Navy,1281.4,182.0
+330,Pale Blue,1379.6,182.0
+331,Ice Tint,1477.8,182.0
+332,Alice Blue,1576.0,182.0
+334,Persian Green,1674.2,182.0
+339,Peacock Blue,103.0,326.0
+340,Haze Blue,201.2,326.0
+341,Shadow Mauve,299.4,326.0
+350,Ice Blue,397.6,326.0
+351,Pale Iceberg Blue,495.8,326.0
+364,Cornflower Blue,594.0,326.0
+367,Dull Blue,692.2,326.0
+378,Deep Blue,790.4,326.0
+404,Bright Yellow,888.6,326.0
+406,Cadmium Orange,986.8,326.0
+407,Orange,1085.0,326.0
+416,Ivory,1183.2,326.0
+417,Porcelain,1281.4,326.0
+418,Champagne,1379.6,326.0
+419,English Rose,1477.8,326.0
+420,Natural Beige,1576.0,326.0
+421,Cream Yellow,1674.2,326.0
+423,Vanilla,103.0,470.0
+424,Light Bisque,201.2,470.0
+426,Rose Beige,299.4,470.0
+502,Pale Green,397.6,470.0
+504,Light Green,495.8,470.0
+505,May Green,594.0,470.0
+506,Ocean Green,692.2,470.0
+508,Green,790.4,470.0
+520,Green Shadow,888.6,470.0
+532,Aqua,986.8,470.0
+534,Turquoise Green,1085.0,470.0
+539,Marine Green,1183.2,470.0
+542,Mid Green,1281.4,470.0
+545,Olive Green,1379.6,470.0
+553,Emerald Green,1477.8,470.0
+567,Deep Green,1576.0,470.0
+603,Lilac,1674.2,470.0
+607,Violet,103.0,614.0
+609,Deep Violet,201.2,614.0
+634,Light Violet,299.4,614.0
+637,Purple,397.6,614.0
+665,Deep Pink,495.8,614.0
+705,Brown,594.0,614.0
+723,Sand,692.2,614.0
+730,Oatmeal,790.4,614.0
+731,Pale Beige,888.6,614.0
+732,Beige,986.8,614.0
+736,Mustard,1085.0,614.0
+738,Burnt Sienna,1183.2,614.0
+742,Pale Blush,1281.4,614.0
+743,Blush,1379.6,614.0
+764,Mid Brown,1477.8,614.0
+765,Nutmeg,1576.0,614.0
+766,Light Chestnut,1674.2,614.0
+767,Dark Brown,103.0,758.0
+769,Deep Brown,201.2,758.0
+784,Dark Oatmeal,299.4,758.0
+793,Light Brown,397.6,758.0
+801,Light Gray,495.8,758.0
+803,Gray Brown,594.0,758.0
+805,Dark Gray,692.2,758.0
+808,Natural Gray,790.4,758.0
+821,Pale Gray,888.6,758.0
+822,Blue Gray 1,986.8,758.0
+823,Dawn Gray,1085.0,758.0
+827,Blue Gray 4,1183.2,758.0
+828,Gray,1281.4,758.0
+829,Dark Steel Gray,1379.6,758.0
+832,Blue Gray,1477.8,758.0
+833,Blue Gray 2,1576.0,758.0
+834,Blue Gray 3,1674.2,758.0
+835,Gray Tint,103.0,902.0
+839,Mid Gray,201.2,902.0
+840,Green Gray 1,299.4,902.0
+841,Pale Dawn Gray,397.6,902.0
+842,Green Gray 2,495.8,902.0
+843,Brick Beige,594.0,902.0
+844,Green Gray 3,692.2,902.0
+845,Green Gray,790.4,902.0
+846,Green Gray 4,888.6,902.0
+847,Slate Gray,986.8,902.0
+900,Black,1085.0,902.0
+C01,Cool Gray 1,1183.2,902.0
+C02,Cool Gray 2,1281.4,902.0
+C03,Cool Gray 3,1379.6,902.0
+C04,Cool Gray 4,1477.8,902.0
+C05,Cool Gray 5,1576.0,902.0
+C06,Cool Gray 6,1674.2,902.0
+C07,Cool Gray 7,103.0,1046.0
+C08,Cool Gray 8,201.2,1046.0
+C09,Cool Gray 9,299.4,1046.0
+C10,Cool Gray 10,397.6,1046.0
+C11,Cool Gray 11,495.8,1046.0
+W01,Warm Gray 1,594.0,1046.0
+W02,Warm Gray 2,692.2,1046.0
+W03,Warm Gray 3,790.4,1046.0
+W04,Warm Gray 4,888.6,1046.0
+W05,Warm Gray 5,986.8,1046.0
+W06,Warm Gray 6,1085.0,1046.0
+W07,Warm Gray 7,1183.2,1046.0
+W08,Warm Gray 8,1281.4,1046.0
+W09,Warm Gray 9,1379.6,1046.0
+W10,Warm Gray 10,1477.8,1046.0
+W11,Warm Gray 11,1576.0,1046.0
+B01,Blender,1674.2,1046.0

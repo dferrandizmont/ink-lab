@@ -1,7 +1,7 @@
 # Ink Lab privacy policy
 
 
-Last updated: 2026-11-05
+Last updated: 2026-11-07
 
 Courtesy translation. The [Spanish version](https://inklab.mainshai.com/es/privacy/) is the one that
 applies.
@@ -26,24 +26,32 @@ sends exactly what is explained below.
 
 
 ### Data that stays on your phone (we do not receive it)
-Your active brand, the packs and markers you own, your favourites, your wishlist, the markers you mark as dried out,
-the own colours you store for your markers, your saved palettes, the history of your latest colour matches, the
-entries and photos of your diary, your favourite and recently viewed ideas and your settings are stored only in the
-app's private storage, on your device. For each own colour only its hex code is stored, never the photo you took it
-from. The marker catalogues ship inside the app and everything works offline; "In other brands" (in a marker's
-detail), the "Colour vision" preview (in Palette) and the "Diary numbers" are computed on your phone from those
-catalogues and your data, sending nothing. There is no synchronisation or copy on any server of ours.
+Your active brand, the packs and markers you own, your favourites, your wishlist, the ink level of your markers (full,
+running out or dried out) and your refill notes, the photos of your real swatches, the own colours you store for your
+markers, your saved palettes, your blending recipes and their photos, the history of your latest colour matches, the
+entries and photos of your diary, your favourite and recently viewed ideas, your settings, how far you got in the
+welcome steps, the date you last saved a backup file and the error log (see below) are stored only in the app's private
+storage, on your device. For each own colour only its hex code is stored, never the photo you took it from. The
+catalogues of the 15 marker brands (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker, Promarker Brush,
+Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush and Artist's
+Loft) ship inside the app and everything works offline. "In other brands", "Shadow and light", "Blend with…" and the
+warning about near-identical markers (in a marker's detail), the hex search, the greyscale "Values" view, the "Colour
+vision" preview (in Palette), the "Colour map" and the recipe translator (in My collection → Tools) and the "Diary
+numbers" are computed on your phone from those catalogues and your data, sending nothing. There is no synchronisation
+or copy on any server of ours.
 
-Android's system backup is **switched off** for this app: it excludes all of the app's files from cloud backup and
-from device-to-device transfer, so neither your settings, nor your key, nor your data, nor the diary photos leave the
-phone that way. On iPhone, the preferences and the diary photos may be part of the device or iCloud backup that you
-manage with your Apple account: that is Apple's mechanism, under your control, not a transfer by the developer.
+Android's system backup is **switched off** for this app: it excludes all of the app's files from cloud backup and from
+device-to-device transfer, so neither your settings, nor your key, nor your data, nor your photos, nor the error
+log leave the phone that way. On iPhone, the preferences, the diary, the blending recipes, the photos the app keeps and
+the error log may be part of the device or iCloud backup that you manage with your Apple account: that is Apple's mechanism, under your control, not a transfer
+by the developer.
 
 ### Camera and gallery
 Only when you use "Match", "From a photo" (in Palette) or "My colour" (in a marker's detail), or add a photo to a
-"Diary" entry (in Ideas), and choose to take a photo or pick one from the gallery, the app asks for the permission or
-opens the system picker. The photo is decoded and analysed **on your phone**: it is not uploaded anywhere and it is
-never sent to an AI provider; except in the diary (see below), it is not stored either. In "Match", only the sampled
+"Diary" entry (in Ideas), to a marker's "Real swatch" or to a blending recipe, and choose to take a photo or pick one
+from the gallery, the app asks for the permission or opens the system picker. The photo is decoded and analysed **on
+your phone**: it is not uploaded anywhere and it is never sent to an AI provider; except in the diary, the real swatch
+and the recipes (see below), it is not stored either. In "Match", only the sampled
 colour and the matched marker are kept, in your local history. In "From a photo", its main colours are found to
 suggest markers from your collection; the photo is only kept in memory while you look at the result, and if you save
 the palette, the marker codes are saved, never the photo. In "My colour", you tap the painted swatch in the photo and
@@ -59,24 +67,71 @@ remove the photo or the entry, and with the app when you uninstall it. "Share th
 an image with the title, the date, the status, the first photo, the markers used and the colours of the linked
 palette, and hands it only to the app you pick in the system share sheet.
 
+### Real swatches, ink level and blending recipes
+In the detail of a marker you own you can set its ink level (full, running out or dried out), write a refill note of
+up to 80 characters and add a photo of your real paper swatch, which the app copies, shrunk to about 1024 pixels on a
+side, into its private folder. In My collection → Tools you can keep your own blending recipes (name, markers, notes
+and an optional photo, shrunk to at most 2048 pixels on a side). All of this stays on your phone: the photos are not
+uploaded anywhere and are not sent to the AI features, they are deleted when you remove them or delete the recipe, and
+with the app when you uninstall it. They only leave the phone if you save a backup file (see below) and send it
+somewhere.
+
+### Sharing as text
+"Share as text" (in Palette), the export of your collection as CSV or text and the translated recipe (in Tools) build a
+text with the markers (the brand, the codes and, depending on the case, the names, the colours and whether they are
+dried out) and, only when you tap it, hand it to the app you pick in the system share sheet or copy it to the
+clipboard. "Import from text" and the code import only read the text you paste or type; they open no links and connect
+to nothing.
+
+### Store review
+Once only, after you save your third palette or your first diary entry, the app asks the system to show the store's
+review dialog (Google Play on Android, the App Store on iPhone). The store decides whether to show it and receives your
+review if you write one, under its own terms; Ink Lab receives neither the rating nor the text, does not know whether
+you left a review and sends nothing. On Android it is an internal exchange on the phone with the Google Play app. The
+app only notes on your phone that it has asked, so as not to ask again, and stops trying if the store is unable to show
+the dialog three times.
+
+### Easel mode and shortcuts
+Easel mode (in Palette) shows the palette in large and keeps the screen on while it is open; when you close it, the
+screen goes back to turning off as usual. It needs no permission and stores or sends no data. The home-screen shortcuts
+(a long press on the icon on Android, quick actions on iPhone) only open Match, New palette or Search swatches: they
+carry none of your data.
+
 ### Backup
 "Export" (Settings → Backup) produces a JSON text, not a file, with your settings, the non-secret AI settings, your
-collection, favourites, wishlist, dried-out markers, own colours, palettes, history, favourite and recently viewed
-ideas and the diary entries (with the internal file names of their photos, not the photos), and **copies it to the
-clipboard** for you to paste wherever you like; "Import" receives it by pasting. Importing replaces your current data,
+collection, favourites, wishlist, dried-out markers, ink levels and refill notes, own colours, palettes, history,
+favourite and recently viewed ideas, the diary entries and your blending recipes (with the internal file names of their
+photos and of your swatch photos, not the photos), and **copies it to the clipboard** for you to paste wherever you like; "Import" receives it by pasting. Importing replaces your current data,
 the diary included: entries that are not in the backup are deleted along with their photos, and the app warns you
-before. The backup is not encrypted, carries no identifier and never includes your API key or the diary photos. What
+before. The backup is not encrypted, carries no identifier and never includes your API key or any photo. What
 you do with it afterwards (saving it in your cloud, sending it in a message...) is outside the app. Note that,
 depending on your system, the clipboard may be visible to your keyboard or to other apps.
 
-"Save backup file" (Settings → Your data → Backup file) makes a ZIP file with that same backup and, in addition, the
-diary photos, writes it to the app's temporary (cache) folder and opens the system share sheet for you to save it to
+"Share backup file" (Settings → Your data → Backup file) makes a ZIP file with that same backup and, in addition, the
+photos of your diary, your real swatches and your blending recipes, writes it to the app's temporary (cache) folder and opens the system share sheet for you to save it to
 Files, Drive or the app you choose: it only goes where you send it, and the app deletes the earlier backup files in
 that folder when it makes the next one. "Restore from file" opens the system document picker, which needs no
 permission (the picker leaves a copy of the chosen file in the app's cache, and the app deletes it when it is done);
 the file is checked whole before anything is written and the app asks you to confirm, because it replaces your
-current data, photos included, and deletes the diary photos that are not in the file. No backup, neither the clipboard
+current data, photos included, and deletes the photos that are not in the file. No backup, neither the clipboard
 one nor the file, includes your API key.
+
+The app also remembers, only on your phone, the date you last saved a backup file, to show it to you and to suggest a
+new backup when more than 30 days have passed. That date is not part of any backup.
+
+### Error log
+If the app hits an unexpected error, it writes a short entry to a file in its private storage on your phone, so that the
+fault can be found and fixed. Each entry holds the time, the app version, the platform and system version, the part of
+the app where the error was caught, the first line of the error message (at most 300 characters) and a shortened
+technical trace of the code (stack trace). Before an entry is saved, the app replaces the parameters of web addresses,
+tokens and keys, email addresses and the folder names that identify the app or the device user. The log is meant for
+technical details, not for your content, although an error message may occasionally include a fragment of what the app
+was handling at that moment. The file is capped at about 200 KB and one previous file is kept; older entries are
+discarded. The log **never leaves your phone on its own**: nothing is uploaded and the app uses no crash-reporting
+service. In Settings → About, "Share error log" hands the file, only when you tap it, to the app you pick in the system
+share sheet, and it only goes where you send it; "Clear error log" deletes it, together with the previous file. On
+Android it is excluded from cloud backup and device-to-device transfer, like the rest of the app's data; on iPhone it
+may be part of your device or iCloud backup, also like the rest of the app's data.
 
 ### Optional AI
 It is **off by default** (Settings → AI assistant → Suggest with AI). With it off, the app opens no network connection
@@ -119,19 +174,24 @@ It is not uploaded to the developer, it is not included in backups, and you can 
 the AI fails, the app goes back to colour theory.
 
 ### Permissions
-The app asks for the **camera or photos** permission only when you use "Match", "From a photo" or "My colour", or add
-a photo to the "Diary". On Android it declares **internet** and **network state** access (`INTERNET` and
+The app asks for the **camera or photos** permission only when you use "Match", "From a photo" or "My colour", or add a
+photo to the "Diary", to a real swatch or to a blending recipe. On Android it declares **internet** and **network state** access (`INTERNET` and
 `ACCESS_NETWORK_STATE`), which are only used with AI turned on: for the optional AI with OpenRouter and for the
 diagnostics ML Kit sends Google when the on-device AI is used. It does not ask for location, contacts, calendar,
-microphone or notifications, and it does not use the advertising identifier. If you share a palette, a swatch chart or
-a diary entry as an image, or a backup file, it is only handed to the app you pick in the system share sheet; the app
-needs no permission for it, nor to pick a backup file with the system picker.
+microphone or notifications, and it does not use the advertising identifier. If you share a palette, a swatch chart or a
+diary entry as an image, a backup file or the error log, it is only handed to the app you pick in the system share
+sheet; the app needs no permission for it, nor to pick a backup file with the system picker. Easel mode, the shortcuts
+and the store review need no permission. On iPhone, the app's privacy manifest declares, as Apple requires, that a
+library the app uses (to read its own version) may look up file dates; it only does so for the app's own files, inside
+its private space (reason C617.1), and that information does not leave the phone.
 
 ### Data that is NOT processed
 - We do not ask for or keep your name, email, phone, age or any account data: there are no accounts.
 - The developer uses no analytics and no crash reports, and there are no ads, no personalised advertising and no
   cross-app tracking. The only exception is the diagnostics and usage data ML Kit sends Google when you use the
   on-device AI (see "Optional AI"); the developer does not receive it.
+- The error log (see "Error log") is not a crash report: nothing is sent automatically, and it only leaves your phone if
+  you share it yourself.
 - We do not receive your photos, your collections, your palettes or your key.
 
 ### If you write to us
@@ -144,24 +204,33 @@ mode or scene, the base marker's code and that suggestion's codes, roles and rea
 reaches us if you send it, and we use it to review the reported content and improve the suggestions. If there is no
 email app, the report is copied to the clipboard for you to paste.
 
+"Send feedback" (Settings → About) opens your email app with a message to inklab@mainshai.com, pre-filled with the app
+version, the platform and the system version, and room for you to write. Nothing is sent unless you send the email
+yourself, and the error log is not attached. If there is no email app, the address is copied to the clipboard. If you
+send us the error log, we use it only to find and fix the error.
+
 ## 3. Purposes and legal basis
 
 
 | Processing | Purpose | Legal basis (GDPR) |
 |---|---|---|
-| Collections, wishlist, own colours, favourites, palettes, diary and settings on your phone | So that you can use the app and keep your work | We do not receive them: they stay on your device, under your control |
-| "Match", "From a photo", "My colour" or "Diary" photo | Finding the closest markers, reading the colour of your swatch or keeping the photo of an artwork in your diary | Processed (and, in the diary, stored) only on your phone, at your request; we do not receive it |
+| Collections, ink levels and notes, wishlist, own colours, favourites, palettes, blending recipes, diary and settings on your phone | So that you can use the app and keep your work | We do not receive them: they stay on your device, under your control |
+| "Match", "From a photo", "My colour", "Diary", real swatch or blending recipe photo | Finding the closest markers, reading the colour of your swatch or keeping the photo of an artwork, a swatch or a recipe | Processed (and, in the diary, the real swatch and the recipes, stored) only on your phone, at your request; we do not receive it |
+| Error log on your phone | Finding and fixing the app's errors | Kept only on your phone; we do not receive it. If you choose to send it to us: your request and our legitimate interest in fixing the error (art. 6.1.f) |
 | ML Kit diagnostics (only with the on-device AI, on Android) | Diagnostics and usage analytics of the SDK, according to Google | Sent only if you choose to turn on the optional AI; Google processes them as the provider of ML Kit, under its own terms and privacy policy; we do not receive them |
 | AI with OpenRouter (optional) | Generating palette suggestions | Your consent when you turn it on and use your own key; OpenRouter performs the processing under its own terms |
-| Support emails and AI suggestion reports | Replying to your query and reviewing the reported content | Your request and our legitimate interest in handling it (art. 6.1.f) |
+| Support emails, feedback and AI suggestion reports | Replying to your query and reviewing the reported content | Your request and our legitimate interest in handling it (art. 6.1.f) |
 
 We make no automated decisions and build no profiles about you.
 
 ## 4. Who receives the data
 The app does not transmit data to the developer. If you turn on AI, on Android **Google** receives the diagnostics and
 usage data ML Kit sends when the on-device AI is used. If you use AI with OpenRouter, the request described above is
-received by **OpenRouter** and the **model provider** you choose, on your behalf and with your key.
-If you send a support email or a suggestion report, the holder receives it at inklab@mainshai.com (or at dev@mainshai.com, the address the app used up to version 0.6.2) through the email service you choose.
+received by **OpenRouter** and the **model provider** you choose, on your behalf and with your key. If you send us a
+support email, feedback, a suggestion report or the error log, the holder receives it at inklab@mainshai.com (or at
+dev@mainshai.com, the address the app used up to version 0.6.2) through the service you choose. If you share the error
+log with another person or service, only that recipient receives it. If you write a review in the store's dialog,
+**Google** or **Apple** receives it directly, not the app.
 
 ## 5. International transfers
 The developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose,
@@ -173,9 +242,12 @@ destination of copied text or of a shared file or image) is governed by its own 
 
 
 - **Data on your phone:** until you uninstall the app or clear its data from the system settings (and, where
-  applicable, from the backup texts or files you saved). The diary photos are also deleted as soon as you remove the
-  photo or the entry.
-- **Support emails:** as long as needed to handle your query and, at most, one year after the last reply.
+  applicable, from the backup texts or files you saved). The diary, swatch and recipe photos are also deleted as soon as
+  you remove the photo, the entry or the recipe.
+- **Error log:** on your phone, until you delete it with "Clear error log", clear the app's data or uninstall the app.
+  As it never grows beyond about 200 KB plus one previous file, the oldest entries are discarded along the way.
+- **Support emails, feedback and error logs you send us:** as long as needed to handle your query and, at most, one year
+  after the last reply.
 
 ## 7. Your rights
 
@@ -185,7 +257,7 @@ portability** by writing to inklab@mainshai.com. We will reply within one month.
 
 We do not receive the data stored on your phone, so we cannot see or delete it for you. You can delete it by
 uninstalling the app or clearing its data from the system settings, and take it with you with "Export" (Settings →
-Backup; the diary photos are not part of that text) or with "Save backup file" (which does include them). For anything
+Backup; the photos are not part of that text) or with "Share backup file" (which does include them). For anything
 sent to OpenRouter, exercise your rights with
 OpenRouter and the model provider; for the ML Kit diagnostics, with Google.
 

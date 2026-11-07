@@ -12,10 +12,10 @@
 [![Descargas](https://img.shields.io/github/downloads/dferrandizmont/ink-lab/total?label=descargas&color=30382F)](https://github.com/dferrandizmont/ink-lab/releases)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Inv%C3%ADtame_a_un_caf%C3%A9-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/danielmfdev)
 
-Compañero de muestras y paletas para quien dibuja con rotuladores de alcohol.
-Busca el código de un color, descubre qué rotulador tuyo se parece más a una foto
-y crea paletas con teoría del color usando solo tus rotuladores. App para Android,
-con modo claro y oscuro, raíl lateral en tablets y seis idiomas.
+Compañero de muestras y paletas para quien dibuja con rotuladores de alcohol. Busca el
+código de un color, descubre qué rotulador tuyo se parece más a una foto y crea paletas
+con teoría del color usando solo tus rotuladores. App para Android, iPhone y iPad, con
+modo claro y oscuro, diseño para tablets y seis idiomas.
 
 **Gratis · Sin anuncios · Sin cuenta · Sin conexión · Código abierto**
 
@@ -58,7 +58,7 @@ Comentarios: inklab@mainshai.com.
 
 <p>
   <a href="docs/readme/es/01-swatches.png"><img src="docs/readme/es/01-swatches.png" width="19%" alt="Muestras: los colores de la marca, cada uno con su código y su nombre"></a>
-  <a href="docs/readme/es/02-swatch-detail.png"><img src="docs/readme/es/02-swatch-detail.png" width="19%" alt="El detalle de un rotulador: su hex, sus alternativas más cercanas y el mismo color en otras marcas"></a>
+  <a href="docs/readme/es/02-swatch-detail.png"><img src="docs/readme/es/02-swatch-detail.png" width="19%" alt="El detalle de un rotulador: su hex, el nivel de tinta, la foto de tu muestra, sombra y luz, y el mismo color en otras marcas"></a>
   <a href="docs/readme/es/03-match.png"><img src="docs/readme/es/03-match.png" width="19%" alt="Un color tocado en una foto, emparejado con el rotulador más cercano de tu colección"></a>
   <a href="docs/readme/es/04-palette.png"><img src="docs/readme/es/04-palette.png" width="19%" alt="Una paleta de escena, con el rol y el código de cada color"></a>
   <a href="docs/readme/es/05-diary.png"><img src="docs/readme/es/05-diary.png" width="19%" alt="El diario de dibujos: un resumen de tu trabajo y las últimas entradas"></a>
@@ -72,6 +72,7 @@ Comentarios: inklab@mainshai.com.
   <a href="docs/readme/es/07-ideas.png"><img src="docs/readme/es/07-ideas.png" width="19%" alt="Ideas: ejercicios y técnicas, con sus paletas y tus favoritas"></a>
   <a href="docs/readme/es/08-collection.png"><img src="docs/readme/es/08-collection.png" width="19%" alt="Mi colección: lo que tienes y qué comprar ahora"></a>
   <a href="docs/readme/es/09-settings-dark.png"><img src="docs/readme/es/09-settings-dark.png" width="19%" alt="Ajustes con el tema oscuro"></a>
+  <a href="docs/readme/es/10-colour-map.png"><img src="docs/readme/es/10-colour-map.png" width="19%" alt="El mapa de color: dónde caen tus rotuladores por tono y luminosidad, y qué huecos hay"></a>
 </p>
 
 </details>
@@ -80,57 +81,65 @@ Pulsa una captura para ampliarla.
 
 ## Funciones
 
-- **Diario de dibujos.** Un registro de lo que pintas, con sus fotos, los
-  rotuladores que usaste y los números que hay detrás.
-- **Cuatro marcas.** Ohuhu (503 colores), DecoTime (313), Copic (358) y Finecolour
-  (480), con el rotulador más cercano de cada otra marca en «En otras marcas».
-- **Emparejar.** Toca un punto de una foto para encontrar el rotulador de tu
-  colección más cercano, y corrige los blancos.
-- **Paletas y escenas.** Armonías de teoría del color, degradados y 67
-  escenas listas en 11 categorías.
-- **Copia de seguridad.** Guarda todo en un archivo `.zip`, con las fotos del
-  diario dentro.
-- **Compras.** Una lista de deseos, los rotuladores secos y qué comprar ahora.
+- **Quince marcas, 3420 colores.** Ohuhu, DecoTime, Copic (Sketch, Ciao y Classic),
+  Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum
+  Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush y Artist's
+  Loft, con buscador de marcas y «En otras marcas».
+- **Detalle del rotulador.** Nivel de tinta y nota de recarga, una foto de tu muestra
+  real, sombra y luz, «Mezclar con…» y aviso de casi duplicados.
+- **Emparejar.** Toca un punto de una foto para encontrar el rotulador de tu colección
+  más cercano, corrige los blancos y mira los valores en gris.
+- **Paletas y escenas.** Armonías de teoría del color, degradados y 67 escenas listas,
+  con modo caballete y paletas que compartes o importas como texto.
+- **Herramientas.** Un mapa de color de tu colección, un traductor de recetas de otras
+  marcas, tus propias recetas de mezcla con foto, y exportar o importar como CSV o
+  texto.
+- **Diario de dibujos.** Un registro de lo que pintas, con sus fotos, los rotuladores
+  que usaste y los números que hay detrás.
+- **Copia de seguridad.** Guarda todo en un archivo `.zip`, fotos incluidas; Ajustes te
+  dice cuándo hiciste la última.
 
 <details>
 <summary>Más funciones</summary>
 
-- **Visión del color.** Previsualiza una paleta como la ve alguien con protanopía,
-  deuteranopía, tritanopía o acromatopsia.
-- **Carta de muestras para imprimir.** Páginas A4 con una casilla rotulada para
-  cada rotulador que tienes.
+- **Compras.** Una lista de deseos, los rotuladores secos y qué comprar ahora.
+- **Visión del color.** Mira una paleta como la ve alguien con daltonismo.
+- **Carta de muestras para imprimir.** Páginas A4 con una casilla rotulada para cada
+  rotulador que tienes.
 - **Ideas.** Ejercicios y técnicas con sus propias paletas, y tus favoritas.
-- **Muestras y tu propio color.** Códigos, nombres y valores hex, más el color
-  que tu rotulador da de verdad.
-- **Compartir.** Manda una paleta, una carta o una entrada del diario a otra app
-  como imagen.
+- **Muestras y tu propio color.** Códigos, nombres y valores hex (un hex encuentra los
+  rotuladores más cercanos), más el color que tu rotulador da de verdad.
 - **IA, si quieres.** Sugerencias de paletas opcionales: Gemini Nano en el móvil u
   OpenRouter con tu propia clave.
-- **Widget «Idea del día».** Un widget de Android para la pantalla de inicio
-  con el ejercicio de hoy, en los colores de tus rotuladores. Cambia solo cada
-  día y al tocarlo se abre la idea.
+- **Widget «Idea del día».** Solo en Android: el ejercicio de hoy, con los colores de
+  tus rotuladores, en la pantalla de inicio.
+- **Accesos directos.** Desde el icono de la app, a Emparejar, una paleta nueva o la
+  búsqueda de muestras.
+- **Ajustes.** Licencias de código abierto, «Enviar comentarios» y un registro de
+  errores local que puedes compartir o borrar.
 
 </details>
 
 ## Privacidad
 
-Los datos se guardan en el móvil: sin cuentas, servidor propio, analítica,
-anuncios ni rastreo; sin IA, no se usa la red. El ML Kit de la IA en el móvil
-envía a Google diagnósticos de uso, nunca peticiones, colores ni fotos. El acceso
-a la cámara y la galería solo sirve para emparejar colores, crear escenas, definir
-tu propio color y añadir fotos al diario; esas fotos se procesan en el
-dispositivo, y las del diario se guardan en la carpeta privada de la app y nunca
-se suben. Al compartir una paleta, una carta o la copia `.zip`, el archivo solo se
-entrega a la app que elijas, y nada más.
+Los datos se guardan en el móvil: sin cuentas, servidor propio, analítica, anuncios ni
+rastreo; sin IA, no se usa la red. El ML Kit de la IA en el móvil envía a Google
+diagnósticos de uso, nunca peticiones, colores ni fotos. El acceso a la cámara y la
+galería solo sirve para emparejar colores, crear escenas, definir tu propio color y
+añadir fotos al diario, a tus muestras reales y a tus recetas de mezcla; esas fotos se
+procesan en el dispositivo, y las que guardas se quedan en la carpeta privada de la app
+y nunca se suben. Al compartir una paleta, una carta o la copia `.zip`, el archivo solo
+se entrega a la app que elijas, y nada más.
 
 [Web](https://inklab.mainshai.com/es/) · [Política de privacidad](https://inklab.mainshai.com/es/privacy/) ·
 [Detalle técnico](docs/privacy.md) · Soporte: **inklab@mainshai.com**.
 
 ## Novedades
 
-La versión 0.10.0 ya está fuera. Novedad: un widget de Android para la pantalla
-de inicio con la idea del día, en los colores de tus rotuladores. La serie 0.9
-ordenó la app. La lista completa está en [CHANGELOG.md](CHANGELOG.md) y en las
+La versión 1.0.0 es la primera versión estable. Trae once marcas nuevas, un detalle del
+rotulador más completo, herramientas nuevas, diseño para tablets y iPad, y los arreglos
+de las pruebas. La lista completa está en
+[CHANGELOG.md](CHANGELOG.md) y en las
 [versiones](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contribuir
@@ -146,8 +155,8 @@ son referencias factuales de terceros y quedan fuera de ambas licencias; las
 fuentes tipográficas (SIL OFL 1.1) y los materiales de terceros conservan sus
 licencias.
 
-Proyecto independiente: **no está afiliado, patrocinado ni respaldado por Ohuhu
-ni por DecoTime ni por Copic ni por Finecolour**. «Ohuhu», «Oahu», «DecoTime», «Copic» y «Finecolour» son marcas de sus propietarios.
+Proyecto independiente: **no está afiliado, patrocinado ni respaldado por ninguna
+de estas marcas de rotuladores**. Los nombres de las marcas anteriores son marcas de sus respectivos propietarios.
 Avisos completos: [NOTICE.md](NOTICE.md).
 
 Para comunicar una vulnerabilidad: [SECURITY.es.md](SECURITY.es.md).

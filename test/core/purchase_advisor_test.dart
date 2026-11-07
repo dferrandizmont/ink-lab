@@ -32,14 +32,14 @@ String _hex(double hue, [double s = 1, double v = 1]) =>
 void main() {
   group('sceneRoleTargets', () {
     test('turns the seed by the hue offset and moves value and saturation', () {
-      final Scene scene = Scene(
+      const Scene scene = Scene(
         id: 's',
         category: 'nature',
-        names: const <String, String>{'en': 'S', 'es': 'S'},
+        names: <String, String>{'en': 'S', 'es': 'S'},
         seedHue: 100,
         seedSaturation: 0.5,
         seedValue: 0.8,
-        targets: const <ScenarioTarget>[
+        targets: <ScenarioTarget>[
           ScenarioTarget(
             'Shadow',
             <double>[20],
@@ -67,14 +67,14 @@ void main() {
     });
 
     test('hue wraps around and the saturation limits are kept', () {
-      final Scene scene = Scene(
+      const Scene scene = Scene(
         id: 's',
         category: 'nature',
-        names: const <String, String>{'en': 'S', 'es': 'S'},
+        names: <String, String>{'en': 'S', 'es': 'S'},
         seedHue: 350,
         seedSaturation: 0.9,
         seedValue: 0.9,
-        targets: const <ScenarioTarget>[
+        targets: <ScenarioTarget>[
           ScenarioTarget(
             'Pale',
             <double>[20],

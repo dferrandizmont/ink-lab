@@ -19,6 +19,7 @@ import '../pages/settings/settings_page.dart';
 import '../pages/swatches/swatches_page.dart';
 import '../theme/app_typography.dart';
 import '../theme/tokens.dart';
+import 'app_shortcuts.dart';
 
 /// One destination of the app shell.
 @immutable
@@ -170,6 +171,37 @@ class _AppShellState extends State<AppShell> {
       _selectedIndex = _ideasIndex;
       _visited.add(_ideasIndex);
     }
+    // A home-screen shortcut (long-press menu of the app icon) opens a tab. The
+    // one that launched the app is already waiting here, but the navigator is
+    // only usable from the first frame on.
+    appShortcutRequest.addListener(_onShortcut);
+    if (appShortcutRequest.value != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _onShortcut());
+    }
+  }
+
+  /// Opens the tab of the shortcut the user used, over whatever page, sheet or
+  /// dialog is open, and for "Search swatches" puts the cursor in the search
+  /// field. The request is consumed, so a shortcut is acted on once.
+  void _onShortcut() {
+    final AppShortcut? shortcut = appShortcutRequest.value;
+    if (shortcut == null || !mounted) return;
+    appShortcutRequest.value = null;
+    final int index = appDestinations.indexWhere(
+      (AppDestination d) => d.id == shortcut.destinationId,
+    );
+    if (index < 0) return;
+    Navigator.of(context).popUntil((Route<dynamic> route) => route.isFirst);
+    _goTo(index);
+    if (shortcut == AppShortcut.searchSwatches) {
+      // The Swatches page is built (and its field attached) by the next frame.
+      WidgetsBinding.instance
+        ..addPostFrameCallback((_) {
+          if (mounted) swatchesSearchFocus.requestFocus();
+        })
+        // Swatches may already be on screen, so nothing else asks for a frame.
+        ..scheduleFrame();
+    }
   }
 
   void _onIdeaDeepLink() {
@@ -212,6 +244,7 @@ class _AppShellState extends State<AppShell> {
   @override
   void dispose() {
     ideaDeepLink.removeListener(_onIdeaDeepLink);
+    appShortcutRequest.removeListener(_onShortcut);
     _brandSubscription?.cancel();
     super.dispose();
   }

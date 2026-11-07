@@ -26,7 +26,7 @@ que nadie la confunda con la original.
 
 ## Datos de los catálogos de rotuladores
 
-Los catálogos de Ohuhu, DecoTime, Copic y Finecolour de `assets/data/` (códigos, nombres, valores hex, pertenencia a
+Los catálogos de rotuladores de `assets/data/` (Ohuhu, DecoTime, Copic, Finecolour y el resto de marcas de [NOTICE.md](NOTICE.md)) (códigos, nombres, valores hex, pertenencia a
 sets y posición en la tarjeta de colores) son **datos factuales de referencia**
 recopilados de fuentes públicas, enumeradas en [NOTICE.md](NOTICE.md). Se usan
 solo para que cada persona identifique los rotuladores que ya tiene. **Quedan
@@ -34,12 +34,12 @@ excluidos tanto de MIT como de CC BY-SA 4.0**: este proyecto no reclama derechos
 sobre los datos de terceros y su inclusión no concede ningún derecho sobre las
 marcas, los diseños ni los materiales de sus propietarios. Los valores hex son
 una aproximación en pantalla del color real del rotulador, no una medida del
-fabricante. Los catálogos fuente de Copic y Finecolour conservan sus licencias MIT; los avisos
+fabricante. Los catálogos fuente de Copic y Finecolour conservan sus licencias MIT, y MarkerMatchDB su licencia Apache-2.0; los avisos
 completos de derechos de autor y permisos figuran en [NOTICE.md](NOTICE.md).
 
 ## Marcas
 
-«Ohuhu», «Oahu», «DecoTime», «Copic» y «Finecolour» son marcas de sus respectivos propietarios. Este
+Los nombres de las marcas de rotuladores de la app («Ohuhu», «Oahu», «DecoTime», «Copic», «Finecolour» y las demás de [NOTICE.md](NOTICE.md)) son marcas de sus respectivos propietarios. Este
 proyecto es independiente y no está afiliado, patrocinado ni respaldado por
 ellos. El repositorio no contiene logotipos, fotografías de producto, embalajes
 ni tarjetas de color de ninguna marca.

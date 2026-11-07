@@ -7,10 +7,12 @@ import 'app_settings_repository.dart';
 import 'app_settings_state.dart';
 import 'artwork_diary_repository.dart';
 import 'artwork_photo_store.dart';
+import 'blend_recipe_repository.dart';
 import 'color_id_set_repository.dart';
 import 'color_match_history_repository.dart';
 import 'data_exceptions.dart';
 import 'idea_favorites_repository.dart';
+import 'marker_extras_repository.dart';
 import 'own_color_repository.dart';
 import 'saved_palette_repository.dart';
 
@@ -19,12 +21,15 @@ import 'saved_palette_repository.dart';
 ///
 /// The document holds settings + favourites, saved palettes, colour-match
 /// history, the colours the user stored for their own markers, the wishlist,
-/// the dried-out markers, the artwork diary entries, the favourite ideas with
-/// the ideas opened last, and the non-secret AI settings. It never contains an
+/// the dried-out markers, the markers that are running out with their refill
+/// notes and the names of their swatch photos, the artwork diary entries, the
+/// blending recipes, the favourite ideas with the ideas opened last, and the
+/// non-secret AI settings. It never contains an
 /// API key or any other secret: those live
 /// behind `SecretStore` and are out of scope here. The diary entries carry
 /// their text, date, marker ids, palette id and the *names* of their photo
-/// files, never the photos themselves: the document goes to the clipboard.
+/// files (and so do the swatch photos and the blending recipes), never the
+/// photos themselves: the document goes to the clipboard.
 /// Encryption/password variants are also out of scope.
 ///
 /// The envelope is:
@@ -38,7 +43,11 @@ import 'saved_palette_repository.dart';
 ///   "ownColors": { "<brandId>:<CODE>": "rrggbb" },
 ///   "wishlist": [ "<brandId>:<CODE>", ... ],
 ///   "driedMarkers": [ "<brandId>:<CODE>", ... ],
+///   "runningOutMarkers": [ "<brandId>:<CODE>", ... ],
+///   "refillNotes": { "<brandId>:<CODE>": "text" },
+///   "swatchPhotos": { "<brandId>:<CODE>": "sw-<name>.jpg" },
 ///   "artworkDiary": [ ...ArtworkEntry... ],
+///   "blendRecipes": [ ...BlendRecipe... ],
 ///   "aiSettings": { ...AiSettings... },
 ///   "ideaFavorites": [ "<ideaId>", ... ],
 ///   "recentIdeas": [ "<ideaId>", ... ]
@@ -59,6 +68,8 @@ final class BackupService {
     required this.dried,
     required this.artworkDiary,
     required this.ideaFavorites,
+    this.recipes,
+    this.markerExtras,
   });
 
   /// Version written by [exportJson]; the newest version this service imports.
@@ -96,9 +107,17 @@ final class BackupService {
   /// The favourite ideas and the ideas opened last.
   final IdeaFavoritesRepository ideaFavorites;
 
+  /// The user's blending recipes. Without it the backup carries none and an
+  /// imported document's recipes are ignored.
+  final BlendRecipeRepository? recipes;
+  /// The ink level, the refill notes and the swatch photos of the markers.
+  /// Without it the three sections are neither written nor read.
+  final MarkerExtrasRepository? markerExtras;
+
   /// Serialises the current state. Deterministic for a given state, so
   /// `export -> import -> export` is byte-identical.
   String exportJson({bool pretty = false}) {
+    final MarkerExtrasRepository? extras = markerExtras;
     final payload = <String, dynamic>{
       versionField: currentVersion,
       'appSettings': appSettings.state.toJson(),
@@ -110,9 +129,16 @@ final class BackupService {
       'ownColors': ownColors.colors,
       'wishlist': wishlist.ids.toList(),
       'driedMarkers': dried.ids.toList(),
+      if (extras != null) ...<String, dynamic>{
+        'runningOutMarkers': extras.runningOutIds.toList()..sort(),
+        'refillNotes': extras.notes,
+        'swatchPhotos': extras.photoNames,
+      },
       'artworkDiary': [
         for (final entry in artworkDiary.entries) entry.toJson(),
       ],
+      if (recipes != null)
+        'blendRecipes': [for (final r in recipes!.recipes) r.toJson()],
       'aiSettings': aiSettings.value.toJson(),
       'ideaFavorites': ideaFavorites.favorites.toList()..sort(),
       'recentIdeas': ideaFavorites.recent,
@@ -157,16 +183,55 @@ final class BackupService {
   /// `null` means the document carries no diary section: the diary the user
   /// has stays as it is.
   ///
+  /// The photo of every blending recipe counts too: both live in the same
+  /// private folder and travel in the same archive.
+  ///
   /// Only names that are safe photo names are returned, so a name that comes
   /// from a hostile document can never point outside the photo folder.
   Set<String>? readDiaryPhotoNames(String source) {
     final _BackupDocument document = _readDocument(source);
     final List<ArtworkEntry>? diary = document.artworkDiary;
-    if (diary == null) return null;
+    final List<BlendRecipe>? blends = recipes == null
+        ? null
+        : document.blendRecipes;
+    if (diary == null && blends == null) return null;
     return <String>{
-      for (final ArtworkEntry entry in diary)
-        for (final String name in entry.photos)
-          if (isSafePhotoName(name)) name,
+      if (diary != null)
+        for (final ArtworkEntry entry in diary)
+          for (final String name in entry.photos)
+            if (isSafePhotoName(name)) name,
+      if (blends != null)
+        for (final BlendRecipe recipe in blends)
+          if (recipe.photo != null && isSafePhotoName(recipe.photo!))
+            recipe.photo!,
+    };
+  }
+
+  /// The names of every photo the document refers to: the diary's, the
+  /// blending recipes' and the markers' swatch photos, read and checked,
+  /// without writing anything.
+  ///
+  /// `null` means the document carries none of those sections: the photos the
+  /// user has stay as they are. Only safe names are returned, so a name that
+  /// comes from a hostile document can never point outside the photo folder.
+  Set<String>? readPhotoNames(String source) {
+    final _BackupDocument document = _readDocument(source);
+    final List<ArtworkEntry>? diary = document.artworkDiary;
+    final List<BlendRecipe>? blends = recipes == null
+        ? null
+        : document.blendRecipes;
+    final Map<String, String>? swatches = document.swatchPhotos;
+    if (diary == null && blends == null && swatches == null) return null;
+    return <String>{
+      if (diary != null)
+        for (final ArtworkEntry entry in diary)
+          for (final String name in entry.photos)
+            if (isSafePhotoName(name)) name,
+      if (blends != null)
+        for (final BlendRecipe recipe in blends)
+          if (recipe.photo != null && isSafePhotoName(recipe.photo!))
+            recipe.photo!,
+      if (swatches != null) ...swatches.values,
     };
   }
 
@@ -213,7 +278,11 @@ final class BackupService {
     final own = payload['ownColors'];
     final wished = payload['wishlist'];
     final dry = payload['driedMarkers'];
+    final runningOut = payload['runningOutMarkers'];
+    final notes = payload['refillNotes'];
+    final swatches = payload['swatchPhotos'];
     final diary = payload['artworkDiary'];
+    final blends = payload['blendRecipes'];
     final ai = payload['aiSettings'];
     final favorites = payload['ideaFavorites'];
     final recent = payload['recentIdeas'];
@@ -231,9 +300,19 @@ final class BackupService {
       ownColors: own == null ? null : _readOwnColors(own),
       wishlist: wished == null ? null : _parseIds('wishlist', wished),
       driedMarkers: dry == null ? null : _parseIds('driedMarkers', dry),
+      runningOutMarkers: runningOut == null
+          ? null
+          : _parseIds('runningOutMarkers', runningOut),
+      refillNotes: notes == null ? null : _readTextMap('refillNotes', notes),
+      swatchPhotos: swatches == null
+          ? null
+          : normalizeSwatchPhotos(_readTextMap('swatchPhotos', swatches)),
       artworkDiary: diary == null
           ? null
           : _parseList('artworkDiary', diary, ArtworkEntry.fromJson),
+      blendRecipes: blends == null
+          ? null
+          : _parseList('blendRecipes', blends, BlendRecipe.fromJson),
       // Never let an imported file switch the AI on: it is an explicit opt-in.
       aiSettings: ai == null
           ? null
@@ -278,8 +357,32 @@ final class BackupService {
     final List<String>? dry = document.driedMarkers;
     if (dry != null) await dried.restore(dry);
 
+    final MarkerExtrasRepository? extras = markerExtras;
+    if (extras != null &&
+        (document.runningOutMarkers != null ||
+            document.refillNotes != null ||
+            document.swatchPhotos != null)) {
+      // A marker is in one ink level at a time: the dried-out list (the one
+      // the document carries, or else the one the user has) wins over
+      // "running out".
+      final Set<String> dryNow = <String>{...?dry, if (dry == null) ...dried.ids};
+      await extras.restore(
+        runningOut: document.runningOutMarkers == null
+            ? null
+            : <String>[
+                for (final String id in document.runningOutMarkers!)
+                  if (!dryNow.contains(id)) id,
+              ],
+        notes: document.refillNotes,
+        photos: document.swatchPhotos,
+      );
+    }
+
     final List<ArtworkEntry>? diary = document.artworkDiary;
     if (diary != null) await artworkDiary.restore(diary);
+
+    final List<BlendRecipe>? blends = document.blendRecipes;
+    if (blends != null && recipes != null) await recipes!.restore(blends);
 
     final AiSettings? ai = document.aiSettings;
     if (ai != null) await aiSettings.replace(ai);
@@ -303,6 +406,17 @@ final class BackupService {
       );
     }
     return restored;
+  }
+
+  /// A section that maps a marker id to a text.
+  Map<String, String> _readTextMap(String field, Object? value) {
+    final map = _asMap(value, field, 'an object');
+    for (final text in map.values) {
+      if (text is! String) {
+        throw BackupFormatException('each entry must be a text', field: field);
+      }
+    }
+    return map.cast<String, String>();
   }
 
   /// The own colours of the document: a string for every marker.
@@ -333,7 +447,11 @@ final class _BackupDocument {
     this.ownColors,
     this.wishlist,
     this.driedMarkers,
+    this.runningOutMarkers,
+    this.refillNotes,
+    this.swatchPhotos,
     this.artworkDiary,
+    this.blendRecipes,
     this.aiSettings,
     this.ideaFavorites,
     this.recentIdeas,
@@ -345,7 +463,11 @@ final class _BackupDocument {
   final Map<String, String>? ownColors;
   final List<String>? wishlist;
   final List<String>? driedMarkers;
+  final List<String>? runningOutMarkers;
+  final Map<String, String>? refillNotes;
+  final Map<String, String>? swatchPhotos;
   final List<ArtworkEntry>? artworkDiary;
+  final List<BlendRecipe>? blendRecipes;
   final AiSettings? aiSettings;
   final List<String>? ideaFavorites;
   final List<String>? recentIdeas;

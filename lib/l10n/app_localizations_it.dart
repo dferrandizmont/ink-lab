@@ -150,13 +150,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsBackupFileCaption =>
-      'Un file ZIP con i tuoi dati e le foto del diario. Salvalo in File, Drive o dove preferisci. La chiave API non è mai inclusa.';
+      'Un file ZIP con i tuoi dati e tutte le tue foto: diario, campioni e ricette. Nel menu di condivisione scegli File, Drive o un’altra app per conservarlo. La chiave API non è mai inclusa.';
 
   @override
   String get settingsBackupTextTitle => 'Copia come testo (senza foto)';
 
   @override
-  String get settingsSaveBackupFile => 'Salva il file di backup';
+  String get settingsSaveBackupFile => 'Condividi il file di backup';
 
   @override
   String get settingsRestoreBackupFile => 'Ripristina da file';
@@ -515,7 +515,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get settingsDisclaimer =>
-      'Ink Lab è un progetto indipendente della comunità: non è affiliato, approvato né sponsorizzato da Ohuhu, DecoTime, Copic o Finecolour e usa i loro codici, nomi e valori di colore solo come dati di riferimento fattuali.';
+      'Ink Lab è un progetto indipendente della comunità: non è affiliato, approvato né sponsorizzato da nessuna delle marche di pennarelli elencate. Usa i loro codici, nomi e valori di colore solo come dati di riferimento fattuali.';
 
   @override
   String get paletteTitle => 'Palette';
@@ -524,7 +524,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get paletteBaseCodeLabel => 'Codice del pennarello base';
 
   @override
-  String get paletteBaseCodeHint => 'E08 o B271';
+  String paletteBaseCodeHint(String first, String second) {
+    return '$first o $second';
+  }
+
+  @override
+  String paletteBaseCodeHintOne(String code) {
+    return '$code';
+  }
 
   @override
   String get paletteScenarioToggle => 'Scene';
@@ -937,6 +944,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get swatchesSearchHint => 'Codice, nome o hex';
+
+  @override
+  String swatchesClosestTo(String hex) {
+    return 'Più vicini a $hex';
+  }
 
   @override
   String get swatchesClearSearch => 'Cancella la ricerca';
@@ -2539,11 +2551,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchLoadingPhoto => 'Lettura della foto…';
 
   @override
-  String get matchEmptyPhotoTitle => 'Ancora nessuna foto';
+  String get matchEmptyPhotoTitle => 'Trova un colore da una foto';
 
   @override
   String get matchEmptyPhotoMessage =>
-      'Scatta una foto o sceglila dalla galleria per trovare il pennarello più vicino.';
+      'Scatta una foto, tocca un colore e guarda i pennarelli più vicini.';
 
   @override
   String get matchPhotoSemantics => 'Foto da cui campionare un colore';
@@ -2617,6 +2629,53 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get matchOkButton => 'OK';
+
+  @override
+  String get matchTakePhotoButton => 'Scatta una foto';
+
+  @override
+  String get matchChooseGalleryButton => 'Scegli dalla galleria';
+
+  @override
+  String get matchValuesButton => 'Valori';
+
+  @override
+  String get matchValuesTooltip =>
+      'Mostra la foto e gli abbinamenti in scala di grigi per controllare il contrasto dei valori';
+
+  @override
+  String get matchPhotoSampleHint =>
+      'Tocca due volte per campionare il centro della foto. Usa le azioni per spostare il punto.';
+
+  @override
+  String get matchSampleMiddle => 'Campiona il centro della foto';
+
+  @override
+  String get matchMoveLeft => 'Sposta il punto a sinistra';
+
+  @override
+  String get matchMoveRight => 'Sposta il punto a destra';
+
+  @override
+  String get matchMoveUp => 'Sposta il punto in alto';
+
+  @override
+  String get matchMoveDown => 'Sposta il punto in basso';
+
+  @override
+  String matchSampleSpoken(
+    String hex,
+    String code,
+    String name,
+    String quality,
+  ) {
+    return 'Colore campionato $hex. Pennarello più vicino: $code, $name, $quality.';
+  }
+
+  @override
+  String matchSampleSpokenNone(String hex) {
+    return 'Colore campionato $hex.';
+  }
 
   @override
   String get appTitle => 'Ink Lab';
@@ -2882,6 +2941,27 @@ class AppLocalizationsIt extends AppLocalizations {
       'copic': '$input non è un codice di pennarello Copic. Prova $example.',
       'finecolour':
           '$input non è un codice di pennarello Finecolour. Prova $example.',
+      'touchTwin':
+          '$input non è un codice di pennarello Touch Twin. Prova $example.',
+      'promarker':
+          '$input non è un codice di pennarello Promarker. Prova $example.',
+      'prismacolor':
+          '$input non è un codice di pennarello Prismacolor Premier. Prova $example.',
+      'spectrumNoir':
+          '$input non è un codice di pennarello Spectrum Noir. Prova $example.',
+      'promarkerBrush':
+          '$input non è un codice di pennarello Promarker Brush. Prova $example.',
+      'arrtx': '$input non è un codice di pennarello Arrtx. Prova $example.',
+      'kurecolor':
+          '$input non è un codice di pennarello ZIG Kurecolor. Prova $example.',
+      'graphit':
+          '$input non è un codice di pennarello Graph\'it. Prova $example.',
+      'marvyLePlume':
+          '$input non è un codice di pennarello Marvy Le Plume. Prova $example.',
+      'blickBrush':
+          '$input non è un codice di pennarello Blick Studio Brush. Prova $example.',
+      'artistsLoft':
+          '$input non è un codice di pennarello Artist\'s Loft. Prova $example.',
       'other': '$input non è un codice di pennarello Ink Lab. Prova $example.',
     });
     return '$_temp0';
@@ -2908,6 +2988,17 @@ class AppLocalizationsIt extends AppLocalizations {
       'decoTime': 'Non hai ancora pennarelli DecoTime nella tua collezione. Aggiungili in La mia collezione.',
       'copic': 'Non hai ancora pennarelli Copic nella tua collezione. Aggiungili in La mia collezione.',
       'finecolour': 'Non hai ancora pennarelli Finecolour nella tua collezione. Aggiungili in La mia collezione.',
+      'touchTwin': 'Non hai ancora pennarelli Touch Twin nella tua collezione. Aggiungili in La mia collezione.',
+      'promarker': 'Non hai ancora pennarelli Promarker nella tua collezione. Aggiungili in La mia collezione.',
+      'prismacolor': 'Non hai ancora pennarelli Prismacolor Premier nella tua collezione. Aggiungili in La mia collezione.',
+      'spectrumNoir': 'Non hai ancora pennarelli Spectrum Noir nella tua collezione. Aggiungili in La mia collezione.',
+      'promarkerBrush': 'Non hai ancora pennarelli Promarker Brush nella tua collezione. Aggiungili in La mia collezione.',
+      'arrtx': 'Non hai ancora pennarelli Arrtx nella tua collezione. Aggiungili in La mia collezione.',
+      'kurecolor': 'Non hai ancora pennarelli ZIG Kurecolor nella tua collezione. Aggiungili in La mia collezione.',
+      'graphit': 'Non hai ancora pennarelli Graph\'it nella tua collezione. Aggiungili in La mia collezione.',
+      'marvyLePlume': 'Non hai ancora pennarelli Marvy Le Plume nella tua collezione. Aggiungili in La mia collezione.',
+      'blickBrush': 'Non hai ancora pennarelli Blick Studio Brush nella tua collezione. Aggiungili in La mia collezione.',
+      'artistsLoft': 'Non hai ancora pennarelli Artist\'s Loft nella tua collezione. Aggiungili in La mia collezione.',
       'other': 'Non hai ancora pennarelli nella tua collezione. Aggiungili in La mia collezione.',
     });
     return '$_temp0';
@@ -4065,6 +4156,263 @@ class AppLocalizationsIt extends AppLocalizations {
   String get collectionToolsGroup => 'Strumenti';
 
   @override
+  String get toolsMapTitle => 'Mappa dei colori';
+
+  @override
+  String get toolsMapHint =>
+      'Dove cadono i tuoi pennarelli per tonalità e luminosità, e dove ci sono vuoti.';
+
+  @override
+  String get toolsTranslateTitle => 'Traduci una ricetta';
+
+  @override
+  String get toolsTranslateHint =>
+      'Trasforma i codici di un tutorial nei tuoi pennarelli più vicini.';
+
+  @override
+  String get toolsBlendsTitle => 'Le mie ricette';
+
+  @override
+  String get toolsBlendsHint =>
+      'Sfumature che salvi: pennarelli in ordine, una nota e una foto.';
+
+  @override
+  String get toolsTransferTitle => 'Esporta e importa';
+
+  @override
+  String get toolsTransferHint =>
+      'Condividi i tuoi pennarelli come elenco o CSV, oppure aggiungine molti con i codici.';
+
+  @override
+  String get toolsMapEmptyTitle => 'Ancora nessun pennarello da mappare';
+
+  @override
+  String get toolsMapIntro =>
+      'Ogni punto è un pennarello che possiedi. Le zone tratteggiate non ne hanno.';
+
+  @override
+  String get toolsMapShowRange => 'Mostra tutta la gamma';
+
+  @override
+  String get toolsMapShowRangeHint =>
+      'Punti tenui per tutti i pennarelli delle tue marche, per vedere cosa manca.';
+
+  @override
+  String get toolsMapAxes =>
+      'Da sinistra a destra: tonalità. Dall’alto in basso: da chiaro a scuro.';
+
+  @override
+  String get toolsMapGreysTitle => 'Grigi e neutri';
+
+  @override
+  String get toolsMapGreysAxis => 'Da sinistra a destra: da scuro a chiaro.';
+
+  @override
+  String get toolsMapFamiliesTitle => 'Per tonalità';
+
+  @override
+  String get toolsHueRed => 'Rosso';
+
+  @override
+  String get toolsHueOrange => 'Arancione';
+
+  @override
+  String get toolsHueYellow => 'Giallo';
+
+  @override
+  String get toolsHueGreen => 'Verde';
+
+  @override
+  String get toolsHueTeal => 'Turchese';
+
+  @override
+  String get toolsHueBlue => 'Blu';
+
+  @override
+  String get toolsHueViolet => 'Viola';
+
+  @override
+  String get toolsHueMagenta => 'Magenta';
+
+  @override
+  String toolsFamilyBands(int light, int mid, int dark) {
+    return 'Chiari $light · Medi $mid · Scuri $dark';
+  }
+
+  @override
+  String get toolsMapDriedNote => 'I pennarelli secchi sono esclusi.';
+
+  @override
+  String toolsMapSummary(String markers, int empty, int cells) {
+    return 'Mappa dei colori di $markers. $empty zone su $cells non hanno pennarelli. L’elenco qui sotto riporta gli stessi pennarelli per tonalità.';
+  }
+
+  @override
+  String get toolsMarkerOwned => 'Nella tua collezione';
+
+  @override
+  String get toolsMarkerNotOwned => 'Non è nella tua collezione';
+
+  @override
+  String get toolsTranslateIntro =>
+      'Scrivi o incolla i codici di un tutorial, nella marca che usa. Virgole, spazi ed elenchi vanno bene.';
+
+  @override
+  String get toolsTranslateBrand => 'Marca della ricetta';
+
+  @override
+  String get toolsTranslateCodes => 'Codici';
+
+  @override
+  String get toolsTranslateResults => 'Traduzione';
+
+  @override
+  String get toolsTranslateEmpty => 'I codici che scrivi compaiono qui.';
+
+  @override
+  String get toolsTranslateMine => 'Il più vicino che hai';
+
+  @override
+  String get toolsTranslateNotOwned => 'Non lo hai';
+
+  @override
+  String get toolsTranslateMissing => 'Niente di simile nella tua collezione.';
+
+  @override
+  String toolsTranslateUnknown(String brand) {
+    return 'Non presente in $brand';
+  }
+
+  @override
+  String get toolsCopyList => 'Copia elenco';
+
+  @override
+  String get toolsShareList => 'Condividi elenco';
+
+  @override
+  String get toolsListCopied => 'Elenco copiato.';
+
+  @override
+  String get toolsShareFailed => 'Impossibile condividere l’elenco.';
+
+  @override
+  String get toolsBlendsNew => 'Nuova ricetta';
+
+  @override
+  String get toolsBlendsEditTitle => 'Modifica ricetta';
+
+  @override
+  String get toolsBlendsEmptyTitle => 'Ancora nessuna ricetta';
+
+  @override
+  String get toolsBlendsEmptyBody =>
+      'Salva le sfumature che ti piacciono: pennarelli in ordine, una nota e una foto.';
+
+  @override
+  String get toolsBlendsName => 'Nome della ricetta';
+
+  @override
+  String get toolsBlendsMarkersTitle => 'Pennarelli, in ordine';
+
+  @override
+  String get toolsBlendsMarkersHelp =>
+      'Trascina la maniglia per cambiare l’ordine.';
+
+  @override
+  String get toolsBlendsDrag => 'Trascina per riordinare';
+
+  @override
+  String toolsBlendsRemoveMarker(String code) {
+    return 'Rimuovi $code';
+  }
+
+  @override
+  String get toolsBlendsNote => 'Nota';
+
+  @override
+  String get toolsBlendsPhotoTitle => 'Foto del risultato';
+
+  @override
+  String get toolsBlendsPhotoHelp => 'Facoltativa. Resta su questo telefono.';
+
+  @override
+  String get toolsBlendsPhotoSemantic => 'Foto della ricetta';
+
+  @override
+  String get toolsBlendsSave => 'Salva ricetta';
+
+  @override
+  String get toolsBlendsDelete => 'Elimina ricetta';
+
+  @override
+  String get toolsBlendsDeleteTitle => 'Eliminare questa ricetta?';
+
+  @override
+  String get toolsBlendsDeleteBody =>
+      'La ricetta e la sua foto saranno rimosse da questo telefono.';
+
+  @override
+  String get toolsTransferExport => 'Esporta';
+
+  @override
+  String toolsTransferBrands(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count marche',
+      one: '1 marca',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolsTransferExportBrands(String brands) {
+    return 'Include tutte le marche che hai: $brands.';
+  }
+
+  @override
+  String get toolsTransferCsv => 'Condividi come CSV';
+
+  @override
+  String get toolsTransferImport => 'Importa con i codici';
+
+  @override
+  String get toolsTransferImportHelp =>
+      'Scegli la marca e incolla i suoi codici. Non viene aggiunto nulla finché non premi il pulsante.';
+
+  @override
+  String get toolsTransferNew => 'Pennarelli nuovi';
+
+  @override
+  String get toolsTransferAlready => 'Già tuoi';
+
+  @override
+  String get toolsTransferUnknown => 'Non riconosciuti';
+
+  @override
+  String toolsTransferAdd(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Aggiungi $count pennarelli',
+      one: 'Aggiungi 1 pennarello',
+      zero: 'Aggiungi pennarelli',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolsTransferAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pennarelli aggiunti.',
+      one: '1 pennarello aggiunto.',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String commonSeeAll(int count) {
     return 'Vedi tutto ($count)';
   }
@@ -4129,6 +4477,67 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get paletteVisionPreviewNote =>
       'Solo un’anteprima. Salvando e condividendo restano i colori reali.';
+
+  @override
+  String get paletteEaselTitle => 'Modalità cavalletto';
+
+  @override
+  String get paletteEaselExit => 'Esci dalla modalità cavalletto';
+
+  @override
+  String get paletteShareTextButton => 'Condividi come testo';
+
+  @override
+  String paletteTextHeader(String brand, String title) {
+    return 'Palette di Ink Lab · $brand · $title';
+  }
+
+  @override
+  String get paletteImportTitle => 'Importa da testo';
+
+  @override
+  String get paletteImportHint =>
+      'Incolla una palette condivisa o un elenco di codici di pennarelli.';
+
+  @override
+  String get paletteImportPaste => 'Incolla';
+
+  @override
+  String get paletteImportAction => 'Carica palette';
+
+  @override
+  String get paletteImportNothing =>
+      'Nessun codice di pennarello trovato in questo testo.';
+
+  @override
+  String paletteImportNoneKnown(String brand, String codes) {
+    return 'Nessuno di questi codici è un pennarello $brand: $codes.';
+  }
+
+  @override
+  String paletteImportOtherBrand(String brand) {
+    return 'Questa palette è per $brand. Cambia marca nelle Opzioni per importarla.';
+  }
+
+  @override
+  String paletteImportDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Palette importata con $count pennarelli.',
+      one: 'Palette importata con 1 pennarello.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String paletteImportUnknown(String codes) {
+    return 'Non riconosciuti: $codes.';
+  }
+
+  @override
+  String get paletteImportRepeated =>
+      'I codici ripetuti sono stati contati una sola volta.';
 
   @override
   String get collectionChartHint =>
@@ -4745,4 +5154,336 @@ class AppLocalizationsIt extends AppLocalizations {
   String diaryShareMore(int count) {
     return '+$count in più';
   }
+
+  @override
+  String get settingsLicences => 'Licenze open source';
+
+  @override
+  String get settingsLicencesSubtitle =>
+      'Le licenze del codice, dei caratteri e dei pacchetti usati dall’app';
+
+  @override
+  String get settingsLicencesLegalese =>
+      'Codice di Ink Lab: licenza MIT. Testi, idee e documentazione: CC BY-SA 4.0. Caratteri inclusi: licenza SIL Open Font 1.1.';
+
+  @override
+  String get settingsSendFeedback => 'Invia un commento';
+
+  @override
+  String get settingsSendFeedbackSubtitle =>
+      'Apre la tua app di posta con la versione dell’app e del sistema. Decidi tu se inviarla.';
+
+  @override
+  String settingsFeedbackNoMail(String address) {
+    return 'Nessuna app di posta trovata. L’indirizzo $address è stato copiato.';
+  }
+
+  @override
+  String get settingsErrorLogShare => 'Condividi il registro degli errori';
+
+  @override
+  String get settingsErrorLogShareSubtitle =>
+      'Dettagli tecnici degli errori dell’app, senza il tuo diario né la tua chiave API. Non viene inviato nulla se non lo condividi.';
+
+  @override
+  String get settingsErrorLogClear => 'Cancella il registro degli errori';
+
+  @override
+  String get settingsErrorLogCleared =>
+      'Il registro degli errori è stato cancellato';
+
+  @override
+  String get settingsErrorLogShareFailed =>
+      'Impossibile condividere il registro degli errori';
+
+  @override
+  String settingsLastBackup(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMMMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Ultimo backup: $dateString';
+  }
+
+  @override
+  String get settingsNoBackupYet => 'Ancora nessun backup';
+
+  @override
+  String get settingsBackupReminderNever =>
+      'Hai dei dati nell’app ma nessun backup. Salva un file di backup per non perderli se cambi o ripristini il telefono.';
+
+  @override
+  String get settingsBackupReminderOld =>
+      'Il tuo ultimo backup ha più di un mese. Salva un nuovo file per proteggere il tuo lavoro più recente.';
+
+  @override
+  String get collectionTouchTwinHint =>
+      'Spunta i pennarelli Touch Twin che hai.';
+
+  @override
+  String get onboardingTouchTwinLine =>
+      '202 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionPromarkerHint =>
+      'Spunta i pennarelli Promarker che hai.';
+
+  @override
+  String get onboardingPromarkerLine =>
+      '148 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionPrismacolorHint =>
+      'Spunta i pennarelli Prismacolor Premier che hai.';
+
+  @override
+  String get onboardingPrismacolorLine =>
+      '200 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionSpectrumNoirHint =>
+      'Spunta i pennarelli Spectrum Noir che hai.';
+
+  @override
+  String get onboardingSpectrumNoirLine =>
+      '216 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionPromarkerBrushHint =>
+      'Spunta i pennarelli Promarker Brush che hai.';
+
+  @override
+  String get onboardingPromarkerBrushLine =>
+      '72 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionArrtxHint => 'Spunta i pennarelli Arrtx che hai.';
+
+  @override
+  String get onboardingArrtxLine => '328 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionKurecolorHint =>
+      'Spunta i pennarelli ZIG Kurecolor che hai.';
+
+  @override
+  String get onboardingKurecolorLine =>
+      '136 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionGraphitHint => 'Spunta i pennarelli Graph\'it che hai.';
+
+  @override
+  String get onboardingGraphitLine =>
+      '168 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionMarvyLePlumeHint =>
+      'Spunta i pennarelli Marvy Le Plume che hai.';
+
+  @override
+  String get onboardingMarvyLePlumeLine =>
+      '144 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionBlickBrushHint =>
+      'Spunta i pennarelli Blick Studio Brush che hai.';
+
+  @override
+  String get onboardingBlickBrushLine =>
+      '96 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get collectionArtistsLoftHint =>
+      'Spunta i pennarelli Artist\'s Loft che hai.';
+
+  @override
+  String get onboardingArtistsLoftLine =>
+      '56 colori · Spunta i pennarelli che hai';
+
+  @override
+  String get shortcutMatchLabel => 'Abbina un colore';
+
+  @override
+  String get shortcutNewPaletteLabel => 'Nuova palette';
+
+  @override
+  String get shortcutSearchSwatchesLabel => 'Cerca campioni';
+
+  @override
+  String get brandSearchHint => 'Cerca una marca';
+
+  @override
+  String get brandGroupPopular => 'Popolari';
+
+  @override
+  String get brandGroupMore => 'Altre marche';
+
+  @override
+  String get brandSearchEmpty => 'Nessuna marca corrisponde alla tua ricerca.';
+
+  @override
+  String get inkLevelTitle => 'Livello d’inchiostro';
+
+  @override
+  String get inkLevelFull => 'Pieno';
+
+  @override
+  String get commonRunningOut => 'In esaurimento';
+
+  @override
+  String get refillNoteTitle => 'Nota di ricarica';
+
+  @override
+  String get refillNoteEmpty => 'Aggiungi una nota, come «ricaricato il 3 nov»';
+
+  @override
+  String get refillNoteHint => 'Ricaricato il 3 nov';
+
+  @override
+  String get refillNoteSave => 'Salva';
+
+  @override
+  String get refillNoteRemove => 'Rimuovi nota';
+
+  @override
+  String get swatchPhotoTitle => 'Campione reale';
+
+  @override
+  String get swatchPhotoEmpty => 'Aggiungi una foto del tuo campione su carta';
+
+  @override
+  String get swatchPhotoHas => 'Il tuo campione su carta';
+
+  @override
+  String get swatchPhotoView => 'Vedi foto';
+
+  @override
+  String get swatchPhotoTake => 'Scatta una foto';
+
+  @override
+  String get swatchPhotoChoose => 'Scegli dalla galleria';
+
+  @override
+  String get swatchPhotoSaved => 'Foto salvata';
+
+  @override
+  String get swatchPhotoSaveFailed =>
+      'Non è stato possibile salvare la foto. Provane un’altra.';
+
+  @override
+  String get swatchPhotoRemoved => 'Foto rimossa';
+
+  @override
+  String get swatchShadowLightTitle => 'Ombra e luce';
+
+  @override
+  String get swatchShadow => 'Ombra';
+
+  @override
+  String get swatchLight => 'Luce';
+
+  @override
+  String get swatchShadowLightNone => 'Nessuno nella tua collezione';
+
+  @override
+  String get swatchBlendWith => 'Sfuma con…';
+
+  @override
+  String get swatchBlendTitle => 'Sfuma con';
+
+  @override
+  String get swatchBlendSearchHint => 'Cerca pennarelli';
+
+  @override
+  String get swatchBlendNoMarkers => 'Non hai altri pennarelli da sfumare.';
+
+  @override
+  String get swatchBlendNoResults =>
+      'Nessun pennarello corrisponde alla ricerca.';
+
+  @override
+  String get swatchBlendSteps => 'Nel mezzo, dalla tua collezione';
+
+  @override
+  String get swatchBlendNothingBetween =>
+      'Questi due sono abbastanza vicini da sfumare direttamente.';
+
+  @override
+  String get swatchBlendNoneBetween =>
+      'Nessuno dei tuoi pennarelli sta nel mezzo.';
+
+  @override
+  String swatchBlendBuy(String code) {
+    return 'Salto grande. Per colmarlo, il pennarello più vicino che non hai è $code.';
+  }
+
+  @override
+  String swatchBlendStripSemantics(String from, String to) {
+    return 'Sfumatura da $from a $to';
+  }
+
+  @override
+  String swatchDuplicatesTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Hai già $count pennarelli molto simili a questo',
+      one: 'Hai già 1 pennarello molto simile a questo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get swatchDuplicatesHint =>
+      'Quasi lo stesso colore: uno nuovo aggiunge poco.';
+
+  @override
+  String swatchDuplicatesMore(int count) {
+    return 'e altri $count';
+  }
+
+  @override
+  String get swatchDuplicatesNone =>
+      'Niente nella tua collezione è molto simile: aggiungerebbe un colore nuovo.';
+
+  @override
+  String wishlistDuplicateNote(String codes) {
+    return 'Molto simile a $codes nella tua collezione';
+  }
+
+  @override
+  String wishlistRunningOutCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pennarelli in esaurimento',
+      one: '1 pennarello in esaurimento',
+      zero: 'Nessuno in esaurimento',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wishlistRunningOutHint =>
+      'Si usano ancora. Aggiungili alla lista quando vuoi comprarli o ricaricarli.';
+
+  @override
+  String swatchesAllBrands(int count) {
+    return 'Tutte le marche ($count)';
+  }
+
+  @override
+  String get swatchesOtherBrandsYours => 'Le tue marche';
+
+  @override
+  String get inkLevelFullNote =>
+      'Pieno: Abbina, Palette e Idee possono suggerirlo.';
+
+  @override
+  String get inkLevelRunningOutNote =>
+      'In esaurimento: si usa ancora ovunque. Compare nel gruppo «In esaurimento» della tua lista dei desideri.';
+
+  @override
+  String get swatchesDetailPaneEmpty =>
+      'Tocca un pennarello per vederne qui i dettagli.';
 }

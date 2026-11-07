@@ -18,7 +18,15 @@ class DiaryMarkerPickerSheet extends StatefulWidget {
     required this.markers,
     required this.selected,
     required this.onChanged,
+    this.title,
+    this.showBrand = false,
   });
+
+  /// The heading of the sheet; the artwork diary's "Markers used" by default.
+  final String? title;
+
+  /// Writes the brand under each name, for a list that mixes brands.
+  final bool showBrand;
 
   /// The markers that can be picked (the collection of the current brand).
   final List<MarkerColor> markers;
@@ -71,7 +79,7 @@ class _DiaryMarkerPickerSheetState extends State<DiaryMarkerPickerSheet> {
           child: Semantics(
             header: true,
             child: Text(
-              context.l10n.diaryMarkersTitle,
+              widget.title ?? context.l10n.diaryMarkersTitle,
               style: AppTypography.section.copyWith(color: ink.fg),
             ),
           ),
@@ -103,7 +111,10 @@ class _DiaryMarkerPickerSheetState extends State<DiaryMarkerPickerSheet> {
                       button: true,
                       selected: on,
                       excludeSemantics: true,
-                      label: '${marker.newCode}, ${marker.newName}',
+                      label: widget.showBrand
+                          ? '${marker.newCode}, ${marker.newName}, '
+                                '${MarkerBrand.fromId(marker.brandId).label}'
+                          : '${marker.newCode}, ${marker.newName}',
                       child: InkWell(
                         key: ValueKey<String>('diary-marker-${marker.newCode}'),
                         onTap: () => _toggle(marker),
@@ -119,7 +130,8 @@ class _DiaryMarkerPickerSheetState extends State<DiaryMarkerPickerSheet> {
                               children: <Widget>[
                                 SwatchBlock(
                                   hex: marker.hex,
-                                  size: 32,
+                                  size: InkGeometry.swatchMd,
+                                  radius: InkRadii.xs,
                                   own: marker.hasOwnColor,
                                 ),
                                 const SizedBox(width: InkSpacing.s12),
@@ -132,7 +144,10 @@ class _DiaryMarkerPickerSheetState extends State<DiaryMarkerPickerSheet> {
                                 const SizedBox(width: InkSpacing.s10),
                                 Expanded(
                                   child: Text(
-                                    marker.newName,
+                                    widget.showBrand
+                                        ? '${marker.newName} · '
+                                              '${MarkerBrand.fromId(marker.brandId).label}'
+                                        : marker.newName,
                                     style: AppTypography.secondary.copyWith(
                                       color: ink.fg2,
                                     ),

@@ -27,7 +27,9 @@ void main() {
         expect(color.newName.trim(), isNotEmpty);
         expect(color.hex, matches(RegExp(r'^[0-9a-f]{6}$')));
         expect(color.sets, isEmpty);
-        expect(color.lines, isEmpty);
+        // Sketch is the catalogue itself; Ciao and Classic are subsets of it.
+        expect(color.lines.first, 'sketch');
+        expect(color.lines.toSet().difference({'sketch', 'ciao', 'classic'}), isEmpty);
         expect(MarkerColor.fromJson(color.toJson()), color);
       }
       expect(

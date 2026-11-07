@@ -40,9 +40,12 @@ final class MarkerColor with JsonValue {
   /// The hex the catalogue gives this marker, whatever the user stored.
   String get originalHex => catalogHex ?? hex;
 
-  /// Ids of the [MarkerLine]s this colour is sold in (`oahu`, `honolulu`,
-  /// `kaala`), or Finecolour availability ids (`EF100` to `EF103`).
-  /// Empty for brands without lines (DecoTime, Copic) and for payloads
+  /// Ids of the product lines this colour is sold in. For Ohuhu they are
+  /// [MarkerLine] ids (`oahu`, `honolulu`, `kaala`); for every other brand they
+  /// are the ids listed in `MarkerBrand.productLines` (Copic `sketch`, `ciao`,
+  /// `classic`; Spectrum Noir `classic`, `illustrator`, `triblend`; Arrtx
+  /// `OROS`, `ALP`; Finecolour `EF100`..`EF103`; Touch Twin `touchTwinMarker`,
+  /// `touchTwinBrush`). Empty for brands with a single range and for payloads
   /// written before lines existed.
   final List<String> lines;
   bool inLine(MarkerLine line) => lines.contains(line.id);

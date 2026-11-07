@@ -136,6 +136,7 @@ docs/readme/en/06-photo-scene.png
 docs/readme/en/07-ideas.png
 docs/readme/en/08-collection.png
 docs/readme/en/09-settings-dark.png
+docs/readme/en/10-colour-map.png
 docs/readme/en/header.png
 docs/readme/es/01-swatches.png
 docs/readme/es/02-swatch-detail.png
@@ -146,6 +147,7 @@ docs/readme/es/06-photo-scene.png
 docs/readme/es/07-ideas.png
 docs/readme/es/08-collection.png
 docs/readme/es/09-settings-dark.png
+docs/readme/es/10-colour-map.png
 docs/readme/es/header.png
 docs/readme/de/01-swatches.png
 docs/readme/de/02-swatch-detail.png
@@ -156,6 +158,7 @@ docs/readme/de/06-photo-scene.png
 docs/readme/de/07-ideas.png
 docs/readme/de/08-collection.png
 docs/readme/de/09-settings-dark.png
+docs/readme/de/10-colour-map.png
 docs/readme/de/header.png
 docs/readme/fr/01-swatches.png
 docs/readme/fr/02-swatch-detail.png
@@ -166,6 +169,7 @@ docs/readme/fr/06-photo-scene.png
 docs/readme/fr/07-ideas.png
 docs/readme/fr/08-collection.png
 docs/readme/fr/09-settings-dark.png
+docs/readme/fr/10-colour-map.png
 docs/readme/fr/header.png
 docs/readme/pt/01-swatches.png
 docs/readme/pt/02-swatch-detail.png
@@ -176,6 +180,7 @@ docs/readme/pt/06-photo-scene.png
 docs/readme/pt/07-ideas.png
 docs/readme/pt/08-collection.png
 docs/readme/pt/09-settings-dark.png
+docs/readme/pt/10-colour-map.png
 docs/readme/pt/header.png
 docs/readme/it/01-swatches.png
 docs/readme/it/02-swatch-detail.png
@@ -186,6 +191,7 @@ docs/readme/it/06-photo-scene.png
 docs/readme/it/07-ideas.png
 docs/readme/it/08-collection.png
 docs/readme/it/09-settings-dark.png
+docs/readme/it/10-colour-map.png
 docs/readme/it/header.png
 ios/.gitignore
 ios/Flutter/AppFrameworkInfo.plist
@@ -597,3 +603,49 @@ android/app/src/main/res/values-fr/strings.xml
 android/app/src/main/res/values-it/strings.xml
 android/app/src/main/res/values-pt/strings.xml
 android/app/src/main/res/xml/idea_widget_info.xml
+# More marker brands (Touch Twin, Promarker, Promarker Brush, Prismacolor Premier,
+# Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio
+# Brush, Artist's Loft) and the Copic product lines.
+# The exporter only lets binaries into assets/, docs/readme/ and test/, and the
+# brand charts (PDF, JPG, PNG) are third-party artwork: they stay in the private
+# repository. Their SOURCE.txt files (URL, date, sha256) and the text baselines
+# are published, and so are the generators, so the method can be audited. The
+# tests of those chart generators need the binaries, so they stay private too.
+assets/data/touch_twin_colors.json
+assets/data/promarker_colors.json
+assets/data/promarker_brush_colors.json
+assets/data/prismacolor_colors.json
+assets/data/spectrum_noir_colors.json
+assets/data/arrtx_colors.json
+assets/data/kurecolor_colors.json
+assets/data/graphit_colors.json
+assets/data/marvy_le_plume_colors.json
+assets/data/blick_brush_colors.json
+assets/data/artists_loft_colors.json
+test/core/all_brands_catalog_test.dart
+test/data/all_brands_backup_test.dart
+test/ui/onboarding/all_brands_onboarding_test.dart
+tool/data/chart_tools.py
+tool/data/generate_markermatch.py
+tool/data/test_generate_markermatch.py
+tool/data/generate_spectrum_noir.py
+tool/data/test_generate_spectrum_noir.py
+tool/data/generate_spectrum_noir_illustrator.py
+tool/data/generate_spectrum_noir_triblend.py
+tool/data/generate_graphit.py
+tool/data/generate_marvy_le_plume.py
+tool/data/generate_arrtx.py
+tool/data/generate_kurecolor.py
+tool/data/baseline/markermatch_source.csv
+tool/data/baseline/markermatch_source.LICENSE
+tool/data/baseline/arrtx.SOURCE.txt
+tool/data/baseline/arrtx_codes.csv
+tool/data/baseline/kurecolor.SOURCE.txt
+tool/data/baseline/kurecolor_codes.csv
+tool/data/baseline/graphit_nuancier_168.SOURCE.txt
+tool/data/baseline/marvy_le_plume_chart.SOURCE.txt
+tool/data/baseline/spectrum_noir_illustrator_chart.SOURCE.txt
+tool/data/baseline/spectrum_noir_triblend_chart.SOURCE.txt
+tool/data/baseline/spectrum_noir_illustrator_chart_colors.json
+tool/data/baseline/spectrum_noir_triblend_chart_colors.json
+tool/data/baseline/spectrum_noir_triblend_chart_markers.json

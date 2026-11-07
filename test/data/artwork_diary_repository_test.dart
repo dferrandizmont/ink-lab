@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Uint8List _jpeg(int seed) =>
     Uint8List.fromList(<int>[0xFF, 0xD8, 0xFF, seed, 1, 2, 3]);
@@ -40,18 +41,189 @@ ArtworkEntry _entry({
   StoredArtworkDiaryRepository repo,
   InMemoryKeyValueStore store,
   InMemoryArtworkPhotoStore photos,
+  InMemoryArtworkDiaryStorage storage,
 })
 _repo([Map<String, Object>? initial]) {
   final InMemoryKeyValueStore store = InMemoryKeyValueStore(initial);
   final InMemoryArtworkPhotoStore photos = InMemoryArtworkPhotoStore();
+  final storage = InMemoryArtworkDiaryStorage();
   return (
-    repo: StoredArtworkDiaryRepository(store, photos: photos),
+    storage: storage,
+    repo: StoredArtworkDiaryRepository(store, photos: photos, storage: storage),
     store: store,
     photos: photos,
   );
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  group('file storage and migration', () {
+    late Directory temp;
+    late FileArtworkDiaryStorage storage;
+    late InMemoryKeyValueStore preferences;
+
+    StoredArtworkDiaryRepository repository({
+      KeyValueStore? store,
+      ArtworkDiaryStorage? documents,
+    }) => StoredArtworkDiaryRepository(
+      store ?? preferences,
+      photos: InMemoryArtworkPhotoStore(),
+      storage: documents ?? storage,
+    );
+    File document([bool backup = false]) => File(
+      '${temp.path}/${FileArtworkDiaryStorage.fileName}${backup ? '.bak' : ''}',
+    );
+    String json([String title = 'Forest page']) =>
+        jsonEncode([_entry(title: title).toJson()]);
+
+    setUp(() {
+      temp = Directory.systemTemp.createTempSync('ink_lab_diary_document');
+      storage = FileArtworkDiaryStorage(directory: () => temp);
+      preferences = InMemoryKeyValueStore();
+    });
+    tearDown(() => temp.deleteSync(recursive: true));
+
+    test(
+      'migrates SharedPreferences once, verifies the file and removes the key',
+      () async {
+        SharedPreferences.setMockInitialValues({'artwork_diary': json()});
+        final store = await SharedPreferencesStore.open();
+        final repo = repository(store: store);
+        await repo.load();
+        expect(repo.entries.single.title, 'Forest page');
+        expect(await document().readAsString(), json());
+        expect(await document(true).readAsString(), json());
+        expect(await store.containsKey('artwork_diary'), isFalse);
+
+        // An interrupted removal must prefer the already migrated document.
+        await store.setString('artwork_diary', json('Obsolete'));
+        await repository(store: store).load();
+        expect(await document().readAsString(), json());
+        expect(await store.containsKey('artwork_diary'), isFalse);
+      },
+    );
+
+    test(
+      'round trips saves through the file and keeps a verified backup',
+      () async {
+        final repo = repository();
+        await repo.load();
+        await repo.save(_entry());
+        await repo.save(_entry(title: 'Edited'));
+        final again = repository();
+        await again.load();
+        expect(again.entries, repo.entries);
+        expect(
+          await document(true).readAsString(),
+          await document().readAsString(),
+        );
+        expect(await preferences.containsKey('artwork_diary'), isFalse);
+        expect(
+          temp.listSync().where((file) => file.path.endsWith('.tmp')),
+          isEmpty,
+        );
+      },
+    );
+
+    test(
+      'recovers a corrupt file from the legacy key before the backup',
+      () async {
+        await storage.write(json('Backup'), backup: true);
+        await document().writeAsString('[partial');
+        await preferences.setString('artwork_diary', json('Legacy'));
+        final repo = repository();
+        await repo.load();
+        expect(repo.entries.single.title, 'Legacy');
+        expect(await document().readAsString(), json('Legacy'));
+        expect(await preferences.containsKey('artwork_diary'), isFalse);
+      },
+    );
+
+    test(
+      'recovers corrupt, empty and missing files from the last good backup',
+      () async {
+        final repo = repository();
+        await repo.save(_entry());
+        await repo.save(_entry(title: 'Latest'));
+        for (final corrupt in ['[partial', '', '{"wrong":true}']) {
+          await document().writeAsString(corrupt);
+          final again = repository();
+          await again.load();
+          expect(again.entries.single.title, 'Latest');
+          expect(await document().readAsString(), json('Latest'));
+        }
+        await document().delete();
+        final again = repository();
+        await again.load();
+        expect(again.entries.single.title, 'Latest');
+      },
+    );
+
+    test('uses the backup even when the legacy key is also corrupt', () async {
+      await storage.write(json(), backup: true);
+      await document().writeAsString('bad file');
+      await preferences.setString('artwork_diary', 'bad legacy');
+      final repo = repository();
+      await repo.load();
+      expect(repo.entries.single.title, 'Forest page');
+    });
+
+    test(
+      'reports unrecoverable corruption without replacing files or memory',
+      () async {
+        final repo = repository();
+        await repo.save(_entry());
+        await document().writeAsString('bad file');
+        await document(true).writeAsString('bad backup');
+        await expectLater(repo.load(), throwsA(isA<DataStoreException>()));
+        expect(repo.entries.single.title, 'Forest page');
+        expect(await document().readAsString(), 'bad file');
+        expect(await document(true).readAsString(), 'bad backup');
+      },
+    );
+
+    test(
+      'a failed rename retains the migration key and removes temporary files',
+      () async {
+        await preferences.setString('artwork_diary', json());
+        await Directory(document().path).create();
+        await expectLater(
+          repository().load(),
+          throwsA(isA<FileSystemException>()),
+        );
+        expect(await preferences.getString('artwork_diary'), json());
+        expect(
+          temp.listSync().where((file) => file.path.endsWith('.tmp')),
+          isEmpty,
+        );
+      },
+    );
+
+    test(
+      'a failed read-back retains the legacy key and does not publish entries',
+      () async {
+        await preferences.setString('artwork_diary', json());
+        final repo = repository(documents: _BadReadbackStorage());
+        await expectLater(repo.load(), throwsA(isA<DataStoreException>()));
+        expect(await preferences.getString('artwork_diary'), json());
+        expect(repo.entries, isEmpty);
+      },
+    );
+
+    test('overlapping saves keep both entries', () async {
+      final repo = repository();
+      await repo.load();
+      await Future.wait([
+        repo.save(_entry(id: 'one')),
+        repo.save(_entry(id: 'two')),
+      ]);
+      final again = repository();
+      await again.load();
+      expect(again.entries.map((entry) => entry.id).toSet(), {'one', 'two'});
+    });
+  });
+
   group('entries', () {
     test('adds, edits and deletes an entry, keeping its id', () async {
       final r = _repo();
@@ -105,7 +277,8 @@ void main() {
           photos: const ['one.jpg', 'two.jpg'],
         ),
       );
-      final String raw = (await r.store.getString('artwork_diary'))!;
+      final String raw = (await r.storage.read())!;
+      expect(await r.store.containsKey('artwork_diary'), isFalse);
       final List<dynamic> json = jsonDecode(raw) as List<dynamic>;
       expect(json.single, {
         'id': 'a1',
@@ -122,6 +295,7 @@ void main() {
 
       final again = StoredArtworkDiaryRepository(
         r.store,
+        storage: r.storage,
         photos: InMemoryArtworkPhotoStore(),
       );
       await again.load();
@@ -320,6 +494,7 @@ void main() {
       final repo = StoredArtworkDiaryRepository(
         InMemoryKeyValueStore(),
         photos: store(),
+        storage: FileArtworkDiaryStorage(directory: () => temp),
       );
       await repo.load();
       final String a = await repo.addPhoto(_jpeg(1));
@@ -336,4 +511,17 @@ void main() {
       expect(folder.listSync(), isEmpty);
     });
   });
+}
+
+/// Simulates a storage backend that does not return the document just written.
+final class _BadReadbackStorage implements ArtworkDiaryStorage {
+  bool written = false;
+
+  @override
+  Future<String?> read({bool backup = false}) async => written ? '[]' : null;
+
+  @override
+  Future<void> write(String json, {bool backup = false}) async {
+    written = true;
+  }
 }

@@ -33,6 +33,10 @@ final class FakeOnDevicePlatform implements OnDeviceAiPlatform {
 
   /// When set, [download] forwards this stream instead of `downloadEvents`,
   /// so a test decides when (and whether) progress arrives.
+  ///
+  /// The controller belongs to the test that injects it, and the test closes
+  /// it; this fake only reads its stream.
+  // ignore: close_sinks
   StreamController<OnDeviceDownloadEvent>? downloadController;
   final OnDeviceStatus statusAfterDownload;
   final List<OnDeviceStatus> _statusesAfterDownload;

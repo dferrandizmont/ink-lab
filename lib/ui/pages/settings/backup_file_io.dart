@@ -38,8 +38,9 @@ final class BackupFilePick {
 /// The app uses [SystemBackupFileIo]; tests give it a fake.
 abstract interface class BackupFileIo {
   /// Writes [bytes] to a temporary file named [fileName] and opens the share
-  /// sheet with it; completes when the sheet closes.
-  Future<void> shareBackup(Uint8List bytes, String fileName);
+  /// sheet with it; completes when the sheet closes. `false` when the user
+  /// closed the sheet without picking anything (so nothing was saved).
+  Future<bool> shareBackup(Uint8List bytes, String fileName);
 
   /// Opens the system file picker for a ZIP; `null` when the user cancels.
   Future<BackupFilePick?> pickBackup();
@@ -76,12 +77,12 @@ final class SystemBackupFileIo implements BackupFileIo {
   );
 
   @override
-  Future<void> shareBackup(Uint8List bytes, String fileName) async {
+  Future<bool> shareBackup(Uint8List bytes, String fileName) async {
     final Directory folder = await getTemporaryDirectory();
     await _deleteOldBackups(folder);
     final File file = File('${folder.path}${Platform.pathSeparator}$fileName');
     await file.writeAsBytes(bytes, flush: true);
-    await SharePlus.instance.share(
+    final ShareResult result = await SharePlus.instance.share(
       ShareParams(
         files: <XFile>[
           XFile(file.path, mimeType: 'application/zip', name: fileName),
@@ -90,6 +91,8 @@ final class SystemBackupFileIo implements BackupFileIo {
         sharePositionOrigin: systemShareOrigin(),
       ),
     );
+    // "Unavailable" (the system does not say) counts as done.
+    return result.status != ShareResultStatus.dismissed;
   }
 
   @override

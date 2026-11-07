@@ -27,6 +27,7 @@ newDiary() {
     diary: StoredArtworkDiaryRepository(
       InMemoryKeyValueStore(),
       photos: photos,
+      storage: InMemoryArtworkDiaryStorage(),
     ),
     photos: photos,
   );
@@ -82,6 +83,7 @@ Future<AppScope> pumpDiaryPage(
   StoredArtworkDiaryRepository? diary,
   Size size = const Size(800, 4000),
   Future<void> Function(AppScope scope)? setup,
+  StoreReviewer? storeReviewer,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -89,6 +91,7 @@ Future<AppScope> pumpDiaryPage(
   final AppScope scope = AppScope.inMemory(
     markers: diskMarkerRepository(),
     artworkDiary: diary,
+    storeReviewer: storeReviewer,
     child: MaterialApp(
       locale: const Locale('en'),
       localizationsDelegates: testLocalizationsDelegates,
@@ -110,12 +113,14 @@ Future<AppScope> pumpDiary(
   ImagePickerService? picker,
   StoredArtworkDiaryRepository? diary,
   Future<void> Function(AppScope scope)? setup,
+  StoreReviewer? storeReviewer,
 }) async {
   final AppScope scope = await pumpDiaryPage(
     tester,
     IdeasPage(today: DateTime(2026, 10, 29), picker: picker),
     diary: diary,
     setup: setup,
+    storeReviewer: storeReviewer,
   );
   await tester.tap(find.text(l10n.ideasDiarySegment));
   await tester.pumpAndSettle();

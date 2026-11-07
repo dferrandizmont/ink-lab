@@ -68,11 +68,10 @@ void main() {
       final source = await harness();
       await source.appSettings.setLanguage(AppLanguage.spanish);
       final exported = source.backup().exportJson();
-      expect(
-        (jsonDecode(exported)
-            as Map<String, dynamic>)['appSettings']['language'],
-        'es',
-      );
+      final Map<String, dynamic> appSettings =
+          (jsonDecode(exported) as Map<String, dynamic>)['appSettings']
+              as Map<String, dynamic>;
+      expect(appSettings['language'], 'es');
 
       final target = await harness();
       expect(target.appSettings.language, AppLanguage.system);

@@ -1,0 +1,1298 @@
+[
+  {
+    "code": "DR1",
+    "name": "Red",
+    "hex": "ed687c",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DR3",
+    "name": "Cherry Red",
+    "hex": "ce4a62",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DR4",
+    "name": "Ruby",
+    "hex": "b35366",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DR5",
+    "name": "Cardinal",
+    "hex": "995360",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DR6",
+    "name": "Sangria",
+    "hex": "925465",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DR7",
+    "name": "Burgundy",
+    "hex": "835864",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CR1",
+    "name": "Silk",
+    "hex": "fdd3cd",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CR3",
+    "name": "Suntan",
+    "hex": "feb8ad",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CR6",
+    "name": "Starfish",
+    "hex": "fe8e7b",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CR7",
+    "name": "Spice",
+    "hex": "fe7862",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CR8",
+    "name": "Vermillion",
+    "hex": "fc675d",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CR10",
+    "name": "Lipstick",
+    "hex": "dd5757",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "OR1",
+    "name": "Satsuma",
+    "hex": "ff893e",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "OR2",
+    "name": "Nectarine",
+    "hex": "fd7546",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "OR3",
+    "name": "Bright Orange",
+    "hex": "fc674c",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BO1",
+    "name": "Vanilla",
+    "hex": "f99f4c",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BO2",
+    "name": "Mango",
+    "hex": "f58a3b",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BO4",
+    "name": "Burnt Orange",
+    "hex": "d26149",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GY2",
+    "name": "Mimosa",
+    "hex": "f5ce62",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GY3",
+    "name": "Gold",
+    "hex": "f3af3e",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GY5",
+    "name": "Yellow Ochre",
+    "hex": "d57d30",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LY1",
+    "name": "Light Yellow",
+    "hex": "f3f29d",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LY2",
+    "name": "Lemon",
+    "hex": "f4ed84",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LY3",
+    "name": "Aniseed",
+    "hex": "efe463",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CT1",
+    "name": "Daffodil",
+    "hex": "f6f27f",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CT2",
+    "name": "Sunshine",
+    "hex": "f8f065",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CT3",
+    "name": "Canary",
+    "hex": "faeb28",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "YG1",
+    "name": "Khaki",
+    "hex": "bab175",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "YG2",
+    "name": "Olive Green",
+    "hex": "909043",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "YG3",
+    "name": "Moss Green",
+    "hex": "746e4c",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CG1",
+    "name": "Citrus Green",
+    "hex": "e6ed7b",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CG2",
+    "name": "Lime Green",
+    "hex": "b8d631",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "CG3",
+    "name": "Pear Green",
+    "hex": "8e9934",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LG1",
+    "name": "Chartreuse",
+    "hex": "c1e593",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LG3",
+    "name": "Meadow",
+    "hex": "8ccf6a",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LG5",
+    "name": "Grass",
+    "hex": "5c9e43",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DG1",
+    "name": "Willow",
+    "hex": "c8daab",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DG2",
+    "name": "Bamboo",
+    "hex": "92b278",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DG3",
+    "name": "Camo Green",
+    "hex": "7a9a61",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AG1",
+    "name": "Apple",
+    "hex": "a0e35e",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AG3",
+    "name": "Emerald",
+    "hex": "43a850",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AG5",
+    "name": "Fern Green",
+    "hex": "4d6d5a",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "JG1",
+    "name": "Pistachio",
+    "hex": "7ed3ba",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "JG2",
+    "name": "Sea Spray",
+    "hex": "39c0a1",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "JG3",
+    "name": "Marine",
+    "hex": "1bac8a",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "JG4",
+    "name": "Jade Green",
+    "hex": "169c77",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "JG5",
+    "name": "Juniper",
+    "hex": "1f7763",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "JG7",
+    "name": "Holly",
+    "hex": "45645a",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GT1",
+    "name": "Ice Green",
+    "hex": "8ee7d5",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GT2",
+    "name": "Aquamarine",
+    "hex": "61e1cd",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GT3",
+    "name": "Teal",
+    "hex": "4bc5b5",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AB1",
+    "name": "Duck Egg",
+    "hex": "a8e9e9",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AB2",
+    "name": "Aqua Blue",
+    "hex": "65d7df",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AB3",
+    "name": "Caribbean",
+    "hex": "2fc7d2",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BT3",
+    "name": "Waterfall",
+    "hex": "86cede",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BT4",
+    "name": "Surf Blue",
+    "hex": "3ecce0",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BT5",
+    "name": "Blue Turquoise",
+    "hex": "22bdd4",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BT7",
+    "name": "Navy Blue",
+    "hex": "008ca7",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BT8",
+    "name": "Duck Blue",
+    "hex": "157589",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BT9",
+    "name": "Petrol Blue",
+    "hex": "265b65",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IB1",
+    "name": "Sky Blue",
+    "hex": "a9e1ef",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IB2",
+    "name": "Cyan",
+    "hex": "82d7ec",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IB3",
+    "name": "Cerulean",
+    "hex": "3ac6e6",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "VB1",
+    "name": "Smoky Blue",
+    "hex": "a9c8cb",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "VB2",
+    "name": "Vintage Blue",
+    "hex": "90b6bb",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "VB3",
+    "name": "Old China",
+    "hex": "729ba4",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TB2",
+    "name": "Periwinkle",
+    "hex": "79bdeb",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TB3",
+    "name": "Denim",
+    "hex": "47a7e5",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TB4",
+    "name": "True Blue",
+    "hex": "2d96db",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TB5",
+    "name": "Cobalt",
+    "hex": "0e5eab",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TB6",
+    "name": "Ultramarine",
+    "hex": "155aa8",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TB9",
+    "name": "Black Blue",
+    "hex": "404f5f",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LV1",
+    "name": "Lavender",
+    "hex": "c9b6e7",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LV2",
+    "name": "Orchid",
+    "hex": "a189d7",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "LV3",
+    "name": "Amethyst",
+    "hex": "745ba5",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "HB1",
+    "name": "Lilac",
+    "hex": "dec5ea",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "HB2",
+    "name": "Hydrangea",
+    "hex": "bfa1e3",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "HB3",
+    "name": "Heather",
+    "hex": "72588f",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PL2",
+    "name": "Violet",
+    "hex": "ba89d2",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PL3",
+    "name": "Purple",
+    "hex": "9461b0",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PL4",
+    "name": "Regal",
+    "hex": "815790",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DP1",
+    "name": "Wisteria",
+    "hex": "dcc4db",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DP2",
+    "name": "Old Lavender",
+    "hex": "d0b6d5",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "DP3",
+    "name": "Dusty Purple",
+    "hex": "ab8ab6",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PV2",
+    "name": "Purple Violet",
+    "hex": "e296df",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PV3",
+    "name": "Pink Violet",
+    "hex": "d270cd",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PV4",
+    "name": "Deep Pink",
+    "hex": "a15398",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BP1",
+    "name": "Tulip",
+    "hex": "fab2e0",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BP2",
+    "name": "Carnation",
+    "hex": "f485c8",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BP3",
+    "name": "Begonia",
+    "hex": "f16cb5",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BP4",
+    "name": "Cerise",
+    "hex": "e74d97",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BP6",
+    "name": "Hot Pink",
+    "hex": "ad4d7d",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BP7",
+    "name": "Cranberry",
+    "hex": "934d70",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "MG1",
+    "name": "Frost Pink",
+    "hex": "f6a2ca",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "MG2",
+    "name": "Bubblegum",
+    "hex": "f886b4",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "MG3",
+    "name": "Fuchsia",
+    "hex": "ee5382",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PP1",
+    "name": "Blossom",
+    "hex": "f7dde3",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PP2",
+    "name": "Baby Pink",
+    "hex": "f7d7d9",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PP3",
+    "name": "Pink Tint",
+    "hex": "eec1cb",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PP4",
+    "name": "Rose Blush",
+    "hex": "f39fb1",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PP5",
+    "name": "Fruit Pink",
+    "hex": "f381a3",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "PP6",
+    "name": "Cocktail Pink",
+    "hex": "ec6083",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AP2",
+    "name": "Old Rose",
+    "hex": "e9c0c3",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AP3",
+    "name": "Vintage Pink",
+    "hex": "daa5ad",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "AP4",
+    "name": "Antique Pink",
+    "hex": "c58d96",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "FS6",
+    "name": "Cream",
+    "hex": "fdf2eb",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "FS7",
+    "name": "Linen",
+    "hex": "fce6d6",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "FS8",
+    "name": "Eggshell",
+    "hex": "fbbc9b",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TN1",
+    "name": "Pale Tan",
+    "hex": "f0c5a0",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TN2",
+    "name": "Honeydew",
+    "hex": "f3bd9c",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TN4",
+    "name": "Warm Beige",
+    "hex": "da753d",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TN6",
+    "name": "Tan",
+    "hex": "b76646",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TN8",
+    "name": "Russet",
+    "hex": "915551",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "TN9",
+    "name": "Henna",
+    "hex": "795453",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GB1",
+    "name": "Sandstone",
+    "hex": "f2e0b7",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GB3",
+    "name": "Maple",
+    "hex": "f0cd80",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GB5",
+    "name": "Golden Brown",
+    "hex": "da9030",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GB6",
+    "name": "Yellow Brown",
+    "hex": "ce7d3a",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GB7",
+    "name": "Raw Sienna",
+    "hex": "b67c53",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "GB10",
+    "name": "Burnt Sienna",
+    "hex": "946843",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "MB1",
+    "name": "Muted Brown",
+    "hex": "decdaa",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "MB2",
+    "name": "Soft Brown",
+    "hex": "d4b891",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "MB4",
+    "name": "Chestnut",
+    "hex": "b2936f",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "RB1",
+    "name": "Pecan",
+    "hex": "e6cab4",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "RB2",
+    "name": "Red Brown",
+    "hex": "cba58d",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "RB3",
+    "name": "Hazelnut",
+    "hex": "a07d6a",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "EB1",
+    "name": "Sand",
+    "hex": "cc926b",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "EB2",
+    "name": "Natural Brown",
+    "hex": "b9825d",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "EB3",
+    "name": "Cocoa",
+    "hex": "956746",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "EB5",
+    "name": "Coffee Bean",
+    "hex": "8a614a",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "EB6",
+    "name": "Bark",
+    "hex": "7e5b4f",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "EB7",
+    "name": "Dark Brown",
+    "hex": "715745",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BG2",
+    "name": "Brown Grey 2",
+    "hex": "cec6bf",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BG3",
+    "name": "Brown Grey 3",
+    "hex": "bcb5af",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BG4",
+    "name": "Brown Grey 4",
+    "hex": "b3aca6",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BG5",
+    "name": "Brown Grey 5",
+    "hex": "a7a09b",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BG6",
+    "name": "Brown Grey 6",
+    "hex": "a19a94",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "BG7",
+    "name": "Brown Grey 7",
+    "hex": "958f8b",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IG2",
+    "name": "Ice Grey 2",
+    "hex": "d7dfeb",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IG4",
+    "name": "Ice Grey 4",
+    "hex": "a4b4cc",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IG5",
+    "name": "Ice Grey 5",
+    "hex": "8b9cb9",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IG6",
+    "name": "Ice Grey 6",
+    "hex": "77828d",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IG8",
+    "name": "Ice Grey 8",
+    "hex": "5d6478",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  },
+  {
+    "code": "IG9",
+    "name": "Ice Grey 9",
+    "hex": "5a5b64",
+    "sets": [],
+    "lines": [
+      "triblend"
+    ]
+  }
+]

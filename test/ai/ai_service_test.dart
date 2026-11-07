@@ -133,7 +133,9 @@ void main() {
       () async {
         final models = <String>[];
         final client = MockClient((request) async {
-          models.add(jsonDecode(request.body)['model'] as String);
+          final Map<String, dynamic> body =
+              jsonDecode(request.body) as Map<String, dynamic>;
+          models.add(body['model'] as String);
           return completionResponse(
             paletteJson([
               {'code': 'R101', 'role': 'Shadow', 'reason': 'deep'},

@@ -129,9 +129,16 @@ void main() {
 
       expect(find.text(l10n.diaryEmptyTitle), findsNothing);
       expect(key('diary-add'), findsOneWidget);
-      final double newest = tester.getTopLeft(key('diary-entry-new')).dy;
-      final double oldest = tester.getTopLeft(key('diary-entry-old')).dy;
-      expect(newest, lessThan(oldest));
+      // Newest first in reading order: above, or on the left in the same row
+      // (the default 800 dp test surface lays the entries in two columns).
+      final Offset newest = tester.getTopLeft(key('diary-entry-new'));
+      final Offset oldest = tester.getTopLeft(key('diary-entry-old'));
+      expect(
+        newest.dy < oldest.dy ||
+            (newest.dy == oldest.dy && newest.dx < oldest.dx),
+        isTrue,
+        reason: 'newest $newest, oldest $oldest',
+      );
 
       expect(find.text('Forest page'), findsOneWidget);
       expect(find.text('Forest colouring book'), findsOneWidget);
@@ -545,32 +552,35 @@ void main() {
       expect(key('diary-delete'), findsNothing);
     });
 
-    testWidgets('folds More details while empty, opens it when one has a value', (
+    testWidgets(
+      'folds More details while empty, opens it when one has a value',
+      (WidgetTester tester) async {
+        await pumpDiaryPage(tester, const ArtworkEntryPage());
+        expect(find.text(l10n.diaryMoreDetails), findsOneWidget);
+        // Folded: the optional fields are not built.
+        expect(key('diary-on-what'), findsNothing);
+        expect(key('diary-date'), findsNothing);
+        expect(key('diary-palette'), findsNothing);
+        expect(key('diary-notes'), findsNothing);
+
+        await _tapKey(tester, 'diary-details');
+        expect(key('diary-on-what'), findsOneWidget);
+        expect(key('diary-date'), findsOneWidget);
+        expect(key('diary-palette'), findsOneWidget);
+        expect(key('diary-notes'), findsOneWidget);
+
+        // An entry with notes opens the block on its own.
+        await pumpDiaryPage(
+          tester,
+          ArtworkEntryPage(entry: entry(notes: 'First layer')),
+        );
+        expect(key('diary-notes'), findsOneWidget);
+      },
+    );
+
+    testWidgets('a new entry has no delete button', (
       WidgetTester tester,
     ) async {
-      await pumpDiaryPage(tester, const ArtworkEntryPage());
-      expect(find.text(l10n.diaryMoreDetails), findsOneWidget);
-      // Folded: the optional fields are not built.
-      expect(key('diary-on-what'), findsNothing);
-      expect(key('diary-date'), findsNothing);
-      expect(key('diary-palette'), findsNothing);
-      expect(key('diary-notes'), findsNothing);
-
-      await _tapKey(tester, 'diary-details');
-      expect(key('diary-on-what'), findsOneWidget);
-      expect(key('diary-date'), findsOneWidget);
-      expect(key('diary-palette'), findsOneWidget);
-      expect(key('diary-notes'), findsOneWidget);
-
-      // An entry with notes opens the block on its own.
-      await pumpDiaryPage(
-        tester,
-        ArtworkEntryPage(entry: entry(notes: 'First layer')),
-      );
-      expect(key('diary-notes'), findsOneWidget);
-    });
-
-    testWidgets('a new entry has no delete button', (WidgetTester tester) async {
       await pumpDiaryPage(tester, const ArtworkEntryPage());
       await _openMenu(tester);
       expect(key('diary-delete'), findsNothing);

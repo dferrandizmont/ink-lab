@@ -66,3 +66,4 @@ local.properties
 
 # Evidencias de la skill probar-como-humano (capturas, logs); el informe sí se versiona
 qa/*/evidencias/
+qa/*/evidence/

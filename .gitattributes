@@ -5,3 +5,6 @@
 *.pdf binary
 *.ttf binary
 *.jar binary
+
+# Pinned upstream sources keep their exact bytes (CRLF) so generators can be byte-checked.
+tool/data/baseline/markermatch_source.csv -text

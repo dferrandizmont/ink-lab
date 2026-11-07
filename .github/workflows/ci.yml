@@ -46,3 +46,28 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+
+  build:
+    name: Debug APK
+    if: github.repository == 'dferrandizmont/ink-lab' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      # Gradle 9 and AGP 9 need a JDK 17.
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+      - run: flutter pub get
+      # Debug build only: it is signed with the debug keystore that Gradle creates
+      # on the fly, so it needs no secret and no android/key.properties.
+      # No artifact is uploaded.
+      - run: flutter build apk --debug

@@ -57,6 +57,130 @@ void main() {
       );
     }
   }
+  group('variation token (Regenerate)', () {
+    final varying = [
+      for (final mode in PaletteMode.values)
+        if (mode != PaletteMode.customPalette &&
+            mode != PaletteMode.blendingChain)
+          mode,
+    ];
+    List<String> codes(List<PaletteSuggestion> s) =>
+        s.map((e) => e.color.newCode).toList();
+
+    for (final mode in varying) {
+      test('${mode.name}: token 0 is the palette without a token', () {
+        for (final size in [3, 4, 5]) {
+          expect(
+            buildPalette(base, collection, mode, size: size, variationToken: 0),
+            buildPalette(base, collection, mode, size: size),
+          );
+        }
+      });
+      test('${mode.name}: another token gives another good palette', () {
+        for (final size in [3, 4, 5]) {
+          final first = buildPalette(base, collection, mode, size: size);
+          final seen = <String>{codes(first).join(',')};
+          for (final token in [1, 2, 3, 4, 5, 6, 7, 8]) {
+            final result = buildPalette(
+              base,
+              collection,
+              mode,
+              size: size,
+              variationToken: token,
+            );
+            // The size is respected, no marker twice, never the base, and
+            // always a marker of the collection.
+            expect(result, hasLength(size));
+            expect(codes(result).toSet(), hasLength(size));
+            expect(codes(result), isNot(contains(base.newCode)));
+            expect(result.every((s) => collection.contains(s.color)), isTrue);
+            expect(result.every((s) => s.reason.isNotEmpty), isTrue);
+            // Deterministic: the same token, the same palette.
+            expect(
+              result,
+              buildPalette(
+                base,
+                collection,
+                mode,
+                size: size,
+                variationToken: token,
+              ),
+            );
+            seen.add(codes(result).join(','));
+          }
+          // Token 1 is not the best palette, and the tokens do not all give
+          // the same one.
+          expect(
+            codes(
+              buildPalette(
+                base,
+                collection,
+                mode,
+                size: size,
+                variationToken: 1,
+              ),
+            ),
+            isNot(codes(first)),
+            reason: '${mode.name} size $size',
+          );
+          expect(seen.length, greaterThan(2));
+        }
+      });
+      test(
+        '${mode.name}: a pool as small as the size cannot repeat markers',
+        () {
+          final tiny = harmonyColors.take(4).toList();
+          final result = buildPalette(
+            tiny.first,
+            tiny,
+            mode,
+            size: 3,
+            variationToken: 3,
+          );
+          expect(result, hasLength(3));
+          expect(codes(result).toSet(), hasLength(3));
+          expect(codes(result), isNot(contains('base')));
+        },
+      );
+    }
+
+    test('the advisor passes the token on to every type', () {
+      const generator = PaletteGenerator();
+      for (final mode in varying) {
+        PaletteAdvice advise(int token) => generator.advise(
+          PaletteAdvisorRequest(
+            baseColor: base,
+            availableColors: collection,
+            paletteSize: 5,
+            mode: mode,
+            brand: MarkerBrand.ohuhuOahu,
+            activeSetIds: {'classic_40'},
+            variationToken: token,
+          ),
+        );
+        final zero = advise(0) as PaletteAdviceSuccess;
+        final one = advise(1) as PaletteAdviceSuccess;
+        expect(
+          codes(one.suggestions),
+          isNot(codes(zero.suggestions)),
+          reason: mode.name,
+        );
+        expect(zero.suggestions, buildPalette(base, collection, mode, size: 5));
+      }
+    });
+
+    test('a blending chain ignores the token', () {
+      expect(
+        buildPalette(
+          base,
+          collection,
+          PaletteMode.blendingChain,
+          variationToken: 5,
+        ),
+        buildPalette(base, collection, PaletteMode.blendingChain),
+      );
+    });
+  });
   final expectedFirst = {
     PaletteMode.complementary: 'opposite',
     PaletteMode.analogous: 'nearA',
@@ -292,7 +416,7 @@ void main() {
       'DecoTime ${mode.name} advisor enforces owned markers on full mixed catalog',
       () {
         final owned = deco.take(7).map((c) => c.colorId).toSet();
-        final PaletteAdvisor advisor = const PaletteGenerator();
+        const PaletteAdvisor advisor = PaletteGenerator();
         final result = advisor.advise(
           PaletteAdvisorRequest(
             brand: MarkerBrand.decoTime,

@@ -88,7 +88,9 @@ class _AiModelPickerSheetState extends State<AiModelPickerSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(right: InkSpacing.sheetCloseClearance),
+                padding: const EdgeInsets.only(
+                  right: InkSpacing.sheetCloseClearance,
+                ),
                 child: Text(
                   widget.multi
                       ? context.l10n.settingsAiFallbacksTitle
@@ -98,7 +100,7 @@ class _AiModelPickerSheetState extends State<AiModelPickerSheet> {
               ),
               if (widget.multi)
                 Padding(
-                  padding: EdgeInsets.only(top: InkSpacing.group),
+                  padding: const EdgeInsets.only(top: InkSpacing.group),
                   child: Text(
                     context.l10n.settingsAiFallbacksHint(
                       AiSettings.maxFallbacks,
@@ -106,7 +108,7 @@ class _AiModelPickerSheetState extends State<AiModelPickerSheet> {
                     style: AppTypography.secondary.copyWith(color: ink.fg2),
                   ),
                 ),
-              SizedBox(height: InkSpacing.block),
+              const SizedBox(height: InkSpacing.block),
               InkSegmented<AiModelFilter>(
                 semanticLabel: context.l10n.settingsAiModelsTitle,
                 expand: true,
@@ -354,7 +356,7 @@ class _ModelRow extends StatelessWidget {
                   ),
                 ],
                 SizedBox(
-                  width: 32,
+                  width: InkGeometry.checkSlot,
                   child: selected
                       ? Align(
                           alignment: Alignment.centerRight,

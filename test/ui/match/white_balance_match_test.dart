@@ -64,14 +64,14 @@ void main() {
 
   testWidgets('the fix waits for a photo', (tester) async {
     await _pump(tester, _paperAndInk());
-    // The row of actions is always the same: the fix is there, disabled.
+    // Before a photo the page shows the empty state: no fix to offer yet.
     final Finder start = find.byKey(
       const ValueKey<String>('white-balance-start'),
     );
-    expect(start, findsOneWidget);
-    expect(tester.widget<InkButton>(start).onPressed, isNull);
+    expect(start, findsNothing);
 
     await _pickPhoto(tester);
+    expect(start, findsOneWidget);
     expect(tester.widget<InkButton>(start).onPressed, isNotNull);
   });
 

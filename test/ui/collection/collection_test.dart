@@ -19,6 +19,7 @@ import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
 import 'package:ink_lab/ui/shell/app_shell.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
+import 'package:ink_lab/ui/widgets/brand_list.dart';
 import 'package:ink_lab/ui/widgets/section_card.dart';
 
 import '../../support/l10n.dart';
@@ -91,6 +92,16 @@ Future<void> _pickBrand(WidgetTester tester, MarkerBrand brand) async {
   await tester.ensureVisible(row);
   await tester.pumpAndSettle();
   await tester.tap(row);
+  await tester.pumpAndSettle();
+  // The rows scroll inside the sheet: bring the brand's row into view.
+  await tester.scrollUntilVisible(
+    _key('brand-${brand.id}'),
+    80,
+    scrollable: find.descendant(
+      of: _key('brand-list'),
+      matching: find.byType(Scrollable),
+    ),
+  );
   await tester.pumpAndSettle();
   await tester.tap(_key('brand-${brand.id}'));
   await tester.pumpAndSettle();
@@ -386,29 +397,40 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(_key('brand-list'), findsOneWidget);
-      double? previousTop;
-      for (final MarkerBrand brand in MarkerBrand.values) {
-        final Finder option = _key('brand-${brand.id}');
-        expect(option, findsOneWidget, reason: brand.label);
-        final double top = tester.getTopLeft(option).dy;
-        expect(top, greaterThanOrEqualTo(0), reason: brand.label);
-        expect(top, lessThan(800), reason: brand.label);
-        if (previousTop != null) {
-          expect(top, greaterThan(previousTop), reason: brand.label);
-        }
-        previousTop = top;
-      }
+      // Fifteen rows do not fit in this sheet: the list scrolls under the
+      // search field, and scrolling reaches every brand, inside the screen.
       // Only the active brand is ticked.
+      final Finder scrollable = find.descendant(
+        of: _key('brand-list'),
+        matching: find.byType(Scrollable),
+      );
       Finder tick(MarkerBrand brand) => find.descendant(
         of: _key('brand-${brand.id}'),
         matching: find.byWidgetPredicate(
           (Widget w) => w is InkIcon && w.icon == InkIcons.check,
         ),
       );
-      expect(tick(MarkerBrand.finecolour), findsOneWidget);
-      expect(tick(MarkerBrand.ohuhuOahu), findsNothing);
+      for (final MarkerBrand brand in <MarkerBrand>[
+        ...popularBrands,
+        ...moreBrands,
+      ]) {
+        final Finder option = _key('brand-${brand.id}');
+        await tester.scrollUntilVisible(option, 60, scrollable: scrollable);
+        await tester.pumpAndSettle();
+        expect(option, findsOneWidget, reason: brand.label);
+        final double top = tester.getTopLeft(option).dy;
+        expect(top, greaterThanOrEqualTo(0), reason: brand.label);
+        expect(top, lessThan(800), reason: brand.label);
+        expect(
+          tick(brand),
+          brand == MarkerBrand.finecolour ? findsOneWidget : findsNothing,
+          reason: brand.label,
+        );
+      }
 
       // Picking a brand applies it at once and closes the sheet.
+      await tester.drag(scrollable, const Offset(0, 5000));
+      await tester.pumpAndSettle();
       await tester.tap(_key('brand-ohuhu_oahu'));
       await tester.pumpAndSettle();
       expect(scope.settings.brand, MarkerBrand.ohuhuOahu);
@@ -618,6 +640,8 @@ void main() {
       WidgetTester tester,
     ) async {
       final AppScope scope = await _pumpApp(tester, state: AppSettingsState());
+      await tester.ensureVisible(_key('onboarding-brand-decotime'));
+      await tester.pumpAndSettle();
       await tester.tap(_key('onboarding-brand-decotime'));
       await tester.pumpAndSettle();
       expect(find.text(l10n.onboardingStep(1, 3)), findsOneWidget);

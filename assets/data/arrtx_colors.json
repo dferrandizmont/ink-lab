@@ -1,0 +1,3180 @@
+[
+  {
+    "code": "0",
+    "name": "Colorless Blender",
+    "hex": "ffffff",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "1",
+    "name": "Wine Red",
+    "hex": "85464e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "2",
+    "name": "Old Red",
+    "hex": "a43754",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "3",
+    "name": "Rose Red",
+    "hex": "b21b3c",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "4",
+    "name": "Vivid Red",
+    "hex": "c8344a",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "5",
+    "name": "Cherry Pink",
+    "hex": "d94567",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "6",
+    "name": "Vivid Pink",
+    "hex": "d74f8d",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "7",
+    "name": "Cosmos",
+    "hex": "ed8c95",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "8",
+    "name": "Rose Pink",
+    "hex": "e17d97",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "9",
+    "name": "Pale Pink",
+    "hex": "f3b3c4",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "10",
+    "name": "Deep Red",
+    "hex": "ce3d5a",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "11",
+    "name": "Carmine",
+    "hex": "e1444f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "12",
+    "name": "Coral Red",
+    "hex": "dc5454",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "13",
+    "name": "Scarlet",
+    "hex": "cc4a54",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "14",
+    "name": "Vermilion",
+    "hex": "dd5933",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "15",
+    "name": "Geranium",
+    "hex": "e03651",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "16",
+    "name": "Coral Pink",
+    "hex": "d96862",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "17",
+    "name": "Pastel Pink",
+    "hex": "e182ac",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "18",
+    "name": "Peach",
+    "hex": "df95a6",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "21",
+    "name": "Terra Cotta",
+    "hex": "d3751e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "22",
+    "name": "French Vermilion",
+    "hex": "d25a26",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "23",
+    "name": "Orange",
+    "hex": "dd7c45",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "24",
+    "name": "Marigold",
+    "hex": "e99849",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "25",
+    "name": "Fluorite Yellow",
+    "hex": "f4f4d8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "26",
+    "name": "Pastel Peach",
+    "hex": "f9e0cc",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "27",
+    "name": "Powder Pink Light",
+    "hex": "fbe9dd",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "28",
+    "name": "Fruit Pink Light",
+    "hex": "f5cec7",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "29",
+    "name": "Barely Beige",
+    "hex": "f9e0cc",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "31",
+    "name": "Dark Yellow",
+    "hex": "e3ad27",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "32",
+    "name": "Deep Yellow",
+    "hex": "dcae4c",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "33",
+    "name": "Melon Yellow",
+    "hex": "f7ba00",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "34",
+    "name": "Yellow",
+    "hex": "ffda44",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "35",
+    "name": "Lemon Yellow",
+    "hex": "f3cc49",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "36",
+    "name": "Cream",
+    "hex": "fce2b1",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "37",
+    "name": "Pastel Yellow",
+    "hex": "ffda2a",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "38",
+    "name": "Pale Yellow",
+    "hex": "fef7b1",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "41",
+    "name": "Olive Green",
+    "hex": "caad37",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "42",
+    "name": "Bronze Green",
+    "hex": "82834a",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "43",
+    "name": "Deep Olive Green",
+    "hex": "749455",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "44",
+    "name": "Fresh Green",
+    "hex": "dfa746",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "45",
+    "name": "Canaria Yellow",
+    "hex": "fef051",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "46",
+    "name": "Vivid Green",
+    "hex": "72ae6e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "47",
+    "name": "Grass Green",
+    "hex": "7fbb61",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "48",
+    "name": "Yellow Green",
+    "hex": "c5ce4f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "49",
+    "name": "Pastel Green",
+    "hex": "f0e798",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "50",
+    "name": "Forest Green",
+    "hex": "187d6f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "51",
+    "name": "Dark Green",
+    "hex": "335f46",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "52",
+    "name": "Deep Green",
+    "hex": "19614b",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "53",
+    "name": "Turquoise Green",
+    "hex": "1a8d7c",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "54",
+    "name": "Viridian",
+    "hex": "007251",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "55",
+    "name": "Emerald Green",
+    "hex": "04a86c",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "56",
+    "name": "Mint Green",
+    "hex": "45a26b",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "57",
+    "name": "Turquoise Green Light",
+    "hex": "309d8a",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "58",
+    "name": "Mint Green Light",
+    "hex": "66be96",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "59",
+    "name": "Pale Green",
+    "hex": "bad284",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "61",
+    "name": "Peacock Green",
+    "hex": "217f5b",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "62",
+    "name": "Marine Blue",
+    "hex": "3c6372",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "63",
+    "name": "Cerulean Blue",
+    "hex": "0099c3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "64",
+    "name": "Indian Blue",
+    "hex": "0093be",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "65",
+    "name": "Ice Blue",
+    "hex": "1d9997",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "66",
+    "name": "Baby Blue",
+    "hex": "00b3dc",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "67",
+    "name": "Pastel Blue",
+    "hex": "80c3dd",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "68",
+    "name": "Turquoise Blue",
+    "hex": "bddfde",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "69",
+    "name": "Prussian Blue",
+    "hex": "1a5072",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "70",
+    "name": "Royal Blue",
+    "hex": "005399",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "71",
+    "name": "Cobalt Blue",
+    "hex": "0e509c",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "72",
+    "name": "Napoleon Blue",
+    "hex": "104788",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "73",
+    "name": "Ultramarine",
+    "hex": "453c7f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "74",
+    "name": "Brilliant Blue",
+    "hex": "4369a8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "75",
+    "name": "Dark Blue Light",
+    "hex": "c3bcdb",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "76",
+    "name": "Sky Blue",
+    "hex": "66aede",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "77",
+    "name": "Pale Blue",
+    "hex": "d7cbe3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "81",
+    "name": "Deep Violet",
+    "hex": "ae4e98",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "82",
+    "name": "Light Violet",
+    "hex": "884e9b",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "83",
+    "name": "Lavender",
+    "hex": "8a7cad",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "84",
+    "name": "Pastel Violet",
+    "hex": "efbbd2",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "85",
+    "name": "Vivid Purple",
+    "hex": "a43277",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "86",
+    "name": "Vivid Reddish Purple",
+    "hex": "ae3875",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "87",
+    "name": "Azalea Purple",
+    "hex": "b7447d",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "88",
+    "name": "Purple Grey",
+    "hex": "d77fa9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "89",
+    "name": "Pale Purple",
+    "hex": "d06c9e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "91",
+    "name": "Natural Oak",
+    "hex": "7f3e28",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "92",
+    "name": "Chocolate",
+    "hex": "6c473f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "93",
+    "name": "Burnt Orange",
+    "hex": "905739",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "94",
+    "name": "Brick Brown",
+    "hex": "8b5032",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "95",
+    "name": "Burnt Sienna",
+    "hex": "885e50",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "96",
+    "name": "Mahogany",
+    "hex": "9d6944",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "97",
+    "name": "Rose Beige",
+    "hex": "d08856",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "98",
+    "name": "Chestnut Brown",
+    "hex": "4d312d",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "99",
+    "name": "Bronze",
+    "hex": "5c3e22",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "100",
+    "name": "Walnut",
+    "hex": "8f7042",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "101",
+    "name": "Yellow Ocher",
+    "hex": "9c6b1e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "102",
+    "name": "Raw Umber",
+    "hex": "715240",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "103",
+    "name": "Potato Brown",
+    "hex": "d7904e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "104",
+    "name": "Brown Grey",
+    "hex": "dcb37d",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "107",
+    "name": "Sand",
+    "hex": "eeccb3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "109",
+    "name": "Pearl White",
+    "hex": "f9e1c6",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "120",
+    "name": "Black",
+    "hex": "231816",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "121",
+    "name": "Fluorescent Coral Red",
+    "hex": "dd656f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "122",
+    "name": "Fluorescent Orange",
+    "hex": "ed6d3c",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "123",
+    "name": "Fluorescent Yellow",
+    "hex": "f9ec01",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "124",
+    "name": "Fluorescent Green",
+    "hex": "d0d84f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "125",
+    "name": "Fluorescent Rose",
+    "hex": "d74f8d",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "126",
+    "name": "Fluorescent Pink",
+    "hex": "d86498",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "131",
+    "name": "Sand Pink",
+    "hex": "fae4d9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "132",
+    "name": "Milky White Light",
+    "hex": "fcebd9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "133",
+    "name": "Baby Skin Pink",
+    "hex": "f4d0b0",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "134",
+    "name": "Raw Silk Light",
+    "hex": "fae8ca",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "135",
+    "name": "Pale Cherry Pink",
+    "hex": "f9e5e4",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "136",
+    "name": "Flush",
+    "hex": "f5cdd0",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "137",
+    "name": "Medium Pink",
+    "hex": "f1bec1",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "138",
+    "name": "Light Pink",
+    "hex": "f5cdd6",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "139",
+    "name": "Flesh",
+    "hex": "f1bca5",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "140",
+    "name": "Light Orange",
+    "hex": "eeb4b3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "141",
+    "name": "Buttercup Yellow",
+    "hex": "f7d9b4",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "142",
+    "name": "Pale Cream",
+    "hex": "f6caa6",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "143",
+    "name": "Mint Blue",
+    "hex": "bddfeb",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "144",
+    "name": "Pale Baby Blue",
+    "hex": "d6e6f5",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "145",
+    "name": "Pale Lavender",
+    "hex": "c3bddb",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "146",
+    "name": "Mauve Shadow",
+    "hex": "dcc9df",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "147",
+    "name": "Pale Lilac",
+    "hex": "e9d8e8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "163",
+    "name": "Green Bice",
+    "hex": "f8f09d",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "164",
+    "name": "Anise",
+    "hex": "f0eeb1",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "166",
+    "name": "Mignonette",
+    "hex": "d2e4be",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "167",
+    "name": "Pale Green Light",
+    "hex": "cae1c4",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "169",
+    "name": "Putty",
+    "hex": "d8c490",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "171",
+    "name": "Jade Green",
+    "hex": "c1dfd3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "172",
+    "name": "Spectrum Green",
+    "hex": "dfecbe",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "173",
+    "name": "Dim Green",
+    "hex": "e0ecc8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "174",
+    "name": "Spring Dim Green",
+    "hex": "ddeacc",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "175",
+    "name": "Lime Green",
+    "hex": "bac58a",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "178",
+    "name": "Cool Green",
+    "hex": "d1e6dd",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "179",
+    "name": "Aqua Mint",
+    "hex": "c3e1df",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "182",
+    "name": "Frost Blue",
+    "hex": "c5e2e7",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "183",
+    "name": "Phthalo Blue",
+    "hex": "bcd6ef",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "185",
+    "name": "Pale Blue Light",
+    "hex": "bbddeb",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "196",
+    "name": "Pale Pink Light",
+    "hex": "f6d4e1",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "198",
+    "name": "Tender Pink",
+    "hex": "e69cba",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "301",
+    "name": "Chamois",
+    "hex": "d99264",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "302",
+    "name": "Lipstick Natural",
+    "hex": "dcb3b9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "303",
+    "name": "Camel Brown",
+    "hex": "a5671e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "304",
+    "name": "Barley Beige Light",
+    "hex": "fad7b9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "305",
+    "name": "Light Suntan",
+    "hex": "f0ceb2",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "306",
+    "name": "Dark Suntan",
+    "hex": "cb8d68",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "307",
+    "name": "Reddish Brass",
+    "hex": "bb7364",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "308",
+    "name": "Dusky Rose",
+    "hex": "deb9b1",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "309",
+    "name": "Tea Rose",
+    "hex": "f7bd95",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "310",
+    "name": "Blush",
+    "hex": "f8ccc3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "311",
+    "name": "Prawn",
+    "hex": "f2a9ba",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "312",
+    "name": "Pinkish White",
+    "hex": "fef5f6",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "313",
+    "name": "Rose Salmon",
+    "hex": "f5bbb7",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "314",
+    "name": "Silk",
+    "hex": "fcede8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "315",
+    "name": "Powder Pink",
+    "hex": "fad7c3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "316",
+    "name": "Flesh Pink",
+    "hex": "f8cfbd",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "317",
+    "name": "Cotton Pearl",
+    "hex": "fbe7de",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "318",
+    "name": "Peach Pull",
+    "hex": "f3c5b8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "319",
+    "name": "Orange Beige",
+    "hex": "f3ae9f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "320",
+    "name": "Floral White",
+    "hex": "fef4f2",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "321",
+    "name": "Pale Fruit Pink",
+    "hex": "fceee3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "322",
+    "name": "Pink Flamingo",
+    "hex": "fad9d0",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "323",
+    "name": "Fruit Pink",
+    "hex": "f0bbad",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "324",
+    "name": "Cherry White",
+    "hex": "fff8f5",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "325",
+    "name": "Pinkish Vanilla",
+    "hex": "fbe3df",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "326",
+    "name": "Baby Skin",
+    "hex": "fce4c2",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "327",
+    "name": "Caribe Cocoa",
+    "hex": "ba9077",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "328",
+    "name": "Africano",
+    "hex": "885b3e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "329",
+    "name": "Burnt Umber",
+    "hex": "6c3a2f",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "330",
+    "name": "Egg Shell",
+    "hex": "fff8f0",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "331",
+    "name": "Milky White",
+    "hex": "fdedd6",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "332",
+    "name": "Raw Silk",
+    "hex": "f7e3c2",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "333",
+    "name": "Light Camel",
+    "hex": "e1c387",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "334",
+    "name": "Light Walnut",
+    "hex": "af885d",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "371",
+    "name": "Beige Palm",
+    "hex": "9e7a46",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "372",
+    "name": "Fruit Flesh",
+    "hex": "ad8166",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "374",
+    "name": "Fructus Momordicae",
+    "hex": "866c39",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "375",
+    "name": "Peru",
+    "hex": "8f5621",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "376",
+    "name": "Sunset Glow",
+    "hex": "a4614e",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "377",
+    "name": "Snow Purple",
+    "hex": "886279",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "378",
+    "name": "Red Brown Coco",
+    "hex": "773e2b",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "379",
+    "name": "Quartz Purple",
+    "hex": "442938",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "386",
+    "name": "Brown Seaweed",
+    "hex": "463322",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "387",
+    "name": "Juncus Dust Grey",
+    "hex": "423c30",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "388",
+    "name": "Deep Misty Grey",
+    "hex": "373735",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "389",
+    "name": "Nightfall",
+    "hex": "402921",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "401",
+    "name": "Pale Azure",
+    "hex": "dceef8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "402",
+    "name": "Aqua Cyan",
+    "hex": "9cd0dd",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "403",
+    "name": "Powder Blue",
+    "hex": "b7ddea",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "404",
+    "name": "Myosotis Sylvatica",
+    "hex": "9ad0ec",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "405",
+    "name": "Cornflower Blue",
+    "hex": "b8c7e4",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "406",
+    "name": "Milky Lavender",
+    "hex": "e6e4f1",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "407",
+    "name": "Pale Thistle",
+    "hex": "e3d8e9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "408",
+    "name": "Thistle",
+    "hex": "ddd1e5",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "409",
+    "name": "Periwinkle",
+    "hex": "d5d3e8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "410",
+    "name": "Wisteria",
+    "hex": "c1c2e0",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "411",
+    "name": "Light Wheat",
+    "hex": "fcefe6",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "413",
+    "name": "Clams Pink",
+    "hex": "fcefe6",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "414",
+    "name": "Light Pink Tulips",
+    "hex": "f6d8d8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "415",
+    "name": "Gladiolus",
+    "hex": "f7d6c7",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "416",
+    "name": "Penoy",
+    "hex": "ecb0c9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "417",
+    "name": "Jasmine",
+    "hex": "fbf5c3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "418",
+    "name": "Carambola",
+    "hex": "f6ef87",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "419",
+    "name": "Yellow Barberry",
+    "hex": "eef486",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "420",
+    "name": "Gardenia Yellow",
+    "hex": "f9e29c",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "421",
+    "name": "Mango",
+    "hex": "f5d2a8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "422",
+    "name": "Celadon",
+    "hex": "e3efed",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "423",
+    "name": "Milk Green",
+    "hex": "eaf2e3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "424",
+    "name": "Honeydew Melon",
+    "hex": "b9d5a2",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "426",
+    "name": "Fresh Bamboo",
+    "hex": "99c578",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "502",
+    "name": "502",
+    "hex": "fffce3",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "510",
+    "name": "510",
+    "hex": "f3ec55",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "515",
+    "name": "515",
+    "hex": "f8c77a",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "521",
+    "name": "521",
+    "hex": "f2b565",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "528",
+    "name": "528",
+    "hex": "f4ad77",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "536",
+    "name": "536",
+    "hex": "ed7c52",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "538",
+    "name": "538",
+    "hex": "f0822b",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "552",
+    "name": "552",
+    "hex": "e7b4b3",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "555",
+    "name": "555",
+    "hex": "d787a2",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "558",
+    "name": "558",
+    "hex": "d79e8b",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "561",
+    "name": "561",
+    "hex": "c17f69",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "564",
+    "name": "564",
+    "hex": "ba6e54",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "572",
+    "name": "572",
+    "hex": "b35539",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "576",
+    "name": "576",
+    "hex": "ec7442",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "581",
+    "name": "581",
+    "hex": "d6663e",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "584",
+    "name": "584",
+    "hex": "c97840",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "590",
+    "name": "590",
+    "hex": "d05a4c",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "593",
+    "name": "593",
+    "hex": "c6463b",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "596",
+    "name": "596",
+    "hex": "c76d90",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "598",
+    "name": "598",
+    "hex": "b6575f",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "602",
+    "name": "602",
+    "hex": "ac4f6a",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "606",
+    "name": "606",
+    "hex": "854b40",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "610",
+    "name": "610",
+    "hex": "7c3b37",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "612",
+    "name": "612",
+    "hex": "79452d",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "613",
+    "name": "613",
+    "hex": "763555",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "618",
+    "name": "618",
+    "hex": "783547",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "629",
+    "name": "629",
+    "hex": "cecece",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "632",
+    "name": "632",
+    "hex": "ebcbe2",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "638",
+    "name": "638",
+    "hex": "f4bad3",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "639",
+    "name": "639",
+    "hex": "e3b8d4",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "641",
+    "name": "641",
+    "hex": "eb79aa",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "643",
+    "name": "643",
+    "hex": "cb81b2",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "645",
+    "name": "645",
+    "hex": "e968a1",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "651",
+    "name": "651",
+    "hex": "9e2c74",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "656",
+    "name": "656",
+    "hex": "ba96c4",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "661",
+    "name": "661",
+    "hex": "b1a6d1",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "665",
+    "name": "665",
+    "hex": "9b73af",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "667",
+    "name": "667",
+    "hex": "ae9e9e",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "670",
+    "name": "670",
+    "hex": "6e6daf",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "673",
+    "name": "673",
+    "hex": "795287",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "679",
+    "name": "679",
+    "hex": "4f3773",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "682",
+    "name": "682",
+    "hex": "312651",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "692",
+    "name": "692",
+    "hex": "40312c",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "705",
+    "name": "705",
+    "hex": "96705d",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "712",
+    "name": "712",
+    "hex": "584237",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "716",
+    "name": "716",
+    "hex": "704029",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "737",
+    "name": "737",
+    "hex": "5d3e3b",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "751",
+    "name": "751",
+    "hex": "e8f0f2",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "754",
+    "name": "754",
+    "hex": "cbdcee",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "757",
+    "name": "757",
+    "hex": "cce9fb",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "759",
+    "name": "759",
+    "hex": "859cd0",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "763",
+    "name": "763",
+    "hex": "004097",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "766",
+    "name": "766",
+    "hex": "6998d0",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "771",
+    "name": "771",
+    "hex": "106c95",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "773",
+    "name": "773",
+    "hex": "3d61ab",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "777",
+    "name": "777",
+    "hex": "1a306a",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "780",
+    "name": "780",
+    "hex": "0d4a69",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "781",
+    "name": "781",
+    "hex": "6ea1c0",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "791",
+    "name": "791",
+    "hex": "bedfd4",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "794",
+    "name": "794",
+    "hex": "93ceba",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "797",
+    "name": "797",
+    "hex": "16acaa",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "802",
+    "name": "802",
+    "hex": "77bdb2",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "806",
+    "name": "806",
+    "hex": "21a188",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "811",
+    "name": "811",
+    "hex": "0d827c",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "814",
+    "name": "814",
+    "hex": "05815c",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "817",
+    "name": "817",
+    "hex": "bcd5d2",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "819",
+    "name": "819",
+    "hex": "accac8",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "822",
+    "name": "822",
+    "hex": "aac5b6",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "850",
+    "name": "850",
+    "hex": "d6e7b0",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "858",
+    "name": "858",
+    "hex": "e0e0ae",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "863",
+    "name": "863",
+    "hex": "dce7a2",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "866",
+    "name": "866",
+    "hex": "e0e0ae",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "869",
+    "name": "869",
+    "hex": "cbd69c",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "872",
+    "name": "872",
+    "hex": "b6d086",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "874",
+    "name": "874",
+    "hex": "a5b55d",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "877",
+    "name": "877",
+    "hex": "80c487",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "878",
+    "name": "878",
+    "hex": "a8d077",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "883",
+    "name": "883",
+    "hex": "7ca350",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "884",
+    "name": "884",
+    "hex": "38773e",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "885",
+    "name": "885",
+    "hex": "bfdc9a",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "892",
+    "name": "892",
+    "hex": "82c590",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "894",
+    "name": "894",
+    "hex": "54ac79",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "898",
+    "name": "898",
+    "hex": "c1dda2",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "903",
+    "name": "903",
+    "hex": "cade87",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "906",
+    "name": "906",
+    "hex": "b0d25a",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "913",
+    "name": "913",
+    "hex": "8ba63d",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "921",
+    "name": "921",
+    "hex": "c9d766",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "929",
+    "name": "929",
+    "hex": "b9bf45",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "933",
+    "name": "933",
+    "hex": "72732d",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "950",
+    "name": "950",
+    "hex": "4f4d24",
+    "sets": [],
+    "lines": [
+      "OROS"
+    ]
+  },
+  {
+    "code": "BG1",
+    "name": "Blue Grey",
+    "hex": "f1f2f4",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "BG3",
+    "name": "Blue Grey",
+    "hex": "d8d9db",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "BG5",
+    "name": "Blue Grey",
+    "hex": "8ea5ad",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "BG7",
+    "name": "Blue Grey",
+    "hex": "5f777b",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "BG9",
+    "name": "Blue Grey",
+    "hex": "354252",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG0.5",
+    "name": "Cool Grey",
+    "hex": "f5f6f8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG1",
+    "name": "Cool Grey",
+    "hex": "f1edee",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG2",
+    "name": "Cool Grey",
+    "hex": "d1d5de",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG3",
+    "name": "Cool Grey",
+    "hex": "b2b6c1",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG4",
+    "name": "Cool Grey",
+    "hex": "9ea1aa",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG5",
+    "name": "Cool Grey",
+    "hex": "787c88",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG6",
+    "name": "Cool Grey",
+    "hex": "64676e",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG7",
+    "name": "Cool Grey",
+    "hex": "555a60",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG8",
+    "name": "Cool Grey",
+    "hex": "44474c",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "CG9",
+    "name": "Cool Grey",
+    "hex": "5d5c62",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "GG1",
+    "name": "Green Grey",
+    "hex": "f7fbfa",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "GG3",
+    "name": "Green Grey",
+    "hex": "d6dcd8",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "GG5",
+    "name": "Green Grey",
+    "hex": "c1ccd2",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "GG7",
+    "name": "Green Grey",
+    "hex": "55595a",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "GG9",
+    "name": "Green Grey",
+    "hex": "444847",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG0.5",
+    "name": "Warm Grey",
+    "hex": "eee6e3",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG1",
+    "name": "Warm Grey",
+    "hex": "dfd9db",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG2",
+    "name": "Warm Grey",
+    "hex": "bfb0a9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG3",
+    "name": "Warm Grey",
+    "hex": "d4c6b9",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG4",
+    "name": "Warm Grey",
+    "hex": "817370",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG5",
+    "name": "Warm Grey",
+    "hex": "837a71",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG6",
+    "name": "Warm Grey",
+    "hex": "98938d",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG7",
+    "name": "Warm Grey",
+    "hex": "635854",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG8",
+    "name": "Warm Grey",
+    "hex": "665750",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  },
+  {
+    "code": "WG9",
+    "name": "Warm Grey",
+    "hex": "484340",
+    "sets": [],
+    "lines": [
+      "OROS",
+      "ALP"
+    ]
+  }
+]

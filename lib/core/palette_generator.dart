@@ -65,7 +65,13 @@ final class PaletteGenerator implements PaletteAdvisor {
       return const PaletteAdviceFailure(PaletteFailureReason.missingBaseColor);
     }
     final suggestions = request.scenario == null
-        ? buildPalette(base, available, request.mode, size: request.paletteSize)
+        ? buildPalette(
+            base,
+            available,
+            request.mode,
+            size: request.paletteSize,
+            variationToken: request.variationToken,
+          )
         : buildScenarioPalette(
             base,
             available,
@@ -80,15 +86,19 @@ final class PaletteGenerator implements PaletteAdvisor {
 }
 
 /// Resolves the first catalog match using either current or legacy code.
+///
+/// Spaces inside [input] are ignored when nothing matches as typed, so `PM 23`
+/// finds Prismacolor's `PM23`.
 MarkerColor? resolveBaseColor(String input, List<MarkerColor> colors) {
   final normalized = input.trim().toUpperCase();
-  return colors
+  MarkerColor? find(String code) => colors
       .where(
         (color) =>
-            color.newCode.toUpperCase() == normalized ||
-            color.oldCode.toUpperCase() == normalized,
+            color.newCode.toUpperCase() == code ||
+            color.oldCode.toUpperCase() == code,
       )
       .firstOrNull;
+  return find(normalized) ?? find(normalized.replaceAll(RegExp(r'\s+'), ''));
 }
 
 MarkerColor? findScenarioDefaultBase(
@@ -107,11 +117,18 @@ MarkerColor? findScenarioDefaultBase(
 /// Like Kotlin, size is the number of companions, excluding the base.
 /// Candidates here are already available markers; use [PaletteGenerator] to
 /// apply pack/ownership validation to a whole catalog.
+///
+/// [variationToken] 0 is the best palette. A higher token picks, for each
+/// role, among the few best candidates instead of always the best one (the
+/// same idea as [buildScenarioPalette]), so Regenerate gives another palette
+/// that is still good. A blending chain ignores it: its alternatives are the
+/// chains of the result.
 List<PaletteSuggestion> buildPalette(
   MarkerColor baseColor,
   List<MarkerColor> candidates,
   PaletteMode mode, {
   int size = 5,
+  int variationToken = 0,
 }) {
   if (mode == PaletteMode.customPalette) return [];
   final wanted = size.clamp(3, 5);
@@ -137,7 +154,7 @@ List<PaletteSuggestion> buildPalette(
       .toList();
   if (options.isEmpty) return [];
   if (mode == PaletteMode.recommended) {
-    return _buildRecommended(base, options, wanted);
+    return _buildRecommended(base, options, wanted, variationToken);
   }
   final scored = options.map((c) {
     final hsv = hexToHsv(c.hex);
@@ -148,12 +165,21 @@ List<PaletteSuggestion> buildPalette(
       _reasonForMode(mode, base, hsv),
     );
   });
-  return _diversify(
-    stableSortedBy(scored, (c) => c.score),
-    mode,
-    wanted,
-  ).map((c) => PaletteSuggestion(color: c.color, reason: c.reason)).toList();
+  final sorted = stableSortedBy(scored, (c) => c.score);
+  final picked = variationToken == 0
+      ? _diversify(sorted, mode, wanted)
+      : _diversifyVaried(sorted, mode, wanted, variationToken);
+  return picked
+      .map((c) => PaletteSuggestion(color: c.color, reason: c.reason))
+      .toList();
 }
+
+/// How many of the best candidates a varied pick chooses from.
+const int _variationDepth = 4;
+
+/// Which of the [count] best candidates the role [role] takes for [token].
+int _variationOffset(int token, int role, int count) =>
+    count <= 1 ? 0 : (token.abs() + role) % math.min(_variationDepth, count);
 
 List<PaletteSuggestion> buildScenarioPalette(
   MarkerColor baseColor,
@@ -231,6 +257,7 @@ List<PaletteSuggestion> _buildRecommended(
   List<double> base,
   List<MarkerColor> options,
   int size,
+  int variationToken,
 ) {
   final scored = options.map((c) {
     final hsv = hexToHsv(c.hex);
@@ -242,12 +269,27 @@ List<PaletteSuggestion> _buildRecommended(
     );
   }).toList();
   final byCode = <String, PaletteSuggestion>{};
+  var role = 0;
   void pick(
     bool Function(_ScoredColor) filter,
     double Function(_ScoredColor) score,
     String reason,
   ) {
-    final best = minBy(scored.where(filter), score);
+    final _ScoredColor? best;
+    if (variationToken == 0) {
+      best = minBy(scored.where(filter), score);
+    } else {
+      // Another palette: this role takes one of its few best candidates that
+      // no other role has taken.
+      final top = stableSortedBy(
+        scored.where((c) => filter(c) && !byCode.containsKey(c.color.newCode)),
+        score,
+      ).take(_variationDepth).toList();
+      best = top.isEmpty
+          ? null
+          : top[_variationOffset(variationToken, role, top.length)];
+    }
+    role++;
     if (best != null) {
       byCode[best.color.newCode] = PaletteSuggestion(
         color: best.color,
@@ -386,6 +428,49 @@ String _reasonForMode(
           ? 'Shadow tone (${(valueDiff * 100).toInt()}% darker)'
           : 'Support tone',
   };
+}
+
+/// Like [_diversify], but each slot takes one of the best remaining candidates
+/// (see [_variationOffset]) instead of always the best.
+List<_ScoredColor> _diversifyVaried(
+  List<_ScoredColor> scored,
+  PaletteMode mode,
+  int size,
+  int token,
+) {
+  final spread = ![
+    PaletteMode.monochrome,
+    PaletteMode.shadow,
+    PaletteMode.customPalette,
+    PaletteMode.blendingChain,
+  ].contains(mode);
+  final gap = mode == PaletteMode.analogous
+      ? 8
+      : mode == PaletteMode.splitComplementary
+      ? 12
+      : 14;
+  final selected = <_ScoredColor>[];
+  for (var slot = 0; slot < size; slot++) {
+    final left = scored.where(
+      (c) => !selected.any((s) => s.color.newCode == c.color.newCode),
+    );
+    var pool = spread
+        ? left
+              .where(
+                (c) => !selected.any(
+                  (s) =>
+                      hueDistance(s.hsv[0], c.hsv[0]) < gap &&
+                      (s.hsv[2] - c.hsv[2]).abs() < 0.07,
+                ),
+              )
+              .take(_variationDepth)
+              .toList()
+        : <_ScoredColor>[];
+    if (pool.isEmpty) pool = left.take(_variationDepth).toList();
+    if (pool.isEmpty) break;
+    selected.add(pool[_variationOffset(token, slot, pool.length)]);
+  }
+  return selected;
 }
 
 List<_ScoredColor> _diversify(

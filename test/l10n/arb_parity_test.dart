@@ -23,6 +23,7 @@ Set<String> _placeholders(String message) => {
 
 /// Brand names, units, codes and words that are the same in every language.
 const Set<String> _sameEverywhere = <String>{
+  'toolsHueMagenta',
   'commonQualityLine',
   'appTitle',
   'collectionFamilyChip',
@@ -31,6 +32,7 @@ const Set<String> _sameEverywhere = <String>{
   'commonRgb',
   'matchOkButton',
   'packFullLabel',
+  'paletteBaseCodeHintOne',
   'paletteOkButton',
   'settingsAiProviderOpenRouter',
   'settingsLanguageEnglish',
@@ -62,6 +64,7 @@ const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
     'swatchesScopePack',
   },
   'de': <String>{
+    'toolsHueOrange',
     'diaryPaletteTitle',
     'diaryStatusLabel',
     'categoryChallenges',
@@ -93,6 +96,8 @@ const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
     'variationPrefixWarm',
   },
   'fr': <String>{
+    'toolsHueOrange',
+    'toolsHueViolet',
     'diaryDateLabel',
     'diaryNotesLabel',
     'diaryPaletteTitle',

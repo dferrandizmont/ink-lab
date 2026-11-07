@@ -93,6 +93,7 @@ Future<_Env> _pump(
     artworkDiary: StoredArtworkDiaryRepository(
       InMemoryKeyValueStore(),
       photos: photos,
+      storage: InMemoryArtworkDiaryStorage(),
     ),
     child: MaterialApp(
       locale: locale,
@@ -288,6 +289,47 @@ void main() {
       expect(await env.photos.read('old.jpg'), isNull);
       expect(find.text(l10n.settingsBackupFileRestored), findsOneWidget);
       expect(_key('settings-backup-file-progress'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'a cancelled share sheet and a restore do not count as a backup, a '
+    'saved one does',
+    (WidgetTester tester) async {
+      final _Env env = await _pump(tester);
+      await env.scope.artworkDiary.save(_entry('old', <String>[]));
+      env.io.shareCompleted = false;
+
+      // Share sheet closed without a target: nothing was saved.
+      await tester.tap(_key('settings-backup-file-save'));
+      await tester.pumpAndSettle();
+      expect(env.scope.settings.lastBackupAt, isNull);
+
+      // Restoring brings data in; it is not a copy of the data.
+      env.io.pick = pickOf(_archive());
+      await tester.tap(_key('settings-backup-file-restore'));
+      await tester.pumpAndSettle();
+      await tester.tap(_inDialog(l10n.settingsImportConfirm));
+      await tester.pumpAndSettle();
+      expect(env.scope.artworkDiary.entries.single.id, 'from-file');
+      expect(env.scope.settings.lastBackupAt, isNull);
+      expect(find.text(l10n.settingsNoBackupYet), findsOneWidget);
+
+      // A share that goes through is a backup.
+      env.io.shareCompleted = true;
+      await tester.tap(_key('settings-backup-file-save'));
+      await tester.pumpAndSettle();
+      final DateTime? saved = env.scope.settings.lastBackupAt;
+      expect(saved, isNotNull);
+      expect(find.text(l10n.settingsLastBackup(saved!)), findsOneWidget);
+
+      // And restoring afterwards does not move that date.
+      env.io.pick = pickOf(_archive());
+      await tester.tap(_key('settings-backup-file-restore'));
+      await tester.pumpAndSettle();
+      await tester.tap(_inDialog(l10n.settingsImportConfirm));
+      await tester.pumpAndSettle();
+      expect(env.scope.settings.lastBackupAt, saved);
     },
   );
 

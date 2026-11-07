@@ -197,19 +197,41 @@ void main() {
       expect(_stripLabels(tester), first);
     });
 
-    testWidgets('Regenerate and Clear still work', (WidgetTester tester) async {
-      await _pumpChain(tester);
-      final List<String> before = _stripLabels(tester);
-      await tester.ensureVisible(_key('palette-regenerate'));
-      await tester.tap(_key('palette-regenerate'));
-      await tester.pumpAndSettle();
-      expect(_stripLabels(tester), before);
+    testWidgets(
+      'Regenerate steps through the alternative chains, Clear works',
+      (WidgetTester tester) async {
+        await _pumpChain(tester);
+        final List<String> before = _stripLabels(tester);
+        await tester.ensureVisible(_key('palette-regenerate'));
+        await tester.tap(_key('palette-regenerate'));
+        await tester.pumpAndSettle();
+        final List<String> next = _stripLabels(tester);
+        expect(next, isNot(before));
+        expect(next, contains('B411'));
+        // The chain chip follows, and it comes back round to the first chain.
+        final int options = tester
+            .widgetList(
+              find.byWidgetPredicate(
+                (Widget w) =>
+                    w.key is ValueKey<String> &&
+                    (w.key! as ValueKey<String>).value.startsWith(
+                      'palette-chain-option-',
+                    ),
+              ),
+            )
+            .length;
+        for (int i = 1; i < options; i++) {
+          await tester.tap(_key('palette-regenerate'));
+          await tester.pumpAndSettle();
+        }
+        expect(_stripLabels(tester), before);
 
-      await tapResultItem(tester, 'palette-clear');
-      await tester.pumpAndSettle();
-      expect(find.byType(PaletteStrip), findsNothing);
-      expect(find.text(l10n.paletteEmptyHint), findsOneWidget);
-    });
+        await tapResultItem(tester, 'palette-clear');
+        await tester.pumpAndSettle();
+        expect(find.byType(PaletteStrip), findsNothing);
+        expect(find.text(l10n.paletteEmptyHint), findsOneWidget);
+      },
+    );
 
     testWidgets('changing the type leaves the chain', (
       WidgetTester tester,

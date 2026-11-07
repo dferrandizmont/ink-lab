@@ -193,6 +193,15 @@ user picks a base colour
   Finecolour stores 480 English-named alcohol markers with approximate chart hex
   values and EF100/EF101/EF102/EF103 availability ids in `MarkerColor.lines`;
   these ids are metadata, not selectable Ohuhu `MarkerLine` values.
+  Fifteen brands in all (`MarkerBrand.values`; the ids are stored in backups,
+  favourites and palettes and never change). Besides the four above: Touch Twin,
+  Promarker, Promarker Brush, Prismacolor Premier, Spectrum Noir, Arrtx, ZIG
+  Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush and Artist's Loft, all
+  collected marker by marker. A brand's product lines are listed in
+  `MarkerBrand.productLines` (Copic `sketch`/`ciao`/`classic`, Spectrum Noir
+  `classic`/`illustrator`/`triblend`, Arrtx `OROS`/`ALP`) and stored in
+  `MarkerColor.lines`; they never change a colour id. A catalogue whose colour has
+  no published name uses its code as the name.
 - Manual calibration of extracted colours lives with the generator, so a
   regeneration never silently reverts a correction.
 - A stable, brand-scoped colour id (`<brandId>:<code>`) is used for

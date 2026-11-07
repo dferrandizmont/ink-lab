@@ -27,21 +27,24 @@ icon so nobody mistakes it for the original.
 
 ## Marker catalogue data
 
-The Ohuhu, DecoTime, Copic and Finecolour catalogues in `assets/data/` (codes, names, hex
+The marker catalogues in `assets/data/` (Ohuhu, DecoTime, Copic, Finecolour and the
+other brands listed in [NOTICE.md](NOTICE.md)) (codes, names, hex
 values, set membership and position on the colour card) are **factual reference
 data** compiled from public sources, listed in [NOTICE.md](NOTICE.md). They are
 used only so that each person
 can identify the markers they already own. **They are excluded from this project's
 MIT and CC BY-SA 4.0**: this project claims no rights over third-party data, and
 including them grants no right over the trademarks, designs or materials of their owners.
-The Copic and Finecolour source catalogues retain their MIT licences; the full
+The Copic and Finecolour source catalogues retain their MIT licences, and
+MarkerMatchDB its Apache-2.0 licence; the full
 copyright and permission notices are reproduced in [NOTICE.md](NOTICE.md).
 The hex values are an on-screen approximation of the real marker colour, not a
 manufacturer measurement.
 
 ## Trademarks
 
-"Ohuhu", "Oahu", "DecoTime", "Copic" and "Finecolour" are trademarks of their respective owners.
+The names of the marker brands in the app ("Ohuhu", "Oahu", "DecoTime", "Copic",
+"Finecolour" and the others listed in [NOTICE.md](NOTICE.md)) are trademarks of their respective owners.
 This project is independent and is not affiliated with, sponsored by or endorsed by
 them. The repository contains no logos, product photographs, packaging or colour
 cards from any brand.

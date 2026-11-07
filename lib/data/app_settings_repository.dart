@@ -5,6 +5,7 @@ import '../core/models.dart';
 import 'app_settings_state.dart';
 import 'brand_scoping.dart';
 import 'key_value_store.dart';
+import 'onboarding_draft.dart';
 import 'replay_stream.dart';
 
 /// Reads and writes the user's app settings: active brand and scope, pack
@@ -28,6 +29,19 @@ abstract class AppSettingsRepository {
   Set<String> get favorites;
   NameDisplayMode get nameDisplayMode;
   bool get onboardingCompleted;
+
+  /// Whether the store's review dialog was already asked for on this device.
+  /// Not part of [state] or of backups: a restore must not bring the question
+  /// back, and the question is about this install.
+  bool get reviewPromptAsked;
+
+  /// How many times the store said it has no review dialog on this device
+  /// (a side-loaded app, no Play). Not part of [state] or of backups.
+  int get reviewPromptUnavailable;
+
+  /// The first-run setup left half-way (step and choices), or null. Not part
+  /// of [state] or of backups: it is cleared when the setup ends.
+  OnboardingDraft? get onboardingDraft;
 
   /// Light / dark / system appearance.
   AppThemeMode get themeMode;
@@ -65,10 +79,27 @@ abstract class AppSettingsRepository {
   Future<void> setFavorites(Set<String> colorIds);
   Future<void> setNameDisplayMode(NameDisplayMode mode);
   Future<void> setOnboardingCompleted(bool value);
+
+  /// Saves the half-done setup, or forgets it when [draft] is null.
+  Future<void> setOnboardingDraft(OnboardingDraft? draft);
   Future<void> setThemeMode(AppThemeMode mode);
   Future<void> setLanguage(AppLanguage language);
 
-  /// Replaces the whole snapshot, as a backup restore does.
+  /// When a backup file was last saved or shared on this device, or `null`.
+  DateTime? get lastBackupAt;
+
+  /// Stores [time] as the moment of the last backup file.
+  Future<void> setLastBackupAt(DateTime time);
+
+  /// Remembers that the review dialog was asked for (or that it never will
+  /// be). Once true it is never reset.
+  Future<void> setReviewPromptAsked(bool value);
+
+  /// Stores how many times the review dialog was unavailable.
+  Future<void> setReviewPromptUnavailable(int count);
+
+  /// Replaces the whole snapshot, as a backup restore does. The date of the
+  /// last backup is kept: it describes this device, not the backup.
   Future<void> restore(AppSettingsState state);
 
   /// Whether [colorId] is a favourite (the id is scoped first).
@@ -94,6 +125,13 @@ abstract class AppSettingsRepository {
 /// * `favorite_marker_ids` (brand-scoped) with legacy fallback
 ///   `favorite_marker_codes`
 /// * `name_display_mode`, `onboarding_completed`, `theme_mode`, `language`
+/// * `onboarding_draft`: the half-done first-run setup as one JSON string
+///   (removed when the setup ends; not part of the snapshot or of backups)
+/// * `last_backup_at` (epoch milliseconds; never part of a backup)
+/// * `review_prompt_asked`: whether the store review dialog was asked for
+///   (not part of the snapshot or of backups)
+/// * `review_prompt_unavailable`: how many times the store had no review
+///   dialog (same)
 final class StoredAppSettingsRepository implements AppSettingsRepository {
   StoredAppSettingsRepository(this._store, {AppSettingsState? initial})
     : _state = initial ?? AppSettingsState();
@@ -124,12 +162,19 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   static const String keyOnboardingCompleted = 'onboarding_completed';
   static const String keyThemeMode = 'theme_mode';
   static const String keyLanguage = 'language';
+  static const String keyOnboardingDraft = 'onboarding_draft';
+  static const String keyLastBackupAt = 'last_backup_at';
+  static const String keyReviewPromptAsked = 'review_prompt_asked';
+  static const String keyReviewPromptUnavailable = 'review_prompt_unavailable';
 
   final KeyValueStore _store;
   final StreamController<AppSettingsState> _controller =
       StreamController<AppSettingsState>.broadcast();
 
   AppSettingsState _state;
+  OnboardingDraft? _draft;
+  bool _reviewPromptAsked = false;
+  int _reviewPromptUnavailable = 0;
 
   @override
   AppSettingsState get state => _state;
@@ -153,10 +198,25 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   bool get onboardingCompleted => _state.onboardingCompleted;
 
   @override
+  OnboardingDraft? get onboardingDraft => _draft;
+
+  @override
+  bool get reviewPromptAsked => _reviewPromptAsked;
+
+  @override
+  int get reviewPromptUnavailable => _reviewPromptUnavailable;
+
+  @override
   AppThemeMode get themeMode => _state.themeMode;
 
   @override
   AppLanguage get language => _state.language;
+
+  @override
+  DateTime? get lastBackupAt {
+    final int? millis = _state.lastBackupAtEpochMs;
+    return millis == null ? null : DateTime.fromMillisecondsSinceEpoch(millis);
+  }
 
   @override
   Stream<AppSettingsState> get changes =>
@@ -232,6 +292,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
       language: AppLanguage.fromJson(await _store.getString(keyLanguage)),
       matchSuggestUnowned: await _store.getBool(keyMatchSuggestUnowned) ?? true,
       useOwnColors: await _store.getBool(keyUseOwnColors) ?? true,
+      lastBackupAtEpochMs: await _store.getInt(keyLastBackupAt),
     );
     if (migrate) {
       await _store.setStringList(
@@ -244,6 +305,10 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
       );
       if (legacyConfigured) await _store.setBool(keyOnboardingCompleted, true);
     }
+    _draft = OnboardingDraft.decode(await _store.getString(keyOnboardingDraft));
+    _reviewPromptAsked = await _store.getBool(keyReviewPromptAsked) ?? false;
+    _reviewPromptUnavailable =
+        await _store.getInt(keyReviewPromptUnavailable) ?? 0;
     _controller.add(_state);
   }
 
@@ -324,6 +389,28 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   );
 
   @override
+  Future<void> setOnboardingDraft(OnboardingDraft? draft) async {
+    if (draft == null) {
+      await _store.remove(keyOnboardingDraft);
+    } else {
+      await _store.setString(keyOnboardingDraft, draft.encode());
+    }
+    _draft = draft;
+  }
+
+  @override
+  Future<void> setReviewPromptAsked(bool value) async {
+    await _store.setBool(keyReviewPromptAsked, value);
+    _reviewPromptAsked = value;
+  }
+
+  @override
+  Future<void> setReviewPromptUnavailable(int count) async {
+    await _store.setInt(keyReviewPromptUnavailable, count);
+    _reviewPromptUnavailable = count;
+  }
+
+  @override
   Future<void> setThemeMode(AppThemeMode mode) => _apply(
     _state.copyWith(themeMode: mode),
     keys: {keyThemeMode: mode.toJson()},
@@ -336,8 +423,17 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   );
 
   @override
+  Future<void> setLastBackupAt(DateTime time) {
+    final int millis = time.millisecondsSinceEpoch;
+    return _apply(
+      _state.copyWith(lastBackupAtEpochMs: millis),
+      intKeys: {keyLastBackupAt: millis},
+    );
+  }
+
+  @override
   Future<void> restore(AppSettingsState state) => _apply(
-    state,
+    state.copyWith(lastBackupAtEpochMs: _state.lastBackupAtEpochMs),
     keys: {
       keyBrand: state.brand.id,
       keyScope: state.scope.toJson(),
@@ -381,6 +477,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
     AppSettingsState next, {
     Map<String, String> keys = const {},
     Map<String, bool> boolKeys = const {},
+    Map<String, int> intKeys = const {},
     Map<String, List<String>> stringListKeys = const {},
   }) async {
     for (final entry in stringListKeys.entries) {
@@ -391,6 +488,9 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
     }
     for (final entry in boolKeys.entries) {
       await _store.setBool(entry.key, entry.value);
+    }
+    for (final entry in intKeys.entries) {
+      await _store.setInt(entry.key, entry.value);
     }
     _state = next;
     _controller.add(_state);

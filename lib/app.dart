@@ -6,6 +6,7 @@ import 'data/data.dart';
 import 'l10n/l10n.dart';
 import 'ui/pages/onboarding/onboarding_page.dart';
 import 'ui/shell/app_shell.dart';
+import 'ui/shell/app_shortcuts.dart';
 import 'ui/theme/app_theme.dart';
 
 /// The root widget of Ink Lab.
@@ -13,7 +14,11 @@ import 'ui/theme/app_theme.dart';
 /// It follows the appearance stored in the app settings (System / Light /
 /// Dark). Without an [AppScope] above it (previews) it follows the system.
 class InkLabApp extends StatefulWidget {
-  const InkLabApp({super.key});
+  const InkLabApp({super.key, this.shortcutsService});
+
+  /// The home-screen shortcuts (long-press menu of the app icon). Tests inject
+  /// one over a fake plugin; by default it only works on Android and iOS.
+  final AppShortcutsService? shortcutsService;
 
   @override
   State<InkLabApp> createState() => _InkLabAppState();
@@ -75,9 +80,13 @@ class _InkLabAppState extends State<InkLabApp> {
             return _app(
               themeModeOf(state.themeMode),
               localeOf(state.language),
-              state.onboardingCompleted
-                  ? const AppShell()
-                  : const OnboardingPage(),
+              AppShortcutsHost(
+                service: widget.shortcutsService,
+                onboardingCompleted: state.onboardingCompleted,
+                child: state.onboardingCompleted
+                    ? const AppShell()
+                    : const OnboardingPage(),
+              ),
             );
           },
     );

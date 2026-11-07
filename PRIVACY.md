@@ -6,21 +6,28 @@
 IA, la app no usa la red. La IA es opcional y está apagada de serie: en el móvil (Gemini Nano, Android) tus peticiones
 no salen del teléfono, pero ML Kit de Google envía a Google diagnósticos de uso (nunca tus peticiones, colores ni
 fotos); con tu propia clave de OpenRouter, la petición (marca, escena y códigos y colores del catálogo de los
-rotuladores, nunca tus colores propios) va de tu móvil a `openrouter.ai` por HTTPS. Las fotos de «Emparejar», de «Desde
-una foto» y de «Mi color» se procesan en el dispositivo y nunca se envían; las del «Diario» se guardan en la carpeta
-privada de la app, no van en la copia del portapapeles y tampoco se envían. La copia en archivo (un ZIP con tus datos y
-las fotos del diario) y las imágenes de una paleta, una carta de muestras o una entrada del diario solo se entregan a la
-app que elijas en el menú de compartir del sistema. Ninguna copia incluye tu clave de API.
+rotuladores, nunca tus colores propios) va de tu móvil a `openrouter.ai` por HTTPS. Los catálogos de las 15 marcas van
+dentro de la app. Las fotos de «Emparejar», de «Desde una foto» y de «Mi color» se procesan en el dispositivo y nunca se
+envían; las del «Diario», las de tus muestras reales y las de tus recetas de mezcla se guardan en la carpeta privada de
+la app, no van en la copia del portapapeles y tampoco se envían. El nivel de tinta y las notas de recarga se quedan en
+el móvil. La copia en archivo (un ZIP con tus datos y esas fotos), las imágenes de una paleta, una carta de muestras o
+una entrada del diario y los textos de una paleta o de tu colección solo se entregan a la app que elijas en el menú de
+compartir del sistema (o al portapapeles, si lo pides). Ninguna copia incluye tu clave de API. La app pide una sola vez
+el diálogo de valoración de la tienda (Google Play o App Store), sin recibir ni enviar nada; el modo caballete solo
+mantiene la pantalla encendida y los accesos directos no llevan datos.
 
 **Ink Lab** has no accounts, analytics of its own, ads or tracking, and keeps your data on your phone. If you do not
 turn on AI, the app never uses the network. AI is optional and off by default: on the device (Gemini Nano, Android) your
 requests stay on the phone, but Google's ML Kit sends Google usage diagnostics (never your prompts, colours or photos);
 with your own OpenRouter key, the request (brand, scene and the markers' codes and catalogue colours, never your own
-colours) goes from your phone to `openrouter.ai` over HTTPS. The photos used by "Match", "From a photo" and "My colour"
-are processed on the device and never sent; "Diary" photos are kept in the app's private folder, are not part of the
-clipboard backup and are never sent either. The backup file (a ZIP with your data and the diary photos) and the images
-of a palette, a swatch chart or a diary entry are only handed to the app you pick in the system share sheet. No backup
-includes your API key.
+colours) goes from your phone to `openrouter.ai` over HTTPS. The catalogues of the 15 brands ship inside the app. The
+photos used by "Match", "From a photo" and "My colour" are processed on the device and never sent; "Diary" photos and
+the photos of your real paper swatches and blending recipes are kept in the app's private folder, are not part of the
+clipboard backup and are never sent either. Ink levels and refill notes stay on the phone. The backup file (a ZIP with
+your data and those photos), the images of a palette, a swatch chart or a diary entry and the text of a palette or of
+your collection are only handed to the app you pick in the system share sheet (or to the clipboard, if you ask). No
+backup includes your API key. The app asks once for the store's review dialog (Google Play or the App Store), receiving
+and sending nothing; easel mode only keeps the screen on and the shortcuts carry no data.
 
 | | Español | English |
 |---|---|---|

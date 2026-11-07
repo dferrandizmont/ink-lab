@@ -17,25 +17,42 @@ import 'l10n.dart';
 
 /// One language x width x text scale combination.
 class StabilityEnv {
-  const StabilityEnv(this.locale, this.width, this.scale);
+  const StabilityEnv(this.locale, this.width, this.scale, [this.height = 800]);
 
   final Locale locale;
   final double width;
   final double scale;
 
+  /// Height of the screen; phones are checked at 800.
+  final double height;
+
   AppLocalizations get t => lookupAppLocalizations(locale);
 
-  String get tag => '${locale.languageCode} ${width.toInt()}dp x$scale';
+  String get tag =>
+      '${locale.languageCode} ${width.toInt()}'
+      '${width < 600 ? '' : 'x${height.toInt()}'}dp x$scale';
 }
 
+/// The tablet screens the app is checked on, portrait and landscape: a 10"
+/// Android tablet and a 13" iPad.
+const List<Size> tabletSizes = <Size>[
+  Size(800, 1280),
+  Size(1280, 800),
+  Size(1032, 1376),
+  Size(1376, 1032),
+];
+
 /// Every combination the app is checked in: six languages, 360 and 412 dp,
-/// text scale 1.0 and 1.3.
+/// text scale 1.0 and 1.3; and the [tabletSizes] at normal text.
 Iterable<StabilityEnv> stabilityEnvs() sync* {
   for (final Locale locale in AppLocalizations.supportedLocales) {
     for (final double width in const <double>[360, 412]) {
       for (final double scale in const <double>[1.0, 1.3]) {
         yield StabilityEnv(locale, width, scale);
       }
+    }
+    for (final Size size in tabletSizes) {
+      yield StabilityEnv(locale, size.width, 1.0, size.height);
     }
   }
 }
@@ -62,9 +79,9 @@ Future<AppScope> pumpStability(
   AiSettingsRepository? aiSettings,
   SecretStore? secrets,
   AiService? aiService,
-  double height = 800,
+  double? height,
 }) async {
-  tester.view.physicalSize = Size(env.width, height);
+  tester.view.physicalSize = Size(env.width, height ?? env.height);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
   final AppScope scope = AppScope.inMemory(
@@ -80,9 +97,8 @@ Future<AppScope> pumpStability(
       supportedLocales: testSupportedLocales,
       theme: AppTheme.light(),
       builder: (BuildContext context, Widget? child) => MediaQuery(
-        data: MediaQuery.of(
-          context,
-        ).copyWith(textScaler: TextScaler.linear(env.scale)),
+        data: MediaQuery.of(context)
+            .copyWith(textScaler: TextScaler.linear(env.scale)),
         child: child!,
       ),
       home: Scaffold(body: page),
@@ -95,10 +111,7 @@ Future<AppScope> pumpStability(
 
 /// One state of the screen to compare: [activate] switches to it (tap the
 /// segment, pick the type...).
-typedef StabilitySegment = ({
-  String name,
-  Future<void> Function() activate,
-});
+typedef StabilitySegment = ({String name, Future<void> Function() activate});
 
 /// Where each anchor sat in each segment: `anchor -> segment -> (top, height)`.
 typedef StabilityRecord = Map<String, Map<String, (double, double)>>;

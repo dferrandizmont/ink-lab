@@ -1,0 +1,9 @@
+Graph'it "Nuancier 168 couleurs" (OZ International), page 3 of the 2025 French catalogue.
+URL: https://graphit-marker.com/CATALOGUE_GRAPHIT_2025_FR.pdf
+Retrieved: 2026-11-06 (original file 9.8 MB, sha256 1b4e440d1ada53f2644003e19304e50b6bdcc6b0692a973925e83f948cf46be3).
+This file is only page 3 of the original (single page copied unchanged with PyMuPDF
+insert_pdf, sha256 of this file d31023db416c97a9ddb97f0814e887a5fe81ca9b7e88ca82d0b7f1a7161faae1).
+Kept to keep the repository small; the generator finds the nuancier page by its text, so
+the full original works too.
+Content: factual product codes, names and printed swatch colours. (c) OZ International;
+Graph'it is a trademark of its owner. Used only to extract catalogue data.

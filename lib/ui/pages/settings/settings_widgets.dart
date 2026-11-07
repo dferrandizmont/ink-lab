@@ -170,20 +170,22 @@ class SettingsRadioRow extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Container(
-                width: 20,
-                height: 20,
+                width: InkGeometry.mediumIcon,
+                height: InkGeometry.mediumIcon,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: selected ? ink.action : ink.strong,
-                    width: selected ? 2 : 1,
+                    width: selected
+                        ? InkGeometry.switchBorder
+                        : InkGeometry.border,
                   ),
                 ),
                 child: selected
                     ? Container(
-                        width: 10,
-                        height: 10,
+                        width: InkGeometry.radioDot,
+                        height: InkGeometry.radioDot,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: ink.action,

@@ -5,6 +5,7 @@ import '../../../core/models.dart';
 import '../../../data/data.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/section_card.dart';
 import '../collection/collection_page.dart';
@@ -96,104 +97,114 @@ class _SettingsPageState extends State<SettingsPage> {
             final AppSettingsState state =
                 snapshot.data ?? scope.settings.state;
             final InkColors ink = InkColors.of(context);
-            return ListView(
-              key: SettingsPage.pageKey,
-              padding: const EdgeInsets.only(bottom: InkSpacing.pageBottom),
-              children: <Widget>[
-                InkPageHeader(
-                  title: context.l10n.settingsTitle,
-                  subtitleWidget: Text.rich(
-                    TextSpan(
-                      children: <InlineSpan>[
-                        const TextSpan(text: '${SettingsConstants.appName} '),
-                        TextSpan(
-                          text: SettingsConstants.appVersion,
-                          style: AppTypography.data.copyWith(color: ink.fg2),
+            return InkReadableWidth(
+              child: ListView(
+                key: SettingsPage.pageKey,
+                padding: EdgeInsets.only(
+                  bottom: InkSpacing.pageBottomOf(context),
+                ),
+                children: <Widget>[
+                  InkPageHeader(
+                    title: context.l10n.settingsTitle,
+                    subtitleWidget: Text.rich(
+                      TextSpan(
+                        children: <InlineSpan>[
+                          const TextSpan(text: '${SettingsConstants.appName} '),
+                          TextSpan(
+                            text: SettingsConstants.appVersion,
+                            style: AppTypography.data.copyWith(color: ink.fg2),
+                          ),
+                        ],
+                      ),
+                      style: AppTypography.secondary.copyWith(color: ink.fg2),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: InkSpacing.pageMargin,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        SettingsGroup(
+                          title: context.l10n.settingsCollectionGroup,
+                          children: <Widget>[
+                            _CollectionRow(scope: scope, state: state),
+                            InkListRow(
+                              key: const ValueKey<String>(
+                                'settings-setup-again',
+                              ),
+                              label: context.l10n.settingsSetupAgain,
+                              chevron: true,
+                              onTap: () => OnboardingPage.open(context),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: InkSpacing.section),
+                        SettingsGroup(
+                          title: context.l10n.settingsDisplayGroup,
+                          children: <Widget>[
+                            // New / old names only exist for Ohuhu.
+                            if (state.brand == MarkerBrand.ohuhuOahu)
+                              LabelsSection(scope: scope, state: state),
+                            AppearanceSection(scope: scope, state: state),
+                            LanguageSection(scope: scope, state: state),
+                          ],
+                        ),
+                        const SizedBox(height: InkSpacing.section),
+                        SettingsGroup(
+                          title: context.l10n.settingsMatchingGroup,
+                          children: <Widget>[
+                            SettingsSwitchRow(
+                              key: const ValueKey<String>(
+                                'settings-match-unowned',
+                              ),
+                              label: context.l10n.settingsMatchSuggestUnowned,
+                              subtitle: context
+                                  .l10n
+                                  .settingsMatchSuggestUnownedSubtitle,
+                              value: state.matchSuggestUnowned,
+                              onChanged: scope.settings.setMatchSuggestUnowned,
+                            ),
+                            SettingsSwitchRow(
+                              key: const ValueKey<String>(
+                                'settings-own-colors',
+                              ),
+                              label: context.l10n.settingsOwnColors,
+                              subtitle: context.l10n.settingsOwnColorsSubtitle,
+                              value: state.useOwnColors,
+                              onChanged: scope.settings.setUseOwnColors,
+                            ),
+                            OwnColorsSection(scope: scope),
+                          ],
+                        ),
+                        const SizedBox(height: InkSpacing.section),
+                        AiSettingsSection(scope: scope, changes: _aiChanges!),
+                        const SizedBox(height: InkSpacing.section),
+                        SettingsGroup(
+                          title: context.l10n.settingsDataGroup,
+                          children: <Widget>[
+                            BackupSection(scope: scope),
+                            SavedPalettesSection(
+                              scope: scope,
+                              state: state,
+                              palettes: _palettesOf(scope, state.brand),
+                            ),
+                            FavoritesSection(scope: scope, state: state),
+                          ],
+                        ),
+                        const SizedBox(height: InkSpacing.section),
+                        SettingsGroup(
+                          title: context.l10n.settingsAboutTitle,
+                          children: <Widget>[
+                            AboutSection(errorLog: scope.errorLog),
+                          ],
                         ),
                       ],
                     ),
-                    style: AppTypography.secondary.copyWith(color: ink.fg2),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: InkSpacing.pageMargin,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      SettingsGroup(
-                        title: context.l10n.settingsCollectionGroup,
-                        children: <Widget>[
-                          _CollectionRow(scope: scope, state: state),
-                          InkListRow(
-                            key: const ValueKey<String>('settings-setup-again'),
-                            label: context.l10n.settingsSetupAgain,
-                            chevron: true,
-                            onTap: () => OnboardingPage.open(context),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: InkSpacing.section),
-                      SettingsGroup(
-                        title: context.l10n.settingsDisplayGroup,
-                        children: <Widget>[
-                          // New / old names only exist for Ohuhu.
-                          if (state.brand == MarkerBrand.ohuhuOahu)
-                            LabelsSection(scope: scope, state: state),
-                          AppearanceSection(scope: scope, state: state),
-                          LanguageSection(scope: scope, state: state),
-                        ],
-                      ),
-                      const SizedBox(height: InkSpacing.section),
-                      SettingsGroup(
-                        title: context.l10n.settingsMatchingGroup,
-                        children: <Widget>[
-                          SettingsSwitchRow(
-                            key: const ValueKey<String>(
-                              'settings-match-unowned',
-                            ),
-                            label: context.l10n.settingsMatchSuggestUnowned,
-                            subtitle: context
-                                .l10n
-                                .settingsMatchSuggestUnownedSubtitle,
-                            value: state.matchSuggestUnowned,
-                            onChanged: scope.settings.setMatchSuggestUnowned,
-                          ),
-                          SettingsSwitchRow(
-                            key: const ValueKey<String>('settings-own-colors'),
-                            label: context.l10n.settingsOwnColors,
-                            subtitle: context.l10n.settingsOwnColorsSubtitle,
-                            value: state.useOwnColors,
-                            onChanged: scope.settings.setUseOwnColors,
-                          ),
-                          OwnColorsSection(scope: scope),
-                        ],
-                      ),
-                      const SizedBox(height: InkSpacing.section),
-                      AiSettingsSection(scope: scope, changes: _aiChanges!),
-                      const SizedBox(height: InkSpacing.section),
-                      SettingsGroup(
-                        title: context.l10n.settingsDataGroup,
-                        children: <Widget>[
-                          BackupSection(scope: scope),
-                          SavedPalettesSection(
-                            scope: scope,
-                            state: state,
-                            palettes: _palettesOf(scope, state.brand),
-                          ),
-                          FavoritesSection(scope: scope, state: state),
-                        ],
-                      ),
-                      const SizedBox(height: InkSpacing.section),
-                      SettingsGroup(
-                        title: context.l10n.settingsAboutTitle,
-                        children: const <Widget>[AboutSection()],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             );
           },
     );

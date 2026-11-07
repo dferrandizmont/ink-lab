@@ -36,6 +36,7 @@ import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/theme/tokens.dart';
 import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
 import 'package:ink_lab/ui/icons/ink_icons.dart';
+import 'package:ink_lab/ui/widgets/ink_adaptive.dart';
 import 'package:ink_lab/ui/widgets/ink_button.dart';
 import 'package:ink_lab/ui/widgets/ink_chip.dart';
 import 'package:ink_lab/ui/widgets/ink_disclosure.dart';
@@ -78,17 +79,22 @@ MarkerRepository _markers() =>
     MarkerRepository(loadAsset: (String path) => File(path).readAsStringSync());
 
 class _Env {
-  _Env(this.locale, this.width, this.scale);
+  _Env(this.locale, this.width, this.scale, [this.height = 800]);
   final Locale locale;
   final double width;
   final double scale;
 
+  /// Phones are checked 800 high; tablets at their own size.
+  final double height;
+
   AppLocalizations get t => lookupAppLocalizations(locale);
-  String get tag => '${locale.languageCode} ${width.toInt()}dp x$scale';
+  String get tag =>
+      '${locale.languageCode} ${width.toInt()}'
+      '${width < 600 ? '' : 'x${height.toInt()}'}dp x$scale';
 }
 
 void _size(WidgetTester tester, _Env env) {
-  tester.view.physicalSize = Size(env.width, 800);
+  tester.view.physicalSize = Size(env.width, env.height);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 }
@@ -131,6 +137,11 @@ bool _isControlLabel(Element element, String text) {
   var control = false;
   element.visitAncestorElements((Element a) {
     final Widget w = a.widget;
+    // A chip that asks for more lines (the "Add by family" grid) may wrap.
+    if (w is InkChip && w.lines > 1) {
+      control = false;
+      return false;
+    }
     if (w is InkSegmented ||
         w is InkChip ||
         w is FilledButton ||
@@ -1278,6 +1289,39 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         _check(tester, 'match results, white balance on');
         await _scroll(tester, 'match results, white balance on');
       },
+  'match: empty state, value view and the sample read aloud':
+      (WidgetTester tester, _Env env) async {
+        await _pump(
+          tester,
+          env,
+          MatchPage(
+            picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+            decoder: fixedDecoder(sampledImage(64, 64, <int>[200, 60, 60])),
+          ),
+        );
+        // Before a photo: one line and two big, equal actions.
+        _check(tester, 'match empty state');
+        await _scroll(tester, 'match empty state');
+        await _tap(tester, find.byKey(const ValueKey<String>('match-camera')));
+        await _tap(tester, find.byKey(const ValueKey<String>('match-canvas')));
+        _check(tester, 'match with a sample');
+        await _tap(tester, find.byKey(const ValueKey<String>('match-values')));
+        _check(tester, 'match, value view on');
+        await _scroll(tester, 'match, value view on');
+      },
+  'swatches: a hex search shows the closest markers':
+      (WidgetTester tester, _Env env) async {
+        await _pump(tester, env, const SwatchesPage());
+        await _tap(tester, find.text(env.t.swatchesAllFilter));
+        await tester.enterText(find.byType(TextField), '#2D6E9C');
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey<String>('swatches-closest-to')),
+          findsOneWidget,
+        );
+        expect(find.text(env.t.swatchesClosestTo('#2D6E9C')), findsOneWidget);
+        _check(tester, 'swatches hex search');
+      },
   'swatches: my colour in the detail sheet and the editor':
       (WidgetTester tester, _Env env) async {
         final SampledImage photo = imageFromRgb(8, 8, <List<int>>[
@@ -1520,10 +1564,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           'A page of the autumn forest colouring book',
         );
         // The optional fields live in "More details".
-        await _tap(
-          tester,
-          find.byKey(const ValueKey<String>('diary-details')),
-        );
+        await _tap(tester, find.byKey(const ValueKey<String>('diary-details')));
         _check(tester, 'diary form, more details');
         await tester.enterText(
           find.byKey(const ValueKey<String>('diary-on-what')),
@@ -1635,10 +1676,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         _check(tester, 'diary form, edit');
         await _scroll(tester, 'diary form, edit');
         await _tap(tester, find.byTooltip(env.t.commonMoreActions));
-        await _tap(
-          tester,
-          find.byKey(const ValueKey<String>('diary-delete')),
-        );
+        await _tap(tester, find.byKey(const ValueKey<String>('diary-delete')));
         _check(tester, 'diary delete dialog');
         await _close(tester);
         await _close(tester);
@@ -1664,12 +1702,10 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.drag(sheet, const Offset(0, -600));
         await tester.pumpAndSettle();
         _check(tester, 'idea of the day at full height');
-        await _openSheetParts(
-          tester,
-          sheet,
-          <String>['ideas-markers-$featured', 'ideas-details-$featured'],
-          'idea of the day, everything open',
-        );
+        await _openSheetParts(tester, sheet, <String>[
+          'ideas-markers-$featured',
+          'ideas-details-$featured',
+        ], 'idea of the day, everything open');
         // The "⋯" menu: add to diary and other markers.
         await _tap(tester, find.byTooltip(env.t.commonMoreActions));
         _check(tester, 'idea of the day, menu');
@@ -1706,15 +1742,10 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           final Finder sheet = find.byKey(ValueKey<String>('ideas-detail-$id'));
           await tester.drag(sheet, const Offset(0, -600));
           await tester.pumpAndSettle();
-          await _openSheetParts(
-            tester,
-            sheet,
-            <String>[
-              if (IdeasEngine.byId(id)!.hasPalette) 'ideas-markers-$id',
-              'ideas-details-$id',
-            ],
-            'idea $id, everything open',
-          );
+          await _openSheetParts(tester, sheet, <String>[
+            if (IdeasEngine.byId(id)!.hasPalette) 'ideas-markers-$id',
+            'ideas-details-$id',
+          ], 'idea $id, everything open');
           await _tap(tester, find.byTooltip(env.t.commonMoreActions));
           _check(tester, 'idea $id, menu');
           final Finder other = find.byKey(ValueKey<String>('ideas-other-$id'));
@@ -1761,13 +1792,19 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         }
         await tester.pumpAndSettle();
         _check(tester, 'ideas favourites');
-        await _scroll(tester, 'ideas favourites', within: _verticalList().first);
+        await _scroll(
+          tester,
+          'ideas favourites',
+          within: _verticalList().first,
+        );
         await _tap(
           tester,
           find.byKey(const ValueKey<String>('ideas-category-all')),
         );
         _check(tester, 'ideas recently viewed');
-        final Finder recent = find.byKey(const ValueKey<String>('ideas-recent'));
+        final Finder recent = find.byKey(
+          const ValueKey<String>('ideas-recent'),
+        );
         await tester.scrollUntilVisible(
           recent,
           200,
@@ -2128,11 +2165,13 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.pumpAndSettle();
         _check(tester, 'chart card, copic');
         expect(find.text(env.t.collectionChartEmpty), findsOneWidget);
-        await scope.settings.setBrand(MarkerBrand.finecolour);
-        await tester.pumpAndSettle();
-        await tester.ensureVisible(card);
-        await tester.pumpAndSettle();
-        _check(tester, 'chart card, finecolour');
+        for (final MarkerBrand brand in MarkerBrand.values.skip(3)) {
+          await scope.settings.setBrand(brand);
+          await tester.pumpAndSettle();
+          await tester.ensureVisible(card);
+          await tester.pumpAndSettle();
+          _check(tester, 'chart card, ${brand.id}');
+        }
       },
   'palette: saved palette row with Share':
       (WidgetTester tester, _Env env) async {
@@ -2191,10 +2230,13 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.pumpAndSettle();
         _check(tester, 'loose markers, copic');
         await _scroll(tester, 'loose markers, copic');
-        await scope.settings.setBrand(MarkerBrand.finecolour);
-        await tester.pumpAndSettle();
-        _check(tester, 'loose markers, finecolour');
-        await _scroll(tester, 'loose markers, finecolour');
+        // Finecolour and every brand added after it (15 brands in all).
+        for (final MarkerBrand brand in MarkerBrand.values.skip(3)) {
+          await scope.settings.setBrand(brand);
+          await tester.pumpAndSettle();
+          _check(tester, 'loose markers, ${brand.id}');
+          await _scroll(tester, 'loose markers, ${brand.id}');
+        }
       },
   'collection: Copic ownership, purchase suggestions, wishlist and dried markers':
       (WidgetTester tester, _Env env) async {
@@ -2349,9 +2391,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
             );
             final Rect text = tester.getRect(paragraph);
             if (text.top + wanted > tile.bottom + 0.5) {
-              _problems.add(
-                '$_tag name past the card: "$name"  [$where]',
-              );
+              _problems.add('$_tag name past the card: "$name"  [$where]');
             }
             // No word may be wider than the name's text box: a word that does
             // not fit cannot wrap and is cut, which is exactly what the grid
@@ -2478,6 +2518,13 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         _check(tester, 'onboarding copic done');
         await _tap(tester, back);
         await _tap(tester, back);
+        // The full-width buttons leave less room: the last card may be
+        // beyond the list's built area until the list is scrolled.
+        await tester.dragUntilVisible(
+          find.byKey(const ValueKey<String>('onboarding-brand-finecolour')),
+          find.byType(ListView),
+          const Offset(0, -80),
+        );
         await _tap(
           tester,
           find.byKey(const ValueKey<String>('onboarding-brand-finecolour')),
@@ -2560,9 +2607,8 @@ void main() {
 
     test('a wide screen keeps the old max-extent count', () {
       // What the grid had before this delegate: as many 130 dp cells as fit.
-      final int old = ((800 - 2 * InkSpacing.pageMargin) /
-              (130 + InkSpacing.block))
-          .ceil();
+      final int old =
+          ((800 - 2 * InkSpacing.pageMargin) / (130 + InkSpacing.block)).ceil();
       expect(columns(800, 1.0), old);
     });
   });
@@ -2573,30 +2619,135 @@ void main() {
         final _Env env = _Env(locale, width, scale);
         group(env.tag, () {
           for (final MapEntry<String, _Scenario> s in _scenarios.entries) {
-            testWidgets(s.key, (WidgetTester tester) async {
-              _problems.clear();
-              _tag = env.tag;
-              try {
-                await s.value(tester, env);
-              } on Object catch (e, st) {
-                final String at = st
-                    .toString()
-                    .split('\n')
-                    .firstWhere(
-                      (String l) =>
-                          l.contains('text_fit_test') && !l.contains('_tap'),
-                      orElse: () => '',
-                    );
-                _problems.add(
-                  '$_tag scenario error: ${_oneLine('$e').split('  ').first}'
-                  ' ${at.trim()}  [${s.key}]',
-                );
-              }
-              expect(_problems, isEmpty, reason: _problems.join('\n'));
-            });
+            testWidgets(
+              s.key,
+              (WidgetTester tester) => _runScenario(tester, env, s),
+            );
           }
         });
       }
     }
+    // Tablets, portrait and landscape, at normal text: the main pages and
+    // their sheets in every language.
+    for (final Size size in tabletSizes) {
+      final _Env env = _Env(locale, size.width, 1.0, size.height);
+      group(env.tag, () {
+        for (final MapEntry<String, _Scenario> s in <String, _Scenario>{
+          ..._tabletScenarios,
+          for (final String name in _tabletPhoneScenarios)
+            name: _scenarios[name]!,
+        }.entries) {
+          testWidgets(
+            s.key,
+            (WidgetTester tester) => _runScenario(tester, env, s),
+          );
+        }
+      });
+    }
   }
 }
+
+/// Runs scenario [s] at [env] and fails with every problem it found.
+Future<void> _runScenario(
+  WidgetTester tester,
+  _Env env,
+  MapEntry<String, _Scenario> s,
+) async {
+  _problems.clear();
+  _tag = env.tag;
+  try {
+    await s.value(tester, env);
+  } on Object catch (e, st) {
+    final String at = st
+        .toString()
+        .split('\n')
+        .firstWhere(
+          (String l) => l.contains('text_fit_test') && !l.contains('_tap'),
+          orElse: () => '',
+        );
+    _problems.add(
+      '$_tag scenario error: ${_oneLine('$e').split('  ').first}'
+      ' ${at.trim()}  [${s.key}]',
+    );
+  }
+  expect(_problems, isEmpty, reason: _problems.join('\n'));
+}
+
+/// The phone scenarios that also run on tablets as they are.
+const List<String> _tabletPhoneScenarios = <String>[
+  'palette: base, harmonies, scenarios, save dialog',
+  'palette: from a photo, close markers',
+  'match: page, results, recent pick sheet',
+  'ideas: list, idea of the day, tabs and detail sheets',
+  'ideas: diary list, entry form, pickers and photo viewer',
+  'settings: backup file',
+  'settings: OpenRouter, model sheets, dialogs',
+  'settings: Language row and picker',
+  'collection: Ohuhu series, sets, older sets and the marker list',
+  'collection: printable swatch chart card, all brands and the empty state',
+  'onboarding: every step of all brands',
+];
+
+/// Tablet versions of the phone scenarios that depend on the layout: the
+/// shell has a rail, and a wide Swatches page opens the detail in a pane.
+final Map<String, _Scenario> _tabletScenarios = <String, _Scenario>{
+  'shell: five tabs and the rail': (WidgetTester tester, _Env env) async {
+    _size(tester, env);
+    useDeviceLocales(tester, <Locale>[env.locale]);
+    await tester.pumpWidget(
+      AppScope.inMemory(markers: _markers(), child: const InkLabApp()),
+    );
+    await tester.pumpAndSettle();
+    _check(tester, 'swatches tab');
+    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(InkNavigationBar), findsNothing);
+    for (int i = 0; i < 5; i++) {
+      await tester.tap(
+        find
+            .descendant(
+              of: find.byType(NavigationRail),
+              // The rail's own ink wells subclass InkResponse.
+              matching: find.byWidgetPredicate((Widget w) => w is InkResponse),
+            )
+            .at(i),
+      );
+      await tester.pumpAndSettle();
+      _check(tester, 'tab $i');
+    }
+  },
+  'swatches: page and the detail of a marker':
+      (WidgetTester tester, _Env env) async {
+        await _pump(tester, env, SwatchesPage(onBlendingChain: (_) {}));
+        _check(tester, 'swatches');
+        await _tap(tester, find.textContaining(env.t.swatchesFilters));
+        _check(tester, 'filters sheet');
+        await _close(tester);
+        await _tap(tester, find.text(env.t.swatchesAllFilter));
+        final Finder swatch = find.text('B08');
+        await tester.scrollUntilVisible(
+          swatch,
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.pumpAndSettle();
+        await _tap(tester, swatch);
+        _check(tester, 'swatch detail');
+        final Finder detail = find.byWidgetPredicate(
+          (Widget w) => w is InkSheet || w is InkDetailPane,
+        );
+        expect(detail, findsOneWidget);
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatch-alternatives')),
+        );
+        _check(tester, 'swatch detail, alternatives open');
+        await _tap(
+          tester,
+          find.descendant(
+            of: detail,
+            matching: find.byTooltip(env.t.commonMoreActions),
+          ),
+        );
+        _check(tester, 'swatch detail, menu open');
+      },
+};

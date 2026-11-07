@@ -1,0 +1,58 @@
+Arrtx (OROS and ALP alcohol markers): official sources, fetched 2026-11-06.
+Official charts page: https://arrtx.com/pages/arrtx-color-charts
+All files are public marketing/chart images and PDFs published by Arrtx.
+
+Pinned in this directory (used by tool/data/generate_arrtx.py)
+-------------------------------------------------------------
+arrtx_oros160_swatches.jpg  (1600x1600, sha256 6f092c45...e479)
+  "Arrtx OROS 160 Colors" product image: one printed colour chip per code,
+  all 160 codes of the OROS 160 set.
+  Product page: https://arrtx.com/products/arrtx-oros-160-alcohol-markers-dual-tip-paint-markers
+  Image: https://cdn.shopify.com/s/files/1/0742/1755/4203/files/AR1100574_new_show4_a2529a13-f58c-43f9-a95b-0c71e3503b45.jpg?v=1764299925
+
+arrtx_oros_color_card_comparison.jpg  (3125x3125, sha256 951ad0b4...71f7)
+  "Color card comparison" image of the OROS 90 product page: printed colour
+  chips for the OROS 90, 80, 66 and 48 skin tone sets.
+  Product page: https://arrtx.com/products/arrtx-oros-90-colors-alcohol-markers
+  Image: https://cdn.shopify.com/s/files/1/0742/1755/4203/files/OROS90_1500x1500_a45e10fd-060f-478a-a471-76519111ed24.jpg?v=1767948783
+
+arrtx_oros48_card.jpg  (1754x1240, sha256 b63a24ed...4d87)
+  Official OROS 48 colour card (names and codes). Not read by the generator;
+  kept because it is the only source of the 48 skin tone names.
+  https://cdn.shopify.com/s/files/1/0742/1755/4203/files/oros48.jpg?v=1739170151
+
+arrtx_codes.csv
+  Hand transcription (code, official name, line, chip position). Sources of
+  codes and names, all from the official charts page:
+  - OROS 160 codes: the blank OROS 160 card (codes only, no names) and the
+    chip image above agree on all 160 codes (sha256 c66aba1e...e871 for
+    oros160.jpg):
+    https://cdn.shopify.com/s/files/1/0742/1755/4203/files/OROS160_1.jpg?v=1764753451
+  - names and codes, OROS 90B card (sha256 d551f72b...9ce8):
+    https://cdn.shopify.com/s/files/1/0742/1755/4203/files/220907_oros_90B_colorsheet_ol.pdf?v=1705379329
+  - names and codes, OROS 80A card (sha256 6d77a227...92c0):
+    https://cdn.shopify.com/s/files/1/0742/1755/4203/files/220906_oros_80_colorsheet_ol.pdf?v=1705379308
+  - names and codes, OROS 66 card (sha256 b0ccca65...188e):
+    https://cdn.shopify.com/s/files/1/0742/1755/4203/files/OROS66.pdf?v=1705379328
+  - names and codes, OROS 48 skin tone card: arrtx_oros48_card.jpg above.
+  The PDFs draw their text as vector outlines (no text layer): names were
+  read from renders at 150 dpi. They are not bundled (about 1 MB each).
+  ALP membership (the "ALP" line): ALP 90B, 80A, 40 and 36 cards
+    https://cdn.shopify.com/s/files/1/0742/1755/4203/files/ALP_90b.pdf
+    https://cdn.shopify.com/s/files/1/0742/1755/4203/files/ALP_80a.pdf?v=1705116880
+    https://cdn.shopify.com/s/files/1/0742/1755/4203/files/ALP_40Pastel_Color.pdf?v=1705116865
+    https://cdn.shopify.com/s/files/1/0742/1755/4203/files/ALP_36skin.pdf?v=1705116872
+  and the ALP 66 product page
+    https://arrtx.com/products/arrtx-alp-66-alcohol-markers-pastel-color-paint-markers-dual-tip
+  (ALP 90B and 80A carry exactly the OROS 90B and 80A codes and names; the
+  ALP 66 / 40 codes are the OROS 66 codes; ALP 36 skin tone is 301-334 plus
+  the blender.) Arrtx states on the product pages: "ALP 80, ALP 90 and
+  OROS 80, 90 colors are the same".
+
+Not used
+--------
+The ALP 90 / ALP 80 / ALP 36 product-page swatch charts (for example
+.../files/6971452645276_new_gallery9.jpg, .../files/6971452645122_new_show9.jpg)
+print very different colours for the same codes (mean channel difference
+about 40 against the OROS chips) and the ALP 80 chart has typos and wrong
+names; they were only used to compare, not to take hex values.

@@ -29,7 +29,13 @@ List<MarkerColor> parseColors(String json, {required MarkerBrand brand}) {
         brandId: brand.id,
         newCode: code,
         newName: name.isEmpty ? code : name,
-        oldCode: code,
+        // Prismacolor's PB codes are aliases of its primary PM codes, using
+        // the same alternative-code field as Ohuhu's historical codes.
+        oldCode: jsonDefault<String>(
+          item,
+          'oldCode',
+          code,
+        ).trim().toUpperCase(),
         oldName: name.isEmpty ? code : name,
         hex: hex.isEmpty ? 'cfcfcf' : hex,
         sets: jsonDefault<List<dynamic>>(item, 'sets', const []).cast<String>(),
@@ -173,7 +179,9 @@ final class MarkerRepository {
       _loaded[brand] = parsed;
       return parsed;
     } catch (_) {
-      _cache.remove(brand);
+      // The cache holds the future, so removing it hands back the failed
+      // future; nobody waits on it because the caller already got the error.
+      unawaited(_cache.remove(brand));
       rethrow;
     }
   }

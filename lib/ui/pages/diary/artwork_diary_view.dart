@@ -10,6 +10,7 @@ import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/empty_state.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
 import '../match/image_picker_service.dart';
 import 'artwork_entry_page.dart';
@@ -131,9 +132,9 @@ class _ArtworkDiaryViewState extends State<ArtworkDiaryView> {
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.only(
+                padding: EdgeInsets.only(
                   top: InkSpacing.block,
-                  bottom: InkSpacing.pageBottom,
+                  bottom: InkSpacing.pageBottomOf(context),
                 ),
                 children: <Widget>[
                   if (entries.isEmpty)
@@ -152,20 +153,26 @@ class _ArtworkDiaryViewState extends State<ArtworkDiaryView> {
                         entries: entries,
                       ),
                     ),
-                    for (final ArtworkEntry entry in entries)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          InkSpacing.gutter,
-                          InkSpacing.block,
-                          InkSpacing.gutter,
-                          0,
-                        ),
-                        child: _EntryCard(
-                          key: ValueKey<String>('diary-entry-${entry.id}'),
-                          entry: entry,
-                          picker: picker,
-                        ),
+                    // One column on a phone, two on a tablet.
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        InkSpacing.gutter,
+                        InkSpacing.block,
+                        InkSpacing.gutter,
+                        0,
                       ),
+                      child: InkCardColumns(
+                        runSpacing: InkSpacing.block,
+                        children: <Widget>[
+                          for (final ArtworkEntry entry in entries)
+                            _EntryCard(
+                              key: ValueKey<String>('diary-entry-${entry.id}'),
+                              entry: entry,
+                              picker: picker,
+                            ),
+                        ],
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -256,7 +263,7 @@ class _EntryCard extends StatelessWidget {
                       ArtworkPhoto(
                         key: ValueKey<String>('diary-thumb-$name'),
                         name: name,
-                        size: 64,
+                        size: InkGeometry.thumbLarge,
                         onTap: (_) => _openPhoto(context, name),
                       ),
                   ],

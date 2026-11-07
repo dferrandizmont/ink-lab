@@ -43,9 +43,9 @@
   "ideasFavoritesEmptyTitle": "No favourite ideas yet",
   "ideasFavoritesEmptyMessage": "Tap the heart on an idea to keep it here.",
   "ideasRecentTitle": "Recently viewed",
-  "settingsBackupFileCaption": "A ZIP file with your data and the diary photos. Save it to Files, Drive or wherever you like. The API key is never included.",
+  "settingsBackupFileCaption": "A ZIP file with your data and all your photos: diary, swatches and recipes. Pick Files, Drive or any app in the share sheet to keep it. The API key is never included.",
   "settingsBackupTextTitle": "Copy as text (no photos)",
-  "settingsSaveBackupFile": "Save backup file",
+  "settingsSaveBackupFile": "Share backup file",
   "settingsRestoreBackupFile": "Restore from file",
   "settingsBackupFileSaving": "Packing your data and photos…",
   "settingsBackupFileRestoring": "Restoring your backup…",
@@ -148,10 +148,30 @@
   "settingsPrivacyPolicy": "Privacy policy",
   "settingsCopyRepository": "Copy the link",
   "settingsRepositoryCopied": "The link was copied",
-  "settingsDisclaimer": "Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime, Copic or Finecolour, and it uses their marker codes, names and colour values only as factual reference data.",
+  "settingsDisclaimer": "Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by any of the marker brands it lists. It uses their marker codes, names and colour values only as factual reference data.",
   "paletteTitle": "Palette",
   "paletteBaseCodeLabel": "Base marker code",
-  "paletteBaseCodeHint": "E08 or B271",
+  "paletteBaseCodeHint": "{first} or {second}",
+  "@paletteBaseCodeHint": {
+    "description": "Hint of the empty base marker field: two real codes of the user's markers in the current brand.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteBaseCodeHintOne": "{code}",
+  "@paletteBaseCodeHintOne": {
+    "description": "Hint of the empty base marker field when only one code is known.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "paletteScenarioToggle": "Scenes",
   "paletteTypeTitle": "Palette type",
   "paletteTypeSheetTitle": "Choose the palette type",
@@ -407,6 +427,14 @@
   },
   "swatchesTitle": "Swatches",
   "swatchesSearchHint": "Code, name or hex",
+  "swatchesClosestTo": "Closest to {hex}",
+  "@swatchesClosestTo": {
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      }
+    }
+  },
   "swatchesClearSearch": "Clear the search",
   "swatchesAllFilter": "All",
   "swatchesFavoritesOnly": "Favourites",
@@ -869,8 +897,8 @@
   "matchCameraButton": "Camera",
   "matchGalleryButton": "Gallery",
   "matchLoadingPhoto": "Reading photo…",
-  "matchEmptyPhotoTitle": "No photo yet",
-  "matchEmptyPhotoMessage": "Take a photo or pick one from the gallery to find the closest marker.",
+  "matchEmptyPhotoTitle": "Match a colour from a photo",
+  "matchEmptyPhotoMessage": "Photograph something, tap a colour on it and see the closest markers.",
   "matchPhotoSemantics": "Photo to sample a colour from",
   "matchPickToSample": "Tap or drag on the photo to sample a colour.",
   "matchSampledLabel": "Sampled",
@@ -893,6 +921,41 @@
   "matchDecodeFailed": "That photo could not be read. Try another one.",
   "matchPickFailed": "The photo could not be opened. Try again.",
   "matchOkButton": "OK",
+  "matchTakePhotoButton": "Take a photo",
+  "matchChooseGalleryButton": "Choose from gallery",
+  "matchValuesButton": "Values",
+  "matchValuesTooltip": "Show the photo and the matches in greyscale to check their value contrast",
+  "matchPhotoSampleHint": "Double-tap to sample the middle of the photo. Use the actions to move the sample point.",
+  "matchSampleMiddle": "Sample the middle of the photo",
+  "matchMoveLeft": "Move the sample point left",
+  "matchMoveRight": "Move the sample point right",
+  "matchMoveUp": "Move the sample point up",
+  "matchMoveDown": "Move the sample point down",
+  "matchSampleSpoken": "Sampled colour {hex}. Closest marker: {code}, {name}, {quality}.",
+  "@matchSampleSpoken": {
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      },
+      "quality": {
+        "type": "String"
+      }
+    }
+  },
+  "matchSampleSpokenNone": "Sampled colour {hex}.",
+  "@matchSampleSpokenNone": {
+    "placeholders": {
+      "hex": {
+        "type": "String"
+      }
+    }
+  },
   "appTitle": "Ink Lab",
   "commonOk": "OK",
   "commonOwned": "Owned",
@@ -1200,7 +1263,7 @@
       }
     }
   },
-  "paletteUnknownCode": "{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} finecolour{{input} is not a Finecolour marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}",
+  "paletteUnknownCode": "{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} finecolour{{input} is not a Finecolour marker code. Try {example}.} touchTwin{{input} is not a Touch Twin marker code. Try {example}.} promarker{{input} is not a Promarker marker code. Try {example}.} prismacolor{{input} is not a Prismacolor Premier marker code. Try {example}.} spectrumNoir{{input} is not a Spectrum Noir marker code. Try {example}.} promarkerBrush{{input} is not a Promarker Brush marker code. Try {example}.} arrtx{{input} is not an Arrtx marker code. Try {example}.} kurecolor{{input} is not a ZIG Kurecolor marker code. Try {example}.} graphit{{input} is not a Graph'it marker code. Try {example}.} marvyLePlume{{input} is not a Marvy Le Plume marker code. Try {example}.} blickBrush{{input} is not a Blick Studio Brush marker code. Try {example}.} artistsLoft{{input} is not an Artist's Loft marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}",
   "@paletteUnknownCode": {
     "placeholders": {
       "brand": {
@@ -1228,7 +1291,7 @@
       }
     }
   },
-  "paletteNoAvailableColors": "{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} finecolour{There are no Finecolour markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}",
+  "paletteNoAvailableColors": "{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} finecolour{There are no Finecolour markers in your collection yet. Add them in My collection.} touchTwin{There are no Touch Twin markers in your collection yet. Add them in My collection.} promarker{There are no Promarker markers in your collection yet. Add them in My collection.} prismacolor{There are no Prismacolor Premier markers in your collection yet. Add them in My collection.} spectrumNoir{There are no Spectrum Noir markers in your collection yet. Add them in My collection.} promarkerBrush{There are no Promarker Brush markers in your collection yet. Add them in My collection.} arrtx{There are no Arrtx markers in your collection yet. Add them in My collection.} kurecolor{There are no ZIG Kurecolor markers in your collection yet. Add them in My collection.} graphit{There are no Graph'it markers in your collection yet. Add them in My collection.} marvyLePlume{There are no Marvy Le Plume markers in your collection yet. Add them in My collection.} blickBrush{There are no Blick Studio Brush markers in your collection yet. Add them in My collection.} artistsLoft{There are no Artist's Loft markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}",
   "@paletteNoAvailableColors": {
     "placeholders": {
       "brand": {
@@ -1922,6 +1985,146 @@
   "collectionOwnedGroup": "What you own",
   "collectionShoppingGroup": "Shopping",
   "collectionToolsGroup": "Tools",
+  "toolsMapTitle": "Colour map",
+  "toolsMapHint": "Where your markers sit by hue and value, and where the gaps are.",
+  "toolsTranslateTitle": "Translate a recipe",
+  "toolsTranslateHint": "Turn a tutorial's marker codes into the closest ones you own.",
+  "toolsBlendsTitle": "My recipes",
+  "toolsBlendsHint": "Blends you save: markers in order, a note and a photo.",
+  "toolsTransferTitle": "Export and import",
+  "toolsTransferHint": "Share your markers as a list or CSV, or add many by code.",
+  "toolsMapEmptyTitle": "No markers to map yet",
+  "toolsMapIntro": "Each dot is a marker you own. Hatched areas have none.",
+  "toolsMapShowRange": "Show the whole range",
+  "toolsMapShowRangeHint": "Faint dots for every marker of your brands, to see what is missing.",
+  "toolsMapAxes": "Left to right: hue. Top to bottom: light to dark.",
+  "toolsMapGreysTitle": "Greys and neutrals",
+  "toolsMapGreysAxis": "Left to right: dark to light.",
+  "toolsMapFamiliesTitle": "By hue",
+  "toolsHueRed": "Red",
+  "toolsHueOrange": "Orange",
+  "toolsHueYellow": "Yellow",
+  "toolsHueGreen": "Green",
+  "toolsHueTeal": "Teal",
+  "toolsHueBlue": "Blue",
+  "toolsHueViolet": "Violet",
+  "toolsHueMagenta": "Magenta",
+  "toolsFamilyBands": "Light {light} · Mid {mid} · Dark {dark}",
+  "@toolsFamilyBands": {
+    "description": "How many markers of one hue band are light, mid-tone and dark.",
+    "placeholders": {
+      "light": {
+        "type": "int"
+      },
+      "mid": {
+        "type": "int"
+      },
+      "dark": {
+        "type": "int"
+      }
+    }
+  },
+  "toolsMapDriedNote": "Dried-out markers are left out.",
+  "toolsMapSummary": "Colour map of {markers}. {empty} of {cells} areas have no marker. The list below has the same markers by hue.",
+  "@toolsMapSummary": {
+    "description": "Spoken summary of the colour map chart: the number of markers (already worded, for example \"12 markers\"), how many of the grid cells are empty and how many cells there are.",
+    "placeholders": {
+      "markers": {
+        "type": "String"
+      },
+      "empty": {
+        "type": "int"
+      },
+      "cells": {
+        "type": "int"
+      }
+    }
+  },
+  "toolsMarkerOwned": "In your collection",
+  "toolsMarkerNotOwned": "Not in your collection",
+  "toolsTranslateIntro": "Type or paste the marker codes of a tutorial, in the brand it uses. Commas, spaces and lists all work.",
+  "toolsTranslateBrand": "Recipe brand",
+  "toolsTranslateCodes": "Marker codes",
+  "toolsTranslateResults": "Translation",
+  "toolsTranslateEmpty": "The codes you type appear here.",
+  "toolsTranslateMine": "Closest you own",
+  "toolsTranslateNotOwned": "Not owned",
+  "toolsTranslateMissing": "Nothing close in your collection.",
+  "toolsTranslateUnknown": "Not found in {brand}",
+  "@toolsTranslateUnknown": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "toolsCopyList": "Copy list",
+  "toolsShareList": "Share list",
+  "toolsListCopied": "List copied.",
+  "toolsShareFailed": "Could not share the list.",
+  "toolsBlendsNew": "New recipe",
+  "toolsBlendsEditTitle": "Edit recipe",
+  "toolsBlendsEmptyTitle": "No recipes yet",
+  "toolsBlendsEmptyBody": "Save the blends you like: markers in order, a note and a photo.",
+  "toolsBlendsName": "Recipe name",
+  "toolsBlendsMarkersTitle": "Markers, in order",
+  "toolsBlendsMarkersHelp": "Drag the handle to change the order.",
+  "toolsBlendsDrag": "Drag to reorder",
+  "toolsBlendsRemoveMarker": "Remove {code}",
+  "@toolsBlendsRemoveMarker": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "toolsBlendsNote": "Note",
+  "toolsBlendsPhotoTitle": "Photo of the result",
+  "toolsBlendsPhotoHelp": "Optional. It stays on this phone.",
+  "toolsBlendsPhotoSemantic": "Photo of the recipe",
+  "toolsBlendsSave": "Save recipe",
+  "toolsBlendsDelete": "Delete recipe",
+  "toolsBlendsDeleteTitle": "Delete this recipe?",
+  "toolsBlendsDeleteBody": "The recipe and its photo will be removed from this phone.",
+  "toolsTransferExport": "Export",
+  "toolsTransferBrands": "{count, plural, =1{1 brand} other{{count} brands}}",
+  "@toolsTransferBrands": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "toolsTransferExportBrands": "Includes every brand you own: {brands}.",
+  "@toolsTransferExportBrands": {
+    "placeholders": {
+      "brands": {
+        "type": "String"
+      }
+    }
+  },
+  "toolsTransferCsv": "Share as CSV",
+  "toolsTransferImport": "Import by code",
+  "toolsTransferImportHelp": "Choose the brand and paste its codes. Nothing is added until you press the button.",
+  "toolsTransferNew": "New markers",
+  "toolsTransferAlready": "Already yours",
+  "toolsTransferUnknown": "Not recognised",
+  "toolsTransferAdd": "{count, plural, =0{Add markers} =1{Add 1 marker} other{Add {count} markers}}",
+  "@toolsTransferAdd": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "toolsTransferAdded": "{count, plural, =1{1 marker added.} other{{count} markers added.}}",
+  "@toolsTransferAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "commonSeeAll": "See all ({count})",
   "@commonSeeAll": {
     "placeholders": {
@@ -1961,6 +2164,61 @@
   },
   "paletteVisionNoPairs": "Every colour stays easy to tell apart.",
   "paletteVisionPreviewNote": "Preview only. Saving and sharing keep the true colours.",
+  "paletteEaselTitle": "Easel mode",
+  "paletteEaselExit": "Exit easel mode",
+  "paletteShareTextButton": "Share as text",
+  "paletteTextHeader": "Ink Lab palette · {brand} · {title}",
+  "@paletteTextHeader": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteImportTitle": "Import from text",
+  "paletteImportHint": "Paste a shared palette or a list of marker codes.",
+  "paletteImportPaste": "Paste",
+  "paletteImportAction": "Load palette",
+  "paletteImportNothing": "No marker codes found in this text.",
+  "paletteImportNoneKnown": "None of these codes is a {brand} marker: {codes}.",
+  "@paletteImportNoneKnown": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      },
+      "codes": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteImportOtherBrand": "This palette is for {brand}. Change the brand in Settings to import it.",
+  "@paletteImportOtherBrand": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteImportDone": "{count, plural, =1{Imported a palette of 1 marker.} other{Imported a palette of {count} markers.}}",
+  "@paletteImportDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteImportUnknown": "Not recognised: {codes}.",
+  "@paletteImportUnknown": {
+    "placeholders": {
+      "codes": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteImportRepeated": "Repeated codes were counted once.",
   "collectionChartHint": "Empty boxes labelled with the code and name of each marker you own, to swatch your real markers. Shared as A4 images to print or save.",
   "collectionChartShowColour": "Catalogue colour",
   "collectionChartShowColourHint": "Show it as a thin strip in each box, to compare.",
@@ -2310,5 +2568,147 @@
         "type": "int"
       }
     }
-  }
+  },
+  "settingsLicences": "Open-source licences",
+  "settingsLicencesSubtitle": "The licences of the code, the fonts and the packages the app uses",
+  "settingsLicencesLegalese": "Ink Lab code: MIT licence. Texts, ideas and documentation: CC BY-SA 4.0. Bundled fonts: SIL Open Font Licence 1.1.",
+  "settingsSendFeedback": "Send feedback",
+  "settingsSendFeedbackSubtitle": "Opens your email app with the app and system version. You decide whether to send it.",
+  "settingsFeedbackNoMail": "No email app was found. The address {address} was copied.",
+  "@settingsFeedbackNoMail": {"placeholders": {"address": {"type": "String"}}},
+  "settingsErrorLogShare": "Share error log",
+  "settingsErrorLogShareSubtitle": "Technical details of the errors the app had, without your diary or your API key. Nothing is sent unless you share it.",
+  "settingsErrorLogClear": "Clear error log",
+  "settingsErrorLogCleared": "The error log was cleared",
+  "settingsErrorLogShareFailed": "The error log could not be shared",
+  "settingsLastBackup": "Last backup: {date}",
+  "@settingsLastBackup": {"placeholders": {"date": {"type": "DateTime", "format": "yMMMd"}}},
+  "settingsNoBackupYet": "No backup yet",
+  "settingsBackupReminderNever": "You have data in the app and no backup yet. Save a backup file to keep it safe if you change or reset your phone.",
+  "settingsBackupReminderOld": "Your last backup is more than a month old. Save a new file to keep your latest work safe.",
+  "collectionTouchTwinHint": "Mark the Touch Twin markers you own.",
+  "onboardingTouchTwinLine": "202 colours · Mark the markers you own",
+  "collectionPromarkerHint": "Mark the Promarker markers you own.",
+  "onboardingPromarkerLine": "148 colours · Mark the markers you own",
+  "collectionPrismacolorHint": "Mark the Prismacolor Premier markers you own.",
+  "onboardingPrismacolorLine": "200 colours · Mark the markers you own",
+  "collectionSpectrumNoirHint": "Mark the Spectrum Noir markers you own.",
+  "onboardingSpectrumNoirLine": "216 colours · Mark the markers you own",
+  "collectionPromarkerBrushHint": "Mark the Promarker Brush markers you own.",
+  "onboardingPromarkerBrushLine": "72 colours · Mark the markers you own",
+  "collectionArrtxHint": "Mark the Arrtx markers you own.",
+  "onboardingArrtxLine": "328 colours · Mark the markers you own",
+  "collectionKurecolorHint": "Mark the ZIG Kurecolor markers you own.",
+  "onboardingKurecolorLine": "136 colours · Mark the markers you own",
+  "collectionGraphitHint": "Mark the Graph'it markers you own.",
+  "onboardingGraphitLine": "168 colours · Mark the markers you own",
+  "collectionMarvyLePlumeHint": "Mark the Marvy Le Plume markers you own.",
+  "onboardingMarvyLePlumeLine": "144 colours · Mark the markers you own",
+  "collectionBlickBrushHint": "Mark the Blick Studio Brush markers you own.",
+  "onboardingBlickBrushLine": "96 colours · Mark the markers you own",
+  "collectionArtistsLoftHint": "Mark the Artist's Loft markers you own.",
+  "onboardingArtistsLoftLine": "56 colours · Mark the markers you own",
+  "shortcutMatchLabel": "Match a colour",
+  "shortcutNewPaletteLabel": "New palette",
+  "shortcutSearchSwatchesLabel": "Search swatches",
+  "brandSearchHint": "Search brands",
+  "brandGroupPopular": "Popular",
+  "brandGroupMore": "More brands",
+  "brandSearchEmpty": "No brand matches your search.",
+  "inkLevelTitle": "Ink level",
+  "inkLevelFull": "Full",
+  "commonRunningOut": "Running out",
+  "refillNoteTitle": "Refill note",
+  "refillNoteEmpty": "Add a note, like “refilled 3 Nov”",
+  "refillNoteHint": "Refilled 3 Nov",
+  "refillNoteSave": "Save",
+  "refillNoteRemove": "Remove note",
+  "swatchPhotoTitle": "Real swatch",
+  "swatchPhotoEmpty": "Add a photo of your paper swatch",
+  "swatchPhotoHas": "Your paper swatch",
+  "swatchPhotoView": "View photo",
+  "swatchPhotoTake": "Take a photo",
+  "swatchPhotoChoose": "Choose from gallery",
+  "swatchPhotoSaved": "Photo saved",
+  "swatchPhotoSaveFailed": "The photo could not be saved. Try another one.",
+  "swatchPhotoRemoved": "Photo removed",
+  "swatchShadowLightTitle": "Shadow and light",
+  "swatchShadow": "Shadow",
+  "swatchLight": "Light",
+  "swatchShadowLightNone": "None in your collection",
+  "swatchBlendWith": "Blend with…",
+  "swatchBlendTitle": "Blend with",
+  "swatchBlendSearchHint": "Search your markers",
+  "swatchBlendNoMarkers": "You have no other markers to blend with.",
+  "swatchBlendNoResults": "No marker matches your search.",
+  "swatchBlendSteps": "In between, from your collection",
+  "swatchBlendNothingBetween": "These two are close enough to blend straight into each other.",
+  "swatchBlendNoneBetween": "None of your markers sits between them.",
+  "swatchBlendBuy": "Big jump. To fill the gap, the closest marker you do not own is {code}.",
+  "@swatchBlendBuy": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "swatchBlendStripSemantics": "Gradient from {from} to {to}",
+  "@swatchBlendStripSemantics": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "swatchDuplicatesTitle": "{count, plural, =1{You already have 1 marker very close to this} other{You already have {count} markers very close to this}}",
+  "@swatchDuplicatesTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "swatchDuplicatesHint": "Almost the same colour, so a new one adds little.",
+  "swatchDuplicatesMore": "and {count} more",
+  "@swatchDuplicatesMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "swatchDuplicatesNone": "Nothing in your collection is very close to this: it would add a new colour.",
+  "wishlistDuplicateNote": "Very close to {codes} in your collection",
+  "@wishlistDuplicateNote": {
+    "placeholders": {
+      "codes": {
+        "type": "String"
+      }
+    }
+  },
+  "wishlistRunningOutCount": "{count, plural, =0{Nothing running out} =1{1 marker running out} other{{count} markers running out}}",
+  "@wishlistRunningOutCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wishlistRunningOutHint": "Still in use. Add them to your list when you want to buy or refill them.",
+  "swatchesAllBrands": "All brands ({count})",
+  "@swatchesAllBrands": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "swatchesOtherBrandsYours": "Your brands",
+  "inkLevelFullNote": "Full: Match, Palette and Ideas can suggest it.",
+  "inkLevelRunningOutNote": "Running out: still used everywhere. It shows in the Running out group of your wishlist.",
+  "swatchesDetailPaneEmpty": "Tap a marker to see its details here.",
+  "@swatchesDetailPaneEmpty": {"description": "Shown in the detail pane next to the Swatches grid on tablets while no marker is selected."}
 }

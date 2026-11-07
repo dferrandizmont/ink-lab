@@ -8,6 +8,10 @@ import 'ink_button.dart';
 /// Empty and error states (spec §4): centred, max width 300, icon 24 `fg2`,
 /// gap 8, `section` headline, gap 4, `secondary` line in `fg2`, gap 16, one
 /// secondary button. Errors share the layout; no red fills, no illustrations.
+///
+/// A screen with more than one action (or custom ones) passes [actions]: they
+/// are stacked full width under the text, [InkSpacing.buttonGap] apart, and
+/// replace the single action.
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
@@ -17,6 +21,7 @@ class EmptyState extends StatelessWidget {
     this.actionLabel,
     this.onAction,
     this.primaryAction = false,
+    this.actions = const <Widget>[],
   });
 
   /// Error variant (alert icon).
@@ -27,6 +32,7 @@ class EmptyState extends StatelessWidget {
     this.actionLabel,
     this.onAction,
     this.primaryAction = false,
+    this.actions = const <Widget>[],
   }) : icon = InkIcons.alertCircle;
 
   final String title;
@@ -37,6 +43,10 @@ class EmptyState extends StatelessWidget {
 
   /// Draws the action as the primary (filled) button.
   final bool primaryAction;
+
+  /// Full-width actions stacked under the text; when not empty they are drawn
+  /// instead of [actionLabel] / [onAction].
+  final List<Widget> actions;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +74,18 @@ class EmptyState extends StatelessWidget {
                   style: AppTypography.secondary.copyWith(color: ink.fg2),
                 ),
               ],
-              if (actionLabel != null && onAction != null) ...<Widget>[
+              if (actions.isNotEmpty) ...<Widget>[
+                const SizedBox(height: InkSpacing.block),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    for (int i = 0; i < actions.length; i++) ...<Widget>[
+                      if (i > 0) const SizedBox(height: InkSpacing.buttonGap),
+                      actions[i],
+                    ],
+                  ],
+                ),
+              ] else if (actionLabel != null && onAction != null) ...<Widget>[
                 const SizedBox(height: 16),
                 if (primaryAction)
                   InkButton(label: actionLabel!, onPressed: onAction)

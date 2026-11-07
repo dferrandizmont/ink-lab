@@ -17,9 +17,41 @@ const List<String> decoTimeFamilyIds = <String>[
 /// Human labels of the collection concepts.
 extension CollectionLabels on AppLocalizations {
   String individualMarkersHint(MarkerBrand brand) => switch (brand) {
+    MarkerBrand.ohuhuOahu || MarkerBrand.decoTime => collectionDecoHint,
     MarkerBrand.copic => collectionCopicHint,
     MarkerBrand.finecolour => collectionFinecolourHint,
-    _ => collectionDecoHint,
+    MarkerBrand.touchTwin => collectionTouchTwinHint,
+    MarkerBrand.promarker => collectionPromarkerHint,
+    MarkerBrand.promarkerBrush => collectionPromarkerBrushHint,
+    MarkerBrand.prismacolor => collectionPrismacolorHint,
+    MarkerBrand.spectrumNoir => collectionSpectrumNoirHint,
+    MarkerBrand.arrtx => collectionArrtxHint,
+    MarkerBrand.kurecolor => collectionKurecolorHint,
+    MarkerBrand.graphit => collectionGraphitHint,
+    MarkerBrand.marvyLePlume => collectionMarvyLePlumeHint,
+    MarkerBrand.blickBrush => collectionBlickBrushHint,
+    MarkerBrand.artistsLoft => collectionArtistsLoftHint,
+  };
+
+  /// The second line of a brand's card in the first-run setup ("358 colours
+  /// · Mark the markers you own"). No default branch: a new brand must get
+  /// its own text.
+  String onboardingBrandLine(MarkerBrand brand) => switch (brand) {
+    MarkerBrand.ohuhuOahu => onboardingOhuhuLine,
+    MarkerBrand.decoTime => onboardingDecoLine,
+    MarkerBrand.copic => onboardingCopicLine,
+    MarkerBrand.finecolour => onboardingFinecolourLine,
+    MarkerBrand.touchTwin => onboardingTouchTwinLine,
+    MarkerBrand.promarker => onboardingPromarkerLine,
+    MarkerBrand.promarkerBrush => onboardingPromarkerBrushLine,
+    MarkerBrand.prismacolor => onboardingPrismacolorLine,
+    MarkerBrand.spectrumNoir => onboardingSpectrumNoirLine,
+    MarkerBrand.arrtx => onboardingArrtxLine,
+    MarkerBrand.kurecolor => onboardingKurecolorLine,
+    MarkerBrand.graphit => onboardingGraphitLine,
+    MarkerBrand.marvyLePlume => onboardingMarvyLePlumeLine,
+    MarkerBrand.blickBrush => onboardingBlickBrushLine,
+    MarkerBrand.artistsLoft => onboardingArtistsLoftLine,
   };
 
   /// What the tips of an Ohuhu series are ("Fine and chisel tips").

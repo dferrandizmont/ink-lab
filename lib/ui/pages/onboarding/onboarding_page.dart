@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../app_scope.dart';
@@ -7,15 +9,21 @@ import '../../../data/data.dart';
 import '../../../l10n/l10n.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/ink_adaptive.dart';
+import '../../widgets/brand_list.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
-import '../../widgets/select_card.dart';
 import '../collection/collection_pickers.dart';
 import '../collection/collection_summary.dart';
 import '../collection/collection_summary_card.dart';
 import '../collection/loose_markers_page.dart';
 
 enum _Step { brand, series, sets, markers, done }
+
+/// Key of a brand's row in the first-run setup: `onboarding-brand-ohuhu`
+/// (the historical key of Ohuhu) or `onboarding-brand-<brand id>`.
+String onboardingBrandCardKey(MarkerBrand brand) =>
+    'onboarding-brand-${brand == MarkerBrand.ohuhuOahu ? 'ohuhu' : brand.id}';
 
 /// The first-run setup: brand, then series and sets for retail-set brands
 /// or individual markers (and available colour families), then a summary.
@@ -48,7 +56,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
   late Set<String> _sets;
   late Set<String> _extras;
   bool _ready = false;
+  bool _finished = false;
   _Step _step = _Step.brand;
+
+  /// The scroll of the step on screen; each step starts at its top.
+  final ScrollController _scroll = ScrollController();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -61,15 +79,83 @@ class _OnboardingPageState extends State<OnboardingPage> {
     _sets = <String>{...state.settings.ownedSetIds};
     _series = <MarkerLine>{...state.settings.ownedSeries};
     _extras = <String>{...state.settings.extraMarkerIds};
+    _restore(_scope.settings.onboardingDraft);
   }
 
-  List<_Step> get _steps => _brand.hasRetailSets
-      ? const <_Step>[_Step.brand, _Step.series, _Step.sets, _Step.done]
-      : const <_Step>[_Step.brand, _Step.markers, _Step.done];
+  /// Picks up a setup left half-way. A draft that names a brand, series, set
+  /// or step this version does not know is ignored (and forgotten).
+  void _restore(OnboardingDraft? draft) {
+    if (draft == null) return;
+    final MarkerBrand? brand = MarkerBrand.byId[draft.brandId.trim()];
+    final Set<MarkerLine> series = <MarkerLine>{};
+    bool known = brand != null;
+    for (final String id in draft.seriesIds) {
+      final MarkerLine? line = MarkerLine.fromId(id);
+      if (line == null) {
+        known = false;
+      } else {
+        series.add(line);
+      }
+    }
+    known = known && draft.setIds.every(OahuSet.byId.containsKey);
+    _Step? step;
+    for (final _Step candidate in _Step.values) {
+      if (candidate.name == draft.step) step = candidate;
+    }
+    if (known && step != null) {
+      final List<_Step> steps = brand!.hasRetailSets
+          ? _retailSteps
+          : _plainSteps;
+      known = steps.contains(step);
+    }
+    if (!known || step == null) {
+      unawaited(_scope.settings.setOnboardingDraft(null));
+      return;
+    }
+    _brand = brand!;
+    _series = series;
+    _sets = <String>{...draft.setIds};
+    _extras = scopedColorIds(draft.extraMarkerIds);
+    _step = step;
+  }
+
+  /// Applies [change], redraws and saves the draft.
+  void _update(VoidCallback change) {
+    setState(change);
+    if (_finished) return;
+    unawaited(
+      _scope.settings.setOnboardingDraft(
+        OnboardingDraft(
+          step: _step.name,
+          brandId: _brand.id,
+          seriesIds: <String>{for (final MarkerLine line in _series) line.id},
+          setIds: _sets,
+          extraMarkerIds: _extras,
+        ),
+      ),
+    );
+  }
+
+  static const List<_Step> _retailSteps = <_Step>[
+    _Step.brand,
+    _Step.series,
+    _Step.sets,
+    _Step.done,
+  ];
+  static const List<_Step> _plainSteps = <_Step>[
+    _Step.brand,
+    _Step.markers,
+    _Step.done,
+  ];
+
+  List<_Step> get _steps => _brand.hasRetailSets ? _retailSteps : _plainSteps;
 
   int get _index => _steps.indexOf(_step);
 
-  void _go(int delta) => setState(() => _step = _steps[_index + delta]);
+  void _go(int delta) {
+    _update(() => _step = _steps[_index + delta]);
+    if (_scroll.hasClients) _scroll.jumpTo(0);
+  }
 
   AppSettings _chosen() {
     return AppSettings(
@@ -81,11 +167,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Future<void> _finish({required bool apply}) async {
     final AppSettingsRepository settings = _scope.settings;
+    _finished = true;
     if (apply) {
       await settings.setBrand(_brand);
       await settings.setCollection(_chosen());
     }
     await settings.setOnboardingCompleted(true);
+    await settings.setOnboardingDraft(null);
     widget.onDone?.call();
   }
 
@@ -93,88 +181,127 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
     final bool last = _step == _Step.done;
+    final Widget note = Text(
+      context.l10n.onboardingLaterNote,
+      style: AppTypography.secondary.copyWith(color: ink.fg2),
+    );
+    // One fixed layout on every step: the primary action fills the width
+    // and "Back" sits under it. On the first step "Back" keeps its place
+    // (invisible), so nothing moves.
+    final Widget next = InkButton(
+      key: const ValueKey<String>('onboarding-next'),
+      label: last ? context.l10n.onboardingFinish : context.l10n.onboardingNext,
+      expand: true,
+      onPressed: last ? () => _finish(apply: true) : () => _go(1),
+    );
+    final Widget back = Visibility(
+      visible: _index > 0,
+      maintainSize: true,
+      maintainAnimation: true,
+      maintainState: true,
+      child: InkButton.text(
+        key: const ValueKey<String>('onboarding-back'),
+        label: context.l10n.onboardingBack,
+        expand: true,
+        onPressed: () => _go(-1),
+      ),
+    );
     return Scaffold(
       key: OnboardingPage.pageKey,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                InkSpacing.gutter,
-                InkSpacing.s4,
-                InkSpacing.s4,
-                0,
-              ),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      context.l10n.onboardingStep(_index + 1, _steps.length),
-                      style: AppTypography.data.copyWith(color: ink.fg2),
-                    ),
-                  ),
-                  // Kept (invisible) on the last step so the header has the
-                  // same height on every step and the title never jumps.
-                  Visibility(
-                    visible: !last,
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    child: InkButton.text(
-                      key: const ValueKey<String>('onboarding-skip'),
-                      label: context.l10n.onboardingSkip,
-                      onPressed: () => _finish(apply: false),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(InkSpacing.gutter),
-                children: _body(context),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                InkSpacing.gutter,
-                0,
-                InkSpacing.gutter,
-                InkSpacing.gutter,
-              ),
-              child: Column(
+      body: InkReadableWidth(
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              // On a short screen (a phone in landscape) the note and the
+              // two stacked buttons would take most of the height and squeeze
+              // the content to a row: the note scrolls with the content and
+              // the buttons share one row.
+              final bool short =
+                  constraints.maxHeight < InkLayout.shortPageHeight;
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Text(
-                    context.l10n.onboardingLaterNote,
-                    style: AppTypography.secondary.copyWith(color: ink.fg2),
-                  ),
-                  const SizedBox(height: InkSpacing.block),
-                  Row(
-                    children: <Widget>[
-                      if (_index > 0)
-                        InkButton.secondary(
-                          key: const ValueKey<String>('onboarding-back'),
-                          label: context.l10n.onboardingBack,
-                          onPressed: () => _go(-1),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      InkSpacing.gutter,
+                      InkSpacing.s4,
+                      InkSpacing.s4,
+                      0,
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            context.l10n.onboardingStep(
+                              _index + 1,
+                              _steps.length,
+                            ),
+                            style: AppTypography.data.copyWith(color: ink.fg2),
+                          ),
                         ),
-                      const Spacer(),
-                      InkButton(
-                        key: const ValueKey<String>('onboarding-next'),
-                        label: last
-                            ? context.l10n.onboardingFinish
-                            : context.l10n.onboardingNext,
-                        onPressed: last
-                            ? () => _finish(apply: true)
-                            : () => _go(1),
-                      ),
-                    ],
+                        // Kept (invisible) on the last step so the header has
+                        // the same height on every step and the title never
+                        // jumps.
+                        Visibility(
+                          visible: !last,
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          child: InkButton.text(
+                            key: const ValueKey<String>('onboarding-skip'),
+                            label: context.l10n.onboardingSkip,
+                            onPressed: () => _finish(apply: false),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView(
+                      key: const ValueKey<String>('onboarding-scroll'),
+                      controller: _scroll,
+                      padding: const EdgeInsets.all(InkSpacing.gutter),
+                      children: <Widget>[
+                        ..._body(context),
+                        // The note goes with the content when the buttons are
+                        // squeezed into one row below.
+                        if (short) ...<Widget>[
+                          const SizedBox(height: InkSpacing.group),
+                          note,
+                        ],
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      InkSpacing.gutter,
+                      0,
+                      InkSpacing.gutter,
+                      InkSpacing.gutter,
+                    ),
+                    child: short
+                        ? Row(
+                            children: <Widget>[
+                              Expanded(child: back),
+                              const SizedBox(width: InkSpacing.buttonGap),
+                              Expanded(child: next),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              note,
+                              const SizedBox(height: InkSpacing.block),
+                              next,
+                              const SizedBox(height: InkSpacing.buttonGap),
+                              back,
+                            ],
+                          ),
                   ),
                 ],
-              ),
-            ),
-          ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -198,36 +325,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
         return <Widget>[
           title(context.l10n.onboardingWelcomeTitle),
           body(context.l10n.onboardingWelcomeBody),
-          SelectCard(
-            key: const ValueKey<String>('onboarding-brand-ohuhu'),
-            title: MarkerBrand.ohuhuOahu.label,
-            line: context.l10n.onboardingOhuhuLine,
-            selected: _brand == MarkerBrand.ohuhuOahu,
-            onTap: () => setState(() => _brand = MarkerBrand.ohuhuOahu),
-          ),
-          const SizedBox(height: InkSpacing.s12),
-          SelectCard(
-            key: const ValueKey<String>('onboarding-brand-decotime'),
-            title: MarkerBrand.decoTime.label,
-            line: context.l10n.onboardingDecoLine,
-            selected: _brand == MarkerBrand.decoTime,
-            onTap: () => setState(() => _brand = MarkerBrand.decoTime),
-          ),
-          const SizedBox(height: InkSpacing.s12),
-          SelectCard(
-            key: const ValueKey<String>('onboarding-brand-copic'),
-            title: MarkerBrand.copic.label,
-            line: context.l10n.onboardingCopicLine,
-            selected: _brand == MarkerBrand.copic,
-            onTap: () => setState(() => _brand = MarkerBrand.copic),
-          ),
-          const SizedBox(height: InkSpacing.s12),
-          SelectCard(
-            key: const ValueKey<String>('onboarding-brand-finecolour'),
-            title: MarkerBrand.finecolour.label,
-            line: context.l10n.onboardingFinecolourLine,
-            selected: _brand == MarkerBrand.finecolour,
-            onTap: () => setState(() => _brand = MarkerBrand.finecolour),
+          // 15 brands: a search field and two short groups (Popular, More
+          // brands), not one tall card per brand.
+          BrandList(
+            selected: _brand,
+            rowKey: (MarkerBrand brand) =>
+                ValueKey<String>(onboardingBrandCardKey(brand)),
+            onSelected: (MarkerBrand brand) => _update(() => _brand = brand),
           ),
         ];
       case _Step.series:
@@ -236,7 +340,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
           body(context.l10n.onboardingSeriesBody),
           SeriesCards(
             selected: _series,
-            onToggle: (MarkerLine line, bool on) => setState(() {
+            onToggle: (MarkerLine line, bool on) => _update(() {
               if (on) {
                 _series.add(line);
               } else {
@@ -266,7 +370,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               series: _series,
               ownedSetIds: _sets,
               onToggle: (OahuSet set, bool on) =>
-                  setState(() => on ? _sets.add(set.id) : _sets.remove(set.id)),
+                  _update(() => on ? _sets.add(set.id) : _sets.remove(set.id)),
             ),
         ];
       case _Step.markers:
@@ -333,7 +437,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         bool all(List<MarkerColor> colors) =>
             colors.isNotEmpty &&
             colors.every((MarkerColor c) => _extras.contains(c.colorId));
-        void toggle(List<MarkerColor> colors) => setState(() {
+        void toggle(List<MarkerColor> colors) => _update(() {
           final bool remove = all(colors);
           for (final MarkerColor c in colors) {
             remove ? _extras.remove(c.colorId) : _extras.add(c.colorId);
@@ -380,6 +484,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
     await AppScope.push(context, LooseMarkersPage(settings: draft));
     if (!mounted) return;
-    setState(() => _extras = <String>{...draft.settings.extraMarkerIds});
+    _update(() => _extras = <String>{...draft.settings.extraMarkerIds});
   }
 }

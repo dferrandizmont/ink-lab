@@ -91,6 +91,10 @@ abstract final class AppTypography {
   /// Marker codes, numeric segments, masked key. JetBrains Mono 500 16/22.
   static final TextStyle code = _mono(16, 22);
 
+  /// The marker code of an easel tile, as large as the swatch allows (it is
+  /// scaled down only when the swatch is too small). JetBrains Mono 500 56/61.6.
+  static final TextStyle easelCode = _mono(56, 61.6);
+
   /// Hex, RGB, ΔE, counts, old codes, step numbers. JetBrains Mono 500 12/16.
   static final TextStyle data = _mono(12, 16);
 

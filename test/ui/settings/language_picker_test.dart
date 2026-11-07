@@ -105,7 +105,7 @@ void main() {
     expect(_key('language-list'), findsOneWidget);
     // Title of the sheet plus the row behind it.
     expect(find.text(l10n.settingsLanguageTitle), findsWidgets);
-    final List<AppLanguage> order = AppLanguage.values;
+    const List<AppLanguage> order = AppLanguage.values;
     expect(order.first, AppLanguage.system);
     double? previousTop;
     for (final AppLanguage language in order) {

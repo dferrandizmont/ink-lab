@@ -63,12 +63,22 @@ final class PlatformImagePickerService implements ImagePickerService {
   /// [imageQuality] is the JPEG quality (1 to 100) of what is picked: Match
   /// keeps 100 so colours stay true, the artwork diary lowers it to keep its
   /// private copies small.
-  PlatformImagePickerService([ImagePicker? picker, int imageQuality = 100])
+  PlatformImagePickerService([ImagePicker? picker, this._imageQuality = 100])
     : _picker = picker ?? ImagePicker(),
-      _imageQuality = imageQuality;
+      _maxSide = 2048;
+
+  /// A picker for small private copies, like the photo of a real swatch: the
+  /// picture is scaled so that neither side is over [maxSide] pixels and
+  /// saved as a JPEG of [imageQuality].
+  PlatformImagePickerService.limited({
+    ImagePicker? picker,
+    this._imageQuality = 85,
+    this._maxSide = 1024,
+  }) : _picker = picker ?? ImagePicker();
 
   final ImagePicker _picker;
   final int _imageQuality;
+  final int _maxSide;
 
   @override
   Future<PhotoPickResult> pick(PhotoSource source) async {
@@ -79,8 +89,8 @@ final class PlatformImagePickerService implements ImagePickerService {
             : ImageSource.gallery,
         // Cap the captured side at capture time; the decoder downscales again
         // before sampling, so this only keeps the intermediate file sane.
-        maxWidth: 2048,
-        maxHeight: 2048,
+        maxWidth: _maxSide.toDouble(),
+        maxHeight: _maxSide.toDouble(),
         imageQuality: _imageQuality,
         // No EXIF is needed, so iOS can use PHPicker without asking for
         // access to the whole photo library.

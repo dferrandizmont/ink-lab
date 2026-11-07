@@ -23,6 +23,17 @@ void main() {
           MarkerBrand.decoTime => 313,
           MarkerBrand.copic => 358,
           MarkerBrand.finecolour => 480,
+          MarkerBrand.touchTwin => 202,
+          MarkerBrand.promarker => 148,
+          MarkerBrand.promarkerBrush => 72,
+          MarkerBrand.prismacolor => 200,
+          MarkerBrand.spectrumNoir => 216,
+          MarkerBrand.arrtx => 328,
+          MarkerBrand.kurecolor => 136,
+          MarkerBrand.graphit => 168,
+          MarkerBrand.marvyLePlume => 144,
+          MarkerBrand.blickBrush => 96,
+          MarkerBrand.artistsLoft => 56,
         });
         expect(parsed.every((c) => c.brandId == brand.id), isTrue);
         expect(parsed.map((c) => c.colorId).toSet().length, parsed.length);
@@ -30,15 +41,34 @@ void main() {
           expect(MarkerColor.fromJson(wire(c.toJson())), c);
           expect(c.hex, matches(RegExp(r'^[0-9a-f]{6}$')));
         }
-        expect(
-          parsed.first.newCode,
-          brand == MarkerBrand.decoTime ? '0.5' : '0',
-        );
+        expect(parsed.first.newCode, switch (brand) {
+          MarkerBrand.decoTime => '0.5',
+          MarkerBrand.promarker => 'Y418',
+          MarkerBrand.promarkerBrush => 'Y828',
+          MarkerBrand.prismacolor => 'PM23',
+          MarkerBrand.spectrumNoir => 'DR1',
+          MarkerBrand.kurecolor => '100',
+          MarkerBrand.graphit => 'GI0000',
+          MarkerBrand.marvyLePlume => 'Y610',
+          MarkerBrand.artistsLoft => 'YG2',
+          _ => '0',
+        });
         expect(parsed.last.newCode, switch (brand) {
           MarkerBrand.ohuhuOahu => 'YR513',
           MarkerBrand.decoTime => 'GG9',
           MarkerBrand.copic => 'YR82',
           MarkerBrand.finecolour => 'SG479',
+          MarkerBrand.touchTwin => 'BR101',
+          MarkerBrand.promarker => 'BL',
+          MarkerBrand.promarkerBrush => 'BL',
+          MarkerBrand.prismacolor => 'PM215',
+          MarkerBrand.spectrumNoir => 'FL3',
+          MarkerBrand.arrtx => 'WG9',
+          MarkerBrand.kurecolor => 'B01',
+          MarkerBrand.graphit => 'GI09909',
+          MarkerBrand.marvyLePlume => 'OP922',
+          MarkerBrand.blickBrush => '063',
+          MarkerBrand.artistsLoft => 'W7',
         });
       },
     );
@@ -88,9 +118,8 @@ void main() {
     final result = await Future.wait([
       repository.loadColors(MarkerBrand.ohuhuOahu),
       repository.loadColors(MarkerBrand.ohuhuOahu),
-      repository.loadColors(MarkerBrand.decoTime),
-      repository.loadColors(MarkerBrand.copic),
-      repository.loadColors(MarkerBrand.finecolour),
+      for (final brand in MarkerBrand.values.skip(1))
+        repository.loadColors(brand),
     ]);
     expect(paths, MarkerBrand.values.map((b) => b.assetPath));
     expect(identical(result[0], result[1]), isTrue);

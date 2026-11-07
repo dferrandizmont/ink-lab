@@ -35,6 +35,36 @@ bool isSafePhotoName(String name) =>
     RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$').hasMatch(name) &&
     !name.contains('..');
 
+/// Whether [bytes] start like a JPEG, a PNG or a WebP image.
+bool looksLikePhotoBytes(Uint8List bytes) {
+  if (bytes.length >= 3 &&
+      bytes[0] == 0xFF &&
+      bytes[1] == 0xD8 &&
+      bytes[2] == 0xFF) {
+    return true;
+  }
+  if (bytes.length >= 8 &&
+      bytes[0] == 0x89 &&
+      bytes[1] == 0x50 &&
+      bytes[2] == 0x4E &&
+      bytes[3] == 0x47 &&
+      bytes[4] == 0x0D &&
+      bytes[5] == 0x0A &&
+      bytes[6] == 0x1A &&
+      bytes[7] == 0x0A) {
+    return true;
+  }
+  return bytes.length >= 12 &&
+      bytes[0] == 0x52 &&
+      bytes[1] == 0x49 &&
+      bytes[2] == 0x46 &&
+      bytes[3] == 0x46 &&
+      bytes[8] == 0x57 &&
+      bytes[9] == 0x45 &&
+      bytes[10] == 0x42 &&
+      bytes[11] == 0x50;
+}
+
 /// The extension for [bytes]: `png` for a PNG file, `jpg` otherwise.
 String photoExtension(Uint8List bytes) =>
     bytes.length > 4 &&
@@ -103,7 +133,7 @@ final class DirectoryArtworkPhotoStore implements ArtworkPhotoStore {
   @override
   Future<void> restore(String name, Uint8List bytes) async {
     if (!isSafePhotoName(name)) {
-      throw ArgumentError.value(name, 'name', 'not a safe photo name');
+      throw ArgumentError('not a safe photo name');
     }
     final Directory directory = await _directory();
     await directory.create(recursive: true);
@@ -144,7 +174,7 @@ final class InMemoryArtworkPhotoStore implements ArtworkPhotoStore {
   @override
   Future<void> restore(String name, Uint8List bytes) async {
     if (!isSafePhotoName(name)) {
-      throw ArgumentError.value(name, 'name', 'not a safe photo name');
+      throw ArgumentError('not a safe photo name');
     }
     _files[name] = Uint8List.fromList(bytes);
   }

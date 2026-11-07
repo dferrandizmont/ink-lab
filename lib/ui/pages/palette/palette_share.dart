@@ -1,5 +1,6 @@
 import '../../../core/models.dart';
 import '../../../core/palette_card_layout.dart';
+import '../../../core/palette_text.dart';
 
 /// One colour of a palette about to be shared: the marker and the role to
 /// print next to it (already localised), when it has one.
@@ -21,6 +22,22 @@ PaletteCardData paletteCardData({
         name: item.color.newName,
         hex: item.color.hex,
       ),
+  ],
+);
+
+/// The message that shares [colors] (in strip order) as text: [header], one
+/// line per marker with its code, name and role, and the compact line the app
+/// reads back (see [PaletteText]).
+String paletteShareText({
+  required String header,
+  required MarkerBrand brand,
+  required List<SharedPaletteColor> colors,
+}) => PaletteText.format(
+  header: header,
+  brandId: brand.id,
+  lines: <PaletteTextLine>[
+    for (final SharedPaletteColor item in colors)
+      (code: item.color.newCode, name: item.color.newName, role: item.role),
   ],
 );
 

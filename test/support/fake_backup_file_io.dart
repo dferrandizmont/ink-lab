@@ -13,16 +13,20 @@ class FakeBackupFileIo implements BackupFileIo {
   Completer<void>? shareGate;
   Object? shareError;
 
+  /// What the share sheet reports: `false` is a sheet closed without a target.
+  bool shareCompleted = true;
+
   /// What the picker returns; `null` is a cancelled picker.
   BackupFilePick? pick;
   int picks = 0;
 
   @override
-  Future<void> shareBackup(Uint8List bytes, String fileName) async {
+  Future<bool> shareBackup(Uint8List bytes, String fileName) async {
     sharedBytes = bytes;
     sharedName = fileName;
     if (shareError != null) throw shareError!;
     await shareGate?.future;
+    return shareCompleted;
   }
 
   @override

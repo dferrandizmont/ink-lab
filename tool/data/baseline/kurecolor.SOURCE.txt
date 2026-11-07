@@ -1,0 +1,22 @@
+ZIG Kurecolor Twin WS, alcohol line KC-3000N (Kuretake), fetched 2026-11-06.
+
+kurecolor_colors_136.png  (1794x1133, sha256 8df5cb64aa477ca616df5554f320a354d688334d341b888a272a5e69c635dc55)
+  Official "135 colors and Blender" colour chart: 136 printed swatches with
+  code and name. Published by Kuretake's ZIG site:
+  https://www.zig-cartoonist.com/images/lineup/colors-136.png
+  It sits on the official product page
+  https://www.zig-cartoonist.com/KC-3000N.html
+  inside an HTML comment (the live page does not display it), so the chart may
+  be older than the current range. Its codes agree with the KC-3000N item
+  codes of retailers (for example KC-3000N-317 Blue, -334 Persian Green,
+  -C03 Cool Gray 3, -W09 Warm Gray 9, -B01 Blender).
+
+kurecolor_codes.csv
+  Hand transcription of the chart (code, name, swatch centre in pixels).
+  The chart prints the grey and blender codes with a dot (C.01, W.01, B.01);
+  the CSV drops the dot, as in the KC-3000N item codes. Names are the printed
+  upper case names in title case.
+
+Searched without finding a better source (no official chart or PDF with
+swatches): kuretake.co.jp (Japanese product pages), zig-cartoonist.com
+(lineup pages), kuretake.eu (redirects to a third-party shop).

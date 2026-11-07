@@ -3,19 +3,44 @@ import 'dart:io' show Directory, Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart'
+    show getApplicationSupportDirectory;
 
 import 'ai/ai.dart';
 import 'app.dart';
+import 'app_licenses.dart';
 import 'app_scope.dart';
+import 'core/app_version.dart' as app_version;
+import 'core/error_log.dart';
 import 'core/marker_repository.dart';
 import 'core/palette_generator.dart' show PaletteGenerator;
+import 'core/platform_info.dart';
 import 'data/data.dart';
 import 'data/idea_widget_sync.dart';
 import 'ui/pages/ideas/idea_deep_link.dart';
 
-Future<void> main() async {
+void main() {
+  // The log of unhandled errors lives in the app support folder. Nothing here
+  // waits for the disk: the folder is resolved when the first error is
+  // written, and no handler can throw.
+  final errorLog = ErrorLog(
+    storage: FileErrorLogStorage(() async {
+      final support = await getApplicationSupportDirectory();
+      return Directory('${support.path}/error_log');
+    }),
+    appVersion: app_version.appVersion,
+    platform: PlatformInfo.summary,
+  );
+  // One zone for the binding and the app, so the errors nobody caught land in
+  // the log (and are still printed in debug).
+  runGuardedByErrorLog(errorLog, () => _start(errorLog));
+}
+
+Future<void> _start(ErrorLog errorLog) async {
   WidgetsFlutterBinding.ensureInitialized();
+  installErrorHandlers(errorLog);
+  unawaited(errorLog.refresh());
+  registerBundledLicences();
   final store = SharedPreferencesAsyncStore();
   final settings = StoredAppSettingsRepository(store);
   final savedPalettes = StoredSavedPaletteRepository(store);
@@ -24,12 +49,24 @@ Future<void> main() async {
   final wishlist = StoredWishlistRepository(store);
   final dried = StoredDriedMarkerRepository(store);
   // The diary's photos live in the app's private documents folder.
-  final artworkDiary = StoredArtworkDiaryRepository(
+  final photoStore = DirectoryArtworkPhotoStore(() async {
+    final documents = await artworkDocumentsDirectory();
+    return Directory('${documents.path}/artworks');
+  });
+  final artworkDiary = StoredArtworkDiaryRepository(store, photos: photoStore);
+  // The photos of the real paper swatches share the diary's private folder.
+  final markerExtras = StoredMarkerExtrasRepository(
     store,
-    photos: DirectoryArtworkPhotoStore(() async {
-      final documents = await getApplicationDocumentsDirectory();
-      return Directory('${documents.path}/artworks');
-    }),
+    dried: dried,
+    photos: photoStore,
+  );
+  // The blending recipes: their own JSON file next to the diary's, and their
+  // photos in the same private folder.
+  final blendRecipes = StoredBlendRecipeRepository(
+    storage: FileArtworkDiaryStorage(
+      name: StoredBlendRecipeRepository.fileName,
+    ),
+    photos: artworkDiary.photoStore,
   );
   final aiSettings = StoredAiSettingsRepository(store);
   final ideaFavorites = StoredIdeaFavoritesRepository(store);
@@ -40,7 +77,9 @@ Future<void> main() async {
     ownColors.load(),
     wishlist.load(),
     dried.load(),
+    markerExtras.load(),
     artworkDiary.load(),
+    blendRecipes.load(),
     aiSettings.load(),
     ideaFavorites.load(),
   ]);
@@ -76,11 +115,15 @@ Future<void> main() async {
       ownColors: ownColors,
       wishlist: wishlist,
       dried: dried,
+      markerExtras: markerExtras,
       artworkDiary: artworkDiary,
+      blendRecipes: blendRecipes,
       aiSettings: aiSettings,
       ideaFavorites: ideaFavorites,
       secrets: secrets,
       markers: markers,
+      errorLog: errorLog,
+      reviewPrompt: ReviewPrompt(settings: settings),
       aiService: AiService(
         aiSettings: aiSettings,
         secrets: secrets,

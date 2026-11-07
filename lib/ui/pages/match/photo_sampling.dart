@@ -8,6 +8,7 @@ import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/value_view.dart';
 import 'color_sampling.dart';
 
 /// A photo with a loupe reticle on the point being sampled.
@@ -30,6 +31,7 @@ class PhotoSampleCanvas extends StatelessWidget {
     this.sampleColor,
     this.balance,
     this.tapOnly = false,
+    this.valueView = false,
     this.gestureKey,
   });
 
@@ -53,6 +55,10 @@ class PhotoSampleCanvas extends StatelessWidget {
 
   /// Whether only a tap (not a drag) calls [onPoint].
   final bool tapOnly;
+
+  /// Whether the photo is drawn in greyscale (its values only). The pixels are
+  /// never changed, and the reticle keeps the [sampleColor] it is given.
+  final bool valueView;
 
   /// Key of the touch layer.
   final Key? gestureKey;
@@ -87,17 +93,20 @@ class PhotoSampleCanvas extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              WhiteBalancePreview(
-                balance: balance,
-                child: Image.memory(
-                  bytes,
-                  fit: BoxFit.contain,
-                  gaplessPlayback: true,
-                  errorBuilder: (
-                    BuildContext context,
-                    Object error,
-                    StackTrace? stack,
-                  ) => ColoredBox(color: InkColors.of(context).surface),
+              ValueViewFilter(
+                enabled: valueView,
+                child: WhiteBalancePreview(
+                  balance: balance,
+                  child: Image.memory(
+                    bytes,
+                    fit: BoxFit.contain,
+                    gaplessPlayback: true,
+                    errorBuilder: (
+                      BuildContext context,
+                      Object error,
+                      StackTrace? stack,
+                    ) => ColoredBox(color: InkColors.of(context).surface),
+                  ),
                 ),
               ),
               if (pickLocal != null && sampleColor != null)

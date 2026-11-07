@@ -3,2148 +3,3616 @@
     "code": "0",
     "name": "Colorless Blender",
     "hex": "ffffff",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "100",
     "name": "Black",
     "hex": "000000",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "110",
     "name": "Special Black",
     "hex": "000000",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B00",
     "name": "Frost Blue",
     "hex": "eaf6f9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B000",
     "name": "Pale Porcelain Blue",
     "hex": "edf6f6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "B0000",
     "name": "Pale Celestine",
     "hex": "f6fbfe",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "B01",
     "name": "Mint Blue",
     "hex": "e1f1f3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B02",
     "name": "Robin's Egg Blue",
     "hex": "c5e6f0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B04",
     "name": "Tahitian Blue",
     "hex": "8dd1e7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B05",
     "name": "Process Blue",
     "hex": "64c5e5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B06",
     "name": "Peacock Blue",
     "hex": "00ace2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B12",
     "name": "Ice Blue",
     "hex": "d6eaf0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B14",
     "name": "Light Blue",
     "hex": "8dd1eb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B16",
     "name": "Cyanine Blue",
     "hex": "01bae7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B18",
     "name": "Lapis Lazuli",
     "hex": "2991c9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B21",
     "name": "Baby Blue",
     "hex": "e6f1fa",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B23",
     "name": "Phthalo Blue",
     "hex": "abcbe9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B24",
     "name": "Sky",
     "hex": "a3d5f1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B26",
     "name": "Cobalt Blue",
     "hex": "7fbbe3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B28",
     "name": "Royal Blue",
     "hex": "1571b0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "B29",
     "name": "Ultramarine",
     "hex": "0077ba",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B32",
     "name": "Pale Blue",
     "hex": "eaf3f7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B34",
     "name": "Manganese Blue",
     "hex": "9bcbeb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B37",
     "name": "Antwerp Blue",
     "hex": "0472a3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B39",
     "name": "Prussian Blue",
     "hex": "286aa7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B41",
     "name": "Powder Blue",
     "hex": "eaf3fb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "B45",
     "name": "Smoky Blue",
     "hex": "8fc7ea",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "B52",
     "name": "Soft Greenish Blue",
     "hex": "c1d6e1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "B60",
     "name": "Pale Blue Gray",
     "hex": "e4e8f4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "B63",
     "name": "Light Hydrangea",
     "hex": "bcc6e2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "B66",
     "name": "Clematis",
     "hex": "6473b4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "B69",
     "name": "Stratospheric Blue",
     "hex": "1967a7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "B79",
     "name": "Iris",
     "hex": "31418f",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "B91",
     "name": "Pale Grayish Blue",
     "hex": "e1e9ed",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "B93",
     "name": "Light Crockery Blue",
     "hex": "abcbdf",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "B95",
     "name": "Light Grayish Cobalt",
     "hex": "88b0ca",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "B97",
     "name": "Night Blue",
     "hex": "45809d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "B99",
     "name": "Agate",
     "hex": "004d7a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BG000",
     "name": "Pale Aqua",
     "hex": "f7fbf9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BG0000",
     "name": "Snow Green",
     "hex": "f5f9f6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BG01",
     "name": "Aqua Blue",
     "hex": "d6ebf8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BG02",
     "name": "New Blue",
     "hex": "d4ebed",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "BG05",
     "name": "Holiday Blue",
     "hex": "9cd5e6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BG07",
     "name": "Petroleum Blue",
     "hex": "33b8d2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BG09",
     "name": "Blue Green",
     "hex": "09b1cd",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BG10",
     "name": "Cool Shadow",
     "hex": "e7f3f2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BG11",
     "name": "Moon White",
     "hex": "daeef2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "BG13",
     "name": "Mint Green",
     "hex": "d3eaeb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BG15",
     "name": "Aqua",
     "hex": "b5ddd6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BG18",
     "name": "Teal Blue",
     "hex": "56beb3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "BG23",
     "name": "Coral Sea",
     "hex": "cde7e0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BG32",
     "name": "Aqua Mint",
     "hex": "cce6db",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "BG34",
     "name": "Horizon Green",
     "hex": "b8dedb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BG45",
     "name": "Nile Blue",
     "hex": "c1e2e3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "BG49",
     "name": "Duck Blue",
     "hex": "15b2bc",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BG53",
     "name": "Ice Mint",
     "hex": "5cb6bd",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BG57",
     "name": "Jasper",
     "hex": "04a2ad",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BG70",
     "name": "Ocean Mist",
     "hex": "e5eee3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BG72",
     "name": "Ice Ocean",
     "hex": "88bec1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BG75",
     "name": "Abyss Green",
     "hex": "b5ddd6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BG78",
     "name": "Bronze",
     "hex": "48756b",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BG90",
     "name": "Gray Sky",
     "hex": "d1ccb8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BG93",
     "name": "Green Gray",
     "hex": "cbcec4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BG96",
     "name": "Bush",
     "hex": "9ab09e",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BG99",
     "name": "Flagstone Blue",
     "hex": "89a996",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "BV00",
     "name": "Mauve Shadow",
     "hex": "e9e3f0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BV000",
     "name": "Iridescent Mauve",
     "hex": "eee7f1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BV0000",
     "name": "Pale Thistle",
     "hex": "eeecf5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BV01",
     "name": "Viola",
     "hex": "c8c4df",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BV02",
     "name": "Prune",
     "hex": "bec4df",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BV04",
     "name": "Blue Berry",
     "hex": "92a4ce",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BV08",
     "name": "Blue Violet",
     "hex": "b08cb9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BV11",
     "name": "Soft Violet",
     "hex": "e0dcec",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BV13",
     "name": "Hydrangea Blue",
     "hex": "989ec9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BV17",
     "name": "Deep Reddish Blue",
     "hex": "7e90bd",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BV20",
     "name": "Dull Lavender",
     "hex": "dce3f2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "BV23",
     "name": "Grayish Lavender",
     "hex": "c4cde1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BV25",
     "name": "Grayish Violet",
     "hex": "908fac",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BV29",
     "name": "Slate",
     "hex": "2e4256",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "BV31",
     "name": "Pale Lavender",
     "hex": "e6e8f4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "BV34",
     "name": "Bluebell",
     "hex": "7f92bd",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "C-0",
     "name": "Cool Gray No.0",
     "hex": "edf2f4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "C-00",
     "name": "Cool Gray No.00",
     "hex": "f1f4f6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "C-1",
     "name": "Cool Gray No.1",
     "hex": "e4eaed",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "C-10",
     "name": "Cool Gray No.10",
     "hex": "1f1e1e",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "C-2",
     "name": "Cool Gray No.2",
     "hex": "d9e0e4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "C-3",
     "name": "Cool Gray No.3",
     "hex": "d0d5da",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "C-4",
     "name": "Cool Gray No.4",
     "hex": "b9c1c7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "C-5",
     "name": "Cool Gray No.5",
     "hex": "a4aeb2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "C-6",
     "name": "Cool Gray No.6",
     "hex": "939ba1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "C-7",
     "name": "Cool Gray No.7",
     "hex": "777f83",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "C-8",
     "name": "Cool Gray No.8",
     "hex": "63696d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "C-9",
     "name": "Cool Gray No.9",
     "hex": "535150",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E00",
     "name": "Cotton Pearl",
     "hex": "fff6ee",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E000",
     "name": "Pale Fruit Pink",
     "hex": "fff8f1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E0000",
     "name": "Floral White",
     "hex": "fffaf3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E01",
     "name": "Pink Flamingo",
     "hex": "fff2e9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E02",
     "name": "Fruit Pink",
     "hex": "fff1e6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E04",
     "name": "Lipstick Rose",
     "hex": "eccace",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E07",
     "name": "Light Mahogany",
     "hex": "d99278",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E08",
     "name": "Brown",
     "hex": "d5745c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E09",
     "name": "Burnt Sienna",
     "hex": "e27453",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E11",
     "name": "Barley Beige",
     "hex": "ffefde",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E13",
     "name": "Desert Sand",
     "hex": "efd2bb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E15",
     "name": "Earthenware",
     "hex": "fdc797",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E17",
     "name": "Reddish Brass",
     "hex": "c46755",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E18",
     "name": "Copper",
     "hex": "97564a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E19",
     "name": "Redwood",
     "hex": "ce5425",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E21",
     "name": "Soft Sun",
     "hex": "ffe9d2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E23",
     "name": "Hazelnut",
     "hex": "aa6a4b",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E25",
     "name": "Caribe Cocoa",
     "hex": "dfb693",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E27",
     "name": "Milk Chocolate",
     "hex": "ac866d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E29",
     "name": "Burnt Umber",
     "hex": "903f0a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E30",
     "name": "Bisque",
     "hex": "f7efcf",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E31",
     "name": "Brick Beige",
     "hex": "f6ecd7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E33",
     "name": "Sand",
     "hex": "f6dcbd",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E34",
     "name": "Toast",
     "hex": "f5d7b3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E35",
     "name": "Chamois",
     "hex": "eed2b2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E37",
     "name": "Sepia",
     "hex": "d9a566",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E39",
     "name": "Leather",
     "hex": "d27d33",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E40",
     "name": "Brick White",
     "hex": "f7f0e5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E41",
     "name": "Pearl White",
     "hex": "fff4e8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E42",
     "name": "Sand White",
     "hex": "f2e8d3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E43",
     "name": "Dull Ivory",
     "hex": "f0e6cb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E44",
     "name": "Clay",
     "hex": "d4c9b6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E47",
     "name": "Dark Brown",
     "hex": "9a826c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E49",
     "name": "Dark Bark",
     "hex": "7a5d45",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E50",
     "name": "Egg Shell",
     "hex": "f7f0f1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E51",
     "name": "Milky White",
     "hex": "fff1de",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E53",
     "name": "Raw Silk",
     "hex": "f6eccc",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E55",
     "name": "Light Camel",
     "hex": "f5e6c4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "E57",
     "name": "Light Walnut",
     "hex": "c29a6a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E59",
     "name": "Walnut",
     "hex": "ad9076",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E70",
     "name": "Ash Rose",
     "hex": "f1e9e2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E71",
     "name": "Champagne",
     "hex": "ebe1da",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E74",
     "name": "Cocoa Brown",
     "hex": "b5998c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E77",
     "name": "Maroon",
     "hex": "947157",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "E79",
     "name": "Cashew",
     "hex": "52382d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E81",
     "name": "Ivory",
     "hex": "dccd98",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E84",
     "name": "Khaki",
     "hex": "b4955f",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E87",
     "name": "Fig",
     "hex": "5b4d38",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E89",
     "name": "Pecan",
     "hex": "7b746a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E93",
     "name": "Tea Rose",
     "hex": "fedbc2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E95",
     "name": "Tea Orange",
     "hex": "fec788",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "E97",
     "name": "Deep Orange",
     "hex": "f3a962",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "E99",
     "name": "Baked Clay",
     "hex": "c06508",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "FB",
     "name": "Fluorescent Blue",
     "hex": "0b93cd",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "FBG",
     "name": "Fluorescent Blue Green",
     "hex": "80cde7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "FG",
     "name": "Fluorescent Green",
     "hex": "afce15",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "FRV",
     "name": "Fluorescent Pink",
     "hex": "f9b0cb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "FV",
     "name": "Fluorescent Violet",
     "hex": "917fb3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "FY",
     "name": "Fluorescent Yellow",
     "hex": "fff9a0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "FYG",
     "name": "Fluorescent Yellow Green",
     "hex": "dce4aa",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "FYR",
     "name": "Fluorescent Orange",
     "hex": "ffd7a4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "G00",
     "name": "Jade Green",
     "hex": "eaf5f6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G000",
     "name": "Pale Green",
     "hex": "f7fbf7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "G0000",
     "name": "Crystal Opal",
     "hex": "f6faf6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "G02",
     "name": "Spectrum Green",
     "hex": "dbecd9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G03",
     "name": "Meadow Green",
     "hex": "b0de7f",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "G05",
     "name": "Emerald Green",
     "hex": "7dc079",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G07",
     "name": "Nile Green",
     "hex": "8fc676",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G09",
     "name": "Veronese Green",
     "hex": "8fc460",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "G12",
     "name": "Sea Green",
     "hex": "deeccb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "G14",
     "name": "Apple Green",
     "hex": "aad294",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G16",
     "name": "Malachite",
     "hex": "76c19c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "G17",
     "name": "Forest Green",
     "hex": "27ae7d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G19",
     "name": "Bright Parrot Green",
     "hex": "49b68a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "G20",
     "name": "Wax White",
     "hex": "f2f7e0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "G21",
     "name": "Lime Green",
     "hex": "d3e8d3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G24",
     "name": "Willow",
     "hex": "d1e4bb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "G28",
     "name": "Ocean Green",
     "hex": "239665",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G29",
     "name": "Pine Tree Green",
     "hex": "3e8667",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G40",
     "name": "Dim Green",
     "hex": "ecf4e3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "G43",
     "name": "Pistachio",
     "hex": "92b35c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "G46",
     "name": "Mistletoe",
     "hex": "54895d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "G82",
     "name": "Spring Dim Green",
     "hex": "dbe2c4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G85",
     "name": "Verdigris",
     "hex": "b3cdb5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "G94",
     "name": "Grayish Olive",
     "hex": "aab38e",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "G99",
     "name": "Olive",
     "hex": "7b8e3f",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "N-0",
     "name": "Neutral Gray No.0",
     "hex": "f2f2f2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-1",
     "name": "Neutral Gray No.1",
     "hex": "ebebeb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-10",
     "name": "Neutral Gray No.10",
     "hex": "1f1e1e",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-2",
     "name": "Neutral Gray No.2",
     "hex": "e3e3e3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-3",
     "name": "Neutral Gray No.3",
     "hex": "dcdcdc",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-4",
     "name": "Neutral Gray No.4",
     "hex": "c9c9c9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-5",
     "name": "Neutral Gray No.5",
     "hex": "b7b6b6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-6",
     "name": "Neutral Gray No.6",
     "hex": "a4a4a4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-7",
     "name": "Neutral Gray No.7",
     "hex": "858485",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-8",
     "name": "Neutral Gray No.8",
     "hex": "6f6e6e",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "N-9",
     "name": "Neutral Gray No.9",
     "hex": "535150",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "R00",
     "name": "Pinkish White",
     "hex": "fff5ef",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R000",
     "name": "Cherry White",
     "hex": "fff6f2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "R0000",
     "name": "Pink Beryl",
     "hex": "fcf6f2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "R01",
     "name": "Pinkish Vanilla",
     "hex": "fde0da",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "R02",
     "name": "Rose Salmon",
     "hex": "fedcd0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R05",
     "name": "Salmon Red",
     "hex": "f89d85",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R08",
     "name": "Vermilion",
     "hex": "f46d56",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "R11",
     "name": "Pale Cherry Pink",
     "hex": "ffe8dd",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R12",
     "name": "Light Tea Rose",
     "hex": "fedccb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "R14",
     "name": "Light Rouge",
     "hex": "f9a89d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "R17",
     "name": "Lipstick Orange",
     "hex": "f78f72",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R20",
     "name": "Blush",
     "hex": "fee0d9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R21",
     "name": "Sardonyx",
     "hex": "fcb6ac",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "R22",
     "name": "Light Prawn",
     "hex": "ff9999",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "R24",
     "name": "Prawn",
     "hex": "f57f82",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "R27",
     "name": "Cadmium Red",
     "hex": "f25364",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R29",
     "name": "Lipstick Red",
     "hex": "ef0047",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R30",
     "name": "Pale Yellowish Pink",
     "hex": "feeae5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "R32",
     "name": "Peach",
     "hex": "fcccc4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R35",
     "name": "Coral",
     "hex": "f57a8a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R37",
     "name": "Carmine",
     "hex": "ed787d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R39",
     "name": "Garnet",
     "hex": "d65382",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "R43",
     "name": "Bougainvillaea",
     "hex": "f18f96",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "R46",
     "name": "Strong Red",
     "hex": "e6506d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "R56",
     "name": "Currant",
     "hex": "c36679",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "R59",
     "name": "Cardinal",
     "hex": "c55f7c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "R81",
     "name": "Rose Pink",
     "hex": "f6d4dc",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "R83",
     "name": "Rose Mist",
     "hex": "f5aabf",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "R85",
     "name": "Rose Red",
     "hex": "de769a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "R89",
     "name": "Dark Red",
     "hex": "91354d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV00",
     "name": "Water Lily",
     "hex": "f3d3e9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV000",
     "name": "Pale Purple",
     "hex": "f7e9f1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "RV0000",
     "name": "Evening Primrose",
     "hex": "f7e9f1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV02",
     "name": "Sugared Almond Pink",
     "hex": "fcdee9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV04",
     "name": "Shock Pink",
     "hex": "f9b0c5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV06",
     "name": "Cerise",
     "hex": "f692b3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV09",
     "name": "Fuchsia",
     "hex": "e87cac",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "RV10",
     "name": "Pale Pink",
     "hex": "fef1f5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV11",
     "name": "Pink",
     "hex": "fcdfe3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "RV13",
     "name": "Tender Pink",
     "hex": "fcd3de",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV14",
     "name": "Begonia Pink",
     "hex": "f8a0bc",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV17",
     "name": "Deep Magenta",
     "hex": "e58bb5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "RV19",
     "name": "Red Violet",
     "hex": "de73a7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "RV21",
     "name": "Light Pink",
     "hex": "feeeed",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV23",
     "name": "Pure Pink",
     "hex": "fbc6cf",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "RV25",
     "name": "Dog Rose Flower",
     "hex": "f8a1c1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "RV29",
     "name": "Crimson",
     "hex": "f14a81",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV32",
     "name": "Shadow Pink",
     "hex": "fddcd7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "RV34",
     "name": "Dark Pink",
     "hex": "fbbcb8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "RV42",
     "name": "Salmon Pink",
     "hex": "fbc7bf",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "RV52",
     "name": "Cotton Candy",
     "hex": "dc9cb6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV55",
     "name": "Hollyhock",
     "hex": "d96196",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV63",
     "name": "Begonia",
     "hex": "db8ab5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV66",
     "name": "Raspberry",
     "hex": "8d3765",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV69",
     "name": "Peony",
     "hex": "9c6276",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "RV91",
     "name": "Grayish Cherry",
     "hex": "eddee8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV93",
     "name": "Smoky Purple",
     "hex": "eec3d2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "RV95",
     "name": "Baby Blossoms",
     "hex": "c694aa",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "RV99",
     "name": "Argyle Purple",
     "hex": "6e5764",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "T-0",
     "name": "Toner Gray No.0",
     "hex": "f2f2f2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-1",
     "name": "Toner Gray No.1",
     "hex": "f0f0ee",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-10",
     "name": "Toner Gray No.10",
     "hex": "1f1e1e",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-2",
     "name": "Toner Gray No.2",
     "hex": "e9e9e6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-3",
     "name": "Toner Gray No.3",
     "hex": "dddcd7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-4",
     "name": "Toner Gray No.4",
     "hex": "cac8c4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-5",
     "name": "Toner Gray No.5",
     "hex": "b8b5b0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-6",
     "name": "Toner Gray No.6",
     "hex": "a4a29e",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-7",
     "name": "Toner Gray No.7",
     "hex": "858380",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-8",
     "name": "Toner Gray No.8",
     "hex": "6f6d6a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "T-9",
     "name": "Toner Gray No.9",
     "hex": "53504d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "V000",
     "name": "Pale Heath",
     "hex": "f7f2f7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "V0000",
     "name": "Rose Quartz",
     "hex": "f3f1f8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "V01",
     "name": "Heath",
     "hex": "edccde",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "V04",
     "name": "Lilac",
     "hex": "edb9d1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "V05",
     "name": "Azalea",
     "hex": "ecb4ce",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "V06",
     "name": "Lavender",
     "hex": "dba5c6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "V09",
     "name": "Violet",
     "hex": "97599a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "V12",
     "name": "Pale Lilac",
     "hex": "f2dfeb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "V15",
     "name": "Mallow",
     "hex": "e0b6d1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "V17",
     "name": "Amethyst",
     "hex": "b3a1c7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "V20",
     "name": "Wisteria",
     "hex": "d5ccd6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "V22",
     "name": "Ash Lavender",
     "hex": "7b6f90",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "V25",
     "name": "Pale Blackberry",
     "hex": "b6aec6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "V28",
     "name": "Eggplant",
     "hex": "787aa0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "V91",
     "name": "Pale Grape",
     "hex": "efd0d8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "V93",
     "name": "Early Grape",
     "hex": "edcddf",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "V95",
     "name": "Light Grape",
     "hex": "c589aa",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "V99",
     "name": "Aubergine",
     "hex": "4f334d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "W-0",
     "name": "Warm Gray No.0",
     "hex": "f7f6f0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "W-00",
     "name": "Warm Gray No.00",
     "hex": "f7f7f1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "W-1",
     "name": "Warm Gray No.1",
     "hex": "eeede7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "W-10",
     "name": "Warm Gray No.10",
     "hex": "1f1e1d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "W-2",
     "name": "Warm Gray No.2",
     "hex": "eeede9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "W-3",
     "name": "Warm Gray No.3",
     "hex": "dddcd5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "W-4",
     "name": "Warm Gray No.4",
     "hex": "cac9c2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "W-5",
     "name": "Warm Gray No.5",
     "hex": "b8b6b0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "W-6",
     "name": "Warm Gray No.6",
     "hex": "a4a39c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "W-7",
     "name": "Warm Gray No.7",
     "hex": "86847f",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "W-8",
     "name": "Warm Gray No.8",
     "hex": "6f6e69",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "W-9",
     "name": "Warm Gray No.9",
     "hex": "53504c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "Y00",
     "name": "Barium Yellow",
     "hex": "fffee5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "Y000",
     "name": "Pale Lemon",
     "hex": "fffff6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "Y0000",
     "name": "Yellow Fluorite",
     "hex": "fffef7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "Y02",
     "name": "Canary Yellow",
     "hex": "f9f5a0",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "Y04",
     "name": "Acacia",
     "hex": "f3e953",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "Y06",
     "name": "Yellow",
     "hex": "fff772",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "Y08",
     "name": "Acid Yellow",
     "hex": "fff500",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "Y11",
     "name": "Pale Yellow",
     "hex": "fffcd3",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "Y13",
     "name": "Lemon Yellow",
     "hex": "fcf9b7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "Y15",
     "name": "Cadmium Yellow",
     "hex": "ffee72",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "Y17",
     "name": "Golden Yellow",
     "hex": "ffea55",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "Y18",
     "name": "Lightning Yellow",
     "hex": "fff257",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "Y19",
     "name": "Napoli Yellow",
     "hex": "ffee39",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "Y21",
     "name": "Buttercup Yellow",
     "hex": "fff2c9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "Y23",
     "name": "Yellowish Beige",
     "hex": "fdeabe",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "Y26",
     "name": "Mustard",
     "hex": "f6e56f",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "Y28",
     "name": "Lionet Gold",
     "hex": "d5b56e",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "Y32",
     "name": "Cashmere",
     "hex": "fbe6ca",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "Y35",
     "name": "Maize",
     "hex": "ffe081",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "Y38",
     "name": "Honey",
     "hex": "ffff99",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG00",
     "name": "Mimosa Yellow",
     "hex": "eeeba6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "YG0000",
     "name": "Lily White",
     "hex": "f7f9e4",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YG01",
     "name": "Green Bice",
     "hex": "eef2c8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YG03",
     "name": "Yellow Green",
     "hex": "eaeeb2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG05",
     "name": "Salad",
     "hex": "e2e999",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YG06",
     "name": "Yellowish Green",
     "hex": "d3e398",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "YG07",
     "name": "Acid Green",
     "hex": "b6d135",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YG09",
     "name": "Lettuce Green",
     "hex": "93c560",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG11",
     "name": "Mignonette",
     "hex": "ecf3d5",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG13",
     "name": "Chartreuse",
     "hex": "dfe9a6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YG17",
     "name": "Grass Green",
     "hex": "85bf4a",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG21",
     "name": "Anise",
     "hex": "f9f8c6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YG23",
     "name": "New Leaf",
     "hex": "efef98",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG25",
     "name": "Celadon Green",
     "hex": "dce47f",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YG41",
     "name": "Pale Cobalt Green",
     "hex": "e1eed9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG45",
     "name": "Cobalt Green",
     "hex": "c5e0be",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YG61",
     "name": "Pale Moss",
     "hex": "b7ca90",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YG63",
     "name": "Pea Green",
     "hex": "b5d2ab",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG67",
     "name": "Moss",
     "hex": "97c592",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG91",
     "name": "Putty",
     "hex": "e4dfb8",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG93",
     "name": "Grayish Yellow",
     "hex": "dedba6",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YG95",
     "name": "Pale Olive",
     "hex": "dbd267",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YG97",
     "name": "Spanish Olive",
     "hex": "aaa000",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YG99",
     "name": "Marine Green",
     "hex": "6a7800",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YR00",
     "name": "Powder Pink",
     "hex": "fedfc7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YR000",
     "name": "Silk",
     "hex": "fff1e1",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "YR0000",
     "name": "Pale Chiffon",
     "hex": "fcf6eb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YR01",
     "name": "Peach Puff",
     "hex": "fdd6b7",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YR02",
     "name": "Light Orange",
     "hex": "ffe4cf",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YR04",
     "name": "Chrome Orange",
     "hex": "ffcf6d",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YR07",
     "name": "Cadmium Orange",
     "hex": "f67833",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YR09",
     "name": "Chinese Orange",
     "hex": "f35700",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YR12",
     "name": "Loquat",
     "hex": "fee391",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YR14",
     "name": "Caramel",
     "hex": "ffd34c",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YR15",
     "name": "Pumpkin Yellow",
     "hex": "ffd198",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "YR16",
     "name": "Apricot",
     "hex": "ffc417",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YR18",
     "name": "Sanguine",
     "hex": "f57335",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YR20",
     "name": "Yellowish Shade",
     "hex": "ffe9c9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "YR21",
     "name": "Cream",
     "hex": "f8e5bb",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YR23",
     "name": "Yellow Ochre",
     "hex": "f2db98",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao",
+      "classic"
+    ]
   },
   {
     "code": "YR24",
     "name": "Pale Sepia",
     "hex": "f6dc6b",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "classic"
+    ]
   },
   {
     "code": "YR27",
     "name": "Tuscan Orange",
     "hex": "d86745",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YR30",
     "name": "Macadamia Nut",
     "hex": "f7edc9",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YR31",
     "name": "Light Reddish Yellow",
     "hex": "ffe6b2",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "YR61",
     "name": "Spring Orange",
     "hex": "fee2cc",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "YR65",
     "name": "Atoll",
     "hex": "febb65",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   },
   {
     "code": "YR68",
     "name": "Orange",
     "hex": "f67700",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch",
+      "ciao"
+    ]
   },
   {
     "code": "YR82",
     "name": "Mellow Peach",
     "hex": "ffd198",
-    "sets": []
+    "sets": [],
+    "lines": [
+      "sketch"
+    ]
   }
 ]

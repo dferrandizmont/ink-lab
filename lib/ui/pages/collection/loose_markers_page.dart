@@ -7,6 +7,7 @@ import '../../../data/data.dart';
 import '../../../l10n/l10n.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_search_field.dart';
@@ -16,7 +17,7 @@ import 'collection_summary.dart';
 /// tick per marker and "tick / untick what is in view". A marker that comes
 /// with an owned set says "In your set" and cannot be ticked one by one.
 ///
-/// For DecoTime, Copic and Finecolour (no sets) it is the list of the markers
+/// For every brand but Ohuhu (no sets) it is the list of the markers
 /// the user has. The list is the page's own scroll, never a scroll inside a
 /// card.
 class LooseMarkersPage extends StatefulWidget {
@@ -76,15 +77,17 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
                   : context.l10n.collectionDecoMarkersTitle,
             ),
           ),
-          body: FutureBuilder<List<MarkerColor>>(
-            future: scope.markers.loadColors(state.brand),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<MarkerColor>> c) {
-                  if (!c.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return _content(context, scope, state, c.data!);
-                },
+          body: InkReadableWidth(
+            child: FutureBuilder<List<MarkerColor>>(
+              future: scope.markers.loadColors(state.brand),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<MarkerColor>> c) {
+                    if (!c.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return _content(context, scope, state, c.data!);
+                  },
+            ),
           ),
         );
       },
@@ -204,7 +207,7 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
           )
         else
           SliverPadding(
-            padding: const EdgeInsets.only(bottom: InkSpacing.pageBottom),
+            padding: EdgeInsets.only(bottom: InkSpacing.pageBottomOf(context)),
             sliver: SliverList.builder(
               itemCount: visible.length,
               itemBuilder: (BuildContext context, int index) {
@@ -284,7 +287,7 @@ class _MarkerRow extends StatelessWidget {
             children: <Widget>[
               SwatchBlock(
                 hex: color.hex,
-                size: 32,
+                size: InkGeometry.swatchMd,
                 radius: InkRadii.xs,
                 own: color.hasOwnColor,
               ),

@@ -12,11 +12,10 @@
 [![Download](https://img.shields.io/github/downloads/dferrandizmont/ink-lab/total?label=download&color=30382F)](https://github.com/dferrandizmont/ink-lab/releases)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Offrimi_un_caff%C3%A8-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/danielmfdev)
 
-Un’app per chi disegna con pennarelli ad alcol, con campioni di colore e palette.
-Cerca il codice di un colore, scopri quale pennarello della tua collezione si
-avvicina di più a una foto e crea palette con la teoria del colore usando solo i
-pennarelli che hai. App per Android, con tema chiaro e scuro, barra laterale sui
-tablet e sei lingue.
+Un’app per chi disegna con pennarelli ad alcol, con campioni di colore e palette. Cerca
+il codice di un colore, scopri quale pennarello della tua collezione si avvicina di più
+a una foto e crea palette con la teoria del colore usando solo i pennarelli che hai. App
+per Android, iPhone e iPad, con tema chiaro e scuro, layout per tablet e sei lingue.
 
 **Gratis · Senza pubblicità · Senza account · Offline · Open source**
 
@@ -59,7 +58,7 @@ pubblicazione. Feedback: inklab@mainshai.com.
 
 <p>
   <a href="docs/readme/it/01-swatches.png"><img src="docs/readme/it/01-swatches.png" width="19%" alt="Campioni: i colori del marchio, ognuno con il suo codice e il suo nome"></a>
-  <a href="docs/readme/it/02-swatch-detail.png"><img src="docs/readme/it/02-swatch-detail.png" width="19%" alt="Il dettaglio di un pennarello: il suo hex, le alternative più vicine e lo stesso colore in altre marche"></a>
+  <a href="docs/readme/it/02-swatch-detail.png"><img src="docs/readme/it/02-swatch-detail.png" width="19%" alt="Il dettaglio di un pennarello: l’hex, il livello d’inchiostro, la foto del tuo campione, ombra e luce, e lo stesso colore in altre marche"></a>
   <a href="docs/readme/it/03-match.png"><img src="docs/readme/it/03-match.png" width="19%" alt="Un colore toccato in una foto, abbinato al pennarello più vicino della tua collezione"></a>
   <a href="docs/readme/it/04-palette.png"><img src="docs/readme/it/04-palette.png" width="19%" alt="Una palette di scena, con il ruolo e il codice di ogni colore"></a>
   <a href="docs/readme/it/05-diary.png"><img src="docs/readme/it/05-diary.png" width="19%" alt="Il diario dei disegni: un riepilogo dei tuoi lavori e le ultime voci"></a>
@@ -73,6 +72,7 @@ pubblicazione. Feedback: inklab@mainshai.com.
   <a href="docs/readme/it/07-ideas.png"><img src="docs/readme/it/07-ideas.png" width="19%" alt="Idee: esercizi e tecniche, con le loro palette e le tue preferite"></a>
   <a href="docs/readme/it/08-collection.png"><img src="docs/readme/it/08-collection.png" width="19%" alt="La mia collezione: quello che hai e cosa comprare dopo"></a>
   <a href="docs/readme/it/09-settings-dark.png"><img src="docs/readme/it/09-settings-dark.png" width="19%" alt="Opzioni con il tema scuro"></a>
+  <a href="docs/readme/it/10-colour-map.png"><img src="docs/readme/it/10-colour-map.png" width="19%" alt="La mappa dei colori: dove cadono i tuoi pennarelli per tonalità e luminosità, e dove ci sono vuoti"></a>
 </p>
 
 </details>
@@ -81,47 +81,57 @@ Tocca una schermata per ingrandirla.
 
 ## Funzioni
 
-- **Diario dei disegni.** Un registro di ciò che colori, con le sue foto, i
-  pennarelli usati e i numeri che ci stanno dietro.
-- **Quattro marche.** Ohuhu (503 colori), DecoTime (313), Copic (358) e Finecolour
-  (480), con il pennarello più vicino di ogni altra marca in «In altre marche».
-- **Abbina.** Tocca un punto di una foto per trovare il pennarello della tua
-  collezione più vicino, e correggi il bianco.
-- **Palette e scene.** Armonie basate sulla teoria del colore, catene di sfumature
-  e 67 scene pronte in 11 categorie.
-- **Backup.** Salva tutto in un file `.zip`, con dentro le foto del diario.
-- **Acquisti.** Una lista dei desideri, i pennarelli secchi e cosa comprare dopo.
+- **Quindici marche, 3.420 colori.** Ohuhu, DecoTime, Copic (Sketch, Ciao e Classic),
+  Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum
+  Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush e Artist's
+  Loft, con la ricerca delle marche e «In altre marche».
+- **Dettaglio del pennarello.** Livello d’inchiostro e nota di ricarica, una foto del
+  tuo campione reale, ombra e luce, «Sfuma con…» e avviso dei quasi doppioni.
+- **Abbina.** Tocca un punto di una foto per trovare il pennarello della tua collezione
+  più vicino, correggi il bianco e controlla i valori in grigio.
+- **Palette e scene.** Armonie basate sulla teoria del colore, catene di sfumature e 67
+  scene pronte, con la modalità cavalletto e palette da condividere o importare come
+  testo.
+- **Strumenti.** Una mappa dei colori della tua collezione, un traduttore di ricette di
+  altre marche, le tue ricette di sfumatura con foto, e l’esportazione o l’importazione
+  in CSV o testo.
+- **Diario dei disegni.** Un registro di ciò che colori, con le sue foto, i pennarelli
+  usati e i numeri che ci stanno dietro.
+- **Backup.** Salva tutto in un file `.zip`, foto comprese; le Opzioni mostrano la data
+  dell’ultimo.
 
 <details>
 <summary>Altre funzioni</summary>
 
-- **Visione dei colori.** Guarda un’anteprima di una palette come la vede chi ha
-  protanopia, deuteranopia, tritanopia o acromatopsia.
+- **Acquisti.** Una lista dei desideri, i pennarelli secchi e cosa comprare dopo.
+- **Visione dei colori.** Guarda una palette come la vede chi ha un deficit di visione
+  dei colori.
 - **Cartella colori stampabile.** Pagine A4 con una casella etichettata per ogni
   pennarello che hai.
 - **Idee.** Esercizi e tecniche con le loro palette, e le tue preferite.
-- **Campioni e il tuo colore.** Codici, nomi e valori hex, più il colore che il
-  pennarello dà davvero.
-- **Condividi.** Invia una palette, una cartella colori o una voce del diario a
-  un’altra app come immagine.
+- **Campioni e il tuo colore.** Codici, nomi e valori hex (un codice hex trova i
+  pennarelli più vicini), più il colore che il pennarello dà davvero.
 - **IA, se vuoi.** Suggerimenti di palette opzionali: Gemini Nano sul telefono o
   OpenRouter con la tua chiave.
-- **Widget «Idea del giorno».** Un widget Android per la schermata iniziale con
-  l’esercizio di oggi, nei colori dei tuoi pennarelli. Cambia da solo ogni giorno
-  e un tocco apre l’idea.
+- **Widget «Idea del giorno».** Solo su Android: l’esercizio di oggi, nei colori dei
+  tuoi pennarelli, sulla schermata iniziale.
+- **Scorciatoie.** Dall’icona dell’app ad Abbina, a una nuova palette o alla ricerca dei
+  campioni.
+- **Opzioni.** Licenze open source, «Invia un commento» e un registro degli errori
+  locale da condividere o cancellare.
 
 </details>
 
 ## Privacy
 
-I tuoi dati restano sul telefono: nessun account, nessun server nostro, nessuna
-analisi, nessuna pubblicità né tracciamento; senza l’IA la rete non viene mai
-usata. ML Kit dell’IA sul dispositivo invia a Google dati diagnostici di utilizzo,
-mai richieste, colori o foto. L’accesso a fotocamera e galleria serve solo per
-abbinare i colori, creare scene, impostare il tuo colore e aggiungere foto al
-diario; queste foto vengono elaborate sul dispositivo, e quelle del diario
-restano nella cartella privata dell’app e non vengono mai caricate. Quando
-condividi una palette, una cartella colori o il backup `.zip`, il file va solo
+I tuoi dati restano sul telefono: nessun account, nessun server nostro, nessuna analisi,
+nessuna pubblicità né tracciamento; senza l’IA la rete non viene mai usata. ML Kit
+dell’IA sul dispositivo invia a Google dati diagnostici di utilizzo, mai richieste,
+colori o foto. L’accesso a fotocamera e galleria serve solo per abbinare i colori,
+creare scene, impostare il tuo colore e aggiungere foto al diario, ai tuoi campioni
+reali e alle tue ricette di sfumatura; queste foto vengono elaborate sul dispositivo, e
+quelle che conservi restano nella cartella privata dell’app e non vengono mai caricate.
+Quando condividi una palette, una cartella colori o il backup `.zip`, il file va solo
 all’app che scegli, e da nessun’altra parte.
 
 [Sito](https://inklab.mainshai.com/it/) · [Informativa sulla privacy](https://inklab.mainshai.com/it/privacy/) ·
@@ -129,9 +139,10 @@ all’app che scegli, e da nessun’altra parte.
 
 ## Novità
 
-La versione 0.10.0 è uscita. Novità: un widget Android per la schermata iniziale
-con l’idea del giorno, nei colori dei tuoi pennarelli. La serie 0.9 ha messo in
-ordine l’app. L’elenco completo è in [CHANGELOG.md](CHANGELOG.md) e nelle
+La versione 1.0.0 è la prima versione stabile. Porta undici nuove marche, un dettaglio del
+pennarello più completo, nuovi strumenti, layout per tablet e iPad e le correzioni dei
+test. L’elenco completo è in
+[CHANGELOG.md](CHANGELOG.md) e nelle
 [versioni](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contribuire
@@ -147,8 +158,8 @@ cataloghi sono riferimenti fattuali di terzi e restano fuori da entrambe le
 licenze; i caratteri (SIL OFL 1.1) e gli altri materiali di terzi mantengono le
 proprie condizioni.
 
-Un progetto indipendente: **nessun legame con Ohuhu, DecoTime, Copic o Finecolour, né
-sponsorizzazione o approvazione**. « Ohuhu », « Oahu », « DecoTime », « Copic » e « Finecolour » sono marchi dei rispettivi proprietari.
+Un progetto indipendente: **nessun legame con queste marche di pennarelli, né
+sponsorizzazione o approvazione**. I nomi delle marche qui sopra sono marchi dei rispettivi proprietari.
 Note complete: [NOTICE.md](NOTICE.md).
 
 Per segnalare una vulnerabilità: [SECURITY.md](SECURITY.md).

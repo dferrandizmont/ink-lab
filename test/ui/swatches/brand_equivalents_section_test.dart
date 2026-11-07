@@ -60,17 +60,44 @@ Future<void> _scrollTo(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
+/// Scrolls the sheet until [finder] is on screen by moving its position, with
+/// no drag. With fifteen brands the groups of a sheet that has just changed
+/// marker are far below its top, and a drag there can resize the sheet away.
+Future<void> _jumpTo(WidgetTester tester, Finder finder) async {
+  final ScrollPosition position = tester
+      .state<ScrollableState>(_sheetScroll(tester))
+      .position;
+  for (
+    int step = 0;
+    step < 80 && finder.hitTestable().evaluate().isEmpty;
+    step++
+  ) {
+    position.jumpTo(
+      (position.pixels + 100).clamp(0, position.maxScrollExtent).toDouble(),
+    );
+    await tester.pump();
+  }
+  await tester.pumpAndSettle();
+}
+
 /// Scrolls the sheet back to its top.
 Future<void> _scrollToTop(WidgetTester tester) async {
   tester.state<ScrollableState>(_sheetScroll(tester)).position.jumpTo(0);
   await tester.pumpAndSettle();
 }
 
-/// Opens the group of a brand in the "In other brands" section.
-Future<void> _openGroup(WidgetTester tester, String brandId) async {
-  final Finder group = _key('swatch-equivalents-$brandId');
-  await _scrollTo(tester, group);
-  await tester.tap(group);
+/// The compact rows of the list of all brands.
+Finder _brandRows() => find.byWidgetPredicate(
+  (Widget w) =>
+      w.key is ValueKey<String> &&
+      (w.key! as ValueKey<String>).value.startsWith('swatch-equivalents-row-'),
+);
+
+/// Opens the list of all brands of the "In other brands" section.
+Future<void> _openAll(WidgetTester tester) async {
+  final Finder all = _key('swatch-equivalents-all');
+  await _scrollTo(tester, all);
+  await tester.tap(all);
   await tester.pumpAndSettle();
 }
 
@@ -86,42 +113,95 @@ void main() {
   setUpAll(loadAppFonts);
 
   group('Swatches: In other brands', () {
-    testWidgets('lists the closest markers of every other brand', (
-      WidgetTester tester,
-    ) async {
+    testWidgets('one list holds the closest marker of every other brand, '
+        'closest first', (WidgetTester tester) async {
       await pumpSwatches(tester);
       await _openB08(tester);
 
       expect(find.text(l10n.swatchesOtherBrandsTitle), findsOneWidget);
       expect(find.text(l10n.swatchesOtherBrandsOnlyMine), findsOneWidget);
-      // The brand of the marker itself is never offered.
-      expect(_key('swatch-equivalents-ohuhu_oahu'), findsNothing);
-      for (final MarkerBrand brand in <MarkerBrand>[
-        MarkerBrand.decoTime,
-        MarkerBrand.copic,
-        MarkerBrand.finecolour,
-      ]) {
-        final Finder group = _key('swatch-equivalents-${brand.id}');
-        expect(group, findsOneWidget, reason: brand.label);
-        // The group starts closed: only its best match is on screen.
-        expect(_rows(group), findsNothing, reason: brand.label);
+      final int others = MarkerBrand.values.length - 1;
+      // One disclosure, closed, that counts the brands.
+      final Finder all = _key('swatch-equivalents-all');
+      expect(all, findsOneWidget);
+      expect(find.text(l10n.swatchesAllBrands(others)), findsOneWidget);
+      expect(_brandRows(), findsNothing);
+      // The user owns no marker of another brand: no group of their own.
+      expect(find.text(l10n.swatchesOtherBrandsYours.toUpperCase()), findsNothing);
+
+      await _scrollTo(tester, all);
+      await tester.tap(all);
+      await tester.pumpAndSettle();
+      // One row per brand, never the brand of the marker itself.
+      expect(_brandRows(), findsNWidgets(others));
+      expect(_key('swatch-equivalents-row-ohuhu_oahu'), findsNothing);
+      for (final MarkerBrand brand in MarkerBrand.values) {
+        if (brand == MarkerBrand.ohuhuOahu) continue;
+        final Finder row = _key('swatch-equivalents-row-${brand.id}');
+        expect(row, findsOneWidget, reason: brand.label);
         expect(
-          find.descendant(of: group, matching: find.textContaining('ΔE ')),
+          find.descendant(of: row, matching: find.text(brand.label)),
           findsOneWidget,
           reason: brand.label,
         );
-
-        // Opened, the three markers of the brand are there.
-        await _scrollTo(tester, group);
-        await tester.tap(group);
-        await tester.pumpAndSettle();
-        expect(_rows(group), findsNWidgets(3), reason: brand.label);
         expect(
-          find.descendant(of: group, matching: find.textContaining('ΔE ')),
-          findsNWidgets(4),
+          find.descendant(of: row, matching: find.textContaining('ΔE ')),
+          findsOneWidget,
           reason: brand.label,
         );
       }
+      // Closest first.
+      final List<double> distances = <double>[
+        for (final Element row in _brandRows().evaluate())
+          double.parse(
+            RegExp(r'ΔE ([0-9.]+)')
+                .firstMatch(
+                  find
+                      .descendant(
+                        of: find.byElementPredicate((Element e) => e == row),
+                        matching: find.textContaining('ΔE '),
+                      )
+                      .evaluate()
+                      .map((Element e) => (e.widget as Text).data!)
+                      .first,
+                )!
+                .group(1)!,
+          ),
+      ];
+      expect(distances, hasLength(others));
+      for (int i = 1; i < distances.length; i++) {
+        expect(distances[i], greaterThanOrEqualTo(distances[i - 1]));
+      }
+    });
+
+    testWidgets('the brands the user owns come first, as groups of their '
+        'closest markers', (WidgetTester tester) async {
+      final AppScope scope = await pumpSwatches(tester);
+      await scope.settings.setOwnedMarkerCodes(<String>{
+        'copic:B00',
+        'copic:B01',
+      });
+      await tester.pumpAndSettle();
+      await _openB08(tester);
+
+      final Finder group = _key('swatch-equivalents-copic');
+      expect(group, findsOneWidget);
+      expect(
+        find.text(l10n.swatchesOtherBrandsYours.toUpperCase()),
+        findsOneWidget,
+      );
+      // Other brands the user does not own are not groups.
+      expect(_key('swatch-equivalents-decotime'), findsNothing);
+      // The group is above the list of all brands.
+      expect(
+        tester.getTopLeft(group).dy,
+        lessThan(tester.getTopLeft(_key('swatch-equivalents-all')).dy),
+      );
+      // Closed, it shows its best match; opened, the closest three.
+      expect(_rows(group), findsNothing);
+      await tester.tap(group);
+      await tester.pumpAndSettle();
+      expect(_rows(group), findsNWidgets(3));
     });
 
     testWidgets('"Only mine" keeps the owned markers and drops the dried '
@@ -138,19 +218,20 @@ void main() {
       await tester.tap(_key('swatch-equivalents-only-mine'));
       await tester.pumpAndSettle();
 
-      // Only Copic is left, with the owned marker that has not run dry.
+      // Only Copic is left, with the owned marker that has not run dry; the
+      // list of all brands would repeat it, so it is not there.
       expect(_key('swatch-equivalents-copic'), findsOneWidget);
+      expect(_key('swatch-equivalents-all'), findsNothing);
       expect(_key('swatch-equivalents-decotime'), findsNothing);
-      expect(_key('swatch-equivalents-finecolour'), findsNothing);
       await tester.tap(_key('swatch-equivalents-copic'));
       await tester.pumpAndSettle();
       expect(_key('swatch-equivalent-copic:B00'), findsOneWidget);
       expect(_key('swatch-equivalent-copic:B01'), findsNothing);
 
-      // Off again: the whole catalogue competes.
+      // Off again: every brand competes, in the list of all brands.
       await tester.tap(_key('swatch-equivalents-only-mine'));
       await tester.pumpAndSettle();
-      expect(_key('swatch-equivalents-decotime'), findsOneWidget);
+      expect(_key('swatch-equivalents-all'), findsOneWidget);
     });
 
     testWidgets('"Only mine" says so when none of the other brands is '
@@ -175,14 +256,15 @@ void main() {
       expect(find.text(l10n.swatchesAddToPalette), findsOneWidget);
       expect(_key('swatch-other-brand-note'), findsNothing);
 
-      await _openGroup(tester, 'copic');
-      await _scrollTo(tester, _rows(_key('swatch-equivalents-copic')).first);
-      await tester.tap(_rows(_key('swatch-equivalents-copic')).first);
+      await _openAll(tester);
+      final Finder row = _key('swatch-equivalents-row-copic');
+      await _scrollTo(tester, row);
+      await tester.tap(row);
       await tester.pumpAndSettle();
 
       // Now the sheet describes a Copic marker: the palette actions give
-      // way to a note, and it lists the other brands (Ohuhu among them)
-      // from there.
+      // way to a note, and it lists the other brands from there. The user
+      // owns Ohuhu, so Ohuhu comes first, as a group.
       await _scrollToTop(tester);
       expect(find.text(l10n.swatchesAddToPalette), findsNothing);
       expect(find.text(l10n.swatchesBlendingChain), findsNothing);
@@ -190,9 +272,11 @@ void main() {
       // Its brand is in the details, which start closed.
       await _openDetails(tester);
       expect(find.text(l10n.settingsBrandTitle.toUpperCase()), findsOneWidget);
+      await _jumpTo(tester, _key('swatch-equivalents-ohuhu_oahu'));
       expect(_key('swatch-equivalents-ohuhu_oahu'), findsOneWidget);
       expect(_key('swatch-equivalents-copic'), findsNothing);
       // Its own closest alternatives are Copic markers too.
+      await _scrollToTop(tester);
       expect(find.text(l10n.swatchesClosestAlternatives), findsOneWidget);
     });
 
@@ -200,14 +284,18 @@ void main() {
         'palette actions', (WidgetTester tester) async {
       await pumpSwatches(tester);
       await _openB08(tester);
-      await _openGroup(tester, 'copic');
-      await tester.tap(_rows(_key('swatch-equivalents-copic')).first);
+      await _openAll(tester);
+      final Finder row = _key('swatch-equivalents-row-copic');
+      await _scrollTo(tester, row);
+      await tester.tap(row);
       await tester.pumpAndSettle();
-      await _openGroup(tester, 'ohuhu_oahu');
-      await _scrollTo(
-        tester,
-        _rows(_key('swatch-equivalents-ohuhu_oahu')).first,
-      );
+      // The sheet now describes the Copic marker; the user's own brand is
+      // a group of its own.
+      await _scrollToTop(tester);
+      await _jumpTo(tester, _key('swatch-equivalents-ohuhu_oahu'));
+      await tester.tap(_key('swatch-equivalents-ohuhu_oahu'));
+      await tester.pumpAndSettle();
+      await _jumpTo(tester, _rows(_key('swatch-equivalents-ohuhu_oahu')).first);
       await tester.tap(_rows(_key('swatch-equivalents-ohuhu_oahu')).first);
       await tester.pumpAndSettle();
 
@@ -270,7 +358,71 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(calls, 2);
+      // The brand is in the list of all brands, which starts closed.
+      expect(find.text(l10n.swatchesAllBrands(1)), findsOneWidget);
+      await tester.tap(_key('swatch-equivalents-all'));
+      await tester.pumpAndSettle();
       expect(find.text('B01'), findsOneWidget);
+    });
+
+    testWidgets('puts the brands the user owns first, closest first', (
+      WidgetTester tester,
+    ) async {
+      BrandEquivalentGroup group(String brand, String code, double d) =>
+          BrandEquivalentGroup(
+            brandId: brand,
+            matches: <BrandEquivalent>[
+              BrandEquivalent(color: _marker(brand, code, '80d0f0'), deltaE: d),
+            ],
+          );
+      Future<List<BrandEquivalentGroup>> loader(
+        MarkerColor m, {
+        required bool onlyMine,
+      }) async => <BrandEquivalentGroup>[
+        group('decotime', 'D1', 9),
+        group('copic', 'C1', 4),
+        group('finecolour', 'F1', 2),
+        group('promarker', 'P1', 1),
+      ];
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: testLocalizationsDelegates,
+          supportedLocales: testSupportedLocales,
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: BrandEquivalentsSection(
+                marker: _marker('ohuhu_oahu', 'B08', '82dcfa'),
+                loader: loader,
+                ownedBrands: () async => <String>{'finecolour', 'decotime'},
+                onSelect: (_) {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // Finecolour (closer) before DecoTime; Copic is not the user's.
+      expect(
+        tester.getTopLeft(_key('swatch-equivalents-finecolour')).dy,
+        lessThan(tester.getTopLeft(_key('swatch-equivalents-decotime')).dy),
+      );
+      expect(_key('swatch-equivalents-copic'), findsNothing);
+      expect(_key('swatch-equivalents-promarker'), findsNothing);
+      // The list of all brands counts the four and is sorted by distance.
+      expect(find.text(l10n.swatchesAllBrands(4)), findsOneWidget);
+      await tester.tap(_key('swatch-equivalents-all'));
+      await tester.pumpAndSettle();
+      final List<double> tops = <double>[
+        for (final String id in <String>[
+          'promarker',
+          'finecolour',
+          'copic',
+          'decotime',
+        ])
+          tester.getTopLeft(_key('swatch-equivalents-row-$id')).dy,
+      ];
+      expect(tops, orderedEquals(<double>[...tops]..sort()));
     });
 
     testWidgets('a failed lookup says so instead of crashing', (

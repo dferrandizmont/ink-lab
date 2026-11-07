@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.10.2+20
+version: 1.0.0+22
 
 environment:
   sdk: ^3.13.5
@@ -66,6 +66,18 @@ dependencies:
   # without a pick.
   file_selector: ^1.1.0
   home_widget: ^0.10.0
+  # The store's own review dialog (Play In-App Review, StoreKit). Asked at
+  # most once ever, after a real milestone; nothing is sent by the app.
+  in_app_review: ^2.0.12
+
+  # Home-screen shortcuts (Android long-press menu, iOS Home Screen quick
+  # actions) that open the Match, Palette and Swatches tabs. Pinned: flutter.dev
+  # package, only labels and an icon name cross the platform channel.
+  quick_actions: 1.1.1
+
+  # Keeps the screen awake while Easel mode is open (no Flutter or
+  # dependency-free way exists). Released on pause, back and dispose.
+  wakelock_plus: ^1.8.2
 
 dev_dependencies:
   integration_test:
@@ -150,8 +162,23 @@ flutter:
     - assets/data/decotime_colors.json
     - assets/data/copic_colors.json
     - assets/data/finecolour_colors.json
+    - assets/data/touch_twin_colors.json
+    - assets/data/promarker_colors.json
+    - assets/data/prismacolor_colors.json
+    - assets/data/spectrum_noir_colors.json
+    - assets/data/promarker_brush_colors.json
+    - assets/data/arrtx_colors.json
+    - assets/data/kurecolor_colors.json
+    - assets/data/graphit_colors.json
+    - assets/data/marvy_le_plume_colors.json
+    - assets/data/blick_brush_colors.json
+    - assets/data/artists_loft_colors.json
     - assets/data/oahu_card_locations.json
     - assets/data/scenes.json
+    # Licence texts of the bundled fonts, shown on the licences page.
+    - assets/fonts/LICENSE-OFL.md
+    - assets/fonts/OFL-Archivo.txt
+    - assets/fonts/OFL-JetBrainsMono.txt
 
   # To add assets to your application, add an assets section, like this:
   # assets:

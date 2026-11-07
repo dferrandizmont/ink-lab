@@ -2,26 +2,30 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 import '../../../app_scope.dart';
 import '../../../core/collection_selection.dart';
 import '../../../core/color_utils.dart';
 import '../../../core/match_quality.dart';
 import '../../../core/models.dart';
+import '../../../core/value_view.dart';
 import '../../../core/white_balance.dart';
 import '../../../data/data.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
-import '../../widgets/empty_state.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_disclosure.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
+import '../../widgets/value_view.dart';
 import '../collection/collection_page.dart';
 import 'color_sampling.dart';
 import 'image_picker_service.dart';
+import 'match_empty_state.dart';
 import 'match_result_tile.dart';
 import 'photo_box.dart';
 import 'photo_sampling.dart';
@@ -57,6 +61,10 @@ class MatchPage extends StatefulWidget {
 
   /// Number of saved picks shown on the page; the rest are in the picker.
   static const int recentPicksInView = 6;
+
+  /// How far one accessibility action moves the sample point: a fraction of
+  /// the photo (so twenty steps cross it).
+  static const double sampleStep = 0.05;
 
   /// Photo picker. Production wraps `image_picker`; tests inject a fake.
   final ImagePickerService? picker;
@@ -112,6 +120,10 @@ class _MatchPageState extends State<MatchPage> {
   /// Whether the best of the whole range is open (the disclosure of the
   /// range suggestion).
   bool _rangeOpen = false;
+
+  /// Whether the photo and the swatches show their values only (greyscale).
+  /// Per session: it is never stored and starts off with every new page.
+  bool _valueView = false;
 
   late final ImagePickerService _picker =
       widget.picker ?? PlatformImagePickerService();
@@ -345,6 +357,32 @@ class _MatchPageState extends State<MatchPage> {
     });
   }
 
+  /// Moves the sample point by [dx] and [dy] (fractions of the photo), from
+  /// the middle of the photo when nothing was sampled yet. For the screen
+  /// reader, which cannot drag.
+  void _moveSample(double dx, double dy) {
+    final Offset from = _pick ?? const Offset(0.5, 0.5);
+    _sampleAt(
+      Offset((from.dx + dx).clamp(0.0, 1.0), (from.dy + dy).clamp(0.0, 1.0)),
+    );
+  }
+
+  /// What a screen reader says about the sample: its colour and the closest
+  /// marker with its closeness. `null` before anything was sampled.
+  String? _spokenSample() {
+    final int? colorInt = _sampledColorInt;
+    if (colorInt == null) return null;
+    final String hex = '#${colorIntToHex(colorInt)}';
+    if (_matches.isEmpty) return context.l10n.matchSampleSpokenNone(hex);
+    final ColorDistanceMatch best = _matches.first;
+    return context.l10n.matchSampleSpoken(
+      hex,
+      best.color.newCode,
+      best.color.newName,
+      context.l10n.matchQualityLabel(best.deltaE),
+    );
+  }
+
   /// Makes the point at [fraction] the white of the photo, unless it cannot
   /// be paper: then it says so and the photo stays as it was.
   void _chooseWhite(Offset fraction) {
@@ -475,62 +513,117 @@ class _MatchPageState extends State<MatchPage> {
     final ColorDistanceMatch? rangeSuggestion = _rangeSuggestion;
     final bool closeMatch =
         _matches.isNotEmpty && MatchQuality.isUsable(_matches.first.deltaE);
-    return ListView(
-      key: MatchPage.pageKey,
-      padding: const EdgeInsets.only(bottom: InkSpacing.pageBottom),
-      children: <Widget>[
-        InkPageHeader(
-          title: context.l10n.matchTitle,
-          subtitle: _available.isEmpty
-              ? context.l10n.matchSubtitleEmpty
-              : context.l10n.matchSubtitle(_available.length),
+    // The photo, its buttons and what is on its way...
+    final List<Widget> photoSide = <Widget>[
+      InkPageHeader(
+        title: context.l10n.matchTitle,
+        subtitle: _available.isEmpty
+            ? context.l10n.matchSubtitleEmpty
+            : context.l10n.matchSubtitle(_available.length),
+      ),
+      if (_available.isEmpty) _buildWholeRangeNotice(),
+      if (_picking)
+        _StatusLine(
+          icon: InkIcons.info,
+          message: context.l10n.matchLoadingPhoto,
         ),
-        if (_available.isEmpty) _buildWholeRangeNotice(),
-        if (_picking)
-          _StatusLine(
-            icon: InkIcons.info,
-            message: context.l10n.matchLoadingPhoto,
+      if (_error != null)
+        _StatusLine(
+          icon: InkIcons.alertCircle,
+          message: _error!,
+          isError: true,
+        ),
+      if (_notice != null) _buildNotice(),
+      if (_sampled == null)
+        // Nothing chosen yet: the empty state takes the slot of the photo
+        // and its row of buttons.
+        _Gutter(
+          child: MatchEmptyState(
+            onCamera: _picking ? null : () => _pickPhoto(PhotoSource.camera),
+            onGallery: _picking ? null : () => _pickPhoto(PhotoSource.gallery),
           ),
-        if (_error != null)
-          _StatusLine(
-            icon: InkIcons.alertCircle,
-            message: _error!,
-            isError: true,
-          ),
-        if (_notice != null) _buildNotice(),
+        )
+      else ...<Widget>[
         _buildPhoto(),
         _buildActions(),
         _buildWhiteBalanceNote(),
-        if (_sampledColorInt != null)
-          _buildSampled(_sampledColorInt!)
-        else if (_sampled != null)
-          _Gutter(
-            top: InkSpacing.block,
-            child: _SecondaryText(context.l10n.matchPickToSample),
-          ),
-        if (_matches.isNotEmpty) ...<Widget>[
-          // Above the threshold the page says so first; the closest owned
-          // marker still shows, with its honest "Far off" label.
-          if (!closeMatch)
-            Padding(
-              padding: const EdgeInsets.only(top: InkSpacing.block),
-              child: _StatusLine(
-                key: const ValueKey<String>('match-no-close'),
-                icon: InkIcons.info,
-                message: context.l10n.matchNoCloseMatch,
-              ),
-            ),
-          _buildBestMatch(),
-          if (_matches.length > 1)
-            _buildAlternatives(
-              _matches.skip(1).toList(),
-              context.l10n.matchAlternatesTitle,
-            ),
-        ],
-        if (rangeSuggestion != null) _buildRangeSuggestion(rangeSuggestion),
-        _buildHistory(scope),
-        const _Gutter(top: InkSpacing.section, child: _PrivacyLine()),
       ],
+    ];
+    // ...and what the photo gives: the sample, the markers and the history.
+    final List<Widget> resultSide = <Widget>[
+      if (_sampledColorInt != null)
+        _buildSampled(_sampledColorInt!)
+      else if (_sampled != null)
+        _Gutter(
+          top: InkSpacing.block,
+          child: _SecondaryText(context.l10n.matchPickToSample),
+        ),
+      if (_matches.isNotEmpty) ...<Widget>[
+        // Above the threshold the page says so first; the closest owned
+        // marker still shows, with its honest "Far off" label.
+        if (!closeMatch)
+          Padding(
+            padding: const EdgeInsets.only(top: InkSpacing.block),
+            child: _StatusLine(
+              key: const ValueKey<String>('match-no-close'),
+              icon: InkIcons.info,
+              message: context.l10n.matchNoCloseMatch,
+            ),
+          ),
+        _buildBestMatch(),
+        if (_matches.length > 1)
+          _buildAlternatives(
+            _matches.skip(1).toList(),
+            context.l10n.matchAlternatesTitle,
+          ),
+      ],
+      if (rangeSuggestion != null) _buildRangeSuggestion(rangeSuggestion),
+      _buildHistory(scope),
+      const _Gutter(top: InkSpacing.section, child: _PrivacyLine()),
+    ];
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        // A tablet in landscape: the photo on one side, the results on the
+        // other, so moving the point never scrolls the result away.
+        if (InkLayout.isSplit(constraints.biggest)) {
+          return InkReadableWidth(
+            maxWidth: InkLayout.wideWidth,
+            child: Row(
+              key: MatchPage.pageKey,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    key: const ValueKey<String>('match-photo-side'),
+                    padding: EdgeInsets.only(
+                      bottom: InkSpacing.pageBottomOf(context),
+                    ),
+                    children: photoSide,
+                  ),
+                ),
+                Expanded(
+                  child: ListView(
+                    key: const ValueKey<String>('match-result-side'),
+                    // Level with the title of the header on the other side.
+                    padding: EdgeInsets.only(
+                      top: InkSpacing.header.top,
+                      bottom: InkSpacing.pageBottomOf(context),
+                    ),
+                    children: resultSide,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        return InkReadableWidth(
+          child: ListView(
+            key: MatchPage.pageKey,
+            padding: EdgeInsets.only(bottom: InkSpacing.pageBottomOf(context)),
+            children: <Widget>[...photoSide, ...resultSide],
+          ),
+        );
+      },
     );
   }
 
@@ -590,6 +683,7 @@ class _MatchPageState extends State<MatchPage> {
             key: ValueKey<String>('match-range-${match.color.newCode}'),
             match: match,
             notOwned: true,
+            valueView: _valueView,
             onRecord: () => _record(match),
           ),
         ),
@@ -598,20 +692,42 @@ class _MatchPageState extends State<MatchPage> {
   }
 
   Widget _buildPhoto() {
-    final bool hasPhoto = _bytes != null && _sampled != null;
+    final SampledImage sampled = _sampled!;
+    final String? spoken = _spokenSample();
+    final AppLocalizations l10n = context.l10n;
+    const Offset middle = Offset(0.5, 0.5);
+    const double step = MatchPage.sampleStep;
+    // The loupe has no equivalent for a screen reader but these: the photo
+    // says what was sampled, double-tap samples the middle, and the actions
+    // menu moves the point any way.
     return _Gutter(
       child: Semantics(
         container: true,
-        label: context.l10n.matchPhotoSemantics,
-        child: PhotoBox(
-          aspectRatio: hasPhoto ? _sampled!.aspectRatio : null,
-          child: hasPhoto
-              ? _buildCanvas()
-              : EmptyState(
-                  icon: InkIcons.image,
-                  title: context.l10n.matchEmptyPhotoTitle,
-                  message: context.l10n.matchEmptyPhotoMessage,
-                ),
+        label: l10n.matchPhotoSemantics,
+        value: spoken,
+        hint: l10n.matchPhotoSampleHint,
+        onTap: () => _onPhotoPoint(middle),
+        customSemanticsActions: _choosingWhite
+            ? null
+            : <CustomSemanticsAction, VoidCallback>{
+                CustomSemanticsAction(label: l10n.matchSampleMiddle): () =>
+                    _sampleAt(middle),
+                CustomSemanticsAction(label: l10n.matchMoveLeft): () =>
+                    _moveSample(-step, 0),
+                CustomSemanticsAction(label: l10n.matchMoveRight): () =>
+                    _moveSample(step, 0),
+                CustomSemanticsAction(label: l10n.matchMoveUp): () =>
+                    _moveSample(0, -step),
+                CustomSemanticsAction(label: l10n.matchMoveDown): () =>
+                    _moveSample(0, step),
+              },
+        // The touch layer under it is tappable and draggable but has no
+        // label of its own: this node speaks for it.
+        child: ExcludeSemantics(
+          child: PhotoBox(
+            aspectRatio: sampled.aspectRatio,
+            child: _buildCanvas(),
+          ),
         ),
       ),
     );
@@ -626,45 +742,59 @@ class _MatchPageState extends State<MatchPage> {
       onPoint: _onPhotoPoint,
       tapOnly: _choosingWhite,
       balance: _balance,
+      valueView: _valueView,
       pick: _choosingWhite ? null : _pick,
       sampleColor: sampledColor == null
           ? null
-          : Color(0xFF000000 | sampledColor),
+          : Color(0xFF000000 | _shown(sampledColor)),
     );
   }
 
   Widget _buildSampled(int colorInt) {
     final InkColors ink = InkColors.of(context);
-    final Color sample = Color(0xFF000000 | colorInt);
+    final Color sample = Color(0xFF000000 | _shown(colorInt));
     return _Gutter(
       top: InkSpacing.block,
-      // The hex is the colour: the RGB triple would only repeat it.
-      child: Row(
-        children: <Widget>[
-          Text(
-            AppTypography.caps(context.l10n.matchSampledLabel),
-            style: AppTypography.capsStyle.copyWith(color: ink.fg2),
-          ),
-          const SizedBox(width: InkSpacing.s8),
-          Container(
-            width: InkGeometry.smallIcon,
-            height: InkGeometry.smallIcon,
-            decoration: BoxDecoration(
-              color: sample,
-              borderRadius: InkRadii.xsRadius,
-              border: Border.all(color: ink.swatchEdge(sample)),
+      // The hex is the colour: the RGB triple would only repeat it. A live
+      // region: a screen reader says the new sample and its best match every
+      // time the point moves.
+      child: Semantics(
+        container: true,
+        liveRegion: true,
+        label: _spokenSample(),
+        excludeSemantics: true,
+        child: Row(
+          children: <Widget>[
+            Text(
+              AppTypography.caps(context.l10n.matchSampledLabel),
+              style: AppTypography.capsStyle.copyWith(color: ink.fg2),
             ),
-          ),
-          const SizedBox(width: InkSpacing.s8),
-          Text(
-            '#${colorIntToHex(colorInt)}',
-            key: const ValueKey<String>('match-sampled-hex'),
-            style: AppTypography.data.copyWith(color: ink.fg),
-          ),
-        ],
+            const SizedBox(width: InkSpacing.s8),
+            Container(
+              width: InkGeometry.smallIcon,
+              height: InkGeometry.smallIcon,
+              decoration: BoxDecoration(
+                color: sample,
+                borderRadius: InkRadii.xsRadius,
+                border: Border.all(color: ink.swatchEdge(sample)),
+              ),
+            ),
+            const SizedBox(width: InkSpacing.s8),
+            Text(
+              '#${colorIntToHex(colorInt)}',
+              key: const ValueKey<String>('match-sampled-hex'),
+              style: AppTypography.data.copyWith(color: ink.fg),
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  /// The colour to draw for [colorInt]: itself, or its grey in the value
+  /// view.
+  int _shown(int colorInt) =>
+      _valueView ? ValueView.greyInt(colorInt) : colorInt;
 
   Widget _buildBestMatch() {
     final ColorDistanceMatch best = _matches.first;
@@ -673,6 +803,7 @@ class _MatchPageState extends State<MatchPage> {
       child: BestMatchTile(
         key: ValueKey<String>('match-best-${best.color.newCode}'),
         match: best,
+        valueView: _valueView,
         onRecord: () => _record(best),
       ),
     );
@@ -695,6 +826,7 @@ class _MatchPageState extends State<MatchPage> {
                 MatchResultTile(
                   key: ValueKey<String>('match-result-${match.color.newCode}'),
                   match: match,
+                  valueView: _valueView,
                   onRecord: () => _record(match),
                 ),
             ],
@@ -705,12 +837,13 @@ class _MatchPageState extends State<MatchPage> {
   }
 
   /// The row of actions, right under the photo: the camera and the gallery,
-  /// and the white balance at the right.
+  /// and the white balance and the value view at the right.
   ///
-  /// The row is always in the same place, with or without a photo, so taking
-  /// a photo never moves the buttons. When the three do not fit on one line
-  /// (a long translation at a large text size) the white balance drops to its
-  /// own line, right-aligned.
+  /// Without a photo the empty state has the camera and gallery actions
+  /// instead (see [MatchEmptyState]). Once there is a photo the row stays
+  /// where it is whatever is sampled or fixed. When the four do not fit on
+  /// one line (a long translation at a large text size) the white balance and
+  /// the value view drop to their own line, right-aligned.
   Widget _buildActions() {
     return _Gutter(
       key: const ValueKey<String>('match-actions'),
@@ -748,8 +881,23 @@ class _MatchPageState extends State<MatchPage> {
           );
           final Widget balance = Align(
             alignment: AlignmentDirectional.centerEnd,
-            child: WhiteBalanceAction(
-              onPressed: _sampled == null ? null : _startWhite,
+            // A Wrap: when the two do not fit side by side (a long
+            // translation at a large text size) they stack instead of
+            // overflowing.
+            child: Wrap(
+              alignment: WrapAlignment.end,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: InkSpacing.s8,
+              children: <Widget>[
+                WhiteBalanceAction(
+                  onPressed: _sampled == null ? null : _startWhite,
+                ),
+                ValueViewToggle(
+                  key: const ValueKey<String>('match-values'),
+                  selected: _valueView,
+                  onChanged: (bool on) => setState(() => _valueView = on),
+                ),
+              ],
             ),
           );
           if (_actionsFitOnOneLine(context, constraints.maxWidth)) {
@@ -774,7 +922,8 @@ class _MatchPageState extends State<MatchPage> {
     );
   }
 
-  /// Whether the camera, the gallery and the white balance fit on one line.
+  /// Whether the camera, the gallery, the white balance and the value view
+  /// fit on one line.
   bool _actionsFitOnOneLine(BuildContext context, double width) {
     final double camera = _buttonWidth(
       context,
@@ -791,7 +940,18 @@ class _MatchPageState extends State<MatchPage> {
       context.l10n.matchWhiteBalanceButton,
       withIcon: false,
     );
-    return camera + gallery + balance + 2 * InkSpacing.buttonGap <= width;
+    final double values = _buttonWidth(
+      context,
+      context.l10n.matchValuesButton,
+      withIcon: false,
+    );
+    return camera +
+            gallery +
+            balance +
+            values +
+            3 * InkSpacing.buttonGap +
+            InkSpacing.s8 <=
+        width;
   }
 
   /// The width a button with [label] takes at the current width and text

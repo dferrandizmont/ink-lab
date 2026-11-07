@@ -19,7 +19,8 @@ import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
 import '../../support/l10n.dart';
 import '../match/match_test_support.dart';
 import '../palette/palette_test_support.dart';
-import '../swatches/swatches_page_test.dart' show pumpSwatches;
+import '../swatches/swatches_page_test.dart'
+    show expandSheet, pumpSwatches, scrollSheetTo;
 
 MarkerRepository _markers() =>
     MarkerRepository(loadAsset: (String path) => File(path).readAsStringSync());
@@ -71,6 +72,13 @@ Future<void> _openDetail(WidgetTester tester, String code) async {
 }
 
 bool _isDriedMark(Widget w) => w is InkIcon && w.icon == InkIcons.dropletOff;
+
+/// Brings the ink level block of the detail sheet on screen: it sits below
+/// the closest alternatives, so the sheet is taken to full height first.
+Future<void> _showInkLevel(WidgetTester tester) async {
+  await expandSheet(tester);
+  await scrollSheetTo(tester, _key('swatch-ink-level'));
+}
 
 /// Opens the "⋯" menu of the detail sheet.
 Future<void> _openMenu(WidgetTester tester) async {
@@ -139,8 +147,6 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(scope.dried.contains('B08'), isTrue);
-        expect(_key('swatch-dried-note'), findsOneWidget);
-        expect(find.text(l10n.driedNote), findsOneWidget);
         // Marking it dried offers to buy a refill.
         expect(find.text(l10n.wishlistOfferTitle), findsOneWidget);
         expect(find.text(l10n.wishlistOfferBody('B08')), findsOneWidget);
@@ -153,6 +159,10 @@ void main() {
         await tester.pumpAndSettle();
         expect(scope.wishlist.contains('B08'), isTrue);
         expect(scope.dried.contains('B08'), isTrue);
+        // The note under the ink level says what it means.
+        await _showInkLevel(tester);
+        expect(_key('swatch-dried-note'), findsOneWidget);
+        expect(find.text(l10n.driedNote), findsOneWidget);
         // The menu offers the way back.
         await _openMenu(tester);
         expect(find.text(l10n.driedUnmark), findsOneWidget);
@@ -193,6 +203,7 @@ void main() {
       final AppScope scope = await pumpSwatches(tester);
       await scope.dried.add('B08');
       await _openDetail(tester, 'B08');
+      await _showInkLevel(tester);
       expect(_key('swatch-dried-note'), findsOneWidget);
       await _tapMenu(tester, 'swatch-menu-dried');
       expect(find.byType(AlertDialog), findsNothing);

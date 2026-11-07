@@ -149,13 +149,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsBackupFileCaption =>
-      'Un archivo ZIP con tus datos y las fotos del diario. Guárdalo en Archivos, Drive o donde quieras. La clave de la API nunca se incluye.';
+      'Un archivo ZIP con tus datos y todas tus fotos: diario, muestras y recetas. En el menú de compartir elige Archivos, Drive o cualquier app para guardarlo. La clave de la API nunca se incluye.';
 
   @override
   String get settingsBackupTextTitle => 'Copia por texto (sin fotos)';
 
   @override
-  String get settingsSaveBackupFile => 'Guardar copia en un archivo';
+  String get settingsSaveBackupFile => 'Compartir copia de seguridad';
 
   @override
   String get settingsRestoreBackupFile => 'Restaurar desde un archivo';
@@ -233,8 +233,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Elige OpenRouter abajo para usar una IA';
 
   @override
-  String get settingsAiEnabledSubtitleOnDevice =>
-      'Gemini Nano en este teléfono';
+  String get settingsAiEnabledSubtitleOnDevice => 'Gemini Nano en este móvil';
 
   @override
   String get settingsAiEnabledSubtitleOpenRouter =>
@@ -242,11 +241,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiExplainColourTheory =>
-      'Las paletas salen del motor de teoría del color integrado. Sin IA y sin que nada salga de tu teléfono.';
+      'Las paletas salen del motor de teoría del color integrado. Sin IA y sin que nada salga de tu móvil.';
 
   @override
   String get settingsAiExplainOnDevice =>
-      'Gemini Nano funciona en este teléfono y tus peticiones no salen de él. ML Kit de Google envía a Google diagnósticos de uso.';
+      'Gemini Nano funciona en este móvil y tus peticiones no salen de él. ML Kit de Google envía a Google diagnósticos de uso.';
 
   @override
   String get settingsAiExplainOpenRouter =>
@@ -338,11 +337,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiDisclosureColourTheory =>
-      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu teléfono. En Android, la app puede preguntar a ML Kit de Google si Gemini Nano está disponible; ML Kit envía a Google diagnósticos de uso, nunca tus colores ni fotos. Elige En el dispositivo u OpenRouter para usar una IA.';
+      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu móvil. En Android, la app puede preguntar a ML Kit de Google si Gemini Nano está disponible; ML Kit envía a Google diagnósticos de uso, nunca tus colores ni fotos. Elige En el dispositivo u OpenRouter para usar una IA.';
 
   @override
   String get settingsAiDisclosureColourTheoryNoOnDevice =>
-      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu teléfono. En Android, la app puede preguntar a ML Kit de Google si Gemini Nano está disponible; ML Kit envía a Google diagnósticos de uso, nunca tus colores ni fotos. Elige OpenRouter para usar una IA.';
+      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu móvil. En Android, la app puede preguntar a ML Kit de Google si Gemini Nano está disponible; ML Kit envía a Google diagnósticos de uso, nunca tus colores ni fotos. Elige OpenRouter para usar una IA.';
 
   @override
   String get settingsAiDisclosureConfirm => 'Activar';
@@ -352,18 +351,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiDisclosureOnDevice =>
-      'Las peticiones En el dispositivo (Gemini Nano) las responde el modelo de este teléfono: tu escenario y los códigos de color nunca salen de él y no hace falta clave. Para comprobar, descargar y usar el modelo, la app usa ML Kit de Google, que envía a Google diagnósticos de uso (modelo del móvil, versión de la app, identificadores de instalación, errores y tamaños), nunca tus peticiones, colores ni fotos. No se envía nada mientras este interruptor esté desactivado.';
+      'Las peticiones En el dispositivo (Gemini Nano) las responde el modelo de este móvil: tu escenario y los códigos de color nunca salen de él y no hace falta clave. Para comprobar, descargar y usar el modelo, la app usa ML Kit de Google, que envía a Google diagnósticos de uso (modelo del móvil, versión de la app, identificadores de instalación, errores y tamaños), nunca tus peticiones, colores ni fotos. No se envía nada mientras este interruptor esté desactivado.';
 
   @override
   String get settingsAiOnDeviceName => 'IA en el dispositivo (Gemini Nano)';
 
   @override
   String get settingsAiOnDevicePrivacy =>
-      'Tus peticiones no salen de este teléfono. ML Kit envía a Google diagnósticos de uso, nunca tus peticiones, colores ni fotos.';
+      'Tus peticiones no salen de este móvil. ML Kit envía a Google diagnósticos de uso, nunca tus peticiones, colores ni fotos.';
 
   @override
   String get settingsAiOnDeviceDownloadable =>
-      'El modelo aún no está en este teléfono. Android lo descarga una vez y lo conserva para todas las apps.';
+      'El modelo aún no está en este móvil. Android lo descarga una vez y lo conserva para todas las apps.';
 
   @override
   String get settingsAiOnDeviceDownloading => 'Descargando el modelo...';
@@ -374,15 +373,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiEnabledSubtitleOnDeviceIos =>
-      'Apple Intelligence en este teléfono';
+      'Apple Intelligence en este móvil';
 
   @override
   String get settingsAiExplainOnDeviceIos =>
-      'El modelo de Apple funciona en este teléfono y tus peticiones no salen de él.';
+      'El modelo de Apple funciona en este móvil y tus peticiones no salen de él.';
 
   @override
   String get settingsAiDisclosureOnDeviceIos =>
-      'Las peticiones En el dispositivo (Apple Intelligence) las responde el modelo de Apple en este teléfono: tu escenario y los códigos de color nunca salen de él y no hace falta clave. iOS instala y gestiona el modelo con Apple Intelligence; la app no descarga nada ni usa ningún otro servicio para ello, así que no se envía nada.';
+      'Las peticiones En el dispositivo (Apple Intelligence) las responde el modelo de Apple en este móvil: tu escenario y los códigos de color nunca salen de él y no hace falta clave. iOS instala y gestiona el modelo con Apple Intelligence; la app no descarga nada ni usa ningún otro servicio para ello, así que no se envía nada.';
 
   @override
   String get settingsAiOnDeviceNameIos =>
@@ -390,7 +389,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiOnDevicePrivacyIos =>
-      'Tus peticiones no salen de este teléfono. No se envía nada: ni tus peticiones, ni colores, ni fotos.';
+      'Tus peticiones no salen de este móvil. No se envía nada: ni tus peticiones, ni colores, ni fotos.';
 
   @override
   String get settingsAiOnDevicePreparingIos =>
@@ -402,18 +401,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiDisclosureColourTheoryIos =>
-      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu teléfono. Elige En el dispositivo u OpenRouter para usar una IA.';
+      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu móvil. Elige En el dispositivo u OpenRouter para usar una IA.';
 
   @override
   String get settingsAiDisclosureColourTheoryNoOnDeviceIos =>
-      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu teléfono. Elige OpenRouter para usar una IA.';
+      'Con Teoría del color seleccionada, las paletas salen del motor integrado: no se usa IA y no salen de tu móvil. Elige OpenRouter para usar una IA.';
 
   @override
   String get settingsAiOnDeviceCheckAgain => 'Comprobar de nuevo';
 
   @override
-  String get settingsAiOnDeviceReady =>
-      'El modelo está listo en este teléfono.';
+  String get settingsAiOnDeviceReady => 'El modelo está listo en este móvil.';
 
   @override
   String get settingsAiOnDeviceDownload => 'Descargar modelo';
@@ -512,7 +510,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsDisclaimer =>
-      'Ink Lab es un proyecto comunitario independiente: no está afiliado, respaldado ni patrocinado por Ohuhu, DecoTime, Copic ni Finecolour, y usa los códigos, nombres y valores de color de sus rotuladores solo como datos factuales de referencia.';
+      'Ink Lab es un proyecto comunitario independiente: no está afiliado, respaldado ni patrocinado por ninguna de las marcas de rotuladores que incluye. Usa sus códigos, nombres y valores de color solo como datos factuales de referencia.';
 
   @override
   String get paletteTitle => 'Paleta';
@@ -521,7 +519,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paletteBaseCodeLabel => 'Código del rotulador base';
 
   @override
-  String get paletteBaseCodeHint => 'E08 o B271';
+  String paletteBaseCodeHint(String first, String second) {
+    return '$first o $second';
+  }
+
+  @override
+  String paletteBaseCodeHintOne(String code) {
+    return '$code';
+  }
 
   @override
   String get paletteScenarioToggle => 'Escenas';
@@ -932,6 +937,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get swatchesSearchHint => 'Código, nombre o hex';
+
+  @override
+  String swatchesClosestTo(String hex) {
+    return 'Más cercanos a $hex';
+  }
 
   @override
   String get swatchesClearSearch => 'Borrar la búsqueda';
@@ -2523,7 +2533,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchTitle => 'Emparejar';
 
   @override
-  String get matchPrivacyCaption => 'Las fotos se quedan en este teléfono.';
+  String get matchPrivacyCaption => 'Las fotos se quedan en este móvil.';
 
   @override
   String get matchCameraButton => 'Cámara';
@@ -2535,11 +2545,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get matchLoadingPhoto => 'Leyendo la foto…';
 
   @override
-  String get matchEmptyPhotoTitle => 'Aún no hay foto';
+  String get matchEmptyPhotoTitle => 'Encuentra un color a partir de una foto';
 
   @override
   String get matchEmptyPhotoMessage =>
-      'Haz una foto o elige una de la galería para encontrar el rotulador más cercano.';
+      'Haz una foto, toca un color en ella y mira los rotuladores más cercanos.';
 
   @override
   String get matchPhotoSemantics => 'Foto de la que tomar un color';
@@ -2611,6 +2621,53 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get matchOkButton => 'OK';
+
+  @override
+  String get matchTakePhotoButton => 'Hacer una foto';
+
+  @override
+  String get matchChooseGalleryButton => 'Elegir de la galería';
+
+  @override
+  String get matchValuesButton => 'Valores';
+
+  @override
+  String get matchValuesTooltip =>
+      'Muestra la foto y las coincidencias en escala de grises para comprobar el contraste de valor';
+
+  @override
+  String get matchPhotoSampleHint =>
+      'Toca dos veces para tomar el color del centro de la foto. Usa las acciones para mover el punto.';
+
+  @override
+  String get matchSampleMiddle => 'Tomar el color del centro de la foto';
+
+  @override
+  String get matchMoveLeft => 'Mover el punto a la izquierda';
+
+  @override
+  String get matchMoveRight => 'Mover el punto a la derecha';
+
+  @override
+  String get matchMoveUp => 'Mover el punto hacia arriba';
+
+  @override
+  String get matchMoveDown => 'Mover el punto hacia abajo';
+
+  @override
+  String matchSampleSpoken(
+    String hex,
+    String code,
+    String name,
+    String quality,
+  ) {
+    return 'Color tomado $hex. Rotulador más cercano: $code, $name, $quality.';
+  }
+
+  @override
+  String matchSampleSpokenNone(String hex) {
+    return 'Color tomado $hex.';
+  }
 
   @override
   String get appTitle => 'Ink Lab';
@@ -2805,7 +2862,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsAiOnDeviceUnavailable =>
-      'La IA en el dispositivo no está disponible ahora en este teléfono. Se usa la teoría del color hasta que lo esté.';
+      'La IA en el dispositivo no está disponible ahora en este móvil. Se usa la teoría del color hasta que lo esté.';
 
   @override
   String paletteSizeChip(int size) {
@@ -2877,6 +2934,28 @@ class AppLocalizationsEs extends AppLocalizations {
           '$input no es un código de rotulador de Copic. Prueba con $example.',
       'finecolour':
           '$input no es un código de rotulador de Finecolour. Prueba con $example.',
+      'touchTwin':
+          '$input no es un código de rotulador de Touch Twin. Prueba con $example.',
+      'promarker':
+          '$input no es un código de rotulador de Promarker. Prueba con $example.',
+      'prismacolor':
+          '$input no es un código de rotulador de Prismacolor Premier. Prueba con $example.',
+      'spectrumNoir':
+          '$input no es un código de rotulador de Spectrum Noir. Prueba con $example.',
+      'promarkerBrush':
+          '$input no es un código de rotulador de Promarker Brush. Prueba con $example.',
+      'arrtx':
+          '$input no es un código de rotulador de Arrtx. Prueba con $example.',
+      'kurecolor':
+          '$input no es un código de rotulador de ZIG Kurecolor. Prueba con $example.',
+      'graphit':
+          '$input no es un código de rotulador de Graph\'it. Prueba con $example.',
+      'marvyLePlume':
+          '$input no es un código de rotulador de Marvy Le Plume. Prueba con $example.',
+      'blickBrush':
+          '$input no es un código de rotulador de Blick Studio Brush. Prueba con $example.',
+      'artistsLoft':
+          '$input no es un código de rotulador de Artist\'s Loft. Prueba con $example.',
       'other':
           '$input no es un código de rotulador de Ink Lab. Prueba con $example.',
     });
@@ -2904,6 +2983,17 @@ class AppLocalizationsEs extends AppLocalizations {
       'decoTime': 'Aún no hay rotuladores DecoTime en tu colección. Añádelos en Mi colección.',
       'copic': 'Aún no hay rotuladores Copic en tu colección. Añádelos en Mi colección.',
       'finecolour': 'Aún no hay rotuladores Finecolour en tu colección. Añádelos en Mi colección.',
+      'touchTwin': 'Aún no hay rotuladores Touch Twin en tu colección. Añádelos en Mi colección.',
+      'promarker': 'Aún no hay rotuladores Promarker en tu colección. Añádelos en Mi colección.',
+      'prismacolor': 'Aún no hay rotuladores Prismacolor Premier en tu colección. Añádelos en Mi colección.',
+      'spectrumNoir': 'Aún no hay rotuladores Spectrum Noir en tu colección. Añádelos en Mi colección.',
+      'promarkerBrush': 'Aún no hay rotuladores Promarker Brush en tu colección. Añádelos en Mi colección.',
+      'arrtx': 'Aún no hay rotuladores Arrtx en tu colección. Añádelos en Mi colección.',
+      'kurecolor': 'Aún no hay rotuladores ZIG Kurecolor en tu colección. Añádelos en Mi colección.',
+      'graphit': 'Aún no hay rotuladores Graph\'it en tu colección. Añádelos en Mi colección.',
+      'marvyLePlume': 'Aún no hay rotuladores Marvy Le Plume en tu colección. Añádelos en Mi colección.',
+      'blickBrush': 'Aún no hay rotuladores Blick Studio Brush en tu colección. Añádelos en Mi colección.',
+      'artistsLoft': 'Aún no hay rotuladores Artist\'s Loft en tu colección. Añádelos en Mi colección.',
       'other':
           'Aún no hay rotuladores en tu colección. Añádelos en Mi colección.',
     });
@@ -3064,7 +3154,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errOnDeviceUnavailable =>
-      'El modelo del dispositivo no está listo en este teléfono.';
+      'El modelo del dispositivo no está listo en este móvil.';
 
   @override
   String get errUnknown => 'Las sugerencias de IA no están disponibles.';
@@ -4067,6 +4157,262 @@ class AppLocalizationsEs extends AppLocalizations {
   String get collectionToolsGroup => 'Herramientas';
 
   @override
+  String get toolsMapTitle => 'Mapa de color';
+
+  @override
+  String get toolsMapHint =>
+      'Dónde caen tus rotuladores por tono y luminosidad, y qué huecos hay.';
+
+  @override
+  String get toolsTranslateTitle => 'Traducir una receta';
+
+  @override
+  String get toolsTranslateHint =>
+      'Convierte los códigos de un tutorial en los más parecidos que tienes.';
+
+  @override
+  String get toolsBlendsTitle => 'Mis recetas';
+
+  @override
+  String get toolsBlendsHint =>
+      'Degradados que guardas: rotuladores en orden, una nota y una foto.';
+
+  @override
+  String get toolsTransferTitle => 'Exportar e importar';
+
+  @override
+  String get toolsTransferHint =>
+      'Comparte tus rotuladores como lista o CSV, o añade muchos por código.';
+
+  @override
+  String get toolsMapEmptyTitle => 'Aún no hay rotuladores que mapear';
+
+  @override
+  String get toolsMapIntro =>
+      'Cada punto es un rotulador que tienes. Las zonas rayadas no tienen ninguno.';
+
+  @override
+  String get toolsMapShowRange => 'Mostrar toda la gama';
+
+  @override
+  String get toolsMapShowRangeHint =>
+      'Puntos tenues con todos los rotuladores de tus marcas, para ver qué falta.';
+
+  @override
+  String get toolsMapAxes =>
+      'De izquierda a derecha: tono. De arriba abajo: de claro a oscuro.';
+
+  @override
+  String get toolsMapGreysTitle => 'Grises y neutros';
+
+  @override
+  String get toolsMapGreysAxis => 'De izquierda a derecha: de oscuro a claro.';
+
+  @override
+  String get toolsMapFamiliesTitle => 'Por tono';
+
+  @override
+  String get toolsHueRed => 'Rojo';
+
+  @override
+  String get toolsHueOrange => 'Naranja';
+
+  @override
+  String get toolsHueYellow => 'Amarillo';
+
+  @override
+  String get toolsHueGreen => 'Verde';
+
+  @override
+  String get toolsHueTeal => 'Turquesa';
+
+  @override
+  String get toolsHueBlue => 'Azul';
+
+  @override
+  String get toolsHueViolet => 'Violeta';
+
+  @override
+  String get toolsHueMagenta => 'Magenta';
+
+  @override
+  String toolsFamilyBands(int light, int mid, int dark) {
+    return 'Claros $light · Medios $mid · Oscuros $dark';
+  }
+
+  @override
+  String get toolsMapDriedNote => 'Los rotuladores secos no se incluyen.';
+
+  @override
+  String toolsMapSummary(String markers, int empty, int cells) {
+    return 'Mapa de color de $markers. $empty de $cells zonas no tienen ningún rotulador. La lista de abajo muestra los mismos rotuladores por tono.';
+  }
+
+  @override
+  String get toolsMarkerOwned => 'En tu colección';
+
+  @override
+  String get toolsMarkerNotOwned => 'No está en tu colección';
+
+  @override
+  String get toolsTranslateIntro =>
+      'Escribe o pega los códigos de un tutorial, en la marca que usa. Valen comas, espacios y listas.';
+
+  @override
+  String get toolsTranslateBrand => 'Marca de la receta';
+
+  @override
+  String get toolsTranslateCodes => 'Códigos';
+
+  @override
+  String get toolsTranslateResults => 'Traducción';
+
+  @override
+  String get toolsTranslateEmpty => 'Los códigos que escribas aparecen aquí.';
+
+  @override
+  String get toolsTranslateMine => 'Lo más parecido que tienes';
+
+  @override
+  String get toolsTranslateNotOwned => 'No lo tienes';
+
+  @override
+  String get toolsTranslateMissing => 'Nada parecido en tu colección.';
+
+  @override
+  String toolsTranslateUnknown(String brand) {
+    return 'No existe en $brand';
+  }
+
+  @override
+  String get toolsCopyList => 'Copiar lista';
+
+  @override
+  String get toolsShareList => 'Compartir lista';
+
+  @override
+  String get toolsListCopied => 'Lista copiada.';
+
+  @override
+  String get toolsShareFailed => 'No se pudo compartir la lista.';
+
+  @override
+  String get toolsBlendsNew => 'Nueva receta';
+
+  @override
+  String get toolsBlendsEditTitle => 'Editar receta';
+
+  @override
+  String get toolsBlendsEmptyTitle => 'Aún no hay recetas';
+
+  @override
+  String get toolsBlendsEmptyBody =>
+      'Guarda los degradados que te gustan: rotuladores en orden, una nota y una foto.';
+
+  @override
+  String get toolsBlendsName => 'Nombre de la receta';
+
+  @override
+  String get toolsBlendsMarkersTitle => 'Rotuladores, en orden';
+
+  @override
+  String get toolsBlendsMarkersHelp => 'Arrastra el asa para cambiar el orden.';
+
+  @override
+  String get toolsBlendsDrag => 'Arrastrar para reordenar';
+
+  @override
+  String toolsBlendsRemoveMarker(String code) {
+    return 'Quitar $code';
+  }
+
+  @override
+  String get toolsBlendsNote => 'Nota';
+
+  @override
+  String get toolsBlendsPhotoTitle => 'Foto del resultado';
+
+  @override
+  String get toolsBlendsPhotoHelp => 'Opcional. Se queda en este móvil.';
+
+  @override
+  String get toolsBlendsPhotoSemantic => 'Foto de la receta';
+
+  @override
+  String get toolsBlendsSave => 'Guardar receta';
+
+  @override
+  String get toolsBlendsDelete => 'Borrar receta';
+
+  @override
+  String get toolsBlendsDeleteTitle => '¿Borrar esta receta?';
+
+  @override
+  String get toolsBlendsDeleteBody =>
+      'La receta y su foto se quitarán de este móvil.';
+
+  @override
+  String get toolsTransferExport => 'Exportar';
+
+  @override
+  String toolsTransferBrands(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count marcas',
+      one: '1 marca',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolsTransferExportBrands(String brands) {
+    return 'Incluye todas las marcas que tienes: $brands.';
+  }
+
+  @override
+  String get toolsTransferCsv => 'Compartir como CSV';
+
+  @override
+  String get toolsTransferImport => 'Importar por código';
+
+  @override
+  String get toolsTransferImportHelp =>
+      'Elige la marca y pega sus códigos. No se añade nada hasta que pulses el botón.';
+
+  @override
+  String get toolsTransferNew => 'Rotuladores nuevos';
+
+  @override
+  String get toolsTransferAlready => 'Ya los tienes';
+
+  @override
+  String get toolsTransferUnknown => 'No reconocidos';
+
+  @override
+  String toolsTransferAdd(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Añadir $count rotuladores',
+      one: 'Añadir 1 rotulador',
+      zero: 'Añadir rotuladores',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolsTransferAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rotuladores añadidos.',
+      one: '1 rotulador añadido.',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String commonSeeAll(int count) {
     return 'Ver todas ($count)';
   }
@@ -4130,6 +4476,67 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get paletteVisionPreviewNote =>
       'Solo es una vista previa. Al guardar y compartir se mantienen los colores reales.';
+
+  @override
+  String get paletteEaselTitle => 'Modo caballete';
+
+  @override
+  String get paletteEaselExit => 'Salir del modo caballete';
+
+  @override
+  String get paletteShareTextButton => 'Compartir como texto';
+
+  @override
+  String paletteTextHeader(String brand, String title) {
+    return 'Paleta de Ink Lab · $brand · $title';
+  }
+
+  @override
+  String get paletteImportTitle => 'Importar desde texto';
+
+  @override
+  String get paletteImportHint =>
+      'Pega una paleta compartida o una lista de códigos de rotuladores.';
+
+  @override
+  String get paletteImportPaste => 'Pegar';
+
+  @override
+  String get paletteImportAction => 'Cargar paleta';
+
+  @override
+  String get paletteImportNothing =>
+      'No se encontró ningún código de rotulador en este texto.';
+
+  @override
+  String paletteImportNoneKnown(String brand, String codes) {
+    return 'Ninguno de estos códigos es un rotulador de $brand: $codes.';
+  }
+
+  @override
+  String paletteImportOtherBrand(String brand) {
+    return 'Esta paleta es de $brand. Cambia la marca en Ajustes para importarla.';
+  }
+
+  @override
+  String paletteImportDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Paleta importada con $count rotuladores.',
+      one: 'Paleta importada con 1 rotulador.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String paletteImportUnknown(String codes) {
+    return 'No reconocidos: $codes.';
+  }
+
+  @override
+  String get paletteImportRepeated =>
+      'Los códigos repetidos se han contado una vez.';
 
   @override
   String get collectionChartHint =>
@@ -4621,7 +5028,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String diaryPhotosHelp(int count) {
-    return 'Hasta $count fotos. Se quedan en este teléfono.';
+    return 'Hasta $count fotos. Se quedan en este móvil.';
   }
 
   @override
@@ -4643,7 +5050,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get diaryDeleteBody =>
-      'La entrada y sus fotos se borran de este teléfono. No se puede deshacer.';
+      'La entrada y sus fotos se borran de este móvil. No se puede deshacer.';
 
   @override
   String get diaryDeleteConfirm => 'Borrar';
@@ -4746,4 +5153,338 @@ class AppLocalizationsEs extends AppLocalizations {
   String diaryShareMore(int count) {
     return '+$count más';
   }
+
+  @override
+  String get settingsLicences => 'Licencias de código abierto';
+
+  @override
+  String get settingsLicencesSubtitle =>
+      'Las licencias del código, las fuentes y los paquetes que usa la app';
+
+  @override
+  String get settingsLicencesLegalese =>
+      'Código de Ink Lab: licencia MIT. Textos, ideas y documentación: CC BY-SA 4.0. Fuentes incluidas: licencia SIL Open Font 1.1.';
+
+  @override
+  String get settingsSendFeedback => 'Enviar comentarios';
+
+  @override
+  String get settingsSendFeedbackSubtitle =>
+      'Abre tu app de correo con la versión de la app y del sistema. Tú decides si lo envías.';
+
+  @override
+  String settingsFeedbackNoMail(String address) {
+    return 'No se encontró ninguna app de correo. Se copió la dirección $address.';
+  }
+
+  @override
+  String get settingsErrorLogShare => 'Compartir registro de errores';
+
+  @override
+  String get settingsErrorLogShareSubtitle =>
+      'Detalles técnicos de los errores que ha tenido la app, sin tu diario ni tu clave de API. No se envía nada si no lo compartes tú.';
+
+  @override
+  String get settingsErrorLogClear => 'Borrar registro de errores';
+
+  @override
+  String get settingsErrorLogCleared => 'Registro de errores borrado';
+
+  @override
+  String get settingsErrorLogShareFailed =>
+      'No se pudo compartir el registro de errores';
+
+  @override
+  String settingsLastBackup(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMMMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Última copia: $dateString';
+  }
+
+  @override
+  String get settingsNoBackupYet => 'Aún no hay copia de seguridad';
+
+  @override
+  String get settingsBackupReminderNever =>
+      'Tienes datos en la app y todavía no has hecho ninguna copia. Guarda un archivo de copia para no perderlos si cambias o reinicias el móvil.';
+
+  @override
+  String get settingsBackupReminderOld =>
+      'Tu última copia tiene más de un mes. Guarda un archivo nuevo para tener a salvo tu trabajo más reciente.';
+
+  @override
+  String get collectionTouchTwinHint =>
+      'Marca los rotuladores Touch Twin que tienes.';
+
+  @override
+  String get onboardingTouchTwinLine =>
+      '202 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionPromarkerHint =>
+      'Marca los rotuladores Promarker que tienes.';
+
+  @override
+  String get onboardingPromarkerLine =>
+      '148 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionPrismacolorHint =>
+      'Marca los rotuladores Prismacolor Premier que tienes.';
+
+  @override
+  String get onboardingPrismacolorLine =>
+      '200 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionSpectrumNoirHint =>
+      'Marca los rotuladores Spectrum Noir que tienes.';
+
+  @override
+  String get onboardingSpectrumNoirLine =>
+      '216 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionPromarkerBrushHint =>
+      'Marca los rotuladores Promarker Brush que tienes.';
+
+  @override
+  String get onboardingPromarkerBrushLine =>
+      '72 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionArrtxHint => 'Marca los rotuladores Arrtx que tienes.';
+
+  @override
+  String get onboardingArrtxLine =>
+      '328 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionKurecolorHint =>
+      'Marca los rotuladores ZIG Kurecolor que tienes.';
+
+  @override
+  String get onboardingKurecolorLine =>
+      '136 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionGraphitHint =>
+      'Marca los rotuladores Graph\'it que tienes.';
+
+  @override
+  String get onboardingGraphitLine =>
+      '168 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionMarvyLePlumeHint =>
+      'Marca los rotuladores Marvy Le Plume que tienes.';
+
+  @override
+  String get onboardingMarvyLePlumeLine =>
+      '144 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionBlickBrushHint =>
+      'Marca los rotuladores Blick Studio Brush que tienes.';
+
+  @override
+  String get onboardingBlickBrushLine =>
+      '96 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get collectionArtistsLoftHint =>
+      'Marca los rotuladores Artist\'s Loft que tienes.';
+
+  @override
+  String get onboardingArtistsLoftLine =>
+      '56 colores · Marca los rotuladores que tienes';
+
+  @override
+  String get shortcutMatchLabel => 'Emparejar un color';
+
+  @override
+  String get shortcutNewPaletteLabel => 'Nueva paleta';
+
+  @override
+  String get shortcutSearchSwatchesLabel => 'Buscar muestras';
+
+  @override
+  String get brandSearchHint => 'Buscar marca';
+
+  @override
+  String get brandGroupPopular => 'Populares';
+
+  @override
+  String get brandGroupMore => 'Más marcas';
+
+  @override
+  String get brandSearchEmpty => 'Ninguna marca coincide con tu búsqueda.';
+
+  @override
+  String get inkLevelTitle => 'Nivel de tinta';
+
+  @override
+  String get inkLevelFull => 'Lleno';
+
+  @override
+  String get commonRunningOut => 'Se acaba';
+
+  @override
+  String get refillNoteTitle => 'Nota de recarga';
+
+  @override
+  String get refillNoteEmpty => 'Añade una nota, como «recargado el 3 nov»';
+
+  @override
+  String get refillNoteHint => 'Recargado el 3 nov';
+
+  @override
+  String get refillNoteSave => 'Guardar';
+
+  @override
+  String get refillNoteRemove => 'Quitar nota';
+
+  @override
+  String get swatchPhotoTitle => 'Muestra real';
+
+  @override
+  String get swatchPhotoEmpty => 'Añade una foto de tu muestra en papel';
+
+  @override
+  String get swatchPhotoHas => 'Tu muestra en papel';
+
+  @override
+  String get swatchPhotoView => 'Ver foto';
+
+  @override
+  String get swatchPhotoTake => 'Hacer una foto';
+
+  @override
+  String get swatchPhotoChoose => 'Elegir de la galería';
+
+  @override
+  String get swatchPhotoSaved => 'Foto guardada';
+
+  @override
+  String get swatchPhotoSaveFailed =>
+      'No se pudo guardar la foto. Prueba con otra.';
+
+  @override
+  String get swatchPhotoRemoved => 'Foto quitada';
+
+  @override
+  String get swatchShadowLightTitle => 'Sombra y luz';
+
+  @override
+  String get swatchShadow => 'Sombra';
+
+  @override
+  String get swatchLight => 'Luz';
+
+  @override
+  String get swatchShadowLightNone => 'Ninguno en tu colección';
+
+  @override
+  String get swatchBlendWith => 'Fundir con…';
+
+  @override
+  String get swatchBlendTitle => 'Fundir con';
+
+  @override
+  String get swatchBlendSearchHint => 'Buscar rotuladores';
+
+  @override
+  String get swatchBlendNoMarkers =>
+      'No tienes otros rotuladores con los que fundir.';
+
+  @override
+  String get swatchBlendNoResults =>
+      'Ningún rotulador coincide con tu búsqueda.';
+
+  @override
+  String get swatchBlendSteps => 'Entre medias, de tu colección';
+
+  @override
+  String get swatchBlendNothingBetween =>
+      'Estos dos están lo bastante cerca para fundirse directamente.';
+
+  @override
+  String get swatchBlendNoneBetween =>
+      'Ninguno de tus rotuladores queda entre ellos.';
+
+  @override
+  String swatchBlendBuy(String code) {
+    return 'Hay un salto grande. Para cubrirlo, el rotulador más cercano que no tienes es $code.';
+  }
+
+  @override
+  String swatchBlendStripSemantics(String from, String to) {
+    return 'Degradado de $from a $to';
+  }
+
+  @override
+  String swatchDuplicatesTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ya tienes $count rotuladores muy parecidos a este',
+      one: 'Ya tienes 1 rotulador muy parecido a este',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get swatchDuplicatesHint =>
+      'Casi el mismo color: uno nuevo aporta poco.';
+
+  @override
+  String swatchDuplicatesMore(int count) {
+    return 'y $count más';
+  }
+
+  @override
+  String get swatchDuplicatesNone =>
+      'Nada de tu colección se parece mucho: añadiría un color nuevo.';
+
+  @override
+  String wishlistDuplicateNote(String codes) {
+    return 'Muy parecido a $codes de tu colección';
+  }
+
+  @override
+  String wishlistRunningOutCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rotuladores se acaban',
+      one: '1 rotulador se acaba',
+      zero: 'Nada se está acabando',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wishlistRunningOutHint =>
+      'Se siguen usando. Añádelos a la lista cuando quieras comprar o recargar.';
+
+  @override
+  String swatchesAllBrands(int count) {
+    return 'Todas las marcas ($count)';
+  }
+
+  @override
+  String get swatchesOtherBrandsYours => 'Tus marcas';
+
+  @override
+  String get inkLevelFullNote =>
+      'Lleno: Emparejar, Paleta e Ideas pueden sugerirlo.';
+
+  @override
+  String get inkLevelRunningOutNote =>
+      'Se acaba: se sigue usando en todas partes. Aparece en el grupo «Se acaba» de tu lista de deseos.';
+
+  @override
+  String get swatchesDetailPaneEmpty =>
+      'Toca un rotulador para ver aquí sus detalles.';
 }

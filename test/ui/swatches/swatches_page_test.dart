@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/collection_selection.dart';
+import 'package:ink_lab/core/color_utils.dart';
+import 'package:ink_lab/core/hex_search.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/ui/icons/ink_icons.dart';
@@ -306,7 +308,7 @@ void main() {
     expect(find.byType(ColorSwatchTile), findsOneWidget);
   });
 
-  testWidgets('the search also matches the hex value', (
+  testWidgets('a hex search shows the closest markers first, B08 on top', (
     WidgetTester tester,
   ) async {
     await pumpSwatches(tester);
@@ -314,8 +316,143 @@ void main() {
     await tester.enterText(find.byType(TextField), '#82dcfa');
     await tester.pumpAndSettle();
 
-    expect(find.text('B08'), findsOneWidget);
+    // "Closest to #82DCFA" over the markers, the exact colour first.
+    expect(
+      find.byKey(const ValueKey<String>('swatches-closest-to')),
+      findsOneWidget,
+    );
+    expect(find.text(l10n.swatchesClosestTo('#82DCFA')), findsOneWidget);
+    final List<ColorSwatchTile> tiles = tester
+        .widgetList<ColorSwatchTile>(find.byType(ColorSwatchTile))
+        .toList();
+    expect(tiles.first.code, 'B08');
+    expect(tiles.first.hex.toLowerCase(), '82dcfa');
+    expect(tiles.length, greaterThan(1));
+    expect(tiles.length, lessThanOrEqualTo(hexSearchLimit));
+  });
+
+  testWidgets('a hex search sorts by perceptual distance', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSwatches(tester);
+    final List<MarkerColor> catalog = await scope.markers.loadColors(
+      scope.settings.brand,
+    );
+
+    await tester.enterText(find.byType(TextField), '2D6E9C');
+    await tester.pumpAndSettle();
+
+    final List<String> shown = <String>[
+      for (final ColorSwatchTile tile in tester.widgetList<ColorSwatchTile>(
+        find.byType(ColorSwatchTile),
+      ))
+        tile.code,
+    ];
+    final List<String> expected = <String>[
+      for (final MarkerColor c in nearestMarkers(0xFF2D6E9C, catalog))
+        c.newCode,
+    ];
+    expect(shown, expected.take(shown.length).toList());
+    expect(shown, isNotEmpty);
+    expect(find.text(l10n.swatchesClosestTo('#2D6E9C')), findsOneWidget);
+    // Every one of them is blue-ish: the closest of the whole range is not
+    // far from the colour asked for.
+    final double first = deltaEOklab(
+      rgbToOklab(colorIntToRgb(0xFF2D6E9C)),
+      hexToOklab(
+        tester
+            .widgetList<ColorSwatchTile>(find.byType(ColorSwatchTile))
+            .first
+            .hex,
+      ),
+    );
+    expect(first, lessThan(0.1));
+  });
+
+  testWidgets('a 3-digit hex works, with or without the #', (
+    WidgetTester tester,
+  ) async {
+    await pumpSwatches(tester);
+
+    for (final String text in <String>['#8df', '8df']) {
+      await tester.enterText(find.byType(TextField), text);
+      await tester.pumpAndSettle();
+      expect(
+        find.text(l10n.swatchesClosestTo('#88DDFF')),
+        findsOneWidget,
+        reason: text,
+      );
+      expect(find.byType(ColorSwatchTile), findsWidgets, reason: text);
+    }
+  });
+
+  testWidgets('a code that looks like a hex stays a code search', (
+    WidgetTester tester,
+  ) async {
+    await pumpSwatches(tester);
+
+    // B08 and B28 are codes, and valid 3-digit hex; B11 is a prefix of codes
+    // (B112...) and B1 has two digits. None shows the "closest to" line.
+    for (final String text in <String>['B08', 'b08', 'B1', 'B28', 'B11']) {
+      await tester.enterText(find.byType(TextField), text);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey<String>('swatches-closest-to')),
+        findsNothing,
+        reason: text,
+      );
+    }
+    await tester.enterText(find.byType(TextField), 'B08');
+    await tester.pumpAndSettle();
     expect(find.byType(ColorSwatchTile), findsOneWidget);
+    expect(
+      tester.widget<ColorSwatchTile>(find.byType(ColorSwatchTile)).code,
+      'B08',
+    );
+    // B1 still finds the codes that contain it.
+    await tester.enterText(find.byType(TextField), 'B1');
+    await tester.pumpAndSettle();
+    expect(find.byType(ColorSwatchTile), findsWidgets);
+    expect(find.text('B112'), findsOneWidget);
+  });
+
+  testWidgets('clearing a hex search brings the whole list back', (
+    WidgetTester tester,
+  ) async {
+    await pumpSwatches(tester);
+    final int all = tester.widgetList(find.byType(ColorSwatchTile)).length;
+
+    await tester.enterText(find.byType(TextField), '#82dcfa');
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey<String>('swatches-closest-to')),
+      findsOneWidget,
+    );
+
+    await tester.enterText(find.byType(TextField), '');
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey<String>('swatches-closest-to')),
+      findsNothing,
+    );
+    expect(tester.widgetList(find.byType(ColorSwatchTile)).length, all);
+  });
+
+  testWidgets('the hex search keeps the favourites filter', (
+    WidgetTester tester,
+  ) async {
+    final AppScope scope = await pumpSwatches(tester);
+    await scope.settings.setFavorites(<String>{'ohuhu_oahu:R012'});
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.swatchesFavoritesOnly));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), '#82dcfa');
+    await tester.pumpAndSettle();
+
+    // Only the favourite is left, whatever its distance.
+    expect(find.byType(ColorSwatchTile), findsOneWidget);
+    expect(find.text('R012'), findsOneWidget);
   });
 
   testWidgets('a search without results shows the empty state', (
@@ -884,14 +1021,13 @@ void main() {
       await pumpSwatches(tester);
       await openDetail(tester);
       await expandSheet(tester);
-      // The group of another brand, and its best match.
-      final Finder group = find.byKey(
-        const ValueKey<String>('swatch-equivalents-copic'),
+      // The list of all brands, and the row of another brand.
+      await openSheetDisclosure(tester, 'swatch-equivalents-all');
+      final Finder row = find.byKey(
+        const ValueKey<String>('swatch-equivalents-row-copic'),
       );
-      await scrollSheetTo(tester, group);
-      await tester.tap(group);
-      await tester.pumpAndSettle();
-      await tester.tap(brandRows(group).first);
+      await scrollSheetTo(tester, row);
+      await tester.tap(row);
       await tester.pumpAndSettle();
 
       // The palette is for the active brand only: the wishlist takes over.
@@ -959,25 +1095,30 @@ void main() {
       expect(find.byType(QualityBadge), findsNothing);
     });
 
-    testWidgets('the groups of the other brands start closed', (
+    testWidgets('the list of all brands starts closed', (
       WidgetTester tester,
     ) async {
       await pumpSwatches(tester);
       await openDetail(tester);
       await expandSheet(tester);
 
-      final Finder group = find.byKey(
-        const ValueKey<String>('swatch-equivalents-copic'),
+      final Finder all = find.byKey(
+        const ValueKey<String>('swatch-equivalents-all'),
       );
-      await scrollSheetTo(tester, group);
-      // The best match of the brand is on screen...
-      expect(group, findsOneWidget);
-      // ...but its three results are not.
-      expect(brandRows(group), findsNothing);
+      await scrollSheetTo(tester, all);
+      // Only the summary is on screen...
+      expect(all, findsOneWidget);
+      expect(find.text(l10n.swatchesAllBrands(MarkerBrand.values.length - 1)),
+          findsOneWidget);
+      // ...the rows of the brands are not.
+      final Finder row = find.byKey(
+        const ValueKey<String>('swatch-equivalents-row-copic'),
+      );
+      expect(row, findsNothing);
 
-      await tester.tap(group);
+      await tester.tap(all);
       await tester.pumpAndSettle();
-      expect(brandRows(group), findsNWidgets(3));
+      expect(row, findsOneWidget);
     });
 
     testWidgets('choosing an alternative takes the sheet back to the top', (

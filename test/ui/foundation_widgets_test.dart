@@ -202,6 +202,39 @@ void main() {
     expect(find.text('IN PACKS'), findsNothing);
   });
 
+  for (final double bar in <double>[48, 24]) {
+    testWidgets('the sheet keeps its content above a ${bar.toInt()} dp '
+        'navigation bar', (WidgetTester tester) async {
+      final double ratio = tester.view.devicePixelRatio;
+      tester.view.padding = FakeViewPadding(bottom: bar * ratio);
+      tester.view.viewPadding = FakeViewPadding(bottom: bar * ratio);
+      addTearDown(tester.view.resetPadding);
+      addTearDown(tester.view.resetViewPadding);
+      const Key last = ValueKey<String>('last row');
+      await pumpIn(
+        tester,
+        Builder(
+          builder: (BuildContext context) => TextButton(
+            onPressed: () => showInkSheet<void>(
+              context: context,
+              builder: (_) => const SizedBox(key: last, height: 40),
+            ),
+            child: const Text('Open'),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      final double screen = tester.view.physicalSize.height / ratio;
+      expect(
+        tester.getRect(find.byKey(last)).bottom,
+        lessThanOrEqualTo(screen - bar - InkSpacing.sheet),
+      );
+      // The sheet itself still reaches the bottom edge, under the bar.
+      expect(tester.getRect(find.byType(InkSheet)).bottom, screen);
+    });
+  }
+
   _t0Tests();
 }
 

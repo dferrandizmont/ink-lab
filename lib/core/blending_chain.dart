@@ -348,6 +348,15 @@ bool _hueOk(_Node a, _Node b) {
   return hueDistance(a.h, b.h) <= _hueWindow(chroma);
 }
 
+/// Whether [other] is in the colour family of [base]: the same hue, within
+/// the window the blending chains use (see [BlendingRules]), or a neutral
+/// next to a neutral.
+///
+/// The question is asked from [base], so it is not symmetric: a pale tint is
+/// in the family of a saturated colour of its hue, but a grey is not.
+bool inSameHueFamily(MarkerColor base, MarkerColor other) =>
+    _inFamily(_Node(base), _Node(other));
+
 /// Whether [dark] can sit right after [light] (the lighter one) in a chain.
 bool _canFollow(_Node light, _Node dark) {
   final double step = light.l - dark.l;

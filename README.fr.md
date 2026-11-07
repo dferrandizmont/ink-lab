@@ -14,10 +14,9 @@
 
 Compagnon de nuanciers et de palettes pour celles et ceux qui dessinent avec des
 marqueurs à alcool. Retrouve le code d’une couleur, découvre quel marqueur de ta
-collection se rapproche le plus d’une photo et crée des palettes selon la théorie
-des couleurs, uniquement avec les marqueurs que tu possèdes. Appli Android avec
-thèmes clair et sombre, barre de navigation latérale sur tablette et six
-langues.
+collection se rapproche le plus d’une photo et crée des palettes selon la théorie des
+couleurs, uniquement avec les marqueurs que tu possèdes. Appli pour Android, iPhone et
+iPad avec thèmes clair et sombre, mise en page pour tablettes et six langues.
 
 **Gratuit · Sans publicité · Sans compte · Hors ligne · Open source**
 
@@ -60,7 +59,7 @@ publication. Retours : inklab@mainshai.com.
 
 <p>
   <a href="docs/readme/fr/01-swatches.png"><img src="docs/readme/fr/01-swatches.png" width="19%" alt="Nuanciers : les couleurs de la marque, chacune avec son code et son nom"></a>
-  <a href="docs/readme/fr/02-swatch-detail.png"><img src="docs/readme/fr/02-swatch-detail.png" width="19%" alt="Le détail d’un marqueur : son code hex, ses alternatives proches et la même couleur dans les autres marques"></a>
+  <a href="docs/readme/fr/02-swatch-detail.png"><img src="docs/readme/fr/02-swatch-detail.png" width="19%" alt="Le détail d’un marqueur : son code hex, son niveau d’encre, la photo de ton échantillon, ombre et lumière, et la même couleur dans les autres marques"></a>
   <a href="docs/readme/fr/03-match.png"><img src="docs/readme/fr/03-match.png" width="19%" alt="Une couleur touchée dans une photo, associée au marqueur le plus proche de ta collection"></a>
   <a href="docs/readme/fr/04-palette.png"><img src="docs/readme/fr/04-palette.png" width="19%" alt="Une palette de scène, avec le rôle et le code de chaque couleur"></a>
   <a href="docs/readme/fr/05-diary.png"><img src="docs/readme/fr/05-diary.png" width="19%" alt="Le journal de dessins : un résumé de tes œuvres et les dernières entrées"></a>
@@ -74,6 +73,7 @@ publication. Retours : inklab@mainshai.com.
   <a href="docs/readme/fr/07-ideas.png"><img src="docs/readme/fr/07-ideas.png" width="19%" alt="Des idées : exercices et techniques, avec leurs palettes et tes favoris"></a>
   <a href="docs/readme/fr/08-collection.png"><img src="docs/readme/fr/08-collection.png" width="19%" alt="Ma collection : ce que tu possèdes et ce qu’il faut racheter ensuite"></a>
   <a href="docs/readme/fr/09-settings-dark.png"><img src="docs/readme/fr/09-settings-dark.png" width="19%" alt="Réglages en thème sombre"></a>
+  <a href="docs/readme/fr/10-colour-map.png"><img src="docs/readme/fr/10-colour-map.png" width="19%" alt="La carte des couleurs : où se placent tes marqueurs par teinte et luminosité, et où sont les trous"></a>
 </p>
 
 </details>
@@ -82,62 +82,67 @@ Touche une capture pour l’agrandir.
 
 ## Fonctionnalités
 
-- **Journal de dessins.** Un suivi de ce que tu peins, avec ses photos, les
-  marqueurs utilisés et les chiffres qui vont avec.
-- **Quatre marques.** Ohuhu (503 couleurs), DecoTime (313), Copic (358) et
-  Finecolour (480), avec le marqueur le plus proche de chaque autre marque dans
-  « Dans d’autres marques ».
-- **Associer.** Touche un point d’une photo pour trouver le marqueur de ta
-  collection le plus proche, et corrige les blancs.
-- **Palettes et scènes.** Harmonies de la théorie des couleurs, dégradés et 67
-  scènes prêtes en 11 catégories.
-- **Sauvegarde.** Enregistre tout dans un fichier `.zip`, avec les photos du
-  journal dedans.
-- **Achats.** Une liste de souhaits, les marqueurs à sec et ce qu’il faut racheter
-  ensuite.
+- **Quinze marques, 3 420 couleurs.** Ohuhu, DecoTime, Copic (Sketch, Ciao et Classic),
+  Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum
+  Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush et Artist's
+  Loft, avec une recherche de marque et « Dans d’autres marques ».
+- **Détail du marqueur.** Niveau d’encre et note de recharge, une photo de ton
+  échantillon réel, ombre et lumière, « Mélanger avec… » et une alerte de quasi-doublon.
+- **Associer.** Touche un point d’une photo pour trouver le marqueur de ta collection le
+  plus proche, corrige les blancs et vérifie les valeurs en gris.
+- **Palettes et scènes.** Harmonies de la théorie des couleurs, dégradés et 67 scènes
+  prêtes, avec le mode chevalet et des palettes à partager ou importer en texte.
+- **Outils.** Une carte des couleurs de ta collection, un traducteur de recettes
+  d’autres marques, tes propres recettes de mélange avec photo, et l’export ou l’import
+  en CSV ou en texte.
+- **Journal de dessins.** Un suivi de ce que tu peins, avec ses photos, les marqueurs
+  utilisés et les chiffres qui vont avec.
+- **Sauvegarde.** Enregistre tout dans un fichier `.zip`, photos comprises ; les
+  Réglages affichent la date de la dernière.
 
 <details>
 <summary>Plus de fonctionnalités</summary>
 
-- **Vision des couleurs.** Prévisualise une palette comme la voit une personne
-  atteinte de protanopie, deutéranopie, tritanopie ou achromatopsie.
-- **Nuancier imprimable.** Des pages A4 avec une case étiquetée pour chaque
-  marqueur que tu possèdes.
+- **Achats.** Une liste de souhaits, les marqueurs à sec et ce qu’il faut racheter
+  ensuite.
+- **Vision des couleurs.** Vois une palette comme la voit une personne daltonienne.
+- **Nuancier imprimable.** Des pages A4 avec une case étiquetée pour chaque marqueur que
+  tu possèdes.
 - **Idées.** Des exercices et des techniques avec leurs propres palettes, et tes
   favoris.
-- **Nuanciers et ta propre couleur.** Codes, noms et valeurs hex, plus la couleur
-  que ton marqueur donne vraiment.
-- **Partager.** Envoie une palette, un nuancier ou une entrée du journal à une
-  autre appli sous forme d’image.
+- **Nuanciers et ta propre couleur.** Codes, noms et valeurs hex (un code hex trouve les
+  marqueurs les plus proches), plus la couleur que ton marqueur donne vraiment.
 - **L’IA, si tu veux.** Des suggestions de palettes en option : Gemini Nano sur
   l’appareil, ou OpenRouter avec ta propre clé.
-- **Widget « Idée du jour ».** Un widget Android pour l’écran d’accueil avec
-  l’exercice du jour, dans les couleurs de tes marqueurs. Il change chaque jour
-  tout seul, et un appui ouvre l’idée.
+- **Widget « Idée du jour ».** Sur Android uniquement : l’exercice du jour, aux couleurs
+  de tes marqueurs, sur l’écran d’accueil.
+- **Raccourcis.** Depuis l’icône de l’appli, vers Associer, une nouvelle palette ou la
+  recherche de nuanciers.
+- **Réglages.** Licences open source, « Envoyer un retour » et un historique des erreurs
+  local que tu peux partager ou effacer.
 
 </details>
 
 ## Confidentialité
 
 Tes données restent sur ton téléphone : pas de compte, pas de serveur à nous, pas
-d’analyse, pas de publicité ni de suivi ; sans l’IA, le réseau n’est jamais
-utilisé. ML Kit de l’IA sur l’appareil envoie à Google des diagnostics
-d’utilisation, jamais tes demandes, tes couleurs ni tes photos. L’accès à la
-caméra et à la galerie ne sert qu’à associer des couleurs, créer des scènes,
-définir ta propre couleur et ajouter des photos au journal ; ces photos sont
-traitées sur l’appareil, et celles du journal restent dans le dossier privé de
-l’appli et ne sont jamais envoyées. Quand tu partages une palette, un nuancier ou
-la sauvegarde `.zip`, le fichier ne va qu’à l’appli que tu choisis, et nulle part
-ailleurs.
+d’analyse, pas de publicité ni de suivi ; sans l’IA, le réseau n’est jamais utilisé. ML
+Kit de l’IA sur l’appareil envoie à Google des diagnostics d’utilisation, jamais tes
+demandes, tes couleurs ni tes photos. L’accès à la caméra et à la galerie ne sert qu’à
+associer des couleurs, créer des scènes, définir ta propre couleur et ajouter des photos
+au journal, à tes échantillons réels et à tes recettes de mélange ; ces photos sont
+traitées sur l’appareil, et celles que tu gardes restent dans le dossier privé de
+l’appli et ne sont jamais envoyées. Quand tu partages une palette, un nuancier ou la
+sauvegarde `.zip`, le fichier ne va qu’à l’appli que tu choisis, et nulle part ailleurs.
 
 [Site](https://inklab.mainshai.com/fr/) · [Politique de confidentialité](https://inklab.mainshai.com/fr/privacy/) ·
 [Détails techniques](docs/privacy.en.md) · Support : **inklab@mainshai.com**.
 
 ## Nouveautés
 
-La version 0.10.0 est sortie. Nouveauté : un widget Android pour l’écran
-d’accueil avec l’idée du jour, dans les couleurs de tes marqueurs. La série 0.9
-a mis de l’ordre dans l’appli. La liste complète est dans
+La version 1.0.0 est la première version stable. Elle apporte onze nouvelles marques, un
+détail du marqueur plus complet, de nouveaux outils, une mise en page pour tablettes et
+iPad, et les corrections issues des tests. La liste complète est dans
 [CHANGELOG.md](CHANGELOG.md) et dans les
 [versions](https://github.com/dferrandizmont/ink-lab/releases).
 
@@ -154,8 +159,8 @@ catalogues sont des références factuelles de tiers et sortent des deux licence
 les polices (SIL OFL 1.1) et les autres éléments tiers gardent leurs propres
 conditions.
 
-Un projet indépendant : **sans lien avec Ohuhu, DecoTime, Copic ou Finecolour, sans
-parrainage ni approbation de leur part**. « Ohuhu », « Oahu », « DecoTime », « Copic » et « Finecolour » sont des marques de leurs propriétaires.
+Un projet indépendant : **sans lien avec ces marques de marqueurs, sans
+parrainage ni approbation de leur part**. Les noms des marques ci-dessus sont des marques de leurs propriétaires respectifs.
 Mentions complètes : [NOTICE.md](NOTICE.md).
 
 Signaler une faille : [SECURITY.md](SECURITY.md).

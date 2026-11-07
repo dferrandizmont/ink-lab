@@ -349,7 +349,7 @@ class _ModeGlyphPainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1
-          ..color = line.withValues(alpha: 0.6),
+          ..color = line.withValues(alpha: InkOpacity.outline),
       );
     }
     for (int i = 0; i < points.length; i++) {

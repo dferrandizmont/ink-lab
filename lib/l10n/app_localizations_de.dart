@@ -149,13 +149,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsBackupFileCaption =>
-      'Eine ZIP-Datei mit deinen Daten und den Tagebuchfotos. Speichere sie in Dateien, Drive oder wo du willst. Der API-Schlüssel ist nie enthalten.';
+      'Eine ZIP-Datei mit deinen Daten und allen Fotos: Tagebuch, Farbmuster und Rezepte. Wähle im Teilen-Menü Dateien, Drive oder eine andere App, um sie aufzubewahren. Der API-Schlüssel ist nie enthalten.';
 
   @override
   String get settingsBackupTextTitle => 'Kopie als Text (ohne Fotos)';
 
   @override
-  String get settingsSaveBackupFile => 'Sicherungsdatei speichern';
+  String get settingsSaveBackupFile => 'Sicherungsdatei teilen';
 
   @override
   String get settingsRestoreBackupFile => 'Aus Datei wiederherstellen';
@@ -511,7 +511,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsDisclaimer =>
-      'Ink Lab ist ein unabhängiges Community-Projekt: Es steht in keiner Verbindung zu Ohuhu, DecoTime, Copic oder Finecolour und wird weder von ihnen empfohlen noch gesponsert. Die App nutzt deren Markercodes, Namen und Farbwerte nur als sachliche Referenzdaten.';
+      'Ink Lab ist ein unabhängiges Community-Projekt: Es ist mit keiner der aufgeführten Markermarken verbunden und wird von keiner unterstützt oder gesponsert. Ihre Markercodes, Namen und Farbwerte dienen nur als sachliche Referenzdaten.';
 
   @override
   String get paletteTitle => 'Palette';
@@ -520,7 +520,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get paletteBaseCodeLabel => 'Code des Basismarkers';
 
   @override
-  String get paletteBaseCodeHint => 'E08 oder B271';
+  String paletteBaseCodeHint(String first, String second) {
+    return '$first oder $second';
+  }
+
+  @override
+  String paletteBaseCodeHintOne(String code) {
+    return '$code';
+  }
 
   @override
   String get paletteScenarioToggle => 'Szenen';
@@ -932,6 +939,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get swatchesSearchHint => 'Code, Name oder Hex';
+
+  @override
+  String swatchesClosestTo(String hex) {
+    return 'Am nächsten an $hex';
+  }
 
   @override
   String get swatchesClearSearch => 'Suche leeren';
@@ -2535,11 +2547,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchLoadingPhoto => 'Foto wird gelesen …';
 
   @override
-  String get matchEmptyPhotoTitle => 'Noch kein Foto';
+  String get matchEmptyPhotoTitle => 'Eine Farbe aus einem Foto finden';
 
   @override
   String get matchEmptyPhotoMessage =>
-      'Mach ein Foto oder wähle eines aus der Galerie, um den nächsten Marker zu finden.';
+      'Mach ein Foto, tippe auf eine Farbe darin und sieh dir die nächsten Marker an.';
 
   @override
   String get matchPhotoSemantics => 'Foto zum Abtasten einer Farbe';
@@ -2613,6 +2625,53 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get matchOkButton => 'OK';
+
+  @override
+  String get matchTakePhotoButton => 'Foto aufnehmen';
+
+  @override
+  String get matchChooseGalleryButton => 'Aus der Galerie wählen';
+
+  @override
+  String get matchValuesButton => 'Tonwerte';
+
+  @override
+  String get matchValuesTooltip =>
+      'Foto und Treffer in Graustufen zeigen, um den Tonwertkontrast zu prüfen';
+
+  @override
+  String get matchPhotoSampleHint =>
+      'Doppeltippen, um die Fotomitte abzutasten. Mit den Aktionen verschiebst du den Messpunkt.';
+
+  @override
+  String get matchSampleMiddle => 'Fotomitte abtasten';
+
+  @override
+  String get matchMoveLeft => 'Messpunkt nach links verschieben';
+
+  @override
+  String get matchMoveRight => 'Messpunkt nach rechts verschieben';
+
+  @override
+  String get matchMoveUp => 'Messpunkt nach oben verschieben';
+
+  @override
+  String get matchMoveDown => 'Messpunkt nach unten verschieben';
+
+  @override
+  String matchSampleSpoken(
+    String hex,
+    String code,
+    String name,
+    String quality,
+  ) {
+    return 'Abgetastete Farbe $hex. Nächster Marker: $code, $name, $quality.';
+  }
+
+  @override
+  String matchSampleSpokenNone(String hex) {
+    return 'Abgetastete Farbe $hex.';
+  }
 
   @override
   String get appTitle => 'Ink Lab';
@@ -2876,6 +2935,24 @@ class AppLocalizationsDe extends AppLocalizations {
       'decoTime': '$input ist kein DecoTime-Markercode. Versuche $example.',
       'copic': '$input ist kein Copic-Markercode. Versuche $example.',
       'finecolour': '$input ist kein Finecolour-Markercode. Versuche $example.',
+      'touchTwin': '$input ist kein Touch Twin-Markercode. Versuche $example.',
+      'promarker': '$input ist kein Promarker-Markercode. Versuche $example.',
+      'prismacolor':
+          '$input ist kein Prismacolor Premier-Markercode. Versuche $example.',
+      'spectrumNoir':
+          '$input ist kein Spectrum Noir-Markercode. Versuche $example.',
+      'promarkerBrush':
+          '$input ist kein Promarker Brush-Markercode. Versuche $example.',
+      'arrtx': '$input ist kein Arrtx-Markercode. Versuche $example.',
+      'kurecolor':
+          '$input ist kein ZIG Kurecolor-Markercode. Versuche $example.',
+      'graphit': '$input ist kein Graph\'it-Markercode. Versuche $example.',
+      'marvyLePlume':
+          '$input ist kein Marvy Le Plume-Markercode. Versuche $example.',
+      'blickBrush':
+          '$input ist kein Blick Studio Brush-Markercode. Versuche $example.',
+      'artistsLoft':
+          '$input ist kein Artist\'s Loft-Markercode. Versuche $example.',
       'other': '$input ist kein Ink-Lab-Markercode. Versuche $example.',
     });
     return '$_temp0';
@@ -2902,6 +2979,17 @@ class AppLocalizationsDe extends AppLocalizations {
       'decoTime': 'Du hast noch keine DecoTime-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
       'copic': 'Du hast noch keine Copic-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
       'finecolour': 'Du hast noch keine Finecolour-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'touchTwin': 'Du hast noch keine Touch Twin-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'promarker': 'Du hast noch keine Promarker-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'prismacolor': 'Du hast noch keine Prismacolor Premier-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'spectrumNoir': 'Du hast noch keine Spectrum Noir-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'promarkerBrush': 'Du hast noch keine Promarker Brush-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'arrtx': 'Du hast noch keine Arrtx-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'kurecolor': 'Du hast noch keine ZIG Kurecolor-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'graphit': 'Du hast noch keine Graph\'it-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'marvyLePlume': 'Du hast noch keine Marvy Le Plume-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'blickBrush': 'Du hast noch keine Blick Studio Brush-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
+      'artistsLoft': 'Du hast noch keine Artist\'s Loft-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
       'other': 'Du hast noch keine Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.',
     });
     return '$_temp0';
@@ -4057,6 +4145,265 @@ class AppLocalizationsDe extends AppLocalizations {
   String get collectionToolsGroup => 'Werkzeuge';
 
   @override
+  String get toolsMapTitle => 'Farbkarte';
+
+  @override
+  String get toolsMapHint =>
+      'Wo deine Marker nach Farbton und Helligkeit liegen und wo Lücken sind.';
+
+  @override
+  String get toolsTranslateTitle => 'Rezept übersetzen';
+
+  @override
+  String get toolsTranslateHint =>
+      'Wandelt die Codes aus einer Anleitung in die ähnlichsten deiner Marker um.';
+
+  @override
+  String get toolsBlendsTitle => 'Meine Rezepte';
+
+  @override
+  String get toolsBlendsHint =>
+      'Verläufe, die du speicherst: Marker in Reihenfolge, Notiz und Foto.';
+
+  @override
+  String get toolsTransferTitle => 'Export und Import';
+
+  @override
+  String get toolsTransferHint =>
+      'Teile deine Marker als Liste oder CSV oder füge viele per Code hinzu.';
+
+  @override
+  String get toolsMapEmptyTitle => 'Noch keine Marker für die Karte';
+
+  @override
+  String get toolsMapIntro =>
+      'Jeder Punkt ist ein Marker, den du besitzt. Schraffierte Bereiche haben keinen.';
+
+  @override
+  String get toolsMapShowRange => 'Ganzes Sortiment zeigen';
+
+  @override
+  String get toolsMapShowRangeHint =>
+      'Blasse Punkte für alle Marker deiner Marken, damit du siehst, was fehlt.';
+
+  @override
+  String get toolsMapAxes =>
+      'Von links nach rechts: Farbton. Von oben nach unten: von hell nach dunkel.';
+
+  @override
+  String get toolsMapGreysTitle => 'Grau- und Neutraltöne';
+
+  @override
+  String get toolsMapGreysAxis =>
+      'Von links nach rechts: von dunkel nach hell.';
+
+  @override
+  String get toolsMapFamiliesTitle => 'Nach Farbton';
+
+  @override
+  String get toolsHueRed => 'Rot';
+
+  @override
+  String get toolsHueOrange => 'Orange';
+
+  @override
+  String get toolsHueYellow => 'Gelb';
+
+  @override
+  String get toolsHueGreen => 'Grün';
+
+  @override
+  String get toolsHueTeal => 'Türkis';
+
+  @override
+  String get toolsHueBlue => 'Blau';
+
+  @override
+  String get toolsHueViolet => 'Violett';
+
+  @override
+  String get toolsHueMagenta => 'Magenta';
+
+  @override
+  String toolsFamilyBands(int light, int mid, int dark) {
+    return 'Hell $light · Mittel $mid · Dunkel $dark';
+  }
+
+  @override
+  String get toolsMapDriedNote => 'Ausgetrocknete Marker sind nicht enthalten.';
+
+  @override
+  String toolsMapSummary(String markers, int empty, int cells) {
+    return 'Farbkarte mit $markers. $empty von $cells Bereichen haben keinen Marker. Die Liste darunter zeigt dieselben Marker nach Farbton.';
+  }
+
+  @override
+  String get toolsMarkerOwned => 'In deiner Sammlung';
+
+  @override
+  String get toolsMarkerNotOwned => 'Nicht in deiner Sammlung';
+
+  @override
+  String get toolsTranslateIntro =>
+      'Tippe oder füge die Codes aus einer Anleitung ein, in der Marke, die sie nutzt. Kommas, Leerzeichen und Listen funktionieren.';
+
+  @override
+  String get toolsTranslateBrand => 'Marke des Rezepts';
+
+  @override
+  String get toolsTranslateCodes => 'Codes';
+
+  @override
+  String get toolsTranslateResults => 'Übersetzung';
+
+  @override
+  String get toolsTranslateEmpty =>
+      'Die Codes, die du eingibst, erscheinen hier.';
+
+  @override
+  String get toolsTranslateMine => 'Dein ähnlichster Marker';
+
+  @override
+  String get toolsTranslateNotOwned => 'Nicht vorhanden';
+
+  @override
+  String get toolsTranslateMissing => 'Nichts Ähnliches in deiner Sammlung.';
+
+  @override
+  String toolsTranslateUnknown(String brand) {
+    return 'Nicht in $brand gefunden';
+  }
+
+  @override
+  String get toolsCopyList => 'Liste kopieren';
+
+  @override
+  String get toolsShareList => 'Liste teilen';
+
+  @override
+  String get toolsListCopied => 'Liste kopiert.';
+
+  @override
+  String get toolsShareFailed => 'Die Liste konnte nicht geteilt werden.';
+
+  @override
+  String get toolsBlendsNew => 'Neues Rezept';
+
+  @override
+  String get toolsBlendsEditTitle => 'Rezept bearbeiten';
+
+  @override
+  String get toolsBlendsEmptyTitle => 'Noch keine Rezepte';
+
+  @override
+  String get toolsBlendsEmptyBody =>
+      'Speichere Verläufe, die dir gefallen: Marker in Reihenfolge, Notiz und Foto.';
+
+  @override
+  String get toolsBlendsName => 'Name des Rezepts';
+
+  @override
+  String get toolsBlendsMarkersTitle => 'Marker in Reihenfolge';
+
+  @override
+  String get toolsBlendsMarkersHelp =>
+      'Ziehe am Griff, um die Reihenfolge zu ändern.';
+
+  @override
+  String get toolsBlendsDrag => 'Ziehen zum Umsortieren';
+
+  @override
+  String toolsBlendsRemoveMarker(String code) {
+    return '$code entfernen';
+  }
+
+  @override
+  String get toolsBlendsNote => 'Notiz';
+
+  @override
+  String get toolsBlendsPhotoTitle => 'Foto des Ergebnisses';
+
+  @override
+  String get toolsBlendsPhotoHelp => 'Optional. Es bleibt auf diesem Handy.';
+
+  @override
+  String get toolsBlendsPhotoSemantic => 'Foto des Rezepts';
+
+  @override
+  String get toolsBlendsSave => 'Rezept speichern';
+
+  @override
+  String get toolsBlendsDelete => 'Rezept löschen';
+
+  @override
+  String get toolsBlendsDeleteTitle => 'Dieses Rezept löschen?';
+
+  @override
+  String get toolsBlendsDeleteBody =>
+      'Das Rezept und sein Foto werden von diesem Handy entfernt.';
+
+  @override
+  String get toolsTransferExport => 'Exportieren';
+
+  @override
+  String toolsTransferBrands(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Marken',
+      one: '1 Marke',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolsTransferExportBrands(String brands) {
+    return 'Enthält alle deine Marken: $brands.';
+  }
+
+  @override
+  String get toolsTransferCsv => 'Als CSV teilen';
+
+  @override
+  String get toolsTransferImport => 'Per Code importieren';
+
+  @override
+  String get toolsTransferImportHelp =>
+      'Wähle die Marke und füge ihre Codes ein. Es wird nichts hinzugefügt, bis du auf den Button tippst.';
+
+  @override
+  String get toolsTransferNew => 'Neue Marker';
+
+  @override
+  String get toolsTransferAlready => 'Schon vorhanden';
+
+  @override
+  String get toolsTransferUnknown => 'Nicht erkannt';
+
+  @override
+  String toolsTransferAdd(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Marker hinzufügen',
+      one: '1 Marker hinzufügen',
+      zero: 'Marker hinzufügen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String toolsTransferAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Marker hinzugefügt.',
+      one: '1 Marker hinzugefügt.',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String commonSeeAll(int count) {
     return 'Alle anzeigen ($count)';
   }
@@ -4120,6 +4467,67 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get paletteVisionPreviewNote =>
       'Nur eine Vorschau. Beim Speichern und Teilen bleiben die echten Farben erhalten.';
+
+  @override
+  String get paletteEaselTitle => 'Staffelei-Modus';
+
+  @override
+  String get paletteEaselExit => 'Staffelei-Modus beenden';
+
+  @override
+  String get paletteShareTextButton => 'Als Text teilen';
+
+  @override
+  String paletteTextHeader(String brand, String title) {
+    return 'Ink-Lab-Palette · $brand · $title';
+  }
+
+  @override
+  String get paletteImportTitle => 'Aus Text importieren';
+
+  @override
+  String get paletteImportHint =>
+      'Füge eine geteilte Palette oder eine Liste von Markercodes ein.';
+
+  @override
+  String get paletteImportPaste => 'Einfügen';
+
+  @override
+  String get paletteImportAction => 'Palette laden';
+
+  @override
+  String get paletteImportNothing =>
+      'In diesem Text wurden keine Markercodes gefunden.';
+
+  @override
+  String paletteImportNoneKnown(String brand, String codes) {
+    return 'Keiner dieser Codes ist ein $brand-Marker: $codes.';
+  }
+
+  @override
+  String paletteImportOtherBrand(String brand) {
+    return 'Diese Palette gehört zu $brand. Wechsle die Marke in den Optionen, um sie zu importieren.';
+  }
+
+  @override
+  String paletteImportDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Palette mit $count Markern importiert.',
+      one: 'Palette mit 1 Marker importiert.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String paletteImportUnknown(String codes) {
+    return 'Nicht erkannt: $codes.';
+  }
+
+  @override
+  String get paletteImportRepeated =>
+      'Doppelte Codes wurden nur einmal gezählt.';
 
   @override
   String get collectionChartHint =>
@@ -4737,4 +5145,339 @@ class AppLocalizationsDe extends AppLocalizations {
   String diaryShareMore(int count) {
     return '+$count weitere';
   }
+
+  @override
+  String get settingsLicences => 'Open-Source-Lizenzen';
+
+  @override
+  String get settingsLicencesSubtitle =>
+      'Die Lizenzen des Codes, der Schriften und der Pakete, die die App nutzt';
+
+  @override
+  String get settingsLicencesLegalese =>
+      'Ink-Lab-Code: MIT-Lizenz. Texte, Ideen und Dokumentation: CC BY-SA 4.0. Enthaltene Schriften: SIL Open Font License 1.1.';
+
+  @override
+  String get settingsSendFeedback => 'Feedback senden';
+
+  @override
+  String get settingsSendFeedbackSubtitle =>
+      'Öffnet deine E-Mail-App mit App- und Systemversion. Du entscheidest, ob du sie abschickst.';
+
+  @override
+  String settingsFeedbackNoMail(String address) {
+    return 'Keine E-Mail-App gefunden. Die Adresse $address wurde kopiert.';
+  }
+
+  @override
+  String get settingsErrorLogShare => 'Fehlerprotokoll teilen';
+
+  @override
+  String get settingsErrorLogShareSubtitle =>
+      'Technische Details zu Fehlern der App, ohne dein Tagebuch und deinen API-Schlüssel. Es wird nichts gesendet, solange du es nicht teilst.';
+
+  @override
+  String get settingsErrorLogClear => 'Fehlerprotokoll löschen';
+
+  @override
+  String get settingsErrorLogCleared => 'Das Fehlerprotokoll wurde gelöscht';
+
+  @override
+  String get settingsErrorLogShareFailed =>
+      'Das Fehlerprotokoll konnte nicht geteilt werden';
+
+  @override
+  String settingsLastBackup(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMMMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Letzte Sicherung: $dateString';
+  }
+
+  @override
+  String get settingsNoBackupYet => 'Noch keine Sicherung';
+
+  @override
+  String get settingsBackupReminderNever =>
+      'Du hast Daten in der App, aber noch keine Sicherung. Speichere eine Sicherungsdatei, damit nichts verloren geht, wenn du dein Handy wechselst oder zurücksetzt.';
+
+  @override
+  String get settingsBackupReminderOld =>
+      'Deine letzte Sicherung ist über einen Monat alt. Speichere eine neue Datei, um deine neuesten Arbeiten zu schützen.';
+
+  @override
+  String get collectionTouchTwinHint =>
+      'Markiere die Touch Twin-Marker, die du besitzt.';
+
+  @override
+  String get onboardingTouchTwinLine =>
+      '202 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionPromarkerHint =>
+      'Markiere die Promarker-Marker, die du besitzt.';
+
+  @override
+  String get onboardingPromarkerLine =>
+      '148 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionPrismacolorHint =>
+      'Markiere die Prismacolor Premier-Marker, die du besitzt.';
+
+  @override
+  String get onboardingPrismacolorLine =>
+      '200 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionSpectrumNoirHint =>
+      'Markiere die Spectrum Noir-Marker, die du besitzt.';
+
+  @override
+  String get onboardingSpectrumNoirLine =>
+      '216 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionPromarkerBrushHint =>
+      'Markiere die Promarker Brush-Marker, die du besitzt.';
+
+  @override
+  String get onboardingPromarkerBrushLine =>
+      '72 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionArrtxHint =>
+      'Markiere die Arrtx-Marker, die du besitzt.';
+
+  @override
+  String get onboardingArrtxLine =>
+      '328 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionKurecolorHint =>
+      'Markiere die ZIG Kurecolor-Marker, die du besitzt.';
+
+  @override
+  String get onboardingKurecolorLine =>
+      '136 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionGraphitHint =>
+      'Markiere die Graph\'it-Marker, die du besitzt.';
+
+  @override
+  String get onboardingGraphitLine =>
+      '168 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionMarvyLePlumeHint =>
+      'Markiere die Marvy Le Plume-Marker, die du besitzt.';
+
+  @override
+  String get onboardingMarvyLePlumeLine =>
+      '144 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionBlickBrushHint =>
+      'Markiere die Blick Studio Brush-Marker, die du besitzt.';
+
+  @override
+  String get onboardingBlickBrushLine =>
+      '96 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get collectionArtistsLoftHint =>
+      'Markiere die Artist\'s Loft-Marker, die du besitzt.';
+
+  @override
+  String get onboardingArtistsLoftLine =>
+      '56 Farben · Markiere die Marker, die du besitzt';
+
+  @override
+  String get shortcutMatchLabel => 'Farbe abgleichen';
+
+  @override
+  String get shortcutNewPaletteLabel => 'Neue Palette';
+
+  @override
+  String get shortcutSearchSwatchesLabel => 'Farbmuster suchen';
+
+  @override
+  String get brandSearchHint => 'Marke suchen';
+
+  @override
+  String get brandGroupPopular => 'Beliebt';
+
+  @override
+  String get brandGroupMore => 'Weitere Marken';
+
+  @override
+  String get brandSearchEmpty => 'Keine Marke passt zu deiner Suche.';
+
+  @override
+  String get inkLevelTitle => 'Tintenstand';
+
+  @override
+  String get inkLevelFull => 'Voll';
+
+  @override
+  String get commonRunningOut => 'Fast leer';
+
+  @override
+  String get refillNoteTitle => 'Nachfüll-Notiz';
+
+  @override
+  String get refillNoteEmpty =>
+      'Notiz hinzufügen, z. B. „am 3. Nov. nachgefüllt“';
+
+  @override
+  String get refillNoteHint => 'Am 3. Nov. nachgefüllt';
+
+  @override
+  String get refillNoteSave => 'Speichern';
+
+  @override
+  String get refillNoteRemove => 'Notiz entfernen';
+
+  @override
+  String get swatchPhotoTitle => 'Echtes Farbmuster';
+
+  @override
+  String get swatchPhotoEmpty =>
+      'Foto deines Farbmusters auf Papier hinzufügen';
+
+  @override
+  String get swatchPhotoHas => 'Dein Farbmuster auf Papier';
+
+  @override
+  String get swatchPhotoView => 'Foto ansehen';
+
+  @override
+  String get swatchPhotoTake => 'Foto aufnehmen';
+
+  @override
+  String get swatchPhotoChoose => 'Aus der Galerie wählen';
+
+  @override
+  String get swatchPhotoSaved => 'Foto gespeichert';
+
+  @override
+  String get swatchPhotoSaveFailed =>
+      'Das Foto konnte nicht gespeichert werden. Versuche ein anderes.';
+
+  @override
+  String get swatchPhotoRemoved => 'Foto entfernt';
+
+  @override
+  String get swatchShadowLightTitle => 'Schatten und Licht';
+
+  @override
+  String get swatchShadow => 'Schatten';
+
+  @override
+  String get swatchLight => 'Licht';
+
+  @override
+  String get swatchShadowLightNone => 'Keiner in deiner Sammlung';
+
+  @override
+  String get swatchBlendWith => 'Verblenden mit …';
+
+  @override
+  String get swatchBlendTitle => 'Verblenden mit';
+
+  @override
+  String get swatchBlendSearchHint => 'Marker suchen';
+
+  @override
+  String get swatchBlendNoMarkers =>
+      'Du hast keine anderen Marker zum Verblenden.';
+
+  @override
+  String get swatchBlendNoResults => 'Kein Marker passt zu deiner Suche.';
+
+  @override
+  String get swatchBlendSteps => 'Dazwischen, aus deiner Sammlung';
+
+  @override
+  String get swatchBlendNothingBetween =>
+      'Die beiden liegen nah genug beieinander, um direkt ineinander zu verlaufen.';
+
+  @override
+  String get swatchBlendNoneBetween => 'Keiner deiner Marker liegt dazwischen.';
+
+  @override
+  String swatchBlendBuy(String code) {
+    return 'Großer Sprung. Die Lücke füllt am besten $code, den du noch nicht hast.';
+  }
+
+  @override
+  String swatchBlendStripSemantics(String from, String to) {
+    return 'Verlauf von $from zu $to';
+  }
+
+  @override
+  String swatchDuplicatesTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Du hast schon $count Marker, die sehr nah daran liegen',
+      one: 'Du hast schon 1 Marker, der sehr nah daran liegt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get swatchDuplicatesHint =>
+      'Fast dieselbe Farbe, ein neuer bringt kaum etwas.';
+
+  @override
+  String swatchDuplicatesMore(int count) {
+    return 'und $count weitere';
+  }
+
+  @override
+  String get swatchDuplicatesNone =>
+      'Nichts in deiner Sammlung liegt sehr nah daran: Er würde eine neue Farbe bringen.';
+
+  @override
+  String wishlistDuplicateNote(String codes) {
+    return 'Sehr ähnlich wie $codes in deiner Sammlung';
+  }
+
+  @override
+  String wishlistRunningOutCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Marker fast leer',
+      one: '1 Marker fast leer',
+      zero: 'Kein Marker fast leer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wishlistRunningOutHint =>
+      'Sie werden weiter genutzt. Setz sie auf die Liste, wenn du kaufen oder nachfüllen willst.';
+
+  @override
+  String swatchesAllBrands(int count) {
+    return 'Alle Marken ($count)';
+  }
+
+  @override
+  String get swatchesOtherBrandsYours => 'Deine Marken';
+
+  @override
+  String get inkLevelFullNote =>
+      'Voll: Abgleich, Palette und Ideen können ihn vorschlagen.';
+
+  @override
+  String get inkLevelRunningOutNote =>
+      'Fast leer: wird weiter überall genutzt. Er steht in der Gruppe „Fast leer“ deiner Wunschliste.';
+
+  @override
+  String get swatchesDetailPaneEmpty =>
+      'Tippe auf einen Marker, um hier seine Details zu sehen.';
 }

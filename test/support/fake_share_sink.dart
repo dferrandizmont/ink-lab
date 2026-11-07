@@ -19,6 +19,31 @@ class FakeShareSink implements ShareSink {
     shared.add(images);
     subjects.add(subject);
   }
+
+  /// One entry per [shareText] call: the text handed to the sheet.
+  final List<String> sharedPlainTexts = <String>[];
+
+  @override
+  Future<void> shareText(String text, {String? subject}) async {
+    if (fail) throw StateError('no share sheet');
+    sharedPlainTexts.add(text);
+    subjects.add(subject);
+  }
+
+  /// One entry per [shareTextFile] call: the file name and its text.
+  final List<({String name, String text})> sharedTexts =
+      <({String name, String text})>[];
+
+  @override
+  Future<void> shareTextFile(
+    String text, {
+    required String name,
+    String? subject,
+  }) async {
+    if (fail) throw StateError('no share sheet');
+    sharedTexts.add((name: name, text: text));
+    subjects.add(subject);
+  }
 }
 
 /// Width and height of a PNG, read from its IHDR chunk; `null` if [bytes] is

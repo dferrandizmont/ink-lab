@@ -15,6 +15,7 @@ import 'package:ink_lab/ui/pages/collection/collection_summary.dart';
 /// path the app uses, so these tests see exactly what the app sees. The
 /// format-specific, deep checks stay where they are
 /// (`test/core/ohuhu_catalog_test.dart`, `test/core/copic_catalog_test.dart`,
+/// `test/core/all_brands_catalog_test.dart`,
 /// `test/core/finecolour_catalog_test.dart`
 /// and `test/core/scene_catalog_test.dart`); this file owns catalogue
 /// discovery, the cross-brand shape checks and the invariants those files do
@@ -129,9 +130,7 @@ void main() {
 
       test('is a JSON list parsed 1:1 by the app', () {
         final List<Map<String, dynamic>> entries = readEntries(file);
-        final String raw = File(
-          '$catalogDirectory/$file',
-        ).readAsStringSync();
+        final String raw = File('$catalogDirectory/$file').readAsStringSync();
         final List<MarkerColor> parsed = parseColors(raw, brand: brand);
         expect(entries, isNotEmpty, reason: '$file has no entries');
         // No length comparison: parseColors maps one-to-one over the decoded
@@ -153,8 +152,7 @@ void main() {
         final List<String> problems = <String>[];
         for (int index = 0; index < entries.length; index++) {
           final Map<String, dynamic> entry = entries[index];
-          final String label =
-              stringField(entry, codeKey) ?? 'entry #$index';
+          final String label = stringField(entry, codeKey) ?? 'entry #$index';
           final String? code = stringField(entry, codeKey);
           if (code == null || code.trim().isEmpty) {
             problems.add('$label: $codeKey is empty or not a string');
@@ -166,8 +164,10 @@ void main() {
             problems.add('$label: $nameKey is empty or not a string');
           }
           final String? hex = stringField(entry, 'hex');
-          final String normalized =
-              (hex ?? '').trim().toLowerCase().replaceFirst('#', '');
+          final String normalized = (hex ?? '')
+              .trim()
+              .toLowerCase()
+              .replaceFirst('#', '');
           if (!hexPattern.hasMatch(normalized)) {
             problems.add('$label: hex "$hex" is not six hex digits');
           }
@@ -214,9 +214,7 @@ void main() {
           final String key = jsonEncode(canonicalEntry(entry));
           final String? first = seenEntries[key];
           if (first != null) {
-            problems.add(
-              '$label is identical in every field to $first',
-            );
+            problems.add('$label is identical in every field to $first');
           } else {
             seenEntries[key] = label;
           }
@@ -225,16 +223,16 @@ void main() {
       });
 
       test('set and line ids exist where the app defines them', () {
+        // Only Ohuhu (retail sets) and DecoTime (colour families) have sets.
         final Set<String> knownSets = switch (brand) {
           MarkerBrand.ohuhuOahu => OahuSet.byId.keys.toSet(),
           MarkerBrand.decoTime => decoTimeFamilyIds.toSet(),
-          MarkerBrand.copic || MarkerBrand.finecolour => <String>{},
-        };
-        final Set<String> knownLines = switch (brand) {
-          MarkerBrand.ohuhuOahu => MarkerLine.byId.keys.toSet(),
-          MarkerBrand.finecolour => {'EF100', 'EF101', 'EF102', 'EF103'},
           _ => <String>{},
         };
+        // The line ids a brand declares in `MarkerBrand.productLines`.
+        final Set<String> knownLines = brand.productLines
+            .map((BrandLine line) => line.id)
+            .toSet();
         final List<MarkerColor> parsed = parseColors(
           File('$catalogDirectory/$file').readAsStringSync(),
           brand: brand,
@@ -280,7 +278,9 @@ void main() {
           <String, List<MarkerColor>>{};
       for (final MarkerColor color in parsed) {
         if (color.oldCode.isNotEmpty) {
-          byOldCode.putIfAbsent(color.oldCode, () => <MarkerColor>[]).add(color);
+          byOldCode
+              .putIfAbsent(color.oldCode, () => <MarkerColor>[])
+              .add(color);
         }
       }
       final List<String> problems = <String>[];
@@ -305,58 +305,63 @@ void main() {
     });
   });
 
-  test('oahu_card_locations.json maps a code to its own set and a real card', () {
-    final String raw = File(
-      MarkerRepository.cardLocationsAssetPath,
-    ).readAsStringSync();
-    final Map<String, Map<String, int>> catalog =
-        decodeSwatchCardLocationCatalog(raw);
-    expect(
-      catalog,
-      isNotEmpty,
-      reason: 'oahu_card_locations.json did not decode',
-    );
-    final List<MarkerColor> ohuhu = parseColors(
-      File(MarkerBrand.ohuhuOahu.assetPath).readAsStringSync(),
-      brand: MarkerBrand.ohuhuOahu,
-    );
-    final Set<String> allCodes =
-        ohuhu.map((MarkerColor c) => c.newCode.toUpperCase()).toSet();
-    // The rule buildSwatchCardLocationLabels applies: a label is only shown
-    // for a code that belongs to the profile's set and for card > 0. The data
-    // must satisfy both, or the mapping is silently ignored by the app.
-    final Map<String, Set<String>> codesBySet = <String, Set<String>>{};
-    for (final MarkerColor color in ohuhu) {
-      final String code = color.newCode.toUpperCase();
-      for (final String setId in color.sets) {
-        codesBySet.putIfAbsent(setId, () => <String>{}).add(code);
+  test(
+    'oahu_card_locations.json maps a code to its own set and a real card',
+    () {
+      final String raw = File(MarkerRepository.cardLocationsAssetPath)
+          .readAsStringSync();
+      final Map<String, Map<String, int>> catalog =
+          decodeSwatchCardLocationCatalog(raw);
+      expect(
+        catalog,
+        isNotEmpty,
+        reason: 'oahu_card_locations.json did not decode',
+      );
+      final List<MarkerColor> ohuhu = parseColors(
+        File(MarkerBrand.ohuhuOahu.assetPath).readAsStringSync(),
+        brand: MarkerBrand.ohuhuOahu,
+      );
+      final Set<String> allCodes = ohuhu
+          .map((MarkerColor c) => c.newCode.toUpperCase())
+          .toSet();
+      // The rule buildSwatchCardLocationLabels applies: a label is only shown
+      // for a code that belongs to the profile's set and for card > 0. The data
+      // must satisfy both, or the mapping is silently ignored by the app.
+      final Map<String, Set<String>> codesBySet = <String, Set<String>>{};
+      for (final MarkerColor color in ohuhu) {
+        final String code = color.newCode.toUpperCase();
+        for (final String setId in color.sets) {
+          codesBySet.putIfAbsent(setId, () => <String>{}).add(code);
+        }
       }
-    }
-    final List<String> problems = <String>[];
-    catalog.forEach((String setId, Map<String, int> codeToCard) {
-      if (!OahuSet.byId.containsKey(setId)) {
-        problems.add('set "$setId" is not a known Ohuhu set');
-      }
-      final Set<String> members = codesBySet[setId] ?? const <String>{};
-      codeToCard.forEach((String code, int card) {
-        final String normalized = code.toUpperCase();
-        if (!allCodes.contains(normalized)) {
-          problems.add('$setId: card $card names code "$code", absent in Ohuhu');
+      final List<String> problems = <String>[];
+      catalog.forEach((String setId, Map<String, int> codeToCard) {
+        if (!OahuSet.byId.containsKey(setId)) {
+          problems.add('set "$setId" is not a known Ohuhu set');
         }
-        if (card <= 0) {
-          problems.add(
-            '$setId: code "$code" has card $card; the app shows a label only '
-            'when card > 0',
-          );
-        }
-        if (!members.contains(normalized)) {
-          problems.add(
-            '$setId: code "$code" is not in set "$setId", so the app would '
-            'show no location for it',
-          );
-        }
+        final Set<String> members = codesBySet[setId] ?? const <String>{};
+        codeToCard.forEach((String code, int card) {
+          final String normalized = code.toUpperCase();
+          if (!allCodes.contains(normalized)) {
+            problems.add(
+              '$setId: card $card names code "$code", absent in Ohuhu',
+            );
+          }
+          if (card <= 0) {
+            problems.add(
+              '$setId: code "$code" has card $card; the app shows a label only '
+              'when card > 0',
+            );
+          }
+          if (!members.contains(normalized)) {
+            problems.add(
+              '$setId: code "$code" is not in set "$setId", so the app would '
+              'show no location for it',
+            );
+          }
+        });
       });
-    });
-    expect(problems, isEmpty, reason: problems.join('\n'));
-  });
+      expect(problems, isEmpty, reason: problems.join('\n'));
+    },
+  );
 }

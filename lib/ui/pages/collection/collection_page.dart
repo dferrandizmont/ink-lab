@@ -7,6 +7,7 @@ import '../../../data/data.dart';
 import '../../../l10n/l10n.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
@@ -14,6 +15,7 @@ import '../../widgets/section_card.dart';
 import '../../share/share_sink.dart';
 import '../settings/dialogs.dart';
 import '../settings/settings_widgets.dart';
+import '../tools/collection_tools_rows.dart';
 import 'brand_picker.dart';
 import 'collection_pickers.dart';
 import 'collection_summary.dart';
@@ -74,22 +76,24 @@ class _CollectionPageState extends State<CollectionPage> {
     final AppScope scope = _scope!;
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.collectionTitle)),
-      body: StreamBuilder<AppSettingsState>(
-        stream: _changes,
-        initialData: scope.settings.state,
-        builder: (BuildContext context, AsyncSnapshot<AppSettingsState> s) {
-          final AppSettingsState state = s.data ?? scope.settings.state;
-          return FutureBuilder<List<MarkerColor>>(
-            future: scope.markers.loadColors(state.brand),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<MarkerColor>> c) {
-                  if (!c.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return _content(context, scope, state, c.data!);
-                },
-          );
-        },
+      body: InkReadableWidth(
+        child: StreamBuilder<AppSettingsState>(
+          stream: _changes,
+          initialData: scope.settings.state,
+          builder: (BuildContext context, AsyncSnapshot<AppSettingsState> s) {
+            final AppSettingsState state = s.data ?? scope.settings.state;
+            return FutureBuilder<List<MarkerColor>>(
+              future: scope.markers.loadColors(state.brand),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<MarkerColor>> c) {
+                    if (!c.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return _content(context, scope, state, c.data!);
+                  },
+            );
+          },
+        ),
       ),
     );
   }
@@ -122,11 +126,11 @@ class _CollectionPageState extends State<CollectionPage> {
 
     return SingleChildScrollView(
       key: CollectionPage.pageKey,
-      padding: const EdgeInsets.fromLTRB(
+      padding: EdgeInsets.fromLTRB(
         InkSpacing.gutter,
         InkSpacing.section,
         InkSpacing.gutter,
-        InkSpacing.pageBottom,
+        InkSpacing.pageBottomOf(context),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -146,10 +150,7 @@ class _CollectionPageState extends State<CollectionPage> {
               ),
               KeyedSubtree(
                 key: const ValueKey<String>('collection-summary'),
-                child: CollectionSummaryCard(
-                  summary: summary,
-                  embedded: true,
-                ),
+                child: CollectionSummaryCard(summary: summary, embedded: true),
               ),
               if (ohuhu) ...<Widget>[
                 InkDisclosure(
@@ -299,6 +300,7 @@ class _CollectionPageState extends State<CollectionPage> {
                 nameDisplay: state.nameDisplayMode,
                 shareSink: widget.shareSink,
               ),
+              ...collectionToolRows(context, shareSink: widget.shareSink),
             ],
           ),
           const SizedBox(height: InkSpacing.section),
@@ -328,43 +330,124 @@ class _CollectionPageState extends State<CollectionPage> {
     );
     void toggle(List<MarkerColor> colors) =>
         _setExtras(scope, settings, colors, add: !all(colors));
-    return Wrap(
-      spacing: InkSpacing.chipGap,
-      runSpacing: InkSpacing.s4,
-      children: <Widget>[
-        InkChip(
-          key: const ValueKey<String>('collection-family-all'),
-          label: context.l10n.collectionWholeRange,
-          selected: range.isNotEmpty && all(range),
-          onSelected: (_) => toggle(range),
-        ),
-        for (final String id in decoTimeFamilyIds)
-          if (range.any((MarkerColor c) => c.sets.contains(id)))
-            Builder(
-              builder: (BuildContext context) {
-                final List<MarkerColor> members = range
-                    .where((MarkerColor c) => c.sets.contains(id))
-                    .toList(growable: false);
-                final int ownedCount = members
-                    .where(
-                      (MarkerColor c) =>
-                          extras.contains(c.newCode.toUpperCase()),
-                    )
-                    .length;
-                return InkChip(
-                  key: ValueKey<String>('collection-family-$id'),
-                  label: context.l10n.collectionFamilyChip(
-                    context.l10n.decoFamilyLabel(id)!,
-                    ownedCount,
-                    members.length,
-                  ),
-                  selected: ownedCount == members.length,
-                  onSelected: (_) => toggle(members),
-                );
-              },
-            ),
-      ],
+    final List<_FamilyChipData> chips = <_FamilyChipData>[
+      _FamilyChipData(
+        id: 'all',
+        label: context.l10n.collectionWholeRange,
+        widest: context.l10n.collectionWholeRange,
+        selected: range.isNotEmpty && all(range),
+        members: range,
+      ),
+      for (final String id in decoTimeFamilyIds)
+        if (range.any((MarkerColor c) => c.sets.contains(id)))
+          () {
+            final List<MarkerColor> members = range
+                .where((MarkerColor c) => c.sets.contains(id))
+                .toList(growable: false);
+            final int ownedCount = members
+                .where(
+                  (MarkerColor c) => extras.contains(c.newCode.toUpperCase()),
+                )
+                .length;
+            final String family = context.l10n.decoFamilyLabel(id)!;
+            return _FamilyChipData(
+              id: id,
+              label: context.l10n.collectionFamilyChip(
+                family,
+                ownedCount,
+                members.length,
+              ),
+              // The count is longest when every marker is owned, so the lines
+              // a chip needs never depend on how many are.
+              widest: context.l10n.collectionFamilyChip(
+                family,
+                members.length,
+                members.length,
+              ),
+              selected: ownedCount == members.length,
+              members: members,
+            );
+          }(),
+    ];
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        const double gap = InkSpacing.chipGap;
+        final double column = (constraints.maxWidth - gap) / 2;
+        final List<String> widest = <String>[
+          for (final chip in chips) chip.widest,
+        ];
+        // The text room of a chip: its width less the padding and the border.
+        const double chrome = 2 * InkSpacing.s10 + 2;
+        // Two lines of label at most, the same for every chip: the grid has
+        // one chip height whatever the language, the text size or the state.
+        // If a label would need a third line in a column (the longest
+        // German and Portuguese families at 1.3x text on the narrowest
+        // phone), the chips take a row each instead: never a cut label.
+        final int columnLines = _familyChipLines(
+          context,
+          widest,
+          column - chrome,
+        );
+        final bool twoColumns = columnLines <= 2;
+        final int lines = twoColumns
+            ? columnLines
+            : _familyChipLines(
+                context,
+                widest,
+                constraints.maxWidth - chrome,
+              ).clamp(1, 2);
+        Widget chip(_FamilyChipData data) => InkChip(
+          key: ValueKey<String>('collection-family-${data.id}'),
+          label: data.label,
+          selected: data.selected,
+          expand: true,
+          lines: lines,
+          onSelected: (_) => toggle(data.members),
+        );
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            for (int i = 0; i < chips.length; i += twoColumns ? 2 : 1)
+              if (twoColumns && i + 1 < chips.length)
+                Row(
+                  children: <Widget>[
+                    Expanded(child: chip(chips[i])),
+                    const SizedBox(width: gap),
+                    Expanded(child: chip(chips[i + 1])),
+                  ],
+                )
+              else
+                // An odd one out (or every chip, in one column) takes the
+                // whole row.
+                chip(chips[i]),
+          ],
+        );
+      },
     );
+  }
+
+  /// How many lines the longest of [labels] needs in [width], in the chip's
+  /// type at the current text scale.
+  int _familyChipLines(
+    BuildContext context,
+    List<String> labels,
+    double width,
+  ) {
+    final TextDirection direction = Directionality.of(context);
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    int lines = 1;
+    for (final String label in labels) {
+      final TextPainter painter = TextPainter(
+        text: TextSpan(text: label, style: AppTypography.button),
+        textDirection: direction,
+        textScaler: scaler,
+      )..layout(maxWidth: width);
+      final int count = painter.computeLineMetrics().length;
+      painter.dispose();
+      if (count > lines) lines = count;
+    }
+    return lines;
   }
 
   void _toggleSeries(
@@ -458,4 +541,21 @@ class _DestructiveButton extends StatelessWidget {
       child: InkButton.text(label: label, expand: true, onPressed: onPressed),
     );
   }
+}
+
+/// One chip of the "Add by family" grid: its key id, the label it shows, the
+/// label at its longest (every marker owned), whether it is on and the
+/// markers it toggles.
+class _FamilyChipData {
+  const _FamilyChipData({
+    required this.id,
+    required this.label,
+    required this.widest,
+    required this.selected,
+    required this.members,
+  });
+
+  final String id, label, widest;
+  final bool selected;
+  final List<MarkerColor> members;
 }

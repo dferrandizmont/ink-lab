@@ -367,7 +367,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsBackupFileCaption.
   ///
   /// In en, this message translates to:
-  /// **'A ZIP file with your data and the diary photos. Save it to Files, Drive or wherever you like. The API key is never included.'**
+  /// **'A ZIP file with your data and all your photos: diary, swatches and recipes. Pick Files, Drive or any app in the share sheet to keep it. The API key is never included.'**
   String get settingsBackupFileCaption;
 
   /// No description provided for @settingsBackupTextTitle.
@@ -379,7 +379,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsSaveBackupFile.
   ///
   /// In en, this message translates to:
-  /// **'Save backup file'**
+  /// **'Share backup file'**
   String get settingsSaveBackupFile;
 
   /// No description provided for @settingsRestoreBackupFile.
@@ -997,7 +997,7 @@ abstract class AppLocalizations {
   /// No description provided for @settingsDisclaimer.
   ///
   /// In en, this message translates to:
-  /// **'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by Ohuhu, DecoTime, Copic or Finecolour, and it uses their marker codes, names and colour values only as factual reference data.'**
+  /// **'Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by any of the marker brands it lists. It uses their marker codes, names and colour values only as factual reference data.'**
   String get settingsDisclaimer;
 
   /// No description provided for @paletteTitle.
@@ -1012,11 +1012,17 @@ abstract class AppLocalizations {
   /// **'Base marker code'**
   String get paletteBaseCodeLabel;
 
-  /// No description provided for @paletteBaseCodeHint.
+  /// Hint of the empty base marker field: two real codes of the user's markers in the current brand.
   ///
   /// In en, this message translates to:
-  /// **'E08 or B271'**
-  String get paletteBaseCodeHint;
+  /// **'{first} or {second}'**
+  String paletteBaseCodeHint(String first, String second);
+
+  /// Hint of the empty base marker field when only one code is known.
+  ///
+  /// In en, this message translates to:
+  /// **'{code}'**
+  String paletteBaseCodeHintOne(String code);
 
   /// No description provided for @paletteScenarioToggle.
   ///
@@ -1731,6 +1737,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Code, name or hex'**
   String get swatchesSearchHint;
+
+  /// No description provided for @swatchesClosestTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Closest to {hex}'**
+  String swatchesClosestTo(String hex);
 
   /// No description provided for @swatchesClearSearch.
   ///
@@ -4345,13 +4357,13 @@ abstract class AppLocalizations {
   /// No description provided for @matchEmptyPhotoTitle.
   ///
   /// In en, this message translates to:
-  /// **'No photo yet'**
+  /// **'Match a colour from a photo'**
   String get matchEmptyPhotoTitle;
 
   /// No description provided for @matchEmptyPhotoMessage.
   ///
   /// In en, this message translates to:
-  /// **'Take a photo or pick one from the gallery to find the closest marker.'**
+  /// **'Photograph something, tap a colour on it and see the closest markers.'**
   String get matchEmptyPhotoMessage;
 
   /// No description provided for @matchPhotoSemantics.
@@ -4485,6 +4497,83 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get matchOkButton;
+
+  /// No description provided for @matchTakePhotoButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get matchTakePhotoButton;
+
+  /// No description provided for @matchChooseGalleryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get matchChooseGalleryButton;
+
+  /// No description provided for @matchValuesButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Values'**
+  String get matchValuesButton;
+
+  /// No description provided for @matchValuesTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the photo and the matches in greyscale to check their value contrast'**
+  String get matchValuesTooltip;
+
+  /// No description provided for @matchPhotoSampleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Double-tap to sample the middle of the photo. Use the actions to move the sample point.'**
+  String get matchPhotoSampleHint;
+
+  /// No description provided for @matchSampleMiddle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample the middle of the photo'**
+  String get matchSampleMiddle;
+
+  /// No description provided for @matchMoveLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the sample point left'**
+  String get matchMoveLeft;
+
+  /// No description provided for @matchMoveRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the sample point right'**
+  String get matchMoveRight;
+
+  /// No description provided for @matchMoveUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the sample point up'**
+  String get matchMoveUp;
+
+  /// No description provided for @matchMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the sample point down'**
+  String get matchMoveDown;
+
+  /// No description provided for @matchSampleSpoken.
+  ///
+  /// In en, this message translates to:
+  /// **'Sampled colour {hex}. Closest marker: {code}, {name}, {quality}.'**
+  String matchSampleSpoken(
+    String hex,
+    String code,
+    String name,
+    String quality,
+  );
+
+  /// No description provided for @matchSampleSpokenNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Sampled colour {hex}.'**
+  String matchSampleSpokenNone(String hex);
 
   /// No description provided for @appTitle.
   ///
@@ -4787,7 +4876,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteUnknownCode.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} finecolour{{input} is not a Finecolour marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}'**
+  /// **'{brand, select, decoTime{{input} is not a DecoTime marker code. Try {example}.} copic{{input} is not a Copic marker code. Try {example}.} finecolour{{input} is not a Finecolour marker code. Try {example}.} touchTwin{{input} is not a Touch Twin marker code. Try {example}.} promarker{{input} is not a Promarker marker code. Try {example}.} prismacolor{{input} is not a Prismacolor Premier marker code. Try {example}.} spectrumNoir{{input} is not a Spectrum Noir marker code. Try {example}.} promarkerBrush{{input} is not a Promarker Brush marker code. Try {example}.} arrtx{{input} is not an Arrtx marker code. Try {example}.} kurecolor{{input} is not a ZIG Kurecolor marker code. Try {example}.} graphit{{input} is not a Graph\'it marker code. Try {example}.} marvyLePlume{{input} is not a Marvy Le Plume marker code. Try {example}.} blickBrush{{input} is not a Blick Studio Brush marker code. Try {example}.} artistsLoft{{input} is not an Artist\'s Loft marker code. Try {example}.} other{{input} is not an Ink Lab marker code. Try {example}.}}'**
   String paletteUnknownCode(String brand, String input, String example);
 
   /// No description provided for @paletteNotAvailable.
@@ -4799,7 +4888,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteNoAvailableColors.
   ///
   /// In en, this message translates to:
-  /// **'{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} finecolour{There are no Finecolour markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}'**
+  /// **'{brand, select, decoTime{There are no DecoTime markers in your collection yet. Add them in My collection.} copic{There are no Copic markers in your collection yet. Add them in My collection.} finecolour{There are no Finecolour markers in your collection yet. Add them in My collection.} touchTwin{There are no Touch Twin markers in your collection yet. Add them in My collection.} promarker{There are no Promarker markers in your collection yet. Add them in My collection.} prismacolor{There are no Prismacolor Premier markers in your collection yet. Add them in My collection.} spectrumNoir{There are no Spectrum Noir markers in your collection yet. Add them in My collection.} promarkerBrush{There are no Promarker Brush markers in your collection yet. Add them in My collection.} arrtx{There are no Arrtx markers in your collection yet. Add them in My collection.} kurecolor{There are no ZIG Kurecolor markers in your collection yet. Add them in My collection.} graphit{There are no Graph\'it markers in your collection yet. Add them in My collection.} marvyLePlume{There are no Marvy Le Plume markers in your collection yet. Add them in My collection.} blickBrush{There are no Blick Studio Brush markers in your collection yet. Add them in My collection.} artistsLoft{There are no Artist\'s Loft markers in your collection yet. Add them in My collection.} other{There are no markers in your collection yet. Add them in My collection.}}'**
   String paletteNoAvailableColors(String brand);
 
   /// No description provided for @paletteMissingBase.
@@ -6818,6 +6907,426 @@ abstract class AppLocalizations {
   /// **'Tools'**
   String get collectionToolsGroup;
 
+  /// No description provided for @toolsMapTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour map'**
+  String get toolsMapTitle;
+
+  /// No description provided for @toolsMapHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Where your markers sit by hue and value, and where the gaps are.'**
+  String get toolsMapHint;
+
+  /// No description provided for @toolsTranslateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Translate a recipe'**
+  String get toolsTranslateTitle;
+
+  /// No description provided for @toolsTranslateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn a tutorial\'s marker codes into the closest ones you own.'**
+  String get toolsTranslateHint;
+
+  /// No description provided for @toolsBlendsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My recipes'**
+  String get toolsBlendsTitle;
+
+  /// No description provided for @toolsBlendsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Blends you save: markers in order, a note and a photo.'**
+  String get toolsBlendsHint;
+
+  /// No description provided for @toolsTransferTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export and import'**
+  String get toolsTransferTitle;
+
+  /// No description provided for @toolsTransferHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your markers as a list or CSV, or add many by code.'**
+  String get toolsTransferHint;
+
+  /// No description provided for @toolsMapEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No markers to map yet'**
+  String get toolsMapEmptyTitle;
+
+  /// No description provided for @toolsMapIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Each dot is a marker you own. Hatched areas have none.'**
+  String get toolsMapIntro;
+
+  /// No description provided for @toolsMapShowRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the whole range'**
+  String get toolsMapShowRange;
+
+  /// No description provided for @toolsMapShowRangeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Faint dots for every marker of your brands, to see what is missing.'**
+  String get toolsMapShowRangeHint;
+
+  /// No description provided for @toolsMapAxes.
+  ///
+  /// In en, this message translates to:
+  /// **'Left to right: hue. Top to bottom: light to dark.'**
+  String get toolsMapAxes;
+
+  /// No description provided for @toolsMapGreysTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Greys and neutrals'**
+  String get toolsMapGreysTitle;
+
+  /// No description provided for @toolsMapGreysAxis.
+  ///
+  /// In en, this message translates to:
+  /// **'Left to right: dark to light.'**
+  String get toolsMapGreysAxis;
+
+  /// No description provided for @toolsMapFamiliesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'By hue'**
+  String get toolsMapFamiliesTitle;
+
+  /// No description provided for @toolsHueRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get toolsHueRed;
+
+  /// No description provided for @toolsHueOrange.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get toolsHueOrange;
+
+  /// No description provided for @toolsHueYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get toolsHueYellow;
+
+  /// No description provided for @toolsHueGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get toolsHueGreen;
+
+  /// No description provided for @toolsHueTeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal'**
+  String get toolsHueTeal;
+
+  /// No description provided for @toolsHueBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get toolsHueBlue;
+
+  /// No description provided for @toolsHueViolet.
+  ///
+  /// In en, this message translates to:
+  /// **'Violet'**
+  String get toolsHueViolet;
+
+  /// No description provided for @toolsHueMagenta.
+  ///
+  /// In en, this message translates to:
+  /// **'Magenta'**
+  String get toolsHueMagenta;
+
+  /// How many markers of one hue band are light, mid-tone and dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Light {light} · Mid {mid} · Dark {dark}'**
+  String toolsFamilyBands(int light, int mid, int dark);
+
+  /// No description provided for @toolsMapDriedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Dried-out markers are left out.'**
+  String get toolsMapDriedNote;
+
+  /// Spoken summary of the colour map chart: the number of markers (already worded, for example "12 markers"), how many of the grid cells are empty and how many cells there are.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour map of {markers}. {empty} of {cells} areas have no marker. The list below has the same markers by hue.'**
+  String toolsMapSummary(String markers, int empty, int cells);
+
+  /// No description provided for @toolsMarkerOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'In your collection'**
+  String get toolsMarkerOwned;
+
+  /// No description provided for @toolsMarkerNotOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not in your collection'**
+  String get toolsMarkerNotOwned;
+
+  /// No description provided for @toolsTranslateIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Type or paste the marker codes of a tutorial, in the brand it uses. Commas, spaces and lists all work.'**
+  String get toolsTranslateIntro;
+
+  /// No description provided for @toolsTranslateBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe brand'**
+  String get toolsTranslateBrand;
+
+  /// No description provided for @toolsTranslateCodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Marker codes'**
+  String get toolsTranslateCodes;
+
+  /// No description provided for @toolsTranslateResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation'**
+  String get toolsTranslateResults;
+
+  /// No description provided for @toolsTranslateEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The codes you type appear here.'**
+  String get toolsTranslateEmpty;
+
+  /// No description provided for @toolsTranslateMine.
+  ///
+  /// In en, this message translates to:
+  /// **'Closest you own'**
+  String get toolsTranslateMine;
+
+  /// No description provided for @toolsTranslateNotOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'Not owned'**
+  String get toolsTranslateNotOwned;
+
+  /// No description provided for @toolsTranslateMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing close in your collection.'**
+  String get toolsTranslateMissing;
+
+  /// No description provided for @toolsTranslateUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found in {brand}'**
+  String toolsTranslateUnknown(String brand);
+
+  /// No description provided for @toolsCopyList.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy list'**
+  String get toolsCopyList;
+
+  /// No description provided for @toolsShareList.
+  ///
+  /// In en, this message translates to:
+  /// **'Share list'**
+  String get toolsShareList;
+
+  /// No description provided for @toolsListCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'List copied.'**
+  String get toolsListCopied;
+
+  /// No description provided for @toolsShareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not share the list.'**
+  String get toolsShareFailed;
+
+  /// No description provided for @toolsBlendsNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New recipe'**
+  String get toolsBlendsNew;
+
+  /// No description provided for @toolsBlendsEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit recipe'**
+  String get toolsBlendsEditTitle;
+
+  /// No description provided for @toolsBlendsEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No recipes yet'**
+  String get toolsBlendsEmptyTitle;
+
+  /// No description provided for @toolsBlendsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Save the blends you like: markers in order, a note and a photo.'**
+  String get toolsBlendsEmptyBody;
+
+  /// No description provided for @toolsBlendsName.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe name'**
+  String get toolsBlendsName;
+
+  /// No description provided for @toolsBlendsMarkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Markers, in order'**
+  String get toolsBlendsMarkersTitle;
+
+  /// No description provided for @toolsBlendsMarkersHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag the handle to change the order.'**
+  String get toolsBlendsMarkersHelp;
+
+  /// No description provided for @toolsBlendsDrag.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to reorder'**
+  String get toolsBlendsDrag;
+
+  /// No description provided for @toolsBlendsRemoveMarker.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {code}'**
+  String toolsBlendsRemoveMarker(String code);
+
+  /// No description provided for @toolsBlendsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get toolsBlendsNote;
+
+  /// No description provided for @toolsBlendsPhotoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo of the result'**
+  String get toolsBlendsPhotoTitle;
+
+  /// No description provided for @toolsBlendsPhotoHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional. It stays on this phone.'**
+  String get toolsBlendsPhotoHelp;
+
+  /// No description provided for @toolsBlendsPhotoSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo of the recipe'**
+  String get toolsBlendsPhotoSemantic;
+
+  /// No description provided for @toolsBlendsSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save recipe'**
+  String get toolsBlendsSave;
+
+  /// No description provided for @toolsBlendsDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete recipe'**
+  String get toolsBlendsDelete;
+
+  /// No description provided for @toolsBlendsDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this recipe?'**
+  String get toolsBlendsDeleteTitle;
+
+  /// No description provided for @toolsBlendsDeleteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The recipe and its photo will be removed from this phone.'**
+  String get toolsBlendsDeleteBody;
+
+  /// No description provided for @toolsTransferExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get toolsTransferExport;
+
+  /// No description provided for @toolsTransferBrands.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 brand} other{{count} brands}}'**
+  String toolsTransferBrands(int count);
+
+  /// No description provided for @toolsTransferExportBrands.
+  ///
+  /// In en, this message translates to:
+  /// **'Includes every brand you own: {brands}.'**
+  String toolsTransferExportBrands(String brands);
+
+  /// No description provided for @toolsTransferCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as CSV'**
+  String get toolsTransferCsv;
+
+  /// No description provided for @toolsTransferImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import by code'**
+  String get toolsTransferImport;
+
+  /// No description provided for @toolsTransferImportHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the brand and paste its codes. Nothing is added until you press the button.'**
+  String get toolsTransferImportHelp;
+
+  /// No description provided for @toolsTransferNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New markers'**
+  String get toolsTransferNew;
+
+  /// No description provided for @toolsTransferAlready.
+  ///
+  /// In en, this message translates to:
+  /// **'Already yours'**
+  String get toolsTransferAlready;
+
+  /// No description provided for @toolsTransferUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Not recognised'**
+  String get toolsTransferUnknown;
+
+  /// No description provided for @toolsTransferAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Add markers} =1{Add 1 marker} other{Add {count} markers}}'**
+  String toolsTransferAdd(int count);
+
+  /// No description provided for @toolsTransferAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 marker added.} other{{count} markers added.}}'**
+  String toolsTransferAdded(int count);
+
   /// No description provided for @commonSeeAll.
   ///
   /// In en, this message translates to:
@@ -6925,6 +7434,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Preview only. Saving and sharing keep the true colours.'**
   String get paletteVisionPreviewNote;
+
+  /// No description provided for @paletteEaselTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Easel mode'**
+  String get paletteEaselTitle;
+
+  /// No description provided for @paletteEaselExit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit easel mode'**
+  String get paletteEaselExit;
+
+  /// No description provided for @paletteShareTextButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as text'**
+  String get paletteShareTextButton;
+
+  /// No description provided for @paletteTextHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Ink Lab palette · {brand} · {title}'**
+  String paletteTextHeader(String brand, String title);
+
+  /// No description provided for @paletteImportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from text'**
+  String get paletteImportTitle;
+
+  /// No description provided for @paletteImportHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a shared palette or a list of marker codes.'**
+  String get paletteImportHint;
+
+  /// No description provided for @paletteImportPaste.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste'**
+  String get paletteImportPaste;
+
+  /// No description provided for @paletteImportAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Load palette'**
+  String get paletteImportAction;
+
+  /// No description provided for @paletteImportNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No marker codes found in this text.'**
+  String get paletteImportNothing;
+
+  /// No description provided for @paletteImportNoneKnown.
+  ///
+  /// In en, this message translates to:
+  /// **'None of these codes is a {brand} marker: {codes}.'**
+  String paletteImportNoneKnown(String brand, String codes);
+
+  /// No description provided for @paletteImportOtherBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'This palette is for {brand}. Change the brand in Settings to import it.'**
+  String paletteImportOtherBrand(String brand);
+
+  /// No description provided for @paletteImportDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Imported a palette of 1 marker.} other{Imported a palette of {count} markers.}}'**
+  String paletteImportDone(int count);
+
+  /// No description provided for @paletteImportUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Not recognised: {codes}.'**
+  String paletteImportUnknown(String codes);
+
+  /// No description provided for @paletteImportRepeated.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeated codes were counted once.'**
+  String get paletteImportRepeated;
 
   /// No description provided for @collectionChartHint.
   ///
@@ -7867,6 +8460,528 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'+{count} more'**
   String diaryShareMore(int count);
+
+  /// No description provided for @settingsLicences.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licences'**
+  String get settingsLicences;
+
+  /// No description provided for @settingsLicencesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The licences of the code, the fonts and the packages the app uses'**
+  String get settingsLicencesSubtitle;
+
+  /// No description provided for @settingsLicencesLegalese.
+  ///
+  /// In en, this message translates to:
+  /// **'Ink Lab code: MIT licence. Texts, ideas and documentation: CC BY-SA 4.0. Bundled fonts: SIL Open Font Licence 1.1.'**
+  String get settingsLicencesLegalese;
+
+  /// No description provided for @settingsSendFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Send feedback'**
+  String get settingsSendFeedback;
+
+  /// No description provided for @settingsSendFeedbackSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens your email app with the app and system version. You decide whether to send it.'**
+  String get settingsSendFeedbackSubtitle;
+
+  /// No description provided for @settingsFeedbackNoMail.
+  ///
+  /// In en, this message translates to:
+  /// **'No email app was found. The address {address} was copied.'**
+  String settingsFeedbackNoMail(String address);
+
+  /// No description provided for @settingsErrorLogShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share error log'**
+  String get settingsErrorLogShare;
+
+  /// No description provided for @settingsErrorLogShareSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Technical details of the errors the app had, without your diary or your API key. Nothing is sent unless you share it.'**
+  String get settingsErrorLogShareSubtitle;
+
+  /// No description provided for @settingsErrorLogClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear error log'**
+  String get settingsErrorLogClear;
+
+  /// No description provided for @settingsErrorLogCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'The error log was cleared'**
+  String get settingsErrorLogCleared;
+
+  /// No description provided for @settingsErrorLogShareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The error log could not be shared'**
+  String get settingsErrorLogShareFailed;
+
+  /// No description provided for @settingsLastBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Last backup: {date}'**
+  String settingsLastBackup(DateTime date);
+
+  /// No description provided for @settingsNoBackupYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No backup yet'**
+  String get settingsNoBackupYet;
+
+  /// No description provided for @settingsBackupReminderNever.
+  ///
+  /// In en, this message translates to:
+  /// **'You have data in the app and no backup yet. Save a backup file to keep it safe if you change or reset your phone.'**
+  String get settingsBackupReminderNever;
+
+  /// No description provided for @settingsBackupReminderOld.
+  ///
+  /// In en, this message translates to:
+  /// **'Your last backup is more than a month old. Save a new file to keep your latest work safe.'**
+  String get settingsBackupReminderOld;
+
+  /// No description provided for @collectionTouchTwinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Touch Twin markers you own.'**
+  String get collectionTouchTwinHint;
+
+  /// No description provided for @onboardingTouchTwinLine.
+  ///
+  /// In en, this message translates to:
+  /// **'202 colours · Mark the markers you own'**
+  String get onboardingTouchTwinLine;
+
+  /// No description provided for @collectionPromarkerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Promarker markers you own.'**
+  String get collectionPromarkerHint;
+
+  /// No description provided for @onboardingPromarkerLine.
+  ///
+  /// In en, this message translates to:
+  /// **'148 colours · Mark the markers you own'**
+  String get onboardingPromarkerLine;
+
+  /// No description provided for @collectionPrismacolorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Prismacolor Premier markers you own.'**
+  String get collectionPrismacolorHint;
+
+  /// No description provided for @onboardingPrismacolorLine.
+  ///
+  /// In en, this message translates to:
+  /// **'200 colours · Mark the markers you own'**
+  String get onboardingPrismacolorLine;
+
+  /// No description provided for @collectionSpectrumNoirHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Spectrum Noir markers you own.'**
+  String get collectionSpectrumNoirHint;
+
+  /// No description provided for @onboardingSpectrumNoirLine.
+  ///
+  /// In en, this message translates to:
+  /// **'216 colours · Mark the markers you own'**
+  String get onboardingSpectrumNoirLine;
+
+  /// No description provided for @collectionPromarkerBrushHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Promarker Brush markers you own.'**
+  String get collectionPromarkerBrushHint;
+
+  /// No description provided for @onboardingPromarkerBrushLine.
+  ///
+  /// In en, this message translates to:
+  /// **'72 colours · Mark the markers you own'**
+  String get onboardingPromarkerBrushLine;
+
+  /// No description provided for @collectionArrtxHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Arrtx markers you own.'**
+  String get collectionArrtxHint;
+
+  /// No description provided for @onboardingArrtxLine.
+  ///
+  /// In en, this message translates to:
+  /// **'328 colours · Mark the markers you own'**
+  String get onboardingArrtxLine;
+
+  /// No description provided for @collectionKurecolorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the ZIG Kurecolor markers you own.'**
+  String get collectionKurecolorHint;
+
+  /// No description provided for @onboardingKurecolorLine.
+  ///
+  /// In en, this message translates to:
+  /// **'136 colours · Mark the markers you own'**
+  String get onboardingKurecolorLine;
+
+  /// No description provided for @collectionGraphitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Graph\'it markers you own.'**
+  String get collectionGraphitHint;
+
+  /// No description provided for @onboardingGraphitLine.
+  ///
+  /// In en, this message translates to:
+  /// **'168 colours · Mark the markers you own'**
+  String get onboardingGraphitLine;
+
+  /// No description provided for @collectionMarvyLePlumeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Marvy Le Plume markers you own.'**
+  String get collectionMarvyLePlumeHint;
+
+  /// No description provided for @onboardingMarvyLePlumeLine.
+  ///
+  /// In en, this message translates to:
+  /// **'144 colours · Mark the markers you own'**
+  String get onboardingMarvyLePlumeLine;
+
+  /// No description provided for @collectionBlickBrushHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Blick Studio Brush markers you own.'**
+  String get collectionBlickBrushHint;
+
+  /// No description provided for @onboardingBlickBrushLine.
+  ///
+  /// In en, this message translates to:
+  /// **'96 colours · Mark the markers you own'**
+  String get onboardingBlickBrushLine;
+
+  /// No description provided for @collectionArtistsLoftHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark the Artist\'s Loft markers you own.'**
+  String get collectionArtistsLoftHint;
+
+  /// No description provided for @onboardingArtistsLoftLine.
+  ///
+  /// In en, this message translates to:
+  /// **'56 colours · Mark the markers you own'**
+  String get onboardingArtistsLoftLine;
+
+  /// No description provided for @shortcutMatchLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Match a colour'**
+  String get shortcutMatchLabel;
+
+  /// No description provided for @shortcutNewPaletteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New palette'**
+  String get shortcutNewPaletteLabel;
+
+  /// No description provided for @shortcutSearchSwatchesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Search swatches'**
+  String get shortcutSearchSwatchesLabel;
+
+  /// No description provided for @brandSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search brands'**
+  String get brandSearchHint;
+
+  /// No description provided for @brandGroupPopular.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular'**
+  String get brandGroupPopular;
+
+  /// No description provided for @brandGroupMore.
+  ///
+  /// In en, this message translates to:
+  /// **'More brands'**
+  String get brandGroupMore;
+
+  /// No description provided for @brandSearchEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No brand matches your search.'**
+  String get brandSearchEmpty;
+
+  /// No description provided for @inkLevelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ink level'**
+  String get inkLevelTitle;
+
+  /// No description provided for @inkLevelFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get inkLevelFull;
+
+  /// No description provided for @commonRunningOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Running out'**
+  String get commonRunningOut;
+
+  /// No description provided for @refillNoteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Refill note'**
+  String get refillNoteTitle;
+
+  /// No description provided for @refillNoteEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a note, like “refilled 3 Nov”'**
+  String get refillNoteEmpty;
+
+  /// No description provided for @refillNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Refilled 3 Nov'**
+  String get refillNoteHint;
+
+  /// No description provided for @refillNoteSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get refillNoteSave;
+
+  /// No description provided for @refillNoteRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove note'**
+  String get refillNoteRemove;
+
+  /// No description provided for @swatchPhotoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Real swatch'**
+  String get swatchPhotoTitle;
+
+  /// No description provided for @swatchPhotoEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a photo of your paper swatch'**
+  String get swatchPhotoEmpty;
+
+  /// No description provided for @swatchPhotoHas.
+  ///
+  /// In en, this message translates to:
+  /// **'Your paper swatch'**
+  String get swatchPhotoHas;
+
+  /// No description provided for @swatchPhotoView.
+  ///
+  /// In en, this message translates to:
+  /// **'View photo'**
+  String get swatchPhotoView;
+
+  /// No description provided for @swatchPhotoTake.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get swatchPhotoTake;
+
+  /// No description provided for @swatchPhotoChoose.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from gallery'**
+  String get swatchPhotoChoose;
+
+  /// No description provided for @swatchPhotoSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo saved'**
+  String get swatchPhotoSaved;
+
+  /// No description provided for @swatchPhotoSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The photo could not be saved. Try another one.'**
+  String get swatchPhotoSaveFailed;
+
+  /// No description provided for @swatchPhotoRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo removed'**
+  String get swatchPhotoRemoved;
+
+  /// No description provided for @swatchShadowLightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow and light'**
+  String get swatchShadowLightTitle;
+
+  /// No description provided for @swatchShadow.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow'**
+  String get swatchShadow;
+
+  /// No description provided for @swatchLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get swatchLight;
+
+  /// No description provided for @swatchShadowLightNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None in your collection'**
+  String get swatchShadowLightNone;
+
+  /// No description provided for @swatchBlendWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend with…'**
+  String get swatchBlendWith;
+
+  /// No description provided for @swatchBlendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend with'**
+  String get swatchBlendTitle;
+
+  /// No description provided for @swatchBlendSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search your markers'**
+  String get swatchBlendSearchHint;
+
+  /// No description provided for @swatchBlendNoMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'You have no other markers to blend with.'**
+  String get swatchBlendNoMarkers;
+
+  /// No description provided for @swatchBlendNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No marker matches your search.'**
+  String get swatchBlendNoResults;
+
+  /// No description provided for @swatchBlendSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'In between, from your collection'**
+  String get swatchBlendSteps;
+
+  /// No description provided for @swatchBlendNothingBetween.
+  ///
+  /// In en, this message translates to:
+  /// **'These two are close enough to blend straight into each other.'**
+  String get swatchBlendNothingBetween;
+
+  /// No description provided for @swatchBlendNoneBetween.
+  ///
+  /// In en, this message translates to:
+  /// **'None of your markers sits between them.'**
+  String get swatchBlendNoneBetween;
+
+  /// No description provided for @swatchBlendBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Big jump. To fill the gap, the closest marker you do not own is {code}.'**
+  String swatchBlendBuy(String code);
+
+  /// No description provided for @swatchBlendStripSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Gradient from {from} to {to}'**
+  String swatchBlendStripSemantics(String from, String to);
+
+  /// No description provided for @swatchDuplicatesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{You already have 1 marker very close to this} other{You already have {count} markers very close to this}}'**
+  String swatchDuplicatesTitle(int count);
+
+  /// No description provided for @swatchDuplicatesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost the same colour, so a new one adds little.'**
+  String get swatchDuplicatesHint;
+
+  /// No description provided for @swatchDuplicatesMore.
+  ///
+  /// In en, this message translates to:
+  /// **'and {count} more'**
+  String swatchDuplicatesMore(int count);
+
+  /// No description provided for @swatchDuplicatesNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in your collection is very close to this: it would add a new colour.'**
+  String get swatchDuplicatesNone;
+
+  /// No description provided for @wishlistDuplicateNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Very close to {codes} in your collection'**
+  String wishlistDuplicateNote(String codes);
+
+  /// No description provided for @wishlistRunningOutCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Nothing running out} =1{1 marker running out} other{{count} markers running out}}'**
+  String wishlistRunningOutCount(int count);
+
+  /// No description provided for @wishlistRunningOutHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Still in use. Add them to your list when you want to buy or refill them.'**
+  String get wishlistRunningOutHint;
+
+  /// No description provided for @swatchesAllBrands.
+  ///
+  /// In en, this message translates to:
+  /// **'All brands ({count})'**
+  String swatchesAllBrands(int count);
+
+  /// No description provided for @swatchesOtherBrandsYours.
+  ///
+  /// In en, this message translates to:
+  /// **'Your brands'**
+  String get swatchesOtherBrandsYours;
+
+  /// No description provided for @inkLevelFullNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Full: Match, Palette and Ideas can suggest it.'**
+  String get inkLevelFullNote;
+
+  /// No description provided for @inkLevelRunningOutNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Running out: still used everywhere. It shows in the Running out group of your wishlist.'**
+  String get inkLevelRunningOutNote;
+
+  /// Shown in the detail pane next to the Swatches grid on tablets while no marker is selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a marker to see its details here.'**
+  String get swatchesDetailPaneEmpty;
 }
 
 class _AppLocalizationsDelegate

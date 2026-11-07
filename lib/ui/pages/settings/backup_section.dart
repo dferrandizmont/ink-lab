@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../app_scope.dart';
+import '../../../core/backup_reminder.dart';
 import '../../../data/data.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
@@ -23,6 +24,7 @@ class BackupSection extends StatefulWidget {
     super.key,
     required this.scope,
     this.fileIo = const SystemBackupFileIo(),
+    this.now = DateTime.now,
   });
 
   /// The app services.
@@ -31,6 +33,10 @@ class BackupSection extends StatefulWidget {
   /// The share sheet and the file picker of the backup file (tests inject a
   /// fake).
   final BackupFileIo fileIo;
+
+  /// The clock (tests inject a fixed one): it stamps a saved backup and
+  /// decides whether the last one is old.
+  final DateTime Function() now;
 
   @override
   State<BackupSection> createState() => _BackupSectionState();
@@ -60,8 +66,8 @@ class _BackupSectionState extends State<BackupSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          // The same data in a ZIP file, with the diary photos: the primary
-          // action of the card.
+          // The same data in a ZIP file, with every photo (diary, swatches,
+          // recipes), handed to the share sheet: the primary action of the card.
           InkButton(
             key: const ValueKey<String>('settings-backup-file-save'),
             label: l10n.settingsSaveBackupFile,
@@ -90,6 +96,9 @@ class _BackupSectionState extends State<BackupSection> {
               ),
             ),
           ],
+          // When the last backup was made, and a gentle hint when it is time.
+          const SizedBox(height: InkSpacing.group),
+          _lastBackupStatus(l10n, ink),
           // What the file holds, and that the key is never in it.
           const SizedBox(height: InkSpacing.group),
           Text(
@@ -137,6 +146,48 @@ class _BackupSectionState extends State<BackupSection> {
     );
   }
 
+  /// "Last backup: DATE" or "No backup yet", and the hint when the user has
+  /// data and the last backup is missing or more than 30 days old.
+  Widget _lastBackupStatus(AppLocalizations l10n, InkColors ink) {
+    final DateTime? last = scope.settings.lastBackupAt;
+    final BackupReminder reminder = BackupReminders.of(
+      lastBackup: last,
+      now: widget.now(),
+      hasData: _hasData,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Text(
+          last == null
+              ? l10n.settingsNoBackupYet
+              : l10n.settingsLastBackup(last),
+          key: const ValueKey<String>('settings-backup-last'),
+          style: AppTypography.secondary.copyWith(color: ink.fg),
+        ),
+        if (reminder != BackupReminder.none) ...<Widget>[
+          const SizedBox(height: InkSpacing.s4),
+          Text(
+            reminder == BackupReminder.never
+                ? l10n.settingsBackupReminderNever
+                : l10n.settingsBackupReminderOld,
+            key: const ValueKey<String>('settings-backup-reminder'),
+            style: AppTypography.secondary.copyWith(color: ink.fg2),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// Whether there is something worth a backup: diary entries, saved
+  /// palettes, or the notes and photos of the user's markers.
+  bool get _hasData =>
+      scope.artworkDiary.entries.isNotEmpty ||
+      scope.blendRecipes.recipes.isNotEmpty ||
+      scope.savedPalettes.exportByBrand().isNotEmpty ||
+      scope.markerExtras.photoNames.isNotEmpty ||
+      scope.markerExtras.notes.isNotEmpty;
+
   BackupArchiveService get _archiveService => BackupArchiveService(
     backup: _service,
     photos: scope.artworkDiary.photoStore,
@@ -150,7 +201,12 @@ class _BackupSectionState extends State<BackupSection> {
     String? problem;
     try {
       final Uint8List bytes = await _archiveService.exportArchive();
-      await widget.fileIo.shareBackup(bytes, backupFileName(DateTime.now()));
+      final DateTime stamp = widget.now();
+      final bool saved = await widget.fileIo.shareBackup(
+        bytes,
+        backupFileName(stamp),
+      );
+      if (saved) await _rememberBackup(stamp);
     } on BackupArchiveException catch (error) {
       problem = backupArchiveMessage(l10n, error);
     } catch (_) {
@@ -159,6 +215,16 @@ class _BackupSectionState extends State<BackupSection> {
     if (!mounted) return;
     setState(() => _work = null);
     if (problem != null) showMessage(context, problem);
+  }
+
+  /// Stores when the backup was made. A store that fails must not turn a
+  /// backup that was saved into an error message.
+  Future<void> _rememberBackup(DateTime stamp) async {
+    try {
+      await scope.settings.setLastBackupAt(stamp);
+    } catch (_) {
+      // The date is a convenience; the file is already safe.
+    }
   }
 
   /// Lets the user pick a backup ZIP, asks to replace the data and restores
@@ -234,6 +300,8 @@ class _BackupSectionState extends State<BackupSection> {
     dried: scope.dried,
     artworkDiary: scope.artworkDiary,
     ideaFavorites: scope.ideaFavorites,
+    recipes: scope.blendRecipes,
+    markerExtras: scope.markerExtras,
   );
 
   Future<void> _export(BuildContext context) async {

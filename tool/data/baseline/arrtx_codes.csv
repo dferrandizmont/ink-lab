@@ -1,0 +1,329 @@
+code,name,name_card,lines,swatch,shape,x,y
+0,Colorless Blender,90B+80A+66+48,OROS;ALP,oros160,disc,162.9,312.4
+1,Wine Red,80A,OROS;ALP,oros160,disc,269.0,312.4
+2,Old Red,80A,OROS;ALP,card_80,pill,1110.6,1482.0
+3,Rose Red,90B,OROS;ALP,card_90,pill,1316.0,500.0
+4,Vivid Red,90B,OROS;ALP,card_90,pill,1453.4,500.0
+5,Cherry Pink,90B,OROS;ALP,oros160,disc,375.1,312.4
+6,Vivid Pink,90B,OROS;ALP,card_90,pill,1728.2,500.0
+7,Cosmos,80A,OROS;ALP,oros160,disc,481.1,312.4
+8,Rose Pink,90B,OROS;ALP,card_90,pill,1865.6,500.0
+9,Pale Pink,80A,OROS;ALP,oros160,disc,587.2,312.4
+10,Deep Red,80A,OROS;ALP,card_80,pill,1430.4,1482.0
+11,Carmine,90B,OROS;ALP,oros160,disc,693.3,312.4
+12,Coral Red,90B,OROS;ALP,card_90,pill,2140.4,500.0
+13,Scarlet,80A,OROS;ALP,card_80,pill,1537.0,1482.0
+14,Vermilion,90B,OROS;ALP,card_90,pill,2277.8,500.0
+15,Geranium,90B,OROS;ALP,oros160,disc,799.4,312.4
+16,Coral Pink,80A,OROS;ALP,card_80,pill,1643.6,1482.0
+17,Pastel Pink,80A,OROS;ALP,card_80,pill,1750.2,1482.0
+18,Peach,80A+66,OROS;ALP,card_80,pill,1856.8,1482.0
+21,Terra Cotta,80A,OROS;ALP,card_80,pill,1963.4,1482.0
+22,French Vermilion,80A,OROS;ALP,card_80,pill,2070.0,1482.0
+23,Orange,80A,OROS;ALP,card_80,pill,2176.6,1482.0
+24,Marigold,80A,OROS;ALP,card_80,pill,2283.2,1482.0
+25,Fluorite Yellow,80A+66,OROS;ALP,card_80,pill,2389.8,1482.0
+26,Pastel Peach,90B,OROS;ALP,card_90,pill,2552.6,500.0
+27,Powder Pink Light,90B+66,OROS;ALP,card_90,pill,2690.0,500.0
+28,Fruit Pink Light,80A,OROS;ALP,card_80,pill,2496.4,1482.0
+29,Barely Beige,80A+66,OROS;ALP,card_80,pill,2603.0,1482.0
+31,Dark Yellow,80A,OROS;ALP,oros160,disc,905.5,312.4
+32,Deep Yellow,90B,OROS;ALP,card_90,pill,2827.4,500.0
+33,Melon Yellow,80A,OROS;ALP,oros160,disc,1011.5,312.4
+34,Yellow,90B,OROS;ALP,oros160,disc,1117.6,312.4
+35,Lemon Yellow,90B,OROS;ALP,card_90,pill,1453.4,600.0
+36,Cream,80A+66,OROS;ALP,oros160,disc,1223.7,312.4
+37,Pastel Yellow,80A,OROS;ALP,oros160,disc,1329.8,312.4
+38,Pale Yellow,90B+66,OROS;ALP,oros160,disc,1435.9,312.4
+41,Olive Green,80A,OROS;ALP,oros160,disc,162.9,408.8
+42,Bronze Green,80A,OROS;ALP,card_80,pill,1323.8,1561.0
+43,Deep Olive Green,80A,OROS;ALP,card_80,pill,1430.4,1561.0
+44,Fresh Green,80A,OROS;ALP,card_80,pill,1537.0,1561.0
+45,Canaria Yellow,90B,OROS;ALP,oros160,disc,269.0,408.8
+46,Vivid Green,80A,OROS;ALP,card_80,pill,1643.6,1561.0
+47,Grass Green,80A,OROS;ALP,oros160,disc,375.1,408.8
+48,Yellow Green,80A,OROS;ALP,card_80,pill,1856.8,1561.0
+49,Pastel Green,80A,OROS;ALP,card_80,pill,1963.4,1561.0
+50,Forest Green,80A,OROS;ALP,card_80,pill,2070.0,1561.0
+51,Dark Green,90B,OROS;ALP,card_90,pill,1865.6,600.0
+52,Deep Green,90B,OROS;ALP,card_90,pill,2003.0,600.0
+53,Turquoise Green,80A,OROS;ALP,card_80,pill,2176.6,1561.0
+54,Viridian,90B,OROS;ALP,card_90,pill,2140.4,600.0
+55,Emerald Green,90B,OROS;ALP,oros160,disc,481.1,408.8
+56,Mint Green,80A,OROS;ALP,card_80,pill,2283.2,1561.0
+57,Turquoise Green Light,80A,OROS;ALP,card_80,pill,2389.8,1561.0
+58,Mint Green Light,80A,OROS;ALP,oros160,disc,587.2,408.8
+59,Pale Green,80A+66,OROS;ALP,card_80,pill,2603.0,1561.0
+61,Peacock Green,80A,OROS;ALP,card_80,pill,2709.6,1561.0
+62,Marine Blue,80A,OROS;ALP,card_80,pill,2816.2,1561.0
+63,Cerulean Blue,80A,OROS;ALP,oros160,disc,693.3,408.8
+64,Indian Blue,90B,OROS;ALP,oros160,disc,799.4,408.8
+65,Ice Blue,80A,OROS;ALP,card_80,pill,1110.6,1640.0
+66,Baby Blue,90B,OROS;ALP,oros160,disc,905.5,408.8
+67,Pastel Blue,80A,OROS;ALP,card_80,pill,1217.2,1640.0
+68,Turquoise Blue,80A+66,OROS;ALP,card_80,pill,1323.8,1640.0
+69,Prussian Blue,80A,OROS;ALP,card_80,pill,1430.4,1640.0
+70,Royal Blue,90B,OROS;ALP,card_90,pill,2690.0,600.0
+71,Cobalt Blue,80A,OROS;ALP,oros160,disc,1011.5,408.8
+72,Napoleon Blue,90B,OROS;ALP,card_90,pill,2827.4,600.0
+73,Ultramarine,80A,OROS;ALP,card_80,pill,1643.6,1640.0
+74,Brilliant Blue,90B,OROS;ALP,card_90,pill,1316.0,700.0
+75,Dark Blue Light,80A,OROS;ALP,card_80,pill,1750.2,1640.0
+76,Sky Blue,90B,OROS;ALP,oros160,disc,1117.6,408.8
+77,Pale Blue,80A+66,OROS;ALP,oros160,disc,1223.7,408.8
+81,Deep Violet,80A,OROS;ALP,oros160,disc,1329.8,408.8
+82,Light Violet,90B,OROS;ALP,oros160,disc,1435.9,408.8
+83,Lavender,90B,OROS;ALP,oros160,disc,162.9,505.1
+84,Pastel Violet,80A,OROS;ALP,card_80,pill,2070.0,1640.0
+85,Vivid Purple,80A,OROS;ALP,card_80,pill,2176.6,1640.0
+86,Vivid Reddish Purple,90B,OROS;ALP,card_90,pill,1865.6,700.0
+87,Azalea Purple,90B,OROS;ALP,card_90,pill,2003.0,700.0
+88,Purple Grey,90B,OROS;ALP,card_90,pill,2140.4,700.0
+89,Pale Purple,90B,OROS;ALP,card_90,pill,2277.8,700.0
+91,Natural Oak,80A,OROS;ALP,card_80,pill,2283.2,1640.0
+92,Chocolate,90B,OROS;ALP,oros160,disc,269.0,505.1
+93,Burnt Orange,90B,OROS;ALP,oros160,disc,375.1,505.1
+94,Brick Brown,80A,OROS;ALP,oros160,disc,481.1,505.1
+95,Burnt Sienna,90B,OROS;ALP,card_90,pill,2690.0,700.0
+96,Mahogany,90B,OROS;ALP,card_90,pill,2827.4,700.0
+97,Rose Beige,80A,OROS;ALP,oros160,disc,587.2,505.1
+98,Chestnut Brown,90B,OROS;ALP,oros160,disc,693.3,505.1
+99,Bronze,80A,OROS;ALP,oros160,disc,799.4,505.1
+100,Walnut,90B,OROS;ALP,oros160,disc,905.5,505.1
+101,Yellow Ocher,80A,OROS;ALP,oros160,disc,1011.5,505.1
+102,Raw Umber,90B,OROS;ALP,oros160,disc,1117.6,505.1
+103,Potato Brown,90B,OROS;ALP,oros160,disc,1223.7,505.1
+104,Brown Grey,80A,OROS;ALP,oros160,disc,1329.8,505.1
+107,Sand,80A,OROS;ALP,card_80,pill,1004.0,1719.0
+109,Pearl White,90B+66,OROS;ALP,card_90,pill,1865.6,800.0
+120,Black,90B+80A+66+48,OROS;ALP,oros160,disc,1435.9,505.1
+121,Fluorescent Coral Red,80A,OROS;ALP,card_80,pill,1110.6,1719.0
+122,Fluorescent Orange,80A,OROS;ALP,oros160,disc,162.9,601.5
+123,Fluorescent Yellow,80A,OROS;ALP,oros160,disc,269.0,601.5
+124,Fluorescent Green,90B,OROS;ALP,card_90,pill,2003.0,800.0
+125,Fluorescent Rose,80A,OROS;ALP,card_80,pill,1430.4,1719.0
+126,Fluorescent Pink,90B,OROS;ALP,card_90,pill,2140.4,800.0
+131,Sand Pink,80A+66,OROS;ALP,card_80,pill,1537.0,1719.0
+132,Milky White Light,90B+66,OROS;ALP,card_90,pill,2277.8,800.0
+133,Baby Skin Pink,90B,OROS;ALP,card_90,pill,2415.2,800.0
+134,Raw Silk Light,90B+66,OROS;ALP,card_90,pill,2552.6,800.0
+135,Pale Cherry Pink,80A+66,OROS;ALP,card_80,pill,1643.6,1719.0
+136,Flush,90B+66,OROS;ALP,card_90,pill,2690.0,800.0
+137,Medium Pink,90B,OROS;ALP,card_90,pill,2827.4,800.0
+138,Light Pink,80A,OROS;ALP,card_80,pill,1750.2,1719.0
+139,Flesh,90B,OROS;ALP,card_90,pill,1316.0,900.0
+140,Light Orange,80A+66,OROS;ALP,card_80,pill,1856.8,1719.0
+141,Buttercup Yellow,90B+66,OROS;ALP,card_90,pill,1453.4,900.0
+142,Pale Cream,90B,OROS;ALP,card_90,pill,1590.8,900.0
+143,Mint Blue,90B+66,OROS;ALP,card_90,pill,1728.2,900.0
+144,Pale Baby Blue,80A+66,OROS;ALP,card_80,pill,1963.4,1719.0
+145,Pale Lavender,90B+66,OROS;ALP,card_90,pill,1865.6,900.0
+146,Mauve Shadow,90B+66,OROS;ALP,card_90,pill,2003.0,900.0
+147,Pale Lilac,80A+66,OROS;ALP,card_80,pill,2070.0,1719.0
+163,Green Bice,80A+66,OROS;ALP,card_80,pill,2176.6,1719.0
+164,Anise,90B,OROS;ALP,card_90,pill,2140.4,900.0
+166,Mignonette,90B+66,OROS;ALP,card_90,pill,2277.8,900.0
+167,Pale Green Light,90B+66,OROS;ALP,card_90,pill,2415.2,900.0
+169,Putty,90B,OROS;ALP,card_90,pill,2552.6,900.0
+171,Jade Green,90B+66,OROS;ALP,card_90,pill,2690.0,900.0
+172,Spectrum Green,80A+66,OROS;ALP,oros160,disc,375.1,601.5
+173,Dim Green,90B+66,OROS;ALP,card_90,pill,2827.4,900.0
+174,Spring Dim Green,90B+66,OROS;ALP,card_90,pill,1316.0,1000.0
+175,Lime Green,90B,OROS;ALP,card_90,pill,1453.4,1000.0
+178,Cool Green,90B+66,OROS;ALP,card_90,pill,1590.8,1000.0
+179,Aqua Mint,90B+66,OROS;ALP,card_90,pill,1728.2,1000.0
+182,Frost Blue,90B+66,OROS;ALP,card_90,pill,1865.6,1000.0
+183,Phthalo Blue,80A+66,OROS;ALP,oros160,disc,481.1,601.5
+185,Pale Blue Light,90B+66,OROS;ALP,card_90,pill,2003.0,1000.0
+196,Pale Pink Light,90B+66,OROS;ALP,card_90,pill,2140.4,1000.0
+198,Tender Pink,90B,OROS;ALP,card_90,pill,2277.8,1000.0
+301,Chamois,48,OROS;ALP,card_48,pill,1006.0,2677
+302,Lipstick Natural,48,OROS;ALP,card_48,pill,1113.0,2677
+303,Camel Brown,48,OROS;ALP,card_48,pill,1220.0,2677
+304,Barley Beige Light,66+48,OROS;ALP,card_48,pill,1327.0,2677
+305,Light Suntan,48,OROS;ALP,card_48,pill,1434.0,2677.0
+306,Dark Suntan,48,OROS;ALP,card_48,pill,1541.0,2677
+307,Reddish Brass,48,OROS;ALP,card_48,pill,1648.0,2677
+308,Dusky Rose,48,OROS;ALP,card_48,pill,1755.0,2677
+309,Tea Rose,66+48,OROS;ALP,card_48,pill,1862.0,2677
+310,Blush,66+48,OROS;ALP,oros160,disc,693.3,601.5
+311,Prawn,48,OROS;ALP,card_48,pill,2076.0,2677
+312,Pinkish White,48,OROS;ALP,card_48,pill,2183.0,2677
+313,Rose Salmon,66+48,OROS;ALP,card_48,pill,2290.0,2677
+314,Silk,48,OROS;ALP,card_48,pill,2397.0,2677
+315,Powder Pink,48,OROS;ALP,card_48,pill,2504.0,2677
+316,Flesh Pink,48,OROS;ALP,card_48,pill,2611.0,2677
+317,Cotton Pearl,48,OROS;ALP,card_48,pill,2718.0,2677
+318,Peach Pull,66+48,OROS;ALP,card_48,pill,2825.0,2677
+319,Orange Beige,48,OROS;ALP,card_48,pill,1006.0,2755
+320,Floral White,48,OROS;ALP,oros160,disc,799.4,601.5
+321,Pale Fruit Pink,48,OROS;ALP,card_48,pill,1220.0,2755
+322,Pink Flamingo,48,OROS;ALP,oros160,disc,905.5,601.5
+323,Fruit Pink,48,OROS;ALP,card_48,pill,1434.0,2755
+324,Cherry White,48,OROS;ALP,card_48,pill,1541.0,2755
+325,Pinkish Vanilla,48,OROS;ALP,card_48,pill,1648.0,2755
+326,Baby Skin,48,OROS;ALP,card_48,pill,1755.0,2755
+327,Caribe Cocoa,48,OROS;ALP,card_48,pill,1862.0,2755
+328,Africano,48,OROS;ALP,card_48,pill,1969.0,2755
+329,Burnt Umber,48,OROS;ALP,card_48,pill,2076.0,2755
+330,Egg Shell,48,OROS;ALP,card_48,pill,2183.0,2755
+331,Milky White,48,OROS;ALP,card_48,pill,2290.0,2755
+332,Raw Silk,48,OROS;ALP,card_48,pill,2397.0,2755
+333,Light Camel,48,OROS;ALP,card_48,pill,2504.0,2755
+334,Light Walnut,48,OROS;ALP,card_48,pill,2611.0,2755
+371,Beige Palm,48,OROS,card_48,pill,2718.0,2755
+372,Fruit Flesh,48,OROS,card_48,pill,2825.0,2755
+374,Fructus Momordicae,48,OROS,card_48,pill,1006.0,2833
+375,Peru,48,OROS,card_48,pill,1113.0,2833
+376,Sunset Glow,48,OROS,card_48,pill,1220.0,2833
+377,Snow Purple,48,OROS,oros160,disc,1011.5,601.5
+378,Red Brown Coco,48,OROS,card_48,pill,1434.0,2833
+379,Quartz Purple,48,OROS,card_48,pill,1541.0,2833
+386,Brown Seaweed,48,OROS,card_48,pill,1648.0,2833
+387,Juncus Dust Grey,48,OROS,card_48,pill,1755.0,2833
+388,Deep Misty Grey,48,OROS,card_48,pill,1862.0,2833
+389,Nightfall,48,OROS,card_48,pill,1969.0,2833
+401,Pale Azure,66,OROS;ALP,card_66,pill,1443.2,2315
+402,Aqua Cyan,66,OROS;ALP,card_66,pill,1549.0,2315
+403,Powder Blue,66,OROS;ALP,card_66,pill,1654.8,2315
+404,Myosotis Sylvatica,66,OROS;ALP,card_66,pill,1760.6,2315
+405,Cornflower Blue,66,OROS;ALP,card_66,pill,1866.4,2315
+406,Milky Lavender,66,OROS;ALP,card_66,pill,1972.2,2315
+407,Pale Thistle,66,OROS;ALP,card_66,pill,2078.0,2315
+408,Thistle,66,OROS;ALP,card_66,pill,2183.8,2315
+409,Periwinkle,66,OROS;ALP,card_66,pill,2289.6,2315
+410,Wisteria,66,OROS;ALP,card_66,pill,2395.4,2315
+411,Light Wheat,66,OROS;ALP,card_66,pill,2501.2,2315
+413,Clams Pink,66,OROS;ALP,card_66,pill,2607.0,2315
+414,Light Pink Tulips,66,OROS;ALP,card_66,pill,2712.8,2315
+415,Gladiolus,66,OROS;ALP,card_66,pill,2818.6,2315
+416,Penoy,66,OROS;ALP,card_66,pill,1020.0,2391
+417,Jasmine,66,OROS;ALP,card_66,pill,1125.8,2391
+418,Carambola,66,OROS;ALP,card_66,pill,1231.6,2391
+419,Yellow Barberry,66,OROS;ALP,card_66,pill,1337.4,2391
+420,Gardenia Yellow,66,OROS;ALP,card_66,pill,1443.2,2391
+421,Mango,66,OROS;ALP,card_66,pill,1549.0,2391
+422,Celadon,66,OROS;ALP,card_66,pill,1654.8,2391
+423,Milk Green,66,OROS;ALP,card_66,pill,1760.6,2391
+424,Honeydew Melon,66,OROS;ALP,card_66,pill,1866.4,2391
+426,Fresh Bamboo,66,OROS;ALP,card_66,pill,1972.2,2391
+502,502,-,OROS,oros160,disc,1117.6,601.5
+510,510,-,OROS,oros160,disc,1223.7,601.5
+515,515,-,OROS,oros160,disc,1329.8,601.5
+521,521,-,OROS,oros160,disc,1435.9,601.5
+528,528,-,OROS,oros160,disc,162.9,697.8
+536,536,-,OROS,oros160,disc,269.0,697.8
+538,538,-,OROS,oros160,disc,375.1,697.8
+552,552,-,OROS,oros160,disc,481.1,697.8
+555,555,-,OROS,oros160,disc,587.2,697.8
+558,558,-,OROS,oros160,disc,693.3,697.8
+561,561,-,OROS,oros160,disc,799.4,697.8
+564,564,-,OROS,oros160,disc,905.5,697.8
+572,572,-,OROS,oros160,disc,1011.5,697.8
+576,576,-,OROS,oros160,disc,1117.6,697.8
+581,581,-,OROS,oros160,disc,1223.7,697.8
+584,584,-,OROS,oros160,disc,1329.8,697.8
+590,590,-,OROS,oros160,disc,1435.9,697.8
+593,593,-,OROS,oros160,disc,162.9,794.2
+596,596,-,OROS,oros160,disc,269.0,794.2
+598,598,-,OROS,oros160,disc,375.1,794.2
+602,602,-,OROS,oros160,disc,481.1,794.2
+606,606,-,OROS,oros160,disc,587.2,794.2
+610,610,-,OROS,oros160,disc,693.3,794.2
+612,612,-,OROS,oros160,disc,799.4,794.2
+613,613,-,OROS,oros160,disc,905.5,794.2
+618,618,-,OROS,oros160,disc,1011.5,794.2
+629,629,-,OROS,oros160,disc,1117.6,794.2
+632,632,-,OROS,oros160,disc,1223.7,794.2
+638,638,-,OROS,oros160,disc,1329.8,794.2
+639,639,-,OROS,oros160,disc,1435.9,794.2
+641,641,-,OROS,oros160,disc,162.9,890.6
+643,643,-,OROS,oros160,disc,269.0,890.6
+645,645,-,OROS,oros160,disc,375.1,890.6
+651,651,-,OROS,oros160,disc,481.1,890.6
+656,656,-,OROS,oros160,disc,587.2,890.6
+661,661,-,OROS,oros160,disc,693.3,890.6
+665,665,-,OROS,oros160,disc,799.4,890.6
+667,667,-,OROS,oros160,disc,905.5,890.6
+670,670,-,OROS,oros160,disc,1011.5,890.6
+673,673,-,OROS,oros160,disc,1117.6,890.6
+679,679,-,OROS,oros160,disc,1223.7,890.6
+682,682,-,OROS,oros160,disc,1329.8,890.6
+692,692,-,OROS,oros160,disc,1435.9,890.6
+705,705,-,OROS,oros160,disc,162.9,986.9
+712,712,-,OROS,oros160,disc,269.0,986.9
+716,716,-,OROS,oros160,disc,375.1,986.9
+737,737,-,OROS,oros160,disc,481.1,986.9
+751,751,-,OROS,oros160,disc,587.2,986.9
+754,754,-,OROS,oros160,disc,693.3,986.9
+757,757,-,OROS,oros160,disc,799.4,986.9
+759,759,-,OROS,oros160,disc,905.5,986.9
+763,763,-,OROS,oros160,disc,1011.5,986.9
+766,766,-,OROS,oros160,disc,1117.6,986.9
+771,771,-,OROS,oros160,disc,1223.7,986.9
+773,773,-,OROS,oros160,disc,1329.8,986.9
+777,777,-,OROS,oros160,disc,1435.9,986.9
+780,780,-,OROS,oros160,disc,162.9,1083.3
+781,781,-,OROS,oros160,disc,269.0,1083.3
+791,791,-,OROS,oros160,disc,375.1,1083.3
+794,794,-,OROS,oros160,disc,481.1,1083.3
+797,797,-,OROS,oros160,disc,587.2,1083.3
+802,802,-,OROS,oros160,disc,693.3,1083.3
+806,806,-,OROS,oros160,disc,799.4,1083.3
+811,811,-,OROS,oros160,disc,905.5,1083.3
+814,814,-,OROS,oros160,disc,1011.5,1083.3
+817,817,-,OROS,oros160,disc,1117.6,1083.3
+819,819,-,OROS,oros160,disc,1223.7,1083.3
+822,822,-,OROS,oros160,disc,1329.8,1083.3
+850,850,-,OROS,oros160,disc,1435.9,1083.3
+858,858,-,OROS,oros160,disc,162.9,1179.6
+863,863,-,OROS,oros160,disc,269.0,1179.6
+866,866,-,OROS,oros160,disc,375.1,1179.6
+869,869,-,OROS,oros160,disc,481.1,1179.6
+872,872,-,OROS,oros160,disc,587.2,1179.6
+874,874,-,OROS,oros160,disc,693.3,1179.6
+877,877,-,OROS,oros160,disc,799.4,1179.6
+878,878,-,OROS,oros160,disc,905.5,1179.6
+883,883,-,OROS,oros160,disc,1011.5,1179.6
+884,884,-,OROS,oros160,disc,1117.6,1179.6
+885,885,-,OROS,oros160,disc,1223.7,1179.6
+892,892,-,OROS,oros160,disc,1329.8,1179.6
+894,894,-,OROS,oros160,disc,1435.9,1179.6
+898,898,-,OROS,oros160,disc,162.9,1276.0
+903,903,-,OROS,oros160,disc,269.0,1276.0
+906,906,-,OROS,oros160,disc,375.1,1276.0
+913,913,-,OROS,oros160,disc,481.1,1276.0
+921,921,-,OROS,oros160,disc,587.2,1276.0
+929,929,-,OROS,oros160,disc,693.3,1276.0
+933,933,-,OROS,oros160,disc,799.4,1276.0
+950,950,-,OROS,oros160,disc,905.5,1276.0
+BG1,Blue Grey,90B,OROS;ALP,oros160,disc,1011.5,1276.0
+BG3,Blue Grey,80A,OROS;ALP,oros160,disc,1117.6,1276.0
+BG5,Blue Grey,80A,OROS;ALP,oros160,disc,1223.7,1276.0
+BG7,Blue Grey,80A,OROS;ALP,oros160,disc,1329.8,1276.0
+BG9,Blue Grey,90B,OROS;ALP,oros160,disc,1435.9,1276.0
+CG0.5,Cool Grey,90B,OROS;ALP,oros160,disc,162.9,1372.4
+CG1,Cool Grey,90B,OROS;ALP,card_90,pill,2827.4,1000.0
+CG2,Cool Grey,90B,OROS;ALP,oros160,disc,269.0,1372.4
+CG3,Cool Grey,90B,OROS;ALP,oros160,disc,375.1,1372.4
+CG4,Cool Grey,90B,OROS;ALP,card_90,pill,1590.8,1100.0
+CG5,Cool Grey,90B,OROS;ALP,oros160,disc,481.1,1372.4
+CG6,Cool Grey,90B,OROS;ALP,card_90,pill,1865.6,1100.0
+CG7,Cool Grey,90B,OROS;ALP,oros160,disc,587.2,1372.4
+CG8,Cool Grey,90B,OROS;ALP,card_90,pill,2140.4,1100.0
+CG9,Cool Grey,80A,OROS;ALP,oros160,disc,693.3,1372.4
+GG1,Green Grey,90B,OROS;ALP,oros160,disc,799.4,1372.4
+GG3,Green Grey,80A,OROS;ALP,oros160,disc,905.5,1372.4
+GG5,Green Grey,80A,OROS;ALP,oros160,disc,1011.5,1372.4
+GG7,Green Grey,90B,OROS;ALP,oros160,disc,1117.6,1372.4
+GG9,Green Grey,90B,OROS;ALP,oros160,disc,1223.7,1372.4
+WG0.5,Warm Grey,80A,OROS;ALP,oros160,disc,1329.8,1372.4
+WG1,Warm Grey,90B,OROS;ALP,card_90,pill,1316.0,1200.0
+WG2,Warm Grey,90B,OROS;ALP,oros160,disc,1435.9,1372.4
+WG3,Warm Grey,80A,OROS;ALP,oros160,disc,162.9,1468.7
+WG4,Warm Grey,90B,OROS;ALP,card_90,pill,1590.8,1200.0
+WG5,Warm Grey,90B,OROS;ALP,oros160,disc,269.0,1468.7
+WG6,Warm Grey,80A,OROS;ALP,card_80,pill,1430.4,1798.0
+WG7,Warm Grey,90B,OROS;ALP,oros160,disc,375.1,1468.7
+WG8,Warm Grey,80A,OROS;ALP,card_80,pill,1537.0,1798.0
+WG9,Warm Grey,90B,OROS;ALP,oros160,disc,481.1,1468.7

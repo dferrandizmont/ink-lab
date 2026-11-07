@@ -12,9 +12,9 @@
 [![Downloads](https://img.shields.io/github/downloads/dferrandizmont/ink-lab/total?label=downloads&color=30382F)](https://github.com/dferrandizmont/ink-lab/releases)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Buy_me_a_coffee-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/danielmfdev)
 
-A swatch and palette companion for people who draw with alcohol markers. Look up
-a colour code, match a photo to your markers and build colour-theory palettes
-with them. Android app with light and dark themes, a tablet side rail and six
+A swatch and palette companion for people who draw with alcohol markers. Look up a
+colour code, match a photo to your markers and build colour-theory palettes with them.
+App for Android, iPhone and iPad, with light and dark themes, tablet layouts and six
 languages.
 
 **Free · No ads · No account · Works offline · Open source**
@@ -57,7 +57,7 @@ inklab@mainshai.com.
 
 <p>
   <a href="docs/readme/en/01-swatches.png"><img src="docs/readme/en/01-swatches.png" width="19%" alt="Swatches: the colours of the brand, each with its code and its name"></a>
-  <a href="docs/readme/en/02-swatch-detail.png"><img src="docs/readme/en/02-swatch-detail.png" width="19%" alt="A marker's detail: its hex, its closest alternatives and the same colour in other brands"></a>
+  <a href="docs/readme/en/02-swatch-detail.png"><img src="docs/readme/en/02-swatch-detail.png" width="19%" alt="A marker's detail: its hex, its ink level, your swatch photo, shadow and light, and the same colour in other brands"></a>
   <a href="docs/readme/en/03-match.png"><img src="docs/readme/en/03-match.png" width="19%" alt="A colour tapped in a photo, matched to the closest marker of your collection"></a>
   <a href="docs/readme/en/04-palette.png"><img src="docs/readme/en/04-palette.png" width="19%" alt="A scene palette, with the role and the code of every colour"></a>
   <a href="docs/readme/en/05-diary.png"><img src="docs/readme/en/05-diary.png" width="19%" alt="The artwork diary: a summary of your work and the last entries"></a>
@@ -71,6 +71,7 @@ inklab@mainshai.com.
   <a href="docs/readme/en/07-ideas.png"><img src="docs/readme/en/07-ideas.png" width="19%" alt="Ideas: exercises and techniques, with their palettes and your favourites"></a>
   <a href="docs/readme/en/08-collection.png"><img src="docs/readme/en/08-collection.png" width="19%" alt="My collection: what you own, and what to buy next"></a>
   <a href="docs/readme/en/09-settings-dark.png"><img src="docs/readme/en/09-settings-dark.png" width="19%" alt="Settings in the dark theme"></a>
+  <a href="docs/readme/en/10-colour-map.png"><img src="docs/readme/en/10-colour-map.png" width="19%" alt="The colour map: where your markers sit by hue and value, and where the gaps are"></a>
 </p>
 
 </details>
@@ -79,51 +80,59 @@ Tap a screenshot to enlarge it.
 
 ## Features
 
-- **Artwork diary.** A log of what you paint, with photos, the markers you used
-  and the numbers behind it.
-- **Four brands.** Ohuhu (503 colours), DecoTime (313), Copic (358) and Finecolour
-  (480), with the closest marker of every other brand under «In other brands».
-- **Match.** Tap a point in a photo to find your closest marker, and fix the
-  white balance.
-- **Palettes and scenes.** Colour-theory harmonies, blending chains, and 67
-  ready-made scenes in 11 categories.
-- **Backup.** Save everything in a `.zip` file, with the diary photos inside.
-- **Shopping.** A wishlist, the markers that dried out, and what to buy next.
+- **Fifteen brands, 3,420 colours.** Ohuhu, DecoTime, Copic (Sketch, Ciao and Classic),
+  Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum
+  Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush and Artist's
+  Loft, with a brand search and «In other brands».
+- **Marker detail.** Ink level and a refill note, a photo of your real swatch, shadow
+  and light, «Blend with…» and a near-duplicate warning.
+- **Match.** Tap a point in a photo to find your closest marker, fix the white balance
+  and check the values in grey.
+- **Palettes and scenes.** Colour-theory harmonies, blending chains and 67 ready-made
+  scenes, with easel mode and palettes you can share or import as text.
+- **Tools.** A colour map of your collection, a translator for recipes from other
+  brands, your own blending recipes with a photo, and export or import as CSV or text.
+- **Artwork diary.** A log of what you paint, with photos, the markers you used and the
+  numbers behind it.
+- **Backup.** Save everything in a `.zip` file, photos included; Settings shows your
+  last backup date.
 
 <details>
 <summary>More features</summary>
 
-- **Colour vision.** Preview a palette as someone with protanopia, deuteranopia,
-  tritanopia or achromatopsia sees it.
+- **Shopping.** A wishlist, the markers that dried out, and what to buy next.
+- **Colour vision.** Preview a palette as someone with colour blindness sees it.
 - **Printable swatch chart.** A4 pages with a labelled box for each marker you own.
 - **Ideas.** Exercises and techniques with their own palettes, and your favourites.
-- **Swatches and your own colours.** Codes, names and hex values, plus your
-  marker’s real colour.
-- **Share.** Send a palette, a chart or a diary entry to another app as an image.
-- **AI, if you want it.** Optional palette suggestions: Gemini Nano on the phone
-  or OpenRouter with your key.
-- **Idea of the day widget.** Android only: today’s exercise in your marker
-  colours, on the home screen. It changes daily and opens the idea on a tap.
+- **Swatches and your own colours.** Codes, names and hex values (a hex code finds the
+  nearest markers), plus your marker’s real colour.
+- **AI, if you want it.** Optional palette suggestions: Gemini Nano on the phone or
+  OpenRouter with your key.
+- **Idea of the day widget.** Android only: today’s exercise in your marker colours, on
+  the home screen.
+- **Shortcuts.** Quick actions on the app icon for Match, a new palette and the swatch
+  search.
+- **Settings.** Open-source licences, «Send feedback» and a local error log you can
+  share or clear.
 
 </details>
 
 ## Privacy
 
-Data stays on your phone: no accounts, no server, no analytics, no ads or
-tracking, and without AI no network use. On-device AI’s ML Kit sends Google usage
-diagnostics, never prompts, colours or photos. Camera and gallery access is only
-for photo matching, scenes, your own colours and the diary; those photos are
-processed on the device and the diary’s stay in the app’s private folder. Sharing
-a palette, a chart or the `.zip` backup hands the file to the app you pick.
+Data stays on your phone: no accounts, no server, no analytics, no ads or tracking, and
+without AI no network use. On-device AI’s ML Kit sends Google usage diagnostics, never
+prompts, colours or photos. Camera and gallery access is only for photo matching,
+scenes, your own colours, the diary, real swatches and blending recipes; those photos
+are processed on the device, and the ones you keep stay in the app’s private folder.
+Sharing a palette, a chart or the `.zip` backup hands the file to the app you pick.
 
 [Website](https://inklab.mainshai.com) · [Privacy policy](https://inklab.mainshai.com/privacy/) ·
 [Technical details](docs/privacy.en.md) · Support: **inklab@mainshai.com**.
 
 ## What's new
 
-Version 0.10.0 is out. New: an Android home-screen widget with the idea of the
-day, in the colours of your own markers. The 0.9 series tidied the app up. Full
-list in [CHANGELOG.md](CHANGELOG.md) and in the
+Version 1.0.0 (first stable) adds eleven brands, a richer marker detail, new tools, and
+tablet and iPad layouts. Full list in [CHANGELOG.md](CHANGELOG.md) and in the
 [releases](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contributing
@@ -138,8 +147,8 @@ documentation and texts: [CC BY-SA 4.0](LICENSE-CONTENT.md). Catalogue data are
 third-party references outside both licences; the typefaces (SIL OFL 1.1) and
 other third-party material keep their own terms.
 
-An independent project: **not affiliated with, sponsored by or endorsed by Ohuhu,
-DecoTime, Copic or Finecolour**. "Ohuhu", "Oahu", "DecoTime", "Copic" and "Finecolour" are trademarks of their owners.
+An independent project: **not affiliated with, sponsored by or endorsed by any of
+these marker brands**. The names of the brands above are trademarks of their respective owners.
 Full notices: [NOTICE.md](NOTICE.md).
 
 To report a vulnerability: [SECURITY.md](SECURITY.md).

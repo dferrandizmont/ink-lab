@@ -61,9 +61,11 @@ final class Harness {
     required this.ownColors,
     required this.wishlist,
     required this.dried,
+    required this.markerExtras,
     required this.artworkDiary,
     required this.photos,
     required this.ideaFavorites,
+    required this.blendRecipes,
   });
 
   final KeyValueStore store;
@@ -74,6 +76,9 @@ final class Harness {
   final StoredOwnColorRepository ownColors;
   final StoredWishlistRepository wishlist;
   final StoredDriedMarkerRepository dried;
+
+  /// The ink level, refill notes and swatch photos (over [photos]).
+  final StoredMarkerExtrasRepository markerExtras;
   final StoredArtworkDiaryRepository artworkDiary;
 
   /// The photo files behind [artworkDiary].
@@ -81,6 +86,9 @@ final class Harness {
 
   /// The favourite ideas and the ideas opened last.
   final StoredIdeaFavoritesRepository ideaFavorites;
+
+  /// The blending recipes, whose photos live in [photos] too.
+  final StoredBlendRecipeRepository blendRecipes;
 
   BackupService backup() => BackupService(
     appSettings: appSettings,
@@ -92,10 +100,15 @@ final class Harness {
     dried: dried,
     artworkDiary: artworkDiary,
     ideaFavorites: ideaFavorites,
+    recipes: blendRecipes,
+    markerExtras: markerExtras,
   );
 }
 
-Future<Harness> harness([Map<String, Object>? initial]) async {
+Future<Harness> harness([
+  Map<String, Object>? initial,
+  ArtworkDiaryStorage? diaryStorage,
+]) async {
   final store = InMemoryKeyValueStore(initial);
   final appSettings = StoredAppSettingsRepository(store);
   final savedPalettes = StoredSavedPaletteRepository(store);
@@ -105,8 +118,21 @@ Future<Harness> harness([Map<String, Object>? initial]) async {
   final wishlist = StoredWishlistRepository(store);
   final dried = StoredDriedMarkerRepository(store);
   final photos = InMemoryArtworkPhotoStore();
-  final artworkDiary = StoredArtworkDiaryRepository(store, photos: photos);
+  final markerExtras = StoredMarkerExtrasRepository(
+    store,
+    dried: dried,
+    photos: photos,
+  );
+  final artworkDiary = StoredArtworkDiaryRepository(
+    store,
+    photos: photos,
+    storage: diaryStorage ?? InMemoryArtworkDiaryStorage(),
+  );
   final ideaFavorites = StoredIdeaFavoritesRepository(store);
+  final blendRecipes = StoredBlendRecipeRepository(
+    storage: InMemoryArtworkDiaryStorage(),
+    photos: photos,
+  );
   await appSettings.load();
   await savedPalettes.load();
   await history.load();
@@ -114,8 +140,10 @@ Future<Harness> harness([Map<String, Object>? initial]) async {
   await ownColors.load();
   await wishlist.load();
   await dried.load();
+  await markerExtras.load();
   await artworkDiary.load();
   await ideaFavorites.load();
+  await blendRecipes.load();
   return Harness(
     store: store,
     appSettings: appSettings,
@@ -125,8 +153,10 @@ Future<Harness> harness([Map<String, Object>? initial]) async {
     ownColors: ownColors,
     wishlist: wishlist,
     dried: dried,
+    markerExtras: markerExtras,
     artworkDiary: artworkDiary,
     photos: photos,
     ideaFavorites: ideaFavorites,
+    blendRecipes: blendRecipes,
   );
 }

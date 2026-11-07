@@ -308,12 +308,12 @@ void main() {
 
   test('the supported locales are the six languages of the app', () {
     expect(AppLocalizations.supportedLocales.toSet(), <Locale>{
-      Locale('en'),
-      Locale('es'),
-      Locale('de'),
-      Locale('fr'),
-      Locale('pt'),
-      Locale('it'),
+      const Locale('en'),
+      const Locale('es'),
+      const Locale('de'),
+      const Locale('fr'),
+      const Locale('pt'),
+      const Locale('it'),
     });
   });
 }

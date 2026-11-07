@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 
@@ -19,6 +20,18 @@ final class ShareImage {
 abstract interface class ShareSink {
   /// Opens the share sheet with [images]; completes when it closes.
   Future<void> shareImages(List<ShareImage> images, {String? subject});
+
+  /// Opens the share sheet with [text] as plain text, to paste into a chat or
+  /// a note; completes when it closes.
+  Future<void> shareText(String text, {String? subject});
+
+  /// Opens the share sheet with [text] as a plain-text file called [name];
+  /// completes when it closes.
+  Future<void> shareTextFile(
+    String text, {
+    required String name,
+    String? subject,
+  });
 }
 
 /// The system share sheet, through `share_plus`. The images are handed over as
@@ -43,6 +56,39 @@ final class SystemShareSink implements ShareSink {
         fileNameOverrides: <String>[
           for (final ShareImage image in images) image.name,
         ],
+        subject: subject,
+        sharePositionOrigin: systemShareOrigin(),
+      ),
+    );
+  }
+
+  @override
+  Future<void> shareText(String text, {String? subject}) async {
+    await SharePlus.instance.share(
+      ShareParams(
+        text: text,
+        subject: subject,
+        sharePositionOrigin: systemShareOrigin(),
+      ),
+    );
+  }
+
+  @override
+  Future<void> shareTextFile(
+    String text, {
+    required String name,
+    String? subject,
+  }) async {
+    await SharePlus.instance.share(
+      ShareParams(
+        files: <XFile>[
+          XFile.fromData(
+            Uint8List.fromList(utf8.encode(text)),
+            mimeType: 'text/plain',
+            name: name,
+          ),
+        ],
+        fileNameOverrides: <String>[name],
         subject: subject,
         sharePositionOrigin: systemShareOrigin(),
       ),

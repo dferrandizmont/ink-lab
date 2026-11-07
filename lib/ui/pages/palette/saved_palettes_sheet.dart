@@ -6,6 +6,7 @@ import '../../../core/scene_catalog.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/ink_button.dart';
 import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
@@ -32,6 +33,7 @@ class SavedPalettesSheet extends StatelessWidget {
     this.onLoad,
     this.onShare,
     this.onAddToDiary,
+    this.onImport,
     this.allowClearAll = false,
   });
 
@@ -61,6 +63,10 @@ class SavedPalettesSheet extends StatelessWidget {
   /// Starts a diary entry linked to the palette. `null` hides the entry.
   final ValueChanged<SavedPalette>? onAddToDiary;
 
+  /// Opens "Import from text" (the sheet closes first). `null` hides the
+  /// button (Settings).
+  final VoidCallback? onImport;
+
   /// Whether the sheet has the "⋯" at its top right (Settings): only then the
   /// title leaves room for it.
   final bool allowClearAll;
@@ -73,6 +79,7 @@ class SavedPalettesSheet extends StatelessWidget {
     ValueChanged<SavedPalette>? onLoad,
     ValueChanged<SavedPalette>? onShare,
     ValueChanged<SavedPalette>? onAddToDiary,
+    VoidCallback? onImport,
     bool allowClearAll = false,
   }) {
     // Created once here: the draggable sheet rebuilds its builder on every
@@ -110,6 +117,7 @@ class SavedPalettesSheet extends StatelessWidget {
             onLoad: onLoad,
             onShare: onShare,
             onAddToDiary: onAddToDiary,
+            onImport: onImport,
             allowClearAll: allowClearAll,
           ),
     );
@@ -184,6 +192,7 @@ class SavedPalettesSheet extends StatelessWidget {
                     t.paletteSavedEmpty,
                     style: AppTypography.secondary.copyWith(color: ink.fg2),
                   ),
+                  ..._importButton(context),
                 ],
               );
             }
@@ -210,12 +219,34 @@ class SavedPalettesSheet extends StatelessWidget {
                           if (i > 0) const SizedBox(height: InkSpacing.block),
                           _row(context, saved[i], hexByCode),
                         ],
+                        ..._importButton(context),
                       ],
                     );
                   },
             );
           },
     );
+  }
+
+  /// "Import from text" at the end of the list, when the page offers it.
+  List<Widget> _importButton(BuildContext context) {
+    final VoidCallback? openImport = onImport;
+    if (openImport == null) return const <Widget>[];
+    return <Widget>[
+      const SizedBox(height: InkSpacing.block),
+      Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: InkButton.text(
+          key: const ValueKey<String>('palette-import-open'),
+          label: context.l10n.paletteImportTitle,
+          icon: InkIcons.download,
+          onPressed: () {
+            Navigator.of(context).maybePop();
+            openImport();
+          },
+        ),
+      ),
+    ];
   }
 
   Widget _row(

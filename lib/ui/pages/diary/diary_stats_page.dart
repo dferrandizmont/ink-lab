@@ -8,6 +8,7 @@ import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/ink_button.dart';
@@ -38,6 +39,17 @@ class DiaryStatsPage extends StatefulWidget {
 
   /// Height of the status bar and of the per-month bars.
   static const double barHeight = 8;
+
+  /// The fill of the "finished" share of the status bar and its legend dot.
+  ///
+  /// `fg`, not `action`: `action` (#30382F) against the `strong` fill of the
+  /// other share is 2.9:1 in the light theme, under the 3:1 of WCAG 1.4.11.
+  /// `fg` against `strong` is 3.9:1 (light) and 4.3:1 (dark), and both are
+  /// over 3:1 against the page (see test/ui/diary/diary_contrast_test.dart).
+  static Color finishedFill(InkColors ink) => ink.fg;
+
+  /// The fill of the "in progress" share of the status bar and its legend dot.
+  static Color inProgressFill(InkColors ink) => ink.strong;
 
   /// Opens the page.
   static Future<void> open(BuildContext context) {
@@ -73,11 +85,19 @@ class _DiaryStatsPageState extends State<DiaryStatsPage> {
     _owned = _loadOwned(scope);
   }
 
-  /// The markers the user owns, in every brand.
+  /// The markers the user owns, in every brand. Only a brand the user has
+  /// something of is read: the catalogues of the other brands (fifteen in
+  /// all) would only be loaded to be thrown away.
   Future<List<MarkerColor>> _loadOwned(AppScope scope) async {
     final AppSettings settings = scope.settings.settings;
     final List<MarkerColor> owned = <MarkerColor>[];
     for (final MarkerBrand brand in MarkerBrand.values) {
+      final bool hasSets =
+          brand.hasRetailSets && settings.effectiveSetIds().isNotEmpty;
+      if (!hasSets &&
+          scopedCodesForBrand(settings.ownedMarkerCodes, brand.id).isEmpty) {
+        continue;
+      }
       List<MarkerColor> catalog;
       try {
         catalog = await scope.markers.loadColors(brand);
@@ -102,60 +122,63 @@ class _DiaryStatsPageState extends State<DiaryStatsPage> {
     final AppLocalizations l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.diaryStatsTitle)),
-      body: SafeArea(
-        child: StreamBuilder<List<ArtworkEntry>>(
-          stream: scope.artworkDiary.changes,
-          initialData: scope.artworkDiary.entries,
-          builder: (BuildContext context, AsyncSnapshot<List<ArtworkEntry>> s) {
-            final List<ArtworkEntry> entries = s.data ?? const <ArtworkEntry>[];
-            return FutureBuilder<List<MarkerColor>>(
-              future: _owned,
-              builder:
-                  (
-                    BuildContext context,
-                    AsyncSnapshot<List<MarkerColor>> owned,
-                  ) {
-                    final DiaryStats stats = computeDiaryStats(
-                      entries: entries,
-                      ownedMarkers: owned.data ?? const <MarkerColor>[],
-                    );
-                    return SingleChildScrollView(
-                      key: DiaryStatsPage.pageKey,
-                      padding: const EdgeInsets.fromLTRB(
-                        InkSpacing.gutter,
-                        InkSpacing.group,
-                        InkSpacing.gutter,
-                        InkSpacing.pageBottom,
-                      ),
-                      child: stats.totalEntries == 0
-                          ? Padding(
-                              padding: const EdgeInsets.only(
-                                top: InkSpacing.section,
-                              ),
-                              child: EmptyState(
-                                icon: InkIcons.edit3,
-                                title: l10n.diaryEmptyTitle,
-                                message: l10n.diaryEmptyMessage,
-                              ),
-                            )
-                          // On a tablet the bars and strips stay readable.
-                          : Center(
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(
-                                  maxWidth: DiaryStatsPage.maxContentWidth,
+      body: InkReadableWidth(
+        child: SafeArea(
+          child: StreamBuilder<List<ArtworkEntry>>(
+            stream: scope.artworkDiary.changes,
+            initialData: scope.artworkDiary.entries,
+            builder: (BuildContext context, AsyncSnapshot<List<ArtworkEntry>> s) {
+              final List<ArtworkEntry> entries =
+                  s.data ?? const <ArtworkEntry>[];
+              return FutureBuilder<List<MarkerColor>>(
+                future: _owned,
+                builder:
+                    (
+                      BuildContext context,
+                      AsyncSnapshot<List<MarkerColor>> owned,
+                    ) {
+                      final DiaryStats stats = computeDiaryStats(
+                        entries: entries,
+                        ownedMarkers: owned.data ?? const <MarkerColor>[],
+                      );
+                      return SingleChildScrollView(
+                        key: DiaryStatsPage.pageKey,
+                        padding: const EdgeInsets.fromLTRB(
+                          InkSpacing.gutter,
+                          InkSpacing.group,
+                          InkSpacing.gutter,
+                          InkSpacing.pageBottom,
+                        ),
+                        child: stats.totalEntries == 0
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                  top: InkSpacing.section,
                                 ),
-                                child: _buildSections(
-                                  context,
-                                  stats,
-                                  ownedLoaded: owned.hasData,
-                                  ownedCount: owned.data?.length ?? 0,
+                                child: EmptyState(
+                                  icon: InkIcons.edit3,
+                                  title: l10n.diaryEmptyTitle,
+                                  message: l10n.diaryEmptyMessage,
+                                ),
+                              )
+                            // On a tablet the bars and strips stay readable.
+                            : Center(
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: DiaryStatsPage.maxContentWidth,
+                                  ),
+                                  child: _buildSections(
+                                    context,
+                                    stats,
+                                    ownedLoaded: owned.hasData,
+                                    ownedCount: owned.data?.length ?? 0,
+                                  ),
                                 ),
                               ),
-                            ),
-                    );
-                  },
-            );
-          },
+                      );
+                    },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -249,7 +272,9 @@ class _StatusBar extends StatelessWidget {
                     if (stats.finished > 0)
                       Expanded(
                         flex: stats.finished,
-                        child: ColoredBox(color: ink.action),
+                        child: ColoredBox(
+                          color: DiaryStatsPage.finishedFill(ink),
+                        ),
                       ),
                     // A gap, so the two fills never rely on colour alone.
                     if (stats.finished > 0 && stats.inProgress > 0)
@@ -257,7 +282,9 @@ class _StatusBar extends StatelessWidget {
                     if (stats.inProgress > 0)
                       Expanded(
                         flex: stats.inProgress,
-                        child: ColoredBox(color: ink.strong),
+                        child: ColoredBox(
+                          color: DiaryStatsPage.inProgressFill(ink),
+                        ),
                       ),
                   ],
                 ),
@@ -268,8 +295,14 @@ class _StatusBar extends StatelessWidget {
               spacing: InkSpacing.block,
               runSpacing: InkSpacing.group,
               children: <Widget>[
-                _LegendDot(color: ink.action, text: finished),
-                _LegendDot(color: ink.strong, text: inProgress),
+                _LegendDot(
+                  color: DiaryStatsPage.finishedFill(ink),
+                  text: finished,
+                ),
+                _LegendDot(
+                  color: DiaryStatsPage.inProgressFill(ink),
+                  text: inProgress,
+                ),
               ],
             ),
           ],

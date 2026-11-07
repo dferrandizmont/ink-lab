@@ -40,7 +40,8 @@ LICENSE ships as `baseline/copic_colors_source.LICENSE`.
 
 The output keeps source order and imports only `number` as `code`, `name`
 and the official `hex` field (never `extractedColor`). Every record has
-`sets: []`: ownership is selected per marker. Validation requires exactly
+`sets: []`: ownership is selected per marker, and `lines` (`sketch`, `ciao`,
+`classic`) from MarkerMatchDB, see "Copic product lines" below. Validation requires exactly
 358 unique codes, non-empty names, six lowercase hex digits and the
 colourless blender `0`. The source is MIT, Copyright (c) 2023 David Aerne;
 the full notice is reproduced in [NOTICE.md](../../NOTICE.md).
@@ -163,8 +164,18 @@ by the catalogue suite above and by `test/core/ohuhu_catalog_test.dart`). The
 Copic snapshot is the upstream `colors.json` at the pinned commit, bundled with
 its MIT licence (`baseline/copic_colors_source.LICENSE`).
 
-These `python` suites are run by hand; no CI job runs them (the catalogue suite
-does run in `flutter test`).
+To run every generator suite at once (about 30 s; the chart ones need PyMuPDF and
+Pillow and the private `baseline/` binaries):
+
+```sh
+for t in tool/data/test_generate_*.py; do python -I -B "$t" || break; done
+```
+
+`test/core/all_brands_catalog_test.dart` pins the exact size of the fifteen
+catalogues (3,420 colours), the product lines and the stable brand ids.
+
+These `python` suites are run by hand; no CI job runs them (the catalogue suites
+do run in `flutter test`).
 
 ## Adding or changing a pack
 
@@ -199,3 +210,304 @@ python -B tool/data/test_generate_finecolour.py
 
 The offline test regenerates the committed JSON byte for byte and checks
 space filtering, malformed input and the pinned download restriction.
+
+## MarkerMatchDB: six alcohol-marker brands, plus line membership
+
+`generate_markermatch.py` (stdlib only, Python 3.9+) reads MarkerMatchDB by
+GrumpyCockatiel, Apache-2.0, pinned to commit `b6e2afedd85887ecf9d5b9a6dcc34aecf627f68f`.
+The 2,804-row CSV and licence are stored in
+`baseline/markermatch_source.csv` and `baseline/markermatch_source.LICENSE`.
+**The CSV keeps the bytes of the upstream file (CRLF line endings).** A
+`.gitattributes` rule (`-text`) stops Git from converting them, and the test
+checks the sha256, so a regenerated or re-saved copy cannot slip in.
+Only the pinned HTTPS URL on `raw.githubusercontent.com` is fetched;
+redirects away from that exact URL are rejected before following them.
+**On 2026-11-07 that URL answered 404 (the upstream repository was gone), so the
+download no longer works: always pass `--from-file` with the bundled snapshot,
+which is now the only copy we know of.**
+
+```sh
+python -B tool/data/generate_markermatch.py
+python -B tool/data/generate_markermatch.py --from-file tool/data/baseline/markermatch_source.csv
+python -B tool/data/generate_markermatch.py --from-file tool/data/baseline/markermatch_source.csv --check
+```
+
+`--out DIRECTORY` chooses the output directory for all six JSON files.
+`--check` compares bytes without writing. Validation finishes for all six
+catalogues before writing; codes must be unique, names non-empty, hex six
+lowercase digits, and counts exactly:
+
+| Asset | Colours | Selected source lines |
+| --- | ---: | --- |
+| `touch_twin_colors.json` | 202 | `touchTwinMarker`, `touchTwinBrush` |
+| `promarker_colors.json` | 148 | `winsorPromarker` |
+| `promarker_brush_colors.json` | 72 | `winsorBrushmarker` |
+| `prismacolor_colors.json` | 200 | `prismaPM`, `prismaPB` |
+| `blick_brush_colors.json` | 96 | `blickBrush` (Blick Studio Brush) |
+| `artists_loft_colors.json` | 56 | `artistsLoftDTS` (Artist's Loft dual tip) |
+
+Skipped on purpose: Copic Sketch and Wide, Prismacolor PC, Polychromos, Letraset
+Tria, Tombow and ZIG Brushmarker (`zigBM`).
+
+* **Touch Twin.** Marker and brush codes, names and hex agree. Each colour lists both
+  source line ids in `lines` (`touchTwinMarker`, `touchTwinBrush`). Ownership is
+  selected marker by marker.
+* **Prismacolor Premier.** PM/PB colours agree; one record uses the source PM code
+  with the source's space dropped, `PM23`) and the PB alias as `oldCode` (`PB23`),
+  which the existing search and palette resolver support; typing `PM 23` with a
+  space finds it too.
+* **Promarker Brush is its own brand** (`promarker_brush`), not a line of Promarker.
+  The two ranges do not line up: 15 of the 72 Brushmarker codes do not exist in
+  Promarker's 148, and 8 of the 57 shared codes carry a different name and colour
+  (`Y828` and the greys `CG02`, `CG03`, `CG05`, `WG01`, `WG03`, `WG04`, `WG05`, where
+  Promarker has "Ice Grey 5" dark and Brushmarker "Cool Grey 2" light under the same
+  code). Putting them in one brand would make one code two colours. The grey rows
+  of Promarker itself look unreliable in the source (the same code is a dark
+  "Ice Grey 5" there and a pale "Cool Grey 2" in the brush list); they are kept as
+  published.
+* **Blick Studio Brush and Artist's Loft.** Plain catalogues, codes such as `069`
+  keep their leading zeros as text.
+* All `sets` are empty.
+
+Two source rows per Touch line are excluded and reported: both conflicting `PB72`
+entries (rows 8512/8578 and 8112/8178: Napoleon Blue `3771b4`, Ultramarine
+`575aaf`). Neither hex is chosen for the ambiguous code; no code is invented.
+The source does not explain its hex provenance; these are unverified screen
+references (see `NOTICE.md`).
+
+**Membership only.** `line_codes(rows, line)` returns the codes of one source line
+without looking at hex or names. Other generators use it, never the source's
+colours: `generate_copic.py` (Copic Ciao 180, Copic Classic 214) and
+`generate_spectrum_noir.py` (the 168 classic Spectrum Noir codes). Spectrum Noir is
+not generated from this file because its hex values are wrong (median 37 per
+channel away from the maker's chart) and its names are only codes.
+
+```sh
+python -B tool/data/test_generate_markermatch.py
+sh ~/.agents/scripts/heavy.sh flutter test --no-pub test/core/all_brands_catalog_test.dart test/data/all_brands_backup_test.dart test/ui/onboarding/all_brands_onboarding_test.dart
+```
+
+The Python tests reproduce the six committed JSONs byte for byte from the
+full offline baseline and cover validation, filtering, membership, download
+restrictions, `--check` and the CSV's bytes. The Dart tests cover all fifteen
+catalogues, ownership, matching, equivalents across all brands, onboarding and
+backup.
+
+## Copic product lines (Sketch, Ciao, Classic)
+
+`copic_colors.json` is still the Sketch range (358). Each record now has
+`lines`: `["sketch"]` plus `"ciao"` (180 colours) and/or `"classic"` (214). The
+membership comes from MarkerMatchDB's `copicCiao` and `copicClassic` lines (codes
+only; every one is a Sketch code with the same name, which the generator checks).
+`generate_copic.py` reads it from `baseline/markermatch_source.csv`; `--markermatch`
+chooses another file. Colour ids (`copic:<code>`) do not change, so favourites,
+owned markers, saved palettes and backups keep working; a payload without `lines`
+parses as before. The fluorescent codes (`FB`, `FBG`, ...) are Sketch only.
+
+## Spectrum Noir (one brand, three lines)
+
+`generate_spectrum_noir.py` (stdlib only) writes `assets/data/spectrum_noir_colors.json`
+(216 records, keyed by code) from three pinned inputs:
+
+* `baseline/spectrum_noir_illustrator_chart_colors.json`, the official "Classique &
+  Illustrator" chart extraction (`generate_spectrum_noir_illustrator.py`): the name
+  and hex of every colour.
+* `baseline/spectrum_noir_triblend_chart_colors.json`, the TriBlend chart extraction
+  (`generate_spectrum_noir_triblend.py`): membership of line `triblend`. A TriBlend
+  tone is an ordinary ink code. `FS7` differs between the charts (`fce6d6` vs
+  `fae0ce`); the Illustrator chart wins. The 48 marker packs
+  (`baseline/spectrum_noir_triblend_chart_markers.json`) are not used by the app.
+* `baseline/markermatch_source.csv`: membership of line `classic`.
+
+Lines: `classic` 168, `illustrator` 216 (the whole chart: the Illustrator range is the
+classic one plus 48 colours), `triblend` 144. The chart-based files used to live in
+`assets/data/`; they are intermediates now, so they are in `baseline/` and are not
+bundled. `BLENDER` and `TRUEBLACK` in MarkerMatchDB are `BL` and `TB`; `BT6` (malformed
+hex in MarkerMatchDB, on the chart) is included. Official chart names and hex win over
+MarkerMatchDB's.
+
+```sh
+python -B tool/data/generate_spectrum_noir.py [--check]
+python -B tool/data/test_generate_spectrum_noir.py
+```
+
+## Arrtx (328 colours: OROS + ALP)
+
+`generate_arrtx.py` rebuilds `assets/data/arrtx_colors.json` offline (Pillow +
+standard library) from files pinned in `baseline/`; the URLs, hashes and the
+cards each name was read from are in `baseline/arrtx.SOURCE.txt`.
+
+```sh
+python -I -B tool/data/generate_arrtx.py
+python -I -B tool/data/generate_arrtx.py --check
+python -I -B tool/data/test_generate_arrtx.py
+```
+
+* **Source.** Arrtx's own published charts
+  (<https://arrtx.com/pages/arrtx-color-charts> and the product pages). The
+  PDF/JPG cards on the charts page are blank colouring cards (no fill), so
+  they give codes and names but no colour; the colours come from the printed
+  chips of two official product images: the OROS 160 chart (every code of the
+  160 set) and the "Color card comparison" of the OROS 90 page (the 90, 80,
+  66 and 48 skin tone sets).
+* **Codes and names.** `baseline/arrtx_codes.csv`, a hand transcription
+  (the PDFs draw their text as vector outlines, so it was read from 150 dpi
+  renders). Codes were read twice independently and agree: the card of each
+  set against the chip order of the comparison image (90, 80, 66, 48), and
+  the blank OROS 160 card against the 160 chip image. 238 colours have an
+  official name (OROS 90B, 80A, 66 and 48 cards; no code has two names).
+  **The 90 colours that exist only in the OROS 160 set (codes 502 to 950 and
+  the new BG/CG/GG/WG codes of that chart) have no published name.** Their
+  name is their code (`502`, not `OROS 502`; column `name_card` is `-`), so the
+  app shows the code where a name would be; replace them if Arrtx ever
+  publishes names.
+* **Hex.** A sample from the printed chip: `x,y` of its centre in the CSV,
+  and the generator takes the median of the dominant colour cluster inside a
+  patch well within the chip (so the printed code text is ignored). They are
+  approximate screen values from the official chart, not measured ink (same
+  approach as DecoTime). Chip source per colour: the OROS 160 chart for every
+  code that is on it, else the comparison chip (skin tone block first, then
+  90, 80, 66). The two images are rendered slightly differently (about 8
+  levels of difference on the 70 codes in both), so the groups have a faint
+  seam. Code 305 is the exception to the rule: the 160 chart prints the
+  colour of "306 Dark Suntan" under 305, so the 48 skin tone card chip
+  (light, matching the name "Light Suntan") is used.
+* **Lines.** One brand, one record per code, `lines` = `["OROS"]` (102) or
+  `["OROS", "ALP"]` (226). Arrtx states that ALP 80/90 and OROS 80/90 are the
+  same colours, and the ALP 90B, 80A, 66/40 and 36 cards carry exactly the
+  OROS codes and names (ALP 36 skin tone = 301-334 + blender). OROS 160,
+  and the 48 skin tone codes 371-389, are OROS only. The only difference
+  between the lines is the tip (brush and chisel for OROS, fine and chisel
+  for ALP). `sets` is empty; ownership is picked per marker.
+* **ALP swatches not used.** The swatch charts on the ALP product pages
+  (90, 80, 36) print very different colours for the same codes (mean channel
+  difference about 40 against the OROS chips; the 80 chart has typos and
+  wrong names, for example WG0.5 as dark brown). They are not used for hex.
+* **Names as printed.** Spelling is kept ("Canaria Yellow", "Penoy",
+  "Colorless Blender", "Barley Beige Light"). Only "Pale purple" (89) is
+  capitalised. The ALP cards differ in a few labels ("27 Powder Pink",
+  "304 Barley Beige"); the OROS card name wins.
+* The colourless blender `0` is `ffffff`, as in the other catalogues.
+* Pillow's JPEG decoder could shift a sample by one level in another
+  version; if the byte-for-byte test fails on such a difference, regenerate
+  and review the diff.
+
+## ZIG Kurecolor (KC-3000N Twin, 136 swatches)
+
+`generate_kurecolor.py` rebuilds `assets/data/kurecolor_colors.json` offline
+from `baseline/kurecolor_colors_136.png`, the official "135 colors and
+Blender" chart of Kuretake's ZIG site
+(<https://www.zig-cartoonist.com/images/lineup/colors-136.png>, on the
+product page `KC-3000N.html`; see `baseline/kurecolor.SOURCE.txt`). The
+chart is inside an HTML comment of that page (not displayed), so it may be
+older than the current range; its codes match the KC-3000N item codes of
+retailers. `baseline/kurecolor_codes.csv` is the hand transcription of code,
+name and swatch centre (136 rows); hex is sampled like Arrtx's
+(approximate screen values). The printed grey/blender codes `C.01`, `W.01`,
+`B.01` are stored without the dot (`C01`, `W01`, `B01`, the item-code form);
+`B01` is the colourless blender. Names are the printed upper case names in
+title case ("Gray" as printed). One line, so no `lines`; `sets` is empty.
+
+```sh
+python -I -B tool/data/generate_kurecolor.py
+python -I -B tool/data/generate_kurecolor.py --check
+python -I -B tool/data/test_generate_kurecolor.py
+```
+
+Both catalogues are registered brands (`arrtx`, with lines `OROS` and `ALP`, and
+`kurecolor`); `test/data/catalog_validation_test.dart` checks them with the rest.
+
+## Official PDF colour charts (Graph'it, Spectrum Noir, Marvy Le Plume)
+
+Four generators read the brand's own public colour chart, pinned in
+`baseline/` (each PDF has a `.SOURCE.txt` sidecar with the URL, retrieval date
+and sha256). They need **PyMuPDF** (`pip install pymupdf`, tested with 1.27.1)
+on top of the standard library; nothing is downloaded when they run. They share
+`chart_tools.py`. Each has `--check` (exit 1 if the committed JSON would
+change), `--from-file <pdf>` and `--out`:
+
+```sh
+python -B tool/data/generate_graphit.py [--check]
+python -B tool/data/generate_spectrum_noir_illustrator.py [--check]
+python -B tool/data/generate_spectrum_noir_triblend.py [--check]
+python -B tool/data/generate_marvy_le_plume.py [--check]
+python -B tool/data/test_generate_graphit.py        # one test file per generator
+```
+
+| Output | Source (pinned in `baseline/`) | Records |
+|---|---|---|
+| `assets/data/graphit_colors.json` | Graph'it "Nuancier 168 couleurs", page 3 of the 2025 FR catalogue (`graphit_nuancier_168.pdf`; the original is 9.8 MB, only that page is kept, checksums in the sidecar) | 168 (`GI0xxxx`, incl. Blender `GI0000`) |
+| `baseline/spectrum_noir_illustrator_chart_colors.json` (intermediate) | Spectrum Noir "Classique & Illustrator Dual-Tip colour chart, 216 colours" (`spectrum_noir_illustrator_chart.pdf`, pages 1-4; 5-8 are uncoloured copies) | 216, `lines: ["classique", "illustrator"]` |
+| `baseline/spectrum_noir_triblend_chart_colors.json` + `..._chart_markers.json` (intermediates) | Spectrum Noir "TriBlend 3-in-1 colour chart" (`spectrum_noir_triblend_chart.pdf`, page 1) | 144 tones (`lines: ["triblend"]`) and 48 markers |
+| `assets/data/marvy_le_plume_colors.json` | Marvy Uchida Le Plume "Color Spectrum Chart" (`marvy_le_plume_chart.pdf`) | 144 (122 wheel codes + 22 grid swatches) |
+
+**Method.** Codes and names are the chart's own text, matched to a swatch by
+position (the text lines under or inside it; ligatures such as "Starfish"
+normalised, split numbers such as `CR1 0` re-joined). Hex values are
+**approximate screen colours from the official chart**, not measured ink
+specifications (same approach as DecoTime):
+
+* Graph'it: the caps are flat shapes in sRGB (ICC "sRGB IEC 61966-2.1"), so the
+  hex is the fill colour itself. No CMYK/RGB conversion anywhere.
+* Spectrum Noir and Le Plume: the page is rendered at 144 dpi with its text
+  removed (PyMuPDF redaction, in memory) and the per-channel median of a 9x9
+  patch at the centre of the swatch is taken. The Spectrum Noir charts paint
+  swatches with Pantone spot colours (Lab D50 alternates, resolved by MuPDF)
+  and, for some pale colours, blend modes, so the vector fill alone is not what
+  a viewer shows; rendering handles both. No CMYK is involved in any chart.
+  Rendering depends on MuPDF's colour management: another PyMuPDF release can
+  shift a value by one step, in which case regenerate and review the diff.
+* The charts are printed/screen artwork: neighbouring colours can look alike
+  and some are identical on the chart itself (Le Plume `Y615`/`Y625`,
+  `G664`/`G668`, `R800`/`R813`, `V750`/`P780`).
+
+**Per-brand notes**
+
+* Graph'it: the Blender cap is a black-to-white gradient, recorded as
+  colourless `ffffff` (same as Copic `0`). Names are kept as printed, including
+  `Sun (Y)`, `Cyan (C)`, `Magenta (M)`, `Black (K)` and the chart's spellings
+  (`Artic Blue`). The chart notes that colours are limited by four-colour
+  printing and that the maker publishes HTML/CMYK values on its site; those
+  were not used.
+* Spectrum Noir Illustrator/Classique: 216 unique codes. 165 of the 167
+  classic Spectrum Noir codes of the MarkerMatchDB import (brand "Spectrum
+  Noir") are on this chart with the same code; the other two are `BLENDER` ->
+  `BL` and `TRUEBLACK` -> `TB`. The remaining 49 codes are not in that import:
+  48 new colours (families `AB`, `AG`, `AP`, `BO`, `DP`, `GY`, `MB`, `MG`,
+  `PV`, `RB`, `VB`, `YG`) and `BT6`, a classic colour the import lacks
+  (it has 167, not 168). So Illustrator/Classique is the classic range plus 48
+  colours. The hex values of the 165 shared codes differ a lot from the
+  MarkerMatchDB ones (median channel difference 37, up to 131, e.g. `EB1`
+  `fdfbee` vs `cc926b` here); the official chart should win.
+* Spectrum Noir TriBlend: each marker has 3 tones, and the chart prints the
+  ordinary ink code on each tone (`DR1 DR3 DR4`...). All 144 tone codes are
+  among the Illustrator 216 and their hex agrees with that chart within 8 steps
+  (printing noise). The chart has no TriBlend-specific codes (no `TB-xx-n`), so
+  a tone record uses the ink code, and its `name` is the ink's name from the
+  Illustrator chart (`DR1` Red). `spectrum_noir_triblend_markers.json` lists the
+  48 markers as the chart names them (`Dark Red Blend`, `Coral Shades`) with
+  their tone codes in chart order (left, right, bottom). The chart prints
+  "True Bluelue Shades" for `TB5/TB6/TB9`: corrected to "True Blue Shades".
+* Marvy Le Plume: only the 22 grid swatches (`AG`, `CG`, `N`, `OP`) have names
+  on the chart; the 122 wheel colours have only a code, so `name` equals the
+  code (nothing invented). `OP920` White and `N900` Blender are drawn as
+  outlines without fill and recorded as `ffffff`; `OP921` Gold and `OP922`
+  Silver are flat colours on the chart (approximate, not metallic). Output is
+  sorted by code number, which groups the colour families.
+
+**Modelling Spectrum Noir.** Decided: one brand "Spectrum Noir" keyed by `code`, with
+`lines` `classic`, `illustrator` and `triblend`; see "Spectrum Noir" above.
+`generate_spectrum_noir.py` merges the two chart extractions here and the classic
+membership of MarkerMatchDB into the one bundled `spectrum_noir_colors.json`.
+
+**Integration.** Graph'it (`graphit`) and Marvy Le Plume (`marvy_le_plume`) are bundled
+as they are (`graphit_colors.json`, `marvy_le_plume_colors.json`). The Spectrum Noir
+extractions are intermediates in `baseline/`, so `test/data/catalog_validation_test.dart`
+(which requires every `assets/data/*_colors.json` to be a registered `MarkerBrand`
+declared in `pubspec.yaml`) only sees the merged file.
+
+**Public export.** The brand charts (PDF, JPG, PNG in `baseline/`) are third-party
+artwork and the exporter only lets binaries into `assets/`, `docs/readme/` and `test/`,
+so they stay in the private repository. The public allowlist carries the generators,
+the text baselines and the `*.SOURCE.txt` files (URL, date, sha256) so the method can be
+audited; the tests of the chart generators need the binaries and are not exported.

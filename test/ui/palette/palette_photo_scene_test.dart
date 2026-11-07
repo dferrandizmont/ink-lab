@@ -154,6 +154,27 @@ String _roleOf(WidgetTester tester, String code) => tester
 FakeImagePickerService _picks() => FakeImagePickerService(PhotoPicked(tinyPng));
 
 void main() {
+  test(
+    'isolate extraction equals synchronous extraction on a small image',
+    () async {
+      final image = _bandsImage();
+      final expected = extractPhotoColorSets(
+        image.rgba,
+        image.width,
+        image.height,
+      );
+      final actual = await extractPhotoColors(image);
+      for (final size in PhotoScene.sizes) {
+        expect(
+          actual[size]!.map((color) => (color.colorInt, color.share)).toList(),
+          expected[size]!
+              .map((color) => (color.colorInt, color.share))
+              .toList(),
+        );
+      }
+    },
+  );
+
   group('the scene sheet entry', () {
     testWidgets('is the first row, above the categories', (
       WidgetTester tester,

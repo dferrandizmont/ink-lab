@@ -58,7 +58,11 @@ class MarkerStatusRow extends StatelessWidget {
                 ),
               )
             else
-              SwatchBlock(hex: known.hex, size: 36, own: known.hasOwnColor),
+              SwatchBlock(
+                hex: known.hex,
+                size: InkGeometry.swatchRow,
+                own: known.hasOwnColor,
+              ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../core/match_quality.dart';
@@ -19,6 +21,7 @@ class InkChip extends StatelessWidget {
     required this.onSelected,
     this.icon,
     this.expand = false,
+    this.lines = 1,
     this.semanticLabel,
   });
 
@@ -31,7 +34,21 @@ class InkChip extends StatelessWidget {
 
   /// Fills its parent's width (equal-width variation chips).
   final bool expand;
+
+  /// How many lines of label the chip makes room for. 1 (the default) is the
+  /// 36 high chip with a single line; more lines make it as tall as that many
+  /// lines of `button` text need at the current text scale, always the same
+  /// height whatever the label, so a grid of chips can share one height.
+  final int lines;
   final String? semanticLabel;
+
+  /// The visual height of a chip that makes room for [lines] lines.
+  static double visualHeight(BuildContext context, int lines) {
+    if (lines <= 1) return InkGeometry.chipHeight;
+    final double line = MediaQuery.textScalerOf(context)
+        .scale(AppTypography.button.fontSize! * AppTypography.button.height!);
+    return math.max(InkGeometry.chipHeight, line * lines + 2 * InkSpacing.s8);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +65,7 @@ class InkChip extends StatelessWidget {
       InkMotion.crossFade,
     );
 
+    final double visual = visualHeight(context, lines);
     return Semantics(
       button: true,
       toggled: selected,
@@ -59,10 +77,11 @@ class InkChip extends StatelessWidget {
         customBorder: const RoundedRectangleBorder(
           borderRadius: InkRadii.controlRadius,
         ),
-        // The hit area is at least 44 x 44 even for a short label.
+        // The hit area is at least 44 x 44 even for a short label, and
+        // reaches 4 beyond the visible chip on every side.
         child: ConstrainedBox(
           constraints: BoxConstraints.tightFor(
-            height: InkGeometry.target,
+            height: visual + (InkGeometry.target - InkGeometry.chipHeight),
             width: expand ? double.infinity : null,
           ).copyWith(minWidth: expand ? null : InkGeometry.target),
           child: Center(
@@ -70,7 +89,7 @@ class InkChip extends StatelessWidget {
             child: AnimatedContainer(
               duration: duration,
               curve: InkMotion.crossFadeCurve,
-              height: InkGeometry.chipHeight,
+              height: visual,
               width: expand ? double.infinity : null,
               padding: const EdgeInsets.symmetric(horizontal: InkSpacing.s10),
               decoration: ShapeDecoration(
@@ -91,8 +110,10 @@ class InkChip extends StatelessWidget {
                   Flexible(
                     child: Text(
                       label,
-                      maxLines: 1,
-                      softWrap: false,
+                      maxLines: lines,
+                      softWrap: lines > 1,
+                      overflow: lines > 1 ? TextOverflow.ellipsis : null,
+                      textAlign: lines > 1 ? TextAlign.center : null,
                       style: AppTypography.button.copyWith(color: fg),
                     ),
                   ),
@@ -107,21 +128,46 @@ class InkChip extends StatelessWidget {
 }
 
 /// A horizontally scrolling row of chips with a 6 gap; the first chip is
-/// aligned to the 16 gutter. Never wraps.
+/// aligned to the 16 gutter. It does not wrap, unless [wrap] is set.
 class InkChipRow extends StatelessWidget {
   const InkChipRow({
     super.key,
     required this.children,
     this.padding = const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
     this.semanticLabel,
+    this.wrap = false,
   });
 
   final List<Widget> children;
   final EdgeInsetsGeometry padding;
   final String? semanticLabel;
 
+  /// Lays the chips out in as many lines as the width needs (the same 6 gap
+  /// between them) instead of scrolling. For a wide page, where a chip cut
+  /// by the edge would look like a mistake; a phone keeps the scrolling row.
+  final bool wrap;
+
   @override
   Widget build(BuildContext context) {
+    if (wrap) {
+      return Semantics(
+        container: true,
+        label: semanticLabel,
+        child: Padding(
+          padding: padding,
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Wrap(
+              spacing: InkSpacing.chipGap,
+              // Each chip has a 44 dp hit area around its 36 dp body, so the
+              // lines need no gap of their own.
+              runSpacing: 0,
+              children: children,
+            ),
+          ),
+        ),
+      );
+    }
     return Semantics(
       container: true,
       label: semanticLabel,

@@ -35,6 +35,17 @@ body:
         - DecoTime
         - Copic
         - Finecolour
+        - Touch Twin
+        - Promarker
+        - Promarker Brush
+        - Prismacolor Premier
+        - Spectrum Noir
+        - Arrtx
+        - ZIG Kurecolor
+        - Graph'it
+        - Marvy Le Plume
+        - Blick Studio Brush
+        - Artist's Loft
         - Other
     validations:
       required: true

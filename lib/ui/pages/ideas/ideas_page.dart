@@ -12,6 +12,7 @@ import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/empty_state.dart';
+import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
@@ -356,134 +357,143 @@ class _IdeasPageState extends State<IdeasPage> {
       widget.today ?? DateTime.now(),
     );
 
-    return Column(
-      key: IdeasPage.pageKey,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        InkPageHeader(
-          title: context.l10n.ideasTitle,
-          subtitle: diary
-              ? context.l10n.ideasDiarySubtitle
-              : _available.isEmpty
-              ? context.l10n.ideasNoMarkers
-              : _wholeRange
-              ? context.l10n.ideasHeaderSubtitleWholeRange
-              : context.l10n.ideasHeaderSubtitle,
-          // The control below must not jump when the segment (or the
-          // collection) swaps the subtitle: reserve the tallest one.
-          reserveSubtitleFor: <String>[
-            context.l10n.ideasDiarySubtitle,
-            context.l10n.ideasNoMarkers,
-            context.l10n.ideasHeaderSubtitleWholeRange,
-            context.l10n.ideasHeaderSubtitle,
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            InkSpacing.pageMargin,
-            0,
-            InkSpacing.pageMargin,
-            InkSpacing.block,
-          ),
-          child: InkSegmented<_IdeasView>(
-            key: const ValueKey<String>('ideas-view'),
-            expand: true,
-            semanticLabel: context.l10n.ideasTitle,
-            segments: <InkSegment<_IdeasView>>[
-              InkSegment<_IdeasView>(
-                value: _IdeasView.ideas,
-                label: context.l10n.ideasTitle,
-              ),
-              InkSegment<_IdeasView>(
-                value: _IdeasView.diary,
-                label: context.l10n.ideasDiarySegment,
-              ),
+    // One width for both segments, so switching never moves the header: the
+    // ideas and the diary entries go in columns on a wide page.
+    return InkReadableWidth(
+      maxWidth: InkLayout.wideWidth,
+      child: Column(
+        key: IdeasPage.pageKey,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          InkPageHeader(
+            title: context.l10n.ideasTitle,
+            subtitle: diary
+                ? context.l10n.ideasDiarySubtitle
+                : _available.isEmpty
+                ? context.l10n.ideasNoMarkers
+                : _wholeRange
+                ? context.l10n.ideasHeaderSubtitleWholeRange
+                : context.l10n.ideasHeaderSubtitle,
+            // The control below must not jump when the segment (or the
+            // collection) swaps the subtitle: reserve the tallest one.
+            reserveSubtitleFor: <String>[
+              context.l10n.ideasDiarySubtitle,
+              context.l10n.ideasNoMarkers,
+              context.l10n.ideasHeaderSubtitleWholeRange,
+              context.l10n.ideasHeaderSubtitle,
             ],
-            selected: _view,
-            onChanged: (_IdeasView view) => setState(() => _view = view),
           ),
-        ),
-        if (diary)
-          Expanded(child: ArtworkDiaryView(picker: widget.picker))
-        else ...<Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(
               InkSpacing.pageMargin,
               0,
               InkSpacing.pageMargin,
-              InkSpacing.group,
+              InkSpacing.block,
             ),
-            child: InkSearchField(
-              key: const ValueKey<String>('ideas-search'),
-              controller: _searchController,
-              hintText: context.l10n.ideasSearchHint,
-              semanticLabel: context.l10n.ideasSearchHint,
-              onChanged: (String value) => setState(() => _query = value),
-            ),
-          ),
-          _buildCategoryChips(),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.only(
-                top: InkSpacing.block,
-                bottom: InkSpacing.pageBottom,
-              ),
-              children: <Widget>[
-                if (browsing)
-                  _inset(
-                    _FeaturedCard(
-                      key: ValueKey<String>('ideas-featured-${featured.id}'),
-                      preset: featured,
-                      plan: _planFor(featured),
-                      favorite: _favorites.contains(featured.id),
-                      onToggleFavorite: () => _toggleFavorite(featured),
-                      onOpen: () => _open(featured),
-                    ),
-                  ),
-                if (filtered.isEmpty && _favoritesOnly && _query.trim().isEmpty)
-                  EmptyState(
-                    key: const ValueKey<String>('ideas-favorites-empty'),
-                    icon: InkIcons.heart,
-                    title: context.l10n.ideasFavoritesEmptyTitle,
-                    message: context.l10n.ideasFavoritesEmptyMessage,
-                  )
-                else if (filtered.isEmpty)
-                  EmptyState(
-                    title: context.l10n.ideasEmptyTitle,
-                    message: context.l10n.ideasEmptySearch,
-                    actionLabel: context.l10n.ideasClearFilters,
-                    onAction: _clearFilters,
-                  )
-                else
-                  _inset(
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        for (final IdeaPreset preset in filtered)
-                          _IdeaRow(
-                            key: ValueKey<String>('ideas-preset-${preset.id}'),
-                            preset: preset,
-                            plan: _planFor(preset),
-                            showCategory: _category == null,
-                            favorite: _favorites.contains(preset.id),
-                            onToggleFavorite: () => _toggleFavorite(preset),
-                            onTap: () => _open(preset),
-                          ),
-                      ],
-                    ),
-                    top: browsing ? InkSpacing.block : 0,
-                  ),
-                if (recent.isNotEmpty)
-                  _RecentSection(
-                    presets: recent,
-                    planFor: _planFor,
-                    onOpen: _open,
-                  ),
+            child: InkSegmented<_IdeasView>(
+              key: const ValueKey<String>('ideas-view'),
+              expand: true,
+              semanticLabel: context.l10n.ideasTitle,
+              segments: <InkSegment<_IdeasView>>[
+                InkSegment<_IdeasView>(
+                  value: _IdeasView.ideas,
+                  label: context.l10n.ideasTitle,
+                ),
+                InkSegment<_IdeasView>(
+                  value: _IdeasView.diary,
+                  label: context.l10n.ideasDiarySegment,
+                ),
               ],
+              selected: _view,
+              onChanged: (_IdeasView view) => setState(() => _view = view),
             ),
           ),
+          if (diary)
+            Expanded(child: ArtworkDiaryView(picker: widget.picker))
+          else ...<Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                InkSpacing.pageMargin,
+                0,
+                InkSpacing.pageMargin,
+                InkSpacing.group,
+              ),
+              child: InkSearchField(
+                key: const ValueKey<String>('ideas-search'),
+                controller: _searchController,
+                hintText: context.l10n.ideasSearchHint,
+                semanticLabel: context.l10n.ideasSearchHint,
+                onChanged: (String value) => setState(() => _query = value),
+              ),
+            ),
+            _buildCategoryChips(),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.only(
+                  top: InkSpacing.block,
+                  bottom: InkSpacing.pageBottomOf(context),
+                ),
+                children: <Widget>[
+                  if (browsing)
+                    _inset(
+                      _FeaturedCard(
+                        key: ValueKey<String>('ideas-featured-${featured.id}'),
+                        preset: featured,
+                        plan: _planFor(featured),
+                        favorite: _favorites.contains(featured.id),
+                        onToggleFavorite: () => _toggleFavorite(featured),
+                        onOpen: () => _open(featured),
+                      ),
+                    ),
+                  if (filtered.isEmpty &&
+                      _favoritesOnly &&
+                      _query.trim().isEmpty)
+                    EmptyState(
+                      key: const ValueKey<String>('ideas-favorites-empty'),
+                      icon: InkIcons.heart,
+                      title: context.l10n.ideasFavoritesEmptyTitle,
+                      message: context.l10n.ideasFavoritesEmptyMessage,
+                    )
+                  else if (filtered.isEmpty)
+                    EmptyState(
+                      title: context.l10n.ideasEmptyTitle,
+                      message: context.l10n.ideasEmptySearch,
+                      actionLabel: context.l10n.ideasClearFilters,
+                      onAction: _clearFilters,
+                    )
+                  else
+                    _inset(
+                      InkCardColumns(
+                        spacing: InkSpacing.xl,
+                        children: <Widget>[
+                          for (final IdeaPreset preset in filtered)
+                            _IdeaRow(
+                              key: ValueKey<String>(
+                                'ideas-preset-${preset.id}',
+                              ),
+                              preset: preset,
+                              plan: _planFor(preset),
+                              showCategory: _category == null,
+                              favorite: _favorites.contains(preset.id),
+                              onToggleFavorite: () => _toggleFavorite(preset),
+                              onTap: () => _open(preset),
+                            ),
+                        ],
+                      ),
+                      top: browsing ? InkSpacing.block : 0,
+                    ),
+                  if (recent.isNotEmpty)
+                    _RecentSection(
+                      presets: recent,
+                      planFor: _planFor,
+                      onOpen: _open,
+                    ),
+                ],
+              ),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 

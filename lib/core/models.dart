@@ -9,3 +9,4 @@ export 'model/scene.dart';
 export 'model/saved_palette.dart';
 export 'model/ai_palette.dart';
 export 'model/artwork_entry.dart';
+export 'model/blend_recipe.dart';

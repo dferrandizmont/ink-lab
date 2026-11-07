@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../icons/ink_icons.dart';
 import '../theme/tokens.dart';
+import 'ink_adaptive.dart';
 import 'ink_button.dart';
 import '../../l10n/l10n.dart';
 
@@ -46,6 +47,9 @@ Future<T?> _showSheetRoute<T>({
     enableDrag: enableDrag,
     showDragHandle: false,
     useSafeArea: true,
+    // Phones: the whole width. Tablets: a centred sheet, never wider than
+    // [InkLayout.sheetWidth].
+    constraints: InkLayout.sheetConstraints,
     backgroundColor: Colors.transparent,
     elevation: 0,
     barrierColor: ink.scrim,
@@ -206,6 +210,12 @@ class InkSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
     final BorderSide side = BorderSide(color: ink.line);
+    // The sheet is painted down to the screen edge (Android draws edge to
+    // edge), so its content keeps clear of the system navigation bar: the
+    // three-button bar would cover the last row, the gesture bar would touch
+    // it. `useSafeArea` of the route only guards the top. With the keyboard
+    // open the bottom padding is already 0.
+    final double systemBottom = MediaQuery.paddingOf(context).bottom;
     return DecoratedBox(
       decoration: BoxDecoration(
         color: ink.raised,
@@ -215,11 +225,11 @@ class InkSheet extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(
+            padding: EdgeInsets.fromLTRB(
               InkSpacing.sheet,
               InkSpacing.s12,
               InkSpacing.sheet,
-              InkSpacing.sheet,
+              InkSpacing.sheet + systemBottom,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

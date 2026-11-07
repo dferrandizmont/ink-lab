@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'ai/ai.dart' as ai;
+import 'core/error_log.dart' show ErrorLog;
 import 'core/marker_repository.dart';
 import 'core/models.dart' show AppSettings;
 import 'core/palette_advisor.dart' as core;
@@ -18,13 +19,17 @@ class AppScope extends InheritedWidget {
     required this.ownColors,
     required this.wishlist,
     required this.dried,
+    required this.markerExtras,
     required this.artworkDiary,
+    required this.blendRecipes,
     required this.aiSettings,
     required this.ideaFavorites,
     required this.secrets,
     required this.markers,
     required this.aiService,
     required super.child,
+    this.errorLog,
+    this.reviewPrompt,
     super.key,
   });
 
@@ -41,9 +46,17 @@ class AppScope extends InheritedWidget {
   /// The owned markers that ran dry: Match, Palette and Ideas skip them.
   final DriedMarkerRepository dried;
 
-  /// The artwork diary: entries in the key-value store, photos in a private
+  /// The ink level (full, running out, dried out), the refill note and the
+  /// swatch photo of the markers.
+  final MarkerExtrasRepository markerExtras;
+
+  /// The artwork diary: entries in a private JSON file, photos in a private
   /// folder on the device.
   final ArtworkDiaryRepository artworkDiary;
+
+  /// The user's own blending recipes: a private JSON file, the photos in the
+  /// diary's private folder.
+  final BlendRecipeRepository blendRecipes;
   final AiSettingsRepository aiSettings;
 
   /// The favourite ideas and the ideas opened last.
@@ -52,12 +65,21 @@ class AppScope extends InheritedWidget {
   final MarkerRepository markers;
   final ai.AiService aiService;
 
+  /// The local log of unhandled errors the user can share, or `null` where
+  /// there is none (most tests).
+  final ErrorLog? errorLog;
+
+  /// Asks for a store review once, after a milestone, or `null` where there is
+  /// no store (most tests).
+  final ReviewPrompt? reviewPrompt;
+
   /// Builds a scope over in-memory stores (tests and previews).
   ///
   /// [aiSettings], [secrets], [aiService] and [settingsState] can be
   /// overridden so a test can seed a stored key, inject a fake HTTP transport
   /// or start from a fresh install; [artworkDiary] lets a test watch the
-  /// photo files.
+  /// photo files; [storeReviewer] turns on the review prompt over a fake
+  /// store (there is none by default).
   static AppScope inMemory({
     required MarkerRepository markers,
     required Widget child,
@@ -68,6 +90,9 @@ class AppScope extends InheritedWidget {
     core.PaletteAdvisor localAdvisor = const PaletteGenerator(),
     AppSettingsState? settingsState,
     ArtworkDiaryRepository? artworkDiary,
+    BlendRecipeRepository? blendRecipes,
+    ErrorLog? errorLog,
+    StoreReviewer? storeReviewer,
   }) {
     final store = InMemoryKeyValueStore();
     final resolvedAiSettings = aiSettings ?? StoredAiSettingsRepository(store);
@@ -78,6 +103,14 @@ class AppScope extends InheritedWidget {
     );
     final ownColors = StoredOwnColorRepository(store);
     final wishlist = StoredWishlistRepository(store);
+    final dried = StoredDriedMarkerRepository(store);
+    final diary =
+        artworkDiary ??
+        StoredArtworkDiaryRepository(
+          store,
+          photos: InMemoryArtworkPhotoStore(),
+          storage: InMemoryArtworkDiaryStorage(),
+        );
     markers.ownColors = OwnColorOverlay(settings: settings, colors: ownColors);
     WishlistOwnershipSync(
       settings: settings,
@@ -86,17 +119,27 @@ class AppScope extends InheritedWidget {
     ).start();
     return AppScope(
       key: key,
+      errorLog: errorLog,
+      reviewPrompt: storeReviewer == null
+          ? null
+          : ReviewPrompt(settings: settings, reviewer: storeReviewer),
       settings: settings,
       savedPalettes: StoredSavedPaletteRepository(store),
       matchHistory: StoredColorMatchHistoryRepository(store),
       ownColors: ownColors,
       wishlist: wishlist,
-      dried: StoredDriedMarkerRepository(store),
-      artworkDiary:
-          artworkDiary ??
-          StoredArtworkDiaryRepository(
-            store,
-            photos: InMemoryArtworkPhotoStore(),
+      dried: dried,
+      markerExtras: StoredMarkerExtrasRepository(
+        store,
+        dried: dried,
+        photos: diary.photoStore,
+      ),
+      artworkDiary: diary,
+      blendRecipes:
+          blendRecipes ??
+          StoredBlendRecipeRepository(
+            storage: InMemoryArtworkDiaryStorage(),
+            photos: diary.photoStore,
           ),
       aiSettings: resolvedAiSettings,
       ideaFavorites: StoredIdeaFavoritesRepository(store),
@@ -130,12 +173,16 @@ class AppScope extends InheritedWidget {
     ownColors: ownColors,
     wishlist: wishlist,
     dried: dried,
+    markerExtras: markerExtras,
     artworkDiary: artworkDiary,
+    blendRecipes: blendRecipes,
     aiSettings: aiSettings,
     ideaFavorites: ideaFavorites,
     secrets: secrets,
     markers: markers,
     aiService: aiService,
+    errorLog: errorLog,
+    reviewPrompt: reviewPrompt,
     child: child,
   );
 

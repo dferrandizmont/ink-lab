@@ -235,9 +235,9 @@ List<PurchaseSuggestion> suggestPurchases({
   return List<PurchaseSuggestion>.unmodifiable(picked);
 }
 
-/// Compares to a tenth of a ΔE, so rounding noise never decides an order.
-int _compareRounded(double a, double b) =>
-    (a * 10).round().compareTo((b * 10).round());
+/// Compares to a tenth of a ΔE (or 1/[scale]); rounding noise never decides.
+int _compareRounded(double a, double b, {double scale = 10}) =>
+    (a * scale).round().compareTo((b * scale).round());
 
 /// For each role, the distance from [marker] to the nearest of the role's
 /// targets, written to [out].
@@ -281,4 +281,68 @@ final class _Lab {
     final double dl = l - other.l, da = a - other.a, db = b - other.b;
     return math.sqrt(dl * dl + da * da + db * db);
   }
+}
+
+/// The knobs of the near-duplicate check, for tests and tuning.
+abstract final class DuplicateRules {
+  /// Two markers closer than this OKLab distance (native `[0, 1]` units, so
+  /// 0.02 is a 2 % step of lightness) count as the same colour.
+  ///
+  /// 0.02 is about one just-noticeable difference in OKLab. On the 3,420
+  /// colours of the catalogues, 0.02 leaves a marker with fifteen neighbours
+  /// on average across all brands, but a collection of a few hundred markers
+  /// with only a handful: few enough to be worth listing, close enough that
+  /// buying the new one adds nothing to a drawing.
+  static const double threshold = 0.02;
+
+  /// How many near-duplicates a screen lists before it summarises the rest.
+  static const int maxListed = 5;
+}
+
+/// A marker the user owns that is almost the same colour as another one.
+final class NearDuplicate {
+  const NearDuplicate({required this.color, required this.deltaE});
+
+  /// The owned marker.
+  final MarkerColor color;
+
+  /// The OKLab distance to the marker asked about (native `[0, 1]` units).
+  final double deltaE;
+}
+
+/// The markers of [owned] that are within [threshold] (OKLab distance) of
+/// [candidate], closest first; ties by natural code order.
+///
+/// Meant for a marker the user does NOT own, before they buy it. [candidate]
+/// itself is never in the answer, and neither is a marker whose hex cannot
+/// be read. The caller leaves out the markers that cannot be used (dried
+/// out): a dried marker does not make a new one redundant.
+List<NearDuplicate> findNearDuplicates(
+  MarkerColor candidate,
+  Iterable<MarkerColor> owned, {
+  double threshold = DuplicateRules.threshold,
+}) {
+  final OklabColor origin;
+  try {
+    origin = hexToOklab(candidate.hex);
+  } on FormatException {
+    return const <NearDuplicate>[];
+  }
+  final List<NearDuplicate> found = <NearDuplicate>[];
+  for (final MarkerColor other in owned) {
+    if (other.colorId == candidate.colorId) continue;
+    try {
+      final double d = deltaEOklab(origin, hexToOklab(other.hex));
+      if (d < threshold) found.add(NearDuplicate(color: other, deltaE: d));
+    } on FormatException {
+      // A malformed entry is simply not compared.
+    }
+  }
+  found.sort((NearDuplicate a, NearDuplicate b) {
+    final int byDistance = _compareRounded(a.deltaE, b.deltaE, scale: 10000);
+    return byDistance != 0
+        ? byDistance
+        : naturalCodeComparator(a.color.newCode, b.color.newCode);
+  });
+  return List<NearDuplicate>.unmodifiable(found);
 }

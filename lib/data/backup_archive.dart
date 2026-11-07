@@ -194,18 +194,27 @@ final class BackupArchiveService {
     }
   }
 
-  /// The photos of the diary entries that are still on the device, by name.
+  /// The photos of the diary entries, of the blending recipes and of the
+  /// markers that are still on the device, by name.
   ///
   /// A photo that is missing, or whose name is not safe, is left out.
   Future<Map<String, Uint8List>> _readDiaryPhotos() async {
     final Map<String, Uint8List> found = <String, Uint8List>{};
-    for (final ArtworkEntry entry in backup.artworkDiary.entries) {
-      for (final String name in entry.photos) {
-        if (!isSafePhotoName(name) || found.containsKey(name)) continue;
-        final Uint8List? bytes = await photos.read(name);
-        if (bytes == null) continue;
-        found[name] = bytes;
-      }
+    final List<String> names = <String>[
+      for (final ArtworkEntry entry in backup.artworkDiary.entries)
+        ...entry.photos,
+      // The blending recipes keep their photo in the same folder.
+      for (final BlendRecipe recipe
+          in backup.recipes?.recipes ?? const <BlendRecipe>[])
+        ?recipe.photo,
+      // The swatch photos of the markers travel in the same folder.
+      ...?backup.markerExtras?.photoNames.values,
+    ];
+    for (final String name in names) {
+      if (!isSafePhotoName(name) || found.containsKey(name)) continue;
+      final Uint8List? bytes = await photos.read(name);
+      if (bytes == null) continue;
+      found[name] = bytes;
     }
     return found;
   }
@@ -479,13 +488,14 @@ final class BackupArchiveService {
     }
   }
 
-  /// The photo names the document's diary entries refer to.
+  /// The photo names the document's diary entries and swatch photos refer
+  /// to.
   ///
   /// The whole document is read and checked, exactly as the clipboard import
   /// checks it, so a document that is refused is refused here too.
   Set<String>? _readDocument(String json) {
     try {
-      return backup.readDiaryPhotoNames(json);
+      return backup.readPhotoNames(json);
     } on BackupFormatException catch (error) {
       throw BackupArchiveException(
         'the backup document is not one this build reads: ${error.message}',
@@ -617,36 +627,6 @@ bool _looksLikeZip(Uint8List bytes) =>
 
 /// Whether [bytes] start like a JPEG, a PNG or a WebP image.
 ///
-/// The app only ever puts photos of the diary in an archive, so an entry that
-/// is not an image is refused instead of written to the photo folder.
-bool _looksLikePhoto(Uint8List bytes) {
-  if (bytes.length >= 3 &&
-      bytes[0] == 0xFF &&
-      bytes[1] == 0xD8 &&
-      bytes[2] == 0xFF) {
-    return true;
-  }
-  if (bytes.length >= 8 &&
-      bytes[0] == 0x89 &&
-      bytes[1] == 0x50 &&
-      bytes[2] == 0x4E &&
-      bytes[3] == 0x47 &&
-      bytes[4] == 0x0D &&
-      bytes[5] == 0x0A &&
-      bytes[6] == 0x1A &&
-      bytes[7] == 0x0A) {
-    return true;
-  }
-  if (bytes.length >= 12 &&
-      bytes[0] == 0x52 &&
-      bytes[1] == 0x49 &&
-      bytes[2] == 0x46 &&
-      bytes[3] == 0x46 &&
-      bytes[8] == 0x57 &&
-      bytes[9] == 0x45 &&
-      bytes[10] == 0x42 &&
-      bytes[11] == 0x50) {
-    return true;
-  }
-  return false;
-}
+/// The app only ever puts photos in an archive, so an entry that is not an
+/// image is refused instead of written to the photo folder.
+bool _looksLikePhoto(Uint8List bytes) => looksLikePhotoBytes(bytes);

@@ -293,7 +293,8 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const SizedBox(height: InkSpacing.s4),
-            for (final PaletteSuggestion s in palette) _MarkerRow(suggestion: s),
+            for (final PaletteSuggestion s in palette)
+              _MarkerRow(suggestion: s),
           ],
         ),
       ),
@@ -325,7 +326,11 @@ class _MarkerRow extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SwatchBlock(hex: color.hex, size: 36, own: color.hasOwnColor),
+              SwatchBlock(
+                hex: color.hex,
+                size: InkGeometry.swatchRow,
+                own: color.hasOwnColor,
+              ),
               const SizedBox(width: InkSpacing.s12),
               Expanded(
                 child: Column(
@@ -389,7 +394,7 @@ class _StepRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(
-            width: 16,
+            width: InkGeometry.smallIcon,
             child: Padding(
               padding: const EdgeInsets.only(top: InkSpacing.s2),
               child: Text(

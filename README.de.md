@@ -12,11 +12,11 @@
 [![Downloads](https://img.shields.io/github/downloads/dferrandizmont/ink-lab/total?label=Downloads&color=30382F)](https://github.com/dferrandizmont/ink-lab/releases)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Kauf_mir_einen_Kaffee-FF5E5B?logo=kofi&logoColor=white)](https://ko-fi.com/danielmfdev)
 
-Begleiter für Farbmuster und Paletten für alle, die mit Alkoholmarkern zeichnen.
-Schlage den Code einer Farbe nach, finde heraus, welcher Marker deiner Sammlung
-einem Foto am nächsten kommt, und erstelle Paletten nach der Farbtheorie – nur
-mit den Markern, die du besitzt. Android-App mit hellem und dunklem Design,
-Seitenleiste auf Tablets und sechs Sprachen.
+Begleiter für Farbmuster und Paletten für alle, die mit Alkoholmarkern zeichnen. Schlage
+den Code einer Farbe nach, finde heraus, welcher Marker deiner Sammlung einem Foto am
+nächsten kommt, und erstelle Paletten nach der Farbtheorie – nur mit den Markern, die du
+besitzt. App für Android, iPhone und iPad mit hellem und dunklem Design, Tablet-Layouts
+und sechs Sprachen.
 
 **Kostenlos · Keine Werbung · Kein Konto · Offline · Open Source**
 
@@ -59,7 +59,7 @@ Veröffentlichung. Feedback: inklab@mainshai.com.
 
 <p>
   <a href="docs/readme/de/01-swatches.png"><img src="docs/readme/de/01-swatches.png" width="19%" alt="Farbmuster: die Farben der Marke, jede mit Code und Name"></a>
-  <a href="docs/readme/de/02-swatch-detail.png"><img src="docs/readme/de/02-swatch-detail.png" width="19%" alt="Die Detailansicht eines Markers: sein Hex-Wert, die nächsten Alternativen und dieselbe Farbe in anderen Marken"></a>
+  <a href="docs/readme/de/02-swatch-detail.png"><img src="docs/readme/de/02-swatch-detail.png" width="19%" alt="Die Detailansicht eines Markers: Hex-Wert, Tintenstand, das Foto deines Farbmusters, Schatten und Licht und dieselbe Farbe in anderen Marken"></a>
   <a href="docs/readme/de/03-match.png"><img src="docs/readme/de/03-match.png" width="19%" alt="Ein in einem Foto angetippter Farbton, abgeglichen mit dem ähnlichsten Marker deiner Sammlung"></a>
   <a href="docs/readme/de/04-palette.png"><img src="docs/readme/de/04-palette.png" width="19%" alt="Eine Szenenpalette mit Rolle und Code jeder Farbe"></a>
   <a href="docs/readme/de/05-diary.png"><img src="docs/readme/de/05-diary.png" width="19%" alt="Das Tagebuch: eine Übersicht deiner Werke und die letzten Einträge"></a>
@@ -73,6 +73,7 @@ Veröffentlichung. Feedback: inklab@mainshai.com.
   <a href="docs/readme/de/07-ideas.png"><img src="docs/readme/de/07-ideas.png" width="19%" alt="Ideen: Übungen und Techniken, mit ihren Paletten und deinen Favoriten"></a>
   <a href="docs/readme/de/08-collection.png"><img src="docs/readme/de/08-collection.png" width="19%" alt="Meine Sammlung: was du besitzt und was als Nächstes kaufen"></a>
   <a href="docs/readme/de/09-settings-dark.png"><img src="docs/readme/de/09-settings-dark.png" width="19%" alt="Optionen im dunklen Design"></a>
+  <a href="docs/readme/de/10-colour-map.png"><img src="docs/readme/de/10-colour-map.png" width="19%" alt="Die Farbkarte: wo deine Marker nach Farbton und Helligkeit liegen und wo Lücken sind"></a>
 </p>
 
 </details>
@@ -81,60 +82,65 @@ Tippe auf einen Screenshot, um ihn zu vergrößern.
 
 ## Funktionen
 
-- **Tagebuch.** Ein Protokoll deiner Werke, mit Fotos, den benutzten Markern und
-  den Zahlen dahinter.
-- **Vier Marken.** Ohuhu (503 Farben), DecoTime (313), Copic (358) und Finecolour
-  (480), mit dem ähnlichsten Marker jeder anderen Marke unter „In anderen Marken“.
-- **Abgleich.** Tippe auf einen Punkt in einem Foto, um den ähnlichsten Marker
-  deiner Sammlung zu finden, und korrigiere den Weißabgleich.
-- **Paletten und Szenen.** Farbharmonien, Blend-Ketten und 67 fertige Szenen in
-  11 Kategorien.
-- **Sicherung.** Speichere alles in einer `.zip`-Datei, mit den Tagebuchfotos
-  darin.
-- **Einkäufe.** Eine Wunschliste, ausgetrocknete Marker und was als Nächstes
-  kaufen.
+- **Fünfzehn Marken, 3.420 Farben.** Ohuhu, DecoTime, Copic (Sketch, Ciao und Classic),
+  Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum
+  Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush und Artist's
+  Loft, mit Markensuche und «In anderen Marken».
+- **Marker-Details.** Tintenstand und Nachfüll-Notiz, ein Foto deiner echten Farbprobe,
+  Schatten und Licht, „Mischen mit …“ und ein Hinweis auf fast gleiche Marker.
+- **Abgleich.** Tippe auf einen Punkt in einem Foto, um den ähnlichsten Marker deiner
+  Sammlung zu finden, korrigiere den Weißabgleich und prüfe die Tonwerte in Grau.
+- **Paletten und Szenen.** Farbharmonien, Blend-Ketten und 67 fertige Szenen, mit
+  Staffelei-Modus und Paletten, die du als Text teilst oder importierst.
+- **Werkzeuge.** Eine Farbkarte deiner Sammlung, ein Übersetzer für Rezepte anderer
+  Marken, eigene Mischrezepte mit Foto sowie Export und Import als CSV oder Text.
+- **Tagebuch.** Ein Protokoll deiner Werke, mit Fotos, den benutzten Markern und den
+  Zahlen dahinter.
+- **Sicherung.** Speichere alles in einer `.zip`-Datei, Fotos inklusive; die Optionen
+  zeigen das Datum der letzten.
 
 <details>
 <summary>Weitere Funktionen</summary>
 
-- **Farbsehen.** Sieh dir eine Palette an, wie sie jemand mit Protanopie,
-  Deuteranopie, Tritanopie oder Achromatopsie sieht.
-- **Druckbare Farbkarte.** A4-Seiten mit einer beschrifteten Box für jeden
-  Marker, den du besitzt.
+- **Einkäufe.** Eine Wunschliste, ausgetrocknete Marker und was als Nächstes kaufen.
+- **Farbsehen.** Sieh eine Palette so, wie sie jemand mit Farbfehlsichtigkeit sieht.
+- **Druckbare Farbkarte.** A4-Seiten mit einer beschrifteten Box für jeden Marker, den
+  du besitzt.
 - **Ideen.** Übungen und Techniken mit eigenen Paletten, und deine Favoriten.
-- **Farbmuster und deine eigene Farbe.** Codes, Namen und Hex-Werte, dazu die
-  Farbe, die dein Marker wirklich ergibt.
-- **Teilen.** Schicke eine Palette, eine Farbkarte oder einen Tagebucheintrag
-  als Bild an eine andere App.
-- **KI, wenn du willst.** Optionale Palettenvorschläge: Gemini Nano auf dem
-  Handy oder OpenRouter mit deinem eigenen Schlüssel.
-- **Widget „Idee des Tages“.** Ein Android-Widget für den Startbildschirm mit der
-  heutigen Übung in den Farben deiner Marker. Es wechselt jeden Tag von selbst,
-  und ein Tippen öffnet die Idee.
+- **Farbmuster und deine eigene Farbe.** Codes, Namen und Hex-Werte (ein Hex-Wert findet
+  die nächsten Marker), dazu die Farbe, die dein Marker wirklich ergibt.
+- **KI, wenn du willst.** Optionale Palettenvorschläge: Gemini Nano auf dem Handy oder
+  OpenRouter mit deinem eigenen Schlüssel.
+- **Widget „Idee des Tages“.** Nur unter Android: die heutige Übung in den Farben deiner
+  Marker, auf dem Startbildschirm.
+- **Verknüpfungen.** Vom App-Symbol direkt zum Abgleich, zu einer neuen Palette oder zur
+  Farbmustersuche.
+- **Optionen.** Open-Source-Lizenzen, „Feedback senden“ und ein lokales Fehlerprotokoll,
+  das du teilen oder löschen kannst.
 
 </details>
 
 ## Datenschutz
 
-Deine Daten bleiben auf dem Handy: kein Konto, kein eigener Server, keine
-Analyse, keine Werbung und kein Tracking; ohne KI wird die Netzverbindung nie
-genutzt. ML Kit der On-Device-KI sendet Google Nutzungsdiagnosen, nie Anfragen,
-Farben oder Fotos. Kamera- und Galerie-Zugriff gibt es nur für den Fotoabgleich,
-Szenen, deine eigenen Markerfarben und das Tagebuch; diese Fotos werden auf dem
-Gerät verarbeitet, und die Tagebuchfotos bleiben im privaten Ordner der App und
+Deine Daten bleiben auf dem Handy: kein Konto, kein eigener Server, keine Analyse, keine
+Werbung und kein Tracking; ohne KI wird die Netzverbindung nie genutzt. ML Kit der
+On-Device-KI sendet Google Nutzungsdiagnosen, nie Anfragen, Farben oder Fotos. Kamera-
+und Galerie-Zugriff gibt es nur für den Fotoabgleich, Szenen, deine eigenen
+Markerfarben, das Tagebuch, echte Farbproben und Mischrezepte; diese Fotos werden auf
+dem Gerät verarbeitet, und die gespeicherten bleiben im privaten Ordner der App und
 werden nie hochgeladen. Beim Teilen einer Palette, einer Farbkarte oder der
-`.zip`-Sicherung geht die Datei nur an die App, die du auswählst, und an nichts
-weiter.
+`.zip`-Sicherung geht die Datei nur an die App, die du auswählst, und an nichts weiter.
 
 [Website](https://inklab.mainshai.com/de/) · [Datenschutzerklärung](https://inklab.mainshai.com/de/privacy/) ·
 [Technische Details](docs/privacy.en.md) · Support: **inklab@mainshai.com**.
 
 ## Neuerungen
 
-Version 0.10.0 ist da. Neu: ein Android-Widget für den Startbildschirm mit der
-Idee des Tages, in den Farben deiner Marker. Die 0.9-Reihe hat die App
-aufgeräumt. Die vollständige Liste steht in [CHANGELOG.md](CHANGELOG.md) und in
-den [Releases](https://github.com/dferrandizmont/ink-lab/releases).
+Version 1.0.0 ist die erste stabile Version. Sie bringt elf neue Marken, ausführlichere
+Marker-Details, neue Werkzeuge, Layouts für Tablets und iPad sowie die Korrekturen aus
+den Tests. Die vollständige Liste steht in
+[CHANGELOG.md](CHANGELOG.md) und in den
+[Releases](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Mitwirken
 
@@ -149,8 +155,8 @@ sind faktische Referenzen von Drittanbietern und fallen unter keine der beiden
 Lizenzen; die Schriften (SIL OFL 1.1) und anderes Material von Drittanbietern
 behalten ihre eigenen Bedingungen.
 
-Ein unabhängiges Projekt: **weder mit Ohuhu, DecoTime, Copic oder Finecolour verbunden noch
-von einer dieser Marken gesponsert oder unterstützt**. „Ohuhu“, „Oahu“, „DecoTime“, „Copic“ und „Finecolour“ sind Marken ihrer Inhaber.
+Ein unabhängiges Projekt: **mit keiner dieser Markermarken verbunden und von
+keiner gesponsert oder unterstützt**. Die Namen der oben genannten Marken sind Marken ihrer jeweiligen Inhaber.
 Vollständige Hinweise: [NOTICE.md](NOTICE.md).
 
 Sicherheitslücken melden: [SECURITY.md](SECURITY.md).

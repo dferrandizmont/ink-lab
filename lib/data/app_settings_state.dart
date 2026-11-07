@@ -76,6 +76,7 @@ final class AppSettingsState with JsonValue {
     this.language = AppLanguage.system,
     this.matchSuggestUnowned = true,
     this.useOwnColors = true,
+    this.lastBackupAtEpochMs,
   }) : settings = settings ?? AppSettings(),
        favorites = Set.unmodifiable(favorites);
 
@@ -102,6 +103,12 @@ final class AppSettingsState with JsonValue {
   /// instead of the catalogue's (backward compatible default: on).
   final bool useOwnColors;
 
+  /// When a backup file was last saved or shared on this device, in
+  /// milliseconds since the epoch; `null` if never. It is a fact about this
+  /// device, so it is not part of a backup: [toJson] leaves it out and a
+  /// restore keeps the value the device has.
+  final int? lastBackupAtEpochMs;
+
   AppSettingsState copyWith({
     MarkerBrand? brand,
     BrandScope? scope,
@@ -113,6 +120,7 @@ final class AppSettingsState with JsonValue {
     AppLanguage? language,
     bool? matchSuggestUnowned,
     bool? useOwnColors,
+    int? lastBackupAtEpochMs,
   }) => AppSettingsState(
     brand: brand ?? this.brand,
     scope: scope ?? this.scope,
@@ -124,6 +132,7 @@ final class AppSettingsState with JsonValue {
     language: language ?? this.language,
     matchSuggestUnowned: matchSuggestUnowned ?? this.matchSuggestUnowned,
     useOwnColors: useOwnColors ?? this.useOwnColors,
+    lastBackupAtEpochMs: lastBackupAtEpochMs ?? this.lastBackupAtEpochMs,
   );
 
   /// Adds or removes a favourite, returning a new state.

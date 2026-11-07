@@ -26,22 +26,49 @@ class CopicGeneratorTest(unittest.TestCase):
     def setUp(self):
         self.catalogue = json.loads(generator.DEFAULT_OUT.read_text(encoding="utf-8"))
         self.rows = json.loads(SNAPSHOT.read_text(encoding="utf-8"))
+        self.membership = generator.line_membership()
 
     def test_pinned_snapshot_regenerates_the_committed_json(self):
         # The whole point: the pinned source, through the generator, must
         # reproduce the committed file byte for byte, with no network.
         self.assertEqual(len(self.rows), generator.EXPECTED_COUNT)
-        self.assertEqual(generator.build(self.rows), self.catalogue)
-        self.assertEqual(generator.render(generator.build(self.rows)).encode("utf-8"),
-                         generator.DEFAULT_OUT.read_bytes())
+        self.assertEqual(generator.build(self.rows, self.membership), self.catalogue)
+        self.assertEqual(
+            generator.render(generator.build(self.rows, self.membership)).encode("utf-8"),
+            generator.DEFAULT_OUT.read_bytes())
 
     def test_output_and_official_hex(self):
-        self.assertEqual(generator.build(self.rows), self.catalogue)
+        self.assertEqual(generator.build(self.rows, self.membership), self.catalogue)
         self.assertEqual(len({c["code"] for c in self.catalogue}), 358)
-        self.assertEqual(generator.build(self.rows)[0], {
-            "code": "0", "name": "Colorless Blender", "hex": "ffffff", "sets": []})
+        self.assertEqual(generator.build(self.rows, self.membership)[0], {
+            "code": "0", "name": "Colorless Blender", "hex": "ffffff", "sets": [],
+            "lines": ["sketch", "ciao", "classic"]})
+        # Without membership the records are the plain Sketch ones.
+        self.assertNotIn("lines", generator.build(self.rows)[0])
         self.assertEqual(generator.render(self.catalogue).encode("utf-8"),
                          generator.DEFAULT_OUT.read_bytes())
+
+    def test_lines_are_sketch_plus_ciao_and_classic_membership(self):
+        by_code = {c["code"]: c for c in self.catalogue}
+        count = lambda line: sum(line in c["lines"] for c in self.catalogue)
+        self.assertEqual((count("sketch"), count("ciao"), count("classic")), (358, 180, 214))
+        self.assertTrue(all(c["lines"][0] == "sketch" for c in self.catalogue))
+        # Ids and everything but lines are what they were before lines existed.
+        self.assertEqual(by_code["BV04"]["lines"], ["sketch", "ciao", "classic"])
+        self.assertEqual(by_code["FB"]["lines"], ["sketch"])  # fluorescent: Sketch only
+        self.assertEqual(self.membership.keys(), {"ciao", "classic"})
+        self.assertLessEqual(self.membership["ciao"], set(by_code))
+        self.assertLessEqual(self.membership["classic"], set(by_code))
+
+    def test_refuses_membership_that_is_not_a_sketch_code(self):
+        membership = {line: set(codes) for line, codes in self.membership.items()}
+        membership["ciao"].add("NOPE")
+        with self.assertRaises(ValueError):
+            generator.build(self.rows, membership)
+        membership = {line: set(codes) for line, codes in self.membership.items()}
+        membership["classic"].pop()
+        with self.assertRaises(ValueError):
+            generator.build(self.rows, membership)
 
     def test_refuses_invalid_inputs(self):
         cases = [self.rows[:-1], {}]

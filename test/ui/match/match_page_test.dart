@@ -10,6 +10,7 @@ import 'package:ink_lab/ui/pages/match/match_page.dart';
 import 'package:ink_lab/ui/pages/match/match_result_tile.dart';
 import 'package:ink_lab/ui/pages/match/photo_box.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
+import 'package:ink_lab/ui/theme/tokens.dart';
 import 'package:ink_lab/ui/widgets/ink_button.dart';
 import 'package:ink_lab/ui/widgets/page_header.dart';
 
@@ -478,7 +479,63 @@ void main() {
     }
   });
 
-  testWidgets('the row of actions holds the camera, the gallery and the fix', (
+  testWidgets('before a photo the page shows two equal, full-width actions', (
+    WidgetTester tester,
+  ) async {
+    final FakeImagePickerService picker = FakeImagePickerService(
+      PhotoPicked(tinyPng),
+    );
+    await pumpMatch(
+      tester,
+      picker: picker,
+      image: sampledImage(96, 16, <int>[255, 0, 0]),
+      size: const Size(360, 740),
+    );
+
+    // One line says what Match does, and nothing else competes with the two
+    // actions: no small row, no white balance, no canvas.
+    expect(find.text(l10n.matchEmptyPhotoMessage), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('match-actions')), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('white-balance-start')),
+      findsNothing,
+    );
+    expect(find.byKey(const ValueKey<String>('match-canvas')), findsNothing);
+
+    final Finder camera = find.byKey(const ValueKey<String>('match-camera'));
+    final Finder gallery = find.byKey(const ValueKey<String>('match-gallery'));
+    final Rect cameraRect = tester.getRect(camera);
+    final Rect galleryRect = tester.getRect(gallery);
+    final Rect card = tester.getRect(
+      find.byKey(const ValueKey<String>('match-empty')),
+    );
+    // Equal: same width, same height, same kind of button, one above the
+    // other. Full width: they fill the empty state (standard button height).
+    expect(cameraRect.width, galleryRect.width);
+    expect(cameraRect.height, galleryRect.height);
+    expect(cameraRect.height, greaterThanOrEqualTo(InkGeometry.buttonHeight));
+    expect(cameraRect.left, galleryRect.left);
+    expect(galleryRect.top, greaterThan(cameraRect.bottom));
+    // The empty state is the standard one (max width 300, centred): the
+    // buttons fill its column.
+    expect(cameraRect.width, moreOrLessEquals(card.width.clamp(0, 300)));
+    expect(cameraRect.center.dx, moreOrLessEquals(card.center.dx));
+    for (final Finder button in <Finder>[camera, gallery]) {
+      expect(
+        tester.widget<InkButton>(button).variant,
+        InkButtonVariant.secondary,
+      );
+      expect(tester.widget<InkButton>(button).onPressed, isNotNull);
+    }
+    expect(find.text(l10n.matchTakePhotoButton), findsOneWidget);
+    expect(find.text(l10n.matchChooseGalleryButton), findsOneWidget);
+
+    await tester.tap(gallery);
+    await tester.pumpAndSettle();
+    expect(picker.calls, <PhotoSource>[PhotoSource.gallery]);
+  });
+
+  testWidgets('a photo replaces the empty state; the row of actions appears', (
     WidgetTester tester,
   ) async {
     await pumpMatch(
@@ -487,19 +544,23 @@ void main() {
       image: sampledImage(96, 16, <int>[255, 0, 0]),
       size: const Size(360, 740),
     );
-
-    // The fix waits for a photo, but the row is always the same.
-    final Finder start = find.byKey(
-      const ValueKey<String>('white-balance-start'),
-    );
-    expect(start, findsOneWidget);
-    expect(tester.widget<InkButton>(start).onPressed, isNull);
+    final Rect header = tester.getRect(find.byType(InkPageHeader));
 
     await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
     await tester.pumpAndSettle();
 
+    expect(find.byKey(const ValueKey<String>('match-empty')), findsNothing);
+    expect(find.byKey(const ValueKey<String>('match-canvas')), findsOneWidget);
+    // The header above did not move, and the page still ends with its
+    // privacy line.
+    expect(tester.getRect(find.byType(InkPageHeader)), header);
+    expect(find.text(l10n.matchPrivacyCaption), findsOneWidget);
+    // The row of actions is small and secondary: the page has no loud button,
+    // and the fix waits for a photo no more.
+    final Finder start = find.byKey(
+      const ValueKey<String>('white-balance-start'),
+    );
     expect(tester.widget<InkButton>(start).onPressed, isNotNull);
-    // Both buttons of the row are secondary: the page has no loud button.
     for (final String key in <String>['match-camera', 'match-gallery']) {
       expect(
         tester.widget<InkButton>(find.byKey(ValueKey<String>(key))).variant,
@@ -586,7 +647,7 @@ void main() {
     );
   });
 
-  stabilityTest('match: the row of actions never moves', (
+  stabilityTest('match: header and row of actions never move', (
     WidgetTester tester,
     StabilityEnv env,
   ) async {
@@ -598,6 +659,13 @@ void main() {
         decoder: fixedDecoder(widePaperAndInk()),
       ),
     );
+
+    // The empty state is its own slot: it holds the two big actions and is
+    // replaced, in place, by the photo and its row. Only the row's own
+    // buttons are anchors from the photo on.
+    final Finder row = find.byKey(const ValueKey<String>('match-actions'));
+    Finder inRow(String key) =>
+        find.descendant(of: row, matching: find.byKey(ValueKey<String>(key)));
 
     Future<void> pickPhoto() async {
       await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
@@ -619,24 +687,67 @@ void main() {
       await tester.pumpAndSettle();
     }
 
+    Future<void> valueView() async {
+      await tester.tap(find.byKey(const ValueKey<String>('match-values')));
+      await tester.pumpAndSettle();
+    }
+
     await expectStableAcrossSegments(
       tester,
       env: env,
       anchors: <String, Finder>{
         'header': find.byType(InkPageHeader),
-        'actions': find.byKey(const ValueKey<String>('match-actions')),
-        'camera': find.byKey(const ValueKey<String>('match-camera')),
-        'gallery': find.byKey(const ValueKey<String>('match-gallery')),
-        'white balance': find.byKey(
-          const ValueKey<String>('white-balance-start'),
-        ),
+        'actions': row,
+        'camera': inRow('match-camera'),
+        'gallery': inRow('match-gallery'),
+        'white balance': inRow('white-balance-start'),
+        'values': inRow('match-values'),
+        'canvas': find.byKey(const ValueKey<String>('match-canvas')),
       },
       segments: <StabilitySegment>[
         (name: 'no photo', activate: () async {}),
         (name: 'with photo', activate: pickPhoto),
         (name: 'whites fixed', activate: fixWhites),
-        (name: 'no photo again', activate: () async {}),
+        (name: 'values on', activate: valueView),
+        (name: 'values off', activate: valueView),
       ],
     );
+  });
+
+  stabilityTest('match: the empty state fits and is replaced in place', (
+    WidgetTester tester,
+    StabilityEnv env,
+  ) async {
+    await pumpStability(
+      tester,
+      env,
+      MatchPage(
+        picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+        decoder: fixedDecoder(widePaperAndInk()),
+      ),
+    );
+    final Finder empty = find.byKey(const ValueKey<String>('match-empty'));
+    final Rect card = tester.getRect(empty);
+    final Rect header = tester.getRect(find.byType(InkPageHeader));
+    // The card starts right under the header and holds both actions inside
+    // its width, in every language.
+    expect(card.top, greaterThanOrEqualTo(header.bottom), reason: env.tag);
+    for (final String key in <String>['match-camera', 'match-gallery']) {
+      final Rect button = tester.getRect(find.byKey(ValueKey<String>(key)));
+      expect(button.left, greaterThanOrEqualTo(card.left), reason: env.tag);
+      expect(button.right, lessThanOrEqualTo(card.right), reason: env.tag);
+      expect(button.height, greaterThanOrEqualTo(InkGeometry.buttonHeight));
+    }
+    // Nothing overflows.
+    expect(tester.takeException(), isNull, reason: env.tag);
+
+    await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
+    await tester.pumpAndSettle();
+    // Replaced in the same slot: the photo box starts where the card started.
+    final Rect canvas = tester.getRect(
+      find.byKey(const ValueKey<String>('match-canvas')),
+    );
+    expect(canvas.top, moreOrLessEquals(card.top + 1, epsilon: 1.01));
+    expect(tester.getRect(find.byType(InkPageHeader)), header);
   });
 }

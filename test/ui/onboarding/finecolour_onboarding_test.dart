@@ -47,6 +47,7 @@ void main() {
           ),
         );
         await tester.ensureVisible(_key('onboarding-brand-finecolour'));
+        await tester.pumpAndSettle();
         await tester.tap(_key('onboarding-brand-finecolour'));
         await tester.pumpAndSettle();
         expect(find.text(l10n.onboardingStep(1, 3)), findsOneWidget);
