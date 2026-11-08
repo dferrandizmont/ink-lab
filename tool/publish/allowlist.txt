@@ -651,3 +651,74 @@ tool/data/baseline/spectrum_noir_triblend_chart.SOURCE.txt
 tool/data/baseline/spectrum_noir_illustrator_chart_colors.json
 tool/data/baseline/spectrum_noir_triblend_chart_colors.json
 tool/data/baseline/spectrum_noir_triblend_chart_markers.json
+
+# Import closure: files that exported Dart code imports, exports or includes as parts.
+# Reviewed one by one (no secrets, personal data or private references). Without
+# them the public tree does not compile.
+# core and data (lib/core, lib/data, lib/app_licenses)
+lib/app_licenses.dart
+lib/core/backup_reminder.dart
+lib/core/collection_export.dart
+lib/core/collection_wheel.dart
+lib/core/error_log.dart
+lib/core/gradient_preview.dart
+lib/core/hex_search.dart
+lib/core/model/blend_recipe.dart
+lib/core/palette_text.dart
+lib/core/platform_info.dart
+lib/core/recipe_codes.dart
+lib/core/shadow_light.dart
+lib/core/value_view.dart
+lib/data/artwork_diary_storage.dart
+lib/data/blend_recipe_repository.dart
+lib/data/marker_extras_repository.dart
+lib/data/onboarding_draft.dart
+lib/data/review_prompt.dart
+# pages: match
+lib/ui/pages/match/match_empty_state.dart
+# pages: palette
+lib/ui/pages/palette/palette_actions.dart
+lib/ui/pages/palette/palette_ai_flow.dart
+lib/ui/pages/palette/palette_ai_report_dialog.dart
+lib/ui/pages/palette/palette_base_field.dart
+lib/ui/pages/palette/palette_base_picker_sheet.dart
+lib/ui/pages/palette/palette_easel_page.dart
+lib/ui/pages/palette/palette_import_sheet.dart
+lib/ui/pages/palette/palette_layout.dart
+lib/ui/pages/palette/palette_notes.dart
+lib/ui/pages/palette/palette_one_line.dart
+lib/ui/pages/palette/palette_paint_order.dart
+lib/ui/pages/palette/palette_photo_flow.dart
+lib/ui/pages/palette/palette_result_header.dart
+lib/ui/pages/palette/palette_result_section.dart
+lib/ui/pages/palette/palette_roles.dart
+lib/ui/pages/palette/palette_save_name_dialog.dart
+lib/ui/pages/palette/palette_save_share.dart
+lib/ui/pages/palette/palette_snapshot.dart
+lib/ui/pages/palette/palette_suggestion_row.dart
+lib/ui/pages/palette/palette_text_flow.dart
+lib/ui/pages/palette/palette_type_fields.dart
+lib/ui/pages/palette/palette_vision_sheet.dart
+# pages: settings
+lib/ui/pages/settings/feedback_email.dart
+# pages: swatches
+lib/ui/pages/swatches/blend_section.dart
+lib/ui/pages/swatches/ink_level_section.dart
+lib/ui/pages/swatches/swatch_marker_row.dart
+lib/ui/pages/swatches/swatch_neighbours_section.dart
+lib/ui/pages/swatches/swatch_photo_row.dart
+# pages: tools
+lib/ui/pages/tools/blend_recipe_page.dart
+lib/ui/pages/tools/blend_recipes_page.dart
+lib/ui/pages/tools/collection_snapshot.dart
+lib/ui/pages/tools/collection_tools_rows.dart
+lib/ui/pages/tools/collection_transfer_page.dart
+lib/ui/pages/tools/colour_map_page.dart
+lib/ui/pages/tools/colour_map_painter.dart
+lib/ui/pages/tools/recipe_translate_page.dart
+lib/ui/pages/tools/tools_widgets.dart
+# UI shell, widgets and helpers (lib/ui)
+lib/ui/screen_awake.dart
+lib/ui/shell/app_shortcuts.dart
+lib/ui/widgets/ink_adaptive.dart
+lib/ui/widgets/value_view.dart
