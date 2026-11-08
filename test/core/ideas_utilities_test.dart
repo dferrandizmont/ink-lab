@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/core/collection_selection.dart';
+import 'package:ink_lab/core/color_utils.dart';
 import 'package:ink_lab/core/ideas_engine.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
@@ -20,12 +22,145 @@ const List<String> _ladder = <String>[
   IdeaRoles.deepShadow,
 ];
 
+/// The 23 technique ideas added from docs/ideas/new-ideas-proposal.md.
+const List<String> _newTechniqueIds = <String>[
+  'feathered_edge',
+  'tip_to_tip',
+  'blender_pattern',
+  'one_marker_layers',
+  'stipple_peel',
+  'clear_glass',
+  'polished_metal',
+  'cast_shadow',
+  'soft_clouds',
+  'still_water',
+  'twisted_ribbon',
+  'no_line_leaf',
+  'short_fur',
+  'wood_grain',
+  'brick_wall',
+  'folded_cloth',
+  'water_drops',
+  'strawberry_seeds',
+  'palette_mixing',
+  'long_hair',
+  'overlap_glazes',
+  'faded_background',
+  'hatch_shading',
+];
+
+/// The season of every idea that belongs to one; the rest have none.
+const Map<String, IdeaSeason> _seasons = <String, IdeaSeason>{
+  'spring': IdeaSeason.spring,
+  'autumn': IdeaSeason.autumn,
+  'halloween': IdeaSeason.autumn,
+  'winter': IdeaSeason.winter,
+  'christmas': IdeaSeason.winter,
+  'tulip_field': IdeaSeason.spring,
+  'summer_beach': IdeaSeason.summer,
+  'watermelon_slice': IdeaSeason.summer,
+  'forest_mushrooms': IdeaSeason.autumn,
+  'harvest_basket': IdeaSeason.autumn,
+  'hot_chocolate': IdeaSeason.winter,
+  'lunar_new_year': IdeaSeason.winter,
+  'diwali_lamps': IdeaSeason.autumn,
+  'hanukkah_candles': IdeaSeason.winter,
+  'painted_eggs': IdeaSeason.spring,
+  'dia_de_muertos': IdeaSeason.autumn,
+  'valentine_card': IdeaSeason.winter,
+  'carnival_mask': IdeaSeason.winter,
+  'midsummer_crown': IdeaSeason.summer,
+  'holi_colours': IdeaSeason.spring,
+  'summer_ice_cream': IdeaSeason.summer,
+  'new_year_fireworks': IdeaSeason.winter,
+};
+
+/// The 17 colour challenges added from docs/ideas/new-ideas-proposal.md.
+///
+/// `colour_wheel` is the one without a palette: it works with the whole
+/// collection, like `swatch_chart`.
+const List<String> _newColourChallengeIds = <String>[
+  'colour_grey_black',
+  'analogous_trio',
+  'triad',
+  'split_complement',
+  'two_gray_temperatures',
+  'gray_plus_accent',
+  'earth_tones',
+  'jewel_tones',
+  'low_key',
+  'complement_gradient',
+  'warm_light_cool_shadow',
+  'vivid_and_muted',
+  'one_marker_blender',
+  'colour_wheel',
+  'deep_skin',
+  'black_object',
+  'white_object',
+];
+
+/// The 14 moods added from docs/ideas/new-ideas-proposal.md.
+///
+/// All of them come with a palette: they pick their markers from the
+/// collection like every other idea with a fixed set of roles.
+const List<String> _newMoodIds = <String>[
+  'cozy_lamp',
+  'foggy_morning',
+  'rainy_window',
+  'eerie_forest',
+  'golden_hour',
+  'stormy_sea',
+  'candle_flame',
+  'desert_noon',
+  'bokeh_lights',
+  'retro_poster',
+  'fresh_citrus',
+  'tropical_noon',
+  'greenhouse_light',
+  'dusty_attic',
+];
+
+/// The 18 seasons and holidays added from docs/ideas/new-ideas-proposal.md.
+const List<String> _newSeasonIds = <String>[
+  'tulip_field',
+  'summer_beach',
+  'watermelon_slice',
+  'forest_mushrooms',
+  'harvest_basket',
+  'hot_chocolate',
+  'lunar_new_year',
+  'diwali_lamps',
+  'hanukkah_candles',
+  'painted_eggs',
+  'dia_de_muertos',
+  'valentine_card',
+  'carnival_mask',
+  'midsummer_crown',
+  'eid_night',
+  'holi_colours',
+  'summer_ice_cream',
+  'new_year_fireworks',
+];
+
 /// Lightness of the markers of [plan] that play ladder roles, in role order.
 List<double> _ladderLightness(IdeaPlan plan) {
   final List<PaletteSuggestion> ladder =
       plan.palette.where((s) => _ladder.contains(s.role)).toList()
         ..sort((a, b) => _ladder.indexOf(a.role!) - _ladder.indexOf(b.role!));
   return <double>[for (final s in ladder) ideaLightness(s.color.hex)];
+}
+
+/// The temperature of a gray marker, the way the engine reads it: warm, cool
+/// or neutral.
+String _grayTemperature(String hex) {
+  final LabColor lab = hexToLab(hex);
+  final double chroma = math.sqrt(lab.a * lab.a + lab.b * lab.b);
+  if (chroma < 2) return 'neutral';
+  double hue = math.atan2(lab.b, lab.a) * 180 / math.pi;
+  if (hue < 0) hue += 360;
+  if (hue >= 20 && hue <= 130) return 'warm';
+  if (hue >= 170 && hue <= 300) return 'cool';
+  return 'neutral';
 }
 
 IdeaPreset _preset(String id) => IdeasEngine.byId(id)!;
@@ -39,6 +174,21 @@ void main() {
     brand: MarkerBrand.ohuhuOahu,
     activeSetIds: <String>{'classic_160'},
   );
+  // The whole range of a brand: every marker it sells, owned or not.
+  final fullOhuhu = paletteCandidateColors(
+    colors: parseColors(
+      File(MarkerBrand.ohuhuOahu.assetPath).readAsStringSync(),
+      brand: MarkerBrand.ohuhuOahu,
+    ),
+    brand: MarkerBrand.ohuhuOahu,
+  );
+  final fullCopic = paletteCandidateColors(
+    colors: parseColors(
+      File(MarkerBrand.copic.assetPath).readAsStringSync(),
+      brand: MarkerBrand.copic,
+    ),
+    brand: MarkerBrand.copic,
+  );
   final deco = parseColors(
     File(MarkerBrand.decoTime.assetPath).readAsStringSync(),
     brand: MarkerBrand.decoTime,
@@ -50,32 +200,35 @@ void main() {
   );
 
   group('catalog', () {
-    test('has 24-30 presets with unique ids and steps bound to real roles', () {
-      expect(IdeasEngine.presets.length, inInclusiveRange(24, 30));
-      expect(
-        IdeasEngine.presets.map((p) => p.id).toSet().length,
-        IdeasEngine.presets.length,
-      );
-      for (final IdeaPreset preset in IdeasEngine.presets) {
+    test(
+      'has 45-110 presets with unique ids and steps bound to real roles',
+      () {
+        expect(IdeasEngine.presets.length, inInclusiveRange(45, 110));
         expect(
-          preset.stepRoles.length,
-          inInclusiveRange(4, 6),
-          reason: preset.id,
+          IdeasEngine.presets.map((p) => p.id).toSet().length,
+          IdeasEngine.presets.length,
         );
-        expect(preset.minutes, greaterThan(0));
-        expect(preset.materials, isNotEmpty, reason: preset.id);
-        for (final String? role in preset.stepRoles) {
-          if (role != null) expect(IdeaRoles.all, contains(role));
+        for (final IdeaPreset preset in IdeasEngine.presets) {
+          expect(
+            preset.stepRoles.length,
+            inInclusiveRange(4, 6),
+            reason: preset.id,
+          );
+          expect(preset.minutes, greaterThan(0));
+          expect(preset.materials, isNotEmpty, reason: preset.id);
+          for (final String? role in preset.stepRoles) {
+            if (role != null) expect(IdeaRoles.all, contains(role));
+          }
         }
-      }
-      for (final IdeaCategory category in IdeaCategory.values) {
-        expect(
-          IdeasEngine.presets.where((p) => p.category == category),
-          isNotEmpty,
-          reason: category.name,
-        );
-      }
-    });
+        for (final IdeaCategory category in IdeaCategory.values) {
+          expect(
+            IdeasEngine.presets.where((p) => p.category == category),
+            isNotEmpty,
+            reason: category.name,
+          );
+        }
+      },
+    );
 
     test('the idea of the day changes every day and stays all day', () {
       final IdeaPreset morning = IdeasEngine.featuredFor(
@@ -86,6 +239,183 @@ void main() {
         IdeasEngine.featuredFor(DateTime(2026, 10, 30, 8)),
         isNot(morning),
       );
+    });
+
+    test('the 23 new technique ideas are in the catalog with five steps', () {
+      expect(_newTechniqueIds.length, 23);
+      for (final String id in _newTechniqueIds) {
+        final IdeaPreset preset = _preset(id);
+        expect(preset.category, IdeaCategory.technique, reason: id);
+        expect(preset.stepRoles.length, 5, reason: id);
+        expect(preset.materials, isNotEmpty, reason: id);
+        expect(preset.minutes, inInclusiveRange(10, 45), reason: id);
+      }
+    });
+
+    test('only the seasonal ideas carry a season', () {
+      for (final IdeaPreset preset in IdeasEngine.presets) {
+        expect(preset.season, _seasons[preset.id], reason: preset.id);
+      }
+    });
+  });
+
+  group('the new colour challenges', () {
+    test('the 17 colour challenges are in the catalog', () {
+      expect(_newColourChallengeIds.length, 17);
+      for (final String id in _newColourChallengeIds) {
+        final IdeaPreset preset = _preset(id);
+        expect(preset.category, IdeaCategory.colorChallenge, reason: id);
+        expect(preset.stepRoles.length, inInclusiveRange(4, 6), reason: id);
+        expect(preset.materials, isNotEmpty, reason: id);
+        expect(preset.minutes, inInclusiveRange(10, 45), reason: id);
+        expect(preset.season, isNull, reason: id);
+      }
+    });
+
+    test('every one with a palette gets a full plan from a whole range', () {
+      for (final String id in _newColourChallengeIds) {
+        final IdeaPreset preset = _preset(id);
+        for (final (String name, List<MarkerColor> collection)
+            in <(String, List<MarkerColor>)>[
+              ('Ohuhu', fullOhuhu),
+              ('Copic', fullCopic),
+            ]) {
+          final IdeaPlan plan = IdeasEngine.generatePlan(preset, collection);
+          if (!preset.hasPalette) {
+            expect(plan.palette, isEmpty, reason: '$id with the whole $name');
+            expect(plan.wanted, 0, reason: '$id with the whole $name');
+            continue;
+          }
+          expect(plan.missing, 0, reason: '$id with the whole $name');
+          expect(
+            plan.palette.map((s) => s.color.colorId).toSet().length,
+            plan.palette.length,
+            reason: '$id with the whole $name',
+          );
+          // Every step that names a role finds the marker that plays it.
+          for (final String? role in preset.stepRoles) {
+            if (role == null) continue;
+            expect(
+              plan.markerFor(role),
+              isNotNull,
+              reason: '$id has no marker for $role in the whole $name',
+            );
+          }
+        }
+      }
+    });
+
+    test('the colour wheel is the one without a palette', () {
+      expect(_preset('colour_wheel').hasPalette, isFalse);
+      for (final String id in _newColourChallengeIds) {
+        if (id == 'colour_wheel') continue;
+        expect(_preset(id).hasPalette, isTrue, reason: id);
+      }
+    });
+  });
+
+  group('the new moods', () {
+    test('the 14 moods are in the catalog', () {
+      expect(_newMoodIds.length, 14);
+      for (final String id in _newMoodIds) {
+        final IdeaPreset preset = _preset(id);
+        expect(preset.category, IdeaCategory.mood, reason: id);
+        expect(preset.stepRoles.length, inInclusiveRange(4, 6), reason: id);
+        expect(preset.materials, isNotEmpty, reason: id);
+        expect(preset.minutes, inInclusiveRange(10, 45), reason: id);
+        expect(preset.season, isNull, reason: id);
+      }
+    });
+
+    test('every one with a palette gets a full plan from a whole range', () {
+      for (final String id in _newMoodIds) {
+        final IdeaPreset preset = _preset(id);
+        for (final (String name, List<MarkerColor> collection)
+            in <(String, List<MarkerColor>)>[
+              ('Ohuhu', fullOhuhu),
+              ('Copic', fullCopic),
+            ]) {
+          final IdeaPlan plan = IdeasEngine.generatePlan(preset, collection);
+          if (!preset.hasPalette) {
+            expect(plan.palette, isEmpty, reason: '$id with the whole $name');
+            expect(plan.wanted, 0, reason: '$id with the whole $name');
+            continue;
+          }
+          expect(plan.missing, 0, reason: '$id with the whole $name');
+          expect(
+            plan.palette.map((s) => s.color.colorId).toSet().length,
+            plan.palette.length,
+            reason: '$id with the whole $name',
+          );
+          // Every step that names a role finds the marker that plays it.
+          for (final String? role in preset.stepRoles) {
+            if (role == null) continue;
+            expect(
+              plan.markerFor(role),
+              isNotNull,
+              reason: '$id has no marker for $role in the whole $name',
+            );
+          }
+        }
+      }
+    });
+
+    test('every mood has a palette of its own', () {
+      for (final String id in _newMoodIds) {
+        expect(_preset(id).hasPalette, isTrue, reason: id);
+      }
+    });
+  });
+
+  group('the new seasons and holidays', () {
+    test('the 18 season ideas are in the catalog', () {
+      expect(_newSeasonIds.length, 18);
+      for (final String id in _newSeasonIds) {
+        final IdeaPreset preset = _preset(id);
+        expect(preset.category, IdeaCategory.season, reason: id);
+        expect(preset.stepRoles.length, inInclusiveRange(4, 6), reason: id);
+        expect(preset.materials, isNotEmpty, reason: id);
+        expect(preset.minutes, inInclusiveRange(10, 45), reason: id);
+      }
+    });
+
+    test('every one with a palette gets a full plan from a whole range', () {
+      for (final String id in _newSeasonIds) {
+        final IdeaPreset preset = _preset(id);
+        for (final (String name, List<MarkerColor> collection)
+            in <(String, List<MarkerColor>)>[
+              ('Ohuhu', fullOhuhu),
+              ('Copic', fullCopic),
+            ]) {
+          final IdeaPlan plan = IdeasEngine.generatePlan(preset, collection);
+          if (!preset.hasPalette) {
+            expect(plan.palette, isEmpty, reason: '$id with the whole $name');
+            expect(plan.wanted, 0, reason: '$id with the whole $name');
+            continue;
+          }
+          expect(plan.missing, 0, reason: '$id with the whole $name');
+          expect(
+            plan.palette.map((s) => s.color.colorId).toSet().length,
+            plan.palette.length,
+            reason: '$id with the whole $name',
+          );
+          // Every step that names a role finds the marker that plays it.
+          for (final String? role in preset.stepRoles) {
+            if (role == null) continue;
+            expect(
+              plan.markerFor(role),
+              isNotNull,
+              reason: '$id has no marker for $role in the whole $name',
+            );
+          }
+        }
+      }
+    });
+
+    test('only eid_night has no season, every idea has a palette', () {
+      for (final String id in _newSeasonIds) {
+        expect(_preset(id).hasPalette, isTrue, reason: id);
+      }
     });
   });
 
@@ -134,6 +464,72 @@ void main() {
       for (final IdeaPreset preset in IdeasEngine.presets) {
         final IdeaPlan plan = IdeasEngine.generatePlan(preset, ohuhu);
         expect(plan.missing, 0, reason: preset.id);
+      }
+    });
+
+    for (final (String name, List<MarkerColor> collection)
+        in <(String, List<MarkerColor>)>[
+          ('Ohuhu', fullOhuhu),
+          ('Copic', fullCopic),
+        ]) {
+      test('the whole $name range fills every palette', () {
+        expect(collection, isNotEmpty);
+        for (final IdeaPreset preset in IdeasEngine.presets) {
+          final IdeaPlan plan = IdeasEngine.generatePlan(preset, collection);
+          expect(plan.missing, 0, reason: preset.id);
+          expect(
+            plan.palette.map((s) => s.color.colorId).toSet().length,
+            plan.palette.length,
+            reason: preset.id,
+          );
+        }
+      });
+
+      test('every named step role of $name has a marker', () {
+        for (final IdeaPreset preset in IdeasEngine.presets) {
+          if (!preset.hasPalette) continue;
+          final IdeaPlan plan = IdeasEngine.generatePlan(preset, collection);
+          for (final String? role in preset.stepRoles) {
+            if (role == null) continue;
+            expect(
+              plan.markerFor(role),
+              isNotNull,
+              reason: '${preset.id} has no marker for $role',
+            );
+          }
+        }
+      });
+    }
+
+    test('a tinted gray ladder keeps one temperature', () {
+      for (final (String id, String temperature) in <(String, String)>[
+        ('clear_glass', 'cool'),
+        ('polished_metal', 'neutral'),
+      ]) {
+        for (final List<MarkerColor> collection in <List<MarkerColor>>[
+          fullOhuhu,
+          fullCopic,
+        ]) {
+          final IdeaPlan plan = IdeasEngine.generatePlan(
+            _preset(id),
+            collection,
+          );
+          final List<PaletteSuggestion> grays = plan.palette
+              .where(
+                (s) =>
+                    IdeaRoles.ladderOrder.contains(s.role) ||
+                    s.role == IdeaRoles.shadowGray,
+              )
+              .toList();
+          expect(grays, isNotEmpty, reason: id);
+          for (final PaletteSuggestion s in grays) {
+            expect(
+              _grayTemperature(s.color.hex),
+              temperature,
+              reason: '$id ${s.color.newCode}',
+            );
+          }
+        }
       }
     });
 

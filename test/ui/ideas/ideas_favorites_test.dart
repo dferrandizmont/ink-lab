@@ -22,6 +22,21 @@ Future<void> _closeSheet(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+/// Scrolls the list of ideas back to its top, where the "Recently viewed" row
+/// sits under the idea of the day.
+Future<void> _scrollToTheTop(WidgetTester tester) async {
+  final ScrollableState list = tester.state<ScrollableState>(
+    find
+        .byWidgetPredicate(
+          (Widget w) =>
+              w is Scrollable && w.axisDirection == AxisDirection.down,
+        )
+        .first,
+  );
+  list.position.jumpTo(0);
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('the heart of a card marks the idea as a favourite', (
     WidgetTester tester,
@@ -81,10 +96,7 @@ void main() {
       expect(find.text(l10n.ideasFavoritesEmptyMessage), findsOneWidget);
       expect(_rows, findsNothing);
       // The idea of the day and the recent row are for browsing only.
-      expect(
-        find.text(l10n.ideasRecentTitle),
-        findsNothing,
-      );
+      expect(find.text(l10n.ideasRecentTitle), findsNothing);
 
       await scope.ideaFavorites.toggle('one_color');
       await scope.ideaFavorites.toggle('neon');
@@ -135,14 +147,20 @@ void main() {
       expect(scope.ideaFavorites.recent, <String>['one_color']);
       await _closeSheet(tester);
 
-      await tester.ensureVisible(_key('ideas-preset-neon'));
+      await showIdeaRow(tester, 'neon');
       await tester.tap(_key('ideas-preset-neon'));
       await tester.pumpAndSettle();
       await _closeSheet(tester);
       expect(scope.ideaFavorites.recent, <String>['neon', 'one_color']);
+      // Back to the overview, where the recent row is.
+      await tester.tap(_key('ideas-category-all'));
+      await tester.pumpAndSettle();
 
       // The row shows them newest first, folded away until asked for.
+      await _scrollToTheTop(tester);
+      expect(_key('ideas-recent'), findsOneWidget);
       await tester.ensureVisible(_key('ideas-recent'));
+      await tester.pumpAndSettle();
       expect(find.text(l10n.ideasRecentTitle), findsOneWidget);
       expect(_key('ideas-recent-neon'), findsNothing);
       await tester.tap(_key('ideas-recent'));
@@ -152,6 +170,8 @@ void main() {
       expect(newest, lessThan(older));
 
       // A card of the row opens the idea and moves it to the front.
+      await tester.ensureVisible(_key('ideas-recent-one_color'));
+      await tester.pumpAndSettle();
       await tester.tap(_key('ideas-recent-one_color'));
       await tester.pumpAndSettle();
       expect(_key('ideas-detail-one_color'), findsOneWidget);

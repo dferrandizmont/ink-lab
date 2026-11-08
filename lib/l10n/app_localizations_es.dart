@@ -897,7 +897,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get paletteEmptyHint =>
-      'Elige un rotulador base para crear una paleta, o elige Escenas como tipo de paleta.';
+      'Elige un rotulador base para crear una paleta, o una escena con el chip Escenas.';
 
   @override
   String get paletteCustomModeHint =>
@@ -906,6 +906,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get paletteNoSuggestions =>
       'No se pudo crear ninguna paleta con tu colección. Prueba otro modo o añade más rotuladores.';
+
+  @override
+  String get paletteScenarioTitle => 'Escenas';
 
   @override
   String get palettePickBaseTooltip => 'Elegir de tus rotuladores';
@@ -1141,6 +1144,2826 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ideasNoMarkers => 'Ahora mismo no hay rotuladores disponibles';
 
   @override
+  String get ideasTulipFieldTitle => 'Campo de tulipanes';
+
+  @override
+  String get ideasTulipFieldSummary =>
+      'Hileras de tulipanes rojos y amarillos hasta el horizonte, con verde de primavera entre ellas.';
+
+  @override
+  String get ideasTulipFieldPractice =>
+      'Bandas planas que se rompen en puntos al acercarse.';
+
+  @override
+  String get ideasTulipFieldSubject =>
+      'Hileras de tulipanes vistas desde abajo, con el horizonte bajo.';
+
+  @override
+  String get ideasTulipFieldTip =>
+      'La hilera más cercana son puntos y la más lejana una franja: cambia la marca según se aleja la hilera.';
+
+  @override
+  String get ideasTulipFieldStep1 =>
+      'Dibuja a lápiz hileras que se estrechan hacia un horizonte bajo.';
+
+  @override
+  String get ideasTulipFieldStep2 =>
+      'Rojo en las primeras hileras: manchas sueltas cerca y una franja sólida más lejos.';
+
+  @override
+  String get ideasTulipFieldStep3 =>
+      'Amarillo en las hileras siguientes, igual que antes.';
+
+  @override
+  String get ideasTulipFieldStep4 =>
+      'Verde claro entre las hileras y a lo largo del horizonte.';
+
+  @override
+  String get ideasTulipFieldStep5 =>
+      'Verde más oscuro en una línea fina al pie de cada hilera.';
+
+  @override
+  String get ideasSummerBeachTitle => 'En la playa';
+
+  @override
+  String get ideasSummerBeachSummary =>
+      'Arena, una franja de mar y una sombrilla: tres bandas planas y un acento vivo.';
+
+  @override
+  String get ideasSummerBeachPractice =>
+      'Tres bandas planas y un único acento que lleva la mirada.';
+
+  @override
+  String get ideasSummerBeachSubject =>
+      'Una playa vista desde la arena, con una sombrilla.';
+
+  @override
+  String get ideasSummerBeachTip =>
+      'Deja la espuma como papel: es la línea más clara del mar.';
+
+  @override
+  String get ideasSummerBeachStep1 =>
+      'Dibuja a lápiz tres bandas horizontales (cielo, mar, arena) y una sombrilla en la arena.';
+
+  @override
+  String get ideasSummerBeachStep2 =>
+      'Arena pálida con la mano muy ligera; deja más clara la arena mojada junto al agua.';
+
+  @override
+  String get ideasSummerBeachStep3 =>
+      'Turquesa claro para el mar, con una línea de papel para la espuma.';
+
+  @override
+  String get ideasSummerBeachStep4 => 'Turquesa más oscuro en el horizonte.';
+
+  @override
+  String get ideasSummerBeachStep5 =>
+      'Sombrilla roja y su pequeña sombra en la arena, hecha con una segunda capa del color de la arena.';
+
+  @override
+  String get ideasWatermelonSliceTitle => 'Sandía';
+
+  @override
+  String get ideasWatermelonSliceSummary =>
+      'Una raja de sandía: pulpa roja, corteza blanca, piel verde y pepitas negras.';
+
+  @override
+  String get ideasWatermelonSlicePractice =>
+      'Un degradado rápido y una franja plana, con la corteza blanca dejada como papel.';
+
+  @override
+  String get ideasWatermelonSliceSubject =>
+      'Una raja triangular de sandía con la base curva.';
+
+  @override
+  String get ideasWatermelonSliceTip =>
+      'La corteza blanca es papel: no la colorees.';
+
+  @override
+  String get ideasWatermelonSliceStep1 =>
+      'Dibuja a lápiz un triángulo con la base curva y una franja blanca fina dentro del verde.';
+
+  @override
+  String get ideasWatermelonSliceStep2 =>
+      'Rojo claro sobre la pulpa, más pálido junto a la corteza.';
+
+  @override
+  String get ideasWatermelonSliceStep3 =>
+      'Rojo más intenso hacia la punta, fundido mientras está húmedo.';
+
+  @override
+  String get ideasWatermelonSliceStep4 =>
+      'Verde en la piel, con rayas de verde oscuro en una segunda capa.';
+
+  @override
+  String get ideasWatermelonSliceStep5 =>
+      'Pepitas con el rotulador calibrado, cada una como una gota pequeña.';
+
+  @override
+  String get ideasForestMushroomsTitle => 'Setas en el suelo del bosque';
+
+  @override
+  String get ideasForestMushroomsSummary =>
+      'Un grupo de setas entre hojas marrones en otoño.';
+
+  @override
+  String get ideasForestMushroomsPractice =>
+      'Sombreros redondos con degradados pequeños y un suelo de trazos sueltos.';
+
+  @override
+  String get ideasForestMushroomsSubject =>
+      'Tres setas de distintas alturas entre hojas caídas.';
+
+  @override
+  String get ideasForestMushroomsTip =>
+      'El suelo del bosque pide trazos sueltos y rotos de marrón, no rellenos macizos.';
+
+  @override
+  String get ideasForestMushroomsStep1 =>
+      'Dibuja a lápiz tres setas de distintas alturas y unas hojas alrededor.';
+
+  @override
+  String get ideasForestMushroomsStep2 =>
+      'Beige pálido en los tallos y en la parte de abajo de los sombreros.';
+
+  @override
+  String get ideasForestMushroomsStep3 =>
+      'Marrón rojizo en los sombreros, más oscuro en el borde.';
+
+  @override
+  String get ideasForestMushroomsStep4 => 'Marrón en las hojas y en el suelo.';
+
+  @override
+  String get ideasForestMushroomsStep5 =>
+      'El más oscuro bajo los sombreros y donde los tallos tocan el suelo; si quieres, motas de gel blanco en los sombreros.';
+
+  @override
+  String get ideasHarvestBasketTitle => 'Cesta de la cosecha';
+
+  @override
+  String get ideasHarvestBasketSummary =>
+      'Manzanas, una pera y una calabaza pequeña en una cesta, cada una de un color, sombreadas con un mismo gris.';
+
+  @override
+  String get ideasHarvestBasketPractice =>
+      'Un solo gris sombreando tres colores fuertes para que encajen juntos.';
+
+  @override
+  String get ideasHarvestBasketSubject =>
+      'Una cesta llena de fruta: manzanas, una pera y una calabaza.';
+
+  @override
+  String get ideasHarvestBasketTip =>
+      'Sombrea toda la fruta con el mismo gris. Es lo que mantiene unido un bodegón con muchas piezas.';
+
+  @override
+  String get ideasHarvestBasketStep1 =>
+      'Dibuja a lápiz la cesta y la fruta superpuesta.';
+
+  @override
+  String get ideasHarvestBasketStep2 =>
+      'Rojo para las manzanas, dejando el brillo como papel.';
+
+  @override
+  String get ideasHarvestBasketStep3 => 'Verde amarillento para la pera.';
+
+  @override
+  String get ideasHarvestBasketStep4 =>
+      'Naranja para la calabaza, con sus nervios como líneas más oscuras de una segunda capa.';
+
+  @override
+  String get ideasHarvestBasketStep5 =>
+      'El mismo gris para todas las sombras y el interior de la cesta.';
+
+  @override
+  String get ideasHarvestBasketStep6 =>
+      'El rotulador más oscuro para las líneas del trenzado de la cesta.';
+
+  @override
+  String get ideasHotChocolateTitle => 'Chocolate caliente';
+
+  @override
+  String get ideasHotChocolateSummary =>
+      'Una taza de chocolate con vapor, una nube de azúcar y una manopla roja.';
+
+  @override
+  String get ideasHotChocolatePractice =>
+      'Marrones cálidos, un acento rojo y vapor levantado del fondo.';
+
+  @override
+  String get ideasHotChocolateSubject =>
+      'Una taza de chocolate caliente con una nube de azúcar y una manopla al lado.';
+
+  @override
+  String get ideasHotChocolateTip =>
+      'El vapor es papel o una forma levantada con el difuminador, nunca una línea dibujada.';
+
+  @override
+  String get ideasHotChocolateStep1 =>
+      'Dibuja a lápiz la taza, la superficie de la bebida, una nube de azúcar y una manopla apoyada en ella.';
+
+  @override
+  String get ideasHotChocolateStep2 =>
+      'Marrón pálido en el lado iluminado de la taza y en la sombra de la nube.';
+
+  @override
+  String get ideasHotChocolateStep3 =>
+      'Marrón en la superficie de la bebida y en el lado de la sombra de la taza.';
+
+  @override
+  String get ideasHotChocolateStep4 => 'Manopla roja, dos capas.';
+
+  @override
+  String get ideasHotChocolateStep5 =>
+      'Vapor: levanta jirones del fondo con el difuminador, o déjalo como papel.';
+
+  @override
+  String get ideasLunarNewYearTitle => 'Año Nuevo Lunar';
+
+  @override
+  String get ideasLunarNewYearSummary =>
+      'Farolillos rojos con adornos dorados contra una pared roja.';
+
+  @override
+  String get ideasLunarNewYearPractice =>
+      'Una familia de rojos en tres pasos y un acento dorado plano.';
+
+  @override
+  String get ideasLunarNewYearSubject =>
+      'Tres farolillos redondos colgados a distintas alturas, con borlas.';
+
+  @override
+  String get ideasLunarNewYearTip =>
+      'Pon el oro encima del rojo ya seco, nunca al revés.';
+
+  @override
+  String get ideasLunarNewYearStep1 =>
+      'Dibuja a lápiz tres farolillos colgados a distintas alturas, con borlas.';
+
+  @override
+  String get ideasLunarNewYearStep2 =>
+      'Rojo claro sobre los farolillos, más pálido en el lado iluminado.';
+
+  @override
+  String get ideasLunarNewYearStep3 =>
+      'El rojo en el lado de la sombra y en los nervios, fundido mientras está húmedo.';
+
+  @override
+  String get ideasLunarNewYearStep4 =>
+      'Rojo oscuro entre los nervios y dentro de los bordes.';
+
+  @override
+  String get ideasLunarNewYearStep5 =>
+      'Amarillo dorado en los bordes, las tapas y las borlas, con bordes nítidos.';
+
+  @override
+  String get ideasDiwaliLampsTitle => 'Lámparas de Diwali';
+
+  @override
+  String get ideasDiwaliLampsSummary =>
+      'Una fila de lámparas de barro con pequeñas llamas y un rangoli de colores vivos alrededor.';
+
+  @override
+  String get ideasDiwaliLampsPractice =>
+      'Un patrón plano y saturado junto a un degradado de dos pasos en las lámparas.';
+
+  @override
+  String get ideasDiwaliLampsSubject =>
+      'Cinco pequeñas lámparas de barro en curva, con un patrón simétrico sencillo alrededor.';
+
+  @override
+  String get ideasDiwaliLampsTip =>
+      'Mantén el patrón plano y de bordes duros. El contraste con las lámparas es lo que lo hace funcionar.';
+
+  @override
+  String get ideasDiwaliLampsStep1 =>
+      'Dibuja a lápiz cinco pequeñas lámparas en curva y un patrón simétrico sencillo alrededor.';
+
+  @override
+  String get ideasDiwaliLampsStep2 => 'Terracota clara en las lámparas.';
+
+  @override
+  String get ideasDiwaliLampsStep3 =>
+      'Terracota más oscura en el lado de la sombra.';
+
+  @override
+  String get ideasDiwaliLampsStep4 =>
+      'Amarillo para cada llama y un halo en el borde de cada lámpara.';
+
+  @override
+  String get ideasDiwaliLampsStep5 =>
+      'Magenta en las secciones alternas del patrón, plano y de bordes duros.';
+
+  @override
+  String get ideasDiwaliLampsStep6 =>
+      'Turquesa en las otras secciones y, si quieres, motas de gel blanco en las llamas.';
+
+  @override
+  String get ideasHanukkahCandlesTitle => 'Hanukká';
+
+  @override
+  String get ideasHanukkahCandlesSummary =>
+      'Un candelabro de Hanukká con las velas encendidas, azul y blanco con llamas doradas.';
+
+  @override
+  String get ideasHanukkahCandlesPractice =>
+      'Formas blancas conservadas como papel sobre un campo azul.';
+
+  @override
+  String get ideasHanukkahCandlesSubject =>
+      'Un candelabro de Hanukká con las velas encendidas delante de un fondo azul.';
+
+  @override
+  String get ideasHanukkahCandlesTip =>
+      'Las velas son papel: colorea alrededor y saldrán blancas.';
+
+  @override
+  String get ideasHanukkahCandlesStep1 =>
+      'Dibuja a lápiz el candelabro y las velas; las velas se quedan en papel.';
+
+  @override
+  String get ideasHanukkahCandlesStep2 => 'Fondo azul claro alrededor de todo.';
+
+  @override
+  String get ideasHanukkahCandlesStep3 =>
+      'Azul más intenso en los bordes de la hoja, fundido hacia dentro.';
+
+  @override
+  String get ideasHanukkahCandlesStep4 =>
+      'El azul oscuro para el propio candelabro.';
+
+  @override
+  String get ideasHanukkahCandlesStep5 =>
+      'Llamas amarillas y un halo suave alrededor, y luego un centro de gel blanco en cada llama.';
+
+  @override
+  String get ideasPaintedEggsTitle => 'Huevos pintados';
+
+  @override
+  String get ideasPaintedEggsSummary =>
+      'Tres huevos decorados con rayas, puntos y zigzag en colores de intensidad media.';
+
+  @override
+  String get ideasPaintedEggsPractice =>
+      'Tres formas de hacer un patrón: papel, forma y segunda capa.';
+
+  @override
+  String get ideasPaintedEggsSubject =>
+      'Tres huevos, cada uno con un patrón distinto.';
+
+  @override
+  String get ideasPaintedEggsTip =>
+      'Los colores de intensidad media dejan ver la segunda capa sin ensuciarse.';
+
+  @override
+  String get ideasPaintedEggsStep1 =>
+      'Dibuja a lápiz tres huevos y un patrón distinto en cada uno.';
+
+  @override
+  String get ideasPaintedEggsStep2 =>
+      'Primer huevo: color base plano, con el patrón reservado en papel.';
+
+  @override
+  String get ideasPaintedEggsStep3 =>
+      'Segundo huevo: rellena solo las formas del patrón, el resto se queda en papel.';
+
+  @override
+  String get ideasPaintedEggsStep4 =>
+      'Tercer huevo: colóralo y luego añade el patrón con el mismo color como segunda capa.';
+
+  @override
+  String get ideasPaintedEggsStep5 =>
+      'Un gris para el lado de la sombra de cada huevo y la pequeña sombra debajo.';
+
+  @override
+  String get ideasDiaDeMuertosTitle => 'Día de Muertos';
+
+  @override
+  String get ideasDiaDeMuertosSummary =>
+      'Flores de cempasúchil y una calavera decorada en naranja, magenta y turquesa sobre un fondo oscuro.';
+
+  @override
+  String get ideasDiaDeMuertosPractice =>
+      'Patrón plano y saturado sobre un campo oscuro.';
+
+  @override
+  String get ideasDiaDeMuertosSubject =>
+      'Una calavera decorada con formas de flor alrededor de los ojos y un grupo de flores de cempasúchil debajo.';
+
+  @override
+  String get ideasDiaDeMuertosTip =>
+      'Pon el fondo oscuro al final y despacio: la tinta oscura se corre hacia las zonas claras.';
+
+  @override
+  String get ideasDiaDeMuertosStep1 =>
+      'Dibuja a lápiz una calavera con formas de flor alrededor de los ojos y un grupo de flores de cempasúchil debajo.';
+
+  @override
+  String get ideasDiaDeMuertosStep2 =>
+      'Naranja claro en las flores, cada una como un círculo tosco.';
+
+  @override
+  String get ideasDiaDeMuertosStep3 =>
+      'Naranja más intenso en trazos cortos dentro de cada círculo para los pétalos.';
+
+  @override
+  String get ideasDiaDeMuertosStep4 =>
+      'Magenta para los patrones de la calavera, planos y simétricos.';
+
+  @override
+  String get ideasDiaDeMuertosStep5 =>
+      'Turquesa para la otra mitad de los patrones de la calavera.';
+
+  @override
+  String get ideasDiaDeMuertosStep6 =>
+      'El rotulador más oscuro para las cuencas de los ojos y el fondo, y después los detalles con el rotulador calibrado.';
+
+  @override
+  String get ideasValentineCardTitle => 'Tarjeta de San Valentín';
+
+  @override
+  String get ideasValentineCardSummary =>
+      'Una tarjeta con tres corazones, del rosa pálido al rojo profundo, y una línea de sombra que los despega del papel.';
+
+  @override
+  String get ideasValentineCardPractice =>
+      'Tres rellenos planos y una línea de sombra proyectada.';
+
+  @override
+  String get ideasValentineCardSubject =>
+      'Tres corazones superpuestos, el más grande detrás.';
+
+  @override
+  String get ideasValentineCardTip =>
+      'Dibuja la sombra proyectada como una línea fina: despega el corazón sin añadir color.';
+
+  @override
+  String get ideasValentineCardStep1 =>
+      'Dibuja a lápiz tres corazones superpuestos, el más grande detrás.';
+
+  @override
+  String get ideasValentineCardStep2 => 'Rosa pálido en el corazón de atrás.';
+
+  @override
+  String get ideasValentineCardStep3 => 'Rosa en el del medio.';
+
+  @override
+  String get ideasValentineCardStep4 =>
+      'Rojo en el de delante y una línea fina del mismo bajo los otros dos como sombra proyectada.';
+
+  @override
+  String get ideasValentineCardStep5 =>
+      'Un brillo de gel blanco en cada corazón, arriba a la izquierda.';
+
+  @override
+  String get ideasCarnivalMaskTitle => 'Máscara de carnaval';
+
+  @override
+  String get ideasCarnivalMaskSummary =>
+      'Una máscara con plumas en violeta, turquesa y oro.';
+
+  @override
+  String get ideasCarnivalMaskPractice =>
+      'Trazos rápidos para las plumas, un degradado para la máscara y oro plano.';
+
+  @override
+  String get ideasCarnivalMaskSubject =>
+      'Una media máscara con tres plumas que suben por un lado.';
+
+  @override
+  String get ideasCarnivalMaskTip =>
+      'Haz las plumas con trazos rápidos hacia fuera desde el cañón: el borde suave es lo que las hace parecer plumas.';
+
+  @override
+  String get ideasCarnivalMaskStep1 =>
+      'Dibuja a lápiz una media máscara y tres plumas que suben por un lado.';
+
+  @override
+  String get ideasCarnivalMaskStep2 =>
+      'Violeta en la máscara, dos capas donde se curva hacia atrás.';
+
+  @override
+  String get ideasCarnivalMaskStep3 =>
+      'Turquesa en las plumas, con trazos rápidos hacia fuera desde el cañón para que los bordes queden suaves.';
+
+  @override
+  String get ideasCarnivalMaskStep4 =>
+      'Oro en el borde de la máscara y en los contornos de los ojos.';
+
+  @override
+  String get ideasCarnivalMaskStep5 =>
+      'El más oscuro dentro de los huecos de los ojos y, después, puntos de gel como lentejuelas.';
+
+  @override
+  String get ideasMidsummerCrownTitle => 'Corona de flores de verano';
+
+  @override
+  String get ideasMidsummerCrownSummary =>
+      'Una corona de flores silvestres y hojas: azul, amarillo y rosa sobre verde.';
+
+  @override
+  String get ideasMidsummerCrownPractice =>
+      'Muchos toques pequeños de la punta fina sobre un verde ya seco.';
+
+  @override
+  String get ideasMidsummerCrownSubject =>
+      'Un anillo de hojas con tres tipos de flores silvestres pequeñas.';
+
+  @override
+  String get ideasMidsummerCrownTip =>
+      'Los toques de color sobre una base seca quedan nítidos. Espera a que el verde se seque antes de empezar con las flores.';
+
+  @override
+  String get ideasMidsummerCrownStep1 =>
+      'Dibuja a lápiz un anillo de hojas y pequeñas flores de tres tipos.';
+
+  @override
+  String get ideasMidsummerCrownStep2 => 'Verde claro en todas las hojas.';
+
+  @override
+  String get ideasMidsummerCrownStep3 =>
+      'Verde más oscuro donde las hojas se solapan y por debajo.';
+
+  @override
+  String get ideasMidsummerCrownStep4 => 'Azul en el primer tipo de flor.';
+
+  @override
+  String get ideasMidsummerCrownStep5 => 'Amarillo en el segundo tipo de flor.';
+
+  @override
+  String get ideasMidsummerCrownStep6 =>
+      'Rosa en el tercero, con una pequeña segunda capa en el centro de cada flor.';
+
+  @override
+  String get ideasEidNightTitle => 'Noche de Eid';
+
+  @override
+  String get ideasEidNightSummary =>
+      'Una luna creciente y un farol colgante contra un cielo turquesa y violeta profundos.';
+
+  @override
+  String get ideasEidNightPractice =>
+      'Un fundido limpio de turquesa a violeta en húmedo, con el oro encima.';
+
+  @override
+  String get ideasEidNightSubject =>
+      'Una luna creciente y un farol con dibujo contra un cielo nocturno.';
+
+  @override
+  String get ideasEidNightTip =>
+      'Funde el turquesa con el violeta mientras ambos estén húmedos. Una vez seco, el cielo queda limpio.';
+
+  @override
+  String get ideasEidNightStep1 =>
+      'Dibuja a lápiz la luna creciente y un farol con dibujo; los dos se quedan en papel por ahora.';
+
+  @override
+  String get ideasEidNightStep2 =>
+      'Turquesa por todo el cielo, más claro junto a la luna.';
+
+  @override
+  String get ideasEidNightStep3 => 'Turquesa más intenso hacia los bordes.';
+
+  @override
+  String get ideasEidNightStep4 =>
+      'Violeta fundido en las esquinas de arriba mientras el turquesa sigue húmedo.';
+
+  @override
+  String get ideasEidNightStep5 =>
+      'Oro en la luna y en la estructura del farol; los paneles quedan claros y luego añades estrellas de gel blanco.';
+
+  @override
+  String get ideasHoliColoursTitle => 'Holi';
+
+  @override
+  String get ideasHoliColoursSummary =>
+      'Nubes de polvo de color sobre blanco: bordes suaves, centros duros, cuatro colores vivos.';
+
+  @override
+  String get ideasHoliColoursPractice =>
+      'Color sin borde: el difuminador disuelve un borde en el papel.';
+
+  @override
+  String get ideasHoliColoursSubject =>
+      'Cuatro nubes de polvo de color superpuestas sobre papel blanco.';
+
+  @override
+  String get ideasHoliColoursTip =>
+      'Deja secar cada nube antes de añadir la siguiente, o todos los colores se vuelven barro.';
+
+  @override
+  String get ideasHoliColoursStep1 =>
+      'Garabatea una nube suelta con el primer color, densa en el centro.';
+
+  @override
+  String get ideasHoliColoursStep2 =>
+      'Estira sus bordes con el difuminador hacia el papel blanco hasta que desaparezcan.';
+
+  @override
+  String get ideasHoliColoursStep3 =>
+      'Una segunda nube que se solape un poco con la primera; donde se toquen, deja que se mezclen.';
+
+  @override
+  String get ideasHoliColoursStep4 =>
+      'Una tercera nube, más pequeña, en un hueco.';
+
+  @override
+  String get ideasHoliColoursStep5 =>
+      'Una cuarta nube en el último hueco y luego unos puntos de cada color a su alrededor.';
+
+  @override
+  String get ideasSummerIceCreamTitle => 'Helado';
+
+  @override
+  String get ideasSummerIceCreamSummary =>
+      'Tres bolas de sabores distintos sobre un cucurucho.';
+
+  @override
+  String get ideasSummerIceCreamPractice =>
+      'Tres degradados redondos y un gris que los sombrea a todos.';
+
+  @override
+  String get ideasSummerIceCreamSubject =>
+      'Tres bolas apiladas sobre un cucurucho con un enrejado.';
+
+  @override
+  String get ideasSummerIceCreamTip =>
+      'Usa el mismo gris para todas las bolas: eso mantiene juntos tres colores distintos.';
+
+  @override
+  String get ideasSummerIceCreamStep1 =>
+      'Dibuja a lápiz un cucurucho con enrejado y tres bolas apiladas.';
+
+  @override
+  String get ideasSummerIceCreamStep2 =>
+      'El primer sabor en la bola de abajo, dejando en ella un brillo de papel.';
+
+  @override
+  String get ideasSummerIceCreamStep3 =>
+      'El segundo sabor en la bola del medio, también con su brillo.';
+
+  @override
+  String get ideasSummerIceCreamStep4 =>
+      'El tercer sabor en la bola de arriba.';
+
+  @override
+  String get ideasSummerIceCreamStep5 =>
+      'El mismo gris claro en la parte de abajo de cada bola y donde se solapan.';
+
+  @override
+  String get ideasSummerIceCreamStep6 =>
+      'El cucurucho en beige, con las líneas del enrejado en una segunda capa.';
+
+  @override
+  String get ideasNewYearFireworksTitle => 'Fuegos de Año Nuevo';
+
+  @override
+  String get ideasNewYearFireworksSummary =>
+      'Tres estallidos de fuegos artificiales sobre un cielo oscuro, cada uno de un color.';
+
+  @override
+  String get ideasNewYearFireworksPractice =>
+      'Color vivo sobre un relleno oscuro, con las líneas reservadas en papel.';
+
+  @override
+  String get ideasNewYearFireworksSubject =>
+      'Tres estallidos de fuegos artificiales con líneas finas que salen de cada centro.';
+
+  @override
+  String get ideasNewYearFireworksTip =>
+      'Rellena el cielo alrededor de las líneas, no encima: el papel blanco es lo que hace brillar los fuegos.';
+
+  @override
+  String get ideasNewYearFireworksStep1 =>
+      'Dibuja a lápiz tres centros y líneas finas que salgan de cada uno; las líneas se quedan en papel por ahora.';
+
+  @override
+  String get ideasNewYearFireworksStep2 =>
+      'Rellena el cielo de oscuro, rodeando las líneas con la punta fina (pueden quedar desiguales).';
+
+  @override
+  String get ideasNewYearFireworksStep3 =>
+      'Sigue las líneas del primer estallido con el primer color, presionando más en las puntas.';
+
+  @override
+  String get ideasNewYearFireworksStep4 =>
+      'Las líneas del segundo estallido con el segundo color.';
+
+  @override
+  String get ideasNewYearFireworksStep5 =>
+      'Las líneas del tercer estallido con el tercer color.';
+
+  @override
+  String get ideasNewYearFireworksStep6 =>
+      'Gel blanco en el centro de cada estallido y unas chispas en las puntas.';
+
+  @override
+  String get ideasCozyLampTitle => 'Rincón acogedor';
+
+  @override
+  String get ideasCozyLampSummary =>
+      'Un sillón bajo una lámpara por la tarde: un charco de luz cálida y sombras marrones suaves.';
+
+  @override
+  String get ideasCozyLampPractice =>
+      'Planear una zona iluminada y dejar que el resto de la habitación caiga en un marrón cálido.';
+
+  @override
+  String get ideasCozyLampSubject =>
+      'Un sillón, una lámpara de pie y una pared detrás.';
+
+  @override
+  String get ideasCozyLampTip =>
+      'No metas el marrón más oscuro en el círculo de luz: la lámpara no llega a ningún rincón.';
+
+  @override
+  String get ideasCozyLampStep1 =>
+      'Dibuja a lápiz el sillón, la lámpara y el círculo de luz que lanza sobre el suelo y la pared.';
+
+  @override
+  String get ideasCozyLampStep2 =>
+      'Rellena el círculo de luz con el amarillo pálido y difumínalo con el difuminador incoloro.';
+
+  @override
+  String get ideasCozyLampStep3 =>
+      'Colorea el resto de la habitación con el beige cálido claro, plano y uniforme.';
+
+  @override
+  String get ideasCozyLampStep4 =>
+      'Pon el marrón cálido en el sillón y en el lado de la habitación lejos de la lámpara.';
+
+  @override
+  String get ideasCozyLampStep5 =>
+      'Usa el marrón oscuro en los rincones y bajo el sillón, y no lo metas en el círculo de luz.';
+
+  @override
+  String get ideasFoggyMorningTitle => 'Niebla';
+
+  @override
+  String get ideasFoggyMorningSummary =>
+      'Árboles que se pierden en la niebla: los de cerca más oscuros, los de lejos más pálidos.';
+
+  @override
+  String get ideasFoggyMorningPractice =>
+      'Profundidad con una veladura pálida sobre formas oscuras.';
+
+  @override
+  String get ideasFoggyMorningSubject =>
+      'Tres filas de árboles en un camino, cada una más al fondo.';
+
+  @override
+  String get ideasFoggyMorningTip =>
+      'Una veladura pálida sobre una forma oscura es la niebla más simple que hay: la tinta de debajo se queda.';
+
+  @override
+  String get ideasFoggyMorningStep1 =>
+      'Dibuja a lápiz tres filas de árboles, cada una más al fondo, y marca dónde empieza el suelo.';
+
+  @override
+  String get ideasFoggyMorningStep2 =>
+      'Colorea la fila más lejana solo con el rotulador más pálido, sin ningún detalle.';
+
+  @override
+  String get ideasFoggyMorningStep3 =>
+      'Colorea la fila del medio con el tono base y suaviza su borde inferior hacia el suelo con el difuminador.';
+
+  @override
+  String get ideasFoggyMorningStep4 =>
+      'Dibuja los árboles más cercanos con el rotulador oscuro y añade unas pocas ramas.';
+
+  @override
+  String get ideasFoggyMorningStep5 =>
+      'Pasa una veladura del rotulador pálido por encima de todas las filas, para que la niebla cubra toda la escena.';
+
+  @override
+  String get ideasRainyWindowTitle => 'Lluvia en la ventana';
+
+  @override
+  String get ideasRainyWindowSummary =>
+      'Luces difusas vistas a través de un cristal mojado, con gotas que resbalan.';
+
+  @override
+  String get ideasRainyWindowPractice =>
+      'Luces que brillan detrás del cristal y marcas nítidas por encima.';
+
+  @override
+  String get ideasRainyWindowSubject =>
+      'Una ventana de noche con farolas fuera y tres gotas en el cristal.';
+
+  @override
+  String get ideasRainyWindowTip =>
+      'Las luces deben secarse del todo antes de pasar el azul por encima, o los colores se mezclan.';
+
+  @override
+  String get ideasRainyWindowStep1 =>
+      'Dibuja a lápiz el marco de la ventana y unas manchas difusas de luz fuera, y marca el recorrido de tres gotas.';
+
+  @override
+  String get ideasRainyWindowStep2 =>
+      'Colorea las luces cálidas como manchas suaves y funde sus bordes con el difuminador.';
+
+  @override
+  String get ideasRainyWindowStep3 =>
+      'Cubre todo el cristal con el azul claro, rodeando las luces.';
+
+  @override
+  String get ideasRainyWindowStep4 =>
+      'Añade el azul base hacia las esquinas y deja los recorridos de las gotas algo más claros.';
+
+  @override
+  String get ideasRainyWindowStep5 =>
+      'Colorea el marco en oscuro y pon una media luna oscura en el lado de cada gota opuesto a la luz.';
+
+  @override
+  String get ideasRainyWindowStep6 =>
+      'Cuando esté seco, añade un toque de gel blanco en el lado iluminado de cada gota.';
+
+  @override
+  String get ideasEerieForestTitle => 'Bosque inquietante';
+
+  @override
+  String get ideasEerieForestSummary =>
+      'Árboles finos al anochecer en verdes enfermizos, con un cielo violeta entre ellos.';
+
+  @override
+  String get ideasEerieForestPractice =>
+      'Dejar que dos colores se mezclen al tocarse, a propósito.';
+
+  @override
+  String get ideasEerieForestSubject =>
+      'Troncos altos y finos sobre un horizonte bajo al anochecer.';
+
+  @override
+  String get ideasEerieForestTip =>
+      'El verde y el violeta se vuelven grises donde se tocan. Ese gris es el ambiente, no un error.';
+
+  @override
+  String get ideasEerieForestStep1 =>
+      'Dibuja a lápiz troncos altos y finos y un horizonte bajo.';
+
+  @override
+  String get ideasEerieForestStep2 =>
+      'Pon un verde amarillento pálido a lo largo del horizonte, entre los troncos.';
+
+  @override
+  String get ideasEerieForestStep3 =>
+      'Colorea el violeta de arriba y fúndelo con el verde mientras esté húmedo.';
+
+  @override
+  String get ideasEerieForestStep4 =>
+      'Colorea el verde del suelo y de la parte baja de los troncos.';
+
+  @override
+  String get ideasEerieForestStep5 =>
+      'Usa el verde más oscuro en los troncos con trazos desiguales, y añade sombras largas por el suelo.';
+
+  @override
+  String get ideasGoldenHourTitle => 'Hora dorada';
+
+  @override
+  String get ideasGoldenHourSummary =>
+      'Una pared blanca y una puerta al final de la tarde: luz naranja, sombras violetas largas.';
+
+  @override
+  String get ideasGoldenHourPractice =>
+      'Una veladura cálida sobre todo, con sombras frías de borde nítido encima.';
+
+  @override
+  String get ideasGoldenHourSubject =>
+      'Una pared con una puerta, una planta y la sombra larga que la planta proyecta.';
+
+  @override
+  String get ideasGoldenHourTip =>
+      'La pared aquí no es blanca: con esta luz es naranja. Píntala así.';
+
+  @override
+  String get ideasGoldenHourStep1 =>
+      'Dibuja a lápiz una pared con una puerta y una planta, y la sombra larga que la planta proyecta.';
+
+  @override
+  String get ideasGoldenHourStep2 =>
+      'Cubre toda la pared con el naranja pálido: esa es la pared blanca con esta luz.';
+
+  @override
+  String get ideasGoldenHourStep3 =>
+      'Pon el naranja más intenso bajo el dintel y en la puerta.';
+
+  @override
+  String get ideasGoldenHourStep4 =>
+      'Añade el gris violeta en la sombra de la planta y en el hueco de la puerta, con un borde nítido.';
+
+  @override
+  String get ideasGoldenHourStep5 =>
+      'Reserva el rotulador más oscuro para el fondo del hueco de la puerta.';
+
+  @override
+  String get ideasStormySeaTitle => 'Mar tormentoso';
+
+  @override
+  String get ideasStormySeaSummary =>
+      'Olas gris verdosas bajo un cielo oscuro, con papel blanco para la espuma.';
+
+  @override
+  String get ideasStormySeaPractice =>
+      'Un agua plana y pálida frente a un cielo pesado, con la espuma sin tocar.';
+
+  @override
+  String get ideasStormySeaSubject =>
+      'Un horizonte bajo, dos olas grandes y la espuma que rompe en ellas.';
+
+  @override
+  String get ideasStormySeaTip =>
+      'La espuma es papel que no has tocado: planifica dónde rompe antes de colorear el agua.';
+
+  @override
+  String get ideasStormySeaStep1 =>
+      'Dibuja a lápiz el horizonte bajo, dos olas grandes y dónde rompe la espuma. La espuma se queda sin tocar.';
+
+  @override
+  String get ideasStormySeaStep2 =>
+      'Cubre el agua con el gris verdoso pálido, rodeando la espuma.';
+
+  @override
+  String get ideasStormySeaStep3 =>
+      'Pon el agua más oscura en los valles entre olas y bajo cada cresta.';
+
+  @override
+  String get ideasStormySeaStep4 =>
+      'Rellena el cielo con el rotulador oscuro, más oscuro arriba, y el agua más profunda bajo la ola que rompe.';
+
+  @override
+  String get ideasStormySeaStep5 =>
+      'Cuando esté seco, añade gel blanco para la espuma que salta de las crestas: solo unos puntos.';
+
+  @override
+  String get ideasCandleFlameTitle => 'A la luz de la vela';
+
+  @override
+  String get ideasCandleFlameSummary =>
+      'Una vela sobre una mesa en una habitación oscura: todo cálido, y nada visible lejos de la llama.';
+
+  @override
+  String get ideasCandleFlamePractice =>
+      'Anillos concéntricos de color cálido, fundidos en húmedo unos con otros.';
+
+  @override
+  String get ideasCandleFlameSubject =>
+      'Una vela en su candelero, con la mesa y la pared de fondo.';
+
+  @override
+  String get ideasCandleFlameTip =>
+      'Solo se ve lo que toca la llama: el fondo de la habitación puede ser casi una mancha oscura.';
+
+  @override
+  String get ideasCandleFlameStep1 =>
+      'Dibuja a lápiz la vela, su llama y un círculo de luz sobre la mesa. El núcleo de la llama se queda sin tocar.';
+
+  @override
+  String get ideasCandleFlameStep2 =>
+      'Colorea el halo de la llama y la parte más cercana de la mesa con el amarillo, difuminado hacia fuera con el difuminador.';
+
+  @override
+  String get ideasCandleFlameStep3 =>
+      'Pon el naranja cálido en el lado iluminado de la vela y en el siguiente anillo de la mesa.';
+
+  @override
+  String get ideasCandleFlameStep4 =>
+      'Colorea de marrón todo lo que queda fuera del círculo de luz.';
+
+  @override
+  String get ideasCandleFlameStep5 =>
+      'Usa el marrón más oscuro para el fondo de la habitación y el lado en sombra de la vela, con un borde suave contra la luz.';
+
+  @override
+  String get ideasDesertNoonTitle => 'Mediodía en el desierto';
+
+  @override
+  String get ideasDesertNoonSummary =>
+      'Arena, una roca y una sombra dura bajo un cielo blanqueado.';
+
+  @override
+  String get ideasDesertNoonPractice =>
+      'Un relleno plano y pálido contra una sombra dura y oscura.';
+
+  @override
+  String get ideasDesertNoonSubject =>
+      'Un horizonte alto, una sola roca y su sombra corta justo debajo.';
+
+  @override
+  String get ideasDesertNoonTip =>
+      'Deja una franja de papel blanco en el horizonte: esa franja es lo que hace que el cielo parezca caliente.';
+
+  @override
+  String get ideasDesertNoonStep1 =>
+      'Dibuja a lápiz un horizonte alto, una roca y su sombra corta justo debajo.';
+
+  @override
+  String get ideasDesertNoonStep2 =>
+      'Cubre la arena de debajo del horizonte con el amarillo pálido, en una sola pasada muy ligera.';
+
+  @override
+  String get ideasDesertNoonStep3 =>
+      'Colorea el cielo con el azul pálido y déjalo más claro cerca del horizonte.';
+
+  @override
+  String get ideasDesertNoonStep4 =>
+      'Pon el naranja en el lado en sombra de la roca y en las ondulaciones de la arena.';
+
+  @override
+  String get ideasDesertNoonStep5 =>
+      'Usa el azul violeta solo en la sombra que proyecta la roca, con un borde duro.';
+
+  @override
+  String get ideasBokehLightsTitle => 'Luces difusas';
+
+  @override
+  String get ideasBokehLightsSummary =>
+      'Un fondo de círculos de luz suaves y fuera de foco.';
+
+  @override
+  String get ideasBokehLightsPractice =>
+      'Hacer un disco suave con el difuminador sobre un campo plano.';
+
+  @override
+  String get ideasBokehLightsSubject =>
+      'Un campo oscuro con una docena de luces difusas de tamaños distintos.';
+
+  @override
+  String get ideasBokehLightsTip =>
+      'Apoya el difuminador plano: una punta fina dibuja una línea, no un disco.';
+
+  @override
+  String get ideasBokehLightsStep1 =>
+      'Rellena toda la zona con el color base, con trazos planos.';
+
+  @override
+  String get ideasBokehLightsStep2 =>
+      'Oscurece las esquinas y funde la oscuridad hacia dentro mientras la tinta está húmeda.';
+
+  @override
+  String get ideasBokehLightsStep3 =>
+      'Deja secar y luego apoya la punta ancha del difuminador en círculos de tamaños distintos.';
+
+  @override
+  String get ideasBokehLightsStep4 =>
+      'Toca el rotulador claro en el centro de algunos discos para que brillen.';
+
+  @override
+  String get ideasBokehLightsStep5 =>
+      'Pon un punto de gel blanco dentro de dos o tres discos, no en todos.';
+
+  @override
+  String get ideasRetroPosterTitle => 'Cartel retro';
+
+  @override
+  String get ideasRetroPosterSummary =>
+      'Tres colores planos, algo apagados, y uno oscuro, sin fundir nada.';
+
+  @override
+  String get ideasRetroPosterPractice =>
+      'Rellenos planos y bordes duros, como se ve un cartel impreso.';
+
+  @override
+  String get ideasRetroPosterSubject =>
+      'Un faro, un coche o una botella dibujados con unas pocas formas planas.';
+
+  @override
+  String get ideasRetroPosterTip =>
+      'Deja un hilo de papel blanco entre los colores, como si la impresión se hubiera movido un poco.';
+
+  @override
+  String get ideasRetroPosterStep1 =>
+      'Dibuja a lápiz un motivo sencillo con formas grandes y planas: un faro, un coche, una botella.';
+
+  @override
+  String get ideasRetroPosterStep2 =>
+      'Rellena las formas más grandes en plano, en una sola pasada.';
+
+  @override
+  String get ideasRetroPosterStep3 =>
+      'Rellena las formas siguientes y deja un hilo de papel entre los colores.';
+
+  @override
+  String get ideasRetroPosterStep4 =>
+      'Usa el tercer color en las formas más pequeñas.';
+
+  @override
+  String get ideasRetroPosterStep5 =>
+      'Dibuja las sombras como formas planas aparte con el rotulador oscuro.';
+
+  @override
+  String get ideasRetroPosterStep6 =>
+      'Añade unas pocas líneas de rotulador calibrado donde las tendría el cartel impreso.';
+
+  @override
+  String get ideasFreshCitrusTitle => 'Fresco y cítrico';
+
+  @override
+  String get ideasFreshCitrusSummary =>
+      'Un limón, una lima y un vaso de agua, con mucho papel blanco y como mucho dos capas.';
+
+  @override
+  String get ideasFreshCitrusPractice =>
+      'Color brillante sobre blanco, acabado pronto.';
+
+  @override
+  String get ideasFreshCitrusSubject =>
+      'Un limón, una lima y un vaso de agua sobre una mesa.';
+
+  @override
+  String get ideasFreshCitrusTip =>
+      'Para en la segunda capa: una tercera le quita lo fresco al color.';
+
+  @override
+  String get ideasFreshCitrusStep1 =>
+      'Dibuja a lápiz la fruta y el vaso, y deja la composición aireada.';
+
+  @override
+  String get ideasFreshCitrusStep2 =>
+      'Colorea el limón con el amarillo en una pasada, dejando un brillo blanco.';
+
+  @override
+  String get ideasFreshCitrusStep3 =>
+      'Colorea la lima con el verde, también en una pasada.';
+
+  @override
+  String get ideasFreshCitrusStep4 =>
+      'El amarillo más oscuro en el lado en sombra del limón, y una segunda pasada de verde en el lado en sombra de la lima.';
+
+  @override
+  String get ideasFreshCitrusStep5 =>
+      'Usa el azul pálido para el agua del vaso y una sombra pequeña bajo cada fruta.';
+
+  @override
+  String get ideasTropicalNoonTitle => 'Mediodía tropical';
+
+  @override
+  String get ideasTropicalNoonSummary =>
+      'Hojas grandes, una flor rosa intenso y un trozo de cielo azul, saturados y de borde duro.';
+
+  @override
+  String get ideasTropicalNoonPractice =>
+      'Color fuerte y plano con solapes nítidos, sin fundir nada.';
+
+  @override
+  String get ideasTropicalNoonSubject =>
+      'Dos o tres hojas grandes superpuestas, una flor y el cielo en los huecos.';
+
+  @override
+  String get ideasTropicalNoonTip =>
+      'Deja el borde de cada hoja nítido: el solape es lo que da profundidad aquí.';
+
+  @override
+  String get ideasTropicalNoonStep1 =>
+      'Dibuja a lápiz dos o tres hojas grandes superpuestas, una flor y el cielo en los huecos.';
+
+  @override
+  String get ideasTropicalNoonStep2 =>
+      'Colorea las hojas con el verde claro, siguiendo las nervaduras.';
+
+  @override
+  String get ideasTropicalNoonStep3 =>
+      'Pon el verde medio en las hojas de detrás y debajo de las otras, con bordes duros donde se solapan.';
+
+  @override
+  String get ideasTropicalNoonStep4 =>
+      'Colorea el rosa intenso de la flor, con dos capas.';
+
+  @override
+  String get ideasTropicalNoonStep5 =>
+      'Colorea el cielo azul en los huecos, hasta el borde de las hojas.';
+
+  @override
+  String get ideasGreenhouseLightTitle => 'En el invernadero';
+
+  @override
+  String get ideasGreenhouseLightSummary =>
+      'Plantas detrás del cristal con una luz verde y húmeda, y cristales gris pálido.';
+
+  @override
+  String get ideasGreenhouseLightPractice =>
+      'Una veladura pálida sobre la escena, como un velo de cristal.';
+
+  @override
+  String get ideasGreenhouseLightSubject =>
+      'Un muro de cristal con sus barrotes y macetas de plantas detrás.';
+
+  @override
+  String get ideasGreenhouseLightTip =>
+      'La veladura verde va al final: es la luz húmeda del sitio, no el color de las plantas.';
+
+  @override
+  String get ideasGreenhouseLightStep1 =>
+      'Dibuja a lápiz un muro de cristal con sus barrotes y macetas de plantas detrás.';
+
+  @override
+  String get ideasGreenhouseLightStep2 =>
+      'Colorea las plantas con el verde base, más suave cuanto más lejos estén tras el cristal.';
+
+  @override
+  String get ideasGreenhouseLightStep3 =>
+      'Reserva el verde oscuro solo para las hojas más cercanas.';
+
+  @override
+  String get ideasGreenhouseLightStep4 =>
+      'Usa el gris claro para los barrotes y para los reflejos en los cristales.';
+
+  @override
+  String get ideasGreenhouseLightStep5 =>
+      'Cuando esté seco, pasa una veladura de verde pálido por toda la zona del cristal: la luz de dentro es verde.';
+
+  @override
+  String get ideasDustyAtticTitle => 'Desván polvoriento';
+
+  @override
+  String get ideasDustyAtticSummary =>
+      'Grises cálidos, un baúl viejo y un rayo de luz con polvo dentro.';
+
+  @override
+  String get ideasDustyAtticPractice =>
+      'Una habitación gris con un solo sitio brillante sin tocar.';
+
+  @override
+  String get ideasDustyAtticSubject =>
+      'Una ventana pequeña y alta, el rayo de luz que lanza y un baúl viejo dentro.';
+
+  @override
+  String get ideasDustyAtticTip =>
+      'Que el rayo de luz sea lo más brillante del dibujo: es el único papel blanco que queda.';
+
+  @override
+  String get ideasDustyAtticStep1 =>
+      'Dibuja a lápiz una ventana pequeña arriba, el rayo de luz que lanza y un baúl dentro.';
+
+  @override
+  String get ideasDustyAtticStep2 =>
+      'Cubre todo con el gris cálido más claro, menos el interior del rayo de luz.';
+
+  @override
+  String get ideasDustyAtticStep3 =>
+      'Pon el gris cálido medio en las paredes lejos de la ventana y en los lados del baúl.';
+
+  @override
+  String get ideasDustyAtticStep4 =>
+      'Usa el gris más oscuro en los rincones y bajo el baúl.';
+
+  @override
+  String get ideasDustyAtticStep5 =>
+      'Añade una veladura amarilla pálida dentro del rayo de luz.';
+
+  @override
+  String get ideasDustyAtticStep6 =>
+      'Cuando esté seco, añade unos puntos de gel blanco de polvo en el rayo de luz.';
+
+  @override
+  String get ideasColourGreyBlackTitle => 'Color, gris y negro';
+
+  @override
+  String get ideasColourGreyBlackSummary =>
+      'Solo tres rotuladores: un color, un gris y uno muy oscuro.';
+
+  @override
+  String get ideasColourGreyBlackPractice =>
+      'Colocar la luz con el mínimo de rotuladores.';
+
+  @override
+  String get ideasColourGreyBlackSubject =>
+      'Una bicicleta, una bota o una tetera de un solo color.';
+
+  @override
+  String get ideasColourGreyBlackTip =>
+      'Con tres puntas no hay nada que decidir salvo dónde va la luz. Planea la luz primero.';
+
+  @override
+  String get ideasColourGreyBlackStep1 =>
+      'Elige un motivo de un solo color principal y marca a lápiz de dónde viene la luz.';
+
+  @override
+  String get ideasColourGreyBlackStep2 =>
+      'Colorea todo el motivo con el color y dale dos capas donde se aparta de la luz.';
+
+  @override
+  String get ideasColourGreyBlackStep3 =>
+      'Usa el gris para la sombra proyectada y para todo lo que no sea el motivo.';
+
+  @override
+  String get ideasColourGreyBlackStep4 =>
+      'Reserva el rotulador oscuro para las líneas de contacto y los rincones más profundos.';
+
+  @override
+  String get ideasColourGreyBlackStep5 =>
+      'Aléjate un poco: el dibujo se lee con solo tres valores y el gris los mantiene unidos.';
+
+  @override
+  String get ideasAnalogousTrioTitle => 'Tres vecinos';
+
+  @override
+  String get ideasAnalogousTrioSummary =>
+      'Tres colores contiguos en la rueda, y nada del otro lado.';
+
+  @override
+  String get ideasAnalogousTrioPractice =>
+      'Montar un esquema con tonos vecinos.';
+
+  @override
+  String get ideasAnalogousTrioSubject =>
+      'Un girasol, el mar o un campo de un solo color.';
+
+  @override
+  String get ideasAnalogousTrioTip =>
+      'Los colores vecinos se funden en húmedo sin volverse grises. Déjalos húmedos y que se mezclen.';
+
+  @override
+  String get ideasAnalogousTrioStep1 =>
+      'Elige un motivo que sea de un solo color por naturaleza, como un girasol o el mar, y dibújalo.';
+
+  @override
+  String get ideasAnalogousTrioStep2 =>
+      'Cubre la mayor parte del motivo con el color central de los tres.';
+
+  @override
+  String get ideasAnalogousTrioStep3 =>
+      'Pon el vecino del lado iluminado y funde con el color central mientras esté húmedo.';
+
+  @override
+  String get ideasAnalogousTrioStep4 =>
+      'Usa el otro vecino en las sombras, lejos de la luz.';
+
+  @override
+  String get ideasAnalogousTrioStep5 =>
+      'Añade el oscuro del color central solo en los sitios más profundos y deja el resto con los tres colores.';
+
+  @override
+  String get ideasTriadTitle => 'Una tríada';
+
+  @override
+  String get ideasTriadSummary =>
+      'Tres colores equidistantes en la rueda: uno manda y los otros dos apoyan.';
+
+  @override
+  String get ideasTriadPractice =>
+      'Usar un esquema de tres colores con uno al mando.';
+
+  @override
+  String get ideasTriadSubject =>
+      'Un cartel, una portada o una flor grande con detalles pequeños.';
+
+  @override
+  String get ideasTriadTip =>
+      'Mantén los tres colores separados en el papel. Un gris sobre los tres ata el esquema.';
+
+  @override
+  String get ideasTriadStep1 =>
+      'Decide cuál de los tres colores manda: ese se lleva la mayor parte del papel.';
+
+  @override
+  String get ideasTriadStep2 =>
+      'Colorea las zonas principales con el color que manda.';
+
+  @override
+  String get ideasTriadStep3 =>
+      'Usa el segundo color en una cuarta parte del dibujo y no lo dejes tocar el primero en húmedo.';
+
+  @override
+  String get ideasTriadStep4 =>
+      'Usa el tercer color solo en unos pocos puntos pequeños.';
+
+  @override
+  String get ideasTriadStep5 =>
+      'Sombrea los tres colores con el mismo gris para que vayan juntos.';
+
+  @override
+  String get ideasSplitComplementTitle => 'Complemento dividido';
+
+  @override
+  String get ideasSplitComplementSummary =>
+      'Una familia de color y los dos colores a los lados de su opuesto.';
+
+  @override
+  String get ideasSplitComplementPractice =>
+      'Equilibrar una familia principal con dos colores cercanos a su opuesto.';
+
+  @override
+  String get ideasSplitComplementSubject =>
+      'Un jarrón con dos flores o una taza con dos objetos pequeños al lado.';
+
+  @override
+  String get ideasSplitComplementTip =>
+      'Un casi opuesto parece choque o armonía según la cantidad que uses de él.';
+
+  @override
+  String get ideasSplitComplementStep1 =>
+      'Dibuja un motivo con una zona grande y dos pequeñas, como un jarrón con dos flores.';
+
+  @override
+  String get ideasSplitComplementStep2 =>
+      'Cubre la zona grande con el tono claro de la familia principal.';
+
+  @override
+  String get ideasSplitComplementStep3 =>
+      'Añade su sombra donde no llega la luz.';
+
+  @override
+  String get ideasSplitComplementStep4 =>
+      'Usa uno de los dos opuestos en la primera zona pequeña.';
+
+  @override
+  String get ideasSplitComplementStep5 =>
+      'Usa el otro opuesto en la segunda zona pequeña y mantén las dos separadas.';
+
+  @override
+  String get ideasTwoGrayTemperaturesTitle => 'Grises cálidos, grises fríos';
+
+  @override
+  String get ideasTwoGrayTemperaturesSummary =>
+      'Colorea la misma piedra dos veces, con grises cálidos y con grises fríos.';
+
+  @override
+  String get ideasTwoGrayTemperaturesPractice =>
+      'Distinguir a ojo un gris cálido de un gris frío.';
+
+  @override
+  String get ideasTwoGrayTemperaturesSubject =>
+      'La misma piedra o una tela plegada, dibujada dos veces una al lado de la otra.';
+
+  @override
+  String get ideasTwoGrayTemperaturesTip =>
+      'La mayoría de marcas venden los grises cálidos, fríos y neutros como familias aparte. Elige una familia para cada mitad.';
+
+  @override
+  String get ideasTwoGrayTemperaturesStep1 =>
+      'Dibuja a lápiz la misma piedra dos veces, una al lado de la otra, y marca la luz en cada una.';
+
+  @override
+  String get ideasTwoGrayTemperaturesStep2 =>
+      'Primera piedra: el gris cálido claro por toda la superficie.';
+
+  @override
+  String get ideasTwoGrayTemperaturesStep3 =>
+      'Añade el gris cálido más oscuro en el lado de la sombra y oscurece el contacto con el suelo.';
+
+  @override
+  String get ideasTwoGrayTemperaturesStep4 =>
+      'Segunda piedra: el gris frío claro por toda la superficie.';
+
+  @override
+  String get ideasTwoGrayTemperaturesStep5 =>
+      'Añade el gris frío más oscuro igual que antes y compara: una piedra parece estar al sol y la otra en la sombra.';
+
+  @override
+  String get ideasGrayPlusAccentTitle => 'Gris con un acento';
+
+  @override
+  String get ideasGrayPlusAccentSummary =>
+      'Todo en gris menos una cosa pequeña en color.';
+
+  @override
+  String get ideasGrayPlusAccentPractice =>
+      'Hacer que un solo color cargue con todo el dibujo.';
+
+  @override
+  String get ideasGrayPlusAccentSubject =>
+      'Una calle con una puerta roja o un paraguas amarillo en un pueblo gris.';
+
+  @override
+  String get ideasGrayPlusAccentTip =>
+      'El acento quiere ser lo más fuerte posible: dos capas del mismo rotulador.';
+
+  @override
+  String get ideasGrayPlusAccentStep1 =>
+      'Dibuja una escena con un objeto al que quieras llevar la mirada, como una puerta roja en una calle.';
+
+  @override
+  String get ideasGrayPlusAccentStep2 =>
+      'Cubre todo menos ese objeto con el gris claro.';
+
+  @override
+  String get ideasGrayPlusAccentStep3 =>
+      'Pon el gris medio en las sombras, como si la escena fuera una foto.';
+
+  @override
+  String get ideasGrayPlusAccentStep4 =>
+      'Usa el gris más oscuro en las ventanas, bajo los aleros y en las líneas de contacto.';
+
+  @override
+  String get ideasGrayPlusAccentStep5 =>
+      'Colorea solo el objeto, con dos capas para que el acento sea lo más fuerte posible.';
+
+  @override
+  String get ideasEarthTonesTitle => 'Tonos tierra';
+
+  @override
+  String get ideasEarthTonesSummary =>
+      'Marrones, ocres y un verde oliva, nada brillante.';
+
+  @override
+  String get ideasEarthTonesPractice =>
+      'Superponer colores de poco croma sin que se apaguen.';
+
+  @override
+  String get ideasEarthTonesSubject => 'Pan, una cesta o un campo labrado.';
+
+  @override
+  String get ideasEarthTonesTip =>
+      'Los colores de poco croma se superponen bien porque el papel sigue iluminándolos por debajo.';
+
+  @override
+  String get ideasEarthTonesStep1 =>
+      'Dibuja algo que venga de la tierra, como pan, una cesta o un campo labrado.';
+
+  @override
+  String get ideasEarthTonesStep2 =>
+      'Cubre todo con el ocre claro como primera capa.';
+
+  @override
+  String get ideasEarthTonesStep3 =>
+      'Añade el marrón donde la forma se aparta de la luz.';
+
+  @override
+  String get ideasEarthTonesStep4 =>
+      'Pon el verde oliva en lo que sea verde y deja que el ocre de debajo lo apague.';
+
+  @override
+  String get ideasEarthTonesStep5 =>
+      'Reserva el marrón más oscuro solo para los sitios más profundos.';
+
+  @override
+  String get ideasJewelTonesTitle => 'Tonos joya';
+
+  @override
+  String get ideasJewelTonesSummary =>
+      'Colores profundos y saturados con un acento dorado, como una caja de terciopelo.';
+
+  @override
+  String get ideasJewelTonesPractice =>
+      'Pintar colores oscuros saturados que conservan el brillo.';
+
+  @override
+  String get ideasJewelTonesSubject =>
+      'Unas gemas o botellas con un brillo planeado en cada una.';
+
+  @override
+  String get ideasJewelTonesTip =>
+      'La tinta oscura saturada sigue brillando en el papel para rotuladores. Un punto de gel blanco encima da el aspecto de cristal.';
+
+  @override
+  String get ideasJewelTonesStep1 =>
+      'Dibuja unas gemas o botellas sencillas y planea un brillo en cada una.';
+
+  @override
+  String get ideasJewelTonesStep2 =>
+      'Cubre la forma más grande con el verde azulado profundo, en dos capas.';
+
+  @override
+  String get ideasJewelTonesStep3 =>
+      'Usa el violeta profundo en la siguiente forma.';
+
+  @override
+  String get ideasJewelTonesStep4 => 'Usa el rojo profundo en la más pequeña.';
+
+  @override
+  String get ideasJewelTonesStep5 =>
+      'Añade el amarillo dorado en las monturas o las tapas y luego un punto de gel blanco en cada brillo.';
+
+  @override
+  String get ideasLowKeyTitle => 'Solo rotuladores oscuros';
+
+  @override
+  String get ideasLowKeySummary =>
+      'Dibuja con rotuladores más oscuros que el gris medio y deja que un poco de papel lleve toda la luz.';
+
+  @override
+  String get ideasLowKeyPractice =>
+      'Pintar un dibujo oscuro dejando la luz en blanco a propósito.';
+
+  @override
+  String get ideasLowKeySubject =>
+      'Un gato con los ojos iluminados, una lámpara en una habitación oscura o un perfil.';
+
+  @override
+  String get ideasLowKeyTip =>
+      'La tinta de alcohol oscura cubre uniforme en una pasada, así que las formas blancas que dejes quedan limpias.';
+
+  @override
+  String get ideasLowKeyStep1 =>
+      'Planea el dibujo como unas formas de papel que quedan blancas sobre un fondo oscuro: los ojos de un gato, una lámpara, un perfil.';
+
+  @override
+  String get ideasLowKeyStep2 =>
+      'Cubre todo menos las formas blancas con el rotulador menos oscuro.';
+
+  @override
+  String get ideasLowKeyStep3 =>
+      'Usa el rotulador intermedio en las sombras grandes.';
+
+  @override
+  String get ideasLowKeyStep4 =>
+      'Pon el rotulador más oscuro en los bordes de las formas claras, para que brillen por contraste.';
+
+  @override
+  String get ideasLowKeyStep5 =>
+      'Añade gel blanco solo en uno o dos puntos, no más.';
+
+  @override
+  String get ideasComplementGradientTitle => 'Por el medio';
+
+  @override
+  String get ideasComplementGradientSummary =>
+      'Funde dos colores opuestos uno en otro y mira el gris que forman donde se encuentran.';
+
+  @override
+  String get ideasComplementGradientPractice =>
+      'Mezclar dos colores sobre el papel y leer el resultado.';
+
+  @override
+  String get ideasComplementGradientSubject =>
+      'Una tira larga de papel donde los dos colores se encuentran en el centro.';
+
+  @override
+  String get ideasComplementGradientTip =>
+      'Los opuestos húmedos se mezclan en el papel al momento. Mantén los dos húmedos y deja que se encuentren en el centro.';
+
+  @override
+  String get ideasComplementGradientStep1 =>
+      'Pega con cinta una tira larga de papel.';
+
+  @override
+  String get ideasComplementGradientStep2 =>
+      'Rellena el tercio izquierdo y difumina el color hacia el centro.';
+
+  @override
+  String get ideasComplementGradientStep3 =>
+      'Rellena el tercio derecho y difumínalo hacia el centro mientras el primero sigue húmedo.';
+
+  @override
+  String get ideasComplementGradientStep4 =>
+      'Compara el centro turbio con un trazo de tu gris al lado.';
+
+  @override
+  String get ideasComplementGradientStep5 =>
+      'Repite la tira poniendo primero el gris en el centro y fundiendo los dos colores hacia él: un paso más limpio.';
+
+  @override
+  String get ideasWarmLightCoolShadowTitle => 'Luz cálida, sombra fría';
+
+  @override
+  String get ideasWarmLightCoolShadowSummary =>
+      'Un objeto, el lado iluminado en colores cálidos y el lado en sombra en fríos.';
+
+  @override
+  String get ideasWarmLightCoolShadowPractice =>
+      'Superponer cálido y frío sobre un mismo color base.';
+
+  @override
+  String get ideasWarmLightCoolShadowSubject =>
+      'Una fruta redonda, un huevo o una pelota.';
+
+  @override
+  String get ideasWarmLightCoolShadowTip =>
+      'Deja una franja fina del color base entre el cálido y el frío: así la forma sigue girando.';
+
+  @override
+  String get ideasWarmLightCoolShadowStep1 =>
+      'Dibuja un objeto redondo y marca de dónde viene la luz.';
+
+  @override
+  String get ideasWarmLightCoolShadowStep2 =>
+      'Cubre todo el objeto con su propio color.';
+
+  @override
+  String get ideasWarmLightCoolShadowStep3 =>
+      'Superpón el color cálido en la mitad iluminada y funde con la base mientras esté húmeda.';
+
+  @override
+  String get ideasWarmLightCoolShadowStep4 =>
+      'Superpón el color frío en la mitad en sombra y deja una franja fina de base entre las dos.';
+
+  @override
+  String get ideasWarmLightCoolShadowStep5 =>
+      'Reserva el rotulador más oscuro solo para el contacto con el suelo.';
+
+  @override
+  String get ideasVividAndMutedTitle => 'Vivo y apagado';
+
+  @override
+  String get ideasVividAndMutedSummary =>
+      'Colorea la misma flor con una pareja viva y después con una pareja apagada del mismo tono.';
+
+  @override
+  String get ideasVividAndMutedPractice =>
+      'Distinguir un color vivo de su versión apagada.';
+
+  @override
+  String get ideasVividAndMutedSubject =>
+      'La misma flor dibujada dos veces, una al lado de la otra.';
+
+  @override
+  String get ideasVividAndMutedTip =>
+      'La mayoría de gamas tienen una versión viva y otra apagada de cada tono. Elegir entre las dos es todo el ejercicio.';
+
+  @override
+  String get ideasVividAndMutedStep1 =>
+      'Dibuja a lápiz la misma flor dos veces, una al lado de la otra.';
+
+  @override
+  String get ideasVividAndMutedStep2 => 'Primera flor: el tono claro y vivo.';
+
+  @override
+  String get ideasVividAndMutedStep3 => 'Añade la sombra viva del mismo tono.';
+
+  @override
+  String get ideasVividAndMutedStep4 =>
+      'Segunda flor: el tono claro y apagado del mismo color.';
+
+  @override
+  String get ideasVividAndMutedStep5 =>
+      'Añade su sombra apagada y decide qué flor iría en primer plano en un dibujo y cuál en el fondo.';
+
+  @override
+  String get ideasOneMarkerBlenderTitle => 'Un rotulador y el difuminador';
+
+  @override
+  String get ideasOneMarkerBlenderSummary =>
+      'Cuatro valores con un solo rotulador oscuro, diluyéndolo con el difuminador incoloro.';
+
+  @override
+  String get ideasOneMarkerBlenderPractice =>
+      'Diluir la tinta para lograr valores más claros sin otro rotulador.';
+
+  @override
+  String get ideasOneMarkerBlenderSubject =>
+      'Cuatro cuadrados de papel pegados con cinta uno al lado del otro.';
+
+  @override
+  String get ideasOneMarkerBlenderTip =>
+      'El difuminador es disolvente puro: convierte un solo rotulador oscuro en su propia familia clara.';
+
+  @override
+  String get ideasOneMarkerBlenderStep1 =>
+      'Pega con cinta cuatro cuadrados pequeños de papel uno al lado del otro.';
+
+  @override
+  String get ideasOneMarkerBlenderStep2 =>
+      'Rellena el primer cuadrado con el rotulador a plena intensidad.';
+
+  @override
+  String get ideasOneMarkerBlenderStep3 =>
+      'Segundo cuadrado: un trazo de rotulador y luego el difuminador encima mientras esté húmedo.';
+
+  @override
+  String get ideasOneMarkerBlenderStep4 =>
+      'Tercer cuadrado: difuminador primero y luego rotulador sobre el difuminador húmedo. Cuarto: toca el rotulador en la punta del difuminador y pinta solo con el difuminador.';
+
+  @override
+  String get ideasOneMarkerBlenderStep5 =>
+      'Ponlos en fila: una escalera de cuatro escalones con un solo rotulador.';
+
+  @override
+  String get ideasColourWheelTitle => 'Tu rueda de color';
+
+  @override
+  String get ideasColourWheelSummary =>
+      'Coloca doce de tus rotuladores en forma de rueda y encuentra los huecos de tu colección.';
+
+  @override
+  String get ideasColourWheelPractice =>
+      'Leer una rueda de color con los rotuladores que tienes.';
+
+  @override
+  String get ideasColourWheelSubject =>
+      'Un círculo de unos diez centímetros de diámetro, dividido en doce sectores.';
+
+  @override
+  String get ideasColourWheelTip =>
+      'Una rueda de rotuladores es una lista de la compra y una guía de mezclas en una sola página.';
+
+  @override
+  String get ideasColourWheelStep1 =>
+      'Dibuja un círculo siguiendo el borde de una taza y divídelo en doce sectores.';
+
+  @override
+  String get ideasColourWheelStep2 =>
+      'Elige el rotulador más cercano al amarillo puro, luego al rojo y luego al azul, y rellena sus sectores, separados cuatro sectores entre sí.';
+
+  @override
+  String get ideasColourWheelStep3 =>
+      'Rellena los sectores intermedios con los rotuladores más cercanos que tengas: naranja, verde, violeta y luego los seis de entremedios.';
+
+  @override
+  String get ideasColourWheelStep4 =>
+      'Escribe el código de cada rotulador bajo su sector. Un sector vacío o dudoso es un rotulador que quizá quieras después.';
+
+  @override
+  String get ideasDeepSkinTitle => 'Tonos de piel profunda';
+
+  @override
+  String get ideasDeepSkinSummary =>
+      'Colorea una cara en tonos de piel profundos, con una luz cálida y un colorete rojizo.';
+
+  @override
+  String get ideasDeepSkinPractice =>
+      'Sombrear piel profunda con un recorrido largo de un solo tono.';
+
+  @override
+  String get ideasDeepSkinSubject =>
+      'Una cara de tres cuartos, iluminada de frente.';
+
+  @override
+  String get ideasDeepSkinTip =>
+      'La piel profunda necesita un recorrido largo de claridad en un solo tono, y las familias de rotuladores están hechas para eso.';
+
+  @override
+  String get ideasDeepSkinStep1 =>
+      'Dibuja a lápiz una cara y marca la frente, la nariz y los pómulos como las zonas iluminadas.';
+
+  @override
+  String get ideasDeepSkinStep2 =>
+      'Cubre toda la cara con el marrón más claro.';
+
+  @override
+  String get ideasDeepSkinStep3 =>
+      'Mientras la primera capa esté húmeda, añade el marrón rojizo en las mejillas y los labios.';
+
+  @override
+  String get ideasDeepSkinStep4 =>
+      'Añade el marrón base en toda la cara menos las zonas iluminadas.';
+
+  @override
+  String get ideasDeepSkinStep5 =>
+      'Usa el rotulador más oscuro bajo las cejas, la nariz, el labio inferior y la mandíbula, y deja las zonas iluminadas solo con la primera capa.';
+
+  @override
+  String get ideasBlackObjectTitle => 'Negro sin negro';
+
+  @override
+  String get ideasBlackObjectSummary =>
+      'Colorea un gato o una bota negros con azules y violetas oscuros, y guarda el negro para el final.';
+
+  @override
+  String get ideasBlackObjectPractice =>
+      'Construir un objeto oscuro con colores oscuros en vez de negro.';
+
+  @override
+  String get ideasBlackObjectSubject =>
+      'Un gato negro, una bota o una tetera brillante.';
+
+  @override
+  String get ideasBlackObjectTip =>
+      'Un rotulador negro plano mata el volumen. Los colores oscuros superpuestos lo conservan.';
+
+  @override
+  String get ideasBlackObjectStep1 =>
+      'Dibuja a lápiz el objeto y la forma de sus reflejos: las cosas negras reflejan el cielo y la habitación.';
+
+  @override
+  String get ideasBlackObjectStep2 =>
+      'Usa el gris azulado frío y claro en los reflejos y en las caras superiores.';
+
+  @override
+  String get ideasBlackObjectStep3 =>
+      'Cubre la mayor parte del objeto con el azul oscuro.';
+
+  @override
+  String get ideasBlackObjectStep4 =>
+      'Usa el violeta oscuro en la parte de abajo.';
+
+  @override
+  String get ideasBlackObjectStep5 =>
+      'Reserva el rotulador más oscuro para los pliegues más profundos y añade un brillo de gel blanco si la superficie es brillante.';
+
+  @override
+  String get ideasWhiteObjectTitle => 'Blanco sin blanco';
+
+  @override
+  String get ideasWhiteObjectSummary =>
+      'Una taza o un huevo blanco con grises pálidos, una sombra con color y mucho papel sin tocar.';
+
+  @override
+  String get ideasWhiteObjectPractice =>
+      'Pintar un objeto blanco sin pintar el papel.';
+
+  @override
+  String get ideasWhiteObjectSubject =>
+      'Una taza blanca, un huevo o una servilleta plegada.';
+
+  @override
+  String get ideasWhiteObjectTip =>
+      'Un objeto blanco es sobre todo papel. Los rotuladores agradecen que no lo pintes.';
+
+  @override
+  String get ideasWhiteObjectStep1 =>
+      'Dibuja a lápiz el objeto y marca el lado iluminado: ese lado se queda como papel.';
+
+  @override
+  String get ideasWhiteObjectStep2 =>
+      'Usa el rotulador pálido con un toque de color solo en el lado en sombra.';
+
+  @override
+  String get ideasWhiteObjectStep3 =>
+      'Pon el gris claro dentro, hacia la parte más oscura.';
+
+  @override
+  String get ideasWhiteObjectStep4 =>
+      'Usa el gris frío algo más oscuro solo en el borde más alejado de la luz y donde el objeto toca la mesa.';
+
+  @override
+  String get ideasWhiteObjectStep5 =>
+      'Añade un toque del color de la mesa reflejado en la parte de abajo del objeto.';
+
+  @override
+  String get ideasFeatheredEdgeTitle => 'Borde difuminado';
+
+  @override
+  String get ideasFeatheredEdgeSummary =>
+      'Haz que un lado de una forma se desvanezca en el papel blanco y el otro quede nítido.';
+
+  @override
+  String get ideasFeatheredEdgePractice =>
+      'Un borde suave junto a uno duro: la manera más sencilla de dar luz a una forma.';
+
+  @override
+  String get ideasFeatheredEdgeSubject =>
+      'Una hoja, un pétalo o un pliegue de tela.';
+
+  @override
+  String get ideasFeatheredEdgeTip =>
+      'Levanta la punta al avanzar: la tinta se acaba sola en el trazo.';
+
+  @override
+  String get ideasFeatheredEdgeStep1 =>
+      'Dibuja a lápiz una hoja y decide qué borde recibe la luz.';
+
+  @override
+  String get ideasFeatheredEdgeStep2 =>
+      'Colorea el borde oscuro con la base en trazos cortos que apuntan todos hacia el lado iluminado.';
+
+  @override
+  String get ideasFeatheredEdgeStep3 =>
+      'Pasa el rotulador claro desde el centro hacia fuera sobre los finales de esos trazos, levantando la punta para que cada trazo se apague.';
+
+  @override
+  String get ideasFeatheredEdgeStep4 =>
+      'Vuelve a pasar por la unión, siempre del color al blanco.';
+
+  @override
+  String get ideasFeatheredEdgeStep5 =>
+      'Compara los dos bordes: uno suave, uno duro. Ese contraste es lo que hace que la forma se lea.';
+
+  @override
+  String get ideasTipToTipTitle => 'Punta contra punta';
+
+  @override
+  String get ideasTipToTipSummary =>
+      'Carga un color oscuro en la punta de un rotulador claro y haz un degradado de una sola pasada.';
+
+  @override
+  String get ideasTipToTipPractice =>
+      'Robar tinta de un rotulador a otro para un degradado rápido.';
+
+  @override
+  String get ideasTipToTipSubject =>
+      'Una tira de papel del ancho de dos dedos.';
+
+  @override
+  String get ideasTipToTipTip =>
+      'Sujeta el rotulador oscuro quieto: la punta clara solo toma tinta de la punta.';
+
+  @override
+  String get ideasTipToTipStep1 =>
+      'Marca con cinta una tira de unos dos dedos de ancho.';
+
+  @override
+  String get ideasTipToTipStep2 =>
+      'Sujeta el rotulador oscuro quieto y apoya la punta del claro encima un par de segundos.';
+
+  @override
+  String get ideasTipToTipStep3 =>
+      'Empieza por abajo de la tira con la punta cargada: los primeros trazos son oscuros y luego vuelve el color del rotulador.';
+
+  @override
+  String get ideasTipToTipStep4 =>
+      'Garabatea la punta en un papel aparte hasta que vuelva a salir limpia: el rotulador claro no se estropea.';
+
+  @override
+  String get ideasTipToTipStep5 =>
+      'Repite en otra tira cargando la punta más tiempo: la parte oscura llega más lejos.';
+
+  @override
+  String get ideasBlenderPatternTitle => 'Patrones con difuminador';
+
+  @override
+  String get ideasBlenderPatternSummary =>
+      'Levanta puntos y líneas de un color plano con el difuminador incoloro.';
+
+  @override
+  String get ideasBlenderPatternPractice =>
+      'Mover tinta en vez de borrarla: puntos, líneas y patrones.';
+
+  @override
+  String get ideasBlenderPatternSubject =>
+      'Un cuadrado de color donde dibujar el patrón.';
+
+  @override
+  String get ideasBlenderPatternTip =>
+      'Espera entre toques: dos marcas muy juntas se unen.';
+
+  @override
+  String get ideasBlenderPatternStep1 =>
+      'Rellena un cuadrado con la base y deja que se seque del todo.';
+
+  @override
+  String get ideasBlenderPatternStep2 =>
+      'Presiona la punta fina del difuminador en el color y mantenla un segundo: se abre un punto claro con un borde más oscuro.';
+
+  @override
+  String get ideasBlenderPatternStep3 =>
+      'Dibuja una línea con la punta ancha del difuminador: la tinta empujada se acumula en los bordes.';
+
+  @override
+  String get ideasBlenderPatternStep4 =>
+      'Haz un patrón: puntos, rayas o una hilera de escamas.';
+
+  @override
+  String get ideasBlenderPatternStep5 =>
+      'Espera entre toques o los puntos se juntan.';
+
+  @override
+  String get ideasOneMarkerLayersTitle => 'Un rotulador, tres capas';
+
+  @override
+  String get ideasOneMarkerLayersSummary =>
+      'Sombrea un cubo con un solo rotulador superponiendo una, dos y tres capas.';
+
+  @override
+  String get ideasOneMarkerLayersPractice =>
+      'Cuánto recorrido tiene un rotulador cuando las capas se secan una sobre otra.';
+
+  @override
+  String get ideasOneMarkerLayersSubject =>
+      'Un cubo con la luz desde una esquina de arriba.';
+
+  @override
+  String get ideasOneMarkerLayersTip =>
+      'Deja secar cada capa: una segunda pasada en húmedo mueve la tinta en vez de oscurecerla.';
+
+  @override
+  String get ideasOneMarkerLayersStep1 =>
+      'Dibuja a lápiz un cubo con la luz desde una esquina de arriba.';
+
+  @override
+  String get ideasOneMarkerLayersStep2 =>
+      'Una pasada en cada cara. Deja secar.';
+
+  @override
+  String get ideasOneMarkerLayersStep3 =>
+      'Una segunda pasada en las dos caras alejadas de la luz.';
+
+  @override
+  String get ideasOneMarkerLayersStep4 =>
+      'Una tercera pasada solo en la cara más oscura y en los bordes de abajo.';
+
+  @override
+  String get ideasOneMarkerLayersStep5 =>
+      'Mira los tres valores: ese es el recorrido de un solo rotulador.';
+
+  @override
+  String get ideasStipplePeelTitle => 'Piel de naranja punteada';
+
+  @override
+  String get ideasStipplePeelSummary =>
+      'Crea la textura de hoyitos de la piel de un cítrico con puntos sobre un degradado.';
+
+  @override
+  String get ideasStipplePeelPractice =>
+      'Puntear sobre un degradado seco, sin emborronarlo.';
+
+  @override
+  String get ideasStipplePeelSubject =>
+      'Una naranja con un brillo suave en su parte de arriba.';
+
+  @override
+  String get ideasStipplePeelTip => 'Usa la punta fina: da motas limpias.';
+
+  @override
+  String get ideasStipplePeelStep1 =>
+      'Dibuja a lápiz una naranja y un brillo suave en su parte de arriba.';
+
+  @override
+  String get ideasStipplePeelStep2 =>
+      'Rellena la naranja dejando el brillo más claro.';
+
+  @override
+  String get ideasStipplePeelStep3 =>
+      'Funde la base en la mitad de la sombra mientras está húmedo.';
+
+  @override
+  String get ideasStipplePeelStep4 =>
+      'Cuando esté seco, da toques con la punta fina del rotulador oscuro: puntos sueltos, más juntos en la sombra y casi ninguno junto al brillo.';
+
+  @override
+  String get ideasStipplePeelStep5 =>
+      'Da unos toques claros dentro de los puntos oscuros para romperlos.';
+
+  @override
+  String get ideasClearGlassTitle => 'Un vaso de cristal';
+
+  @override
+  String get ideasClearGlassSummary =>
+      'Colorea un vaso vacío con grises y casi nada más.';
+
+  @override
+  String get ideasClearGlassPractice =>
+      'Gris y papel blanco: la manera más ligera de dibujar cristal.';
+
+  @override
+  String get ideasClearGlassSubject =>
+      'Un vaso con el borde, la base y dos brillos verticales.';
+
+  @override
+  String get ideasClearGlassTip =>
+      'El vidrio es más oscuro donde es más grueso: en el borde y en la base.';
+
+  @override
+  String get ideasClearGlassStep1 =>
+      'Dibuja a lápiz el vaso y marca el borde, la base y dos brillos verticales que quedan en papel blanco.';
+
+  @override
+  String get ideasClearGlassStep2 =>
+      'Colorea el vaso con el gris más claro, dejando los brillos y casi todo el centro en blanco.';
+
+  @override
+  String get ideasClearGlassStep3 =>
+      'Oscurece el borde, la base gruesa y el canto lejano: el vidrio es más oscuro donde es más grueso.';
+
+  @override
+  String get ideasClearGlassStep4 =>
+      'Pon una mancha de color detrás del vaso y deja que una versión más pálida se vea a través del vaso, sobre el gris claro.';
+
+  @override
+  String get ideasClearGlassStep5 =>
+      'Gel blanco en el borde y en la base para los brillos más nítidos.';
+
+  @override
+  String get ideasPolishedMetalTitle => 'Metal pulido';
+
+  @override
+  String get ideasPolishedMetalSummary =>
+      'Haz que una cuchara parezca metal con bandas duras de gris y un color reflejado.';
+
+  @override
+  String get ideasPolishedMetalPractice =>
+      'Bandas de borde nítido y un recorrido largo de valores: así se lee el metal.';
+
+  @override
+  String get ideasPolishedMetalSubject =>
+      'Una cuchara con las bandas de su reflejo ya dibujadas.';
+
+  @override
+  String get ideasPolishedMetalTip =>
+      'El metal no tiene transiciones suaves: deja los bordes de las bandas nítidos.';
+
+  @override
+  String get ideasPolishedMetalStep1 =>
+      'Dibuja a lápiz la cuchara y sus reflejos como bandas: una oscura cruzando el cuenco, otra clara al lado, sin transiciones suaves.';
+
+  @override
+  String get ideasPolishedMetalStep2 =>
+      'Rellena el cuenco y el mango con el gris más claro.';
+
+  @override
+  String get ideasPolishedMetalStep3 =>
+      'Pon las bandas oscuras con bordes nítidos, siguiendo la curva del cuenco.';
+
+  @override
+  String get ideasPolishedMetalStep4 =>
+      'Pon el gris más oscuro justo junto a la banda más clara: el metal vive de ese contraste.';
+
+  @override
+  String get ideasPolishedMetalStep5 =>
+      'Deja que una mancha del color de la mesa se refleje en la mitad de abajo del cuenco y pon gel blanco en el brillo más nítido.';
+
+  @override
+  String get ideasCastShadowTitle => 'La sombra sobre la mesa';
+
+  @override
+  String get ideasCastShadowSummary =>
+      'Dibuja una taza y acierta con su sombra proyectada: oscura en el contacto, suave más lejos.';
+
+  @override
+  String get ideasCastShadowPractice =>
+      'Sombras proyectadas: la línea de contacto, el degradado y el gris que las dibuja.';
+
+  @override
+  String get ideasCastShadowSubject =>
+      'Una taza sobre una mesa, con la luz desde un lado.';
+
+  @override
+  String get ideasCastShadowTip =>
+      'La sombra empieza donde el objeto toca la mesa, no donde acaba la luz.';
+
+  @override
+  String get ideasCastShadowStep1 =>
+      'Dibuja a lápiz una taza y la forma de su sombra en la mesa, más larga en el lado contrario a la luz.';
+
+  @override
+  String get ideasCastShadowStep2 =>
+      'Colorea la taza y sombrea su lado lejano con el mismo rotulador en una segunda capa.';
+
+  @override
+  String get ideasCastShadowStep3 =>
+      'Rellena la sombra proyectada con el gris, empezando en la base de la taza y levantando la punta según te alejas.';
+
+  @override
+  String get ideasCastShadowStep4 =>
+      'Añade una línea oscura fina donde la taza toca la mesa.';
+
+  @override
+  String get ideasCastShadowStep5 =>
+      'Suaviza el borde lejano de la sombra con otra pasada ligera de gris mientras la primera sigue húmeda.';
+
+  @override
+  String get ideasSoftCloudsTitle => 'Nubes suaves';
+
+  @override
+  String get ideasSoftCloudsSummary =>
+      'Colorea el cielo alrededor de las nubes y deja las nubes como papel.';
+
+  @override
+  String get ideasSoftCloudsPractice =>
+      'Pintar en negativo: la forma es el papel que no tocaste.';
+
+  @override
+  String get ideasSoftCloudsSubject =>
+      'Dos o tres nubes con la parte de arriba redondeada y la de abajo más plana.';
+
+  @override
+  String get ideasSoftCloudsTip =>
+      'Rodea las nubes con la punta ancha: sus bordes quedan irregulares.';
+
+  @override
+  String get ideasSoftCloudsStep1 =>
+      'Dibuja a lápiz, muy suave, dos o tres nubes: arriba redondeadas, abajo más planas.';
+
+  @override
+  String get ideasSoftCloudsStep2 =>
+      'Rellena el cielo con el azul claro, rodeando las nubes con la punta ancha para que sus bordes queden algo irregulares.';
+
+  @override
+  String get ideasSoftCloudsStep3 =>
+      'Oscurece el cielo hacia arriba y funde hacia el azul claro mientras está húmedo.';
+
+  @override
+  String get ideasSoftCloudsStep4 =>
+      'Sombrea la parte de abajo de cada nube con el gris claro, dejando arriba en blanco.';
+
+  @override
+  String get ideasSoftCloudsStep5 =>
+      'Suaviza con el difuminador cualquier borde duro del cielo contra una nube, empujando el color hacia fuera.';
+
+  @override
+  String get ideasStillWaterTitle => 'Reflejo en agua quieta';
+
+  @override
+  String get ideasStillWaterSummary =>
+      'Dibuja un árbol en la orilla y su copia invertida, algo más oscura, en el agua.';
+
+  @override
+  String get ideasStillWaterPractice =>
+      'Superponer un color sobre otro: así se hace un reflejo.';
+
+  @override
+  String get ideasStillWaterSubject =>
+      'Un árbol en la orilla con su reflejo en el agua de abajo.';
+
+  @override
+  String get ideasStillWaterTip =>
+      'Pinta el reflejo solo con trazos horizontales: el agua se mueve de lado.';
+
+  @override
+  String get ideasStillWaterStep1 =>
+      'Dibuja a lápiz una línea de horizonte, un árbol sencillo encima y su reflejo debajo.';
+
+  @override
+  String get ideasStillWaterStep2 =>
+      'Colorea el árbol y su reflejo con el mismo rotulador, solo en trazos horizontales.';
+
+  @override
+  String get ideasStillWaterStep3 =>
+      'Extiende el azul claro por todo el agua, incluido el reflejo, con trazos horizontales largos.';
+
+  @override
+  String get ideasStillWaterStep4 =>
+      'Oscurece el agua cerca de la orilla y en el borde lejano; añade unas líneas horizontales rotas de base sobre el reflejo.';
+
+  @override
+  String get ideasStillWaterStep5 =>
+      'Pon el azul oscuro donde la orilla toca el agua y añade dos o tres líneas finas de gel blanco para las ondas.';
+
+  @override
+  String get ideasTwistedRibbonTitle => 'Cinta retorcida';
+
+  @override
+  String get ideasTwistedRibbonSummary =>
+      'Funde un degradado que se curva con una cinta al girarse sobre sí misma.';
+
+  @override
+  String get ideasTwistedRibbonPractice =>
+      'Repetir un degradado corto en cada vuelta de una forma.';
+
+  @override
+  String get ideasTwistedRibbonSubject =>
+      'Una cinta con dos vueltas, por encima y por debajo.';
+
+  @override
+  String get ideasTwistedRibbonTip =>
+      'Funde siguiendo la curva de la cinta, nunca en recto.';
+
+  @override
+  String get ideasTwistedRibbonStep1 =>
+      'Dibuja a lápiz una cinta con dos vueltas; marca qué tramos se ven por delante y cuáles por detrás.';
+
+  @override
+  String get ideasTwistedRibbonStep2 =>
+      'Rellena cada tramo con el rotulador claro.';
+
+  @override
+  String get ideasTwistedRibbonStep3 =>
+      'En cada tramo, pon la base en el lado que se curva hacia atrás, con trazos que sigan la curva y no rectos.';
+
+  @override
+  String get ideasTwistedRibbonStep4 =>
+      'Oscurece solo donde un tramo pasa por debajo de otro, con una franja estrecha justo en el cruce.';
+
+  @override
+  String get ideasTwistedRibbonStep5 =>
+      'Pasa el difuminador por cada franja donde el degradado se ve escalonado.';
+
+  @override
+  String get ideasNoLineLeafTitle => 'Colorear sin contorno';
+
+  @override
+  String get ideasNoLineLeafSummary =>
+      'Colorea una hoja partiendo de un boceto a lápiz y deja que los bordes del color hagan de contorno.';
+
+  @override
+  String get ideasNoLineLeafPractice =>
+      'Dibujar sin rotulador calibrado: el borde del color es el contorno.';
+
+  @override
+  String get ideasNoLineLeafSubject =>
+      'Una hoja sencilla con su nervio central.';
+
+  @override
+  String get ideasNoLineLeafTip =>
+      'Borra el lápiz con una goma blanda hasta que apenas se vea.';
+
+  @override
+  String get ideasNoLineLeafStep1 =>
+      'Dibuja la hoja y su nervio central muy suave a lápiz y borra casi todo el grafito con una goma blanda hasta que apenas se vea.';
+
+  @override
+  String get ideasNoLineLeafStep2 =>
+      'Rellena la hoja y para justo en la línea de lápiz.';
+
+  @override
+  String get ideasNoLineLeafStep3 =>
+      'Sombrea media hoja y la base mientras la primera capa sigue húmeda.';
+
+  @override
+  String get ideasNoLineLeafStep4 =>
+      'Define el borde del lado de la sombra con una línea fina del rotulador más oscuro, en vez de con un rotulador calibrado.';
+
+  @override
+  String get ideasNoLineLeafStep5 =>
+      'Borra el lápiz que aún se vea cuando la tinta esté seca.';
+
+  @override
+  String get ideasShortFurTitle => 'Pelo corto';
+
+  @override
+  String get ideasShortFurSummary =>
+      'Colorea la oreja de un gato con trazos cortos en dos direcciones.';
+
+  @override
+  String get ideasShortFurPractice =>
+      'Trazos cortos que siguen la dirección del pelo.';
+
+  @override
+  String get ideasShortFurSubject =>
+      'Una oreja de gato con unas flechas que marcan por dónde crece el pelo.';
+
+  @override
+  String get ideasShortFurTip =>
+      'Trazos rápidos desde la raíz hacia fuera: apoya, mueve rápido y levanta.';
+
+  @override
+  String get ideasShortFurStep1 =>
+      'Dibuja a lápiz la oreja y marca con unas flechas hacia dónde crece el pelo.';
+
+  @override
+  String get ideasShortFurStep2 =>
+      'Rellena la oreja con el rotulador claro, con trazos rápidos hacia fuera en el borde para que quede peluda y no sólida.';
+
+  @override
+  String get ideasShortFurStep3 =>
+      'Trazos cortos y rápidos de base desde el borde interior hacia fuera, siguiendo las flechas.';
+
+  @override
+  String get ideasShortFurStep4 =>
+      'Menos trazos y más oscuros dentro de la oreja y en la base, donde se une con la cabeza.';
+
+  @override
+  String get ideasShortFurStep5 =>
+      'Pasa el rotulador claro otra vez por las uniones para fundir las capas y suavizar los trazos más oscuros.';
+
+  @override
+  String get ideasWoodGrainTitle => 'Tabla de madera';
+
+  @override
+  String get ideasWoodGrainSummary =>
+      'Una tabla con veta y un nudo, en tres marrones.';
+
+  @override
+  String get ideasWoodGrainPractice =>
+      'Trazos largos que siguen la forma del material.';
+
+  @override
+  String get ideasWoodGrainSubject =>
+      'Una tabla de madera con un nudo cerca de un extremo.';
+
+  @override
+  String get ideasWoodGrainTip =>
+      'La veta pasa alrededor del nudo: dibuja las líneas curvadas, nunca rectas.';
+
+  @override
+  String get ideasWoodGrainStep1 =>
+      'Dibuja a lápiz una tabla con un nudo; la veta pasa alrededor del nudo como el agua alrededor de una piedra.';
+
+  @override
+  String get ideasWoodGrainStep2 =>
+      'Rellena la tabla con trazos largos a lo largo de la veta.';
+
+  @override
+  String get ideasWoodGrainStep3 =>
+      'Líneas largas y algo onduladas de base siguiendo la veta, agrupándose cerca del nudo.';
+
+  @override
+  String get ideasWoodGrainStep4 =>
+      'Unas líneas más oscuras y los anillos del nudo; oscurece el borde de abajo de la tabla.';
+
+  @override
+  String get ideasWoodGrainStep5 =>
+      'Vuelve a pasar el claro por las líneas para suavizar donde parecen trazadas encima.';
+
+  @override
+  String get ideasBrickWallTitle => 'Muro de ladrillos';
+
+  @override
+  String get ideasBrickWallSummary =>
+      'Un trozo de muro de ladrillos de colores algo distintos y mortero claro.';
+
+  @override
+  String get ideasBrickWallPractice =>
+      'Rellenos planos, ladrillo a ladrillo, y el gris del mortero.';
+
+  @override
+  String get ideasBrickWallSubject =>
+      'Un trozo de muro con unos veinte ladrillos.';
+
+  @override
+  String get ideasBrickWallTip =>
+      'Deja el mortero como papel: es más claro que cualquier ladrillo.';
+
+  @override
+  String get ideasBrickWallStep1 =>
+      'Dibuja a lápiz la retícula del mortero y déjalo como papel por ahora.';
+
+  @override
+  String get ideasBrickWallStep2 =>
+      'Rellena cada ladrillo con el rotulador claro, dejando que cada uno se seque por separado.';
+
+  @override
+  String get ideasBrickWallStep3 =>
+      'Pasa la base por más o menos la mitad de los ladrillos, elegidos al azar, para que el muro no sea uniforme.';
+
+  @override
+  String get ideasBrickWallStep4 =>
+      'Sombra en el borde de abajo de cada ladrillo, más algunos desconchones y ladrillos más oscuros.';
+
+  @override
+  String get ideasBrickWallStep5 =>
+      'Rellena las juntas de mortero con el gris claro.';
+
+  @override
+  String get ideasFoldedClothTitle => 'Paño plegado';
+
+  @override
+  String get ideasFoldedClothSummary =>
+      'Sombrea los pliegues de un paño colgante con cuatro valores y una sola dirección de luz.';
+
+  @override
+  String get ideasFoldedClothPractice =>
+      'El mismo degradado repetido en cada pliegue.';
+
+  @override
+  String get ideasFoldedClothSubject =>
+      'Un paño colgando de un cordón, con tres o cuatro pliegues.';
+
+  @override
+  String get ideasFoldedClothTip =>
+      'La línea más oscura va solo donde la tela se dobla sobre sí misma.';
+
+  @override
+  String get ideasFoldedClothStep1 =>
+      'Dibuja a lápiz un paño colgando de un cordón, con tres o cuatro pliegues; marca la parte alta de cada pliegue.';
+
+  @override
+  String get ideasFoldedClothStep2 => 'Rellena el paño.';
+
+  @override
+  String get ideasFoldedClothStep3 =>
+      'Pon la base en el lado de cada pliegue apartado de la luz y fúndela con el claro mientras está húmedo.';
+
+  @override
+  String get ideasFoldedClothStep4 =>
+      'Sombra en el fondo de cada pliegue, donde la tela se dobla.';
+
+  @override
+  String get ideasFoldedClothStep5 =>
+      'Una línea oscura fina solo al fondo de los pliegues más profundos; pasa el difuminador por cualquier salto duro de las partes curvas.';
+
+  @override
+  String get ideasWaterDropsTitle => 'Gotas sobre una hoja';
+
+  @override
+  String get ideasWaterDropsSummary =>
+      'Tres gotas de agua sobre una hoja, cada una con su sombra, su borde oscuro y su brillo.';
+
+  @override
+  String get ideasWaterDropsPractice =>
+      'Unas marcas nítidas encima de un degradado ya terminado.';
+
+  @override
+  String get ideasWaterDropsSubject => 'Una hoja con tres gotas de agua.';
+
+  @override
+  String get ideasWaterDropsTip =>
+      'La gota invierte la luz: sombrea el lado que mira hacia ella.';
+
+  @override
+  String get ideasWaterDropsStep1 =>
+      'Dibuja a lápiz una hoja y tres gotas; marca en cada gota un brillo pequeño en el lado iluminado.';
+
+  @override
+  String get ideasWaterDropsStep2 =>
+      'Colorea toda la hoja, gotas incluidas; las gotas son la hoja vista a través del agua.';
+
+  @override
+  String get ideasWaterDropsStep3 =>
+      'Sombrea la hoja y, dentro de cada gota, el lado que mira a la luz, porque la gota actúa como una lente y lo invierte.';
+
+  @override
+  String get ideasWaterDropsStep4 =>
+      'Una media luna oscura fina en el lado opuesto de cada gota y una sombra pequeña debajo.';
+
+  @override
+  String get ideasWaterDropsStep5 =>
+      'Gel blanco: un punto duro por gota en el lado iluminado y un filo más claro justo en el contrario.';
+
+  @override
+  String get ideasStrawberrySeedsTitle => 'Fresa';
+
+  @override
+  String get ideasStrawberrySeedsSummary =>
+      'Una fresa con las semillas hundidas en pequeños hoyos y una corona verde.';
+
+  @override
+  String get ideasStrawberrySeedsPractice =>
+      'Textura hecha de marcas pequeñas: hoyos, semillas y corona.';
+
+  @override
+  String get ideasStrawberrySeedsSubject =>
+      'Una fresa con una rejilla suelta de semillas.';
+
+  @override
+  String get ideasStrawberrySeedsTip =>
+      'Marca los hoyos con el color aún húmedo: el anillo oscuro se forma solo.';
+
+  @override
+  String get ideasStrawberrySeedsStep1 =>
+      'Dibuja a lápiz la fresa y una rejilla suelta de puntitos de semilla, más juntos hacia la punta.';
+
+  @override
+  String get ideasStrawberrySeedsStep2 =>
+      'Rellena el fruto dejando un brillo suave.';
+
+  @override
+  String get ideasStrawberrySeedsStep3 =>
+      'Funde la base por los lados; mientras esté húmedo, presiona un punto algo más oscuro sobre cada semilla.';
+
+  @override
+  String get ideasStrawberrySeedsStep4 =>
+      'Oscurece la mitad de abajo y el hoyo sobre cada semilla.';
+
+  @override
+  String get ideasStrawberrySeedsStep5 =>
+      'Colorea las hojas y el tallo con el verde y pon un punto diminuto de gel blanco en cada hoyo para la semilla.';
+
+  @override
+  String get ideasPaletteMixingTitle => 'Mezclar en una paleta';
+
+  @override
+  String get ideasPaletteMixingSummary =>
+      'Haz un tercer color mezclando dos rotuladores sobre una superficie de plástico y recógelo con el difuminador.';
+
+  @override
+  String get ideasPaletteMixingPractice =>
+      'Mezclar dos tintas fuera del papel, con el difuminador como pincel.';
+
+  @override
+  String get ideasPaletteMixingSubject =>
+      'Una tapa de plástico o una tarjeta de mezcla, y un papel aparte.';
+
+  @override
+  String get ideasPaletteMixingTip =>
+      'El difuminador solo lleva lo que está húmedo: no dejes secar los charcos.';
+
+  @override
+  String get ideasPaletteMixingStep1 =>
+      'Garabatea el primer rotulador en un trozo que no absorba, como una tarjeta de mezcla, una tapa de plástico o una bolsa de congelación.';
+
+  @override
+  String get ideasPaletteMixingStep2 =>
+      'Garabatea el segundo rotulador al lado para que los dos charcos se toquen.';
+
+  @override
+  String get ideasPaletteMixingStep3 =>
+      'Coge la mezcla con la punta ancha del difuminador incoloro y pinta una muestra; al lado, muestra cada rotulador por separado.';
+
+  @override
+  String get ideasPaletteMixingStep4 =>
+      'Prueba otra mezcla con más cantidad de uno de los dos colores.';
+
+  @override
+  String get ideasPaletteMixingStep5 =>
+      'Anota qué mezclas te gustaría tener como rotulador.';
+
+  @override
+  String get ideasLongHairTitle => 'Pelo largo';
+
+  @override
+  String get ideasLongHairSummary =>
+      'Una melena con una banda de luz y mechones que siguen la forma de la cabeza.';
+
+  @override
+  String get ideasLongHairPractice =>
+      'Trazos largos que se afinan y una banda de luz que es solo papel.';
+
+  @override
+  String get ideasLongHairSubject =>
+      'Una melena con unos pocos mechones grandes y una banda de luz.';
+
+  @override
+  String get ideasLongHairTip =>
+      'Presiona menos dentro de la banda de luz: el papel hace el trabajo.';
+
+  @override
+  String get ideasLongHairStep1 =>
+      'Dibuja a lápiz el pelo en pocos mechones grandes y no en pelos sueltos, y una banda curva donde da la luz.';
+
+  @override
+  String get ideasLongHairStep2 =>
+      'Rellena todo el pelo, presionando menos dentro de la banda de luz.';
+
+  @override
+  String get ideasLongHairStep3 =>
+      'Trazos largos desde la raya hacia abajo, levantando la punta al llegar a la banda de luz, y luego desde las puntas hacia arriba.';
+
+  @override
+  String get ideasLongHairStep4 =>
+      'Oscurece entre los mechones y bajo la oreja y el cuello.';
+
+  @override
+  String get ideasLongHairStep5 =>
+      'Unas hebras finas del rotulador más oscuro y dos o tres hilos finos de gel blanco solo dentro de la banda de luz.';
+
+  @override
+  String get ideasOverlapGlazesTitle => 'Capas superpuestas';
+
+  @override
+  String get ideasOverlapGlazesSummary =>
+      'Superpone tres círculos transparentes y mira qué colores nuevos aparecen.';
+
+  @override
+  String get ideasOverlapGlazesPractice =>
+      'Capas transparentes: cada solape es una mezcla de verdad.';
+
+  @override
+  String get ideasOverlapGlazesSubject =>
+      'Tres círculos que se solapan, como un diagrama de Venn.';
+
+  @override
+  String get ideasOverlapGlazesTip =>
+      'El orden importa: el color más claro arriba siempre se ve distinto.';
+
+  @override
+  String get ideasOverlapGlazesStep1 =>
+      'Dibuja a lápiz tres círculos que se solapen como un diagrama de Venn.';
+
+  @override
+  String get ideasOverlapGlazesStep2 =>
+      'Rellena el primer círculo y deja que se seque del todo.';
+
+  @override
+  String get ideasOverlapGlazesStep3 =>
+      'Rellena el segundo, incluido el solape; el solape se vuelve un tercer color.';
+
+  @override
+  String get ideasOverlapGlazesStep4 =>
+      'Rellena el tercer círculo; el centro, donde se encuentran los tres, es la mezcla más oscura.';
+
+  @override
+  String get ideasOverlapGlazesStep5 =>
+      'Repite con los rotuladores en otro orden: el más claro arriba siempre se ve distinto.';
+
+  @override
+  String get ideasFadedBackgroundTitle => 'Fondo difuminado';
+
+  @override
+  String get ideasFadedBackgroundSummary =>
+      'Da a un dibujo un halo de color que se apaga en blanco mucho antes del borde del papel.';
+
+  @override
+  String get ideasFadedBackgroundPractice =>
+      'Un viñeteado hecho con trazos circulares y el difuminador.';
+
+  @override
+  String get ideasFadedBackgroundSubject =>
+      'Una taza, un pájaro o cualquier motivo pequeño en el centro de la página.';
+
+  @override
+  String get ideasFadedBackgroundTip =>
+      'Para antes de llegar al borde del papel: el halo se apaga solo.';
+
+  @override
+  String get ideasFadedBackgroundStep1 =>
+      'Dibuja a lápiz un motivo sencillo, como una taza o un pájaro, en el centro de la página.';
+
+  @override
+  String get ideasFadedBackgroundStep2 =>
+      'Colorea un anillo de base alrededor del motivo, de un dedo de ancho, con trazos circulares.';
+
+  @override
+  String get ideasFadedBackgroundStep3 =>
+      'Lleva el rotulador claro hacia fuera del anillo en círculos que se solapen hasta que el color se aclare.';
+
+  @override
+  String get ideasFadedBackgroundStep4 =>
+      'Continúa con el difuminador más allá del color, empujando lo que queda hacia el papel para que no haya borde.';
+
+  @override
+  String get ideasFadedBackgroundStep5 =>
+      'Termina el motivo para que sea más oscuro que el halo.';
+
+  @override
+  String get ideasHatchShadingTitle => 'Sombreado a rayas';
+
+  @override
+  String get ideasHatchShadingSummary =>
+      'Sombrea una manzana solo con líneas, sin fundir: rayas para el tono medio y rayas cruzadas para la sombra.';
+
+  @override
+  String get ideasHatchShadingPractice =>
+      'Rayas y rayas cruzadas: líneas que se leen como un tono.';
+
+  @override
+  String get ideasHatchShadingSubject => 'Una manzana con el brillo marcado.';
+
+  @override
+  String get ideasHatchShadingTip =>
+      'Mantén las líneas paralelas y a la misma distancia: el ojo hace el resto.';
+
+  @override
+  String get ideasHatchShadingStep1 =>
+      'Dibuja a lápiz una manzana y marca el brillo.';
+
+  @override
+  String get ideasHatchShadingStep2 =>
+      'Rellena la manzana de plano y deja secar.';
+
+  @override
+  String get ideasHatchShadingStep3 =>
+      'Raya la mitad en sombra con líneas paralelas de la punta fina, más juntas cuanto más lejos de la luz.';
+
+  @override
+  String get ideasHatchShadingStep4 =>
+      'Cruza la zona más oscura con un segundo grupo de líneas en otro ángulo y añade la sombra de contacto bajo la manzana.';
+
+  @override
+  String get ideasHatchShadingStep5 =>
+      'Aléjate un poco: a distancia las líneas se vuelven un tono.';
+
+  @override
   String get ideasCategoryTechnique => 'Técnicas';
 
   @override
@@ -1160,6 +3983,26 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ideasDifficultyHard => 'Difícil';
+
+  @override
+  String get ideasSeasonSpring => 'Primavera';
+
+  @override
+  String get ideasSeasonSummer => 'Verano';
+
+  @override
+  String get ideasSeasonAutumn => 'Otoño';
+
+  @override
+  String get ideasSeasonWinter => 'Invierno';
+
+  @override
+  String get ideasSectionAnyTime => 'Cualquier época';
+
+  @override
+  String ideasSeeAllSemantic(int count, String category) {
+    return 'Ver las $count ideas de $category';
+  }
 
   @override
   String get ideasFeaturedLabel => 'Idea del día';

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
+import 'package:ink_lab/core/ideas_engine.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
@@ -18,11 +19,15 @@ MarkerRepository diskMarkerRepository() =>
     MarkerRepository(loadAsset: (String path) => File(path).readAsStringSync());
 
 /// The ideas page inside an in-memory scope and a minimal Material app.
-AppScope ideasScope({DateTime? today, VoidCallback? onOpenPalette}) =>
+AppScope ideasScope({
+  DateTime? today,
+  VoidCallback? onOpenPalette,
+  Locale locale = const Locale('en'),
+}) =>
     AppScope.inMemory(
       markers: diskMarkerRepository(),
       child: MaterialApp(
-        locale: const Locale('en'),
+        locale: locale,
         localizationsDelegates: testLocalizationsDelegates,
         supportedLocales: testSupportedLocales,
         theme: AppTheme.light(),
@@ -41,6 +46,7 @@ Future<AppScope> pumpIdeas(
   DateTime? today,
   VoidCallback? onOpenPalette,
   Size size = const Size(800, 4000),
+  Locale locale = const Locale('en'),
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -49,6 +55,7 @@ Future<AppScope> pumpIdeas(
   final AppScope scope = ideasScope(
     today: today ?? DateTime(2026, 10, 29),
     onOpenPalette: onOpenPalette,
+    locale: locale,
   );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);
@@ -60,4 +67,28 @@ Future<AppScope> pumpIdeas(
   await tester.pumpWidget(scope);
   await tester.pumpAndSettle();
   return scope;
+}
+
+/// Brings the row of idea [id] on screen: the overview only lists the first
+/// ideas of each category, so the category's own tab is opened when needed.
+Future<void> showIdeaRow(WidgetTester tester, String id) async {
+  final Finder row = find.byKey(ValueKey<String>('ideas-preset-$id'));
+  if (row.evaluate().isEmpty) {
+    final IdeaCategory category = IdeasEngine.byId(id)!.category;
+    await tester.tap(
+      find.byKey(ValueKey<String>('ideas-category-${category.name}')),
+    );
+    await tester.pumpAndSettle();
+  }
+  await tester.scrollUntilVisible(
+    row,
+    300,
+    scrollable: find
+        .byWidgetPredicate(
+          (Widget w) =>
+              w is Scrollable && w.axisDirection == AxisDirection.down,
+        )
+        .first,
+  );
+  await tester.pumpAndSettle();
 }

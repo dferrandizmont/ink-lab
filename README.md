@@ -131,8 +131,8 @@ Sharing a palette, a chart or the `.zip` backup hands the file to the app you pi
 
 ## What's new
 
-Version 1.1.0 adds «Your brands» at the top of the brand picker, with what you own of
-each brand, and a side menu that folds away on tablets in landscape. Full list in [CHANGELOG.md](CHANGELOG.md) and in the
+Version 1.2.0 brings 100 ideas instead of 28, grouped by difficulty and by season so they are easy to
+browse, and a tidier side menu on tablets. Full list in [CHANGELOG.md](CHANGELOG.md) and in the
 [releases](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contributing

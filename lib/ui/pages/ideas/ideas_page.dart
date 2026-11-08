@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../app_scope.dart';
 import '../../../core/collection_selection.dart';
 import '../../../core/ideas_engine.dart';
+import '../../../core/ideas_sections.dart';
 import '../../../core/models.dart';
 import '../../../data/data.dart';
 import '../../../l10n/l10n.dart';
@@ -350,12 +351,14 @@ class _IdeasPageState extends State<IdeasPage> {
     final List<IdeaPreset> filtered = _filteredPresets;
     final bool browsing =
         _category == null && !_favoritesOnly && _query.trim().isEmpty;
+    // Headed sections: a category tab or the overview, unless a search or the
+    // favourites turned the list flat.
+    final bool sectioned = !_favoritesOnly && _query.trim().isEmpty;
     final List<IdeaPreset> recent = browsing
         ? _recentPresets
         : const <IdeaPreset>[];
-    final IdeaPreset featured = IdeasEngine.featuredFor(
-      widget.today ?? DateTime.now(),
-    );
+    final DateTime today = widget.today ?? DateTime.now();
+    final IdeaPreset featured = IdeasEngine.featuredFor(today);
 
     // One width for both segments, so switching never moves the header: the
     // ideas and the diary entries go in columns on a wide page.
@@ -428,7 +431,11 @@ class _IdeasPageState extends State<IdeasPage> {
             ),
             _buildCategoryChips(),
             Expanded(
+              // A new list per chip, so every chip starts at the top.
               child: ListView(
+                key: ValueKey<String>(
+                  'ideas-list-${_category?.name}-$_favoritesOnly',
+                ),
                 padding: EdgeInsets.only(
                   top: InkSpacing.block,
                   bottom: InkSpacing.pageBottomOf(context),
@@ -444,6 +451,12 @@ class _IdeasPageState extends State<IdeasPage> {
                         onToggleFavorite: () => _toggleFavorite(featured),
                         onOpen: () => _open(featured),
                       ),
+                    ),
+                  if (recent.isNotEmpty)
+                    _RecentSection(
+                      presets: recent,
+                      planFor: _planFor,
+                      onOpen: _open,
                     ),
                   if (filtered.isEmpty &&
                       _favoritesOnly &&
@@ -461,33 +474,12 @@ class _IdeasPageState extends State<IdeasPage> {
                       actionLabel: context.l10n.ideasClearFilters,
                       onAction: _clearFilters,
                     )
+                  else if (sectioned && _category == null)
+                    ..._overviewSections(today)
+                  else if (sectioned)
+                    ..._categorySections(_category!, filtered, today)
                   else
-                    _inset(
-                      InkCardColumns(
-                        spacing: InkSpacing.xl,
-                        children: <Widget>[
-                          for (final IdeaPreset preset in filtered)
-                            _IdeaRow(
-                              key: ValueKey<String>(
-                                'ideas-preset-${preset.id}',
-                              ),
-                              preset: preset,
-                              plan: _planFor(preset),
-                              showCategory: _category == null,
-                              favorite: _favorites.contains(preset.id),
-                              onToggleFavorite: () => _toggleFavorite(preset),
-                              onTap: () => _open(preset),
-                            ),
-                        ],
-                      ),
-                      top: browsing ? InkSpacing.block : 0,
-                    ),
-                  if (recent.isNotEmpty)
-                    _RecentSection(
-                      presets: recent,
-                      planFor: _planFor,
-                      onOpen: _open,
-                    ),
+                    _inset(_rows(filtered, showCategory: _category == null)),
                 ],
               ),
             ),
@@ -496,6 +488,146 @@ class _IdeasPageState extends State<IdeasPage> {
       ),
     );
   }
+
+  /// The ideas as hairline rows, in as many columns as the width allows.
+  Widget _rows(
+    List<IdeaPreset> presets, {
+    required bool showCategory,
+    bool showDifficulty = true,
+  }) => InkCardColumns(
+    spacing: InkSpacing.xl,
+    children: <Widget>[
+      for (final IdeaPreset preset in presets)
+        _IdeaRow(
+          key: ValueKey<String>('ideas-preset-${preset.id}'),
+          preset: preset,
+          plan: _planFor(preset),
+          showCategory: showCategory,
+          showDifficulty: showDifficulty,
+          favorite: _favorites.contains(preset.id),
+          onToggleFavorite: () => _toggleFavorite(preset),
+          onTap: () => _open(preset),
+        ),
+    ],
+  );
+
+  String _sectionTitle(IdeaSection section) {
+    final AppLocalizations l10n = context.l10n;
+    if (section.difficulty != null) {
+      return l10n.ideaDifficultyLabel(section.difficulty!);
+    }
+    if (section.season != null) return l10n.ideaSeasonLabel(section.season!);
+    return l10n.ideasSectionAnyTime;
+  }
+
+  /// A category's tab: its ideas under Easy / Medium / Hard headings, or under
+  /// the seasons (the current one first) and "Any time".
+  List<Widget> _categorySections(
+    IdeaCategory category,
+    List<IdeaPreset> presets,
+    DateTime today,
+  ) {
+    final List<IdeaSection> sections = ideaSectionsFor(
+      category,
+      presets,
+      today: today,
+    );
+    return <Widget>[
+      for (int i = 0; i < sections.length; i++) ...<Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: i == 0 ? 0 : InkSpacing.block),
+          child: _SectionHead(
+            key: ValueKey<String>('ideas-section-${sections[i].id}'),
+            title: _sectionTitle(sections[i]),
+          ),
+        ),
+        _inset(
+          _rows(
+            sections[i].presets,
+            showCategory: false,
+            // The heading says it already.
+            showDifficulty: sections[i].difficulty == null,
+          ),
+        ),
+      ],
+    ];
+  }
+
+  /// The overview ("All"): each category with its first [_overviewShown]
+  /// ideas and a "See all" row that opens the category.
+  List<Widget> _overviewSections(DateTime today) => <Widget>[
+    for (final IdeaCategory category in IdeaCategory.values)
+      ..._overviewSection(category, today),
+  ];
+
+  List<Widget> _overviewSection(IdeaCategory category, DateTime today) {
+    final List<IdeaPreset> all = <IdeaPreset>[
+      for (final IdeaPreset p in IdeasEngine.presets)
+        if (p.category == category) p,
+    ];
+    // The same order as the category's own tab, so "See all" continues it.
+    final List<IdeaPreset> ordered = <IdeaPreset>[
+      for (final IdeaSection s in ideaSectionsFor(category, all, today: today))
+        ...s.presets,
+    ];
+    final String label = context.l10n.ideaCategoryLabel(category);
+    return <Widget>[
+      Padding(
+        padding: const EdgeInsets.only(top: InkSpacing.section),
+        child: _SectionHead(
+          key: ValueKey<String>('ideas-section-category-${category.name}'),
+          title: label,
+          prominent: true,
+        ),
+      ),
+      _inset(_rows(ordered.take(_overviewShown).toList(), showCategory: false)),
+      _SeeAllRow(
+        key: ValueKey<String>('ideas-see-all-${category.name}'),
+        label: context.l10n.commonSeeAll(all.length),
+        semanticLabel: context.l10n.ideasSeeAllSemantic(all.length, label),
+        onTap: () => _selectCategory(category, reveal: true),
+      ),
+    ];
+  }
+
+  /// Selects a chip; the list below starts again from its top.
+  ///
+  /// [reveal] scrolls the chip row so the selected chip is on screen: a
+  /// selection made from the list ("See all") must not leave the active chip
+  /// hidden past the edge of the row.
+  void _selectCategory(
+    IdeaCategory? category, {
+    bool favorites = false,
+    bool reveal = false,
+  }) {
+    setState(() {
+      _category = category;
+      _favoritesOnly = favorites;
+    });
+    if (!reveal) return;
+    final GlobalKey key = _chipKeys.putIfAbsent(
+      category?.name ?? (favorites ? 'favorites' : 'all'),
+      GlobalKey.new,
+    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final BuildContext? chip = key.currentContext;
+      if (chip == null || !chip.mounted) return;
+      Scrollable.ensureVisible(
+        chip,
+        alignment: 0.5,
+        duration: MediaQuery.of(chip).disableAnimations
+            ? Duration.zero
+            : const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+      );
+    });
+  }
+
+  /// One key per chip, so [_selectCategory] can scroll it into view.
+  final Map<String, GlobalKey> _chipKeys = <String, GlobalKey>{};
+
+  Widget _chip(String id, Widget chip) =>
+      KeyedSubtree(key: _chipKeys.putIfAbsent(id, GlobalKey.new), child: chip);
 
   Widget _inset(Widget child, {double top = 0}) => Padding(
     padding: EdgeInsets.fromLTRB(InkSpacing.gutter, top, InkSpacing.gutter, 0),
@@ -515,51 +647,149 @@ class _IdeasPageState extends State<IdeasPage> {
     return InkChipRow(
       semanticLabel: context.l10n.ideasCategoriesLabel,
       children: <Widget>[
-        InkChip(
-          key: const ValueKey<String>('ideas-category-all'),
-          label: context.l10n.ideasCategoryAll,
-          selected: _category == null && !_favoritesOnly,
-          onSelected: (_) => setState(() {
-            _category = null;
-            _favoritesOnly = false;
-          }),
+        _chip(
+          'all',
+          InkChip(
+            key: const ValueKey<String>('ideas-category-all'),
+            label: context.l10n.ideasCategoryAll,
+            selected: _category == null && !_favoritesOnly,
+            onSelected: (_) => _selectCategory(null),
+          ),
         ),
-        InkChip(
-          key: const ValueKey<String>('ideas-category-favorites'),
-          label: context.l10n.ideasFavoritesChip,
-          icon: InkIcons.heart,
-          selected: _favoritesOnly,
-          onSelected: (_) => setState(() {
-            _category = null;
-            _favoritesOnly = true;
-          }),
+        _chip(
+          'favorites',
+          InkChip(
+            key: const ValueKey<String>('ideas-category-favorites'),
+            label: context.l10n.ideasFavoritesChip,
+            icon: InkIcons.heart,
+            selected: _favoritesOnly,
+            onSelected: (_) => _selectCategory(null, favorites: true),
+          ),
         ),
         for (final category in IdeaCategory.values)
-          InkChip(
-            key: ValueKey<String>('ideas-category-${category.name}'),
-            label: context.l10n.ideaCategoryLabel(category),
-            selected: _category == category,
-            onSelected: (_) => setState(() {
-              _category = category;
-              _favoritesOnly = false;
-            }),
+          _chip(
+            category.name,
+            InkChip(
+              key: ValueKey<String>('ideas-category-${category.name}'),
+              label: context.l10n.ideaCategoryLabel(category),
+              selected: _category == category,
+              onSelected: (_) => _selectCategory(category),
+            ),
           ),
       ],
     );
   }
 }
 
-/// `TECHNIQUES · EASY · 15 MIN` (the category is left out inside a tab).
+/// How many ideas of each category the overview ("All") shows before its
+/// "See all" row.
+const int _overviewShown = 3;
+
+/// A caps heading above a run of ideas (a difficulty, a season, a category).
+///
+/// Its height depends only on the text scale: one line, cut with an ellipsis,
+/// so no language or chip makes the list below jump.
+class _SectionHead extends StatelessWidget {
+  const _SectionHead({super.key, required this.title, this.prominent = false});
+
+  final String title;
+
+  /// Category headings of the overview: in the main text colour.
+  final bool prominent;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    final double line = MediaQuery.textScalerOf(context).scale(16);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        InkSpacing.gutter,
+        0,
+        InkSpacing.gutter,
+        InkSpacing.group,
+      ),
+      child: Semantics(
+        header: true,
+        child: SizedBox(
+          height: line,
+          child: Text(
+            AppTypography.caps(title),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTypography.capsStyle.copyWith(
+              color: prominent ? ink.fg : ink.fg2,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "See all (28)" under a category of the overview: opens that category.
+class _SeeAllRow extends StatelessWidget {
+  const _SeeAllRow({
+    super.key,
+    required this.label,
+    required this.semanticLabel,
+    required this.onTap,
+  });
+
+  final String label;
+  final String semanticLabel;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    return Semantics(
+      button: true,
+      label: semanticLabel,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: InkWell(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: InkGeometry.target),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTypography.button.copyWith(color: ink.action),
+                  ),
+                ),
+                InkIcon(
+                  InkIcons.chevronRight,
+                  size: InkGeometry.mediumIcon,
+                  color: ink.action,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// `TECHNIQUES · EASY · 15 MIN` (the category is left out inside a tab, and the
+/// difficulty under a heading that already says it).
 String ideaMetaLine(
   BuildContext context,
   IdeaPreset preset, {
   bool withCategory = true,
+  bool withDifficulty = true,
 }) {
   final AppLocalizations l10n = context.l10n;
   return AppTypography.caps(
     <String>[
       if (withCategory) l10n.ideaCategoryLabel(preset.category),
-      l10n.ideaDifficultyLabel(preset.difficulty),
+      if (withDifficulty) l10n.ideaDifficultyLabel(preset.difficulty),
       l10n.ideasMinutes(preset.minutes),
     ].join(' · '),
   );
@@ -695,6 +925,7 @@ class _IdeaRow extends StatelessWidget {
     required this.preset,
     required this.plan,
     required this.showCategory,
+    required this.showDifficulty,
     required this.favorite,
     required this.onToggleFavorite,
     required this.onTap,
@@ -703,6 +934,7 @@ class _IdeaRow extends StatelessWidget {
   final IdeaPreset preset;
   final IdeaPlan plan;
   final bool showCategory;
+  final bool showDifficulty;
   final bool favorite;
   final VoidCallback onToggleFavorite;
   final VoidCallback onTap;
@@ -738,6 +970,7 @@ class _IdeaRow extends StatelessWidget {
                                 context,
                                 preset,
                                 withCategory: showCategory,
+                                withDifficulty: showDifficulty,
                               ),
                               style: AppTypography.capsStyle.copyWith(
                                 color: ink.fg2,
@@ -794,6 +1027,13 @@ class _IdeaRow extends StatelessWidget {
 /// How many recently viewed ideas the Ideas tab shows (the repository keeps
 /// more).
 const int _recentShown = 6;
+
+/// Title lines every recently viewed card reserves (longer titles end in an
+/// ellipsis), so all the cards of the row are the same height.
+const int _recentTitleLines = 3;
+
+/// Height of the palette strip on a recently viewed card.
+const double _recentStripHeight = 14;
 
 /// The heart that marks an idea as a favourite: outlined, filled with the
 /// action colour while the idea is a favourite. Shared by the cards and the
@@ -919,27 +1159,75 @@ class _RecentCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    context.l10n.ideaTitle(preset),
+                  _TitleSlot(
+                    title: context.l10n.ideaTitle(preset),
                     style: AppTypography.section.copyWith(color: ink.fg),
                   ),
-                  if (plan.palette.isNotEmpty) ...<Widget>[
-                    const SizedBox(height: InkSpacing.s8),
-                    ExcludeSemantics(
-                      child: PaletteStrip(
-                        colors: <String>[
-                          for (final s in plan.palette) s.color.hex,
-                        ],
-                        colorHeight: 14,
-                        radius: InkRadii.xs,
-                      ),
-                    ),
-                  ],
+                  const SizedBox(height: InkSpacing.s8),
+                  // The strip always takes its slot, with or without colours,
+                  // so every card has the same height.
+                  SizedBox(
+                    key: const ValueKey<String>('ideas-recent-strip'),
+                    height: _recentStripHeight,
+                    child: plan.palette.isEmpty
+                        ? null
+                        : ExcludeSemantics(
+                            child: PaletteStrip(
+                              colors: <String>[
+                                for (final s in plan.palette) s.color.hex,
+                              ],
+                              colorHeight: _recentStripHeight,
+                              radius: InkRadii.xs,
+                            ),
+                          ),
+                  ),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// A title that always takes [_recentTitleLines] lines of room, whatever its
+/// length, language or the text scale: a hidden two-line text sets the height
+/// and the real title sits at the top of it.
+class _TitleSlot extends StatelessWidget {
+  const _TitleSlot({required this.title, required this.style});
+
+  final String title;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Stack(
+        children: <Widget>[
+          ExcludeSemantics(
+            child: Opacity(
+              opacity: 0,
+              child: Text(
+                '\n' * (_recentTitleLines - 1),
+                style: style,
+                maxLines: _recentTitleLines,
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            top: 0,
+            child: Text(
+              title,
+              style: style,
+              maxLines: _recentTitleLines,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

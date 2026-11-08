@@ -49,6 +49,8 @@ const Set<String> _sameEverywhere = <String>{
 /// English is a missing translation.
 const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
   'es': <String>{
+    'ideasDiaDeMuertosTitle',
+    'ideasHoliColoursTitle',
     'collectionSets',
     'ideasMarkerSemantic',
     'ideasMinutes',
@@ -64,6 +66,9 @@ const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
     'swatchesScopePack',
   },
   'de': <String>{
+    'ideasDiaDeMuertosTitle',
+    'ideasHoliColoursTitle',
+    'ideasSeasonWinter',
     'toolsHueOrange',
     'diaryPaletteTitle',
     'diaryStatusLabel',
@@ -96,6 +101,8 @@ const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
     'variationPrefixWarm',
   },
   'fr': <String>{
+    'ideasDiaDeMuertosTitle',
+    'ideasHoliColoursTitle',
     'toolsHueOrange',
     'toolsHueViolet',
     'diaryDateLabel',
@@ -126,6 +133,7 @@ const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
     'swatchesCatalogueLabel',
   },
   'pt': <String>{
+    'ideasHoliColoursTitle',
     'ideasMarkerSemantic',
     'ideasMinutes',
     'ideasRoleBase',
@@ -141,6 +149,9 @@ const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
     'swatchesAlternativeSemantics',
   },
   'it': <String>{
+    'ideasDiaDeMuertosTitle',
+    'ideasHoliColoursTitle',
+    'ideasHanukkahCandlesTitle',
     'diaryPaletteTitle',
     'ideasMarkerSemantic',
     'matchCameraButton',

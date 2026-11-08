@@ -56,11 +56,9 @@ void main() {
     for (final IdeaCategory c in IdeaCategory.values) {
       expect(_key('ideas-category-${c.name}'), findsOneWidget);
     }
-    // Rows show difficulty and time instead of the old data-model badge.
-    expect(
-      find.text(AppTypography.caps('Techniques · Easy · 10 min')),
-      findsWidgets,
-    );
+    // Rows show difficulty and time instead of the old data-model badge; the
+    // category is the heading of the section they sit in.
+    expect(find.text(AppTypography.caps('Easy · 10 min')), findsWidgets);
   });
 
   testWidgets('search narrows the list and hides the idea of the day', (
@@ -208,6 +206,7 @@ void main() {
   ) async {
     await pumpIdeas(tester);
 
+    await showIdeaRow(tester, 'swatch_chart');
     await tester.tap(_key('ideas-preset-swatch_chart'));
     await tester.pumpAndSettle();
 

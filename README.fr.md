@@ -140,8 +140,8 @@ sauvegarde `.zip`, le fichier ne va qu’à l’appli que tu choisis, et nulle p
 
 ## Nouveautés
 
-La version 1.1.0 ajoute «Tes marques» en haut du choix de marque, avec ce que tu as de
-chaque marque, et un menu latéral qui se replie sur les tablettes à l’horizontale. La liste complète est dans
+La version 1.2.0 apporte 100 idées au lieu de 28, rangées par difficulté et par saison pour les trouver
+facilement, et un menu latéral plus net sur les tablettes. La liste complète est dans
 [CHANGELOG.md](CHANGELOG.md) et dans les
 [versions](https://github.com/dferrandizmont/ink-lab/releases).
 

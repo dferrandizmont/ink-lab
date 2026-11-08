@@ -149,6 +149,7 @@ bool _isControlLabel(Element element, String text) {
         w is TextButton ||
         w is InkNavigationBar ||
         w is NavigationRail ||
+        w.key == extendedRailKey ||
         w is InkGroupHead ||
         w is SettingsSubhead) {
       control = true;
@@ -346,6 +347,21 @@ Finder _verticalList() => find.byWidgetPredicate(
       (w.axisDirection == AxisDirection.down ||
           w.axisDirection == AxisDirection.up),
 );
+
+/// Opens the idea [id] from its row, in its category's own tab (the overview
+/// only lists the first ideas of each category).
+Future<void> _openIdeaRow(WidgetTester tester, String id) async {
+  final Finder row = find.byKey(ValueKey<String>('ideas-preset-$id'));
+  // Choosing the chip also brings the list back to its top.
+  final IdeaCategory category = IdeasEngine.byId(id)!.category;
+  await _tap(
+    tester,
+    find.byKey(ValueKey<String>('ideas-category-${category.name}')),
+  );
+  await tester.scrollUntilVisible(row, 200, scrollable: _verticalList().first);
+  await tester.pumpAndSettle();
+  await _tap(tester, row);
+}
 
 /// Opens the folded parts [keys] of the draggable sheet [sheet], scrolling
 /// each into reach first (a sheet's content is lazy, so a part below the fold
@@ -1737,7 +1753,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           'grayscale',
           'swatch_chart',
         ]) {
-          await _tap(tester, find.byKey(ValueKey<String>('ideas-preset-$id')));
+          await _openIdeaRow(tester, id);
           _check(tester, 'idea $id');
           final Finder sheet = find.byKey(ValueKey<String>('ideas-detail-$id'));
           await tester.drag(sheet, const Offset(0, -600));
@@ -1763,6 +1779,12 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
             find.byKey(ValueKey<String>('ideas-category-${category.name}')),
           );
           _check(tester, 'ideas ${category.name}');
+          // Every heading, row and "See all" of the tab, not only its top.
+          await _scroll(
+            tester,
+            'ideas ${category.name}',
+            within: _verticalList().first,
+          );
         }
       },
   'ideas: favourites and recently viewed':
@@ -1805,11 +1827,13 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         final Finder recent = find.byKey(
           const ValueKey<String>('ideas-recent'),
         );
-        await tester.scrollUntilVisible(
-          recent,
-          200,
-          scrollable: _verticalList().first,
+        // The row sits under the idea of the day, at the top of the list.
+        final ScrollableState list = tester.state<ScrollableState>(
+          _verticalList().first,
         );
+        list.position.jumpTo(0);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(recent);
         await tester.pumpAndSettle();
         _check(tester, 'ideas recently viewed, folded');
         await _tap(tester, recent);
@@ -2717,6 +2741,40 @@ final Map<String, _Scenario> _tabletScenarios = <String, _Scenario>{
       _check(tester, 'tab $i');
     }
   },
+  'shell: five tabs and the unfolded rail':
+      (WidgetTester tester, _Env env) async {
+        _size(tester, env);
+        useDeviceLocales(tester, <Locale>[env.locale]);
+        await tester.pumpWidget(
+          AppScope.inMemory(
+            markers: _markers(),
+            settingsState: AppSettingsState(
+              onboardingCompleted: true,
+              railExpanded: true,
+            ),
+            child: const InkLabApp(),
+          ),
+        );
+        await tester.pumpAndSettle();
+        _check(tester, 'swatches tab');
+        // Below 1100 dp the rail stays folded whatever was remembered.
+        final bool unfolded = find.byKey(extendedRailKey).evaluate().isNotEmpty;
+        expect(find.byType(NavigationRail).evaluate().isEmpty, unfolded);
+        for (final AppDestination d in appDestinations) {
+          await tester.tap(
+            unfolded
+                ? find.byKey(extendedRailItemKey(d.id))
+                : find
+                      .descendant(
+                        of: find.byType(NavigationRail),
+                        matching: find.text(d.label(env.t)),
+                      )
+                      .first,
+          );
+          await tester.pumpAndSettle();
+          _check(tester, 'tab ${d.id}');
+        }
+      },
   'swatches: page and the detail of a marker':
       (WidgetTester tester, _Env env) async {
         await _pump(tester, env, SwatchesPage(onBlendingChain: (_) {}));

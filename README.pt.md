@@ -137,8 +137,8 @@ para a app que escolheres, e mais nada.
 
 ## Novidades
 
-A versão 1.1.0 acrescenta «As tuas marcas» no topo da escolha de marca, com o que tens de
-cada marca, e um menu lateral que se recolhe nos tablets na horizontal. A lista completa está em
+A versão 1.2.0 traz 100 ideias em vez de 28, organizadas por dificuldade e por estação para as encontrares
+facilmente, e um menu lateral mais limpo nos tablets. A lista completa está em
 [CHANGELOG.md](CHANGELOG.md) e nas
 [versões](https://github.com/dferrandizmont/ink-lab/releases).
 

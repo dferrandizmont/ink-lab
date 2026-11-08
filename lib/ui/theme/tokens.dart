@@ -398,9 +398,13 @@ abstract final class InkMotion {
   static const Duration crossFade = Duration(milliseconds: 150);
   static const Duration swatchFade = Duration(milliseconds: 120);
 
+  /// Folding or unfolding the navigation rail on wide screens.
+  static const Duration railFold = Duration(milliseconds: 220);
+
   static const Curve sheetInCurve = Curves.easeOutCubic;
   static const Curve sheetOutCurve = Curves.easeInCubic;
   static const Curve crossFadeCurve = Curves.easeOut;
+  static const Curve railFoldCurve = Curves.easeInOutCubic;
 
   /// [duration], or zero when the platform asks to disable animations.
   static Duration accessible(BuildContext context, Duration duration) =>

@@ -1669,7 +1669,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteEmptyHint.
   ///
   /// In en, this message translates to:
-  /// **'Pick a base marker to build a palette, or choose Scenes as the palette type.'**
+  /// **'Pick a base marker to build a palette, or choose a scene with the Scenes chip.'**
   String get paletteEmptyHint;
 
   /// No description provided for @paletteCustomModeHint.
@@ -1683,6 +1683,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No palette could be built from your collection. Try another mode or add more markers.'**
   String get paletteNoSuggestions;
+
+  /// No description provided for @paletteScenarioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scenes'**
+  String get paletteScenarioTitle;
 
   /// No description provided for @palettePickBaseTooltip.
   ///
@@ -2122,6 +2128,4374 @@ abstract class AppLocalizations {
   /// **'No markers currently available'**
   String get ideasNoMarkers;
 
+  /// No description provided for @ideasTulipFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tulip field'**
+  String get ideasTulipFieldTitle;
+
+  /// No description provided for @ideasTulipFieldSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows of red and yellow tulips running to the horizon, spring green between them.'**
+  String get ideasTulipFieldSummary;
+
+  /// No description provided for @ideasTulipFieldPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Flat bands that break into dots as they come closer.'**
+  String get ideasTulipFieldPractice;
+
+  /// No description provided for @ideasTulipFieldSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Rows of tulips seen from low down, with a low horizon.'**
+  String get ideasTulipFieldSubject;
+
+  /// No description provided for @ideasTulipFieldTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The nearest row is dots, the furthest is a stripe: change the mark as the row goes back.'**
+  String get ideasTulipFieldTip;
+
+  /// No description provided for @ideasTulipFieldStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil rows that narrow towards a low horizon.'**
+  String get ideasTulipFieldStep1;
+
+  /// No description provided for @ideasTulipFieldStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Red in the first rows: single blobs near, a solid stripe further back.'**
+  String get ideasTulipFieldStep2;
+
+  /// No description provided for @ideasTulipFieldStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow in the next rows, the same way.'**
+  String get ideasTulipFieldStep3;
+
+  /// No description provided for @ideasTulipFieldStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Light green between the rows, and along the horizon.'**
+  String get ideasTulipFieldStep4;
+
+  /// No description provided for @ideasTulipFieldStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Darker green in a thin line at the foot of each row.'**
+  String get ideasTulipFieldStep5;
+
+  /// No description provided for @ideasSummerBeachTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'At the beach'**
+  String get ideasSummerBeachTitle;
+
+  /// No description provided for @ideasSummerBeachSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Sand, a strip of sea, a parasol: three flat bands and one bright accent.'**
+  String get ideasSummerBeachSummary;
+
+  /// No description provided for @ideasSummerBeachPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Three flat bands and a single accent that carries the eye.'**
+  String get ideasSummerBeachPractice;
+
+  /// No description provided for @ideasSummerBeachSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A beach seen from the sand, with a parasol.'**
+  String get ideasSummerBeachSubject;
+
+  /// No description provided for @ideasSummerBeachTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the foam as paper: it is the brightest line in the sea.'**
+  String get ideasSummerBeachTip;
+
+  /// No description provided for @ideasSummerBeachStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil three horizontal bands (sky, sea, sand) and a parasol in the sand.'**
+  String get ideasSummerBeachStep1;
+
+  /// No description provided for @ideasSummerBeachStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Pale sand with a very light hand; leave the wet sand near the water lighter.'**
+  String get ideasSummerBeachStep2;
+
+  /// No description provided for @ideasSummerBeachStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Light teal for the sea, with a line of paper for the foam.'**
+  String get ideasSummerBeachStep3;
+
+  /// No description provided for @ideasSummerBeachStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper teal at the horizon.'**
+  String get ideasSummerBeachStep4;
+
+  /// No description provided for @ideasSummerBeachStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Red parasol and its small shadow on the sand, painted with a second layer of the sand colour.'**
+  String get ideasSummerBeachStep5;
+
+  /// No description provided for @ideasWatermelonSliceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Watermelon'**
+  String get ideasWatermelonSliceTitle;
+
+  /// No description provided for @ideasWatermelonSliceSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A slice of watermelon: red flesh, white rind, green skin, black seeds.'**
+  String get ideasWatermelonSliceSummary;
+
+  /// No description provided for @ideasWatermelonSlicePractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A quick blend and a flat stripe, with the white rind left as paper.'**
+  String get ideasWatermelonSlicePractice;
+
+  /// No description provided for @ideasWatermelonSliceSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A triangular slice of watermelon with a curved base.'**
+  String get ideasWatermelonSliceSubject;
+
+  /// No description provided for @ideasWatermelonSliceTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The white rind is paper: do not colour it at all.'**
+  String get ideasWatermelonSliceTip;
+
+  /// No description provided for @ideasWatermelonSliceStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a triangle with a curved base and a thin white band inside the green.'**
+  String get ideasWatermelonSliceStep1;
+
+  /// No description provided for @ideasWatermelonSliceStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'The light red over the flesh, paler near the rind.'**
+  String get ideasWatermelonSliceStep2;
+
+  /// No description provided for @ideasWatermelonSliceStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper red towards the point, blended while wet.'**
+  String get ideasWatermelonSliceStep3;
+
+  /// No description provided for @ideasWatermelonSliceStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Green on the skin, with dark green stripes in a second layer.'**
+  String get ideasWatermelonSliceStep4;
+
+  /// No description provided for @ideasWatermelonSliceStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Seeds with the liner, each a small teardrop.'**
+  String get ideasWatermelonSliceStep5;
+
+  /// No description provided for @ideasForestMushroomsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mushrooms on the forest floor'**
+  String get ideasForestMushroomsTitle;
+
+  /// No description provided for @ideasForestMushroomsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A cluster of mushrooms among brown leaves in autumn.'**
+  String get ideasForestMushroomsSummary;
+
+  /// No description provided for @ideasForestMushroomsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Round caps with small blends and a loose, dry ground.'**
+  String get ideasForestMushroomsPractice;
+
+  /// No description provided for @ideasForestMushroomsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three mushrooms of different heights among fallen leaves.'**
+  String get ideasForestMushroomsSubject;
+
+  /// No description provided for @ideasForestMushroomsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The forest floor wants loose, broken strokes of brown, not solid fills.'**
+  String get ideasForestMushroomsTip;
+
+  /// No description provided for @ideasForestMushroomsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil three mushrooms of different heights and a few leaves around them.'**
+  String get ideasForestMushroomsStep1;
+
+  /// No description provided for @ideasForestMushroomsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Pale beige on the stems and the underside of the caps.'**
+  String get ideasForestMushroomsStep2;
+
+  /// No description provided for @ideasForestMushroomsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'The red-brown on the caps, darker at the edge.'**
+  String get ideasForestMushroomsStep3;
+
+  /// No description provided for @ideasForestMushroomsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Brown on the leaves and the ground.'**
+  String get ideasForestMushroomsStep4;
+
+  /// No description provided for @ideasForestMushroomsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Darkest under the caps and where the stems meet the ground; white gel spots on the caps if you like.'**
+  String get ideasForestMushroomsStep5;
+
+  /// No description provided for @ideasHarvestBasketTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Harvest basket'**
+  String get ideasHarvestBasketTitle;
+
+  /// No description provided for @ideasHarvestBasketSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Apples, a pear and a small squash in a basket, each a different colour, shaded with one grey.'**
+  String get ideasHarvestBasketSummary;
+
+  /// No description provided for @ideasHarvestBasketPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'One grey shading three strong colours so they belong together.'**
+  String get ideasHarvestBasketPractice;
+
+  /// No description provided for @ideasHarvestBasketSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A basket full of fruit: apples, a pear and a squash.'**
+  String get ideasHarvestBasketSubject;
+
+  /// No description provided for @ideasHarvestBasketTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade every fruit with the same grey. It is what keeps a busy still life together.'**
+  String get ideasHarvestBasketTip;
+
+  /// No description provided for @ideasHarvestBasketStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the basket and the fruit overlapping.'**
+  String get ideasHarvestBasketStep1;
+
+  /// No description provided for @ideasHarvestBasketStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Red for the apples, with the highlight left as paper.'**
+  String get ideasHarvestBasketStep2;
+
+  /// No description provided for @ideasHarvestBasketStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow-green for the pear.'**
+  String get ideasHarvestBasketStep3;
+
+  /// No description provided for @ideasHarvestBasketStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange for the squash, with its ridges as darker lines of a second layer.'**
+  String get ideasHarvestBasketStep4;
+
+  /// No description provided for @ideasHarvestBasketStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'The same grey for every shadow and the inside of the basket.'**
+  String get ideasHarvestBasketStep5;
+
+  /// No description provided for @ideasHarvestBasketStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'The darkest marker for the weave lines of the basket.'**
+  String get ideasHarvestBasketStep6;
+
+  /// No description provided for @ideasHotChocolateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot chocolate'**
+  String get ideasHotChocolateTitle;
+
+  /// No description provided for @ideasHotChocolateSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A mug of chocolate with steam, a marshmallow and a red mitten.'**
+  String get ideasHotChocolateSummary;
+
+  /// No description provided for @ideasHotChocolatePractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm browns, one red accent and steam lifted out of the background.'**
+  String get ideasHotChocolatePractice;
+
+  /// No description provided for @ideasHotChocolateSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A mug of hot chocolate with a marshmallow and a mitten beside it.'**
+  String get ideasHotChocolateSubject;
+
+  /// No description provided for @ideasHotChocolateTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Steam is either paper or a shape lifted with the blender, never a drawn line.'**
+  String get ideasHotChocolateTip;
+
+  /// No description provided for @ideasHotChocolateStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the mug, the surface of the drink, a marshmallow and a mitten resting against it.'**
+  String get ideasHotChocolateStep1;
+
+  /// No description provided for @ideasHotChocolateStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Pale brown on the lit side of the mug and on the shadow of the marshmallow.'**
+  String get ideasHotChocolateStep2;
+
+  /// No description provided for @ideasHotChocolateStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Brown on the surface of the drink and the shadow side of the mug.'**
+  String get ideasHotChocolateStep3;
+
+  /// No description provided for @ideasHotChocolateStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Red mitten, two layers.'**
+  String get ideasHotChocolateStep4;
+
+  /// No description provided for @ideasHotChocolateStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Steam: lift wisps out of the background with the blender, or leave them as paper.'**
+  String get ideasHotChocolateStep5;
+
+  /// No description provided for @ideasLunarNewYearTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunar New Year'**
+  String get ideasLunarNewYearTitle;
+
+  /// No description provided for @ideasLunarNewYearSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Red lanterns with gold trim against a red wall.'**
+  String get ideasLunarNewYearSummary;
+
+  /// No description provided for @ideasLunarNewYearPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'One red family in three steps and a flat gold accent.'**
+  String get ideasLunarNewYearPractice;
+
+  /// No description provided for @ideasLunarNewYearSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three round lanterns hanging at different heights, with tassels.'**
+  String get ideasLunarNewYearSubject;
+
+  /// No description provided for @ideasLunarNewYearTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the gold on top of the dry red, never the other way round.'**
+  String get ideasLunarNewYearTip;
+
+  /// No description provided for @ideasLunarNewYearStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil three lanterns hanging at different heights, with tassels.'**
+  String get ideasLunarNewYearStep1;
+
+  /// No description provided for @ideasLunarNewYearStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Light red over the lanterns, paler on the lit side.'**
+  String get ideasLunarNewYearStep2;
+
+  /// No description provided for @ideasLunarNewYearStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'The red on the shadow side and the ribs, blended while wet.'**
+  String get ideasLunarNewYearStep3;
+
+  /// No description provided for @ideasLunarNewYearStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark red between the ribs and inside the rims.'**
+  String get ideasLunarNewYearStep4;
+
+  /// No description provided for @ideasLunarNewYearStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold yellow on the rims, the caps and the tassels, left crisp.'**
+  String get ideasLunarNewYearStep5;
+
+  /// No description provided for @ideasDiwaliLampsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Diwali lamps'**
+  String get ideasDiwaliLampsTitle;
+
+  /// No description provided for @ideasDiwaliLampsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A row of clay lamps with small flames and a rangoli of bright colours around them.'**
+  String get ideasDiwaliLampsSummary;
+
+  /// No description provided for @ideasDiwaliLampsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A flat saturated pattern next to a two-step blend on the lamps.'**
+  String get ideasDiwaliLampsPractice;
+
+  /// No description provided for @ideasDiwaliLampsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Five little clay lamps in a curve, with a simple symmetrical pattern around them.'**
+  String get ideasDiwaliLampsSubject;
+
+  /// No description provided for @ideasDiwaliLampsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the pattern flat and hard-edged. It is the contrast with the lamps that makes it work.'**
+  String get ideasDiwaliLampsTip;
+
+  /// No description provided for @ideasDiwaliLampsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil five little lamps in a curve and a simple symmetrical pattern around them.'**
+  String get ideasDiwaliLampsStep1;
+
+  /// No description provided for @ideasDiwaliLampsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Light terracotta on the lamps.'**
+  String get ideasDiwaliLampsStep2;
+
+  /// No description provided for @ideasDiwaliLampsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper terracotta on their shadow side.'**
+  String get ideasDiwaliLampsStep3;
+
+  /// No description provided for @ideasDiwaliLampsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow for each flame and a glow on the rim of each lamp.'**
+  String get ideasDiwaliLampsStep4;
+
+  /// No description provided for @ideasDiwaliLampsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Magenta in the alternating sections of the pattern, flat and hard-edged.'**
+  String get ideasDiwaliLampsStep5;
+
+  /// No description provided for @ideasDiwaliLampsStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal in the other sections, then white gel dots on the flames if you like.'**
+  String get ideasDiwaliLampsStep6;
+
+  /// No description provided for @ideasHanukkahCandlesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hanukkah'**
+  String get ideasHanukkahCandlesTitle;
+
+  /// No description provided for @ideasHanukkahCandlesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A menorah with its candles lit, blue and white with gold flames.'**
+  String get ideasHanukkahCandlesSummary;
+
+  /// No description provided for @ideasHanukkahCandlesPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'White shapes kept as paper against a blue field.'**
+  String get ideasHanukkahCandlesPractice;
+
+  /// No description provided for @ideasHanukkahCandlesSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A menorah with its candles lit in front of a blue background.'**
+  String get ideasHanukkahCandlesSubject;
+
+  /// No description provided for @ideasHanukkahCandlesTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The candles are paper: colour around them and they come out white.'**
+  String get ideasHanukkahCandlesTip;
+
+  /// No description provided for @ideasHanukkahCandlesStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the menorah and the candles; the candles stay paper.'**
+  String get ideasHanukkahCandlesStep1;
+
+  /// No description provided for @ideasHanukkahCandlesStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Light blue background around everything.'**
+  String get ideasHanukkahCandlesStep2;
+
+  /// No description provided for @ideasHanukkahCandlesStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper blue at the edges of the page, blended inwards.'**
+  String get ideasHanukkahCandlesStep3;
+
+  /// No description provided for @ideasHanukkahCandlesStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'The dark blue for the menorah itself.'**
+  String get ideasHanukkahCandlesStep4;
+
+  /// No description provided for @ideasHanukkahCandlesStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow flames and a soft glow around each, then a white gel core in each flame.'**
+  String get ideasHanukkahCandlesStep5;
+
+  /// No description provided for @ideasPaintedEggsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Painted eggs'**
+  String get ideasPaintedEggsTitle;
+
+  /// No description provided for @ideasPaintedEggsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Three decorated eggs with stripes, dots and zigzags in mid-strength colours.'**
+  String get ideasPaintedEggsSummary;
+
+  /// No description provided for @ideasPaintedEggsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Three ways to make a pattern: paper, shape and second layer.'**
+  String get ideasPaintedEggsPractice;
+
+  /// No description provided for @ideasPaintedEggsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three eggs, each with a different pattern.'**
+  String get ideasPaintedEggsSubject;
+
+  /// No description provided for @ideasPaintedEggsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Mid-strength colours let a second layer show without turning muddy.'**
+  String get ideasPaintedEggsTip;
+
+  /// No description provided for @ideasPaintedEggsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil three eggs and a different pattern on each.'**
+  String get ideasPaintedEggsStep1;
+
+  /// No description provided for @ideasPaintedEggsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'First egg: base colour flat, with the pattern left as paper.'**
+  String get ideasPaintedEggsStep2;
+
+  /// No description provided for @ideasPaintedEggsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Second egg: fill the pattern shapes only, the rest stays paper.'**
+  String get ideasPaintedEggsStep3;
+
+  /// No description provided for @ideasPaintedEggsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Third egg: colour it, then add the pattern in the same colour as a second layer.'**
+  String get ideasPaintedEggsStep4;
+
+  /// No description provided for @ideasPaintedEggsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'One grey for the shadow side of each egg and the small shadow under it.'**
+  String get ideasPaintedEggsStep5;
+
+  /// No description provided for @ideasDiaDeMuertosTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Día de Muertos'**
+  String get ideasDiaDeMuertosTitle;
+
+  /// No description provided for @ideasDiaDeMuertosSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Marigolds and a decorated skull in orange, magenta and teal on a dark ground.'**
+  String get ideasDiaDeMuertosSummary;
+
+  /// No description provided for @ideasDiaDeMuertosPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturated flat pattern on a dark field.'**
+  String get ideasDiaDeMuertosPractice;
+
+  /// No description provided for @ideasDiaDeMuertosSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A decorated skull with flower shapes round the eyes and a bank of marigolds below.'**
+  String get ideasDiaDeMuertosSubject;
+
+  /// No description provided for @ideasDiaDeMuertosTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the dark ground last and slowly: dark ink runs into the light areas.'**
+  String get ideasDiaDeMuertosTip;
+
+  /// No description provided for @ideasDiaDeMuertosStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a skull with flower shapes round the eyes and a bank of marigolds below.'**
+  String get ideasDiaDeMuertosStep1;
+
+  /// No description provided for @ideasDiaDeMuertosStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Light orange on the marigolds, each as a rough circle.'**
+  String get ideasDiaDeMuertosStep2;
+
+  /// No description provided for @ideasDiaDeMuertosStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper orange in short strokes inside each circle for the petals.'**
+  String get ideasDiaDeMuertosStep3;
+
+  /// No description provided for @ideasDiaDeMuertosStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Magenta for the patterns of the skull, flat and symmetrical.'**
+  String get ideasDiaDeMuertosStep4;
+
+  /// No description provided for @ideasDiaDeMuertosStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal for the other half of the patterns of the skull.'**
+  String get ideasDiaDeMuertosStep5;
+
+  /// No description provided for @ideasDiaDeMuertosStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'The darkest marker for the eye sockets and the background, then liner details.'**
+  String get ideasDiaDeMuertosStep6;
+
+  /// No description provided for @ideasValentineCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Valentine card'**
+  String get ideasValentineCardTitle;
+
+  /// No description provided for @ideasValentineCardSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A card with three hearts, from pale pink to deep red, and a shadow line that lifts them off the paper.'**
+  String get ideasValentineCardSummary;
+
+  /// No description provided for @ideasValentineCardPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Three flat fills and a drop-shadow line.'**
+  String get ideasValentineCardPractice;
+
+  /// No description provided for @ideasValentineCardSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three overlapping hearts, the biggest at the back.'**
+  String get ideasValentineCardSubject;
+
+  /// No description provided for @ideasValentineCardTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the drop shadow as one thin line: it lifts the heart without more colour.'**
+  String get ideasValentineCardTip;
+
+  /// No description provided for @ideasValentineCardStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil three overlapping hearts, the biggest at the back.'**
+  String get ideasValentineCardStep1;
+
+  /// No description provided for @ideasValentineCardStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Pale pink on the back heart.'**
+  String get ideasValentineCardStep2;
+
+  /// No description provided for @ideasValentineCardStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink on the middle one.'**
+  String get ideasValentineCardStep3;
+
+  /// No description provided for @ideasValentineCardStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Red on the front one, and a thin line of it under the other two as a drop shadow.'**
+  String get ideasValentineCardStep4;
+
+  /// No description provided for @ideasValentineCardStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'A white gel highlight on each heart, top left.'**
+  String get ideasValentineCardStep5;
+
+  /// No description provided for @ideasCarnivalMaskTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Carnival mask'**
+  String get ideasCarnivalMaskTitle;
+
+  /// No description provided for @ideasCarnivalMaskSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A mask with feathers in violet, teal and gold.'**
+  String get ideasCarnivalMaskSummary;
+
+  /// No description provided for @ideasCarnivalMaskPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Flicks for feathers, a blend for the mask and flat gold.'**
+  String get ideasCarnivalMaskPractice;
+
+  /// No description provided for @ideasCarnivalMaskSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A half mask with three feathers rising from one side.'**
+  String get ideasCarnivalMaskSubject;
+
+  /// No description provided for @ideasCarnivalMaskTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Flick the feathers outwards from the quill: the soft edge is what makes them read as feathers.'**
+  String get ideasCarnivalMaskTip;
+
+  /// No description provided for @ideasCarnivalMaskStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a half mask and three feathers rising from one side.'**
+  String get ideasCarnivalMaskStep1;
+
+  /// No description provided for @ideasCarnivalMaskStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Violet on the mask, two layers where it curves away.'**
+  String get ideasCarnivalMaskStep2;
+
+  /// No description provided for @ideasCarnivalMaskStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal on the feathers, flicked outwards from the quill so the edges are soft.'**
+  String get ideasCarnivalMaskStep3;
+
+  /// No description provided for @ideasCarnivalMaskStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold on the edge of the mask and the eye rims.'**
+  String get ideasCarnivalMaskStep4;
+
+  /// No description provided for @ideasCarnivalMaskStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Darkest inside the eye holes, then gel dots as sequins.'**
+  String get ideasCarnivalMaskStep5;
+
+  /// No description provided for @ideasMidsummerCrownTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Midsummer flower crown'**
+  String get ideasMidsummerCrownTitle;
+
+  /// No description provided for @ideasMidsummerCrownSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A crown of wildflowers and leaves: blue, yellow and pink on green.'**
+  String get ideasMidsummerCrownSummary;
+
+  /// No description provided for @ideasMidsummerCrownPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Many small dabs of the fine nib on a dry green base.'**
+  String get ideasMidsummerCrownPractice;
+
+  /// No description provided for @ideasMidsummerCrownSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A ring of leaves with three kinds of small wildflowers.'**
+  String get ideasMidsummerCrownSubject;
+
+  /// No description provided for @ideasMidsummerCrownTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Dabs of colour on a dry base stay crisp. Wait for the green to dry before you start the flowers.'**
+  String get ideasMidsummerCrownTip;
+
+  /// No description provided for @ideasMidsummerCrownStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a ring of leaves and small flowers in three kinds.'**
+  String get ideasMidsummerCrownStep1;
+
+  /// No description provided for @ideasMidsummerCrownStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Light green on all the leaves.'**
+  String get ideasMidsummerCrownStep2;
+
+  /// No description provided for @ideasMidsummerCrownStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Darker green where leaves overlap and underneath.'**
+  String get ideasMidsummerCrownStep3;
+
+  /// No description provided for @ideasMidsummerCrownStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue on the first kind of flower.'**
+  String get ideasMidsummerCrownStep4;
+
+  /// No description provided for @ideasMidsummerCrownStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow on the second kind of flower.'**
+  String get ideasMidsummerCrownStep5;
+
+  /// No description provided for @ideasMidsummerCrownStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink on the third, with a tiny second layer at the centre of each flower.'**
+  String get ideasMidsummerCrownStep6;
+
+  /// No description provided for @ideasEidNightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Eid night'**
+  String get ideasEidNightTitle;
+
+  /// No description provided for @ideasEidNightSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A crescent moon and a hanging lantern against a deep teal and violet sky.'**
+  String get ideasEidNightSummary;
+
+  /// No description provided for @ideasEidNightPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A clean wet blend from teal to violet, with gold laid on top.'**
+  String get ideasEidNightPractice;
+
+  /// No description provided for @ideasEidNightSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A crescent moon and a patterned lantern against a night sky.'**
+  String get ideasEidNightSubject;
+
+  /// No description provided for @ideasEidNightTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend the teal into the violet while both are wet. Once dry, the sky stays clean.'**
+  String get ideasEidNightTip;
+
+  /// No description provided for @ideasEidNightStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the crescent and a patterned lantern; both stay paper for now.'**
+  String get ideasEidNightStep1;
+
+  /// No description provided for @ideasEidNightStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Teal across the sky, lightest near the moon.'**
+  String get ideasEidNightStep2;
+
+  /// No description provided for @ideasEidNightStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Deeper teal towards the edges.'**
+  String get ideasEidNightStep3;
+
+  /// No description provided for @ideasEidNightStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Violet blended into the top corners while the teal is still damp.'**
+  String get ideasEidNightStep4;
+
+  /// No description provided for @ideasEidNightStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold on the crescent and the lantern frame; the panes stay pale, then white gel stars.'**
+  String get ideasEidNightStep5;
+
+  /// No description provided for @ideasHoliColoursTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Holi'**
+  String get ideasHoliColoursTitle;
+
+  /// No description provided for @ideasHoliColoursSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Clouds of coloured powder on white: soft edges, hard centres, four bright colours.'**
+  String get ideasHoliColoursSummary;
+
+  /// No description provided for @ideasHoliColoursPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour with no edge: the blender dissolves an edge into paper.'**
+  String get ideasHoliColoursPractice;
+
+  /// No description provided for @ideasHoliColoursSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Four overlapping clouds of coloured powder on white paper.'**
+  String get ideasHoliColoursSubject;
+
+  /// No description provided for @ideasHoliColoursTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Let each cloud dry before you add the next one, or the colours all turn to mud.'**
+  String get ideasHoliColoursTip;
+
+  /// No description provided for @ideasHoliColoursStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Scribble a loose cloud with the first colour, dense in the middle.'**
+  String get ideasHoliColoursStep1;
+
+  /// No description provided for @ideasHoliColoursStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull its edges out with the blender into the white paper until they vanish.'**
+  String get ideasHoliColoursStep2;
+
+  /// No description provided for @ideasHoliColoursStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'A second cloud overlapping the first a little; where they meet, let them mix.'**
+  String get ideasHoliColoursStep3;
+
+  /// No description provided for @ideasHoliColoursStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'A third cloud, smaller, in a gap.'**
+  String get ideasHoliColoursStep4;
+
+  /// No description provided for @ideasHoliColoursStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'A fourth cloud in the last gap, then flick a few dots of each colour around it.'**
+  String get ideasHoliColoursStep5;
+
+  /// No description provided for @ideasSummerIceCreamTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ice cream'**
+  String get ideasSummerIceCreamTitle;
+
+  /// No description provided for @ideasSummerIceCreamSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Three scoops of different flavours on a cone.'**
+  String get ideasSummerIceCreamSummary;
+
+  /// No description provided for @ideasSummerIceCreamPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Three round blends and one grey shading all of them.'**
+  String get ideasSummerIceCreamPractice;
+
+  /// No description provided for @ideasSummerIceCreamSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three stacked scoops on a cone with a waffle grid.'**
+  String get ideasSummerIceCreamSubject;
+
+  /// No description provided for @ideasSummerIceCreamTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the same grey for every scoop: that is what keeps three different colours together.'**
+  String get ideasSummerIceCreamTip;
+
+  /// No description provided for @ideasSummerIceCreamStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a cone with a waffle grid and three stacked scoops.'**
+  String get ideasSummerIceCreamStep1;
+
+  /// No description provided for @ideasSummerIceCreamStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'The first flavour on the bottom scoop, with a highlight of paper left on it.'**
+  String get ideasSummerIceCreamStep2;
+
+  /// No description provided for @ideasSummerIceCreamStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'The second flavour on the middle scoop, with its own highlight.'**
+  String get ideasSummerIceCreamStep3;
+
+  /// No description provided for @ideasSummerIceCreamStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'The third flavour on the top scoop.'**
+  String get ideasSummerIceCreamStep4;
+
+  /// No description provided for @ideasSummerIceCreamStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'The same light grey on the underside of every scoop and where they overlap.'**
+  String get ideasSummerIceCreamStep5;
+
+  /// No description provided for @ideasSummerIceCreamStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'The cone in beige, with the grid lines in a second layer.'**
+  String get ideasSummerIceCreamStep6;
+
+  /// No description provided for @ideasNewYearFireworksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Year fireworks'**
+  String get ideasNewYearFireworksTitle;
+
+  /// No description provided for @ideasNewYearFireworksSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Three bursts of fireworks over a dark sky, each a different colour.'**
+  String get ideasNewYearFireworksSummary;
+
+  /// No description provided for @ideasNewYearFireworksPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Bright colour over a dark fill, with the lines kept as paper.'**
+  String get ideasNewYearFireworksPractice;
+
+  /// No description provided for @ideasNewYearFireworksSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three bursts of fireworks with light lines radiating from each centre.'**
+  String get ideasNewYearFireworksSubject;
+
+  /// No description provided for @ideasNewYearFireworksTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the sky around the lines, not over them: the white paper is what makes the fireworks glow.'**
+  String get ideasNewYearFireworksTip;
+
+  /// No description provided for @ideasNewYearFireworksStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil three centres and light radiating lines from each; the lines stay paper for now.'**
+  String get ideasNewYearFireworksStep1;
+
+  /// No description provided for @ideasNewYearFireworksStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the sky dark, going round the lines with the fine nib (they can be uneven).'**
+  String get ideasNewYearFireworksStep2;
+
+  /// No description provided for @ideasNewYearFireworksStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Trace the lines of the first burst with the first colour, pressing harder at the tips.'**
+  String get ideasNewYearFireworksStep3;
+
+  /// No description provided for @ideasNewYearFireworksStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'The lines of the second burst in the second colour.'**
+  String get ideasNewYearFireworksStep4;
+
+  /// No description provided for @ideasNewYearFireworksStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'The lines of the third burst in the third colour.'**
+  String get ideasNewYearFireworksStep5;
+
+  /// No description provided for @ideasNewYearFireworksStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'White gel at the centre of each burst and a few sparks at the tips.'**
+  String get ideasNewYearFireworksStep6;
+
+  /// No description provided for @ideasCozyLampTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cosy corner'**
+  String get ideasCozyLampTitle;
+
+  /// No description provided for @ideasCozyLampSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'An armchair under a lamp in the evening: a warm pool of light and soft brown shadows.'**
+  String get ideasCozyLampSummary;
+
+  /// No description provided for @ideasCozyLampPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Planning a lit area and letting the rest of the room fall into warm brown.'**
+  String get ideasCozyLampPractice;
+
+  /// No description provided for @ideasCozyLampSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'An armchair, a floor lamp and a wall behind them.'**
+  String get ideasCozyLampSubject;
+
+  /// No description provided for @ideasCozyLampTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the darkest brown out of the circle of light: the lamp reaches no corner.'**
+  String get ideasCozyLampTip;
+
+  /// No description provided for @ideasCozyLampStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the chair, the lamp and the circle of light it throws on the floor and the wall.'**
+  String get ideasCozyLampStep1;
+
+  /// No description provided for @ideasCozyLampStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the circle of light with the pale yellow and fade it out with the colourless blender.'**
+  String get ideasCozyLampStep2;
+
+  /// No description provided for @ideasCozyLampStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the rest of the room with the light warm beige, flat and even.'**
+  String get ideasCozyLampStep3;
+
+  /// No description provided for @ideasCozyLampStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the warm brown on the chair and on the side of the room that is away from the lamp.'**
+  String get ideasCozyLampStep4;
+
+  /// No description provided for @ideasCozyLampStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the dark brown in the corners and under the chair, and keep it off the circle of light.'**
+  String get ideasCozyLampStep5;
+
+  /// No description provided for @ideasFoggyMorningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fog'**
+  String get ideasFoggyMorningTitle;
+
+  /// No description provided for @ideasFoggyMorningSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Trees disappearing into fog: the nearer ones darker, the further ones paler.'**
+  String get ideasFoggyMorningSummary;
+
+  /// No description provided for @ideasFoggyMorningPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Depth with a pale glaze over dark shapes.'**
+  String get ideasFoggyMorningPractice;
+
+  /// No description provided for @ideasFoggyMorningSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three rows of trees on a road, each row further back.'**
+  String get ideasFoggyMorningSubject;
+
+  /// No description provided for @ideasFoggyMorningTip.
+  ///
+  /// In en, this message translates to:
+  /// **'A pale glaze over a dark shape is the simplest fog there is: the ink under it stays.'**
+  String get ideasFoggyMorningTip;
+
+  /// No description provided for @ideasFoggyMorningStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil three rows of trees, each row further back, and mark where the ground starts.'**
+  String get ideasFoggyMorningStep1;
+
+  /// No description provided for @ideasFoggyMorningStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the furthest row with the palest marker only, without any detail.'**
+  String get ideasFoggyMorningStep2;
+
+  /// No description provided for @ideasFoggyMorningStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the middle row with the base tone and soften its lower edge into the ground with the blender.'**
+  String get ideasFoggyMorningStep3;
+
+  /// No description provided for @ideasFoggyMorningStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the nearest trees with the dark marker and add a few branches.'**
+  String get ideasFoggyMorningStep4;
+
+  /// No description provided for @ideasFoggyMorningStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Glaze the pale marker over the top of every row, so the fog lies over the whole scene.'**
+  String get ideasFoggyMorningStep5;
+
+  /// No description provided for @ideasRainyWindowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain on the window'**
+  String get ideasRainyWindowTitle;
+
+  /// No description provided for @ideasRainyWindowSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Blurred lights seen through a wet window, with drops running down the glass.'**
+  String get ideasRainyWindowSummary;
+
+  /// No description provided for @ideasRainyWindowPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Glowing lights behind glass, and crisp marks on top of them.'**
+  String get ideasRainyWindowPractice;
+
+  /// No description provided for @ideasRainyWindowSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A window at night with street lights outside and three drops on the glass.'**
+  String get ideasRainyWindowSubject;
+
+  /// No description provided for @ideasRainyWindowTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The lights must dry completely before the blue goes over them, or the colours mix.'**
+  String get ideasRainyWindowTip;
+
+  /// No description provided for @ideasRainyWindowStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the window frame and a few blurred blobs of light outside, and mark the path of three drops.'**
+  String get ideasRainyWindowStep1;
+
+  /// No description provided for @ideasRainyWindowStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the warm lights as soft blobs and melt their edges with the blender.'**
+  String get ideasRainyWindowStep2;
+
+  /// No description provided for @ideasRainyWindowStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the whole glass with the light blue, working around the lights.'**
+  String get ideasRainyWindowStep3;
+
+  /// No description provided for @ideasRainyWindowStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the base blue towards the corners and leave the drop paths a little lighter.'**
+  String get ideasRainyWindowStep4;
+
+  /// No description provided for @ideasRainyWindowStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the frame dark and put a dark crescent on the side of each drop away from the light.'**
+  String get ideasRainyWindowStep5;
+
+  /// No description provided for @ideasRainyWindowStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Once dry, add a touch of white gel on the lit side of each drop.'**
+  String get ideasRainyWindowStep6;
+
+  /// No description provided for @ideasEerieForestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Eerie woods'**
+  String get ideasEerieForestTitle;
+
+  /// No description provided for @ideasEerieForestSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Thin trees at dusk in sickly greens, with a violet sky between them.'**
+  String get ideasEerieForestSummary;
+
+  /// No description provided for @ideasEerieForestPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Letting two colours mix where they meet, on purpose.'**
+  String get ideasEerieForestPractice;
+
+  /// No description provided for @ideasEerieForestSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Tall thin trunks on a low horizon at dusk.'**
+  String get ideasEerieForestSubject;
+
+  /// No description provided for @ideasEerieForestTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The green and the violet turn grey where they meet. That grey is the mood, not a mistake.'**
+  String get ideasEerieForestTip;
+
+  /// No description provided for @ideasEerieForestStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil tall thin trunks and a low horizon.'**
+  String get ideasEerieForestStep1;
+
+  /// No description provided for @ideasEerieForestStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Put a pale yellow-green along the horizon, between the trunks.'**
+  String get ideasEerieForestStep2;
+
+  /// No description provided for @ideasEerieForestStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the violet above it and blend it into the green while it is damp.'**
+  String get ideasEerieForestStep3;
+
+  /// No description provided for @ideasEerieForestStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the green on the ground and on the lower part of the trunks.'**
+  String get ideasEerieForestStep4;
+
+  /// No description provided for @ideasEerieForestStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest green on the trunks in uneven strokes, and add long shadows across the ground.'**
+  String get ideasEerieForestStep5;
+
+  /// No description provided for @ideasGoldenHourTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Golden hour'**
+  String get ideasGoldenHourTitle;
+
+  /// No description provided for @ideasGoldenHourSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A white wall and a doorway at the end of the afternoon: orange light, long violet shadows.'**
+  String get ideasGoldenHourSummary;
+
+  /// No description provided for @ideasGoldenHourPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'One warm glaze over everything, with hard-edged cool shadows on top.'**
+  String get ideasGoldenHourPractice;
+
+  /// No description provided for @ideasGoldenHourSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A wall with a door, a plant and the long shadow the plant throws on the wall.'**
+  String get ideasGoldenHourSubject;
+
+  /// No description provided for @ideasGoldenHourTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The wall is not white here: in this light it is orange. Paint it so.'**
+  String get ideasGoldenHourTip;
+
+  /// No description provided for @ideasGoldenHourStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a wall with a door and a plant, and the long shadow the plant throws across the wall.'**
+  String get ideasGoldenHourStep1;
+
+  /// No description provided for @ideasGoldenHourStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Wash the whole wall with the pale orange: that is the white wall in this light.'**
+  String get ideasGoldenHourStep2;
+
+  /// No description provided for @ideasGoldenHourStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the deeper orange under the lintel and on the door.'**
+  String get ideasGoldenHourStep3;
+
+  /// No description provided for @ideasGoldenHourStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the violet-grey in the shadow of the plant and in the doorway, with a crisp edge.'**
+  String get ideasGoldenHourStep4;
+
+  /// No description provided for @ideasGoldenHourStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the darkest marker for the depth of the doorway only.'**
+  String get ideasGoldenHourStep5;
+
+  /// No description provided for @ideasStormySeaTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stormy sea'**
+  String get ideasStormySeaTitle;
+
+  /// No description provided for @ideasStormySeaSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Grey-green waves under a dark sky, with white paper for the foam.'**
+  String get ideasStormySeaSummary;
+
+  /// No description provided for @ideasStormySeaPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pale flat water against a heavy sky, with the foam left as paper.'**
+  String get ideasStormySeaPractice;
+
+  /// No description provided for @ideasStormySeaSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A low horizon, two big waves and the foam breaking on them.'**
+  String get ideasStormySeaSubject;
+
+  /// No description provided for @ideasStormySeaTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The foam is paper you did not touch: plan where it breaks before you colour the water.'**
+  String get ideasStormySeaTip;
+
+  /// No description provided for @ideasStormySeaStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the horizon low, two big waves and where the foam breaks. The foam stays paper.'**
+  String get ideasStormySeaStep1;
+
+  /// No description provided for @ideasStormySeaStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the water with the pale grey-green, going round the foam.'**
+  String get ideasStormySeaStep2;
+
+  /// No description provided for @ideasStormySeaStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the darker water in the troughs and under each crest.'**
+  String get ideasStormySeaStep3;
+
+  /// No description provided for @ideasStormySeaStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the sky with the dark marker, darkest at the top, and the deepest water under the breaking wave.'**
+  String get ideasStormySeaStep4;
+
+  /// No description provided for @ideasStormySeaStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Once dry, add white gel for the spray flicked off the crests: a few dots only.'**
+  String get ideasStormySeaStep5;
+
+  /// No description provided for @ideasCandleFlameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'By candlelight'**
+  String get ideasCandleFlameTitle;
+
+  /// No description provided for @ideasCandleFlameSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A candle on a table in a dark room: everything warm, and nothing far from the flame visible.'**
+  String get ideasCandleFlameSummary;
+
+  /// No description provided for @ideasCandleFlamePractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Concentric rings of warm colour, blended wet into each other.'**
+  String get ideasCandleFlamePractice;
+
+  /// No description provided for @ideasCandleFlameSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A candle in a holder, with the table and the far wall behind it.'**
+  String get ideasCandleFlameSubject;
+
+  /// No description provided for @ideasCandleFlameTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Only what the flame touches is visible: the far room can be almost one dark shape.'**
+  String get ideasCandleFlameTip;
+
+  /// No description provided for @ideasCandleFlameStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the candle, its flame and a circle of light on the table. The core of the flame stays paper.'**
+  String get ideasCandleFlameStep1;
+
+  /// No description provided for @ideasCandleFlameStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the halo of the flame and the nearest part of the table with the yellow, melted outwards with the blender.'**
+  String get ideasCandleFlameStep2;
+
+  /// No description provided for @ideasCandleFlameStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the warm orange on the lit side of the candle and on the next ring of the table.'**
+  String get ideasCandleFlameStep3;
+
+  /// No description provided for @ideasCandleFlameStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour brown everything beyond the circle of light.'**
+  String get ideasCandleFlameStep4;
+
+  /// No description provided for @ideasCandleFlameStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest brown for the far room and the shadow side of the candle, with a soft edge against the light.'**
+  String get ideasCandleFlameStep5;
+
+  /// No description provided for @ideasDesertNoonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Desert noon'**
+  String get ideasDesertNoonTitle;
+
+  /// No description provided for @ideasDesertNoonSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Sand, one rock and a hard shadow under a bleached sky.'**
+  String get ideasDesertNoonSummary;
+
+  /// No description provided for @ideasDesertNoonPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A flat pale fill against one hard, dark shadow.'**
+  String get ideasDesertNoonPractice;
+
+  /// No description provided for @ideasDesertNoonSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A high horizon, a single rock and its short shadow straight under it.'**
+  String get ideasDesertNoonSubject;
+
+  /// No description provided for @ideasDesertNoonTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave a band of white paper at the horizon: that band is what makes the sky look hot.'**
+  String get ideasDesertNoonTip;
+
+  /// No description provided for @ideasDesertNoonStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a high horizon, one rock and its short shadow straight under it.'**
+  String get ideasDesertNoonStep1;
+
+  /// No description provided for @ideasDesertNoonStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the sand below the horizon with the pale yellow, in one very light pass.'**
+  String get ideasDesertNoonStep2;
+
+  /// No description provided for @ideasDesertNoonStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the sky with the pale blue and leave it paler near the horizon.'**
+  String get ideasDesertNoonStep3;
+
+  /// No description provided for @ideasDesertNoonStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the orange on the shadow side of the rock and on the ripples of the sand.'**
+  String get ideasDesertNoonStep4;
+
+  /// No description provided for @ideasDesertNoonStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the violet-blue only in the shadow the rock casts, with a hard edge.'**
+  String get ideasDesertNoonStep5;
+
+  /// No description provided for @ideasBokehLightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blurred lights'**
+  String get ideasBokehLightsTitle;
+
+  /// No description provided for @ideasBokehLightsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A background of soft out-of-focus circles of light.'**
+  String get ideasBokehLightsSummary;
+
+  /// No description provided for @ideasBokehLightsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Making a soft disc with the blender on a flat field.'**
+  String get ideasBokehLightsPractice;
+
+  /// No description provided for @ideasBokehLightsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A dark field with a dozen blurred lights of different sizes.'**
+  String get ideasBokehLightsSubject;
+
+  /// No description provided for @ideasBokehLightsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the blender flat: a pointed nib draws a line, not a disc.'**
+  String get ideasBokehLightsTip;
+
+  /// No description provided for @ideasBokehLightsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the whole area with the base colour, in flat strokes.'**
+  String get ideasBokehLightsStep1;
+
+  /// No description provided for @ideasBokehLightsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the corners and blend the dark inwards while the ink is damp.'**
+  String get ideasBokehLightsStep2;
+
+  /// No description provided for @ideasBokehLightsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Let it dry, then press the broad nib of the blender flat in circles of different sizes.'**
+  String get ideasBokehLightsStep3;
+
+  /// No description provided for @ideasBokehLightsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch the light marker into the centre of a few of the discs so they glow.'**
+  String get ideasBokehLightsStep4;
+
+  /// No description provided for @ideasBokehLightsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Put a white gel dot inside two or three of the discs, not in all of them.'**
+  String get ideasBokehLightsStep5;
+
+  /// No description provided for @ideasRetroPosterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Retro poster'**
+  String get ideasRetroPosterTitle;
+
+  /// No description provided for @ideasRetroPosterSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Three flat, slightly dusty colours and one dark, with no blending at all.'**
+  String get ideasRetroPosterSummary;
+
+  /// No description provided for @ideasRetroPosterPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Flat fills and hard edges, the way a printed poster looks.'**
+  String get ideasRetroPosterPractice;
+
+  /// No description provided for @ideasRetroPosterSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A lighthouse, a car or a bottle drawn as a few big flat shapes.'**
+  String get ideasRetroPosterSubject;
+
+  /// No description provided for @ideasRetroPosterTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave a hair of white paper between the colours, as if the print had slipped a little.'**
+  String get ideasRetroPosterTip;
+
+  /// No description provided for @ideasRetroPosterStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a simple subject as big flat shapes: a lighthouse, a car, a bottle.'**
+  String get ideasRetroPosterStep1;
+
+  /// No description provided for @ideasRetroPosterStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the biggest shapes flat, in one pass.'**
+  String get ideasRetroPosterStep2;
+
+  /// No description provided for @ideasRetroPosterStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the next shapes and leave a hair of paper between the colours.'**
+  String get ideasRetroPosterStep3;
+
+  /// No description provided for @ideasRetroPosterStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the third colour on the smallest shapes.'**
+  String get ideasRetroPosterStep4;
+
+  /// No description provided for @ideasRetroPosterStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the shadows as separate flat shapes with the dark marker.'**
+  String get ideasRetroPosterStep5;
+
+  /// No description provided for @ideasRetroPosterStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a few liner lines where the printed poster would have them.'**
+  String get ideasRetroPosterStep6;
+
+  /// No description provided for @ideasFreshCitrusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh and zesty'**
+  String get ideasFreshCitrusTitle;
+
+  /// No description provided for @ideasFreshCitrusSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A lemon, a lime and a glass of water, with lots of white paper and at most two layers.'**
+  String get ideasFreshCitrusSummary;
+
+  /// No description provided for @ideasFreshCitrusPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Bright colour on white, stopped early.'**
+  String get ideasFreshCitrusPractice;
+
+  /// No description provided for @ideasFreshCitrusSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A lemon, a lime and a glass of water on a table.'**
+  String get ideasFreshCitrusSubject;
+
+  /// No description provided for @ideasFreshCitrusTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop after two layers: a third one takes the fresh out of the colour.'**
+  String get ideasFreshCitrusTip;
+
+  /// No description provided for @ideasFreshCitrusStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the fruit and the glass, and keep the composition airy.'**
+  String get ideasFreshCitrusStep1;
+
+  /// No description provided for @ideasFreshCitrusStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the lemon with the yellow in one pass, leaving a white highlight.'**
+  String get ideasFreshCitrusStep2;
+
+  /// No description provided for @ideasFreshCitrusStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the lime with the green, also in one pass.'**
+  String get ideasFreshCitrusStep3;
+
+  /// No description provided for @ideasFreshCitrusStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'The darker yellow on the shadow side of the lemon, and a second pass of green on the shadow side of the lime.'**
+  String get ideasFreshCitrusStep4;
+
+  /// No description provided for @ideasFreshCitrusStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the pale blue for the water in the glass and a small shadow under each fruit.'**
+  String get ideasFreshCitrusStep5;
+
+  /// No description provided for @ideasTropicalNoonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tropical noon'**
+  String get ideasTropicalNoonTitle;
+
+  /// No description provided for @ideasTropicalNoonSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Big leaves, a hot pink flower and a slice of blue sky, saturated and hard-edged.'**
+  String get ideasTropicalNoonSummary;
+
+  /// No description provided for @ideasTropicalNoonPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong flat colour with crisp overlaps, without any blending.'**
+  String get ideasTropicalNoonPractice;
+
+  /// No description provided for @ideasTropicalNoonSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Two or three big leaves overlapping, one flower and the sky in the gaps.'**
+  String get ideasTropicalNoonSubject;
+
+  /// No description provided for @ideasTropicalNoonTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the edge of each leaf sharp: the overlap is what sells the depth here.'**
+  String get ideasTropicalNoonTip;
+
+  /// No description provided for @ideasTropicalNoonStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil two or three large leaves overlapping, one flower and the sky in the gaps between them.'**
+  String get ideasTropicalNoonStep1;
+
+  /// No description provided for @ideasTropicalNoonStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the leaves with the light green, following the veins.'**
+  String get ideasTropicalNoonStep2;
+
+  /// No description provided for @ideasTropicalNoonStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the mid green on the leaves behind and under the others, with hard edges where they overlap.'**
+  String get ideasTropicalNoonStep3;
+
+  /// No description provided for @ideasTropicalNoonStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the hot pink on the flower, with two layers.'**
+  String get ideasTropicalNoonStep4;
+
+  /// No description provided for @ideasTropicalNoonStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the blue sky in the gaps, right up to the edge of the leaves.'**
+  String get ideasTropicalNoonStep5;
+
+  /// No description provided for @ideasGreenhouseLightTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'In the greenhouse'**
+  String get ideasGreenhouseLightTitle;
+
+  /// No description provided for @ideasGreenhouseLightSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Plants behind glass in damp green light, with pale grey panes.'**
+  String get ideasGreenhouseLightSummary;
+
+  /// No description provided for @ideasGreenhouseLightPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A pale glaze over a scene, the way glass veils it.'**
+  String get ideasGreenhouseLightPractice;
+
+  /// No description provided for @ideasGreenhouseLightSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A glass wall with its bars and pots of plants behind it.'**
+  String get ideasGreenhouseLightSubject;
+
+  /// No description provided for @ideasGreenhouseLightTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The green glaze goes on last: it is the damp light of the place, not the colour of the plants.'**
+  String get ideasGreenhouseLightTip;
+
+  /// No description provided for @ideasGreenhouseLightStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a glass wall with its bars and pots of plants behind it.'**
+  String get ideasGreenhouseLightStep1;
+
+  /// No description provided for @ideasGreenhouseLightStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the plants with the base green, softer the further they are behind the glass.'**
+  String get ideasGreenhouseLightStep2;
+
+  /// No description provided for @ideasGreenhouseLightStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the dark green for the nearest leaves only.'**
+  String get ideasGreenhouseLightStep3;
+
+  /// No description provided for @ideasGreenhouseLightStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the light grey for the bars and for the reflection streaks on the panes.'**
+  String get ideasGreenhouseLightStep4;
+
+  /// No description provided for @ideasGreenhouseLightStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Once dry, glaze the whole glass area with the pale green: the light inside is green.'**
+  String get ideasGreenhouseLightStep5;
+
+  /// No description provided for @ideasDustyAtticTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dusty attic'**
+  String get ideasDustyAtticTitle;
+
+  /// No description provided for @ideasDustyAtticSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm greys, an old trunk and one shaft of light with dust in it.'**
+  String get ideasDustyAtticSummary;
+
+  /// No description provided for @ideasDustyAtticPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A grey room with one bright place left untouched.'**
+  String get ideasDustyAtticPractice;
+
+  /// No description provided for @ideasDustyAtticSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A small high window, the shaft of light it throws and an old trunk in it.'**
+  String get ideasDustyAtticSubject;
+
+  /// No description provided for @ideasDustyAtticTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the shaft of light the brightest thing in the picture: it is the only white paper left.'**
+  String get ideasDustyAtticTip;
+
+  /// No description provided for @ideasDustyAtticStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a small window high up, the shaft of light it throws and a trunk inside it.'**
+  String get ideasDustyAtticStep1;
+
+  /// No description provided for @ideasDustyAtticStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover everything with the lightest warm grey, except the inside of the shaft.'**
+  String get ideasDustyAtticStep2;
+
+  /// No description provided for @ideasDustyAtticStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the mid warm grey on the walls away from the window and on the sides of the trunk.'**
+  String get ideasDustyAtticStep3;
+
+  /// No description provided for @ideasDustyAtticStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest grey in the corners and under the trunk.'**
+  String get ideasDustyAtticStep4;
+
+  /// No description provided for @ideasDustyAtticStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a faint pale yellow glaze inside the shaft of light.'**
+  String get ideasDustyAtticStep5;
+
+  /// No description provided for @ideasDustyAtticStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Once dry, add a few white gel specks of dust in the shaft.'**
+  String get ideasDustyAtticStep6;
+
+  /// No description provided for @ideasColourGreyBlackTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour, grey and black'**
+  String get ideasColourGreyBlackTitle;
+
+  /// No description provided for @ideasColourGreyBlackSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Only three markers: one colour, one grey and one very dark.'**
+  String get ideasColourGreyBlackSummary;
+
+  /// No description provided for @ideasColourGreyBlackPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Placing the light with the fewest markers you have.'**
+  String get ideasColourGreyBlackPractice;
+
+  /// No description provided for @ideasColourGreyBlackSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A bike, a boot or a teapot with one clear colour.'**
+  String get ideasColourGreyBlackSubject;
+
+  /// No description provided for @ideasColourGreyBlackTip.
+  ///
+  /// In en, this message translates to:
+  /// **'With three nibs there is nothing to decide but where the light goes. Plan the light first.'**
+  String get ideasColourGreyBlackTip;
+
+  /// No description provided for @ideasColourGreyBlackStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a subject with one main colour and mark in pencil where the light comes from.'**
+  String get ideasColourGreyBlackStep1;
+
+  /// No description provided for @ideasColourGreyBlackStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the whole subject with the colour, and give it two layers where it turns away from the light.'**
+  String get ideasColourGreyBlackStep2;
+
+  /// No description provided for @ideasColourGreyBlackStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the grey for the cast shadow and for anything that is not the subject.'**
+  String get ideasColourGreyBlackStep3;
+
+  /// No description provided for @ideasColourGreyBlackStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the dark marker for the contact lines and the deepest corners.'**
+  String get ideasColourGreyBlackStep4;
+
+  /// No description provided for @ideasColourGreyBlackStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Step back: the drawing reads with just three values, and the grey holds them together.'**
+  String get ideasColourGreyBlackStep5;
+
+  /// No description provided for @ideasAnalogousTrioTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Three neighbours'**
+  String get ideasAnalogousTrioTitle;
+
+  /// No description provided for @ideasAnalogousTrioSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Three colours that sit next to each other on the wheel, and nothing from the other side.'**
+  String get ideasAnalogousTrioSummary;
+
+  /// No description provided for @ideasAnalogousTrioPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Building a scheme out of neighbouring hues.'**
+  String get ideasAnalogousTrioPractice;
+
+  /// No description provided for @ideasAnalogousTrioSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A sunflower, a sea or a field of one colour.'**
+  String get ideasAnalogousTrioSubject;
+
+  /// No description provided for @ideasAnalogousTrioTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Neighbouring colours blend while wet without turning grey. Keep them wet and let them mix.'**
+  String get ideasAnalogousTrioTip;
+
+  /// No description provided for @ideasAnalogousTrioStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a subject that is naturally one colour, such as a sunflower or a sea, and draw it.'**
+  String get ideasAnalogousTrioStep1;
+
+  /// No description provided for @ideasAnalogousTrioStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover most of the subject with the middle colour of the three.'**
+  String get ideasAnalogousTrioStep2;
+
+  /// No description provided for @ideasAnalogousTrioStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the neighbour on the lit side and blend it into the middle colour while it is wet.'**
+  String get ideasAnalogousTrioStep3;
+
+  /// No description provided for @ideasAnalogousTrioStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the other neighbour in the shadows, away from the light.'**
+  String get ideasAnalogousTrioStep4;
+
+  /// No description provided for @ideasAnalogousTrioStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the dark of the middle colour only in the deepest places, and leave the rest in the three.'**
+  String get ideasAnalogousTrioStep5;
+
+  /// No description provided for @ideasTriadTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A triad'**
+  String get ideasTriadTitle;
+
+  /// No description provided for @ideasTriadSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Three colours equally spaced on the wheel; one leads and two support.'**
+  String get ideasTriadSummary;
+
+  /// No description provided for @ideasTriadPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Using a three-colour scheme with one colour in charge.'**
+  String get ideasTriadPractice;
+
+  /// No description provided for @ideasTriadSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A poster, a book cover or a big flower with small details.'**
+  String get ideasTriadSubject;
+
+  /// No description provided for @ideasTriadTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the three colours apart on the paper. One grey over all of them ties the scheme together.'**
+  String get ideasTriadTip;
+
+  /// No description provided for @ideasTriadStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Decide which of the three colours leads: it gets most of the paper.'**
+  String get ideasTriadStep1;
+
+  /// No description provided for @ideasTriadStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the main areas with the leading colour.'**
+  String get ideasTriadStep2;
+
+  /// No description provided for @ideasTriadStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the second colour on about a quarter of the drawing, and never let it touch the first while it is wet.'**
+  String get ideasTriadStep3;
+
+  /// No description provided for @ideasTriadStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the third colour in a few small spots only.'**
+  String get ideasTriadStep4;
+
+  /// No description provided for @ideasTriadStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade all three colours with the same grey so they belong together.'**
+  String get ideasTriadStep5;
+
+  /// No description provided for @ideasSplitComplementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Split complement'**
+  String get ideasSplitComplementTitle;
+
+  /// No description provided for @ideasSplitComplementSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'One colour family and the two colours on either side of its opposite.'**
+  String get ideasSplitComplementSummary;
+
+  /// No description provided for @ideasSplitComplementPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Balancing a main family with two colours close to its opposite.'**
+  String get ideasSplitComplementPractice;
+
+  /// No description provided for @ideasSplitComplementSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A vase with two flowers, or a cup with two small objects beside it.'**
+  String get ideasSplitComplementSubject;
+
+  /// No description provided for @ideasSplitComplementTip.
+  ///
+  /// In en, this message translates to:
+  /// **'A near-opposite reads as a clash or a harmony depending on how much of it you use.'**
+  String get ideasSplitComplementTip;
+
+  /// No description provided for @ideasSplitComplementStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a subject with one big area and two small ones, such as a vase with two flowers.'**
+  String get ideasSplitComplementStep1;
+
+  /// No description provided for @ideasSplitComplementStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the big area with the light tone of the main family.'**
+  String get ideasSplitComplementStep2;
+
+  /// No description provided for @ideasSplitComplementStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add its shadow where the light does not reach.'**
+  String get ideasSplitComplementStep3;
+
+  /// No description provided for @ideasSplitComplementStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use one of the two opposites on the first small area.'**
+  String get ideasSplitComplementStep4;
+
+  /// No description provided for @ideasSplitComplementStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the other opposite on the second small area and keep the two apart.'**
+  String get ideasSplitComplementStep5;
+
+  /// No description provided for @ideasTwoGrayTemperaturesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm greys, cool greys'**
+  String get ideasTwoGrayTemperaturesTitle;
+
+  /// No description provided for @ideasTwoGrayTemperaturesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the same stone twice, once with warm greys and once with cool ones.'**
+  String get ideasTwoGrayTemperaturesSummary;
+
+  /// No description provided for @ideasTwoGrayTemperaturesPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Telling warm grey from cool grey by eye.'**
+  String get ideasTwoGrayTemperaturesPractice;
+
+  /// No description provided for @ideasTwoGrayTemperaturesSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'The same pebble or a folded cloth, drawn twice side by side.'**
+  String get ideasTwoGrayTemperaturesSubject;
+
+  /// No description provided for @ideasTwoGrayTemperaturesTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Most brands sell warm, cool and neutral greys as separate families. Pick one family for each half.'**
+  String get ideasTwoGrayTemperaturesTip;
+
+  /// No description provided for @ideasTwoGrayTemperaturesStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the same pebble twice, side by side, and mark the light on each.'**
+  String get ideasTwoGrayTemperaturesStep1;
+
+  /// No description provided for @ideasTwoGrayTemperaturesStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'First pebble: the light warm grey all over.'**
+  String get ideasTwoGrayTemperaturesStep2;
+
+  /// No description provided for @ideasTwoGrayTemperaturesStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the darker warm grey on the shadow side and darken the contact with the ground.'**
+  String get ideasTwoGrayTemperaturesStep3;
+
+  /// No description provided for @ideasTwoGrayTemperaturesStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Second pebble: the light cool grey all over.'**
+  String get ideasTwoGrayTemperaturesStep4;
+
+  /// No description provided for @ideasTwoGrayTemperaturesStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the darker cool grey the same way, then compare: one pebble sits in the sun, the other in the shade.'**
+  String get ideasTwoGrayTemperaturesStep5;
+
+  /// No description provided for @ideasGrayPlusAccentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Grey with one accent'**
+  String get ideasGrayPlusAccentTitle;
+
+  /// No description provided for @ideasGrayPlusAccentSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything in grey except one small thing in colour.'**
+  String get ideasGrayPlusAccentSummary;
+
+  /// No description provided for @ideasGrayPlusAccentPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Making one colour carry the whole drawing.'**
+  String get ideasGrayPlusAccentPractice;
+
+  /// No description provided for @ideasGrayPlusAccentSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A street with a red door, or a yellow umbrella in a grey town.'**
+  String get ideasGrayPlusAccentSubject;
+
+  /// No description provided for @ideasGrayPlusAccentTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The accent wants to be as strong as it can be: two layers of the same marker.'**
+  String get ideasGrayPlusAccentTip;
+
+  /// No description provided for @ideasGrayPlusAccentStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a scene with one object you want the eye to land on, such as a red door in a street.'**
+  String get ideasGrayPlusAccentStep1;
+
+  /// No description provided for @ideasGrayPlusAccentStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover everything but that object with the light grey.'**
+  String get ideasGrayPlusAccentStep2;
+
+  /// No description provided for @ideasGrayPlusAccentStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the mid grey in the shadows, as if the scene were a photograph.'**
+  String get ideasGrayPlusAccentStep3;
+
+  /// No description provided for @ideasGrayPlusAccentStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest grey for the windows, under the eaves and the contact lines.'**
+  String get ideasGrayPlusAccentStep4;
+
+  /// No description provided for @ideasGrayPlusAccentStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the object alone, with two layers so the accent is as strong as it can be.'**
+  String get ideasGrayPlusAccentStep5;
+
+  /// No description provided for @ideasEarthTonesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Earth tones'**
+  String get ideasEarthTonesTitle;
+
+  /// No description provided for @ideasEarthTonesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Browns, ochres and an olive green, nothing bright.'**
+  String get ideasEarthTonesSummary;
+
+  /// No description provided for @ideasEarthTonesPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Layering low-chroma colours without them going dull.'**
+  String get ideasEarthTonesPractice;
+
+  /// No description provided for @ideasEarthTonesSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Bread, a basket or a ploughed field.'**
+  String get ideasEarthTonesSubject;
+
+  /// No description provided for @ideasEarthTonesTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Low-chroma colours layer well because the paper keeps lighting them from underneath.'**
+  String get ideasEarthTonesTip;
+
+  /// No description provided for @ideasEarthTonesStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw something that came from the land, such as bread, a basket or a ploughed field.'**
+  String get ideasEarthTonesStep1;
+
+  /// No description provided for @ideasEarthTonesStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the pale ochre over everything as the first layer.'**
+  String get ideasEarthTonesStep2;
+
+  /// No description provided for @ideasEarthTonesStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the brown where the form turns away from the light.'**
+  String get ideasEarthTonesStep3;
+
+  /// No description provided for @ideasEarthTonesStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the olive green on anything green, and let the ochre under it mute it.'**
+  String get ideasEarthTonesStep4;
+
+  /// No description provided for @ideasEarthTonesStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the darkest brown for the deepest places only.'**
+  String get ideasEarthTonesStep5;
+
+  /// No description provided for @ideasJewelTonesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Jewel tones'**
+  String get ideasJewelTonesTitle;
+
+  /// No description provided for @ideasJewelTonesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep, saturated colours with a gold accent, like a velvet box.'**
+  String get ideasJewelTonesSummary;
+
+  /// No description provided for @ideasJewelTonesPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Painting dark saturated colours that keep their shine.'**
+  String get ideasJewelTonesPractice;
+
+  /// No description provided for @ideasJewelTonesSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A few gems or bottles with a highlight planned on each.'**
+  String get ideasJewelTonesSubject;
+
+  /// No description provided for @ideasJewelTonesTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark saturated ink stays glossy on marker paper. A white gel dot on top gives the glass look.'**
+  String get ideasJewelTonesTip;
+
+  /// No description provided for @ideasJewelTonesStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a few simple gems or bottles and plan a highlight on each one.'**
+  String get ideasJewelTonesStep1;
+
+  /// No description provided for @ideasJewelTonesStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the biggest shape with the deep blue-green, in two layers.'**
+  String get ideasJewelTonesStep2;
+
+  /// No description provided for @ideasJewelTonesStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the deep violet on the next shape.'**
+  String get ideasJewelTonesStep3;
+
+  /// No description provided for @ideasJewelTonesStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the deep red on the smallest one.'**
+  String get ideasJewelTonesStep4;
+
+  /// No description provided for @ideasJewelTonesStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the gold yellow to the settings or the caps, then a hard white gel dot on every highlight.'**
+  String get ideasJewelTonesStep5;
+
+  /// No description provided for @ideasLowKeyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark markers only'**
+  String get ideasLowKeyTitle;
+
+  /// No description provided for @ideasLowKeySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw with markers darker than mid grey and let a few bits of paper carry all the light.'**
+  String get ideasLowKeySummary;
+
+  /// No description provided for @ideasLowKeyPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Painting a dark picture with light left out on purpose.'**
+  String get ideasLowKeyPractice;
+
+  /// No description provided for @ideasLowKeySubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A cat with lit eyes, a lamp in a dark room or a profile.'**
+  String get ideasLowKeySubject;
+
+  /// No description provided for @ideasLowKeyTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark alcohol ink covers evenly in one pass, so the white shapes you leave stay clean.'**
+  String get ideasLowKeyTip;
+
+  /// No description provided for @ideasLowKeyStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan the drawing as a few shapes of paper left white on a dark field: a cat\'s eyes, a lamp, a profile.'**
+  String get ideasLowKeyStep1;
+
+  /// No description provided for @ideasLowKeyStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover everything except the white shapes with the least dark marker.'**
+  String get ideasLowKeyStep2;
+
+  /// No description provided for @ideasLowKeyStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the middle marker on the bigger shadows.'**
+  String get ideasLowKeyStep3;
+
+  /// No description provided for @ideasLowKeyStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the darkest marker on the edges of the light shapes, so they glow by contrast.'**
+  String get ideasLowKeyStep4;
+
+  /// No description provided for @ideasLowKeyStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add white gel on one or two points only, no more.'**
+  String get ideasLowKeyStep5;
+
+  /// No description provided for @ideasComplementGradientTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Through the middle'**
+  String get ideasComplementGradientTitle;
+
+  /// No description provided for @ideasComplementGradientSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend two opposite colours into each other and see the grey they make where they meet.'**
+  String get ideasComplementGradientSummary;
+
+  /// No description provided for @ideasComplementGradientPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixing two colours on the paper and reading the result.'**
+  String get ideasComplementGradientPractice;
+
+  /// No description provided for @ideasComplementGradientSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A long strip of paper with the two colours meeting in the middle.'**
+  String get ideasComplementGradientSubject;
+
+  /// No description provided for @ideasComplementGradientTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Wet opposites mix on the paper at once. Keep both damp and let them meet in the middle.'**
+  String get ideasComplementGradientTip;
+
+  /// No description provided for @ideasComplementGradientStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Tape a long strip of paper down.'**
+  String get ideasComplementGradientStep1;
+
+  /// No description provided for @ideasComplementGradientStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the left third and fade the colour out towards the middle.'**
+  String get ideasComplementGradientStep2;
+
+  /// No description provided for @ideasComplementGradientStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the right third and fade it into the middle while the first colour is still damp.'**
+  String get ideasComplementGradientStep3;
+
+  /// No description provided for @ideasComplementGradientStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare the muddy middle with a stroke of your grey next to it.'**
+  String get ideasComplementGradientStep4;
+
+  /// No description provided for @ideasComplementGradientStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Redo the strip with the grey laid in the middle first and the two colours blended into it: a cleaner way through.'**
+  String get ideasComplementGradientStep5;
+
+  /// No description provided for @ideasWarmLightCoolShadowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm light, cool shadow'**
+  String get ideasWarmLightCoolShadowTitle;
+
+  /// No description provided for @ideasWarmLightCoolShadowSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'One object, lit side in warm colours and shadow side in cool ones.'**
+  String get ideasWarmLightCoolShadowSummary;
+
+  /// No description provided for @ideasWarmLightCoolShadowPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Glazing warm and cool over one base colour.'**
+  String get ideasWarmLightCoolShadowPractice;
+
+  /// No description provided for @ideasWarmLightCoolShadowSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A round fruit, an egg or a ball.'**
+  String get ideasWarmLightCoolShadowSubject;
+
+  /// No description provided for @ideasWarmLightCoolShadowTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave a thin band of the plain base between the warm and the cool: it keeps the form turning.'**
+  String get ideasWarmLightCoolShadowTip;
+
+  /// No description provided for @ideasWarmLightCoolShadowStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a round object and mark where the light comes from.'**
+  String get ideasWarmLightCoolShadowStep1;
+
+  /// No description provided for @ideasWarmLightCoolShadowStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the whole object with its own colour.'**
+  String get ideasWarmLightCoolShadowStep2;
+
+  /// No description provided for @ideasWarmLightCoolShadowStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Glaze the warm colour over the lit half and blend it into the base while it is wet.'**
+  String get ideasWarmLightCoolShadowStep3;
+
+  /// No description provided for @ideasWarmLightCoolShadowStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Glaze the cool colour over the shadow half, and leave a thin band of plain base between the two.'**
+  String get ideasWarmLightCoolShadowStep4;
+
+  /// No description provided for @ideasWarmLightCoolShadowStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the darkest marker for the contact with the ground only.'**
+  String get ideasWarmLightCoolShadowStep5;
+
+  /// No description provided for @ideasVividAndMutedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vivid and muted'**
+  String get ideasVividAndMutedTitle;
+
+  /// No description provided for @ideasVividAndMutedSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the same flower with a bright pair and then a muted pair of the same hue.'**
+  String get ideasVividAndMutedSummary;
+
+  /// No description provided for @ideasVividAndMutedPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Telling a vivid colour from its dusty version.'**
+  String get ideasVividAndMutedPractice;
+
+  /// No description provided for @ideasVividAndMutedSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'The same flower drawn twice, side by side.'**
+  String get ideasVividAndMutedSubject;
+
+  /// No description provided for @ideasVividAndMutedTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Most ranges carry a vivid and a dusty version of each hue. Choosing between them is the whole exercise.'**
+  String get ideasVividAndMutedTip;
+
+  /// No description provided for @ideasVividAndMutedStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the same flower twice, side by side.'**
+  String get ideasVividAndMutedStep1;
+
+  /// No description provided for @ideasVividAndMutedStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'First flower: the vivid light tone.'**
+  String get ideasVividAndMutedStep2;
+
+  /// No description provided for @ideasVividAndMutedStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the vivid shadow of the same hue.'**
+  String get ideasVividAndMutedStep3;
+
+  /// No description provided for @ideasVividAndMutedStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Second flower: the muted light tone of the same hue.'**
+  String get ideasVividAndMutedStep4;
+
+  /// No description provided for @ideasVividAndMutedStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add its muted shadow, then decide which flower would go in the foreground of a drawing and which in the background.'**
+  String get ideasVividAndMutedStep5;
+
+  /// No description provided for @ideasOneMarkerBlenderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One marker and the blender'**
+  String get ideasOneMarkerBlenderTitle;
+
+  /// No description provided for @ideasOneMarkerBlenderSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Four values out of one dark marker by diluting it with the colourless blender.'**
+  String get ideasOneMarkerBlenderSummary;
+
+  /// No description provided for @ideasOneMarkerBlenderPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Diluting ink to get lighter values without another marker.'**
+  String get ideasOneMarkerBlenderPractice;
+
+  /// No description provided for @ideasOneMarkerBlenderSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Four small squares of paper taped side by side.'**
+  String get ideasOneMarkerBlenderSubject;
+
+  /// No description provided for @ideasOneMarkerBlenderTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The blender is pure solvent: it turns a single dark marker into its own light family.'**
+  String get ideasOneMarkerBlenderTip;
+
+  /// No description provided for @ideasOneMarkerBlenderStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Tape four small squares of paper side by side.'**
+  String get ideasOneMarkerBlenderStep1;
+
+  /// No description provided for @ideasOneMarkerBlenderStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the first square with the marker at full strength.'**
+  String get ideasOneMarkerBlenderStep2;
+
+  /// No description provided for @ideasOneMarkerBlenderStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Second square: one stroke of marker, then the blender over it while it is wet.'**
+  String get ideasOneMarkerBlenderStep3;
+
+  /// No description provided for @ideasOneMarkerBlenderStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Third square: blender first, then marker into the wet blender. Fourth: touch the marker to the blender nib and paint with the blender only.'**
+  String get ideasOneMarkerBlenderStep4;
+
+  /// No description provided for @ideasOneMarkerBlenderStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Line them up: a four-step ladder out of a single marker.'**
+  String get ideasOneMarkerBlenderStep5;
+
+  /// No description provided for @ideasColourWheelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your colour wheel'**
+  String get ideasColourWheelTitle;
+
+  /// No description provided for @ideasColourWheelSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay out twelve of your markers as a wheel and find the gaps in your collection.'**
+  String get ideasColourWheelSummary;
+
+  /// No description provided for @ideasColourWheelPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading a colour wheel with the markers you own.'**
+  String get ideasColourWheelPractice;
+
+  /// No description provided for @ideasColourWheelSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A circle about ten centimetres across, divided into twelve wedges.'**
+  String get ideasColourWheelSubject;
+
+  /// No description provided for @ideasColourWheelTip.
+  ///
+  /// In en, this message translates to:
+  /// **'A marker wheel is a shopping list and a mixing guide on one page.'**
+  String get ideasColourWheelTip;
+
+  /// No description provided for @ideasColourWheelStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Trace a circle round a cup and divide it into twelve wedges.'**
+  String get ideasColourWheelStep1;
+
+  /// No description provided for @ideasColourWheelStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the marker closest to pure yellow, then to red and then to blue, and fill their wedges, four wedges apart.'**
+  String get ideasColourWheelStep2;
+
+  /// No description provided for @ideasColourWheelStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the wedges between with the closest markers you own: orange, green, violet, then the six in-betweens.'**
+  String get ideasColourWheelStep3;
+
+  /// No description provided for @ideasColourWheelStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Write each code under its wedge. An empty or doubtful wedge is a marker you might want next.'**
+  String get ideasColourWheelStep4;
+
+  /// No description provided for @ideasDeepSkinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep skin tones'**
+  String get ideasDeepSkinTitle;
+
+  /// No description provided for @ideasDeepSkinSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour a face in deep skin tones, with a warm light and a reddish blush.'**
+  String get ideasDeepSkinSummary;
+
+  /// No description provided for @ideasDeepSkinPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Shading deep skin with a long range of one hue.'**
+  String get ideasDeepSkinPractice;
+
+  /// No description provided for @ideasDeepSkinSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A face in three-quarter view, lit from the front.'**
+  String get ideasDeepSkinSubject;
+
+  /// No description provided for @ideasDeepSkinTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Deep skin needs a long lightness range in one hue, which marker families are built for.'**
+  String get ideasDeepSkinTip;
+
+  /// No description provided for @ideasDeepSkinStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a face and mark the forehead, the nose and the cheekbones as the lit planes.'**
+  String get ideasDeepSkinStep1;
+
+  /// No description provided for @ideasDeepSkinStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover the whole face with the lightest brown.'**
+  String get ideasDeepSkinStep2;
+
+  /// No description provided for @ideasDeepSkinStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'While the first layer is damp, add the red-brown on the cheeks and the lips.'**
+  String get ideasDeepSkinStep3;
+
+  /// No description provided for @ideasDeepSkinStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the base brown everywhere except on the lit planes.'**
+  String get ideasDeepSkinStep4;
+
+  /// No description provided for @ideasDeepSkinStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the darkest marker under the brows, the nose, the lower lip and the jaw, and leave the lit planes with only the first layer.'**
+  String get ideasDeepSkinStep5;
+
+  /// No description provided for @ideasBlackObjectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Black without black'**
+  String get ideasBlackObjectTitle;
+
+  /// No description provided for @ideasBlackObjectSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour a black cat or boot with dark blues and violets, saving the black marker for last.'**
+  String get ideasBlackObjectSummary;
+
+  /// No description provided for @ideasBlackObjectPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Building a dark object out of dark colours instead of black.'**
+  String get ideasBlackObjectPractice;
+
+  /// No description provided for @ideasBlackObjectSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A black cat, a boot or a shiny kettle.'**
+  String get ideasBlackObjectSubject;
+
+  /// No description provided for @ideasBlackObjectTip.
+  ///
+  /// In en, this message translates to:
+  /// **'A flat black marker kills the form. Layered dark colours keep it.'**
+  String get ideasBlackObjectTip;
+
+  /// No description provided for @ideasBlackObjectStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the object and the shape of its reflections: black things mirror the sky and the room.'**
+  String get ideasBlackObjectStep1;
+
+  /// No description provided for @ideasBlackObjectStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the pale cool grey-blue on the reflections and the top planes.'**
+  String get ideasBlackObjectStep2;
+
+  /// No description provided for @ideasBlackObjectStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover most of the object with the dark blue.'**
+  String get ideasBlackObjectStep3;
+
+  /// No description provided for @ideasBlackObjectStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the dark violet on the underside.'**
+  String get ideasBlackObjectStep4;
+
+  /// No description provided for @ideasBlackObjectStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the darkest marker for the deepest creases, and add a white gel glint if the surface is shiny.'**
+  String get ideasBlackObjectStep5;
+
+  /// No description provided for @ideasWhiteObjectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'White without white'**
+  String get ideasWhiteObjectTitle;
+
+  /// No description provided for @ideasWhiteObjectSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A white cup or egg with pale greys, one tinted shadow and plenty of untouched paper.'**
+  String get ideasWhiteObjectSummary;
+
+  /// No description provided for @ideasWhiteObjectPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Painting a white object without painting over the paper.'**
+  String get ideasWhiteObjectPractice;
+
+  /// No description provided for @ideasWhiteObjectSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A white cup, an egg or a folded napkin.'**
+  String get ideasWhiteObjectSubject;
+
+  /// No description provided for @ideasWhiteObjectTip.
+  ///
+  /// In en, this message translates to:
+  /// **'A white object is mostly paper. Markers reward leaving it alone.'**
+  String get ideasWhiteObjectTip;
+
+  /// No description provided for @ideasWhiteObjectStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the object and mark the lit side: that side stays paper.'**
+  String get ideasWhiteObjectStep1;
+
+  /// No description provided for @ideasWhiteObjectStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the very pale tinted marker on the shadow side only.'**
+  String get ideasWhiteObjectStep2;
+
+  /// No description provided for @ideasWhiteObjectStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the light grey inside that, towards the darkest part.'**
+  String get ideasWhiteObjectStep3;
+
+  /// No description provided for @ideasWhiteObjectStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the slightly darker cool grey only along the edge furthest from the light and where the object meets the table.'**
+  String get ideasWhiteObjectStep4;
+
+  /// No description provided for @ideasWhiteObjectStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a hint of the colour of the table reflected into the underside of the object.'**
+  String get ideasWhiteObjectStep5;
+
+  /// No description provided for @ideasFeatheredEdgeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Feathered edge'**
+  String get ideasFeatheredEdgeTitle;
+
+  /// No description provided for @ideasFeatheredEdgeSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Make one side of a shape fade into white paper and keep the other side crisp.'**
+  String get ideasFeatheredEdgeSummary;
+
+  /// No description provided for @ideasFeatheredEdgePractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A soft edge next to a hard one: the simplest way to give a shape light.'**
+  String get ideasFeatheredEdgePractice;
+
+  /// No description provided for @ideasFeatheredEdgeSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A leaf, a petal or a fold of cloth.'**
+  String get ideasFeatheredEdgeSubject;
+
+  /// No description provided for @ideasFeatheredEdgeTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Lift the nib as you go: the ink runs out of the stroke on its own.'**
+  String get ideasFeatheredEdgeTip;
+
+  /// No description provided for @ideasFeatheredEdgeStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a leaf and decide which edge is in the light.'**
+  String get ideasFeatheredEdgeStep1;
+
+  /// No description provided for @ideasFeatheredEdgeStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the dark edge with the base in short strokes that all point towards the light side.'**
+  String get ideasFeatheredEdgeStep2;
+
+  /// No description provided for @ideasFeatheredEdgeStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull the light marker from the middle out over the ends of those strokes, lifting the nib as you go so each stroke dies out.'**
+  String get ideasFeatheredEdgeStep3;
+
+  /// No description provided for @ideasFeatheredEdgeStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Go over the join again, always moving from colour into white.'**
+  String get ideasFeatheredEdgeStep4;
+
+  /// No description provided for @ideasFeatheredEdgeStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare the two edges: one soft, one hard. That contrast is what makes the shape read.'**
+  String get ideasFeatheredEdgeStep5;
+
+  /// No description provided for @ideasTipToTipTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tip to tip'**
+  String get ideasTipToTipTitle;
+
+  /// No description provided for @ideasTipToTipSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Load a dark colour onto a light marker nib and lay a gradient in one pass.'**
+  String get ideasTipToTipSummary;
+
+  /// No description provided for @ideasTipToTipPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Borrowing ink from one marker to another for a quick gradient.'**
+  String get ideasTipToTipPractice;
+
+  /// No description provided for @ideasTipToTipSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A strip of paper the width of two fingers.'**
+  String get ideasTipToTipSubject;
+
+  /// No description provided for @ideasTipToTipTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the dark marker still: the light nib only takes ink from the tip.'**
+  String get ideasTipToTipTip;
+
+  /// No description provided for @ideasTipToTipStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Tape a strip about the width of two fingers.'**
+  String get ideasTipToTipStep1;
+
+  /// No description provided for @ideasTipToTipStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold the dark marker still and touch the light marker nib to it for a couple of seconds.'**
+  String get ideasTipToTipStep2;
+
+  /// No description provided for @ideasTipToTipStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Start at the bottom of the strip with the loaded nib: the first strokes are dark, then the colour of the marker comes back.'**
+  String get ideasTipToTipStep3;
+
+  /// No description provided for @ideasTipToTipStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Scribble the nib on a scrap until it runs clean again: the light marker is not spoilt.'**
+  String get ideasTipToTipStep4;
+
+  /// No description provided for @ideasTipToTipStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat on a second strip, loading the nib for longer: the dark part reaches further.'**
+  String get ideasTipToTipStep5;
+
+  /// No description provided for @ideasBlenderPatternTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Blender patterns'**
+  String get ideasBlenderPatternTitle;
+
+  /// No description provided for @ideasBlenderPatternSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Lift dots and lines out of a flat colour with the colourless blender.'**
+  String get ideasBlenderPatternSummary;
+
+  /// No description provided for @ideasBlenderPatternPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Moving ink instead of erasing it: dots, lines and patterns.'**
+  String get ideasBlenderPatternPractice;
+
+  /// No description provided for @ideasBlenderPatternSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A square of colour to draw the pattern on.'**
+  String get ideasBlenderPatternSubject;
+
+  /// No description provided for @ideasBlenderPatternTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait between touches: two marks too close run into one.'**
+  String get ideasBlenderPatternTip;
+
+  /// No description provided for @ideasBlenderPatternStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill a square with the base and let it dry fully.'**
+  String get ideasBlenderPatternStep1;
+
+  /// No description provided for @ideasBlenderPatternStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the fine point of the blender into the colour and hold for a second: a pale dot opens with a darker rim.'**
+  String get ideasBlenderPatternStep2;
+
+  /// No description provided for @ideasBlenderPatternStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a line with the broad nib of the blender: the pushed ink gathers at the edges.'**
+  String get ideasBlenderPatternStep3;
+
+  /// No description provided for @ideasBlenderPatternStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a pattern: polka dots, stripes or a row of fish scales.'**
+  String get ideasBlenderPatternStep4;
+
+  /// No description provided for @ideasBlenderPatternStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait between the touches or the dots run together.'**
+  String get ideasBlenderPatternStep5;
+
+  /// No description provided for @ideasOneMarkerLayersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'One marker, three layers'**
+  String get ideasOneMarkerLayersTitle;
+
+  /// No description provided for @ideasOneMarkerLayersSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade a cube with a single marker by layering one, two and three passes.'**
+  String get ideasOneMarkerLayersSummary;
+
+  /// No description provided for @ideasOneMarkerLayersPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'How much range one marker has when the layers dry one on top of the other.'**
+  String get ideasOneMarkerLayersPractice;
+
+  /// No description provided for @ideasOneMarkerLayersSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A cube with the light coming from one top corner.'**
+  String get ideasOneMarkerLayersSubject;
+
+  /// No description provided for @ideasOneMarkerLayersTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Let every layer dry: a wet second pass moves the ink instead of darkening it.'**
+  String get ideasOneMarkerLayersTip;
+
+  /// No description provided for @ideasOneMarkerLayersStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a cube with the light coming from one top corner.'**
+  String get ideasOneMarkerLayersStep1;
+
+  /// No description provided for @ideasOneMarkerLayersStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'One pass on every face. Let it dry.'**
+  String get ideasOneMarkerLayersStep2;
+
+  /// No description provided for @ideasOneMarkerLayersStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'A second pass on the two faces away from the light.'**
+  String get ideasOneMarkerLayersStep3;
+
+  /// No description provided for @ideasOneMarkerLayersStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'A third pass only on the darkest face and along the bottom edges.'**
+  String get ideasOneMarkerLayersStep4;
+
+  /// No description provided for @ideasOneMarkerLayersStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Look at the three values: that is how much range a single marker has.'**
+  String get ideasOneMarkerLayersStep5;
+
+  /// No description provided for @ideasStipplePeelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stippled orange peel'**
+  String get ideasStipplePeelTitle;
+
+  /// No description provided for @ideasStipplePeelSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Build the dimpled texture of a citrus peel with dots over a blend.'**
+  String get ideasStipplePeelSummary;
+
+  /// No description provided for @ideasStipplePeelPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Stippling on top of a dry blend, without smearing it.'**
+  String get ideasStipplePeelPractice;
+
+  /// No description provided for @ideasStipplePeelSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'An orange with a soft highlight on its upper side.'**
+  String get ideasStipplePeelSubject;
+
+  /// No description provided for @ideasStipplePeelTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the fine point of the nib: it gives clean specks.'**
+  String get ideasStipplePeelTip;
+
+  /// No description provided for @ideasStipplePeelStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil an orange and a soft highlight on its upper side.'**
+  String get ideasStipplePeelStep1;
+
+  /// No description provided for @ideasStipplePeelStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the orange, keeping the highlight paler.'**
+  String get ideasStipplePeelStep2;
+
+  /// No description provided for @ideasStipplePeelStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend the base into the shadow half while it is wet.'**
+  String get ideasStipplePeelStep3;
+
+  /// No description provided for @ideasStipplePeelStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Once dry, tap the fine point of the shadow marker in loose dots, closer together in the shadow and almost none near the highlight.'**
+  String get ideasStipplePeelStep4;
+
+  /// No description provided for @ideasStipplePeelStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a few light dots inside the shadow dots to break them up.'**
+  String get ideasStipplePeelStep5;
+
+  /// No description provided for @ideasClearGlassTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A clear glass'**
+  String get ideasClearGlassTitle;
+
+  /// No description provided for @ideasClearGlassSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour an empty drinking glass with greys and almost nothing else.'**
+  String get ideasClearGlassSummary;
+
+  /// No description provided for @ideasClearGlassPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Grey and white paper: the lightest way to draw glass.'**
+  String get ideasClearGlassPractice;
+
+  /// No description provided for @ideasClearGlassSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A tumbler with the rim, the foot and two vertical highlights.'**
+  String get ideasClearGlassSubject;
+
+  /// No description provided for @ideasClearGlassTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Glass is darkest where it is thickest: the rim and the foot.'**
+  String get ideasClearGlassTip;
+
+  /// No description provided for @ideasClearGlassStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the glass and mark the rim, the base and two vertical highlights that stay white paper.'**
+  String get ideasClearGlassStep1;
+
+  /// No description provided for @ideasClearGlassStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the glass with the lightest grey, leaving the highlights and most of the middle white.'**
+  String get ideasClearGlassStep2;
+
+  /// No description provided for @ideasClearGlassStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the rim, the thick base and the far edge: glass is darkest where it is thickest.'**
+  String get ideasClearGlassStep3;
+
+  /// No description provided for @ideasClearGlassStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay a patch of colour behind the glass and let a paler version of it show through the glass, over the light grey.'**
+  String get ideasClearGlassStep4;
+
+  /// No description provided for @ideasClearGlassStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'White gel on the rim and the base edge for the sharpest glints.'**
+  String get ideasClearGlassStep5;
+
+  /// No description provided for @ideasPolishedMetalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Polished metal'**
+  String get ideasPolishedMetalTitle;
+
+  /// No description provided for @ideasPolishedMetalSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a spoon look like metal with hard bands of grey and one reflected colour.'**
+  String get ideasPolishedMetalSummary;
+
+  /// No description provided for @ideasPolishedMetalPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Hard-edged bands and a long range of values: how metal reads.'**
+  String get ideasPolishedMetalPractice;
+
+  /// No description provided for @ideasPolishedMetalSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A spoon with the bands of its reflection drawn in.'**
+  String get ideasPolishedMetalSubject;
+
+  /// No description provided for @ideasPolishedMetalTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Metal has no soft transitions: keep the edges of the bands crisp.'**
+  String get ideasPolishedMetalTip;
+
+  /// No description provided for @ideasPolishedMetalStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the spoon and draw its reflections as bands: a dark one across the bowl, a light one next to it, no soft transitions.'**
+  String get ideasPolishedMetalStep1;
+
+  /// No description provided for @ideasPolishedMetalStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the bowl and the handle with the lightest grey.'**
+  String get ideasPolishedMetalStep2;
+
+  /// No description provided for @ideasPolishedMetalStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the dark bands with crisp edges, following the curve of the bowl.'**
+  String get ideasPolishedMetalStep3;
+
+  /// No description provided for @ideasPolishedMetalStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the darkest grey right next to the brightest band: metal lives on that contrast.'**
+  String get ideasPolishedMetalStep4;
+
+  /// No description provided for @ideasPolishedMetalStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Let a smudge of the colour of the table reflect in the lower half of the bowl, then white gel on the sharpest glint.'**
+  String get ideasPolishedMetalStep5;
+
+  /// No description provided for @ideasCastShadowTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The shadow on the table'**
+  String get ideasCastShadowTitle;
+
+  /// No description provided for @ideasCastShadowSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a cup and get its cast shadow right: dark at the contact, soft further away.'**
+  String get ideasCastShadowSummary;
+
+  /// No description provided for @ideasCastShadowPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Cast shadows: the contact line, the fade and the grey that draws them.'**
+  String get ideasCastShadowPractice;
+
+  /// No description provided for @ideasCastShadowSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A cup on a table, with the light from one side.'**
+  String get ideasCastShadowSubject;
+
+  /// No description provided for @ideasCastShadowTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The shadow starts where the object touches the table, not where the light ends.'**
+  String get ideasCastShadowTip;
+
+  /// No description provided for @ideasCastShadowStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a cup and the shape of its shadow on the table, longer on the side away from the light.'**
+  String get ideasCastShadowStep1;
+
+  /// No description provided for @ideasCastShadowStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the cup; shade its far side with the same marker in a second layer.'**
+  String get ideasCastShadowStep2;
+
+  /// No description provided for @ideasCastShadowStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the cast shadow with the grey, starting at the base of the cup and lifting as you move away.'**
+  String get ideasCastShadowStep3;
+
+  /// No description provided for @ideasCastShadowStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a thin dark line where the cup touches the table.'**
+  String get ideasCastShadowStep4;
+
+  /// No description provided for @ideasCastShadowStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Soften the far edge of the shadow with a second light touch of grey while the first is still damp.'**
+  String get ideasCastShadowStep5;
+
+  /// No description provided for @ideasSoftCloudsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft clouds'**
+  String get ideasSoftCloudsTitle;
+
+  /// No description provided for @ideasSoftCloudsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the sky around the clouds and leave the clouds as paper.'**
+  String get ideasSoftCloudsSummary;
+
+  /// No description provided for @ideasSoftCloudsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Negative painting: the shape is the paper you did not touch.'**
+  String get ideasSoftCloudsPractice;
+
+  /// No description provided for @ideasSoftCloudsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Two or three clouds with round tops and flat bottoms.'**
+  String get ideasSoftCloudsSubject;
+
+  /// No description provided for @ideasSoftCloudsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Work around the clouds with the broad nib: their edges keep a ragged look.'**
+  String get ideasSoftCloudsTip;
+
+  /// No description provided for @ideasSoftCloudsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil two or three cloud shapes very lightly: round tops, flatter bottoms.'**
+  String get ideasSoftCloudsStep1;
+
+  /// No description provided for @ideasSoftCloudsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the sky with the light blue, working around the clouds with the broad nib so their edges stay a bit ragged.'**
+  String get ideasSoftCloudsStep2;
+
+  /// No description provided for @ideasSoftCloudsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the sky towards the top and blend down into the light blue while it is wet.'**
+  String get ideasSoftCloudsStep3;
+
+  /// No description provided for @ideasSoftCloudsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade the underside of each cloud with the light grey, keeping the tops white.'**
+  String get ideasSoftCloudsStep4;
+
+  /// No description provided for @ideasSoftCloudsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Soften any hard sky edge against a cloud with the blender, pushing the colour outwards.'**
+  String get ideasSoftCloudsStep5;
+
+  /// No description provided for @ideasStillWaterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reflection in still water'**
+  String get ideasStillWaterTitle;
+
+  /// No description provided for @ideasStillWaterSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a tree on a bank and its upside-down, slightly darker copy in the water.'**
+  String get ideasStillWaterSummary;
+
+  /// No description provided for @ideasStillWaterPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Glazing a colour over another one: how a reflection is made.'**
+  String get ideasStillWaterPractice;
+
+  /// No description provided for @ideasStillWaterSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A tree on a bank with its reflection in the water below.'**
+  String get ideasStillWaterSubject;
+
+  /// No description provided for @ideasStillWaterTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Paint the reflection in horizontal strokes only: the water moves sideways.'**
+  String get ideasStillWaterTip;
+
+  /// No description provided for @ideasStillWaterStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a horizon line, a simple tree above it and its mirror image below.'**
+  String get ideasStillWaterStep1;
+
+  /// No description provided for @ideasStillWaterStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the tree; colour its reflection with the same marker in horizontal strokes only.'**
+  String get ideasStillWaterStep2;
+
+  /// No description provided for @ideasStillWaterStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the light blue over the whole water area, including the reflection, in long horizontal strokes.'**
+  String get ideasStillWaterStep3;
+
+  /// No description provided for @ideasStillWaterStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the water near the bank and the far edge; a few broken horizontal lines of base across the reflection.'**
+  String get ideasStillWaterStep4;
+
+  /// No description provided for @ideasStillWaterStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Put the dark blue where the bank meets the water, then two or three thin white gel lines for ripples.'**
+  String get ideasStillWaterStep5;
+
+  /// No description provided for @ideasTwistedRibbonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Twisted ribbon'**
+  String get ideasTwistedRibbonTitle;
+
+  /// No description provided for @ideasTwistedRibbonSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend a gradient that bends with a ribbon as it twists over and under itself.'**
+  String get ideasTwistedRibbonSummary;
+
+  /// No description provided for @ideasTwistedRibbonPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeating a short blend on every turn of a shape.'**
+  String get ideasTwistedRibbonPractice;
+
+  /// No description provided for @ideasTwistedRibbonSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A ribbon with two twists, over and under itself.'**
+  String get ideasTwistedRibbonSubject;
+
+  /// No description provided for @ideasTwistedRibbonTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend along the curve of the ribbon, never straight across it.'**
+  String get ideasTwistedRibbonTip;
+
+  /// No description provided for @ideasTwistedRibbonStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a ribbon with two twists; mark which segments show the front and which the back.'**
+  String get ideasTwistedRibbonStep1;
+
+  /// No description provided for @ideasTwistedRibbonStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill every segment with the light marker.'**
+  String get ideasTwistedRibbonStep2;
+
+  /// No description provided for @ideasTwistedRibbonStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'On each segment, add the base on the side that curves away from you, in strokes that follow the curve and not straight across.'**
+  String get ideasTwistedRibbonStep3;
+
+  /// No description provided for @ideasTwistedRibbonStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken only where a segment passes under another, as a narrow band right at the overlap.'**
+  String get ideasTwistedRibbonStep4;
+
+  /// No description provided for @ideasTwistedRibbonStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend with the blender along each band where the gradient looks stepped.'**
+  String get ideasTwistedRibbonStep5;
+
+  /// No description provided for @ideasNoLineLeafTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No-line colouring'**
+  String get ideasNoLineLeafTitle;
+
+  /// No description provided for @ideasNoLineLeafSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour a leaf from a pencil sketch and let the edges of the colour do the work of the outline.'**
+  String get ideasNoLineLeafSummary;
+
+  /// No description provided for @ideasNoLineLeafPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Drawing without a liner: the edge of the colour is the outline.'**
+  String get ideasNoLineLeafPractice;
+
+  /// No description provided for @ideasNoLineLeafSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A simple leaf with its central vein.'**
+  String get ideasNoLineLeafSubject;
+
+  /// No description provided for @ideasNoLineLeafTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Lift the pencil with a soft eraser until you can only just see it.'**
+  String get ideasNoLineLeafTip;
+
+  /// No description provided for @ideasNoLineLeafStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw the leaf and its central vein very lightly in pencil, then lift most of the graphite with a soft eraser until you can only just see it.'**
+  String get ideasNoLineLeafStep1;
+
+  /// No description provided for @ideasNoLineLeafStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the leaf; stop exactly at the pencil line.'**
+  String get ideasNoLineLeafStep2;
+
+  /// No description provided for @ideasNoLineLeafStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade one half and the base of the leaf while the first layer is damp.'**
+  String get ideasNoLineLeafStep3;
+
+  /// No description provided for @ideasNoLineLeafStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Define the edge on the shadow side with a thin line of the darkest marker instead of a liner.'**
+  String get ideasNoLineLeafStep4;
+
+  /// No description provided for @ideasNoLineLeafStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Erase any pencil still showing once the ink is dry.'**
+  String get ideasNoLineLeafStep5;
+
+  /// No description provided for @ideasShortFurTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Short fur'**
+  String get ideasShortFurTitle;
+
+  /// No description provided for @ideasShortFurSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the ear of a cat with short flicks in two directions.'**
+  String get ideasShortFurSummary;
+
+  /// No description provided for @ideasShortFurPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Short strokes that follow the direction the hair grows.'**
+  String get ideasShortFurPractice;
+
+  /// No description provided for @ideasShortFurSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A cat ear with a few arrows showing the way the fur grows.'**
+  String get ideasShortFurSubject;
+
+  /// No description provided for @ideasShortFurTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Flick from the roots outwards: press, move fast and lift.'**
+  String get ideasShortFurTip;
+
+  /// No description provided for @ideasShortFurStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the ear and draw the direction the fur grows with a few arrows.'**
+  String get ideasShortFurStep1;
+
+  /// No description provided for @ideasShortFurStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the ear with the light marker, flicking outward at the rim so the edge is furry and not solid.'**
+  String get ideasShortFurStep2;
+
+  /// No description provided for @ideasShortFurStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Short flicks of base from the inner edge outward, following the arrows.'**
+  String get ideasShortFurStep3;
+
+  /// No description provided for @ideasShortFurStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Fewer and darker flicks inside the ear and at the base where it meets the head.'**
+  String get ideasShortFurStep4;
+
+  /// No description provided for @ideasShortFurStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Flick the light marker back over the joins to merge the layers and soften the darkest flicks.'**
+  String get ideasShortFurStep5;
+
+  /// No description provided for @ideasWoodGrainTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wood plank'**
+  String get ideasWoodGrainTitle;
+
+  /// No description provided for @ideasWoodGrainSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A plank with grain lines and a knot, in three browns.'**
+  String get ideasWoodGrainSummary;
+
+  /// No description provided for @ideasWoodGrainPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Long strokes that follow the shape of the material.'**
+  String get ideasWoodGrainPractice;
+
+  /// No description provided for @ideasWoodGrainSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A wooden plank with a knot near one end.'**
+  String get ideasWoodGrainSubject;
+
+  /// No description provided for @ideasWoodGrainTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The grain flows around the knot: draw the lines bending, never straight.'**
+  String get ideasWoodGrainTip;
+
+  /// No description provided for @ideasWoodGrainStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a plank and a knot; the grain flows around the knot like water around a stone.'**
+  String get ideasWoodGrainStep1;
+
+  /// No description provided for @ideasWoodGrainStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the plank with long strokes along the grain.'**
+  String get ideasWoodGrainStep2;
+
+  /// No description provided for @ideasWoodGrainStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Long, slightly wavy lines of base along the grain, bunching up near the knot.'**
+  String get ideasWoodGrainStep3;
+
+  /// No description provided for @ideasWoodGrainStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'A few darker lines and the rings of the knot; darken the lower edge of the plank.'**
+  String get ideasWoodGrainStep4;
+
+  /// No description provided for @ideasWoodGrainStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back over the lines with the light marker to soften where they look drawn on.'**
+  String get ideasWoodGrainStep5;
+
+  /// No description provided for @ideasBrickWallTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Brick wall'**
+  String get ideasBrickWallTitle;
+
+  /// No description provided for @ideasBrickWallSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A patch of brick wall with bricks of slightly different colours and pale mortar.'**
+  String get ideasBrickWallSummary;
+
+  /// No description provided for @ideasBrickWallPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Flat fills, one brick at a time, and the grey of the mortar.'**
+  String get ideasBrickWallPractice;
+
+  /// No description provided for @ideasBrickWallSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A patch of wall with about twenty bricks.'**
+  String get ideasBrickWallSubject;
+
+  /// No description provided for @ideasBrickWallTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave the mortar as paper: it is lighter than any brick.'**
+  String get ideasBrickWallTip;
+
+  /// No description provided for @ideasBrickWallStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the mortar grid; leave it as paper for now.'**
+  String get ideasBrickWallStep1;
+
+  /// No description provided for @ideasBrickWallStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill every brick with the light marker, letting each brick dry as a separate shape.'**
+  String get ideasBrickWallStep2;
+
+  /// No description provided for @ideasBrickWallStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Go over about half the bricks with the base, chosen at random, so the wall is not uniform.'**
+  String get ideasBrickWallStep3;
+
+  /// No description provided for @ideasBrickWallStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow on the lower edge of each brick, plus a few chips and some darker bricks.'**
+  String get ideasBrickWallStep4;
+
+  /// No description provided for @ideasBrickWallStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the mortar lines with the light grey.'**
+  String get ideasBrickWallStep5;
+
+  /// No description provided for @ideasFoldedClothTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Folded cloth'**
+  String get ideasFoldedClothTitle;
+
+  /// No description provided for @ideasFoldedClothSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade the folds of a hanging cloth with four values and one direction of light.'**
+  String get ideasFoldedClothSummary;
+
+  /// No description provided for @ideasFoldedClothPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'The same gradient repeated on every fold.'**
+  String get ideasFoldedClothPractice;
+
+  /// No description provided for @ideasFoldedClothSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A cloth hanging over a line, with three or four folds.'**
+  String get ideasFoldedClothSubject;
+
+  /// No description provided for @ideasFoldedClothTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The darkest line goes only where the cloth turns under itself.'**
+  String get ideasFoldedClothTip;
+
+  /// No description provided for @ideasFoldedClothStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a cloth draped over a line, three or four folds; mark the top of each fold.'**
+  String get ideasFoldedClothStep1;
+
+  /// No description provided for @ideasFoldedClothStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the cloth.'**
+  String get ideasFoldedClothStep2;
+
+  /// No description provided for @ideasFoldedClothStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Base on the side of each fold away from the light, blended into the light while it is damp.'**
+  String get ideasFoldedClothStep3;
+
+  /// No description provided for @ideasFoldedClothStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Shadow deep inside each fold, where the cloth turns under.'**
+  String get ideasFoldedClothStep4;
+
+  /// No description provided for @ideasFoldedClothStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'A thin dark line only at the very bottom of the deepest folds; blend with the blender any hard step on the round parts.'**
+  String get ideasFoldedClothStep5;
+
+  /// No description provided for @ideasWaterDropsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drops on a leaf'**
+  String get ideasWaterDropsTitle;
+
+  /// No description provided for @ideasWaterDropsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Three water drops on a leaf, each with a shadow, a dark edge and a bright glint.'**
+  String get ideasWaterDropsSummary;
+
+  /// No description provided for @ideasWaterDropsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A few crisp marks on top of a finished blend.'**
+  String get ideasWaterDropsPractice;
+
+  /// No description provided for @ideasWaterDropsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A leaf with three drops of water on it.'**
+  String get ideasWaterDropsSubject;
+
+  /// No description provided for @ideasWaterDropsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The drop reverses the light: shade the side that faces it.'**
+  String get ideasWaterDropsTip;
+
+  /// No description provided for @ideasWaterDropsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a leaf and three drops; mark in each drop a small highlight on the light side.'**
+  String get ideasWaterDropsStep1;
+
+  /// No description provided for @ideasWaterDropsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the whole leaf, drops included; the drops are the leaf seen through water.'**
+  String get ideasWaterDropsStep2;
+
+  /// No description provided for @ideasWaterDropsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade the leaf, and inside each drop shade the side towards the light, because the drop acts as a lens and reverses it.'**
+  String get ideasWaterDropsStep3;
+
+  /// No description provided for @ideasWaterDropsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'A thin dark crescent on the far side of each drop and a small cast shadow under it.'**
+  String get ideasWaterDropsStep4;
+
+  /// No description provided for @ideasWaterDropsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'White gel: one hard dot per drop on the light side, plus a faint lighter rim opposite it.'**
+  String get ideasWaterDropsStep5;
+
+  /// No description provided for @ideasStrawberrySeedsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Strawberry'**
+  String get ideasStrawberrySeedsTitle;
+
+  /// No description provided for @ideasStrawberrySeedsSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A strawberry whose seeds sit in small dimples, with a green cap.'**
+  String get ideasStrawberrySeedsSummary;
+
+  /// No description provided for @ideasStrawberrySeedsPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Texture made of small marks: dimples, seeds and a cap.'**
+  String get ideasStrawberrySeedsPractice;
+
+  /// No description provided for @ideasStrawberrySeedsSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A strawberry with a loose grid of seeds.'**
+  String get ideasStrawberrySeedsSubject;
+
+  /// No description provided for @ideasStrawberrySeedsTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the dimples while the colour is still damp: the darker ring forms by itself.'**
+  String get ideasStrawberrySeedsTip;
+
+  /// No description provided for @ideasStrawberrySeedsStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the strawberry and a loose grid of seed dots, closer together towards the tip.'**
+  String get ideasStrawberrySeedsStep1;
+
+  /// No description provided for @ideasStrawberrySeedsStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the fruit, leaving a soft highlight.'**
+  String get ideasStrawberrySeedsStep2;
+
+  /// No description provided for @ideasStrawberrySeedsStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Blend the base around the sides; while damp, press a slightly darker dot above each seed position.'**
+  String get ideasStrawberrySeedsStep3;
+
+  /// No description provided for @ideasStrawberrySeedsStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken the lower half and the dimple above each seed.'**
+  String get ideasStrawberrySeedsStep4;
+
+  /// No description provided for @ideasStrawberrySeedsStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour the leaves and the stalk with the green, then a tiny pale gel dot in each dimple for the seed.'**
+  String get ideasStrawberrySeedsStep5;
+
+  /// No description provided for @ideasPaletteMixingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixing on a palette'**
+  String get ideasPaletteMixingTitle;
+
+  /// No description provided for @ideasPaletteMixingSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Make a third colour by mixing two markers on a plastic surface and picking it up with the blender.'**
+  String get ideasPaletteMixingSummary;
+
+  /// No description provided for @ideasPaletteMixingPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixing two inks outside the paper, with the blender as the brush.'**
+  String get ideasPaletteMixingPractice;
+
+  /// No description provided for @ideasPaletteMixingSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A plastic lid or a blending card, plus a scrap of paper.'**
+  String get ideasPaletteMixingSubject;
+
+  /// No description provided for @ideasPaletteMixingTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The blender only carries what is wet: do not let the puddles dry.'**
+  String get ideasPaletteMixingTip;
+
+  /// No description provided for @ideasPaletteMixingStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Scribble the first marker onto a non-porous scrap, such as a blending card, a plastic lid or a zip bag.'**
+  String get ideasPaletteMixingStep1;
+
+  /// No description provided for @ideasPaletteMixingStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Scribble the second marker next to it so the two puddles touch.'**
+  String get ideasPaletteMixingStep2;
+
+  /// No description provided for @ideasPaletteMixingStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick the mixture up with the broad nib of the colourless blender and paint a swatch with it; next to it, swatch each marker alone.'**
+  String get ideasPaletteMixingStep3;
+
+  /// No description provided for @ideasPaletteMixingStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a second mix with more of one of the two colours.'**
+  String get ideasPaletteMixingStep4;
+
+  /// No description provided for @ideasPaletteMixingStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Note which mixes you would like to own as a marker.'**
+  String get ideasPaletteMixingStep5;
+
+  /// No description provided for @ideasLongHairTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Long hair'**
+  String get ideasLongHairTitle;
+
+  /// No description provided for @ideasLongHairSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'A fall of hair with a band of light across it and strands that follow the head.'**
+  String get ideasLongHairSummary;
+
+  /// No description provided for @ideasLongHairPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Long tapered strokes and a band of light that is only paper.'**
+  String get ideasLongHairPractice;
+
+  /// No description provided for @ideasLongHairSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A head of hair with a few big locks and a band of light.'**
+  String get ideasLongHairSubject;
+
+  /// No description provided for @ideasLongHairTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Press less inside the band of light: the paper does the work.'**
+  String get ideasLongHairTip;
+
+  /// No description provided for @ideasLongHairStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil the hair as a few big locks and not as single hairs, and a curved band where the light hits.'**
+  String get ideasLongHairStep1;
+
+  /// No description provided for @ideasLongHairStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill all the hair, pressing less inside the light band.'**
+  String get ideasLongHairStep2;
+
+  /// No description provided for @ideasLongHairStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Long strokes from the parting down, each lifting as it reaches the light band, then from the ends up towards it.'**
+  String get ideasLongHairStep3;
+
+  /// No description provided for @ideasLongHairStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Darken between the locks and under the ear and the neck.'**
+  String get ideasLongHairStep4;
+
+  /// No description provided for @ideasLongHairStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'A few thin strands of the darkest marker, then two or three fine white gel strands only inside the light band.'**
+  String get ideasLongHairStep5;
+
+  /// No description provided for @ideasOverlapGlazesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlapping glazes'**
+  String get ideasOverlapGlazesTitle;
+
+  /// No description provided for @ideasOverlapGlazesSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlap three transparent circles and see which new colours appear.'**
+  String get ideasOverlapGlazesSummary;
+
+  /// No description provided for @ideasOverlapGlazesPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Transparent layers: every overlap is a real mix.'**
+  String get ideasOverlapGlazesPractice;
+
+  /// No description provided for @ideasOverlapGlazesSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Three overlapping circles, like a Venn diagram.'**
+  String get ideasOverlapGlazesSubject;
+
+  /// No description provided for @ideasOverlapGlazesTip.
+  ///
+  /// In en, this message translates to:
+  /// **'The order matters: the lighter colour on top always looks different.'**
+  String get ideasOverlapGlazesTip;
+
+  /// No description provided for @ideasOverlapGlazesStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil three circles that overlap like a Venn diagram.'**
+  String get ideasOverlapGlazesStep1;
+
+  /// No description provided for @ideasOverlapGlazesStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the first circle and let it dry completely.'**
+  String get ideasOverlapGlazesStep2;
+
+  /// No description provided for @ideasOverlapGlazesStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the second, including the overlap; the overlap turns a third colour.'**
+  String get ideasOverlapGlazesStep3;
+
+  /// No description provided for @ideasOverlapGlazesStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the third circle; the middle, where all three meet, is the darkest mix.'**
+  String get ideasOverlapGlazesStep4;
+
+  /// No description provided for @ideasOverlapGlazesStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat with the markers in another order: the lighter one on top always looks different.'**
+  String get ideasOverlapGlazesStep5;
+
+  /// No description provided for @ideasFadedBackgroundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Faded background'**
+  String get ideasFadedBackgroundTitle;
+
+  /// No description provided for @ideasFadedBackgroundSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a drawing a halo of colour that fades to white long before the edge of the paper.'**
+  String get ideasFadedBackgroundSummary;
+
+  /// No description provided for @ideasFadedBackgroundPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'A vignette made with circular strokes and the blender.'**
+  String get ideasFadedBackgroundPractice;
+
+  /// No description provided for @ideasFadedBackgroundSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'A mug, a bird or any small subject in the middle of the page.'**
+  String get ideasFadedBackgroundSubject;
+
+  /// No description provided for @ideasFadedBackgroundTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop before you reach the edge of the paper: the halo fades on its own.'**
+  String get ideasFadedBackgroundTip;
+
+  /// No description provided for @ideasFadedBackgroundStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil a simple subject, such as a mug or a bird, in the middle of the page.'**
+  String get ideasFadedBackgroundStep1;
+
+  /// No description provided for @ideasFadedBackgroundStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Colour a ring of base around the subject, about a finger wide, in circular strokes.'**
+  String get ideasFadedBackgroundStep2;
+
+  /// No description provided for @ideasFadedBackgroundStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Pull the light marker outwards from the ring in overlapping circles until it runs pale.'**
+  String get ideasFadedBackgroundStep3;
+
+  /// No description provided for @ideasFadedBackgroundStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow with the blender beyond the colour, pushing the last of it into the paper so there is no edge at all.'**
+  String get ideasFadedBackgroundStep4;
+
+  /// No description provided for @ideasFadedBackgroundStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish the subject so it is darker than the halo.'**
+  String get ideasFadedBackgroundStep5;
+
+  /// No description provided for @ideasHatchShadingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatched shading'**
+  String get ideasHatchShadingTitle;
+
+  /// No description provided for @ideasHatchShadingSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Shade an apple with lines only, no blending: hatching for the mid-tone and cross-hatching for the shadow.'**
+  String get ideasHatchShadingSummary;
+
+  /// No description provided for @ideasHatchShadingPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatching and cross-hatching: lines that read as a tone.'**
+  String get ideasHatchShadingPractice;
+
+  /// No description provided for @ideasHatchShadingSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'An apple with the highlight marked in.'**
+  String get ideasHatchShadingSubject;
+
+  /// No description provided for @ideasHatchShadingTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep the lines parallel and evenly spaced: the eye does the rest.'**
+  String get ideasHatchShadingTip;
+
+  /// No description provided for @ideasHatchShadingStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil an apple and mark the highlight.'**
+  String get ideasHatchShadingStep1;
+
+  /// No description provided for @ideasHatchShadingStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill the apple flat and let it dry.'**
+  String get ideasHatchShadingStep2;
+
+  /// No description provided for @ideasHatchShadingStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Hatch the shadow half with parallel lines of the fine nib, closer together as they get further from the light.'**
+  String get ideasHatchShadingStep3;
+
+  /// No description provided for @ideasHatchShadingStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Cross the darkest area with a second set of lines at an angle, and add the contact shadow under the apple.'**
+  String get ideasHatchShadingStep4;
+
+  /// No description provided for @ideasHatchShadingStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Step back: from a distance the lines turn into a shade.'**
+  String get ideasHatchShadingStep5;
+
   /// No description provided for @ideasCategoryTechnique.
   ///
   /// In en, this message translates to:
@@ -2163,6 +6537,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hard'**
   String get ideasDifficultyHard;
+
+  /// No description provided for @ideasSeasonSpring.
+  ///
+  /// In en, this message translates to:
+  /// **'Spring'**
+  String get ideasSeasonSpring;
+
+  /// No description provided for @ideasSeasonSummer.
+  ///
+  /// In en, this message translates to:
+  /// **'Summer'**
+  String get ideasSeasonSummer;
+
+  /// No description provided for @ideasSeasonAutumn.
+  ///
+  /// In en, this message translates to:
+  /// **'Autumn'**
+  String get ideasSeasonAutumn;
+
+  /// No description provided for @ideasSeasonWinter.
+  ///
+  /// In en, this message translates to:
+  /// **'Winter'**
+  String get ideasSeasonWinter;
+
+  /// No description provided for @ideasSectionAnyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Any time'**
+  String get ideasSectionAnyTime;
+
+  /// No description provided for @ideasSeeAllSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'See all {count} ideas in {category}'**
+  String ideasSeeAllSemantic(int count, String category);
 
   /// No description provided for @ideasFeaturedLabel.
   ///

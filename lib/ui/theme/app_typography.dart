@@ -85,6 +85,13 @@ abstract final class AppTypography {
   /// Bottom nav labels. Inter 500 12/16.
   static final TextStyle nav = _inter(12, 16, FontWeight.w500);
 
+  /// Labels of the unfolded navigation rail. Inter 400 16/24 (the body
+  /// style); [railLabelSelected] is the same at 500.
+  static final TextStyle railLabel = _inter(16, 24, FontWeight.w400);
+
+  /// Label of the selected destination of the unfolded rail. Inter 500 16/24.
+  static final TextStyle railLabelSelected = _inter(16, 24, FontWeight.w500);
+
   /// Buttons, chips, segments. Inter 600 14/20.
   static final TextStyle button = _inter(14, 20, FontWeight.w600);
 

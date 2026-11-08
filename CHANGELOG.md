@@ -10,6 +10,29 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.2.0 · 2026-11-08
+
+100 ideas instead of 28, organised so they are easy to browse, and a tidier side menu on tablets.
+
+- The Ideas tab is easier to browse now that it has 100 ideas. Inside «Techniques», «Colour challenges» and
+  «Moods», ideas are grouped under «Easy», «Medium» and «Hard»; in «Seasons», they are grouped by season, starting
+  with the one you are in, and «Any time» comes last. «All» no longer lists everything: it shows the idea of the day,
+  what you looked at recently, and the first three ideas of each category, with a «See all» button that opens the
+  category. Search and favourites stay a single list.
+- 72 new ideas, 100 in all: 23 techniques (glass, metal, clouds, water, fur, wood, folded cloth, no-line colouring…),
+  17 colour challenges (triads, warm and cool greys, earth and jewel tones, black without black…), 14 moods (fog, rain
+  on the window, golden hour, candlelight…) and 18 seasons and holidays (tulips, beach, Diwali, Hanukkah, Lunar New
+  Year, Día de Muertos, Holi…). Each one picks its markers from your collection and comes with steps and a tip, in
+  every language.
+- On the Ideas tab, the cards in «Recently viewed» are now all the same height, so the row looks tidy and the colour
+  strips line up whatever the length of the idea's name. Names in every language still fit in full.
+- The unfolded side menu on wide screens is tidier: it is as wide as its names need (about 200 dp instead of 256), the
+  names are larger and closer to their icons, and the selected destination sits on one rounded highlight that holds
+  icon and name together. It folds and unfolds with a smooth animation (about a fifth of a second): the menu slides
+  open or closed, the names fade in or out, the highlight grows from the icon to the whole row, and the icons and the
+  button stay where they are. The page next to it resizes with it, and with «Remove animations» on in the system it
+  changes at once.
+
 ## 1.1.0 · 2026-11-08
 
 Finding your collection in other brands is easier, and the side menu on wide screens can fold away.

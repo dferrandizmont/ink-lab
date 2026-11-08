@@ -274,6 +274,7 @@ lib/core/collection_utils.dart
 lib/core/color_utils.dart
 lib/core/ideas_catalog.dart
 lib/core/ideas_engine.dart
+lib/core/ideas_sections.dart
 lib/core/json_value.dart
 lib/core/layout_rect.dart
 lib/core/marker_repository.dart

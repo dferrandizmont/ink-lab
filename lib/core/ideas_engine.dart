@@ -22,6 +22,11 @@ enum IdeaCategory {
 /// How hard an exercise is for someone who already owns a few markers.
 enum IdeaDifficulty { easy, medium, hard }
 
+/// The season an exercise belongs to, when it is about one.
+///
+/// Exercises without a season work any time of the year.
+enum IdeaSeason { spring, summer, autumn, winter }
+
 /// Things an exercise needs besides the markers.
 enum IdeaMaterial { paper, blender, whiteGel, pigmentLiner, pencil, tape }
 
@@ -133,6 +138,7 @@ final class IdeaPreset {
     required this.minutes,
     required this.materials,
     required this.stepRoles,
+    this.season,
   });
 
   final String id, title, summary;
@@ -141,6 +147,9 @@ final class IdeaPreset {
   final int minutes;
   final List<IdeaMaterial> materials;
   final List<String?> stepRoles;
+
+  /// The season the exercise belongs to, or null when it works any time.
+  final IdeaSeason? season;
 
   /// Whether the exercise comes with a palette picked from the collection.
   bool get hasPalette => _recipes.containsKey(id);
@@ -540,6 +549,179 @@ final Map<String, _Recipe> _recipes = <String, _Recipe>{
       ?p.one(IdeaRoles.deepShadow, hue: 285, width: 60, maxL: 28),
     ],
   ),
+  'cozy_lamp': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(
+        p.family(hue: 60, width: 25, minC: 10, maxC: 45, want: 3),
+        const [IdeaRoles.light, IdeaRoles.base, IdeaRoles.deepShadow],
+      ),
+      ?p.one(IdeaRoles.accent, hue: 90, width: 25, minC: 20, minL: 80),
+    ],
+  ),
+  'foggy_morning': _Recipe(
+    3,
+    (p) => p.ladder(
+      p.family(hue: 210, width: 50, minC: 3, maxC: 18, want: 3),
+      const [IdeaRoles.light, IdeaRoles.base, IdeaRoles.deepShadow],
+    ),
+  ),
+  'rainy_window': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(
+        p.family(hue: _blue, width: 30, minC: 10, want: 3),
+        const [IdeaRoles.light, IdeaRoles.base, IdeaRoles.deepShadow],
+      ),
+      ?p.one(IdeaRoles.accent, hue: 70, width: 30, minC: 30, minL: 70),
+    ],
+  ),
+  'eerie_forest': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ?p.one(IdeaRoles.light, hue: 110, width: 25, minC: 15, minL: 75),
+      ?p.one(
+        IdeaRoles.background,
+        hue: _violet,
+        width: 40,
+        minC: 10,
+        minL: 30,
+        maxL: 55,
+      ),
+      ?p.one(IdeaRoles.base, hue: _green, width: 30, minC: 10, maxL: 55),
+      ?p.one(IdeaRoles.deepShadow, hue: 150, width: 50, maxL: 25),
+    ],
+  ),
+  'golden_hour': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(
+        p.family(hue: 60, width: 25, minC: 20, want: 2),
+        const [IdeaRoles.warmLight, IdeaRoles.warmShadow],
+      ),
+      ?p.one(
+        IdeaRoles.coolShadow,
+        hue: 295,
+        width: 35,
+        minC: 8,
+        minL: 40,
+        maxL: 65,
+      ),
+      ?p.one(IdeaRoles.deepShadow, maxL: 28),
+    ],
+  ),
+  'stormy_sea': _Recipe(
+    3,
+    (p) => p.ladder(
+      p.family(hue: 190, width: 35, minC: 6, maxC: 42, want: 3),
+      const [IdeaRoles.light, IdeaRoles.base, IdeaRoles.deepShadow],
+    ),
+  ),
+  'candle_flame': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ?p.one(IdeaRoles.accent, hue: 90, width: 20, minC: 35, minL: 78),
+      ?p.one(IdeaRoles.light, hue: 58, width: 25, minC: 30, minL: 60, maxL: 80),
+      ?p.one(IdeaRoles.base, hue: 55, width: 30, minC: 8, maxC: 40, minL: 30, maxL: 50),
+      ?p.one(IdeaRoles.deepShadow, hue: 50, width: 60, maxL: 25),
+    ],
+  ),
+  'desert_noon': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(
+        p.family(hue: 75, width: 25, minC: 20, want: 2),
+        const [IdeaRoles.light, IdeaRoles.base],
+      ),
+      ?p.one(IdeaRoles.coolLight, hue: 245, width: 30, minC: 8, minL: 80),
+      ?p.one(
+        IdeaRoles.coolShadow,
+        hue: 285,
+        width: 35,
+        minC: 10,
+        minL: 35,
+        maxL: 60,
+      ),
+    ],
+  ),
+  'bokeh_lights': _Recipe(
+    3,
+    (p) => p.ladder(p.family(minC: 15, want: 3), null, 3),
+  ),
+  'retro_poster': _Recipe(
+    4,
+    (p) {
+      final PaletteSuggestion? main = p.one(
+        IdeaRoles.mainColor,
+        minC: 15,
+        maxC: 45,
+        minL: 45,
+        maxL: 75,
+        seeded: true,
+      );
+      final double hue = main == null ? _pink : _hueOf(main.color.hex);
+      return <PaletteSuggestion>[
+        ?main,
+        ?p.one(
+          IdeaRoles.secondColor,
+          hue: (hue + 120) % 360,
+          width: 40,
+          minC: 15,
+          maxC: 45,
+          minL: 45,
+        ),
+        ?p.one(
+          IdeaRoles.thirdColor,
+          hue: (hue + 240) % 360,
+          width: 40,
+          minC: 15,
+          maxC: 45,
+          minL: 55,
+        ),
+        ?p.one(IdeaRoles.deepShadow, maxL: 30),
+      ];
+    },
+  ),
+  'fresh_citrus': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(
+        p.family(hue: 95, width: 20, minC: 35, want: 2),
+        const [IdeaRoles.mainColor, IdeaRoles.mainShadow],
+      ),
+      ?p.one(IdeaRoles.secondColor, hue: 125, width: 25, minC: 30, minL: 55),
+      ?p.one(IdeaRoles.coolLight, hue: 230, width: 35, minC: 8, minL: 80),
+    ],
+  ),
+  'tropical_noon': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(
+        p.family(hue: _green, width: 25, minC: 30, want: 2),
+        const [IdeaRoles.light, IdeaRoles.base],
+      ),
+      ?p.one(IdeaRoles.accent, hue: _pink, width: 25, minC: 45, minL: 50),
+      ?p.one(IdeaRoles.secondColor, hue: 240, width: 30, minC: 30, minL: 55),
+    ],
+  ),
+  'greenhouse_light': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(p.family(hue: _green, width: 30, minC: 10), null, 3),
+      ?p.gray(IdeaRoles.shadowGray, minL: 65, maxL: 85, tint: _GrayTint.cool),
+    ],
+  ),
+  'dusty_attic': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(p.grays(tint: _GrayTint.warm, want: 2), const [
+        IdeaRoles.light,
+        IdeaRoles.base,
+      ]),
+      ?p.gray(IdeaRoles.deepShadow, minL: 25, maxL: 45, tint: _GrayTint.warm),
+      ?p.one(IdeaRoles.accent, hue: 90, width: 25, minC: 10, minL: 85),
+    ],
+  ),
   'spring': _Recipe(
     5,
     (p) => <PaletteSuggestion>[
@@ -603,6 +785,708 @@ final Map<String, _Recipe> _recipes = <String, _Recipe>{
       ?p.one(IdeaRoles.background, hue: _violet, width: 40, minC: 10, maxL: 40),
     ],
   ),
+  'feathered_edge': _Recipe(
+    2,
+    (p) => p.ladder(p.family(minC: 15, minL: 45), const [
+      IdeaRoles.light,
+      IdeaRoles.base,
+    ]),
+  ),
+  'tip_to_tip': _Recipe(
+    2,
+    (p) =>
+        p.ladder(p.family(want: 2), const [IdeaRoles.light, IdeaRoles.shadow]),
+  ),
+  'blender_pattern': _Recipe(
+    1,
+    (p) => <PaletteSuggestion>[
+      ?p.one(IdeaRoles.base, minC: 25, minL: 40, maxL: 70),
+    ],
+  ),
+  'one_marker_layers': _Recipe(
+    1,
+    (p) => <PaletteSuggestion>[
+      ?p.one(IdeaRoles.base, minC: 20, minL: 50, maxL: 75),
+    ],
+  ),
+  'stipple_peel': _Recipe(
+    3,
+    (p) => p.ladder(p.family(hue: _orange, width: 22, minC: 30), null, 3),
+  ),
+  'clear_glass': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(p.grays(minL: 40, tint: _GrayTint.cool, want: 3), const [
+        IdeaRoles.light,
+        IdeaRoles.base,
+        IdeaRoles.shadow,
+      ]),
+      ?p.one(IdeaRoles.background, minC: 20, minL: 50, maxL: 80),
+    ],
+  ),
+  'polished_metal': _Recipe(
+    5,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(p.grays(tint: _GrayTint.neutral, want: 4), const [
+        IdeaRoles.light,
+        IdeaRoles.base,
+        IdeaRoles.shadow,
+        IdeaRoles.deepShadow,
+      ]),
+      ?p.one(IdeaRoles.accent, minC: 25, minL: 45, maxL: 75),
+    ],
+  ),
+  'cast_shadow': _Recipe(
+    3,
+    (p) => <PaletteSuggestion>[
+      ?p.one(IdeaRoles.base, minC: 20, minL: 45, maxL: 75),
+      ?p.gray(IdeaRoles.shadowGray, minL: 50, maxL: 72),
+      ?p.one(IdeaRoles.deepShadow, maxL: 30),
+    ],
+  ),
+  'soft_clouds': _Recipe(
+    3,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(p.family(hue: 250, width: 30, minC: 10, minL: 55), const [
+        IdeaRoles.light,
+        IdeaRoles.base,
+      ]),
+      ?p.gray(IdeaRoles.shadowGray, minL: 70, maxL: 88, tint: _GrayTint.cool),
+    ],
+  ),
+  'still_water': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(p.family(hue: 250, width: 30, minC: 12), null, 3),
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: _green,
+        width: 35,
+        minC: 20,
+        minL: 35,
+        maxL: 65,
+      ),
+    ],
+  ),
+  'twisted_ribbon': _Recipe(3, (p) => p.ladder(p.family(minC: 20), null, 3)),
+  'no_line_leaf': _Recipe(
+    3,
+    (p) => p.ladder(p.family(hue: _green, width: 30, minC: 15), const [
+      IdeaRoles.light,
+      IdeaRoles.base,
+      IdeaRoles.deepShadow,
+    ]),
+  ),
+  'short_fur': _Recipe(
+    3,
+    (p) => p.ladder(p.family(hue: 62, width: 25, minC: 8, maxC: 45), null, 3),
+  ),
+  'wood_grain': _Recipe(
+    3,
+    (p) => p.ladder(p.family(hue: 62, width: 25, minC: 10, maxC: 50), null, 3),
+  ),
+  'brick_wall': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(p.family(hue: 40, width: 25, minC: 20), null, 3),
+      ?p.gray(IdeaRoles.shadowGray, minL: 70, maxL: 88, tint: _GrayTint.warm),
+    ],
+  ),
+  'folded_cloth': _Recipe(4, (p) => p.ladder(p.family(want: 4), null, 4)),
+  'water_drops': _Recipe(
+    3,
+    (p) => p.ladder(p.family(hue: _green, width: 35, minC: 20), const [
+      IdeaRoles.light,
+      IdeaRoles.base,
+      IdeaRoles.deepShadow,
+    ]),
+  ),
+  'strawberry_seeds': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(p.family(hue: _red, width: 20, minC: 35), null, 3),
+      ?p.one(
+        IdeaRoles.accent,
+        hue: _green,
+        width: 30,
+        minC: 25,
+        minL: 35,
+        maxL: 65,
+      ),
+    ],
+  ),
+  'palette_mixing': _Recipe(2, (p) {
+    final PaletteSuggestion? first = p.one(
+      IdeaRoles.mainColor,
+      minC: 30,
+      minL: 40,
+      maxL: 75,
+    );
+    final double hue = first == null ? _pink : _hueOf(first.color.hex);
+    return <PaletteSuggestion>[
+      ?first,
+      ?p.one(
+        IdeaRoles.secondColor,
+        minC: 30,
+        minL: 40,
+        maxL: 75,
+        awayFrom: hue,
+      ),
+    ];
+  }),
+  'long_hair': _Recipe(
+    4,
+    (p) => p.ladder(p.family(minC: 10, want: 4), null, 4),
+  ),
+  'overlap_glazes': _Recipe(
+    3,
+    (p) => <PaletteSuggestion>[
+      ?p.one(IdeaRoles.mainColor, hue: 95, width: 25, minC: 35, minL: 70),
+      ?p.one(IdeaRoles.secondColor, hue: 352, width: 30, minC: 35, minL: 55),
+      ?p.one(IdeaRoles.thirdColor, hue: 240, width: 35, minC: 30, minL: 50),
+    ],
+  ),
+  'faded_background': _Recipe(
+    2,
+    (p) => p.ladder(p.family(minC: 12, minL: 55), const [
+      IdeaRoles.light,
+      IdeaRoles.base,
+    ]),
+  ),
+  'hatch_shading': _Recipe(3, (p) => p.ladder(p.family(minC: 20), null, 3)),
+
+  // ------------------------------------------------------- Colour challenges
+  'colour_grey_black': _Recipe(
+    3,
+    (p) => <PaletteSuggestion>[
+      ?p.one(IdeaRoles.base, minC: 25, minL: 45, maxL: 75),
+      ?p.gray(IdeaRoles.shadowGray, minL: 45, maxL: 70),
+      ?p.one(IdeaRoles.deepShadow, maxL: 22),
+    ],
+  ),
+  'analogous_trio': _Recipe(4, (p) {
+    final _Family family = p.family(want: 2, minC: 20);
+    final double hue = family.hue;
+    return <PaletteSuggestion>[
+      ...p.ladder(family, const [IdeaRoles.mainColor, IdeaRoles.mainShadow]),
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: (hue + 35) % 360,
+        width: 25,
+        minC: 20,
+        minL: 55,
+      ),
+      ?p.one(
+        IdeaRoles.thirdColor,
+        hue: (hue - 35 + 360) % 360,
+        width: 25,
+        minC: 20,
+        minL: 35,
+        maxL: 65,
+      ),
+    ];
+  }),
+  'triad': _Recipe(4, (p) {
+    final PaletteSuggestion? main = p.one(
+      IdeaRoles.mainColor,
+      minC: 30,
+      minL: 40,
+      maxL: 75,
+      seeded: true,
+    );
+    final double hue = main == null ? _pink : _hueOf(main.color.hex);
+    return <PaletteSuggestion>[
+      ?main,
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: (hue + 120) % 360,
+        width: 30,
+        minC: 25,
+        minL: 40,
+      ),
+      ?p.one(
+        IdeaRoles.thirdColor,
+        hue: (hue + 240) % 360,
+        width: 30,
+        minC: 25,
+        minL: 40,
+      ),
+      ?p.gray(IdeaRoles.shadowGray, minL: 45, maxL: 70),
+    ];
+  }),
+  'split_complement': _Recipe(4, (p) {
+    final _Family family = p.family(want: 2, minC: 20);
+    final double hue = family.hue;
+    return <PaletteSuggestion>[
+      ...p.ladder(family, const [IdeaRoles.light, IdeaRoles.shadow]),
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: (hue + 150) % 360,
+        width: 25,
+        minC: 25,
+        minL: 40,
+      ),
+      ?p.one(
+        IdeaRoles.thirdColor,
+        hue: (hue + 210) % 360,
+        width: 25,
+        minC: 25,
+        minL: 40,
+      ),
+    ];
+  }),
+  'two_gray_temperatures': _Recipe(4, (p) => <PaletteSuggestion>[
+    ...p.ladder(p.grays(tint: _GrayTint.warm, want: 2), const [
+      IdeaRoles.warmLight,
+      IdeaRoles.warmShadow,
+    ]),
+    ...p.ladder(p.grays(tint: _GrayTint.cool, want: 2), const [
+      IdeaRoles.coolLight,
+      IdeaRoles.coolShadow,
+    ]),
+  ]),
+  'gray_plus_accent': _Recipe(4, (p) => <PaletteSuggestion>[
+    ...p.ladder(p.grays(want: 3), const [
+      IdeaRoles.light,
+      IdeaRoles.shadow,
+      IdeaRoles.deepShadow,
+    ]),
+    ?p.one(IdeaRoles.accent, minC: 40, minL: 40, maxL: 70),
+  ]),
+  'earth_tones': _Recipe(4, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 65, width: 25, minC: 10, maxC: 40),
+      const [IdeaRoles.light, IdeaRoles.base, IdeaRoles.deepShadow],
+    ),
+    ?p.one(
+      IdeaRoles.secondColor,
+      hue: 120,
+      width: 30,
+      minC: 8,
+      maxC: 30,
+      minL: 35,
+      maxL: 65,
+    ),
+  ]),
+  'jewel_tones': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ?p.one(
+        IdeaRoles.mainColor,
+        hue: 200,
+        width: 30,
+        minC: 30,
+        maxL: 50,
+      ),
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: 305,
+        width: 30,
+        minC: 30,
+        maxL: 50,
+      ),
+      ?p.one(
+        IdeaRoles.thirdColor,
+        hue: 20,
+        width: 25,
+        minC: 35,
+        maxL: 50,
+      ),
+      ?p.one(
+        IdeaRoles.accent,
+        hue: 85,
+        width: 20,
+        minC: 35,
+        minL: 60,
+        maxL: 80,
+      ),
+    ],
+  ),
+  'low_key': _Recipe(
+    3,
+    (p) =>
+        p.ladder(
+          p.family(minC: 10, maxL: 48, want: 3),
+          const [IdeaRoles.base, IdeaRoles.shadow, IdeaRoles.deepShadow],
+        ),
+  ),
+  'complement_gradient': _Recipe(3, (p) {
+    final PaletteSuggestion? main = p.one(
+      IdeaRoles.mainColor,
+      minC: 30,
+      minL: 45,
+      maxL: 75,
+      seeded: true,
+    );
+    final double hue = main == null ? _pink : _hueOf(main.color.hex);
+    return <PaletteSuggestion>[
+      ?main,
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: (hue + 180) % 360,
+        width: 35,
+        minC: 30,
+        minL: 45,
+        maxL: 75,
+      ),
+      ?p.gray(IdeaRoles.shadowGray, minL: 45, maxL: 70),
+    ];
+  }),
+  'warm_light_cool_shadow': _Recipe(4, (p) => <PaletteSuggestion>[
+    ?p.one(IdeaRoles.base, minC: 20, minL: 55, maxL: 80, seeded: true),
+    ?p.one(IdeaRoles.warmLight, hue: 70, width: 30, minC: 20, minL: 70),
+    ?p.one(
+      IdeaRoles.coolShadow,
+      hue: 265,
+      width: 40,
+      minC: 10,
+      minL: 35,
+      maxL: 60,
+    ),
+    ?p.one(IdeaRoles.deepShadow, maxL: 30),
+  ]),
+  'vivid_and_muted': _Recipe(4, (p) {
+    final _Family vivid = p.family(minC: 40, want: 2);
+    return <PaletteSuggestion>[
+      ...p.ladder(vivid, const [IdeaRoles.mainColor, IdeaRoles.mainShadow]),
+      ...p.ladder(
+        p.family(
+          hue: vivid.hue,
+          width: 25,
+          maxC: 25,
+          want: 2,
+        ),
+        const [IdeaRoles.secondColor, IdeaRoles.secondShadow],
+      ),
+    ];
+  }),
+  'one_marker_blender': _Recipe(
+    1,
+    (p) => <PaletteSuggestion>[
+      ?p.one(IdeaRoles.shadow, minC: 20, minL: 30, maxL: 50),
+    ],
+  ),
+  'deep_skin': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ...p.ladder(
+        p.family(hue: 55, width: 20, minC: 12, maxC: 45, minL: 25, maxL: 65),
+        null,
+        3,
+      ),
+      ?p.one(
+        IdeaRoles.blush,
+        hue: 25,
+        width: 25,
+        minC: 20,
+        minL: 35,
+        maxL: 60,
+      ),
+    ],
+  ),
+  'black_object': _Recipe(
+    4,
+    (p) => <PaletteSuggestion>[
+      ?p.one(
+        IdeaRoles.light,
+        hue: 250,
+        width: 40,
+        minC: 5,
+        maxC: 25,
+        minL: 55,
+        maxL: 72,
+      ),
+      ?p.one(IdeaRoles.base, hue: 262, width: 30, minC: 10, maxL: 40),
+      ?p.one(IdeaRoles.shadow, hue: 300, width: 35, minC: 8, maxL: 30),
+      ?p.one(IdeaRoles.deepShadow, maxL: 18),
+    ],
+  ),
+  'white_object': _Recipe(4, (p) => <PaletteSuggestion>[
+    ?p.one(IdeaRoles.light, minC: 3, maxC: 15, minL: 85),
+    ?p.gray(IdeaRoles.shadowGray, minL: 72, maxL: 88, tint: _GrayTint.cool),
+    ?p.gray(IdeaRoles.shadow, minL: 55, maxL: 72, tint: _GrayTint.cool),
+    ?p.one(IdeaRoles.accent, minC: 20, minL: 55, maxL: 80),
+  ]),
+
+  // ------------------------------------------------------ Seasons & holidays
+  'tulip_field': _Recipe(4, (p) => <PaletteSuggestion>[
+    ?p.one(IdeaRoles.mainColor, hue: 32, width: 25, minC: 40, minL: 40),
+    ?p.one(IdeaRoles.secondColor, hue: 95, width: 20, minC: 40, minL: 70),
+    ...p.ladder(
+      p.family(hue: 138, width: 25, minC: 20, want: 2),
+      const [IdeaRoles.light, IdeaRoles.shadow],
+    ),
+  ]),
+  'summer_beach': _Recipe(4, (p) => <PaletteSuggestion>[
+    ?p.one(IdeaRoles.accent, hue: 25, width: 25, minC: 45, minL: 45),
+    ...p.ladder(
+      p.family(hue: 205, width: 30, minC: 20, want: 2),
+      const [IdeaRoles.base, IdeaRoles.shadow],
+    ),
+    ?p.one(IdeaRoles.light, hue: 75, width: 25, minC: 8, maxC: 30, minL: 82),
+  ]),
+  'watermelon_slice': _Recipe(3, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 20, width: 25, minC: 35, want: 2),
+      const [IdeaRoles.light, IdeaRoles.base],
+    ),
+    ?p.one(
+      IdeaRoles.secondColor,
+      hue: 140,
+      width: 30,
+      minC: 25,
+      minL: 35,
+      maxL: 65,
+    ),
+  ]),
+  'forest_mushrooms': _Recipe(4, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 62, width: 25, minC: 10, maxC: 45),
+      const [IdeaRoles.light, IdeaRoles.base, IdeaRoles.deepShadow],
+    ),
+    ?p.one(
+      IdeaRoles.accent,
+      hue: 30,
+      width: 20,
+      minC: 30,
+      minL: 35,
+      maxL: 60,
+    ),
+  ]),
+  'harvest_basket': _Recipe(5, (p) => <PaletteSuggestion>[
+    ?p.one(IdeaRoles.mainColor, hue: 30, width: 20, minC: 35, minL: 40),
+    ?p.one(IdeaRoles.secondColor, hue: 110, width: 25, minC: 25, minL: 60),
+    ?p.one(IdeaRoles.thirdColor, hue: 58, width: 20, minC: 40, minL: 55),
+    ?p.gray(IdeaRoles.shadowGray, minL: 45, maxL: 70, tint: _GrayTint.warm),
+    ?p.one(IdeaRoles.deepShadow, maxL: 30),
+  ]),
+  'hot_chocolate': _Recipe(3, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 60, width: 25, minC: 12, want: 2),
+      const [IdeaRoles.light, IdeaRoles.base],
+    ),
+    ?p.one(IdeaRoles.accent, hue: 28, width: 25, minC: 40, minL: 40),
+  ]),
+  'lunar_new_year': _Recipe(4, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 32, width: 20, minC: 35),
+      const [IdeaRoles.light, IdeaRoles.base, IdeaRoles.deepShadow],
+    ),
+    ?p.one(
+      IdeaRoles.accent,
+      hue: 85,
+      width: 20,
+      minC: 35,
+      minL: 60,
+      maxL: 80,
+    ),
+  ]),
+  'diwali_lamps': _Recipe(5, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 50, width: 25, minC: 25, want: 2),
+      const [IdeaRoles.light, IdeaRoles.base],
+    ),
+    ?p.one(IdeaRoles.accent, hue: 90, width: 20, minC: 40, minL: 75),
+    ?p.one(IdeaRoles.secondColor, hue: 345, width: 25, minC: 40, minL: 45),
+    ?p.one(IdeaRoles.thirdColor, hue: 200, width: 30, minC: 30, minL: 45),
+  ]),
+  'hanukkah_candles': _Recipe(4, (p) => <PaletteSuggestion>[
+    ...p.ladder(p.family(hue: 262, width: 30, minC: 15), null, 3),
+    ?p.one(IdeaRoles.accent, hue: 90, width: 20, minC: 35, minL: 75),
+  ]),
+  'painted_eggs': _Recipe(4, (p) {
+    final PaletteSuggestion? main = p.one(
+      IdeaRoles.mainColor,
+      minC: 25,
+      maxC: 50,
+      minL: 55,
+      maxL: 80,
+      seeded: true,
+    );
+    final double hue = main == null ? _pink : _hueOf(main.color.hex);
+    return <PaletteSuggestion>[
+      ?main,
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: (hue + 120) % 360,
+        width: 40,
+        minC: 25,
+        maxC: 50,
+        minL: 55,
+      ),
+      ?p.one(
+        IdeaRoles.thirdColor,
+        hue: (hue + 240) % 360,
+        width: 40,
+        minC: 25,
+        maxC: 50,
+        minL: 55,
+      ),
+      ?p.gray(IdeaRoles.shadowGray, minL: 60, maxL: 80),
+    ];
+  }),
+  'dia_de_muertos': _Recipe(5, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 58, width: 20, minC: 40, want: 2),
+      const [IdeaRoles.light, IdeaRoles.base],
+    ),
+    ?p.one(IdeaRoles.secondColor, hue: 345, width: 25, minC: 40, minL: 45),
+    ?p.one(IdeaRoles.thirdColor, hue: 200, width: 30, minC: 30, minL: 45),
+    ?p.one(IdeaRoles.deepShadow, maxL: 22),
+  ]),
+  'valentine_card': _Recipe(
+    3,
+    (p) => p.ladder(p.family(hue: 355, width: 25, minC: 20), null, 3),
+  ),
+  'carnival_mask': _Recipe(4, (p) => <PaletteSuggestion>[
+    ?p.one(
+      IdeaRoles.mainColor,
+      hue: 305,
+      width: 30,
+      minC: 30,
+      minL: 35,
+      maxL: 65,
+    ),
+    ?p.one(
+      IdeaRoles.secondColor,
+      hue: 200,
+      width: 30,
+      minC: 30,
+      minL: 40,
+      maxL: 70,
+    ),
+    ?p.one(
+      IdeaRoles.accent,
+      hue: 85,
+      width: 20,
+      minC: 35,
+      minL: 60,
+      maxL: 80,
+    ),
+    ?p.one(IdeaRoles.deepShadow, maxL: 25),
+  ]),
+  'midsummer_crown': _Recipe(5, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 138, width: 25, minC: 20, want: 2),
+      const [IdeaRoles.light, IdeaRoles.shadow],
+    ),
+    ?p.one(IdeaRoles.mainColor, hue: 255, width: 30, minC: 30, minL: 50),
+    ?p.one(IdeaRoles.secondColor, hue: 95, width: 20, minC: 40, minL: 70),
+    ?p.one(IdeaRoles.thirdColor, hue: 355, width: 25, minC: 25, minL: 60),
+  ]),
+  'eid_night': _Recipe(4, (p) => <PaletteSuggestion>[
+    ...p.ladder(
+      p.family(hue: 205, width: 30, minC: 15, want: 2),
+      const [IdeaRoles.light, IdeaRoles.base],
+    ),
+    ?p.one(IdeaRoles.secondColor, hue: 305, width: 35, minC: 12, maxL: 45),
+    ?p.one(
+      IdeaRoles.accent,
+      hue: 85,
+      width: 20,
+      minC: 35,
+      minL: 60,
+      maxL: 80,
+    ),
+  ]),
+  'holi_colours': _Recipe(4, (p) {
+    final PaletteSuggestion? main = p.one(
+      IdeaRoles.mainColor,
+      minC: 45,
+      minL: 50,
+      maxL: 80,
+      seeded: true,
+    );
+    final double hue = main == null ? _pink : _hueOf(main.color.hex);
+    return <PaletteSuggestion>[
+      ?main,
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: (hue + 90) % 360,
+        width: 40,
+        minC: 45,
+        minL: 50,
+      ),
+      ?p.one(
+        IdeaRoles.thirdColor,
+        hue: (hue + 180) % 360,
+        width: 40,
+        minC: 45,
+        minL: 50,
+      ),
+      ?p.one(
+        IdeaRoles.accent,
+        hue: (hue + 270) % 360,
+        width: 40,
+        minC: 45,
+        minL: 50,
+      ),
+    ];
+  }),
+  'summer_ice_cream': _Recipe(5, (p) {
+    final PaletteSuggestion? main = p.one(
+      IdeaRoles.mainColor,
+      minC: 20,
+      maxC: 50,
+      minL: 65,
+      seeded: true,
+    );
+    final double hue = main == null ? _pink : _hueOf(main.color.hex);
+    return <PaletteSuggestion>[
+      ?main,
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: (hue + 120) % 360,
+        width: 40,
+        minC: 20,
+        maxC: 50,
+        minL: 65,
+      ),
+      ?p.one(
+        IdeaRoles.thirdColor,
+        hue: (hue + 240) % 360,
+        width: 40,
+        minC: 20,
+        maxC: 50,
+        minL: 65,
+      ),
+      ?p.gray(IdeaRoles.shadowGray, minL: 65, maxL: 85),
+      ?p.one(IdeaRoles.base, hue: 65, width: 25, minC: 15, minL: 55, maxL: 78),
+    ];
+  }),
+  'new_year_fireworks': _Recipe(4, (p) {
+    final PaletteSuggestion? dark = p.one(
+      IdeaRoles.deepShadow,
+      hue: 262,
+      width: 50,
+      maxL: 22,
+    );
+    final PaletteSuggestion? main = p.one(
+      IdeaRoles.mainColor,
+      minC: 45,
+      minL: 55,
+      seeded: true,
+    );
+    final double hue = main == null ? _pink : _hueOf(main.color.hex);
+    return <PaletteSuggestion>[
+      ?dark,
+      ?main,
+      ?p.one(
+        IdeaRoles.secondColor,
+        hue: (hue + 120) % 360,
+        width: 40,
+        minC: 45,
+        minL: 55,
+      ),
+      ?p.one(
+        IdeaRoles.thirdColor,
+        hue: (hue + 240) % 360,
+        width: 40,
+        minC: 45,
+        minL: 55,
+      ),
+    ];
+  }),
 };
 
 // ---------------------------------------------------------------------------
@@ -805,20 +1689,50 @@ final class _Picker {
   }
 
   /// Gray markers of one family (warm, cool or green grays never mix).
-  _Family grays({double minL = 0, double maxL = 100, int want = 5}) {
-    final List<_Swatch> all = <_Swatch>[
+  ///
+  /// With [tint], only the grays of that temperature are used, so a whole
+  /// ladder is warm or cool. A collection without grays of that temperature
+  /// falls back to the best family of one temperature it does have, so the
+  /// idea still gets a palette and the ladder never mixes warm and cool.
+  _Family grays({
+    double minL = 0,
+    double maxL = 100,
+    int want = 5,
+    _GrayTint? tint,
+  }) {
+    List<_Swatch> ofTint(_GrayTint? wanted) => <_Swatch>[
       for (final _Swatch s in _free)
-        if (s.c <= _grayChroma && s.l >= minL && s.l <= maxL) s,
+        if (s.c <= _grayChroma &&
+            s.l >= minL &&
+            s.l <= maxL &&
+            (wanted == null || s.tint == wanted))
+          s,
     ];
-    if (all.isEmpty) return const _Family(0, <_Swatch>[], hasHue: false);
+
+    /// The gray families of one temperature each, the best ladder first.
+    List<List<_Swatch>> familiesOf(List<_Swatch> grays) {
+      final Map<_GrayTint, List<_Swatch>> byTint = <_GrayTint, List<_Swatch>>{};
+      for (final _Swatch s in grays) {
+        byTint.putIfAbsent(s.tint, () => <_Swatch>[]).add(s);
+      }
+      return byTint.values.toList()..sort(
+        (a, b) => _ladderScore(b, want).compareTo(_ladderScore(a, want)),
+      );
+    }
+
+    List<_Swatch> all = ofTint(tint);
+    if (all.isEmpty) {
+      // No grays of the wanted temperature: take the best family of the
+      // temperature the collection does have, never a mix of two.
+      final List<List<_Swatch>> fallback = familiesOf(ofTint(null));
+      if (fallback.isEmpty) {
+        return const _Family(0, <_Swatch>[], hasHue: false);
+      }
+      all = fallback.first;
+    }
     final List<_Swatch> byCode = _sameCodeFamily(all, math.min(want, 4));
     if (!identical(byCode, all)) return _Family(0, byCode, hasHue: false);
-    final Map<_GrayTint, List<_Swatch>> byTint = <_GrayTint, List<_Swatch>>{};
-    for (final _Swatch s in all) {
-      byTint.putIfAbsent(s.tint, () => <_Swatch>[]).add(s);
-    }
-    final List<List<_Swatch>> families = byTint.values.toList()
-      ..sort((a, b) => _ladderScore(b, want).compareTo(_ladderScore(a, want)));
+    final List<List<_Swatch>> families = familiesOf(all);
     return _Family(0, families[_variant(families.length)], hasHue: false);
   }
 

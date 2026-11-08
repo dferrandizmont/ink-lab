@@ -20,12 +20,51 @@ const dartStr = (s) => "'" + s.replace(/\\/g, '\\\\').replace(/'/g, "\\'").repla
 
 // ---- sanity
 const roleNames = new Set(Object.keys(roles));
+// The Dart constant of every role: the role ids are British English, the
+// constants kept the names they had.
+const roleConsts = {
+  Light: 'light',
+  'Light mid': 'lightMid',
+  Base: 'base',
+  Shadow: 'shadow',
+  'Deep shadow': 'deepShadow',
+  'Shadow grey': 'shadowGray',
+  Accent: 'accent',
+  Background: 'background',
+  'Main colour': 'mainColor',
+  'Main shadow': 'mainShadow',
+  'Second colour': 'secondColor',
+  'Second shadow': 'secondShadow',
+  'Third colour': 'thirdColor',
+  Blush: 'blush',
+  'Warm light': 'warmLight',
+  'Warm shadow': 'warmShadow',
+  'Cool light': 'coolLight',
+  'Cool shadow': 'coolShadow',
+  'Colour shadow': 'colorShadow',
+};
+const seasons = new Set(['spring', 'summer', 'autumn', 'winter']);
+// The ARB key of every role: the role ids are British English, but the keys
+// were published with the American spelling and do not change.
+const roleArbKeys = {
+  'Shadow grey': 'ShadowGray',
+  'Main colour': 'MainColor',
+  'Second colour': 'SecondColor',
+  'Third colour': 'ThirdColor',
+  'Colour shadow': 'ColorShadow',
+};
+const roleArbKey = (role) => roleArbKeys[role] ?? pascal(role);
 const ids = new Set();
 for (const p of presets) {
   if (ids.has(p.id)) throw new Error('dup ' + p.id);
   ids.add(p.id);
   if (p.steps.length < 4 || p.steps.length > 6) throw new Error('steps ' + p.id);
-  for (const [r] of p.steps) if (r !== null && !roleNames.has(r)) throw new Error(`role ${r} in ${p.id}`);
+  for (const [r] of p.steps) {
+    if (r === null) continue;
+    if (!roleNames.has(r)) throw new Error(`role ${r} in ${p.id}`);
+    if (!roleConsts[r]) throw new Error(`no constant for role ${r}`);
+  }
+  if (p.season !== undefined && !seasons.has(p.season)) throw new Error(`season ${p.season} in ${p.id}`);
 }
 
 // ---- ARB
@@ -39,8 +78,8 @@ function contentEntries(lang) {
     p.steps.forEach((s, i) => out.push([`${k}Step${i + 1}`, lang === 'en' ? s[1] : s[2]]));
   }
   for (const [role, [en, es, ren, res]] of Object.entries(roles)) {
-    out.push(['ideasRole' + pascal(role), lang === 'en' ? en : es]);
-    out.push(['ideasReason' + pascal(role), lang === 'en' ? ren : res]);
+    out.push(['ideasRole' + roleArbKey(role), lang === 'en' ? en : es]);
+    out.push(['ideasReason' + roleArbKey(role), lang === 'en' ? ren : res]);
   }
   return out;
 }
@@ -115,16 +154,12 @@ for (const p of presets) {
     minutes: ${p.min},
     materials: <IdeaMaterial>[${p.mat.map((m) => 'IdeaMaterial.' + m).join(', ')}],
     stepRoles: <String?>[
-${p.steps.map(([r]) => '      ' + (r === null ? 'null' : 'IdeaRoles.' + roleConst(r)) + ',').join('\n')}
+${p.steps.map(([r]) => '      ' + (r === null ? 'null' : 'IdeaRoles.' + roleConsts[r]) + ',').join('\n')}
     ],
-  ),
+${p.season ? `    season: IdeaSeason.${p.season},\n` : ''}  ),
 `;
 }
 cat += '];\n';
-function roleConst(r) {
-  const w = r.split(' ');
-  return w[0].toLowerCase() + w.slice(1).map((x) => x[0].toUpperCase() + x.slice(1)).join('');
-}
 fs.writeFileSync(path.join(repo, 'lib/core/ideas_catalog.dart'), cat);
 
 // ---- l10n lookup
@@ -158,11 +193,11 @@ d += `  String ideaTitle(IdeaPreset preset) => ideaTitleText(preset.id) ?? prese
 d += `  String ideaSummary(IdeaPreset preset) =>\n      ideaSummaryText(preset.id) ?? preset.summary;\n\n`;
 d += `  /// Localised label of an idea role (see [IdeaRoles]), or null.\n`;
 d += `  String? ideaRoleText(String role) => switch (role) {\n`;
-for (const r of Object.keys(roles)) d += `    ${dartStr(r)} => ideasRole${pascal(r)},\n`;
+for (const r of Object.keys(roles)) d += `    ${dartStr(r)} => ideasRole${roleArbKey(r)},\n`;
 d += `    _ => null,\n  };\n\n`;
 d += `  /// Localised reason of an idea role (see [IdeaRoles.reasonFor]), or null.\n`;
 d += `  String? ideaReasonText(String reason) => switch (reason) {\n`;
-for (const [r, v] of Object.entries(roles)) d += `    ${dartStr(v[2])} => ideasReason${pascal(r)},\n`;
+for (const [r, v] of Object.entries(roles)) d += `    ${dartStr(v[2])} => ideasReason${roleArbKey(r)},\n`;
 d += `    _ => null,\n  };\n\n`;
 d += `  String ideaCategoryLabel(IdeaCategory category) => switch (category) {
     IdeaCategory.technique => ideasCategoryTechnique,
