@@ -45,6 +45,31 @@ void main() {
     expect(reopened.state, h.appSettings.state);
   });
 
+  test('the navigation rail is folded until the user unfolds it', () async {
+    final h = await harness();
+    expect(h.appSettings.railExpanded, isFalse);
+    expect(h.appSettings.state.railExpanded, isFalse);
+
+    await h.appSettings.setRailExpanded(true);
+    expect(h.appSettings.railExpanded, isTrue);
+    final reopened = StoredAppSettingsRepository(h.store);
+    await reopened.load();
+    expect(reopened.railExpanded, isTrue);
+
+    await reopened.setRailExpanded(false);
+    final again = StoredAppSettingsRepository(h.store);
+    await again.load();
+    expect(again.railExpanded, isFalse);
+  });
+
+  test('restore brings the rail choice back', () async {
+    final h = await harness();
+    await h.appSettings.restore(AppSettingsState(railExpanded: true));
+    final reopened = StoredAppSettingsRepository(h.store);
+    await reopened.load();
+    expect(reopened.railExpanded, isTrue);
+  });
+
   test('the chosen series persist without any set, and in a backup', () async {
     final h = await harness();
     await h.appSettings.setCollection(

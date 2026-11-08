@@ -1437,6 +1437,20 @@
   "brandGroupPopular": "Beliebt",
   "brandGroupMore": "Weitere Marken",
   "brandSearchEmpty": "Keine Marke passt zu deiner Suche.",
+  "brandGroupOwned": "Deine Marken",
+  "brandOwnedLine": "{owned} von {total} im Besitz",
+  "@brandOwnedLine": {
+    "placeholders": {
+      "owned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "navRailExpand": "Menü ausklappen",
+  "navRailCollapse": "Menü einklappen",
   "inkLevelTitle": "Tintenstand",
   "inkLevelFull": "Voll",
   "commonRunningOut": "Fast leer",

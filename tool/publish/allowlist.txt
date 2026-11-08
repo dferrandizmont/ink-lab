@@ -504,6 +504,8 @@ web/legal/test_legal.py
 lib/core/match_quality.dart
 lib/l10n/ideas_text.dart
 lib/ui/pages/collection/brand_picker.dart
+lib/ui/pages/collection/owned_brands.dart
+lib/ui/widgets/brand_list.dart
 lib/ui/pages/collection/collection_page.dart
 lib/ui/pages/collection/collection_pickers.dart
 lib/ui/pages/collection/collection_summary.dart

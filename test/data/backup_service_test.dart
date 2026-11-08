@@ -369,6 +369,25 @@ void main() {
     expect(target.appSettings.themeMode, AppThemeMode.dark);
   });
 
+  test('the navigation rail choice goes in the backup and comes back', () async {
+    final source = await harness();
+    await source.appSettings.setRailExpanded(true);
+    final exported =
+        jsonDecode(source.backup().exportJson()) as Map<String, dynamic>;
+    expect((exported['appSettings'] as Map)['railExpanded'], isTrue);
+
+    final target = await harness();
+    await target.backup().importJson(jsonEncode(exported));
+    expect(target.appSettings.railExpanded, isTrue);
+  });
+
+  test('a backup without railExpanded imports with the rail folded', () async {
+    final h = await harness();
+    await h.appSettings.setRailExpanded(true);
+    await h.backup().importJson(kotlinSample);
+    expect(h.appSettings.railExpanded, isFalse);
+  });
+
   test('a backup without themeMode imports with the System default', () async {
     final h = await harness();
     await h.appSettings.setThemeMode(AppThemeMode.dark);

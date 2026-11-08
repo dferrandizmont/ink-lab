@@ -49,6 +49,10 @@ abstract class AppSettingsRepository {
   /// App language (system / Spanish / English).
   AppLanguage get language;
 
+  /// Whether the navigation rail of a wide screen shows its labels beside the
+  /// icons (default: folded).
+  bool get railExpanded;
+
   /// Emits the current snapshot immediately, then every change.
   Stream<AppSettingsState> get changes;
 
@@ -84,6 +88,9 @@ abstract class AppSettingsRepository {
   Future<void> setOnboardingDraft(OnboardingDraft? draft);
   Future<void> setThemeMode(AppThemeMode mode);
   Future<void> setLanguage(AppLanguage language);
+
+  /// Unfolds (true) or folds (false) the navigation rail of a wide screen.
+  Future<void> setRailExpanded(bool value);
 
   /// When a backup file was last saved or shared on this device, or `null`.
   DateTime? get lastBackupAt;
@@ -121,7 +128,8 @@ abstract class AppSettingsRepository {
 ///   wrote `pack_selection_mode`, `selected_core_set_ids`,
 ///   `selected_addon_set_ids` and `owned_marker_codes`: [load] migrates them
 ///   once (see [AppSettings.fromLegacy]) and writes the new keys.
-/// * `match_suggest_unowned`, `use_own_colors`
+/// * `match_suggest_unowned`, `use_own_colors`, `rail_expanded` (the
+///   navigation rail of a wide screen is unfolded)
 /// * `favorite_marker_ids` (brand-scoped) with legacy fallback
 ///   `favorite_marker_codes`
 /// * `name_display_mode`, `onboarding_completed`, `theme_mode`, `language`
@@ -156,6 +164,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   static const String keyChosenSeriesIds = 'chosen_series_ids';
   static const String keyMatchSuggestUnowned = 'match_suggest_unowned';
   static const String keyUseOwnColors = 'use_own_colors';
+  static const String keyRailExpanded = 'rail_expanded';
   static const String keyFavorites = 'favorite_marker_ids';
   static const String keyLegacyFavorites = 'favorite_marker_codes';
   static const String keyNameDisplayMode = 'name_display_mode';
@@ -211,6 +220,9 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
 
   @override
   AppLanguage get language => _state.language;
+
+  @override
+  bool get railExpanded => _state.railExpanded;
 
   @override
   DateTime? get lastBackupAt {
@@ -292,6 +304,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
       language: AppLanguage.fromJson(await _store.getString(keyLanguage)),
       matchSuggestUnowned: await _store.getBool(keyMatchSuggestUnowned) ?? true,
       useOwnColors: await _store.getBool(keyUseOwnColors) ?? true,
+      railExpanded: await _store.getBool(keyRailExpanded) ?? false,
       lastBackupAtEpochMs: await _store.getInt(keyLastBackupAt),
     );
     if (migrate) {
@@ -417,6 +430,12 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   );
 
   @override
+  Future<void> setRailExpanded(bool value) => _apply(
+    _state.copyWith(railExpanded: value),
+    boolKeys: {keyRailExpanded: value},
+  );
+
+  @override
   Future<void> setLanguage(AppLanguage language) => _apply(
     _state.copyWith(language: language),
     keys: {keyLanguage: language.toJson()},
@@ -445,6 +464,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
       keyOnboardingCompleted: state.onboardingCompleted,
       keyMatchSuggestUnowned: state.matchSuggestUnowned,
       keyUseOwnColors: state.useOwnColors,
+      keyRailExpanded: state.railExpanded,
     },
     stringListKeys: {
       keyOwnedSetIds: sortedStrings(state.settings.ownedSetIds),

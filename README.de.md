@@ -136,9 +136,8 @@ werden nie hochgeladen. Beim Teilen einer Palette, einer Farbkarte oder der
 
 ## Neuerungen
 
-Version 1.0.0 ist die erste stabile Version. Sie bringt elf neue Marken, ausführlichere
-Marker-Details, neue Werkzeuge, Layouts für Tablets und iPad sowie die Korrekturen aus
-den Tests. Die vollständige Liste steht in
+Version 1.1.0 bringt «Deine Marken» oben in der Markenauswahl, mit dem, was du von
+jeder Marke hast, und ein Seitenmenü, das sich auf Tablets im Querformat einklappen lässt. Die vollständige Liste steht in
 [CHANGELOG.md](CHANGELOG.md) und in den
 [Releases](https://github.com/dferrandizmont/ink-lab/releases).
 

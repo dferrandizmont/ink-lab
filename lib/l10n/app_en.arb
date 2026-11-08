@@ -2615,6 +2615,20 @@
   "brandGroupPopular": "Popular",
   "brandGroupMore": "More brands",
   "brandSearchEmpty": "No brand matches your search.",
+  "brandGroupOwned": "Your brands",
+  "brandOwnedLine": "{owned} of {total} owned",
+  "@brandOwnedLine": {
+    "placeholders": {
+      "owned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "navRailExpand": "Expand menu",
+  "navRailCollapse": "Collapse menu",
   "inkLevelTitle": "Ink level",
   "inkLevelFull": "Full",
   "commonRunningOut": "Running out",

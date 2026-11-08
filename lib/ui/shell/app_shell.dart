@@ -131,11 +131,23 @@ Widget _destinationIcon(AppDestination destination, {double size = 24}) =>
     ? Icon(destination.icon, size: size)
     : InkIcon(destination.inkIcon!, size: size);
 
+/// Width of the unfolded rail (the Material default); the button at its top is
+/// laid out in a box this wide so it stays over the icons.
+const double _extendedRailWidth = 256;
+
+/// Key of the button that folds and unfolds the navigation rail (shown from
+/// [AppShell.extendedRailBreakpoint] on).
+const Key railToggleKey = ValueKey<String>('rail-toggle');
+
 /// The adaptive shell of the app.
 ///
 /// Phones get the design G bottom bar ([InkNavigationBar]); wide screens get
-/// a [NavigationRail] on the leading edge. Pages live in an [IndexedStack],
-/// built the first time they are visited, so every tab keeps its state.
+/// a [NavigationRail] on the leading edge, compact (labels under the icons).
+/// From [extendedRailBreakpoint] on, a button at the top of the rail unfolds
+/// it (labels beside the icons) or folds it back; the choice is remembered
+/// (`AppSettingsState.railExpanded`, folded by default). Pages live in an
+/// [IndexedStack], built the first time they are visited, so every tab keeps
+/// its state.
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
 
@@ -143,7 +155,8 @@ class AppShell extends StatefulWidget {
   /// instead of the bottom bar.
   static const double wideLayoutBreakpoint = 720;
 
-  /// Width, in logical pixels, from which the rail is shown extended.
+  /// Width, in logical pixels, from which the rail can be unfolded (extended)
+  /// with the button at its top. Below it the rail is always compact.
   static const double extendedRailBreakpoint = 1100;
 
   @override
@@ -160,6 +173,9 @@ class _AppShellState extends State<AppShell> {
   /// The active brand. Palette and Ideas are keyed by it, so switching brand
   /// starts them fresh: no colour of the other brand stays on screen.
   String _brandId = '';
+
+  /// Whether the user unfolded the rail (it only shows from the breakpoint on).
+  bool _railExpanded = false;
 
   @override
   void initState() {
@@ -216,9 +232,14 @@ class _AppShellState extends State<AppShell> {
     if (scope == null || identical(scope, _scope)) return;
     _scope = scope;
     _brandId = scope.settings.brand.id;
+    _railExpanded = scope.settings.railExpanded;
     _brandSubscription?.cancel();
     _brandSubscription = scope.settings.changes.listen((AppSettingsState s) {
-      if (s.brand.id == _brandId || !mounted) return;
+      if (!mounted) return;
+      if (s.railExpanded != _railExpanded) {
+        setState(() => _railExpanded = s.railExpanded);
+      }
+      if (s.brand.id == _brandId) return;
       // Hand-offs still pending for the other brand are dropped.
       final MarkerColor? base = paletteBaseDraft.value;
       if (base != null && base.brandId != s.brand.id) {
@@ -260,6 +281,12 @@ class _AppShellState extends State<AppShell> {
 
   void _goTo(int index) => _onDestinationSelected(index);
 
+  /// Folds or unfolds the rail at once and remembers the choice.
+  void _setRailExpanded(bool value) {
+    setState(() => _railExpanded = value);
+    _scope?.settings.setRailExpanded(value);
+  }
+
   void _onDestinationSelected(int index) {
     if (index == _selectedIndex) {
       return;
@@ -293,8 +320,10 @@ class _AppShellState extends State<AppShell> {
       builder: (BuildContext context, BoxConstraints constraints) {
         final bool wide = constraints.maxWidth >= AppShell.wideLayoutBreakpoint;
         if (wide) {
-          final bool extended =
+          // The button only exists where the rail has room to unfold.
+          final bool canUnfold =
               constraints.maxWidth >= AppShell.extendedRailBreakpoint;
+          final bool extended = canUnfold && _railExpanded;
           return Scaffold(
             body: Row(
               children: <Widget>[
@@ -308,6 +337,13 @@ class _AppShellState extends State<AppShell> {
                       : NavigationRailLabelType.all,
                   extended: extended,
                   minWidth: InkGeometry.railWidth,
+                  minExtendedWidth: _extendedRailWidth,
+                  leading: canUnfold
+                      ? _RailToggle(
+                          expanded: extended,
+                          onPressed: () => _setRailExpanded(!extended),
+                        )
+                      : null,
                   destinations: <NavigationRailDestination>[
                     for (final AppDestination d in appDestinations)
                       NavigationRailDestination(
@@ -331,6 +367,58 @@ class _AppShellState extends State<AppShell> {
           ),
         );
       },
+    );
+  }
+}
+
+/// The button at the top of a wide rail: unfolds it (labels beside the icons)
+/// or folds it back. A 48 dp target centred over the icons of the rail, in the
+/// colour of its unselected icons; the chevron points the way the rail will
+/// move.
+class _RailToggle extends StatelessWidget {
+  const _RailToggle({required this.expanded, required this.onPressed});
+
+  final bool expanded;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    // The rail centres its leading widget, so the button gets a box as wide as
+    // the rail and sits at its start, over the icons.
+    return SizedBox(
+      width: expanded ? _extendedRailWidth : InkGeometry.railWidth,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: SizedBox(
+          width: InkGeometry.railWidth,
+          child: Center(
+            child: IconButton(
+              key: railToggleKey,
+              tooltip: expanded
+                  ? context.l10n.navRailCollapse
+                  : context.l10n.navRailExpand,
+              onPressed: onPressed,
+              style: IconButton.styleFrom(
+                foregroundColor: ink.fg2,
+                fixedSize: const Size.square(InkGeometry.androidTarget),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: InkRadii.controlRadius,
+                ),
+              ),
+              icon: Transform.flip(
+                flipX: expanded,
+                child: InkIcon(
+                  InkIcons.chevronRight,
+                  size: InkGeometry.iconSize,
+                  color: ink.fg2,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

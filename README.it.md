@@ -139,9 +139,8 @@ all’app che scegli, e da nessun’altra parte.
 
 ## Novità
 
-La versione 1.0.0 è la prima versione stabile. Porta undici nuove marche, un dettaglio del
-pennarello più completo, nuovi strumenti, layout per tablet e iPad e le correzioni dei
-test. L’elenco completo è in
+La versione 1.1.0 aggiunge «Le tue marche» in cima alla scelta della marca, con quello che
+hai di ogni marca, e un menu laterale che si chiude sui tablet in orizzontale. L’elenco completo è in
 [CHANGELOG.md](CHANGELOG.md) e nelle
 [versioni](https://github.com/dferrandizmont/ink-lab/releases).
 

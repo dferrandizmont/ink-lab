@@ -5281,6 +5281,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get brandSearchEmpty => 'No brand matches your search.';
 
   @override
+  String get brandGroupOwned => 'Your brands';
+
+  @override
+  String brandOwnedLine(int owned, int total) {
+    return '$owned of $total owned';
+  }
+
+  @override
+  String get navRailExpand => 'Expand menu';
+
+  @override
+  String get navRailCollapse => 'Collapse menu';
+
+  @override
   String get inkLevelTitle => 'Ink level';
 
   @override

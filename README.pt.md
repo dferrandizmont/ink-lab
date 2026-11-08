@@ -137,9 +137,8 @@ para a app que escolheres, e mais nada.
 
 ## Novidades
 
-A versão 1.0.0 é a primeira versão estável. Traz onze marcas novas, um detalhe do marcador
-mais completo, novas ferramentas, ecrãs pensados para tablets e iPad e as correções dos
-testes. A lista completa está em
+A versão 1.1.0 acrescenta «As tuas marcas» no topo da escolha de marca, com o que tens de
+cada marca, e um menu lateral que se recolhe nos tablets na horizontal. A lista completa está em
 [CHANGELOG.md](CHANGELOG.md) e nas
 [versões](https://github.com/dferrandizmont/ink-lab/releases).
 

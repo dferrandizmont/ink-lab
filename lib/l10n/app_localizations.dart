@@ -8725,6 +8725,30 @@ abstract class AppLocalizations {
   /// **'No brand matches your search.'**
   String get brandSearchEmpty;
 
+  /// No description provided for @brandGroupOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'Your brands'**
+  String get brandGroupOwned;
+
+  /// No description provided for @brandOwnedLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{owned} of {total} owned'**
+  String brandOwnedLine(int owned, int total);
+
+  /// No description provided for @navRailExpand.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand menu'**
+  String get navRailExpand;
+
+  /// No description provided for @navRailCollapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse menu'**
+  String get navRailCollapse;
+
   /// No description provided for @inkLevelTitle.
   ///
   /// In en, this message translates to:

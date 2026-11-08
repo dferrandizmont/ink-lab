@@ -7,6 +7,7 @@ import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
+import 'package:ink_lab/ui/icons/ink_icons.dart';
 import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
 import 'package:ink_lab/ui/pages/match/match_page.dart';
@@ -189,6 +190,197 @@ void main() {
       expect(find.byKey(SwatchesPage.pageKey), findsOneWidget);
     },
   );
+
+  group('the navigation rail folds and unfolds from 1100 dp on', () {
+    NavigationRail rail(WidgetTester tester) =>
+        tester.widget(find.byType(NavigationRail));
+
+    AppSettingsRepository settingsOf(WidgetTester tester) =>
+        AppScope.of(tester.element(find.byType(AppShell))).settings;
+
+    Future<void> pumpWith(
+      WidgetTester tester,
+      Size size, {
+      bool railExpanded = false,
+    }) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      useEnglishDevice(tester);
+      await tester.pumpWidget(
+        AppScope.inMemory(
+          markers: MarkerRepository(
+            loadAsset: (String path) => File(path).readAsStringSync(),
+          ),
+          settingsState: AppSettingsState(
+            onboardingCompleted: true,
+            railExpanded: railExpanded,
+          ),
+          child: const InkLabApp(),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('below 1100 dp the rail is compact and has no button', (
+      WidgetTester tester,
+    ) async {
+      for (final double width in const <double>[720, 1000, 1099]) {
+        await pumpWith(tester, Size(width, 800));
+        expect(find.byType(NavigationRail), findsOneWidget, reason: '$width');
+        expect(find.byKey(railToggleKey), findsNothing, reason: '$width');
+        expect(rail(tester).extended, isFalse, reason: '$width');
+        expect(
+          rail(tester).labelType,
+          NavigationRailLabelType.all,
+          reason: '$width',
+        );
+      }
+    });
+
+    testWidgets('a remembered unfolded rail stays compact below 1100 dp', (
+      WidgetTester tester,
+    ) async {
+      await pumpWith(tester, const Size(1000, 800), railExpanded: true);
+      expect(find.byKey(railToggleKey), findsNothing);
+      expect(rail(tester).extended, isFalse);
+      expect(rail(tester).labelType, NavigationRailLabelType.all);
+    });
+
+    testWidgets('from 1100 dp it starts folded, with the expand button', (
+      WidgetTester tester,
+    ) async {
+      for (final double width in const <double>[1100, 1280]) {
+        await pumpWith(tester, Size(width, 800));
+        expect(find.byKey(railToggleKey), findsOneWidget, reason: '$width');
+        expect(rail(tester).extended, isFalse, reason: '$width');
+        expect(
+          rail(tester).labelType,
+          NavigationRailLabelType.all,
+          reason: '$width',
+        );
+        expect(find.byTooltip(l10n.navRailExpand), findsOneWidget);
+        expect(find.byTooltip(l10n.navRailCollapse), findsNothing);
+        expect(settingsOf(tester).railExpanded, isFalse);
+        // A 48 dp target, so it is easy to hit.
+        expect(tester.getSize(find.byKey(railToggleKey)), const Size(48, 48));
+      }
+    });
+
+    testWidgets('the button unfolds the rail, folds it back and remembers', (
+      WidgetTester tester,
+    ) async {
+      await pumpWith(tester, const Size(1280, 800));
+      final double folded = tester.getSize(find.byType(NavigationRail)).width;
+      expect(folded, greaterThanOrEqualTo(InkGeometry.railWidth));
+
+      await tester.tap(find.byKey(railToggleKey));
+      await tester.pumpAndSettle();
+      expect(rail(tester).extended, isTrue);
+      expect(rail(tester).labelType, NavigationRailLabelType.none);
+      expect(
+        tester.getSize(find.byType(NavigationRail)).width,
+        greaterThan(folded),
+      );
+      expect(find.byTooltip(l10n.navRailCollapse), findsOneWidget);
+      expect(find.byTooltip(l10n.navRailExpand), findsNothing);
+      for (final String label in labels) {
+        expect(
+          find.descendant(
+            of: find.byType(NavigationRail),
+            matching: find.text(label),
+          ),
+          findsOneWidget,
+          reason: label,
+        );
+      }
+      expect(settingsOf(tester).railExpanded, isTrue);
+
+      await tester.tap(find.byKey(railToggleKey));
+      await tester.pumpAndSettle();
+      expect(rail(tester).extended, isFalse);
+      expect(rail(tester).labelType, NavigationRailLabelType.all);
+      expect(tester.getSize(find.byType(NavigationRail)).width, folded);
+      expect(find.byTooltip(l10n.navRailExpand), findsOneWidget);
+      expect(settingsOf(tester).railExpanded, isFalse);
+    });
+
+    testWidgets('a rail left unfolded comes back unfolded', (
+      WidgetTester tester,
+    ) async {
+      await pumpWith(tester, const Size(1280, 800), railExpanded: true);
+      expect(rail(tester).extended, isTrue);
+      expect(find.byTooltip(l10n.navRailCollapse), findsOneWidget);
+    });
+
+    testWidgets('the choice survives a narrower window and comes back', (
+      WidgetTester tester,
+    ) async {
+      await pumpWith(tester, const Size(1280, 800));
+      await tester.tap(find.byKey(railToggleKey));
+      await tester.pumpAndSettle();
+      expect(rail(tester).extended, isTrue);
+
+      tester.view.physicalSize = const Size(1000, 800);
+      await tester.pumpAndSettle();
+      expect(find.byKey(railToggleKey), findsNothing);
+      expect(rail(tester).extended, isFalse);
+      expect(settingsOf(tester).railExpanded, isTrue);
+
+      tester.view.physicalSize = const Size(1280, 800);
+      await tester.pumpAndSettle();
+      expect(rail(tester).extended, isTrue);
+      expect(find.byKey(railToggleKey), findsOneWidget);
+    });
+
+    testWidgets('a phone has neither the rail nor the button', (
+      WidgetTester tester,
+    ) async {
+      await pumpWith(tester, const Size(390, 844));
+      expect(find.byType(NavigationRail), findsNothing);
+      expect(find.byKey(railToggleKey), findsNothing);
+    });
+
+    testWidgets('the button sits over the icons of the rail, folded or not', (
+      WidgetTester tester,
+    ) async {
+      Future<void> check(String state) async {
+        final double toggle = tester
+            .getCenter(find.byKey(railToggleKey))
+            .dx;
+        final Finder firstIcon = find
+            .descendant(
+              of: find.byType(NavigationRail),
+              matching: find.byWidgetPredicate(
+                (Widget w) => w is InkIcon && w.icon == InkIcons.grid,
+              ),
+            );
+        expect(
+          toggle,
+          moreOrLessEquals(tester.getCenter(firstIcon).dx, epsilon: 0.5),
+          reason: state,
+        );
+      }
+
+      await pumpWith(tester, const Size(1280, 800));
+      await check('folded');
+      await tester.tap(find.byKey(railToggleKey));
+      await tester.pumpAndSettle();
+      await check('unfolded');
+    });
+
+    testWidgets('is announced to screen readers with what it will do', (
+      WidgetTester tester,
+    ) async {
+      final SemanticsHandle semantics = tester.ensureSemantics();
+      await pumpWith(tester, const Size(1280, 800));
+      expect(
+        tester.getSemantics(find.byKey(railToggleKey)).tooltip,
+        l10n.navRailExpand,
+      );
+      semantics.dispose();
+    });
+  });
 
   testWidgets(
     'Add to palette sends the marker to the Palette tab as its base',

@@ -5315,6 +5315,20 @@ class AppLocalizationsDe extends AppLocalizations {
   String get brandSearchEmpty => 'Keine Marke passt zu deiner Suche.';
 
   @override
+  String get brandGroupOwned => 'Deine Marken';
+
+  @override
+  String brandOwnedLine(int owned, int total) {
+    return '$owned von $total im Besitz';
+  }
+
+  @override
+  String get navRailExpand => 'Menü ausklappen';
+
+  @override
+  String get navRailCollapse => 'Menü einklappen';
+
+  @override
   String get inkLevelTitle => 'Tintenstand';
 
   @override

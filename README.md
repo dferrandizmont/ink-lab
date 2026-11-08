@@ -131,8 +131,8 @@ Sharing a palette, a chart or the `.zip` backup hands the file to the app you pi
 
 ## What's new
 
-Version 1.0.0 (first stable) adds eleven brands, a richer marker detail, new tools, and
-tablet and iPad layouts. Full list in [CHANGELOG.md](CHANGELOG.md) and in the
+Version 1.1.0 adds «Your brands» at the top of the brand picker, with what you own of
+each brand, and a side menu that folds away on tablets in landscape. Full list in [CHANGELOG.md](CHANGELOG.md) and in the
 [releases](https://github.com/dferrandizmont/ink-lab/releases).
 
 ## Contributing

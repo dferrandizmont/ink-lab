@@ -5323,6 +5323,26 @@ class AppLocalizationsPt extends AppLocalizations {
   String get brandSearchEmpty => 'Nenhuma marca corresponde à tua pesquisa.';
 
   @override
+  String get brandGroupOwned => 'As tuas marcas';
+
+  @override
+  String brandOwnedLine(int owned, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      owned,
+      locale: localeName,
+      other: '$owned de $total teus',
+      one: '1 de $total teu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get navRailExpand => 'Expandir o menu';
+
+  @override
+  String get navRailCollapse => 'Recolher o menu';
+
+  @override
   String get inkLevelTitle => 'Nível de tinta';
 
   @override

@@ -2701,6 +2701,8 @@ final Map<String, _Scenario> _tabletScenarios = <String, _Scenario>{
     _check(tester, 'swatches tab');
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(InkNavigationBar), findsNothing);
+    // From 1100 dp the rail has a fold/unfold button first (an ink well too).
+    final int skip = find.byKey(railToggleKey).evaluate().isEmpty ? 0 : 1;
     for (int i = 0; i < 5; i++) {
       await tester.tap(
         find
@@ -2709,7 +2711,7 @@ final Map<String, _Scenario> _tabletScenarios = <String, _Scenario>{
               // The rail's own ink wells subclass InkResponse.
               matching: find.byWidgetPredicate((Widget w) => w is InkResponse),
             )
-            .at(i),
+            .at(i + skip),
       );
       await tester.pumpAndSettle();
       _check(tester, 'tab $i');

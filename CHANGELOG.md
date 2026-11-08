@@ -10,6 +10,16 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.1.0 · 2026-11-08
+
+Finding your collection in other brands is easier, and the side menu on wide screens can fold away.
+
+- The brand picker (in My collection) now starts with a «Your brands» group: every brand you own at least one marker
+  of, so a collection in another brand is easy to find. Each row says what you own: «284 of 313 owned», or «1 set · 161
+  markers» for Ohuhu. These brands are not repeated in «Popular» or «More brands».
+- On wide screens (such as a tablet in landscape) a button at the top of the side menu unfolds it, with
+  the names beside the icons, or folds it back. It starts folded, and the app remembers your choice.
+
 ## 1.0.0 · 2026-11-07
 
 The first stable version. It is everything in 0.11.0 (below), which never reached the stores, plus the fixes found while

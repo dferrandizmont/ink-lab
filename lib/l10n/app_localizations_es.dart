@@ -5322,6 +5322,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get brandSearchEmpty => 'Ninguna marca coincide con tu búsqueda.';
 
   @override
+  String get brandGroupOwned => 'Tus marcas';
+
+  @override
+  String brandOwnedLine(int owned, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      owned,
+      locale: localeName,
+      other: '$owned de $total tuyos',
+      one: '1 de $total tuyo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get navRailExpand => 'Desplegar menú';
+
+  @override
+  String get navRailCollapse => 'Plegar menú';
+
+  @override
   String get inkLevelTitle => 'Nivel de tinta';
 
   @override

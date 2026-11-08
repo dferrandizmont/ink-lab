@@ -136,9 +136,8 @@ se entrega a la app que elijas, y nada más.
 
 ## Novedades
 
-La versión 1.0.0 es la primera versión estable. Trae once marcas nuevas, un detalle del
-rotulador más completo, herramientas nuevas, diseño para tablets y iPad, y los arreglos
-de las pruebas. La lista completa está en
+La versión 1.1.0 añade «Tus marcas» arriba del selector de marca, con lo que tienes de
+cada una, y un menú lateral que se pliega en tablets en horizontal. La lista completa está en
 [CHANGELOG.md](CHANGELOG.md) y en las
 [versiones](https://github.com/dferrandizmont/ink-lab/releases).
 

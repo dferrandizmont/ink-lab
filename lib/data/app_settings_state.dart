@@ -76,6 +76,7 @@ final class AppSettingsState with JsonValue {
     this.language = AppLanguage.system,
     this.matchSuggestUnowned = true,
     this.useOwnColors = true,
+    this.railExpanded = false,
     this.lastBackupAtEpochMs,
   }) : settings = settings ?? AppSettings(),
        favorites = Set.unmodifiable(favorites);
@@ -103,6 +104,10 @@ final class AppSettingsState with JsonValue {
   /// instead of the catalogue's (backward compatible default: on).
   final bool useOwnColors;
 
+  /// On a wide screen (1100 dp or more), the navigation rail shows the labels
+  /// beside the icons instead of under them (default: folded).
+  final bool railExpanded;
+
   /// When a backup file was last saved or shared on this device, in
   /// milliseconds since the epoch; `null` if never. It is a fact about this
   /// device, so it is not part of a backup: [toJson] leaves it out and a
@@ -120,6 +125,7 @@ final class AppSettingsState with JsonValue {
     AppLanguage? language,
     bool? matchSuggestUnowned,
     bool? useOwnColors,
+    bool? railExpanded,
     int? lastBackupAtEpochMs,
   }) => AppSettingsState(
     brand: brand ?? this.brand,
@@ -132,6 +138,7 @@ final class AppSettingsState with JsonValue {
     language: language ?? this.language,
     matchSuggestUnowned: matchSuggestUnowned ?? this.matchSuggestUnowned,
     useOwnColors: useOwnColors ?? this.useOwnColors,
+    railExpanded: railExpanded ?? this.railExpanded,
     lastBackupAtEpochMs: lastBackupAtEpochMs ?? this.lastBackupAtEpochMs,
   );
 
@@ -170,6 +177,7 @@ final class AppSettingsState with JsonValue {
         language: AppLanguage.fromJson(json['language']),
         matchSuggestUnowned: json['matchSuggestUnowned'] != false,
         useOwnColors: json['useOwnColors'] != false,
+        railExpanded: json['railExpanded'] == true,
       );
 
   @override
@@ -186,6 +194,7 @@ final class AppSettingsState with JsonValue {
     'language': language.toJson(),
     'matchSuggestUnowned': matchSuggestUnowned,
     'useOwnColors': useOwnColors,
+    'railExpanded': railExpanded,
   };
 }
 
