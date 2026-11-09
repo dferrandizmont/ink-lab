@@ -30,6 +30,10 @@ List<String> _markerSteps(IdeaPreset preset) => <String>[
 ];
 
 void main() {
+  // The real fonts: the summary wraps in full now, and the test font (one em
+  // per glyph) would make it far longer than any language does.
+  setUpAll(loadAppFonts);
+
   testWidgets('renders the intro, the idea of the day and the list', (
     WidgetTester tester,
   ) async {
@@ -100,7 +104,10 @@ void main() {
     // What you practise, what to draw, the tip and the materials are folded
     // behind "More details".
     expect(_key('ideas-details-one_color'), findsOneWidget);
-    expect(find.text(AppTypography.caps(l10n.ideasPracticeTitle)), findsNothing);
+    expect(
+      find.text(AppTypography.caps(l10n.ideasPracticeTitle)),
+      findsNothing,
+    );
     await tester.tap(_key('ideas-details-one_color'));
     await tester.pumpAndSettle();
     for (final String title in <String>[
@@ -142,31 +149,37 @@ void main() {
     expect(after, isNot(before));
   });
 
-  testWidgets('the sheet opens at half height with "Use in Palette" on view', (
-    WidgetTester tester,
-  ) async {
-    await pumpIdeas(tester, size: const Size(360, 740));
-    final IdeaPreset featured = IdeasEngine.featuredFor(DateTime(2026, 10, 29));
+  testWidgets(
+    'the sheet opens a little above half height with "Use in Palette" on view',
+    (WidgetTester tester) async {
+      await pumpIdeas(tester, size: const Size(360, 740));
+      final IdeaPreset featured = IdeasEngine.featuredFor(
+        DateTime(2026, 10, 29),
+      );
 
-    await tester.tap(_key('ideas-open-${featured.id}'));
-    await tester.pumpAndSettle();
+      await tester.tap(_key('ideas-open-${featured.id}'));
+      await tester.pumpAndSettle();
 
-    final Rect sheet = tester.getRect(find.byType(InkSheet));
-    // Half of 740.
-    expect(sheet.top, moreOrLessEquals(370, epsilon: 2));
-    // The primary action is on view without scrolling.
-    final Finder apply = _key('ideas-apply-${featured.id}');
-    expect(apply, findsOneWidget);
-    final Rect button = tester.getRect(apply);
-    expect(button.bottom, lessThanOrEqualTo(sheet.bottom + 0.5));
-    expect(button.height, greaterThanOrEqualTo(InkGeometry.target));
-    // The "⋯" menu offers the diary and other markers.
-    await tester.tap(find.byTooltip(l10n.commonMoreActions));
-    await tester.pumpAndSettle();
-    expect(find.text(l10n.diaryAdd), findsOneWidget);
-    expect(find.text(l10n.ideasOtherMarkersButton), findsOneWidget);
-    expect(_key('ideas-other-${featured.id}'), findsOneWidget);
-  });
+      final Rect sheet = tester.getRect(find.byType(InkSheet));
+      // 60 % of 740.
+      expect(
+        sheet.top,
+        moreOrLessEquals(740 * (1 - ideaSheetHeight), epsilon: 2),
+      );
+      // The primary action is on view without scrolling.
+      final Finder apply = _key('ideas-apply-${featured.id}');
+      expect(apply, findsOneWidget);
+      final Rect button = tester.getRect(apply);
+      expect(button.bottom, lessThanOrEqualTo(sheet.bottom + 0.5));
+      expect(button.height, greaterThanOrEqualTo(InkGeometry.target));
+      // The "⋯" menu offers the diary and other markers.
+      await tester.tap(find.byTooltip(l10n.commonMoreActions));
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.diaryAdd), findsOneWidget);
+      expect(find.text(l10n.ideasOtherMarkersButton), findsOneWidget);
+      expect(_key('ideas-other-${featured.id}'), findsOneWidget);
+    },
+  );
 
   testWidgets('"Use in Palette" hands over roles, opens Palette and confirms', (
     WidgetTester tester,

@@ -16,7 +16,7 @@ import '../../widgets/palette_strip.dart';
 import 'ideas_page.dart' show IdeaHeartButton, ideaMetaLine;
 
 /// The detail of one idea, inside a draggable ink sheet (0.9 review §2.3):
-/// the title with its heart, the meta line, a one-line summary, the palette
+/// the title with its heart, the meta line, the summary, the palette
 /// picked from the collection with "Use in Palette" as the only action on
 /// view, the steps and, folded away, what you practise, what to draw, a tip
 /// and the materials.
@@ -168,15 +168,10 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
           style: AppTypography.capsStyle.copyWith(color: ink.fg2),
         ),
         const SizedBox(height: InkSpacing.group),
-        // One line: the whole summary is one long-press away.
-        Tooltip(
-          message: l10n.ideaSummary(_preset),
-          child: Text(
-            l10n.ideaSummary(_preset),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTypography.secondary.copyWith(color: ink.fg2),
-          ),
+        // The whole summary, wrapped: it is the idea's description.
+        Text(
+          l10n.ideaSummary(_preset),
+          style: AppTypography.secondary.copyWith(color: ink.fg2),
         ),
         const SizedBox(height: InkSpacing.block),
         ..._buildMarkers(context, caps, body, palette),

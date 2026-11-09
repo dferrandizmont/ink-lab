@@ -200,6 +200,10 @@ class ColorSwatchTile extends StatelessWidget {
       _codeLine = 22;
   static const double _nameLine = 20, _hexLine = 16, _minBlock = 32;
 
+  // The font sizes behind those line heights (the code is 16/22, the name
+  // 14/20, the hex 12/16): the system scales the font size, not the line.
+  static const double _codeSize = 16, _nameSize = 14, _hexSize = 12;
+
   /// The height of a grid cell that holds the colour block, the code, two name
   /// lines and the hex line (spec §4 "Swatch cell").
   ///
@@ -207,20 +211,23 @@ class ColorSwatchTile extends StatelessWidget {
   /// with fixed lines a second name line would be cut at the card's bottom edge
   /// at large text sizes. A cell without the hex (the grid) is one line
   /// shorter.
-  static double gridCellHeight(
-    BuildContext context, {
-    bool showHex = true,
-  }) =>
+  static double gridCellHeight(BuildContext context, {bool showHex = true}) =>
       InkGeometry.swatchBlockHeight +
       _bodyTop +
       _bodyBottom +
-      _line(context, _codeLine) +
-      2 * _line(context, _nameLine) +
-      (showHex ? _line(context, _hexLine) : 0);
+      _line(context, _codeLine, _codeSize) +
+      2 * _line(context, _nameLine, _nameSize) +
+      (showHex ? _line(context, _hexLine, _hexSize) : 0);
 
-  /// [height], a line height at scale 1, as the system text scale makes it.
-  static double _line(BuildContext context, double height) =>
-      MediaQuery.textScalerOf(context).scale(height);
+  /// [height], a line height at scale 1 of a text of [fontSize], as the system
+  /// text scale makes it.
+  ///
+  /// The scaler is asked for the font size, as the text does: Android scales
+  /// text non-linearly (a 14 sp name grows more than a 20 sp line would), so
+  /// scaling the line itself came out too short at large text sizes and cut
+  /// the second line of a name at the card's bottom edge.
+  static double _line(BuildContext context, double height, double fontSize) =>
+      MediaQuery.textScalerOf(context).scale(fontSize) * height / fontSize;
 
   /// The grid delegate for a grid of [ColorSwatchTile]s, from the system text
   /// scale and whether the cells show the hex (the grid leaves it out).
@@ -240,9 +247,9 @@ class ColorSwatchTile extends StatelessWidget {
     final InkColors ink = InkColors.of(context);
     final Color background = swatchColor(hex);
     final Color onSwatch = inkOn(background);
-    final double codeLine = _line(context, _codeLine);
-    final double nameLine = _line(context, _nameLine);
-    final double hexLine = _line(context, _hexLine);
+    final double codeLine = _line(context, _codeLine, _codeSize);
+    final double nameLine = _line(context, _nameLine, _nameSize);
+    final double hexLine = _line(context, _hexLine, _hexSize);
 
     return Semantics(
       button: onTap != null,
@@ -300,7 +307,8 @@ class ColorSwatchTile extends StatelessWidget {
                   // A second name line only when the block keeps its 72.
                   final double secondLine =
                       nameLine + InkGeometry.swatchBlockHeight - _minBlock;
-                  if (nameLines == 1 && budget >= secondLine) {
+                  // (a hair of tolerance for the rounding of scaled lines)
+                  if (nameLines == 1 && budget + 0.01 >= secondLine) {
                     nameLines = 2;
                   }
                 }

@@ -140,7 +140,7 @@ sauvegarde `.zip`, le fichier ne va qu’à l’appli que tu choisis, et nulle p
 
 ## Nouveautés
 
-La version 1.2.0 apporte 100 idées au lieu de 28, rangées par difficulté et par saison pour les trouver
+La version 1.2.1 affiche les descriptions des idées en entier et corrige de petits défauts d’affichage. La 1.2.0 a apporté 100 idées au lieu de 28, rangées par difficulté et par saison pour les trouver
 facilement, et un menu latéral plus net sur les tablettes. La liste complète est dans
 [CHANGELOG.md](CHANGELOG.md) et dans les
 [versions](https://github.com/dferrandizmont/ink-lab/releases).

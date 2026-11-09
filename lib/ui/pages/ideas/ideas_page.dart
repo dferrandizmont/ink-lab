@@ -263,8 +263,15 @@ class _IdeasPageState extends State<IdeasPage> {
     if (favorites != null) {
       unawaited(favorites.recordViewed(preset.id).catchError((Object _) {}));
     }
+    // Let go of the search field first: the route would give it the focus
+    // back when the sheet closes (cursor and keyboard back on the page).
+    FocusManager.instance.primaryFocus?.unfocus();
     final IdeaPlan? applied = await showInkDraggableSheet<IdeaPlan>(
       context: context,
+      // A little above half height, so "Use in Palette" stays on view when
+      // the title or the summary takes a few lines (de, fr).
+      initial: ideaSheetHeight,
+      snaps: const <double>[ideaSheetHeight],
       builder: (BuildContext context, ScrollController scroll) =>
           IdeaDetailSheet(
             initial: initial,
@@ -683,6 +690,11 @@ class _IdeasPageState extends State<IdeasPage> {
 
 /// How many ideas of each category the overview ("All") shows before its
 /// "See all" row.
+/// How high an idea sheet opens, as a share of the screen: enough for
+/// "Use in Palette" to be on view on a 740 dp phone with the longest title
+/// and summary in every language.
+const double ideaSheetHeight = 0.6;
+
 const int _overviewShown = 3;
 
 /// A caps heading above a run of ideas (a difficulty, a season, a category).
@@ -847,7 +859,9 @@ class _FeaturedCard extends StatelessWidget {
                             message: eyebrow,
                             child: Text(
                               eyebrow,
-                              maxLines: 1,
+                              // Two lines at most: at large text the
+                              // minutes would otherwise be cut off.
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: AppTypography.capsStyle.copyWith(
                                 color: ink.action,
@@ -875,14 +889,10 @@ class _FeaturedCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: InkSpacing.group),
-                  Tooltip(
-                    message: summary,
-                    child: Text(
-                      summary,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTypography.secondary.copyWith(color: ink.fg2),
-                    ),
+                  // The whole description, wrapped, like the list rows.
+                  Text(
+                    summary,
+                    style: AppTypography.secondary.copyWith(color: ink.fg2),
                   ),
                   const SizedBox(height: InkSpacing.block),
                   Row(

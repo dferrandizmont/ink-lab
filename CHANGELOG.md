@@ -10,6 +10,16 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.2.1 · 2026-11-09
+
+Small fixes to the Ideas tab and the Swatches grid.
+
+- Idea descriptions now show in full, in the idea sheet and on the idea of the day, instead of being cut
+  with «…».
+- The idea sheet opens a little higher, so «Use in Palette» is always on view.
+- Closing an idea no longer puts the cursor and keyboard back in the search field.
+- Two-line colour names fit their card in the Swatches grid at large text sizes.
+
 ## 1.2.0 · 2026-11-08
 
 100 ideas instead of 28, organised so they are easy to browse, and a tidier side menu on tablets.

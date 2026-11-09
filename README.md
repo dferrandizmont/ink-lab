@@ -131,7 +131,7 @@ Sharing a palette, a chart or the `.zip` backup hands the file to the app you pi
 
 ## What's new
 
-Version 1.2.0 brings 100 ideas instead of 28, grouped by difficulty and by season so they are easy to
+Version 1.2.1 shows idea descriptions in full and fixes a few small display issues. Version 1.2.0 brought 100 ideas instead of 28, grouped by difficulty and by season so they are easy to
 browse, and a tidier side menu on tablets. Full list in [CHANGELOG.md](CHANGELOG.md) and in the
 [releases](https://github.com/dferrandizmont/ink-lab/releases).
 

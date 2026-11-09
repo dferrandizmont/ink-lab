@@ -136,7 +136,7 @@ se entrega a la app que elijas, y nada más.
 
 ## Novedades
 
-La versión 1.2.0 trae 100 ideas en vez de 28, agrupadas por dificultad y por estación para encontrarlas
+La versión 1.2.1 muestra enteras las descripciones de las ideas y corrige pequeños detalles de pantalla. La 1.2.0 trajo 100 ideas en vez de 28, agrupadas por dificultad y por estación para encontrarlas
 fácilmente, y un menú lateral más limpio en tablets. La lista completa está en
 [CHANGELOG.md](CHANGELOG.md) y en las
 [versiones](https://github.com/dferrandizmont/ink-lab/releases).
