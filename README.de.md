@@ -30,7 +30,7 @@ Die KI ist optional und standardmäßig aus.
   <a href="https://apps.apple.com/app/ink-lab-marker-palettes/id6830184034"><img src="https://img.shields.io/badge/App_Store-Herunterladen-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Im App Store verfügbar"></a>
 </p>
 
-iPhone im App Store. Android auf GitHub und in geschlossener Testphase bei Google Play.
+iPhone und iPad im App Store. Android auf GitHub und in geschlossener Testphase bei Google Play.
 
 <details>
 <summary>Der Google-Play-Beta beitreten</summary>

@@ -29,7 +29,7 @@ L’IA è facoltativa e disattivata di default.
   <a href="https://apps.apple.com/app/ink-lab-marker-palettes/id6830184034"><img src="https://img.shields.io/badge/App_Store-Scarica-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Disponibile sull’App Store"></a>
 </p>
 
-iPhone sull’App Store. Android su GitHub e in test chiuso su Google Play.
+iPhone e iPad sull’App Store. Android su GitHub e in test chiuso su Google Play.
 
 <details>
 <summary>Unisciti alla beta di Google Play</summary>

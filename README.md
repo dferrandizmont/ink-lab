@@ -29,7 +29,7 @@ AI is optional and off by default.
   <a href="https://apps.apple.com/app/ink-lab-marker-palettes/id6830184034"><img src="https://img.shields.io/badge/App_Store-Download-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Available on the App Store"></a>
 </p>
 
-iPhone on the App Store. Android on GitHub, and in closed testing on Google Play.
+iPhone and iPad on the App Store. Android on GitHub, and in closed testing on Google Play.
 
 <details>
 <summary>Join the beta on Google Play</summary>

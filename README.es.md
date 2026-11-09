@@ -29,7 +29,7 @@ La IA es opcional y está apagada de serie.
   <a href="https://apps.apple.com/app/ink-lab-marker-palettes/id6830184034"><img src="https://img.shields.io/badge/App_Store-Descargar-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Disponible en App Store"></a>
 </p>
 
-iPhone en la App Store. Android en GitHub y en prueba cerrada en Google Play.
+iPhone y iPad en la App Store. Android en GitHub y en prueba cerrada en Google Play.
 
 <details>
 <summary>Únete a la beta de Google Play</summary>
