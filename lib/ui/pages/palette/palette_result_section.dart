@@ -70,6 +70,7 @@ extension _PaletteResultSection on _PalettePageState {
             // Side by side on a tablet there is room for the lines: no chip
             // is cut by the edge of its half.
             wrap: split,
+            fadeEnds: true,
             semanticLabel: context.l10n.paletteVariationsLabel,
             children: <Widget>[
               for (final variation in QuickPaletteVariation.values)

@@ -772,6 +772,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get paletteSaveButton => 'Guardar paleta';
 
   @override
+  String get paletteSavedButton => 'Paleta guardada';
+
+  @override
   String get paletteShareButton => 'Partilhar';
 
   @override
@@ -946,7 +949,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get swatchesClearSearch => 'Limpar a pesquisa';
+  String get swatchesClearSearch => 'Limpar pesquisa';
 
   @override
   String get swatchesAllFilter => 'Todos';
@@ -976,10 +979,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get swatchesClearFilters => 'Limpar filtros';
 
   @override
+  String get swatchesClearSearchAndFilters => 'Limpar pesquisa e filtros';
+
+  @override
   String get swatchesLoadingSemantics => 'A carregar cores';
 
   @override
   String get swatchesClosestAlternatives => 'Alternativas próximas';
+
+  @override
+  String get swatchesNoCloseAlternatives => 'Sem alternativas próximas';
 
   @override
   String get swatchesInPacks => 'Em conjuntos';
@@ -1074,6 +1083,27 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get swatchesEmptyFiltersBody =>
       'Esta marca não tem cores para os conjuntos e filtros selecionados.';
+
+  @override
+  String get swatchesEmptyNoFavoritesTitle => 'Ainda não há favoritos';
+
+  @override
+  String get swatchesEmptyNoFavoritesBody =>
+      'Toca na estrela nos detalhes de uma cor para a adicionar.';
+
+  @override
+  String get swatchesEmptyNoFavoritesAction => 'Ver todas as cores';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineTitle =>
+      'Nenhum favorito na tua coleção';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineBody =>
+      'Nenhum dos teus favoritos é um marcador que tens.';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineAction => 'Ver todos os favoritos';
 
   @override
   String get swatchesLoading => 'A carregar cores…';
@@ -2533,7 +2563,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Sombreia as três cores com o mesmo cinzento para que pertençam umas às outras.';
 
   @override
-  String get ideasSplitComplementTitle => 'Complementar dividido';
+  String get ideasSplitComplementTitle => 'Complementar dividida';
 
   @override
   String get ideasSplitComplementSummary =>
@@ -5707,6 +5737,10 @@ class AppLocalizationsPt extends AppLocalizations {
       'A IA no dispositivo não está disponível neste telemóvel neste momento. Usa-se a teoria da cor até estar.';
 
   @override
+  String get settingsAiOnDeviceNotEnabledIos =>
+      'Para usar a IA no dispositivo, ativa o Apple Intelligence em Definições → Apple Intelligence e Siri.';
+
+  @override
   String paletteSizeChip(int size) {
     return '$size cores';
   }
@@ -5843,7 +5877,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String paletteMissingBase(String example) {
-    return 'Escolhe um marcador base, como $example, ou uma cena com o chip Cenas.';
+    return 'Escolhe um marcador base, como $example, ou escolhe Cenas como tipo de paleta.';
   }
 
   @override
@@ -6695,11 +6729,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get categoryAtmosphere => 'Atmosfera';
 
   @override
-  String get settingsLinesTitle => 'Linhas que tens';
+  String get settingsLinesTitle => 'Séries que tens';
 
   @override
   String get settingsLinesHint =>
-      'Escolhe todas as linhas da Ohuhu que tenhas. Se desativares uma linha, os seus packs saem da tua seleção.';
+      'Escolhe todas as séries da Ohuhu que tenhas. Se desativares uma série, os seus packs saem da tua seleção.';
 
   @override
   String settingsLineSelectedOfTotal(int selected, int total) {
@@ -6732,13 +6766,13 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get swatchesLines => 'Linhas';
+  String get swatchesLines => 'Séries';
 
   @override
-  String get swatchesLabelLine => 'Linha';
+  String get swatchesLabelLine => 'Série';
 
   @override
-  String get swatchesAllLines => 'Todas as linhas';
+  String get swatchesAllLines => 'Todas as séries';
 
   @override
   String get swatchesLegacyPacks => 'Conjuntos antigos';
@@ -6973,6 +7007,15 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get collectionTickVisible => 'Marcar tudo';
+
+  @override
+  String collectionTickManyTitle(int count) {
+    return 'Marcar $count marcadores?';
+  }
+
+  @override
+  String get collectionTickManyBody =>
+      'Todos contam como marcadores que tens. Podes tirá-los outra vez com «Desmarcar».';
 
   @override
   String get collectionUntickVisible => 'Desmarcar';
@@ -7433,6 +7476,11 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String collectionLooseTicked(int loose, int sets) {
+    return '$loose avulsos marcados · $sets nos teus conjuntos';
+  }
+
+  @override
   String get onboardingWelcomeTitle => 'Damos-te as boas-vindas';
 
   @override
@@ -7478,6 +7526,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get onboardingFinish => 'Começar';
+
+  @override
+  String get onboardingStepFirst => 'Passo 1';
+
+  @override
+  String onboardingMarkersTicked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count assinalados',
+      one: '1 assinalado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String onboardingMarkersNoneTicked(String range) {
+    return 'Nenhum assinalado · $range';
+  }
 
   @override
   String onboardingStep(int step, int total) {
@@ -7532,6 +7599,9 @@ class AppLocalizationsPt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get wishlistSubtitle => 'Adiciona a partir do detalhe de uma cor';
 
   @override
   String get wishlistEmpty =>
@@ -7914,7 +7984,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String diaryStatsFinished(int count) {
-    return '$count terminadas';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count terminadas',
+      one: '1 terminada',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -7936,7 +8012,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String diaryStatsMonthsLatest(int count) {
-    return 'A mostrar os últimos $count meses.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'A mostrar os últimos $count meses.',
+      one: 'A mostrar o último mês.',
+    );
+    return '$_temp0';
   }
 
   @override

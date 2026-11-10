@@ -42,6 +42,7 @@ void main() {
       for (final MapEntry<String, OnDeviceStatus> entry
           in <String, OnDeviceStatus>{
             'unavailable': OnDeviceStatus.unavailable,
+            'notEnabled': OnDeviceStatus.notEnabled,
             'downloadable': OnDeviceStatus.downloadable,
             'downloading': OnDeviceStatus.downloading,
             'available': OnDeviceStatus.available,
@@ -53,6 +54,14 @@ void main() {
         });
         expect(await platform.status(), entry.value, reason: entry.key);
       }
+    });
+
+    test('notEnabled is not supported and stays out of the UI', () {
+      expect(OnDeviceStatus.notEnabled.supported, isFalse);
+      expect(OnDeviceStatus.unavailable.supported, isFalse);
+      expect(OnDeviceStatus.available.supported, isTrue);
+      expect(OnDeviceStatus.parse('notenabled'), OnDeviceStatus.unavailable);
+      expect(OnDeviceStatus.parse(null), OnDeviceStatus.unavailable);
     });
 
     test(

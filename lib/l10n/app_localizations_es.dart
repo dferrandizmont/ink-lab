@@ -773,6 +773,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paletteSaveButton => 'Guardar paleta';
 
   @override
+  String get paletteSavedButton => 'Paleta guardada';
+
+  @override
   String get paletteShareButton => 'Compartir';
 
   @override
@@ -897,7 +900,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get paletteEmptyHint =>
-      'Elige un rotulador base para crear una paleta, o una escena con el chip Escenas.';
+      'Elige un rotulador base para crear una paleta, o elige Escenas como tipo de paleta.';
 
   @override
   String get paletteCustomModeHint =>
@@ -947,7 +950,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get swatchesClearSearch => 'Borrar la búsqueda';
+  String get swatchesClearSearch => 'Borrar búsqueda';
 
   @override
   String get swatchesAllFilter => 'Todos';
@@ -977,10 +980,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get swatchesClearFilters => 'Quitar filtros';
 
   @override
+  String get swatchesClearSearchAndFilters => 'Borrar búsqueda y filtros';
+
+  @override
   String get swatchesLoadingSemantics => 'Cargando colores';
 
   @override
   String get swatchesClosestAlternatives => 'Alternativas cercanas';
+
+  @override
+  String get swatchesNoCloseAlternatives => 'Sin alternativas cercanas';
 
   @override
   String get swatchesInPacks => 'En sets';
@@ -1074,6 +1083,27 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get swatchesEmptyFiltersBody =>
       'Esta marca no tiene colores para los sets y filtros seleccionados.';
+
+  @override
+  String get swatchesEmptyNoFavoritesTitle => 'Aún no hay favoritos';
+
+  @override
+  String get swatchesEmptyNoFavoritesBody =>
+      'Toca la estrella en el detalle de un color para añadirlo.';
+
+  @override
+  String get swatchesEmptyNoFavoritesAction => 'Ver todos los colores';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineTitle =>
+      'Ningún favorito en tu colección';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineBody =>
+      'Ninguno de tus favoritos es un rotulador que tengas.';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineAction => 'Ver todos los favoritos';
 
   @override
   String get swatchesLoading => 'Cargando colores…';
@@ -2533,7 +2563,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Sombrea los tres colores con el mismo gris para que vayan juntos.';
 
   @override
-  String get ideasSplitComplementTitle => 'Complemento dividido';
+  String get ideasSplitComplementTitle => 'Complementaria dividida';
 
   @override
   String get ideasSplitComplementSummary =>
@@ -5708,6 +5738,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'La IA en el dispositivo no está disponible ahora en este móvil. Se usa la teoría del color hasta que lo esté.';
 
   @override
+  String get settingsAiOnDeviceNotEnabledIos =>
+      'Para usar la IA en el dispositivo, activa Apple Intelligence en Ajustes → Apple Intelligence y Siri.';
+
+  @override
   String paletteSizeChip(int size) {
     return '$size colores';
   }
@@ -5845,7 +5879,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String paletteMissingBase(String example) {
-    return 'Elige un rotulador base, como $example, o una escena con el chip Escenas.';
+    return 'Elige un rotulador base, como $example, o elige Escenas como tipo de paleta.';
   }
 
   @override
@@ -6699,11 +6733,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get categoryAtmosphere => 'Atmósfera';
 
   @override
-  String get settingsLinesTitle => 'Líneas que tienes';
+  String get settingsLinesTitle => 'Series que tienes';
 
   @override
   String get settingsLinesHint =>
-      'Elige todas las líneas de Ohuhu que tengas. Si desactivas una línea, sus packs se quitan de tu selección.';
+      'Elige todas las series de Ohuhu que tengas. Si desactivas una serie, sus packs se quitan de tu selección.';
 
   @override
   String settingsLineSelectedOfTotal(int selected, int total) {
@@ -6736,13 +6770,13 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get swatchesLines => 'Líneas';
+  String get swatchesLines => 'Series';
 
   @override
-  String get swatchesLabelLine => 'Línea';
+  String get swatchesLabelLine => 'Serie';
 
   @override
-  String get swatchesAllLines => 'Todas las líneas';
+  String get swatchesAllLines => 'Todas las series';
 
   @override
   String get swatchesLegacyPacks => 'Sets antiguos';
@@ -6976,6 +7010,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get collectionTickVisible => 'Marcar todos';
+
+  @override
+  String collectionTickManyTitle(int count) {
+    return '¿Marcar $count rotuladores?';
+  }
+
+  @override
+  String get collectionTickManyBody =>
+      'Todos cuentan como rotuladores que tienes. Puedes quitarlos otra vez con «Quitar todos».';
 
   @override
   String get collectionUntickVisible => 'Quitar todos';
@@ -7435,6 +7478,11 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String collectionLooseTicked(int loose, int sets) {
+    return '$loose sueltos marcados · $sets en tus sets';
+  }
+
+  @override
   String get onboardingWelcomeTitle => 'Te damos la bienvenida';
 
   @override
@@ -7478,6 +7526,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onboardingFinish => 'Empezar';
+
+  @override
+  String get onboardingStepFirst => 'Paso 1';
+
+  @override
+  String onboardingMarkersTicked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count marcados',
+      one: '1 marcado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String onboardingMarkersNoneTicked(String range) {
+    return 'Ninguno marcado aún · $range';
+  }
 
   @override
   String onboardingStep(int step, int total) {
@@ -7532,6 +7599,9 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get wishlistSubtitle => 'Añade desde el detalle de un color';
 
   @override
   String get wishlistEmpty =>
@@ -7914,7 +7984,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String diaryStatsFinished(int count) {
-    return '$count terminadas';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count terminadas',
+      one: '1 terminada',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -7936,7 +8012,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String diaryStatsMonthsLatest(int count) {
-    return 'Mostrando los últimos $count meses.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mostrando los últimos $count meses.',
+      one: 'Mostrando el último mes.',
+    );
+    return '$_temp0';
   }
 
   @override

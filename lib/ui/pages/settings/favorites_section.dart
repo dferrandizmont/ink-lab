@@ -74,17 +74,28 @@ Future<void> showFavoritesSheet(
   return showInkDraggableSheet<void>(
     context: context,
     actions: <Widget>[
-      InkOverflowMenu(
-        key: const ValueKey<String>('settings-favorites-menu'),
-        items: <InkMenuItem>[
-          InkMenuItem(
-            key: const ValueKey<String>('settings-favorites-clear'),
-            label: l10n.settingsClearFavorites,
-            icon: InkIcons.trash2,
-            destructive: true,
-            onSelected: () => _clearAllFavorites(context, scope: scope),
-          ),
-        ],
+      // Only while there is something to clear: an empty list has no menu.
+      StreamBuilder<AppSettingsState>(
+        stream: scope.settings.changes,
+        initialData: scope.settings.state,
+        builder:
+            (BuildContext context, AsyncSnapshot<AppSettingsState> snapshot) {
+              final AppSettingsState state =
+                  snapshot.data ?? scope.settings.state;
+              if (_favoritesOf(state).isEmpty) return const SizedBox.shrink();
+              return InkOverflowMenu(
+                key: const ValueKey<String>('settings-favorites-menu'),
+                items: <InkMenuItem>[
+                  InkMenuItem(
+                    key: const ValueKey<String>('settings-favorites-clear'),
+                    label: l10n.settingsClearFavorites,
+                    icon: InkIcons.trash2,
+                    destructive: true,
+                    onSelected: () => _clearAllFavorites(context, scope: scope),
+                  ),
+                ],
+              );
+            },
       ),
     ],
     builder: (BuildContext context, ScrollController scroll) =>

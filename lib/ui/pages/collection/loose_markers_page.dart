@@ -11,6 +11,7 @@ import '../../widgets/ink_adaptive.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_search_field.dart';
+import '../settings/dialogs.dart';
 import 'collection_summary.dart';
 
 /// "Add loose markers": every marker of the active brand with a search, a
@@ -28,6 +29,9 @@ class LooseMarkersPage extends StatefulWidget {
 
   /// Key of the page body.
   static const Key pageKey = Key('loose-markers-page');
+
+  /// "Tick all" asks first when it would tick more markers than this at once.
+  static const int tickConfirmThreshold = 20;
 
   /// Pushes the page on the nearest navigator.
   static Future<void> open(BuildContext context) =>
@@ -123,6 +127,14 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
     final List<MarkerColor> tickable = visible
         .where((MarkerColor c) => !viaSet(c))
         .toList(growable: false);
+    // What "Tick all" would add: the tickable markers not ticked yet.
+    final List<MarkerColor> toTick = tickable
+        .where((MarkerColor c) => !owned(c))
+        .toList(growable: false);
+    final int inSets = range.where(viaSet).length;
+    final int looseTicked = range
+        .where((MarkerColor c) => !viaSet(c) && owned(c))
+        .length;
 
     final List<Widget> top = <Widget>[
       Text(
@@ -148,7 +160,7 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
               label: context.l10n.collectionTickVisible,
               onPressed: tickable.isEmpty
                   ? null
-                  : () => _setExtras(scope, settings, tickable, add: true),
+                  : () => _tickAll(scope, settings, tickable, toTick.length),
             ),
           ),
           const SizedBox(width: InkSpacing.buttonGap),
@@ -173,10 +185,13 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
       ],
       const SizedBox(height: InkSpacing.group),
       Text(
-        context.l10n.collectionOwnedCount(
-          range.where(owned).length,
-          range.length,
-        ),
+        // With sets, the sets are not what is ticked here: say the two apart.
+        brand.hasRetailSets
+            ? context.l10n.collectionLooseTicked(looseTicked, inSets)
+            : context.l10n.collectionOwnedCount(
+                range.where(owned).length,
+                range.length,
+              ),
         key: const ValueKey<String>('collection-owned-count'),
         style: AppTypography.data.copyWith(color: ink.fg2),
       ),
@@ -237,6 +252,27 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
         color.oldCode.toLowerCase().contains(_query) ||
         color.newName.toLowerCase().contains(_query) ||
         color.oldName.toLowerCase().contains(_query);
+  }
+
+  /// Ticks [colors]; asks first when [adding] of them are new and that is
+  /// more than [LooseMarkersPage.tickConfirmThreshold] (a whole range at once
+  /// is easy to do by mistake).
+  Future<void> _tickAll(
+    AppScope scope,
+    AppSettings settings,
+    List<MarkerColor> colors,
+    int adding,
+  ) async {
+    if (adding > LooseMarkersPage.tickConfirmThreshold) {
+      final bool ok = await confirmAction(
+        context,
+        title: context.l10n.collectionTickManyTitle(adding),
+        body: context.l10n.collectionTickManyBody,
+        confirmLabel: context.l10n.collectionTickVisible,
+      );
+      if (!ok || !mounted) return;
+    }
+    await _setExtras(scope, settings, colors, add: true);
   }
 
   Future<void> _setExtras(

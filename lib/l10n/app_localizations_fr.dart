@@ -776,6 +776,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paletteSaveButton => 'Enregistrer la palette';
 
   @override
+  String get paletteSavedButton => 'Palette enregistrée';
+
+  @override
   String get paletteShareButton => 'Partager';
 
   @override
@@ -981,10 +984,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get swatchesClearFilters => 'Retirer les filtres';
 
   @override
+  String get swatchesClearSearchAndFilters => 'Effacer recherche et filtres';
+
+  @override
   String get swatchesLoadingSemantics => 'Chargement des couleurs';
 
   @override
   String get swatchesClosestAlternatives => 'Alternatives proches';
+
+  @override
+  String get swatchesNoCloseAlternatives => 'Aucune alternative proche';
 
   @override
   String get swatchesInPacks => 'Dans les coffrets';
@@ -1078,6 +1087,27 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get swatchesEmptyFiltersBody =>
       'Cette marque n’a aucune couleur pour les coffrets et filtres sélectionnés.';
+
+  @override
+  String get swatchesEmptyNoFavoritesTitle => 'Pas encore de favoris';
+
+  @override
+  String get swatchesEmptyNoFavoritesBody =>
+      'Touche l’étoile dans la fiche d’une couleur pour l’ajouter.';
+
+  @override
+  String get swatchesEmptyNoFavoritesAction => 'Voir toutes les couleurs';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineTitle =>
+      'Aucun favori dans ta collection';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineBody =>
+      'Aucun de tes favoris n’est un marqueur que tu possèdes.';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineAction => 'Voir tous les favoris';
 
   @override
   String get swatchesLoading => 'Chargement des couleurs…';
@@ -2541,7 +2571,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ombre les trois couleurs avec le même gris pour qu’elles aillent bien ensemble.';
 
   @override
-  String get ideasSplitComplementTitle => 'Complémentaire divisé';
+  String get ideasSplitComplementTitle => 'Complémentaire divisée';
 
   @override
   String get ideasSplitComplementSummary =>
@@ -5723,6 +5753,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'L’IA sur l’appareil n’est pas disponible sur ce téléphone pour le moment. La théorie des couleurs est utilisée en attendant.';
 
   @override
+  String get settingsAiOnDeviceNotEnabledIos =>
+      'Pour utiliser l’IA sur l’appareil, active Apple Intelligence dans Réglages → Apple Intelligence et Siri.';
+
+  @override
   String paletteSizeChip(int size) {
     return '$size couleurs';
   }
@@ -5856,7 +5890,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String paletteMissingBase(String example) {
-    return 'Choisis un marqueur de base, comme $example, ou une scène avec la puce Scènes.';
+    return 'Choisis un marqueur de base, comme $example, ou sélectionne Scènes comme type de palette.';
   }
 
   @override
@@ -6709,11 +6743,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get categoryAtmosphere => 'Atmosphère';
 
   @override
-  String get settingsLinesTitle => 'Gammes que tu possèdes';
+  String get settingsLinesTitle => 'Séries que tu possèdes';
 
   @override
   String get settingsLinesHint =>
-      'Choisis toutes les gammes Ohuhu que tu possèdes. Désactiver une gamme retire ses coffrets de ta sélection.';
+      'Choisis toutes les séries Ohuhu que tu possèdes. Désactiver une série retire ses coffrets de ta sélection.';
 
   @override
   String settingsLineSelectedOfTotal(int selected, int total) {
@@ -6746,13 +6780,13 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get swatchesLines => 'Gammes';
+  String get swatchesLines => 'Séries';
 
   @override
-  String get swatchesLabelLine => 'Gamme';
+  String get swatchesLabelLine => 'Série';
 
   @override
-  String get swatchesAllLines => 'Toutes les gammes';
+  String get swatchesAllLines => 'Toutes les séries';
 
   @override
   String get swatchesLegacyPacks => 'Anciens coffrets';
@@ -6986,6 +7020,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get collectionTickVisible => 'Tout cocher';
+
+  @override
+  String collectionTickManyTitle(int count) {
+    return 'Cocher $count marqueurs ?';
+  }
+
+  @override
+  String get collectionTickManyBody =>
+      'Tous comptent comme des marqueurs que tu as. Tu peux les retirer avec « Décocher ».';
 
   @override
   String get collectionUntickVisible => 'Décocher';
@@ -7448,6 +7491,11 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String collectionLooseTicked(int loose, int sets) {
+    return '$loose à l’unité cochés · $sets dans tes coffrets';
+  }
+
+  @override
   String get onboardingWelcomeTitle => 'Bienvenue dans Ink Lab';
 
   @override
@@ -7494,6 +7542,25 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get onboardingFinish => 'Commencer';
+
+  @override
+  String get onboardingStepFirst => 'Étape 1';
+
+  @override
+  String onboardingMarkersTicked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cochés',
+      one: '$count coché',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String onboardingMarkersNoneTicked(String range) {
+    return 'Aucun coché · $range';
+  }
 
   @override
   String onboardingStep(int step, int total) {
@@ -7549,6 +7616,9 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get wishlistSubtitle => 'Ajoute-les depuis le détail d’une couleur';
 
   @override
   String get wishlistEmpty =>
@@ -7931,7 +8001,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String diaryStatsFinished(int count) {
-    return '$count terminées';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count terminées',
+      one: '$count terminée',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -7953,7 +8029,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String diaryStatsMonthsLatest(int count) {
-    return 'Les $count derniers mois.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Les $count derniers mois.',
+      one: 'Le dernier mois.',
+    );
+    return '$_temp0';
   }
 
   @override

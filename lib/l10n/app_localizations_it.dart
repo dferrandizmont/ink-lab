@@ -778,6 +778,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get paletteSaveButton => 'Salva palette';
 
   @override
+  String get paletteSavedButton => 'Palette salvata';
+
+  @override
   String get paletteShareButton => 'Condividi';
 
   @override
@@ -954,7 +957,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get swatchesClearSearch => 'Cancella la ricerca';
+  String get swatchesClearSearch => 'Azzera ricerca';
 
   @override
   String get swatchesAllFilter => 'Tutti';
@@ -984,10 +987,16 @@ class AppLocalizationsIt extends AppLocalizations {
   String get swatchesClearFilters => 'Azzera filtri';
 
   @override
+  String get swatchesClearSearchAndFilters => 'Azzera ricerca e filtri';
+
+  @override
   String get swatchesLoadingSemantics => 'Caricamento colori';
 
   @override
   String get swatchesClosestAlternatives => 'Alternative più vicine';
+
+  @override
+  String get swatchesNoCloseAlternatives => 'Nessuna alternativa vicina';
 
   @override
   String get swatchesInPacks => 'Nei set';
@@ -1081,6 +1090,27 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get swatchesEmptyFiltersBody =>
       'Questa marca non ha colori per i set e i filtri scelti.';
+
+  @override
+  String get swatchesEmptyNoFavoritesTitle => 'Ancora nessun preferito';
+
+  @override
+  String get swatchesEmptyNoFavoritesBody =>
+      'Tocca la stella nei dettagli di un colore per aggiungerlo.';
+
+  @override
+  String get swatchesEmptyNoFavoritesAction => 'Mostra tutti i colori';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineTitle =>
+      'Nessun preferito nella tua collezione';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineBody =>
+      'Nessuno dei tuoi preferiti è tra i pennarelli che hai.';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineAction => 'Mostra tutti i preferiti';
 
   @override
   String get swatchesLoading => 'Caricamento colori…';
@@ -2549,7 +2579,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Ombreggia tutti e tre i colori con lo stesso grigio, così stanno bene insieme.';
 
   @override
-  String get ideasSplitComplementTitle => 'Complementare diviso';
+  String get ideasSplitComplementTitle => 'Complementare divisa';
 
   @override
   String get ideasSplitComplementSummary =>
@@ -5726,6 +5756,10 @@ class AppLocalizationsIt extends AppLocalizations {
       'L’IA sul dispositivo al momento non è disponibile su questo telefono. Si usa la teoria del colore finché non lo sarà.';
 
   @override
+  String get settingsAiOnDeviceNotEnabledIos =>
+      'Per usare l’IA sul dispositivo, attiva Apple Intelligence in Impostazioni → Apple Intelligence e Siri.';
+
+  @override
   String paletteSizeChip(int size) {
     return '$size colori';
   }
@@ -5859,7 +5893,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String paletteMissingBase(String example) {
-    return 'Scegli un pennarello base, come $example, oppure una scena con il chip Scene.';
+    return 'Scegli un pennarello base, come $example, oppure scegli Scene come tipo di palette.';
   }
 
   @override
@@ -6987,6 +7021,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get collectionTickVisible => 'Spunta tutti';
 
   @override
+  String collectionTickManyTitle(int count) {
+    return 'Spuntare $count pennarelli?';
+  }
+
+  @override
+  String get collectionTickManyBody =>
+      'Contano tutti come pennarelli che hai. Puoi toglierli di nuovo con «Togli tutti».';
+
+  @override
   String get collectionUntickVisible => 'Togli tutti';
 
   @override
@@ -7446,6 +7489,11 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String collectionLooseTicked(int loose, int sets) {
+    return '$loose singoli spuntati · $sets nei tuoi set';
+  }
+
+  @override
   String get onboardingWelcomeTitle => 'Benvenuto in Ink Lab';
 
   @override
@@ -7489,6 +7537,25 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get onboardingFinish => 'Inizia';
+
+  @override
+  String get onboardingStepFirst => 'Passo 1';
+
+  @override
+  String onboardingMarkersTicked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count spuntati',
+      one: '1 spuntato',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String onboardingMarkersNoneTicked(String range) {
+    return 'Nessuno spuntato · $range';
+  }
 
   @override
   String onboardingStep(int step, int total) {
@@ -7544,6 +7611,9 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get wishlistSubtitle => 'Aggiungili dal dettaglio di un colore';
 
   @override
   String get wishlistEmpty =>
@@ -7926,7 +7996,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String diaryStatsFinished(int count) {
-    return '$count finite';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count finite',
+      one: '1 finita',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -7948,7 +8024,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String diaryStatsMonthsLatest(int count) {
-    return 'Gli ultimi $count mesi.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Gli ultimi $count mesi.',
+      one: 'L’ultimo mese.',
+    );
+    return '$_temp0';
   }
 
   @override

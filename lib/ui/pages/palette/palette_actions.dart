@@ -21,6 +21,7 @@ class PaletteActions extends StatelessWidget {
     required this.aiLoading,
     required this.aiError,
     required this.hasResult,
+    this.saved = false,
     required this.canRegenerate,
     required this.canGenerate,
     required this.onSuggestAi,
@@ -40,6 +41,10 @@ class PaletteActions extends StatelessWidget {
   /// Typed message of the last failed AI call, shown under the buttons.
   final String? aiError;
   final bool hasResult;
+
+  /// The palette on screen is already saved: the Save button reads "Saved"
+  /// (checked, disabled), in the same place and size.
+  final bool saved;
 
   /// Whether Regenerate has anything else to show.
   final bool canRegenerate;
@@ -171,9 +176,12 @@ class PaletteActions extends StatelessWidget {
             child: hasResult
                 ? InkButton(
                     key: const ValueKey<String>('palette-save'),
-                    label: context.l10n.paletteSaveButton,
+                    label: saved
+                        ? context.l10n.paletteSavedButton
+                        : context.l10n.paletteSaveButton,
+                    icon: saved ? InkIcons.check : null,
                     expand: true,
-                    onPressed: onSave,
+                    onPressed: saved ? null : onSave,
                   )
                 : null,
           ),

@@ -28,6 +28,11 @@ const double colourMapStripGap = 4;
 /// is not cut.
 const double colourMapInset = 8;
 
+/// Space between the left and right borders and the dots: the inset plus the
+/// radius of a dot, so a dot at the first or last hue (or the darkest or
+/// lightest grey) and its selection ring clear the border.
+const double colourMapInsetX = colourMapInset + colourMapOwnedRadius;
+
 /// The place of every dot in a map drawn in [size]: the plot is the whole
 /// area but the hue strip at the bottom.
 final class ColourMapLayout {
@@ -43,7 +48,12 @@ final class ColourMapLayout {
     math.max(0, size.height - colourMapStripHeight - colourMapStripGap),
   );
 
-  Rect get _inner => plot.deflate(colourMapInset);
+  Rect get _inner => Rect.fromLTRB(
+    plot.left + colourMapInsetX,
+    plot.top + colourMapInset,
+    plot.right - colourMapInsetX,
+    plot.bottom - colourMapInset,
+  );
 
   /// Where [dot] sits in the plot.
   Offset position(WheelDot dot) => Offset(
@@ -235,7 +245,7 @@ const double valueStripHeight = 64;
 /// (dark) to right (light); greys of nearly the same value stack in rows.
 List<Offset> valueStripPositions(List<WheelDot> greys, Size size) {
   const double pitch = colourMapOwnedRadius * 2 + 1;
-  final double width = size.width - 2 * colourMapInset;
+  final double width = size.width - 2 * colourMapInsetX;
   final int rows = math.max(
     1,
     ((size.height - 2 * colourMapInset) / pitch).floor(),
@@ -243,7 +253,7 @@ List<Offset> valueStripPositions(List<WheelDot> greys, Size size) {
   final List<double> lastX = List<double>.filled(rows, double.negativeInfinity);
   final List<Offset> placed = <Offset>[];
   for (final WheelDot dot in greys) {
-    final double x = colourMapInset + dot.lightness.clamp(0.0, 1.0) * width;
+    final double x = colourMapInsetX + dot.lightness.clamp(0.0, 1.0) * width;
     int row = 0;
     for (int r = 0; r < rows; r++) {
       if (x - lastX[r] >= pitch) {

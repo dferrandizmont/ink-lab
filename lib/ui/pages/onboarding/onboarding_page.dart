@@ -17,6 +17,7 @@ import '../collection/collection_pickers.dart';
 import '../collection/collection_summary.dart';
 import '../collection/collection_summary_card.dart';
 import '../collection/loose_markers_page.dart';
+import 'markers_preview_card.dart';
 
 enum _Step { brand, series, sets, markers, done }
 
@@ -58,6 +59,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
   bool _ready = false;
   bool _finished = false;
   _Step _step = _Step.brand;
+
+  /// Height of the fade at the foot of the scrolling content.
+  static const double _footFade = InkSpacing.s24;
 
   /// The scroll of the step on screen; each step starts at its top.
   final ScrollController _scroll = ScrollController();
@@ -232,10 +236,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            context.l10n.onboardingStep(
-                              _index + 1,
-                              _steps.length,
-                            ),
+                            // The number of steps depends on the brand chosen on
+                            // the first one, so that one shows no total.
+                            _index == 0
+                                ? context.l10n.onboardingStepFirst
+                                : context.l10n.onboardingStep(
+                                    _index + 1,
+                                    _steps.length,
+                                  ),
                             style: AppTypography.data.copyWith(color: ink.fg2),
                           ),
                         ),
@@ -257,18 +265,54 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     ),
                   ),
                   Expanded(
-                    child: ListView(
-                      key: const ValueKey<String>('onboarding-scroll'),
-                      controller: _scroll,
-                      padding: const EdgeInsets.all(InkSpacing.gutter),
+                    child: Stack(
                       children: <Widget>[
-                        ..._body(context),
-                        // The note goes with the content when the buttons are
-                        // squeezed into one row below.
-                        if (short) ...<Widget>[
-                          const SizedBox(height: InkSpacing.group),
-                          note,
-                        ],
+                        ListView(
+                          key: const ValueKey<String>('onboarding-scroll'),
+                          controller: _scroll,
+                          // Room under the last row, the height of the fade
+                          // over the foot of the list, so at the end of the
+                          // scroll nothing sits under it.
+                          padding: const EdgeInsets.fromLTRB(
+                            InkSpacing.gutter,
+                            InkSpacing.gutter,
+                            InkSpacing.gutter,
+                            InkSpacing.gutter + _footFade,
+                          ),
+                          children: <Widget>[
+                            ..._body(context),
+                            // The note goes with the content when the buttons
+                            // are squeezed into one row below.
+                            if (short) ...<Widget>[
+                              const SizedBox(height: InkSpacing.group),
+                              note,
+                            ],
+                          ],
+                        ),
+                        // The list scrolls under the footer: a short fade
+                        // into the page colour, so the last visible row does
+                        // not look chopped off.
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          height: _footFade,
+                          child: IgnorePointer(
+                            child: DecoratedBox(
+                              key: const ValueKey<String>('onboarding-fade'),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    ink.bg.withValues(alpha: 0),
+                                    ink.bg,
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -381,10 +425,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
             body(context.l10n.collectionDecoSizesHint),
             _decoFamilies(context),
           ],
-          InkButton.secondary(
-            key: const ValueKey<String>('onboarding-pick-markers'),
-            label: context.l10n.collectionDecoMarkersButton,
-            onPressed: _pickMarkers,
+          // The card is the control: no separate button above it.
+          FutureBuilder<List<MarkerColor>>(
+            future: _scope.markers.loadColors(_brand),
+            initialData: _scope.markers.peekColors(_brand),
+            builder:
+                (BuildContext context, AsyncSnapshot<List<MarkerColor>> s) =>
+                    MarkersPreviewCard(
+                      brand: _brand,
+                      colors: s.data,
+                      tickedIds: _extras,
+                      onTap: _pickMarkers,
+                    ),
           ),
         ];
       case _Step.done:

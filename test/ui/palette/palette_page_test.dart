@@ -5,6 +5,7 @@ import 'package:ink_lab/core/ideas_engine.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/core/palette_advisor.dart';
 import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
+import 'package:ink_lab/ui/pages/palette/palette_notes.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
 import 'package:ink_lab/ui/widgets/ink_button.dart';
@@ -89,10 +90,7 @@ void main() {
       slotAfter.height,
       moreOrLessEquals(slotBefore.height, epsilon: 0.01),
     );
-    expect(
-      slotAfter.width,
-      moreOrLessEquals(slotBefore.width, epsilon: 0.01),
-    );
+    expect(slotAfter.width, moreOrLessEquals(slotBefore.width, epsilon: 0.01));
     // The primary takes the whole row.
     expect(
       tester.getRect(find.byKey(const ValueKey<String>('palette-save'))).width,
@@ -240,6 +238,105 @@ void main() {
     expect(saved.single.baseCode, 'B08');
     expect(saved.single.colorCodes, isNotEmpty);
     expect(find.textContaining('saved'), findsWidgets);
+  });
+
+  testWidgets('a saved palette handed over from Settings loads in the page', (
+    WidgetTester tester,
+  ) async {
+    final SavedPalette stored = SavedPalette(
+      id: 'p7',
+      brandId: MarkerBrand.ohuhuOahu.id,
+      name: 'From settings',
+      baseCode: 'B08',
+      baseName: 'Cotton Candy Blue',
+      mode: PaletteMode.triad,
+      paletteSize: 3,
+      createdAtEpochMs: 1,
+      colorCodes: const <String>['B08', '120', 'BV19'],
+    );
+    await pumpPalette(tester);
+    addTearDown(() => paletteSavedDraft.value = null);
+
+    paletteSavedDraft.value = stored;
+    await tester.pumpAndSettle();
+
+    final TextField field = tester.widget<TextField>(
+      find.byKey(const ValueKey<String>('palette-base-input')),
+    );
+    expect(field.controller?.text, 'B08');
+    expect(find.textContaining('Combinations ('), findsOneWidget);
+    // Consumed: it is not replayed.
+    expect(paletteSavedDraft.value, isNull);
+  });
+
+  testWidgets('saving shows "saved" on the button and a snack bar, and a '
+      'deleted palette can be saved again', (WidgetTester tester) async {
+    final AppScope scope = await pumpPalette(tester);
+    await enterBaseCode(tester, 'B08');
+    expect(find.text(l10n.paletteSavedButton), findsNothing);
+
+    await tester.tap(find.byKey(const ValueKey<String>('palette-save')));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(const ValueKey<String>('palette-save-confirm')),
+    );
+    await tester.pumpAndSettle();
+
+    // Where the finger is: the button, and a snack bar with the name.
+    final Finder save = find.byKey(const ValueKey<String>('palette-save'));
+    expect(
+      find.descendant(of: save, matching: find.text(l10n.paletteSavedButton)),
+      findsOneWidget,
+    );
+    expect(
+      tester.widget<InkButton>(save).onPressed,
+      isNull,
+      reason: 'a saved palette is not saved twice',
+    );
+    expect(
+      find.byKey(const ValueKey<String>('palette-saved-snack')),
+      findsOneWidget,
+    );
+    // No banner at the top of the page.
+    expect(find.byType(PaletteNoticeCard), findsNothing);
+
+    // Deleting it makes the palette saveable again.
+    final String id = scope.savedPalettes
+        .palettesOf(MarkerBrand.ohuhuOahu)
+        .single
+        .id;
+    await scope.savedPalettes.delete(MarkerBrand.ohuhuOahu, id);
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(of: save, matching: find.text(l10n.paletteSaveButton)),
+      findsOneWidget,
+    );
+    expect(tester.widget<InkButton>(save).onPressed, isNotNull);
+  });
+
+  testWidgets('a long marker name stays on one line', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(tester);
+    tester.view.physicalSize = const Size(360, 3000);
+    await tester.pumpAndSettle();
+    final List<MarkerColor> catalog = await diskMarkerRepository().loadColors(
+      MarkerBrand.ohuhuOahu,
+    );
+    final MarkerColor longest = catalog.reduce(
+      (MarkerColor a, MarkerColor b) =>
+          a.newName.length >= b.newName.length ? a : b,
+    );
+    await enterBaseCode(tester, longest.newCode);
+
+    final Finder name = find.byKey(const ValueKey<String>('palette-base-name'));
+    expect(name, findsOneWidget);
+    expect(tester.widget<Text>(name).maxLines, 1);
+    // One line, not two: the card does not grow with the name.
+    expect(
+      tester.getSize(name).height,
+      lessThan(AppTypography.caption.fontSize! * 2),
+    );
   });
 
   testWidgets('loads a saved palette back into the builder', (

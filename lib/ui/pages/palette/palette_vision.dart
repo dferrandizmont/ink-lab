@@ -119,24 +119,59 @@ class PaletteVisionControl extends StatelessWidget {
             ],
           ),
         ),
-        if (previewing) ...<Widget>[
-          const SizedBox(height: InkSpacing.s8),
+        // The space of the explanation is always reserved (the note and two
+        // lines for the pairs), so choosing a vision does not move the sheet:
+        // in Normal the same room holds an invisible note and a line saying
+        // every colour is easy to tell apart.
+        const SizedBox(height: InkSpacing.s8),
+        if (previewing)
           Text(
             context.l10n.paletteVisionPreviewNote,
             key: const ValueKey<String>('palette-vision-note'),
             style: AppTypography.secondary.copyWith(color: ink.fg2),
-          ),
-          if (colors != null)
-            PaletteVisionPairs(
-              colors: colors!,
-              labels: labels ?? const <String>[],
-              type: effective!,
+          )
+        else
+          ExcludeSemantics(
+            child: Opacity(
+              opacity: 0,
+              child: Text(
+                context.l10n.paletteVisionPreviewNote,
+                style: AppTypography.secondary,
+              ),
             ),
-        ],
+          ),
+        if (colors != null)
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight:
+                  InkSpacing.s4 +
+                  _textHeight(context, AppTypography.secondary, 2),
+            ),
+            child: previewing
+                ? PaletteVisionPairs(
+                    colors: colors!,
+                    labels: labels ?? const <String>[],
+                    type: effective!,
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: InkSpacing.s4),
+                    child: Text(
+                      context.l10n.paletteVisionNoPairs,
+                      key: const ValueKey<String>('palette-vision-normal-line'),
+                      style: AppTypography.secondary.copyWith(color: ink.fg2),
+                    ),
+                  ),
+          ),
       ],
     );
   }
 }
+
+/// The height of [lines] lines of [style] at the user's text size.
+double _textHeight(BuildContext context, TextStyle style, int lines) =>
+    MediaQuery.textScalerOf(context).scale(style.fontSize ?? 14) *
+    (style.height ?? 1.3) *
+    lines;
 
 /// The pairs of colours of a palette that [type] makes hard to tell apart,
 /// or a short line saying there are none.

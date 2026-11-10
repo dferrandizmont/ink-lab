@@ -652,6 +652,7 @@ class _IdeasPageState extends State<IdeasPage> {
 
   Widget _buildCategoryChips() {
     return InkChipRow(
+      fadeEnds: true,
       semanticLabel: context.l10n.ideasCategoriesLabel,
       children: <Widget>[
         _chip(

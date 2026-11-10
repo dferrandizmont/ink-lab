@@ -66,6 +66,18 @@ class _BackupSectionState extends State<BackupSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          // Status and explanation first, so the buttons are read as the
+          // answer to them: when the last backup was made (and a gentle hint
+          // when it is time), then what the file holds and that the key is
+          // never in it.
+          _lastBackupStatus(l10n, ink),
+          const SizedBox(height: InkSpacing.group),
+          Text(
+            l10n.settingsBackupFileCaption,
+            key: const ValueKey<String>('settings-backup-file-caption'),
+            style: AppTypography.secondary.copyWith(color: ink.fg2),
+          ),
+          const SizedBox(height: InkSpacing.block),
           // The same data in a ZIP file, with every photo (diary, swatches,
           // recipes), handed to the share sheet: the primary action of the card.
           InkButton(
@@ -96,16 +108,6 @@ class _BackupSectionState extends State<BackupSection> {
               ),
             ),
           ],
-          // When the last backup was made, and a gentle hint when it is time.
-          const SizedBox(height: InkSpacing.group),
-          _lastBackupStatus(l10n, ink),
-          // What the file holds, and that the key is never in it.
-          const SizedBox(height: InkSpacing.group),
-          Text(
-            l10n.settingsBackupFileCaption,
-            key: const ValueKey<String>('settings-backup-file-caption'),
-            style: AppTypography.secondary.copyWith(color: ink.fg2),
-          ),
           // The copy by text: a second way to back up, without the photos.
           InkDisclosure(
             key: const ValueKey<String>('settings-backup-text'),

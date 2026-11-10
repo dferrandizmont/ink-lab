@@ -340,9 +340,12 @@ void main() {
       final FakeShareSink sink = FakeShareSink();
       await pumpDiaryPage(tester, ArtworkEntryPage(shareSink: sink));
       await _openMenu(tester);
+      // The item is there but off: tapping it does nothing.
       await tester.tap(key('diary-share'));
       await tester.pumpAndSettle();
       expect(sink.shared, isEmpty, reason: 'no title, nothing to share');
+      Navigator.of(tester.element(key('diary-overflow'))).pop();
+      await tester.pumpAndSettle();
 
       await tester.enterText(key('diary-title'), 'Forest page');
       await tester.pumpAndSettle();

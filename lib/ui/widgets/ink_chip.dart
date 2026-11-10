@@ -136,6 +136,7 @@ class InkChipRow extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: InkSpacing.gutter),
     this.semanticLabel,
     this.wrap = false,
+    this.fadeEnds = false,
   });
 
   final List<Widget> children;
@@ -146,6 +147,11 @@ class InkChipRow extends StatelessWidget {
   /// between them) instead of scrolling. For a wide page, where a chip cut
   /// by the edge would look like a mistake; a phone keeps the scrolling row.
   final bool wrap;
+
+  /// Fades the chips out at an edge that has more to scroll to, so a chip cut
+  /// by the edge reads as "there is more" and not as a mistake. Only for the
+  /// scrolling row.
+  final bool fadeEnds;
 
   @override
   Widget build(BuildContext context) {
@@ -168,19 +174,84 @@ class InkChipRow extends StatelessWidget {
         ),
       );
     }
+    final Widget row = SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: padding,
+      child: Row(
+        children: <Widget>[
+          for (int i = 0; i < children.length; i++) ...<Widget>[
+            if (i > 0) const SizedBox(width: InkSpacing.chipGap),
+            children[i],
+          ],
+        ],
+      ),
+    );
     return Semantics(
       container: true,
       label: semanticLabel,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: padding,
-        child: Row(
-          children: <Widget>[
-            for (int i = 0; i < children.length; i++) ...<Widget>[
-              if (i > 0) const SizedBox(width: InkSpacing.chipGap),
-              children[i],
-            ],
-          ],
+      child: fadeEnds ? _EdgeFade(child: row) : row,
+    );
+  }
+}
+
+/// Width of the fade at the edge of a scrolling chip row.
+const double _chipFadeWidth = 32;
+
+/// Fades the sides of a horizontally scrolling child that still have content
+/// beyond them. The layout does not change: only the paint does.
+class _EdgeFade extends StatefulWidget {
+  const _EdgeFade({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_EdgeFade> createState() => _EdgeFadeState();
+}
+
+class _EdgeFadeState extends State<_EdgeFade> {
+  bool _fadeStart = false;
+  bool _fadeEnd = false;
+
+  void _update(ScrollMetrics metrics) {
+    final bool start = metrics.pixels > metrics.minScrollExtent + 1;
+    final bool end = metrics.pixels < metrics.maxScrollExtent - 1;
+    if (start == _fadeStart && end == _fadeEnd) return;
+    setState(() {
+      _fadeStart = start;
+      _fadeEnd = end;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final TextDirection direction = Directionality.of(context);
+    return NotificationListener<ScrollMetricsNotification>(
+      onNotification: (ScrollMetricsNotification n) {
+        _update(n.metrics);
+        return false;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification n) {
+          if (n.metrics.axis == Axis.horizontal) _update(n.metrics);
+          return false;
+        },
+        child: ShaderMask(
+          blendMode: BlendMode.dstIn,
+          shaderCallback: (Rect bounds) {
+            final double fade = (_chipFadeWidth / bounds.width).clamp(0.0, 0.5);
+            return LinearGradient(
+              begin: AlignmentDirectional.centerStart,
+              end: AlignmentDirectional.centerEnd,
+              colors: <Color>[
+                _fadeStart ? Colors.transparent : Colors.black,
+                Colors.black,
+                Colors.black,
+                _fadeEnd ? Colors.transparent : Colors.black,
+              ],
+              stops: <double>[0, fade, 1 - fade, 1],
+            ).createShader(bounds, textDirection: direction);
+          },
+          child: widget.child,
         ),
       ),
     );

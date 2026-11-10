@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import '../../../core/color_utils.dart';
+import '../../../core/match_quality.dart';
 import '../../../core/models.dart';
 import '../../../data/marker_extras_repository.dart' show InkLevel;
 import '../../../l10n/l10n.dart';
@@ -34,11 +35,14 @@ class SwatchAlternative {
 /// The [SwatchAlternative]s closest to [color] among [pool], nearest first.
 ///
 /// Distances come from the colour utilities of `core` (CIE76); colours whose
-/// hex cannot be parsed are skipped.
+/// hex cannot be parsed are skipped. Colours farther than [maxDeltaE] (the
+/// "No close match" distance by default) are not alternatives at all, so the
+/// list can be shorter than [limit] or empty.
 List<SwatchAlternative> closestAlternatives(
   MarkerColor color,
   Iterable<MarkerColor> pool, {
   int limit = 3,
+  double maxDeltaE = MatchQuality.noCloseMatchThreshold,
 }) {
   final LabColor origin;
   try {
@@ -63,7 +67,10 @@ List<SwatchAlternative> closestAlternatives(
   found.sort(
     (SwatchAlternative a, SwatchAlternative b) => a.deltaE.compareTo(b.deltaE),
   );
-  return found.take(limit).toList();
+  return found
+      .where((SwatchAlternative a) => a.deltaE <= maxDeltaE)
+      .take(limit)
+      .toList();
 }
 
 /// Detail sheet content of a single swatch (spec §4 "Swatch detail sheet").
@@ -632,7 +639,7 @@ class _SwatchDetailSheetState extends State<SwatchDetailSheet> {
     final InkColors ink = InkColors.of(context);
     final AppLocalizations l10n = context.l10n;
     final List<SwatchAlternative> alternatives = widget.alternatives;
-    if (alternatives.isEmpty) return const SizedBox.shrink();
+    if (alternatives.isEmpty) return _buildNoAlternatives(context);
     final SwatchAlternative best = alternatives.first;
     return InkDisclosure(
       key: const ValueKey<String>('swatch-alternatives'),
@@ -692,6 +699,58 @@ class _SwatchDetailSheetState extends State<SwatchDetailSheet> {
               ],
             ),
         ],
+      ),
+    );
+  }
+
+  /// Nothing is close enough to stand in for the marker: the row of the
+  /// alternatives says so, as high as its closed header, so the sheet does
+  /// not change height with the marker.
+  Widget _buildNoAlternatives(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    final AppLocalizations l10n = context.l10n;
+    return Semantics(
+      container: true,
+      label:
+          '${l10n.swatchesClosestAlternatives}, '
+          '${l10n.swatchesNoCloseAlternatives}',
+      excludeSemantics: true,
+      child: ConstrainedBox(
+        key: const ValueKey<String>('swatch-alternatives-none'),
+        constraints: const BoxConstraints(minHeight: InkGeometry.target),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: InkSpacing.s8),
+          child: Row(
+            children: <Widget>[
+              SizedBox.square(
+                dimension: InkGeometry.swatchInline,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: InkRadii.xsRadius,
+                    border: Border.all(color: ink.line),
+                  ),
+                ),
+              ),
+              const SizedBox(width: InkSpacing.s12),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      l10n.swatchesClosestAlternatives,
+                      style: AppTypography.body.copyWith(color: ink.fg),
+                    ),
+                    Text(
+                      l10n.swatchesNoCloseAlternatives,
+                      style: AppTypography.secondary.copyWith(color: ink.fg2),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

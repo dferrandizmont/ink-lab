@@ -183,6 +183,10 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
+
+  /// The saved palettes of the brand: the Save button follows them (saved,
+  /// or saveable again once the palette is deleted).
+  StreamSubscription<List<SavedPalette>>? _savedSubscription;
   StreamSubscription<Map<String, String>>? _ownColorsSubscription;
   StreamSubscription<Set<String>>? _driedSubscription;
   StreamSubscription<AiSettings>? _aiSubscription;
@@ -298,9 +302,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _baseController = TextEditingController();
     paletteDraft.addListener(_onDraftChanged);
     paletteBaseDraft.addListener(_onBaseDraftChanged);
+    paletteSavedDraft.addListener(_onSavedDraftChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _onDraftChanged();
       _onBaseDraftChanged();
+      _onSavedDraftChanged();
     });
   }
 
@@ -316,6 +322,12 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _settingsSubscription?.cancel();
     _collectionSignature = _signatureOf(scope.settings.state);
     _settingsSubscription = scope.settings.changes.listen(_onSettingsChanged);
+    _savedSubscription?.cancel();
+    _savedSubscription = scope.savedPalettes.watch(scope.settings.brand).listen(
+      (_) {
+        if (mounted) setState(() {});
+      },
+    );
     // The colours of the markers changed (an own colour was set or reset).
     _ownColorsSubscription?.cancel();
     _driedSubscription?.cancel();
@@ -359,7 +371,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     paletteDraft.removeListener(_onDraftChanged);
     paletteBaseDraft.removeListener(_onBaseDraftChanged);
+    paletteSavedDraft.removeListener(_onSavedDraftChanged);
     _settingsSubscription?.cancel();
+    _savedSubscription?.cancel();
     _ownColorsSubscription?.cancel();
     _aiSubscription?.cancel();
     _photoToken++;
@@ -420,6 +434,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _loading = false;
     });
     _recompute();
+    // A saved palette handed over before the catalogue was ready.
+    _onSavedDraftChanged();
   }
 
   // ---------------------------------------------------------------------------
@@ -443,6 +459,16 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
             : suggestion,
     ];
     _applyDraft(suggestions.length, suggestions, title: draft.title);
+  }
+
+  /// Loads the saved palette handed over by the saved palettes sheet opened
+  /// from Settings. It waits (stays in the slot) until the catalogue is
+  /// loaded, so the markers can be resolved.
+  void _onSavedDraftChanged() {
+    final SavedPalette? palette = paletteSavedDraft.value;
+    if (palette == null || !mounted || _loading || _catalog.isEmpty) return;
+    paletteSavedDraft.value = null;
+    _loadSaved(palette);
   }
 
   /// Uses the marker handed over by the Swatches page as the base colour.
@@ -1178,6 +1204,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       aiLoading: _aiLoading,
       aiError: _aiError,
       hasResult: hasResult,
+      saved: hasResult && _isSaved,
       canRegenerate: _canRegenerate,
       canGenerate: _baseInput.trim().isNotEmpty || _useScenario,
       onSuggestAi: _suggestWithAi,

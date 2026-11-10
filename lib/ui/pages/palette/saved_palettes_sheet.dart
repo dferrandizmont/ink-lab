@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../app_scope.dart';
 import '../../../core/models.dart';
+import '../../../core/palette_card_layout.dart';
 import '../../../core/scene_catalog.dart';
 import '../../icons/ink_icons.dart';
+import '../../share/share_actions.dart';
+import '../../share/share_sink.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
@@ -11,17 +16,23 @@ import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
+import '../diary/artwork_entry_page.dart';
 import '../settings/dialogs.dart';
+import 'palette_draft.dart';
 import 'palette_photo_scene.dart';
+import 'palette_roles.dart';
+import 'palette_share.dart';
 import '../../../l10n/l10n.dart';
 
 /// The palettes saved for one brand, as a draggable selector (spec §2.2).
 ///
 /// The list left the Palette page (and the Settings screen, which keeps a
 /// summary row): it opens on demand from the page header, one row per palette
-/// with its strip, its name and its meta line. Tapping a row loads it; each
-/// row has a "⋯" with Share · Add to the diary · Delete. In Settings the
-/// sheet also carries "Clear all" in its own "⋯".
+/// with its strip, its name and its meta line. Tapping a row loads it in the
+/// Palette tab; each row has a "⋯" with Share · Add to the diary · Delete.
+/// The rows and their menu are the same wherever the sheet opens (the Palette
+/// page or Settings). In Settings the sheet also carries "Clear all" in its
+/// own "⋯".
 class SavedPalettesSheet extends StatelessWidget {
   const SavedPalettesSheet({
     super.key,
@@ -30,9 +41,9 @@ class SavedPalettesSheet extends StatelessWidget {
     required this.palettes,
     required this.colors,
     required this.scrollController,
-    this.onLoad,
-    this.onShare,
-    this.onAddToDiary,
+    required this.onLoad,
+    required this.onShare,
+    required this.onAddToDiary,
     this.onImport,
     this.allowClearAll = false,
   });
@@ -53,15 +64,15 @@ class SavedPalettesSheet extends StatelessWidget {
   /// Binds the sheet's drag to the list (see [showInkDraggableSheet]).
   final ScrollController scrollController;
 
-  /// Loads the palette into the builder (the Palette page). `null` in
-  /// Settings, where a row is not loaded, only managed.
-  final ValueChanged<SavedPalette>? onLoad;
+  /// Loads the palette into the builder (the Palette page hands it its own
+  /// loader; [show] hands the palette over to the Palette tab by default).
+  final ValueChanged<SavedPalette> onLoad;
 
-  /// Shares the palette as an image. `null` hides the entry.
-  final ValueChanged<SavedPalette>? onShare;
+  /// Shares the palette as an image.
+  final ValueChanged<SavedPalette> onShare;
 
-  /// Starts a diary entry linked to the palette. `null` hides the entry.
-  final ValueChanged<SavedPalette>? onAddToDiary;
+  /// Starts a diary entry linked to the palette.
+  final ValueChanged<SavedPalette> onAddToDiary;
 
   /// Opens "Import from text" (the sheet closes first). `null` hides the
   /// button (Settings).
@@ -80,6 +91,7 @@ class SavedPalettesSheet extends StatelessWidget {
     ValueChanged<SavedPalette>? onShare,
     ValueChanged<SavedPalette>? onAddToDiary,
     VoidCallback? onImport,
+    ShareSink? shareSink,
     bool allowClearAll = false,
   }) {
     // Created once here: the draggable sheet rebuilds its builder on every
@@ -88,6 +100,23 @@ class SavedPalettesSheet extends StatelessWidget {
       brand,
     );
     final Future<List<MarkerColor>> colors = scope.markers.loadColors(brand);
+    // Without the Palette page's own handlers (Settings), a row opens in the
+    // Palette tab and Share / Add to the diary work from the sheet itself.
+    final ValueChanged<SavedPalette> load =
+        onLoad ?? (SavedPalette palette) => paletteSavedDraft.value = palette;
+    final ValueChanged<SavedPalette> share =
+        onShare ??
+        (SavedPalette palette) => unawaited(
+          _share(
+            context,
+            colors,
+            palette,
+            shareSink ?? const SystemShareSink(),
+          ),
+        );
+    final ValueChanged<SavedPalette> diary =
+        onAddToDiary ??
+        (SavedPalette palette) => unawaited(_addToDiary(context, palette));
     return showInkDraggableSheet<void>(
       context: context,
       initial: 0.5,
@@ -114,13 +143,61 @@ class SavedPalettesSheet extends StatelessWidget {
             palettes: palettes,
             colors: colors,
             scrollController: scroll,
-            onLoad: onLoad,
-            onShare: onShare,
-            onAddToDiary: onAddToDiary,
+            onLoad: load,
+            onShare: share,
+            onAddToDiary: diary,
             onImport: onImport,
             allowClearAll: allowClearAll,
           ),
     );
+  }
+
+  /// Shares a saved palette as an image (the sheet's own default).
+  static Future<void> _share(
+    BuildContext context,
+    Future<List<MarkerColor>> colors,
+    SavedPalette palette,
+    ShareSink sink,
+  ) async {
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    final AppLocalizations t = context.l10n;
+    try {
+      final PaletteCardData data = savedPaletteCardData(
+        palette: palette,
+        catalog: await colors,
+        baseRole: t.roleLabel(PaletteRoles.base),
+      );
+      // None of its codes are in the catalogue any more: nothing to draw.
+      if (data.entries.isEmpty) throw StateError('empty palette');
+      await sharePaletteCard(sink, data);
+    } catch (_) {
+      messenger
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            key: const ValueKey<String>('palette-share-failed'),
+            content: Text(t.shareFailed),
+          ),
+        );
+    }
+  }
+
+  /// Starts a diary entry linked to a saved palette (the sheet's own default).
+  static Future<void> _addToDiary(
+    BuildContext context,
+    SavedPalette palette,
+  ) async {
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    final String notice = context.l10n.diaryAddedNotice;
+    final bool saved = await ArtworkEntryPage.open(context, palette: palette);
+    if (!saved) return;
+    messenger
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(notice)));
   }
 
   static Future<void> _clearAll(
@@ -261,20 +338,18 @@ class SavedPalettesSheet extends StatelessWidget {
         hexByCode[code.toUpperCase()] ?? '#CFCFCF',
     ];
     final List<InkMenuItem> items = <InkMenuItem>[
-      if (onShare != null)
-        InkMenuItem(
-          key: ValueKey<String>('palette-share-${palette.id}'),
-          label: t.paletteShareButton,
-          icon: InkIcons.share,
-          onSelected: () => onShare!(palette),
-        ),
-      if (onAddToDiary != null)
-        InkMenuItem(
-          key: ValueKey<String>('palette-diary-${palette.id}'),
-          label: t.diaryAdd,
-          icon: InkIcons.plus,
-          onSelected: () => onAddToDiary!(palette),
-        ),
+      InkMenuItem(
+        key: ValueKey<String>('palette-share-${palette.id}'),
+        label: t.paletteShareButton,
+        icon: InkIcons.share,
+        onSelected: () => onShare(palette),
+      ),
+      InkMenuItem(
+        key: ValueKey<String>('palette-diary-${palette.id}'),
+        label: t.diaryAdd,
+        icon: InkIcons.plus,
+        onSelected: () => onAddToDiary(palette),
+      ),
       InkMenuItem(
         key: ValueKey<String>('palette-delete-${palette.id}'),
         label: t.paletteDeleteButton,
@@ -321,12 +396,10 @@ class SavedPalettesSheet extends StatelessWidget {
                 ),
                 child: InkWell(
                   key: ValueKey<String>('palette-load-${palette.id}'),
-                  onTap: onLoad == null
-                      ? null
-                      : () {
-                          onLoad!(palette);
-                          Navigator.of(context).maybePop();
-                        },
+                  onTap: () {
+                    onLoad(palette);
+                    Navigator.of(context).maybePop();
+                  },
                   child: details,
                 ),
               ),

@@ -136,7 +136,11 @@ class _WishlistCardState extends State<WishlistCard> {
     return InkDisclosure(
       key: const ValueKey<String>('wishlist-disclosure'),
       title: context.l10n.wishlistCount(ids.length),
-      subtitle: context.l10n.wishlistRunningOutCount(runningOut.length),
+      // Something is running out: say how many. Otherwise one line of help,
+      // so the row keeps the same height in every state.
+      subtitle: runningOut.isEmpty
+          ? context.l10n.wishlistSubtitle
+          : context.l10n.wishlistRunningOutCount(runningOut.length),
       expanded: _open,
       onToggle: () => setState(() => _open = !_open),
       child: Padding(

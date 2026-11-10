@@ -11,6 +11,7 @@ import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
 import 'package:ink_lab/ui/pages/collection/collection_page.dart';
 import 'package:ink_lab/ui/pages/onboarding/onboarding_page.dart';
+import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/pages/settings/constants.dart';
 import 'package:ink_lab/ui/pages/settings/favorites_section.dart';
 import 'package:ink_lab/ui/pages/settings/settings_page.dart';
@@ -304,6 +305,65 @@ void main() {
     expect(scope.savedPalettes.palettesOf(MarkerBrand.ohuhuOahu), isEmpty);
   });
 
+  testWidgets(
+    'a saved palette opens in the Palette tab and has the same menu as there',
+    (WidgetTester tester) async {
+      final AppScope scope = await pumpSettings(tester);
+      final SavedPalette stored = SavedPalette(
+        id: 'p1',
+        brandId: 'ohuhu_oahu',
+        name: 'Sunrise',
+        baseCode: 'R1',
+        baseName: 'Red',
+        mode: PaletteMode.triad,
+        paletteSize: 3,
+        createdAtEpochMs: 1000,
+        colorCodes: const <String>['R1', 'G1', 'B1'],
+      );
+      await scope.savedPalettes.save(stored);
+      await tester.pumpAndSettle();
+      addTearDown(() => paletteSavedDraft.value = null);
+
+      final Finder row = find.byKey(
+        const ValueKey<String>('settings-saved-palettes'),
+      );
+      await scrollTo(tester, row);
+      await tester.tap(row);
+      await tester.pumpAndSettle();
+
+      // The "⋯" of a row: Share, Add to the diary and Delete, as on Palette.
+      await tester.tap(
+        find.byKey(const ValueKey<String>('palette-saved-menu-p1')),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey<String>('palette-share-p1')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('palette-diary-p1')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('palette-delete-p1')),
+        findsOneWidget,
+      );
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
+
+      // Tapping the row hands the palette to the Palette tab and closes the
+      // sheet.
+      expect(paletteSavedDraft.value, isNull);
+      await tester.tap(find.byKey(const ValueKey<String>('palette-load-p1')));
+      await tester.pumpAndSettle();
+      expect(paletteSavedDraft.value?.id, 'p1');
+      expect(
+        find.byKey(const ValueKey<String>('palette-saved-list')),
+        findsNothing,
+      );
+    },
+  );
+
   testWidgets('a favorite can be removed from the sheet', (
     WidgetTester tester,
   ) async {
@@ -380,6 +440,31 @@ void main() {
 
     expect(scope.settings.favorites, isEmpty);
     expect(find.text('YR114'), findsNothing);
+  });
+
+  testWidgets('an empty favorites sheet has no "⋯" menu, and the menu goes '
+      'when the last favorite is removed', (WidgetTester tester) async {
+    final AppScope scope = await pumpSettings(tester);
+
+    await scrollTo(tester, find.byKey(FavoritesSection.rowKey));
+    await tester.tap(find.byKey(FavoritesSection.rowKey));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.settingsFavoritesEmpty), findsOneWidget);
+    expect(find.byTooltip(l10n.commonMoreActions), findsNothing);
+    expect(
+      find.byKey(const ValueKey<String>('settings-favorites-menu')),
+      findsNothing,
+    );
+    // The close button is still there.
+    expect(find.byTooltip(l10n.commonClose), findsOneWidget);
+
+    await scope.settings.setFavorites(<String>{'ohuhu_oahu:YR114'});
+    await tester.pumpAndSettle();
+    expect(find.byTooltip(l10n.commonMoreActions), findsOneWidget);
+
+    await tester.tap(find.byTooltip(l10n.settingsDeleteFavorite));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip(l10n.commonMoreActions), findsNothing);
   });
 
   testWidgets('many favorites do not make the page longer', (

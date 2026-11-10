@@ -225,6 +225,7 @@
   "paletteSuggestAiLoading": "Wird vorgeschlagen …",
   "paletteAiBadge": "KI",
   "paletteSaveButton": "Palette speichern",
+  "paletteSavedButton": "Palette gespeichert",
   "paletteShareButton": "Teilen",
   "shareFailed": "Das Bild konnte nicht geteilt werden.",
   "paletteOkButton": "OK",
@@ -284,8 +285,11 @@
   "swatchesLabelLayout": "Ansicht",
   "swatchesAllPacks": "Alle Sets",
   "swatchesClearFilters": "Filter löschen",
+  "swatchesClearSearch": "Suche löschen",
+  "swatchesClearSearchAndFilters": "Suche und Filter löschen",
   "swatchesLoadingSemantics": "Farben werden geladen",
   "swatchesClosestAlternatives": "Nächste Alternativen",
+  "swatchesNoCloseAlternatives": "Keine nahen Alternativen",
   "swatchesInPacks": "In Sets",
   "swatchesLocation": "Position",
   "swatchesAddToPalette": "Zur Palette",
@@ -316,6 +320,12 @@
   "swatchesEmptySearchBody": "Keine Farbe dieser Sammlung passt zu deiner Suche.",
   "swatchesEmptyFiltersTitle": "Nichts anzuzeigen",
   "swatchesEmptyFiltersBody": "Diese Marke hat keine Farben für die gewählten Sets und Filter.",
+  "swatchesEmptyNoFavoritesTitle": "Noch keine Favoriten",
+  "swatchesEmptyNoFavoritesBody": "Tippe in den Details einer Farbe auf den Stern, um sie hinzuzufügen.",
+  "swatchesEmptyNoFavoritesAction": "Alle Farben zeigen",
+  "swatchesEmptyFavoritesNotMineTitle": "Kein Favorit in deiner Sammlung",
+  "swatchesEmptyFavoritesNotMineBody": "Keiner deiner Favoriten gehört zu den Markern, die du besitzt.",
+  "swatchesEmptyFavoritesNotMineAction": "Alle Favoriten zeigen",
   "swatchesLoading": "Farben werden geladen …",
   "swatchesLoadFailedTitle": "Farben nicht verfügbar",
   "swatchesLoadFailedBody": "Der Markerkatalog konnte nicht gelesen werden, daher lassen sich keine Farben anzeigen.",
@@ -597,7 +607,7 @@
   "ideasTriadStep3": "Nimm die zweite Farbe auf ungefähr ein Viertel der Zeichnung und lass sie die erste nie nass berühren.",
   "ideasTriadStep4": "Nimm die dritte Farbe nur an ein paar kleinen Stellen.",
   "ideasTriadStep5": "Schattiere alle drei Farben mit demselben Grau, damit sie zusammengehören.",
-  "ideasSplitComplementTitle": "Geteiltes Komplement",
+  "ideasSplitComplementTitle": "Geteilt komplementär",
   "ideasSplitComplementSummary": "Eine Farbfamilie und die beiden Farben neben ihrer Gegenfarbe.",
   "ideasSplitComplementPractice": "Eine Hauptfamilie mit zwei Farben nahe ihrer Gegenfarbe ausbalancieren.",
   "ideasSplitComplementSubject": "Eine Vase mit zwei Blumen oder eine Tasse mit zwei kleinen Dingen daneben.",
@@ -1331,6 +1341,7 @@
   "settingsAiUseTyped": "„{id}“ verwenden",
   "settingsAiFallbacksHint": "Werden der Reihe nach versucht, wenn das obige Modell fehlschlägt (bis zu {max}).",
   "settingsAiOnDeviceUnavailable": "Die KI auf dem Gerät ist auf diesem Handy gerade nicht verfügbar. Bis dahin wird die Farbtheorie genutzt.",
+  "settingsAiOnDeviceNotEnabledIos": "Um die KI auf dem Gerät zu nutzen, aktiviere Apple Intelligence unter Einstellungen → Apple Intelligence & Siri.",
   "paletteSizeChip": "{size} Farben",
   "paletteAiLabel": "KI · {name}",
   "paletteAiLabelPartial": "KI + Farbtheorie · {name} · {aiCount}/{total}",
@@ -1345,7 +1356,7 @@
   "paletteUnknownCode": "{brand, select, decoTime{{input} ist kein DecoTime-Markercode. Versuche {example}.} copic{{input} ist kein Copic-Markercode. Versuche {example}.} finecolour{{input} ist kein Finecolour-Markercode. Versuche {example}.} touchTwin{{input} ist kein Touch Twin-Markercode. Versuche {example}.} promarker{{input} ist kein Promarker-Markercode. Versuche {example}.} prismacolor{{input} ist kein Prismacolor Premier-Markercode. Versuche {example}.} spectrumNoir{{input} ist kein Spectrum Noir-Markercode. Versuche {example}.} promarkerBrush{{input} ist kein Promarker Brush-Markercode. Versuche {example}.} arrtx{{input} ist kein Arrtx-Markercode. Versuche {example}.} kurecolor{{input} ist kein ZIG Kurecolor-Markercode. Versuche {example}.} graphit{{input} ist kein Graph'it-Markercode. Versuche {example}.} marvyLePlume{{input} ist kein Marvy Le Plume-Markercode. Versuche {example}.} blickBrush{{input} ist kein Blick Studio Brush-Markercode. Versuche {example}.} artistsLoft{{input} ist kein Artist's Loft-Markercode. Versuche {example}.} other{{input} ist kein Ink-Lab-Markercode. Versuche {example}.}}",
   "paletteNotAvailable": "{brand, select, decoTime{{input} ist nicht in deiner Sammlung. Versuche {example} oder füge ihn in Meine Sammlung hinzu.} copic{{input} ist nicht in deiner Sammlung. Versuche {example} oder füge ihn in Meine Sammlung hinzu.} finecolour{{input} ist nicht in deiner Sammlung. Versuche {example} oder füge ihn in Meine Sammlung hinzu.} other{{input} ist nicht in deiner Sammlung. Versuche {example} oder füge ihn in Meine Sammlung hinzu.}}",
   "paletteNoAvailableColors": "{brand, select, decoTime{Du hast noch keine DecoTime-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} copic{Du hast noch keine Copic-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} finecolour{Du hast noch keine Finecolour-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} touchTwin{Du hast noch keine Touch Twin-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} promarker{Du hast noch keine Promarker-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} prismacolor{Du hast noch keine Prismacolor Premier-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} spectrumNoir{Du hast noch keine Spectrum Noir-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} promarkerBrush{Du hast noch keine Promarker Brush-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} arrtx{Du hast noch keine Arrtx-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} kurecolor{Du hast noch keine ZIG Kurecolor-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} graphit{Du hast noch keine Graph'it-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} marvyLePlume{Du hast noch keine Marvy Le Plume-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} blickBrush{Du hast noch keine Blick Studio Brush-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} artistsLoft{Du hast noch keine Artist's Loft-Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.} other{Du hast noch keine Marker in deiner Sammlung. Füge sie in Meine Sammlung hinzu.}}",
-  "paletteMissingBase": "Wähle einen Basismarker, zum Beispiel {example}, oder eine Szene mit dem Chip Szenen.",
+  "paletteMissingBase": "Wähle einen Basismarker, zum Beispiel {example}, oder wähle Szenen als Palettentyp.",
   "swatchesFiltersCount": "Filter · {count}",
   "swatchesCodeCopied": "{code} kopiert. Füge ihn im Tab Palette als Basisfarbe ein.",
   "swatchesAlternativeSemantics": "{code}, {name}, Delta E {value}",
@@ -1674,6 +1685,15 @@
   "collectionWholeRange": "Ganzes Sortiment",
   "collectionSearchHint": "Code oder Name suchen",
   "collectionTickVisible": "Alle anhaken",
+  "collectionTickManyTitle": "{count} Marker anhaken?",
+  "@collectionTickManyTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionTickManyBody": "Alle zählen dann als Marker, die du besitzt. Mit „Alle abwählen“ nimmst du sie wieder heraus.",
   "collectionUntickVisible": "Alle abwählen",
   "collectionInYourSets": "In deinem Set",
   "collectionNoResults": "Kein Marker passt zur Suche.",
@@ -1795,6 +1815,17 @@
   "collectionResetTitle": "Deine {brand}-Sammlung zurücksetzen?",
   "collectionResetBody": "Deine Sets und Einzelmarker dieser Marke werden entfernt. Favoriten und Paletten bleiben.",
   "collectionOwnedCount": "{owned} von {total}",
+  "collectionLooseTicked": "{loose} einzelne angehakt · {sets} in deinen Sets",
+  "@collectionLooseTicked": {
+    "placeholders": {
+      "loose": {
+        "type": "int"
+      },
+      "sets": {
+        "type": "int"
+      }
+    }
+  },
   "onboardingWelcomeTitle": "Willkommen bei Ink Lab",
   "onboardingWelcomeBody": "Durchsuche deine Marker, gleiche Farben mit Fotos ab und erstelle Paletten. Sag uns zuerst, welche Marker du hast.",
   "onboardingOhuhuLine": "Sets nach Serie: Oahu, Honolulu, Kaala",
@@ -1809,6 +1840,9 @@
   "onboardingNext": "Weiter",
   "onboardingBack": "Zurück",
   "onboardingFinish": "Los geht’s",
+  "onboardingStepFirst": "Schritt 1",
+  "onboardingMarkersTicked": "{count, plural, =1{1 angehakt} other{{count} angehakt}}",
+  "onboardingMarkersNoneTicked": "Noch keiner angehakt · {range}",
   "onboardingStep": "Schritt {step} von {total}",
   "collectionSeriesOahuTips": "Fein- und Keilspitze",
   "collectionSeriesHonoluluTips": "Pinsel- und Keilspitze",
@@ -1820,6 +1854,7 @@
   "collectionExtrasCount": "{count, plural, =0{Keine einzelnen Marker} =1{1 einzelner Marker} other{{count} einzelne Marker}}",
   "wishlistTitle": "Wunschliste",
   "wishlistCount": "{count, plural, =0{Noch nichts auf deiner Wunschliste} =1{1 Marker zu kaufen} other{{count} Marker zu kaufen}}",
+  "wishlistSubtitle": "Füge sie im Detail einer Farbe hinzu",
   "wishlistEmpty": "Füge die Marker, die du kaufen willst, im Detail eines beliebigen Markers hinzu.",
   "wishlistAdd": "Zur Wunschliste",
   "wishlistRemove": "Aus Liste entfernen",
@@ -1921,13 +1956,13 @@
   "diaryDeleteConfirm": "Löschen",
   "diaryAddedNotice": "Zum Tagebuch hinzugefügt",
   "diaryStatsArtworks": "{count, plural, =1{1 Werk} other{{count} Werke}}",
-  "diaryStatsFinished": "{count} fertig",
+  "diaryStatsFinished": "{count, plural, =1{1 fertig} other{{count} fertig}}",
   "diaryStatsInProgress": "{count} in Arbeit",
   "diaryStatsOpen": "Zahlen ansehen",
   "diaryStatsTitle": "Zahlen des Tagebuchs",
   "diaryStatsStatusTitle": "Fertig und in Arbeit",
   "diaryStatsMonthsTitle": "Einträge pro Monat",
-  "diaryStatsMonthsLatest": "Die letzten {count} Monate.",
+  "diaryStatsMonthsLatest": "{count, plural, =1{Der letzte Monat.} other{Die letzten {count} Monate.}}",
   "diaryStatsMarkersTitle": "Marker, die du am meisten nutzt",
   "diaryStatsMarkersEmpty": "Noch kein Eintrag hat Marker.",
   "diaryStatsEntries": "{count, plural, =1{1 Eintrag} other{{count} Einträge}}",

@@ -96,6 +96,33 @@ void main() {
       expect(_key('palette-vision-clear'), findsNothing);
     });
 
+    testWidgets('keeps its height from Normal to every deficiency', (
+      WidgetTester tester,
+    ) async {
+      await pumpPalette(tester);
+      await enterBaseCode(tester, 'B08');
+      await tapResultItem(tester, 'palette-vision-open');
+
+      // Normal already says every colour is easy to tell apart, and holds the
+      // room of the note and the pairs: the sheet does not jump.
+      expect(_key('palette-vision-normal-line'), findsOneWidget);
+      final double normal = tester.getSize(_key('palette-vision')).height;
+      final double top = tester.getTopLeft(_key('palette-vision')).dy;
+      for (final ColorVisionType type in ColorVisionType.values) {
+        await _choose(tester, colorVisionLabelOf(type));
+        expect(
+          tester.getSize(_key('palette-vision')).height,
+          moreOrLessEquals(normal, epsilon: 0.5),
+          reason: type.name,
+        );
+        expect(
+          tester.getTopLeft(_key('palette-vision')).dy,
+          moreOrLessEquals(top, epsilon: 0.5),
+          reason: type.name,
+        );
+      }
+    });
+
     testWidgets('draws the strip as seen with the chosen deficiency', (
       WidgetTester tester,
     ) async {

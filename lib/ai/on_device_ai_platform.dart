@@ -13,6 +13,11 @@ enum OnDeviceStatus {
   /// Not supported on this device, or the platform has no on-device model.
   unavailable,
 
+  /// iOS only: the phone can run the model but Apple Intelligence is switched
+  /// off in the system settings. The app cannot change that, so the provider is
+  /// not offered; Settings only tells the user where to turn it on.
+  notEnabled,
+
   /// Supported, but the model has not been downloaded yet.
   downloadable,
 
@@ -24,6 +29,7 @@ enum OnDeviceStatus {
 
   /// Parses the wire value; anything unknown is [unavailable].
   static OnDeviceStatus parse(Object? raw) => switch (raw) {
+    'notEnabled' => OnDeviceStatus.notEnabled,
     'downloadable' => OnDeviceStatus.downloadable,
     'downloading' => OnDeviceStatus.downloading,
     'available' => OnDeviceStatus.available,
@@ -31,7 +37,8 @@ enum OnDeviceStatus {
   };
 
   /// Whether the provider should be offered in the UI at all.
-  bool get supported => this != OnDeviceStatus.unavailable;
+  bool get supported =>
+      this != OnDeviceStatus.unavailable && this != OnDeviceStatus.notEnabled;
 }
 
 /// One step of the model download.

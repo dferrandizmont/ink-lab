@@ -155,7 +155,8 @@ final class AiSettingsController extends ChangeNotifier {
   PaletteFailureReason? get modelsError => _modelsError;
 
   /// State of the on-device model. The provider is offered in the UI only
-  /// while this is not [OnDeviceStatus.unavailable]. It is unknown, so
+  /// while this is not [OnDeviceStatus.unavailable] or
+  /// [OnDeviceStatus.notEnabled]. It is unknown, so
   /// [OnDeviceStatus.unavailable], while the AI is off: the platform is not
   /// asked until the user turns the AI on.
   OnDeviceStatus get onDeviceStatus =>

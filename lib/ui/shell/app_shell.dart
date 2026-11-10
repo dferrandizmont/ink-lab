@@ -181,8 +181,11 @@ class AppShell extends StatefulWidget {
 }
 
 class _AppShellState extends State<AppShell> {
-  int _selectedIndex = 0;
-  final Set<int> _visited = <int>{0};
+  /// The tab the app opens on and Back returns to: Swatches.
+  static const int _homeIndex = 0;
+
+  int _selectedIndex = _homeIndex;
+  final Set<int> _visited = <int>{_homeIndex};
 
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _brandSubscription;
@@ -200,6 +203,8 @@ class _AppShellState extends State<AppShell> {
     // The home-screen widget opens an idea: show the Ideas tab. A tap that
     // launched the app is already waiting here.
     ideaDeepLink.addListener(_onIdeaDeepLink);
+    // A saved palette picked in Settings opens in the Palette tab.
+    paletteSavedDraft.addListener(_onSavedPaletteDraft);
     if (ideaDeepLink.value != null) {
       _selectedIndex = _ideasIndex;
       _visited.add(_ideasIndex);
@@ -237,6 +242,10 @@ class _AppShellState extends State<AppShell> {
     }
   }
 
+  void _onSavedPaletteDraft() {
+    if (paletteSavedDraft.value != null && mounted) _goTo(_paletteIndex);
+  }
+
   void _onIdeaDeepLink() {
     if (ideaDeepLink.value != null && mounted) _goTo(_ideasIndex);
   }
@@ -270,6 +279,10 @@ class _AppShellState extends State<AppShell> {
           )) {
         paletteDraft.value = null;
       }
+      final SavedPalette? savedDraft = paletteSavedDraft.value;
+      if (savedDraft != null && savedDraft.brandId != s.brand.id) {
+        paletteSavedDraft.value = null;
+      }
       // A notice of the old brand (Palette undo, Ideas hand-off) would act on
       // a page that is about to be rebuilt fresh.
       ScaffoldMessenger.maybeOf(context)?.removeCurrentSnackBar();
@@ -282,6 +295,7 @@ class _AppShellState extends State<AppShell> {
   @override
   void dispose() {
     ideaDeepLink.removeListener(_onIdeaDeepLink);
+    paletteSavedDraft.removeListener(_onSavedPaletteDraft);
     appShortcutRequest.removeListener(_onShortcut);
     _brandSubscription?.cancel();
     super.dispose();
@@ -333,6 +347,19 @@ class _AppShellState extends State<AppShell> {
         ],
       ),
     );
+    // Swatches (the first tab) is the root: Back from another tab goes to it
+    // and only Back from Swatches leaves the app. Pages, sheets and dialogs
+    // above the shell are routes of their own and take Back first.
+    return PopScope<Object?>(
+      canPop: _selectedIndex == _homeIndex,
+      onPopInvokedWithResult: (bool didPop, Object? result) {
+        if (!didPop) _onDestinationSelected(_homeIndex);
+      },
+      child: _buildLayout(context, body),
+    );
+  }
+
+  Widget _buildLayout(BuildContext context, Widget body) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final bool wide = constraints.maxWidth >= AppShell.wideLayoutBreakpoint;

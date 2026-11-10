@@ -220,8 +220,9 @@ class _CollectionPageState extends State<CollectionPage> {
                 InkListRow(
                   key: const ValueKey<String>('collection-add-loose'),
                   label: context.l10n.collectionExtrasTitle,
-                  value: context.l10n.collectionExtrasCount(extras.length),
-                  subtitle: context.l10n.collectionExtrasHint,
+                  // One line under the title, like the Sets row; the help
+                  // sentence is on the page the row opens.
+                  subtitle: context.l10n.collectionExtrasCount(extras.length),
                   chevron: true,
                   onTap: () => LooseMarkersPage.open(context),
                 ),

@@ -322,6 +322,7 @@
   "paletteSuggestAiLoading": "Suggesting…",
   "paletteAiBadge": "AI",
   "paletteSaveButton": "Save palette",
+  "paletteSavedButton": "Palette saved",
   "paletteShareButton": "Share",
   "@paletteShareButton": {
     "description": "Button that renders the palette on screen as an image and opens the system share sheet."
@@ -398,7 +399,7 @@
     "description": "Snack bar when no email app opens; the report was copied to the clipboard."
   },
   "paletteAiFellBack": "AI unavailable. Showing local suggestions.",
-  "paletteEmptyHint": "Pick a base marker to build a palette, or choose a scene with the Scenes chip.",
+  "paletteEmptyHint": "Pick a base marker to build a palette, or choose Scenes as the palette type.",
   "paletteCustomModeHint": "Custom palette mode is manual: load a saved palette or apply one from Ideas.",
   "paletteNoSuggestions": "No palette could be built from your collection. Try another mode or add more markers.",
   "paletteScenarioTitle": "Scenes",
@@ -446,8 +447,11 @@
   "swatchesLabelLayout": "Layout",
   "swatchesAllPacks": "All sets",
   "swatchesClearFilters": "Clear filters",
+  "swatchesClearSearch": "Clear search",
+  "swatchesClearSearchAndFilters": "Clear search and filters",
   "swatchesLoadingSemantics": "Loading colours",
   "swatchesClosestAlternatives": "Closest alternatives",
+  "swatchesNoCloseAlternatives": "No close alternatives",
   "swatchesInPacks": "In sets",
   "swatchesLocation": "Location",
   "swatchesAddToPalette": "Add to palette",
@@ -478,6 +482,12 @@
   "swatchesEmptySearchBody": "No colour of this collection matches your search.",
   "swatchesEmptyFiltersTitle": "Nothing to show",
   "swatchesEmptyFiltersBody": "This brand has no colours for the selected sets and filters.",
+  "swatchesEmptyNoFavoritesTitle": "No favourites yet",
+  "swatchesEmptyNoFavoritesBody": "Tap the star in a colour's details to add one.",
+  "swatchesEmptyNoFavoritesAction": "Show all colours",
+  "swatchesEmptyFavoritesNotMineTitle": "No favourites in your collection",
+  "swatchesEmptyFavoritesNotMineBody": "None of your favourites is one of the markers you own.",
+  "swatchesEmptyFavoritesNotMineAction": "Show all favourites",
   "swatchesLoading": "Loading colours…",
   "swatchesLoadFailedTitle": "Colours unavailable",
   "swatchesLoadFailedBody": "The marker catalogue could not be read, so no colours can be shown.",
@@ -858,7 +868,7 @@
   "ideasTriadStep3": "Use the second colour on about a quarter of the drawing, and never let it touch the first while it is wet.",
   "ideasTriadStep4": "Use the third colour in a few small spots only.",
   "ideasTriadStep5": "Shade all three colours with the same grey so they belong together.",
-  "ideasSplitComplementTitle": "Split complement",
+  "ideasSplitComplementTitle": "Split Complementary",
   "ideasSplitComplementSummary": "One colour family and the two colours on either side of its opposite.",
   "ideasSplitComplementPractice": "Balancing a main family with two colours close to its opposite.",
   "ideasSplitComplementSubject": "A vase with two flowers, or a cup with two small objects beside it.",
@@ -1908,6 +1918,7 @@
     }
   },
   "settingsAiOnDeviceUnavailable": "On-device AI is not available on this phone right now. Colour theory is used until it is.",
+  "settingsAiOnDeviceNotEnabledIos": "To use on-device AI, turn on Apple Intelligence in Settings → Apple Intelligence & Siri.",
   "paletteSizeChip": "{size} colours",
   "@paletteSizeChip": {
     "placeholders": {
@@ -2044,7 +2055,7 @@
       }
     }
   },
-  "paletteMissingBase": "Pick a base marker, such as {example}, or choose a scene with the Scenes chip.",
+  "paletteMissingBase": "Pick a base marker, such as {example}, or choose Scenes as the palette type.",
   "@paletteMissingBase": {
     "placeholders": {
       "example": {
@@ -2447,8 +2458,8 @@
   "categorySignature": "Signature",
   "categoryChallenges": "Challenges",
   "categoryAtmosphere": "Atmosphere",
-  "settingsLinesTitle": "Lines you own",
-  "settingsLinesHint": "Pick every Ohuhu line you own. Turning a line off removes its packs from your selection.",
+  "settingsLinesTitle": "Series you own",
+  "settingsLinesHint": "Pick every Ohuhu series you own. Turning a series off removes its packs from your selection.",
   "settingsLineSelectedOfTotal": "{selected} of {total} packs selected",
   "@settingsLineSelectedOfTotal": {
     "placeholders": {
@@ -2488,9 +2499,9 @@
       }
     }
   },
-  "swatchesLines": "Lines",
-  "swatchesLabelLine": "Line",
-  "swatchesAllLines": "All lines",
+  "swatchesLines": "Series",
+  "swatchesLabelLine": "Series",
+  "swatchesAllLines": "All series",
   "swatchesLegacyPacks": "Older sets",
   "packLabelSkin": "{n} Skin",
   "@packLabelSkin": {
@@ -2723,6 +2734,15 @@
   "collectionWholeRange": "Whole range",
   "collectionSearchHint": "Search code or name",
   "collectionTickVisible": "Tick all",
+  "collectionTickManyTitle": "Tick {count} markers?",
+  "@collectionTickManyTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionTickManyBody": "They all count as markers you own. You can take them out again with “Untick all”.",
   "collectionUntickVisible": "Untick all",
   "collectionInYourSets": "In your set",
   "collectionNoResults": "No marker matches the search.",
@@ -3014,6 +3034,17 @@
       }
     }
   },
+  "collectionLooseTicked": "{loose} loose ticked · {sets} in your sets",
+  "@collectionLooseTicked": {
+    "placeholders": {
+      "loose": {
+        "type": "int"
+      },
+      "sets": {
+        "type": "int"
+      }
+    }
+  },
   "onboardingWelcomeTitle": "Welcome to Ink Lab",
   "onboardingWelcomeBody": "Browse your markers, match colours from photos and build palettes. First, tell us which markers you have.",
   "onboardingOhuhuLine": "Sets by series: Oahu, Honolulu, Kaala",
@@ -3028,6 +3059,28 @@
   "onboardingNext": "Next",
   "onboardingBack": "Back",
   "onboardingFinish": "Start",
+  "onboardingStepFirst": "Step 1",
+  "@onboardingStepFirst": {
+    "description": "Header of the first setup step: no total, because the number of steps depends on the brand chosen here."
+  },
+  "onboardingMarkersTicked": "{count, plural, =1{1 ticked} other{{count} ticked}}",
+  "@onboardingMarkersTicked": {
+    "description": "Preview card of the markers step in the first-run setup: how many markers of the brand are ticked.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingMarkersNoneTicked": "None ticked yet · {range}",
+  "@onboardingMarkersNoneTicked": {
+    "description": "Status line of the markers card in the first-run setup when nothing is ticked yet: the size of the brand's range follows, for example 'None ticked yet · 358 colours'.",
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
   "onboardingStep": "Step {step} of {total}",
   "@onboardingStep": {
     "placeholders": {
@@ -3063,6 +3116,7 @@
       }
     }
   },
+  "wishlistSubtitle": "Add them from a colour's details",
   "wishlistEmpty": "Add the markers you want to buy from the detail of any marker.",
   "wishlistAdd": "Add to wishlist",
   "wishlistRemove": "Remove from wishlist",
@@ -3275,7 +3329,7 @@
       }
     }
   },
-  "diaryStatsFinished": "{count} finished",
+  "diaryStatsFinished": "{count, plural, =1{1 finished} other{{count} finished}}",
   "@diaryStatsFinished": {
     "placeholders": {
       "count": {
@@ -3295,7 +3349,7 @@
   "diaryStatsTitle": "Diary numbers",
   "diaryStatsStatusTitle": "Finished and in progress",
   "diaryStatsMonthsTitle": "Entries per month",
-  "diaryStatsMonthsLatest": "Showing the latest {count} months.",
+  "diaryStatsMonthsLatest": "{count, plural, =1{Showing the latest month.} other{Showing the latest {count} months.}}",
   "@diaryStatsMonthsLatest": {
     "placeholders": {
       "count": {

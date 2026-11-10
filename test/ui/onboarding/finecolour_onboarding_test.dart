@@ -50,7 +50,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(_key('onboarding-brand-finecolour'));
         await tester.pumpAndSettle();
-        expect(find.text(l10n.onboardingStep(1, 3)), findsOneWidget);
+        expect(find.text(l10n.onboardingStepFirst), findsOneWidget);
         await tester.tap(_key('onboarding-next'));
         await tester.pumpAndSettle();
         expect(

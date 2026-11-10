@@ -146,9 +146,9 @@ abstract interface class PaletteAdvisor {
 
 /// Advisor backed by a model exposed by the operating system.
 ///
-/// The Android implementation is `PlatformOnDevicePaletteAdvisor`; iOS reports
-/// "unavailable" until its implementation lands. [isAvailable] never prompts
-/// the user or downloads anything.
+/// The implementation is `PlatformOnDevicePaletteAdvisor`: Gemini Nano on
+/// Android and Apple Intelligence (Foundation Models) on iOS 26+. [isAvailable]
+/// never prompts the user or downloads anything.
 abstract class OnDevicePaletteAdvisor implements PaletteAdvisor {
   Future<bool> isAvailable();
 }

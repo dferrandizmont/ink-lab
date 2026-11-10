@@ -768,6 +768,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paletteSaveButton => 'Save palette';
 
   @override
+  String get paletteSavedButton => 'Palette saved';
+
+  @override
   String get paletteShareButton => 'Share';
 
   @override
@@ -891,7 +894,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paletteEmptyHint =>
-      'Pick a base marker to build a palette, or choose a scene with the Scenes chip.';
+      'Pick a base marker to build a palette, or choose Scenes as the palette type.';
 
   @override
   String get paletteCustomModeHint =>
@@ -941,7 +944,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get swatchesClearSearch => 'Clear the search';
+  String get swatchesClearSearch => 'Clear search';
 
   @override
   String get swatchesAllFilter => 'All';
@@ -971,10 +974,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get swatchesClearFilters => 'Clear filters';
 
   @override
+  String get swatchesClearSearchAndFilters => 'Clear search and filters';
+
+  @override
   String get swatchesLoadingSemantics => 'Loading colours';
 
   @override
   String get swatchesClosestAlternatives => 'Closest alternatives';
+
+  @override
+  String get swatchesNoCloseAlternatives => 'No close alternatives';
 
   @override
   String get swatchesInPacks => 'In sets';
@@ -1068,6 +1077,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get swatchesEmptyFiltersBody =>
       'This brand has no colours for the selected sets and filters.';
+
+  @override
+  String get swatchesEmptyNoFavoritesTitle => 'No favourites yet';
+
+  @override
+  String get swatchesEmptyNoFavoritesBody =>
+      'Tap the star in a colour\'s details to add one.';
+
+  @override
+  String get swatchesEmptyNoFavoritesAction => 'Show all colours';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineTitle =>
+      'No favourites in your collection';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineBody =>
+      'None of your favourites is one of the markers you own.';
+
+  @override
+  String get swatchesEmptyFavoritesNotMineAction => 'Show all favourites';
 
   @override
   String get swatchesLoading => 'Loading colours…';
@@ -2524,7 +2554,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Shade all three colours with the same grey so they belong together.';
 
   @override
-  String get ideasSplitComplementTitle => 'Split complement';
+  String get ideasSplitComplementTitle => 'Split Complementary';
 
   @override
   String get ideasSplitComplementSummary =>
@@ -5692,6 +5722,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'On-device AI is not available on this phone right now. Colour theory is used until it is.';
 
   @override
+  String get settingsAiOnDeviceNotEnabledIos =>
+      'To use on-device AI, turn on Apple Intelligence in Settings → Apple Intelligence & Siri.';
+
+  @override
   String paletteSizeChip(int size) {
     return '$size colours';
   }
@@ -5819,7 +5853,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paletteMissingBase(String example) {
-    return 'Pick a base marker, such as $example, or choose a scene with the Scenes chip.';
+    return 'Pick a base marker, such as $example, or choose Scenes as the palette type.';
   }
 
   @override
@@ -6663,11 +6697,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryAtmosphere => 'Atmosphere';
 
   @override
-  String get settingsLinesTitle => 'Lines you own';
+  String get settingsLinesTitle => 'Series you own';
 
   @override
   String get settingsLinesHint =>
-      'Pick every Ohuhu line you own. Turning a line off removes its packs from your selection.';
+      'Pick every Ohuhu series you own. Turning a series off removes its packs from your selection.';
 
   @override
   String settingsLineSelectedOfTotal(int selected, int total) {
@@ -6700,13 +6734,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get swatchesLines => 'Lines';
+  String get swatchesLines => 'Series';
 
   @override
-  String get swatchesLabelLine => 'Line';
+  String get swatchesLabelLine => 'Series';
 
   @override
-  String get swatchesAllLines => 'All lines';
+  String get swatchesAllLines => 'All series';
 
   @override
   String get swatchesLegacyPacks => 'Older sets';
@@ -6940,6 +6974,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get collectionTickVisible => 'Tick all';
+
+  @override
+  String collectionTickManyTitle(int count) {
+    return 'Tick $count markers?';
+  }
+
+  @override
+  String get collectionTickManyBody =>
+      'They all count as markers you own. You can take them out again with “Untick all”.';
 
   @override
   String get collectionUntickVisible => 'Untick all';
@@ -7395,6 +7438,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String collectionLooseTicked(int loose, int sets) {
+    return '$loose loose ticked · $sets in your sets';
+  }
+
+  @override
   String get onboardingWelcomeTitle => 'Welcome to Ink Lab';
 
   @override
@@ -7438,6 +7486,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingFinish => 'Start';
+
+  @override
+  String get onboardingStepFirst => 'Step 1';
+
+  @override
+  String onboardingMarkersTicked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ticked',
+      one: '1 ticked',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String onboardingMarkersNoneTicked(String range) {
+    return 'None ticked yet · $range';
+  }
 
   @override
   String onboardingStep(int step, int total) {
@@ -7493,6 +7560,9 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get wishlistSubtitle => 'Add them from a colour\'s details';
 
   @override
   String get wishlistEmpty =>
@@ -7874,7 +7944,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String diaryStatsFinished(int count) {
-    return '$count finished';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count finished',
+      one: '1 finished',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -7896,7 +7972,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String diaryStatsMonthsLatest(int count) {
-    return 'Showing the latest $count months.';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Showing the latest $count months.',
+      one: 'Showing the latest month.',
+    );
+    return '$_temp0';
   }
 
   @override

@@ -49,6 +49,8 @@ const Set<String> _sameEverywhere = <String>{
 /// English is a missing translation.
 const Map<String, Set<String>> _sameInLanguage = <String, Set<String>>{
   'es': <String>{
+    // "Series" is the same word in Spanish.
+    'swatchesLines',
     'ideasDiaDeMuertosTitle',
     'ideasHoliColoursTitle',
     'collectionSets',

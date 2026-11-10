@@ -16,7 +16,7 @@ import Foundation
 /// session that is dropped when the call ends.
 ///
 /// Methods on `ink_lab/on_device_ai` (same contract as Android):
-///  - `status`   -> "unavailable" | "downloadable" | "downloading" | "available"
+///  - `status`   -> "unavailable" | "notEnabled" | "downloadable" | "downloading" | "available"
 ///  - `download` -> the current status. iOS has no app-driven download: the
 ///                  system fetches the model on its own, so there is no event
 ///                  channel and nothing to start.
@@ -27,6 +27,7 @@ final class OnDeviceAiChannel: NSObject {
   private static let methodChannel = "ink_lab/on_device_ai"
   private static let generateTimeoutNanos: UInt64 = 30_000_000_000
   private static let unavailable = "unavailable"
+  private static let notEnabled = "notEnabled"
 
   private let methods: FlutterMethodChannel
 
@@ -66,7 +67,8 @@ final class OnDeviceAiChannel: NSObject {
     }
   }
 
-  /// One of "unavailable", "downloadable", "downloading", "available".
+  /// One of "unavailable", "notEnabled", "downloadable", "downloading",
+  /// "available".
   private func currentStatus() -> String {
     #if canImport(FoundationModels)
       if #available(iOS 26.0, *) {
@@ -109,10 +111,13 @@ final class OnDeviceAiChannel: NSObject {
     ///  - unavailable(.modelNotReady)     -> "downloading": the system is still
     ///    fetching or preparing the model; the app cannot speed it up, so Dart
     ///    shows a disabled "downloading" state with a "check again" action.
+    ///  - unavailable(.appleIntelligenceNotEnabled) -> "notEnabled": the phone
+    ///    can run it but the user switched Apple Intelligence off. The app cannot
+    ///    switch it on, so Dart keeps the provider hidden and tells the user
+    ///    where to turn it on.
     ///  - deviceNotEligible,
-    ///    appleIntelligenceNotEnabled,
     ///    anything unknown                -> "unavailable": the app cannot fix
-    ///    either, so the provider stays hidden. "downloadable" is never used,
+    ///    it, so the provider stays hidden. "downloadable" is never used,
     ///    because it would offer a download button that has nothing to start.
     @available(iOS 26.0, *)
     private static func modelStatus() -> String {
@@ -121,6 +126,8 @@ final class OnDeviceAiChannel: NSObject {
         return "available"
       case .unavailable(.modelNotReady):
         return "downloading"
+      case .unavailable(.appleIntelligenceNotEnabled):
+        return notEnabled
       case .unavailable:
         return unavailable
       @unknown default:

@@ -103,69 +103,68 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
       controller: widget.scrollController,
       padding: EdgeInsets.zero,
       children: <Widget>[
-        // Title with the heart and the "⋯" menu. The right clearance keeps
-        // them clear of the sheet's floating close button.
+        // The title has the whole width (a word is never broken inside); the
+        // right clearance keeps it clear of the sheet's floating close
+        // button. The heart and the "⋯" menu sit on the meta line's row.
         Padding(
           padding: const EdgeInsets.only(right: InkSpacing.sheetCloseClearance),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    l10n.ideaTitle(_preset),
-                    style: AppTypography.sheetTitle.copyWith(color: ink.fg),
-                  ),
-                ),
-              ),
-              if (widget.favorites != null) ...<Widget>[
-                const SizedBox(width: InkSpacing.s8),
-                StreamBuilder<Set<String>>(
-                  stream: widget.favorites!.favoriteChanges,
-                  initialData: widget.favorites!.favorites,
-                  builder:
-                      (
-                        BuildContext context,
-                        AsyncSnapshot<Set<String>> snapshot,
-                      ) => IdeaHeartButton(
-                        key: ValueKey<String>(
-                          'ideas-heart-sheet-${_preset.id}',
-                        ),
-                        favorite: (snapshot.data ?? const <String>{}).contains(
-                          _preset.id,
-                        ),
-                        onPressed: _toggleFavorite,
-                      ),
-                ),
-              ],
-              const SizedBox(width: InkSpacing.s8),
-              InkOverflowMenu(
-                key: ValueKey<String>('ideas-overflow-${_preset.id}'),
-                items: <InkMenuItem>[
-                  if (widget.onAddToDiary != null)
-                    InkMenuItem(
-                      key: ValueKey<String>('ideas-diary-${_preset.id}'),
-                      label: l10n.diaryAdd,
-                      icon: InkIcons.plus,
-                      onSelected: _addToDiary,
-                    ),
-                  if (palette.isNotEmpty)
-                    InkMenuItem(
-                      key: ValueKey<String>('ideas-other-${_preset.id}'),
-                      label: l10n.ideasOtherMarkersButton,
-                      icon: InkIcons.shuffle,
-                      onSelected: _otherMarkers,
-                    ),
-                ],
-              ),
-            ],
+          child: Semantics(
+            header: true,
+            child: _WordFitTitle(
+              text: l10n.ideaTitle(_preset),
+              style: AppTypography.sheetTitle.copyWith(color: ink.fg),
+            ),
           ),
         ),
-        const SizedBox(height: InkSpacing.group),
-        Text(
-          ideaMetaLine(context, _preset),
-          style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+        const SizedBox(height: InkSpacing.s4),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                ideaMetaLine(context, _preset),
+                style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+              ),
+            ),
+            if (widget.favorites != null) ...<Widget>[
+              const SizedBox(width: InkSpacing.s8),
+              StreamBuilder<Set<String>>(
+                stream: widget.favorites!.favoriteChanges,
+                initialData: widget.favorites!.favorites,
+                builder:
+                    (
+                      BuildContext context,
+                      AsyncSnapshot<Set<String>> snapshot,
+                    ) => IdeaHeartButton(
+                      key: ValueKey<String>('ideas-heart-sheet-${_preset.id}'),
+                      favorite: (snapshot.data ?? const <String>{}).contains(
+                        _preset.id,
+                      ),
+                      onPressed: _toggleFavorite,
+                    ),
+              ),
+            ],
+            const SizedBox(width: InkSpacing.s8),
+            InkOverflowMenu(
+              key: ValueKey<String>('ideas-overflow-${_preset.id}'),
+              items: <InkMenuItem>[
+                if (widget.onAddToDiary != null)
+                  InkMenuItem(
+                    key: ValueKey<String>('ideas-diary-${_preset.id}'),
+                    label: l10n.diaryAdd,
+                    icon: InkIcons.plus,
+                    onSelected: _addToDiary,
+                  ),
+                if (palette.isNotEmpty)
+                  InkMenuItem(
+                    key: ValueKey<String>('ideas-other-${_preset.id}'),
+                    label: l10n.ideasOtherMarkersButton,
+                    icon: InkIcons.shuffle,
+                    onSelected: _otherMarkers,
+                  ),
+              ],
+            ),
+          ],
         ),
         const SizedBox(height: InkSpacing.group),
         // The whole summary, wrapped: it is the idea's description.
@@ -424,6 +423,47 @@ class _StepRow extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// The sheet's title, wrapped, and never broken inside a word: when the
+/// longest word (a hyphenated word counts by its pieces) does not fit in a
+/// line at the user's text size, the whole title steps down a size until it
+/// does (never below [minScale] of the style, where a cut is the last resort).
+class _WordFitTitle extends StatelessWidget {
+  const _WordFitTitle({required this.text, required this.style});
+
+  final String text;
+  final TextStyle style;
+
+  static const double minScale = 0.6;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextDirection direction = Directionality.of(context);
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final double available = constraints.maxWidth;
+        double widest = 0;
+        for (final String piece in text.split(RegExp(r'(?<=-)|\s+'))) {
+          if (piece.isEmpty) continue;
+          final TextPainter painter = TextPainter(
+            text: TextSpan(text: piece, style: style),
+            textDirection: direction,
+            textScaler: scaler,
+          )..layout();
+          if (painter.width > widest) widest = painter.width;
+          painter.dispose();
+        }
+        TextStyle fitted = style;
+        if (available.isFinite && widest > available && widest > 0) {
+          final double scale = (available / widest).clamp(minScale, 1.0);
+          fitted = style.copyWith(fontSize: (style.fontSize ?? 26) * scale);
+        }
+        return Text(text, style: fitted);
+      },
     );
   }
 }

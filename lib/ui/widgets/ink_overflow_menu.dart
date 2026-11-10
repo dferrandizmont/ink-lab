@@ -17,6 +17,7 @@ class InkMenuItem {
     required this.onSelected,
     this.icon,
     this.destructive = false,
+    this.enabled = true,
   });
 
   final Key? key;
@@ -34,6 +35,10 @@ class InkMenuItem {
 
   /// Draws the entry in the `error` colour (delete, clear all).
   final bool destructive;
+
+  /// Whether the entry can be picked. A disabled entry stays in the menu (so
+  /// the menu keeps its size) drawn in the muted colour, and does nothing.
+  final bool enabled;
 }
 
 /// The entries of a "⋯" menu that a sheet fills while it is open.
@@ -75,6 +80,7 @@ class InkMenuItemsNotifier extends ValueNotifier<List<InkMenuItem>> {
     for (int i = 0; i < a.length; i++) {
       if (a[i].label != b[i].label) return false;
       if (a[i].key != b[i].key) return false;
+      if (a[i].enabled != b[i].enabled) return false;
     }
     return true;
   }
@@ -143,6 +149,7 @@ class InkOverflowMenu extends StatelessWidget {
           PopupMenuItem<int>(
             key: items[i].key,
             value: i,
+            enabled: items[i].enabled,
             height: kMinInteractiveDimension,
             child: _MenuRow(item: items[i]),
           ),
@@ -170,7 +177,11 @@ class _MenuRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
-    final Color color = item.destructive ? ink.error : ink.fg;
+    final Color color = !item.enabled
+        ? ink.fg2
+        : item.destructive
+        ? ink.error
+        : ink.fg;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: InkSpacing.s8),
       child: Row(

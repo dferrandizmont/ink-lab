@@ -487,6 +487,10 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
                 key: const ValueKey<String>('diary-share'),
                 label: l10n.diaryShareButton,
                 icon: InkIcons.share,
+                // Nothing to share until the entry has a title (and while it
+                // is saving or sharing): the item stays, dimmed, so the menu
+                // does not change size.
+                enabled: _canShare,
                 onSelected: _share,
               ),
               if (!_isNew)

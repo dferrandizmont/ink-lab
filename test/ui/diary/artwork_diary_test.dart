@@ -536,6 +536,30 @@ void main() {
       expect(key('diary-delete'), findsOneWidget);
     });
 
+    testWidgets(
+      'Share this entry is off on an empty new entry, on with a title',
+      (WidgetTester tester) async {
+        await pumpDiaryPage(tester, const ArtworkEntryPage());
+        await _openMenu(tester);
+        // The item stays in the menu (so it keeps its size) but cannot be used.
+        expect(key('diary-share'), findsOneWidget);
+        expect(
+          tester.widget<PopupMenuItem<int>>(key('diary-share')).enabled,
+          isFalse,
+        );
+        Navigator.of(tester.element(key('diary-overflow'))).pop();
+        await tester.pumpAndSettle();
+
+        await tester.enterText(key('diary-title'), 'Forest');
+        await tester.pumpAndSettle();
+        await _openMenu(tester);
+        expect(
+          tester.widget<PopupMenuItem<int>>(key('diary-share')).enabled,
+          isTrue,
+        );
+      },
+    );
+
     testWidgets('Save entry is the only primary action of the form', (
       WidgetTester tester,
     ) async {

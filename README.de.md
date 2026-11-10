@@ -136,7 +136,7 @@ werden nie hochgeladen. Beim Teilen einer Palette, einer Farbkarte oder der
 
 ## Neuerungen
 
-Version 1.2.1 zeigt Ideenbeschreibungen vollständig und behebt kleine Anzeigefehler. Version 1.2.0 brachte 100 Ideen statt 28, nach Schwierigkeit und Jahreszeit geordnet, damit du sie leicht
+Version 1.2.2 behebt, was eine Prüfung aller Bildschirme gefunden hat: Gespeicherte Paletten öffnen sich mit einem Tipp, Zurück unter Android führt zu Farbmuster, und die Texte sind klarer. Version 1.2.1 zeigt Ideenbeschreibungen vollständig und behebt kleine Anzeigefehler. Version 1.2.0 brachte 100 Ideen statt 28, nach Schwierigkeit und Jahreszeit geordnet, damit du sie leicht
 findest, und ein aufgeräumteres Seitenmenü auf Tablets. Die vollständige Liste steht in
 [CHANGELOG.md](CHANGELOG.md) und in den
 [Releases](https://github.com/dferrandizmont/ink-lab/releases).

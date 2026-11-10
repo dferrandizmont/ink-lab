@@ -500,7 +500,19 @@ class _SwatchesPageState extends State<SwatchesPage> {
               if (visible.isEmpty)
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: _emptyState(context, owned.isEmpty),
+                  child: _emptyState(
+                    context,
+                    noCollection: owned.isEmpty,
+                    noFavorites: !candidates.any(
+                      (MarkerColor color) =>
+                          state.favorites.contains(color.colorId),
+                    ),
+                    noOwnedFavorites: !candidates.any(
+                      (MarkerColor color) =>
+                          state.favorites.contains(color.colorId) &&
+                          isOwned(color),
+                    ),
+                  ),
                 )
               else if (_listLayout)
                 SliverPadding(
@@ -651,12 +663,10 @@ class _SwatchesPageState extends State<SwatchesPage> {
     }
   }
 
-  /// Number of view filters that differ from the defaults (series, set,
-  /// layout).
+  /// Number of filters that narrow the results (series, set). The layout
+  /// (grid or list) only changes how they are drawn, so it does not count.
   int _activeFilterCount(AppSettingsState state) =>
-      (_selectedPackId != null ? 1 : 0) +
-      (_selectedLines.isNotEmpty ? 1 : 0) +
-      (_listLayout ? 1 : 0);
+      (_selectedPackId != null ? 1 : 0) + (_selectedLines.isNotEmpty ? 1 : 0);
 
   Widget _chipRow(
     BuildContext context,
@@ -665,40 +675,62 @@ class _SwatchesPageState extends State<SwatchesPage> {
     List<MarkerColor> colors,
   ) {
     final int active = _activeFilterCount(state);
-    return InkChipRow(
+    // The Filters chip stays outside the scrolling chips: it carries a count
+    // and must never be cut by the edge of the screen, in any language.
+    return Row(
       children: <Widget>[
-        InkChip(
-          label: context.l10n.swatchesAllFilter,
-          selected: !_favoritesOnly && !_ownedOnly,
-          onSelected: (_) => setState(() {
-            _favoritesOnly = false;
-            _ownedOnly = false;
-          }),
+        Expanded(
+          child: InkChipRow(
+            fadeEnds: true,
+            padding: const EdgeInsetsDirectional.only(
+              start: InkSpacing.gutter,
+              end: InkSpacing.chipGap,
+            ),
+            children: <Widget>[
+              InkChip(
+                label: context.l10n.swatchesAllFilter,
+                selected: !_favoritesOnly && !_ownedOnly,
+                onSelected: (_) => setState(() {
+                  _favoritesOnly = false;
+                  _ownedOnly = false;
+                }),
+              ),
+              InkChip(
+                key: const ValueKey<String>('swatches-mine'),
+                label: context.l10n.swatchesOwnedOnly,
+                selected: _ownedOnly,
+                onSelected: (bool on) => setState(() => _ownedOnly = on),
+              ),
+              InkChip(
+                label: context.l10n.swatchesFavoritesOnly,
+                selected: _favoritesOnly,
+                onSelected: (bool on) => setState(() => _favoritesOnly = on),
+              ),
+            ],
+          ),
         ),
-        InkChip(
-          key: const ValueKey<String>('swatches-mine'),
-          label: context.l10n.swatchesOwnedOnly,
-          selected: _ownedOnly,
-          onSelected: (bool on) => setState(() => _ownedOnly = on),
-        ),
-        InkChip(
-          label: context.l10n.swatchesFavoritesOnly,
-          selected: _favoritesOnly,
-          onSelected: (bool on) => setState(() => _favoritesOnly = on),
-        ),
-        InkChip(
-          label: active > 0
-              ? context.l10n.swatchesFiltersCount(active)
-              : context.l10n.swatchesFilters,
-          icon: InkIcons.filterLines,
-          selected: active > 0,
-          onSelected: (_) => _openFilters(context, scope, colors),
+        Padding(
+          padding: const EdgeInsetsDirectional.only(end: InkSpacing.gutter),
+          child: InkChip(
+            key: const ValueKey<String>('swatches-filters'),
+            label: active > 0
+                ? context.l10n.swatchesFiltersCount(active)
+                : context.l10n.swatchesFilters,
+            icon: InkIcons.filterLines,
+            selected: active > 0,
+            onSelected: (_) => _openFilters(context, scope, colors),
+          ),
         ),
       ],
     );
   }
 
-  Widget _emptyState(BuildContext context, bool noCollection) {
+  Widget _emptyState(
+    BuildContext context, {
+    required bool noCollection,
+    required bool noFavorites,
+    required bool noOwnedFavorites,
+  }) {
     if (_ownedOnly && noCollection) {
       return EmptyState(
         title: context.l10n.swatchesEmptyNoOwnedTitle,
@@ -707,6 +739,33 @@ class _SwatchesPageState extends State<SwatchesPage> {
         actionLabel: context.l10n.swatchesEmptyNoOwnedAction,
         primaryAction: true,
         onAction: _openCollection,
+      );
+    }
+    // "Favourites" is on and nothing is starred: the filters are not the
+    // cause, so the text says what to do instead of blaming them.
+    if (_favoritesOnly && noFavorites) {
+      return EmptyState(
+        key: const ValueKey<String>('swatches-empty-no-favorites'),
+        title: context.l10n.swatchesEmptyNoFavoritesTitle,
+        message: context.l10n.swatchesEmptyNoFavoritesBody,
+        icon: InkIcons.star,
+        actionLabel: context.l10n.swatchesEmptyNoFavoritesAction,
+        onAction: () => setState(() {
+          _favoritesOnly = false;
+          _ownedOnly = false;
+        }),
+      );
+    }
+    // "Mine" and "Favourites" can be on together: the favourites exist, but
+    // none of them is a marker the user owns.
+    if (_favoritesOnly && _ownedOnly && noOwnedFavorites) {
+      return EmptyState(
+        key: const ValueKey<String>('swatches-empty-favorites-not-mine'),
+        title: context.l10n.swatchesEmptyFavoritesNotMineTitle,
+        message: context.l10n.swatchesEmptyFavoritesNotMineBody,
+        icon: InkIcons.star,
+        actionLabel: context.l10n.swatchesEmptyFavoritesNotMineAction,
+        onAction: () => setState(() => _ownedOnly = false),
       );
     }
     final bool searching = _query.isNotEmpty;
@@ -718,17 +777,28 @@ class _SwatchesPageState extends State<SwatchesPage> {
           ? context.l10n.swatchesEmptySearchBody
           : context.l10n.swatchesEmptyFiltersBody,
       icon: searching ? InkIcons.search : InkIcons.filterLines,
-      actionLabel: context.l10n.swatchesClearFilters,
-      onAction: _clearFilters,
+      // The button says what it clears, and clears exactly that.
+      actionLabel: switch ((searching, _hasNarrowingFilters)) {
+        (true, true) => context.l10n.swatchesClearSearchAndFilters,
+        (true, false) => context.l10n.swatchesClearSearch,
+        _ => context.l10n.swatchesClearFilters,
+      },
+      onAction: _clearSearchAndFilters,
     );
   }
 
-  void _clearFilters() {
+  /// Whether the favourites switch or a series / set filter narrows the list
+  /// (the search text and the "Mine" scope are not counted).
+  bool get _hasNarrowingFilters =>
+      _favoritesOnly || _selectedPackId != null || _selectedLines.isNotEmpty;
+
+  /// The empty state's button: clears the search text and every filter it
+  /// names. The layout (grid / list) and the "Mine" scope stay as they are.
+  void _clearSearchAndFilters() {
     _searchController.clear();
     setState(() {
       _query = '';
       _favoritesOnly = false;
-      _ownedOnly = false;
       _selectedPackId = null;
       _selectedLines.clear();
     });
@@ -1142,6 +1212,9 @@ class _SwatchesPageState extends State<SwatchesPage> {
     List<MarkerColor> candidates, {
     bool? forPane,
   }) async {
+    // The search field must not keep the focus under the detail: closing the
+    // sheet would bring the keyboard back over the list.
+    FocusManager.instance.primaryFocus?.unfocus();
     // Where the detail goes is decided now, not after the catalogue is read:
     // a page that changes width meanwhile is put right by the layout pass.
     final bool inPane = forPane ?? _twoPane;

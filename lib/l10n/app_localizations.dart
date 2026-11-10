@@ -1456,6 +1456,12 @@ abstract class AppLocalizations {
   /// **'Save palette'**
   String get paletteSaveButton;
 
+  /// No description provided for @paletteSavedButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Palette saved'**
+  String get paletteSavedButton;
+
   /// Button that renders the palette on screen as an image and opens the system share sheet.
   ///
   /// In en, this message translates to:
@@ -1669,7 +1675,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteEmptyHint.
   ///
   /// In en, this message translates to:
-  /// **'Pick a base marker to build a palette, or choose a scene with the Scenes chip.'**
+  /// **'Pick a base marker to build a palette, or choose Scenes as the palette type.'**
   String get paletteEmptyHint;
 
   /// No description provided for @paletteCustomModeHint.
@@ -1753,7 +1759,7 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesClearSearch.
   ///
   /// In en, this message translates to:
-  /// **'Clear the search'**
+  /// **'Clear search'**
   String get swatchesClearSearch;
 
   /// No description provided for @swatchesAllFilter.
@@ -1810,6 +1816,12 @@ abstract class AppLocalizations {
   /// **'Clear filters'**
   String get swatchesClearFilters;
 
+  /// No description provided for @swatchesClearSearchAndFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search and filters'**
+  String get swatchesClearSearchAndFilters;
+
   /// No description provided for @swatchesLoadingSemantics.
   ///
   /// In en, this message translates to:
@@ -1821,6 +1833,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Closest alternatives'**
   String get swatchesClosestAlternatives;
+
+  /// No description provided for @swatchesNoCloseAlternatives.
+  ///
+  /// In en, this message translates to:
+  /// **'No close alternatives'**
+  String get swatchesNoCloseAlternatives;
 
   /// No description provided for @swatchesInPacks.
   ///
@@ -2001,6 +2019,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This brand has no colours for the selected sets and filters.'**
   String get swatchesEmptyFiltersBody;
+
+  /// No description provided for @swatchesEmptyNoFavoritesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No favourites yet'**
+  String get swatchesEmptyNoFavoritesTitle;
+
+  /// No description provided for @swatchesEmptyNoFavoritesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the star in a colour\'s details to add one.'**
+  String get swatchesEmptyNoFavoritesBody;
+
+  /// No description provided for @swatchesEmptyNoFavoritesAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all colours'**
+  String get swatchesEmptyNoFavoritesAction;
+
+  /// No description provided for @swatchesEmptyFavoritesNotMineTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No favourites in your collection'**
+  String get swatchesEmptyFavoritesNotMineTitle;
+
+  /// No description provided for @swatchesEmptyFavoritesNotMineBody.
+  ///
+  /// In en, this message translates to:
+  /// **'None of your favourites is one of the markers you own.'**
+  String get swatchesEmptyFavoritesNotMineBody;
+
+  /// No description provided for @swatchesEmptyFavoritesNotMineAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all favourites'**
+  String get swatchesEmptyFavoritesNotMineAction;
 
   /// No description provided for @swatchesLoading.
   ///
@@ -4285,7 +4339,7 @@ abstract class AppLocalizations {
   /// No description provided for @ideasSplitComplementTitle.
   ///
   /// In en, this message translates to:
-  /// **'Split complement'**
+  /// **'Split Complementary'**
   String get ideasSplitComplementTitle;
 
   /// No description provided for @ideasSplitComplementSummary.
@@ -9217,6 +9271,12 @@ abstract class AppLocalizations {
   /// **'On-device AI is not available on this phone right now. Colour theory is used until it is.'**
   String get settingsAiOnDeviceUnavailable;
 
+  /// No description provided for @settingsAiOnDeviceNotEnabledIos.
+  ///
+  /// In en, this message translates to:
+  /// **'To use on-device AI, turn on Apple Intelligence in Settings → Apple Intelligence & Siri.'**
+  String get settingsAiOnDeviceNotEnabledIos;
+
   /// No description provided for @paletteSizeChip.
   ///
   /// In en, this message translates to:
@@ -9304,7 +9364,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteMissingBase.
   ///
   /// In en, this message translates to:
-  /// **'Pick a base marker, such as {example}, or choose a scene with the Scenes chip.'**
+  /// **'Pick a base marker, such as {example}, or choose Scenes as the palette type.'**
   String paletteMissingBase(String example);
 
   /// No description provided for @swatchesFiltersCount.
@@ -10882,13 +10942,13 @@ abstract class AppLocalizations {
   /// No description provided for @settingsLinesTitle.
   ///
   /// In en, this message translates to:
-  /// **'Lines you own'**
+  /// **'Series you own'**
   String get settingsLinesTitle;
 
   /// No description provided for @settingsLinesHint.
   ///
   /// In en, this message translates to:
-  /// **'Pick every Ohuhu line you own. Turning a line off removes its packs from your selection.'**
+  /// **'Pick every Ohuhu series you own. Turning a series off removes its packs from your selection.'**
   String get settingsLinesHint;
 
   /// No description provided for @settingsLineSelectedOfTotal.
@@ -10924,19 +10984,19 @@ abstract class AppLocalizations {
   /// No description provided for @swatchesLines.
   ///
   /// In en, this message translates to:
-  /// **'Lines'**
+  /// **'Series'**
   String get swatchesLines;
 
   /// No description provided for @swatchesLabelLine.
   ///
   /// In en, this message translates to:
-  /// **'Line'**
+  /// **'Series'**
   String get swatchesLabelLine;
 
   /// No description provided for @swatchesAllLines.
   ///
   /// In en, this message translates to:
-  /// **'All lines'**
+  /// **'All series'**
   String get swatchesAllLines;
 
   /// No description provided for @swatchesLegacyPacks.
@@ -11274,6 +11334,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tick all'**
   String get collectionTickVisible;
+
+  /// No description provided for @collectionTickManyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick {count} markers?'**
+  String collectionTickManyTitle(int count);
+
+  /// No description provided for @collectionTickManyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'They all count as markers you own. You can take them out again with “Untick all”.'**
+  String get collectionTickManyBody;
 
   /// No description provided for @collectionUntickVisible.
   ///
@@ -12001,6 +12073,12 @@ abstract class AppLocalizations {
   /// **'{owned} of {total}'**
   String collectionOwnedCount(int owned, int total);
 
+  /// No description provided for @collectionLooseTicked.
+  ///
+  /// In en, this message translates to:
+  /// **'{loose} loose ticked · {sets} in your sets'**
+  String collectionLooseTicked(int loose, int sets);
+
   /// No description provided for @onboardingWelcomeTitle.
   ///
   /// In en, this message translates to:
@@ -12085,6 +12163,24 @@ abstract class AppLocalizations {
   /// **'Start'**
   String get onboardingFinish;
 
+  /// Header of the first setup step: no total, because the number of steps depends on the brand chosen here.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1'**
+  String get onboardingStepFirst;
+
+  /// Preview card of the markers step in the first-run setup: how many markers of the brand are ticked.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 ticked} other{{count} ticked}}'**
+  String onboardingMarkersTicked(int count);
+
+  /// Status line of the markers card in the first-run setup when nothing is ticked yet: the size of the brand's range follows, for example 'None ticked yet · 358 colours'.
+  ///
+  /// In en, this message translates to:
+  /// **'None ticked yet · {range}'**
+  String onboardingMarkersNoneTicked(String range);
+
   /// No description provided for @onboardingStep.
   ///
   /// In en, this message translates to:
@@ -12150,6 +12246,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{Nothing on your wishlist yet} =1{1 marker to buy} other{{count} markers to buy}}'**
   String wishlistCount(int count);
+
+  /// No description provided for @wishlistSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add them from a colour\'s details'**
+  String get wishlistSubtitle;
 
   /// No description provided for @wishlistEmpty.
   ///
@@ -12760,7 +12862,7 @@ abstract class AppLocalizations {
   /// No description provided for @diaryStatsFinished.
   ///
   /// In en, this message translates to:
-  /// **'{count} finished'**
+  /// **'{count, plural, =1{1 finished} other{{count} finished}}'**
   String diaryStatsFinished(int count);
 
   /// No description provided for @diaryStatsInProgress.
@@ -12796,7 +12898,7 @@ abstract class AppLocalizations {
   /// No description provided for @diaryStatsMonthsLatest.
   ///
   /// In en, this message translates to:
-  /// **'Showing the latest {count} months.'**
+  /// **'{count, plural, =1{Showing the latest month.} other{Showing the latest {count} months.}}'**
   String diaryStatsMonthsLatest(int count);
 
   /// No description provided for @diaryStatsMarkersTitle.

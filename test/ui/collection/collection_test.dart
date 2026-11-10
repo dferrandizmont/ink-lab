@@ -193,9 +193,10 @@ void main() {
       expect(scope.settings.settings.extraMarkerIds, <String>{
         'ohuhu_oahu:BV04',
       });
+      // With sets the count is what is ticked here, apart from the sets.
       expect(
         tester.widget<Text>(_key('collection-owned-count')).data,
-        startsWith('1 of '),
+        l10n.collectionLooseTicked(1, 0),
       );
 
       await tester.pageBack();
@@ -535,6 +536,120 @@ void main() {
       expect(scope.settings.settings.extraMarkerIds, isEmpty);
     });
 
+    testWidgets('the loose markers row has one line of help, the count', (
+      WidgetTester tester,
+    ) async {
+      await _pumpCollection(
+        tester,
+        state: AppSettingsState(onboardingCompleted: true),
+      );
+      await tester.ensureVisible(_key('collection-add-loose'));
+      // The help sentence lives on the page the row opens, not twice.
+      expect(find.text(l10n.collectionExtrasHint), findsNothing);
+      expect(
+        find.descendant(
+          of: _key('collection-add-loose'),
+          matching: find.text(l10n.collectionExtrasCount(0)),
+        ),
+        findsOneWidget,
+      );
+      // Label and one subtitle: no taller than any other two-line row.
+      expect(
+        tester.getSize(_key('collection-add-loose')).height,
+        lessThanOrEqualTo(72),
+      );
+    });
+
+    testWidgets('the count says loose ticked and, apart, what the sets give', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await _pumpCollection(
+        tester,
+        state: AppSettingsState(
+          onboardingCompleted: true,
+          settings: AppSettings(ownedSetIds: const {'classic_160'}),
+        ),
+      );
+      await tester.ensureVisible(_key('collection-add-loose'));
+      await tester.tap(_key('collection-add-loose'));
+      await tester.pumpAndSettle();
+      final String before = tester
+          .widget<Text>(_key('collection-owned-count'))
+          .data!;
+      final RegExpMatch match = RegExp(r'^0 loose ticked · (\d+) in your sets$')
+          .firstMatch(before)!;
+      final int inSets = int.parse(match.group(1)!);
+      expect(inSets, greaterThan(100));
+      // Ticking a marker that is not in a set moves only the loose number.
+      await tester.enterText(find.byType(TextField), 'BV04');
+      await tester.pumpAndSettle();
+      await tester.tap(_key('collection-marker-BV04'));
+      await tester.pumpAndSettle();
+      expect(
+        scope.settings.settings.extraMarkerIds,
+        contains('ohuhu_oahu:BV04'),
+      );
+      expect(
+        tester.widget<Text>(_key('collection-owned-count')).data,
+        l10n.collectionLooseTicked(1, inSets),
+      );
+    });
+
+    testWidgets('Tick all asks first when it would tick a lot at once', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await _pumpCollection(
+        tester,
+        state: AppSettingsState(onboardingCompleted: true),
+      );
+      await tester.ensureVisible(_key('collection-add-loose'));
+      await tester.tap(_key('collection-add-loose'));
+      await tester.pumpAndSettle();
+
+      // The whole range: a question, and Cancel changes nothing.
+      await tester.tap(_key('collection-tick-visible'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.textContaining(l10n.collectionTickManyBody), findsOneWidget);
+      await tester.tap(find.text(l10n.settingsCancel));
+      await tester.pumpAndSettle();
+      expect(scope.settings.settings.extraMarkerIds, isEmpty);
+
+      // Confirm: everything in view is ticked.
+      await tester.tap(_key('collection-tick-visible'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.widgetWithText(FilledButton, l10n.collectionTickVisible),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        scope.settings.settings.extraMarkerIds.length,
+        greaterThan(LooseMarkersPage.tickConfirmThreshold),
+      );
+      expect(find.byType(AlertDialog), findsNothing);
+    });
+
+    testWidgets('Tick all does not ask for a handful of markers', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await _pumpCollection(
+        tester,
+        state: AppSettingsState(onboardingCompleted: true),
+      );
+      await tester.ensureVisible(_key('collection-add-loose'));
+      await tester.tap(_key('collection-add-loose'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'BV04');
+      await tester.pumpAndSettle();
+      await tester.tap(_key('collection-tick-visible'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(
+        scope.settings.settings.extraMarkerIds,
+        contains('ohuhu_oahu:BV04'),
+      );
+    });
+
     testWidgets('the marker list scrolls with the page, not inside a card', (
       WidgetTester tester,
     ) async {
@@ -557,7 +672,7 @@ void main() {
       final AppScope scope = await _pumpApp(tester, state: AppSettingsState());
       expect(find.byKey(OnboardingPage.pageKey), findsOneWidget);
       expect(find.byType(AppShell), findsNothing);
-      expect(find.text(l10n.onboardingStep(1, 4)), findsOneWidget);
+      expect(find.text(l10n.onboardingStepFirst), findsOneWidget);
 
       await tester.tap(_key('onboarding-brand-ohuhu'));
       await tester.tap(_key('onboarding-next'));
@@ -644,7 +759,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(_key('onboarding-brand-decotime'));
       await tester.pumpAndSettle();
-      expect(find.text(l10n.onboardingStep(1, 3)), findsOneWidget);
+      expect(find.text(l10n.onboardingStepFirst), findsOneWidget);
       await tester.tap(_key('onboarding-next'));
       await tester.pumpAndSettle();
       await tester.tap(_key('onboarding-family-decotime_cool_grey'));
@@ -673,7 +788,7 @@ void main() {
           await tester.ensureVisible(_key('onboarding-brand-copic'));
           await tester.tap(_key('onboarding-brand-copic'));
           await tester.pumpAndSettle();
-          expect(find.text(l10n.onboardingStep(1, 3)), findsOneWidget);
+          expect(find.text(l10n.onboardingStepFirst), findsOneWidget);
           await tester.tap(_key('onboarding-next'));
           await tester.pumpAndSettle();
           expect(

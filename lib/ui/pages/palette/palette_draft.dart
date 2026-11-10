@@ -50,3 +50,13 @@ final ValueNotifier<MarkerColor?> paletteBaseDraft =
 final ValueNotifier<PaletteMode?> paletteBaseMode = ValueNotifier<PaletteMode?>(
   null,
 );
+
+/// Hand-off slot for a saved palette to open in the Palette tab (a row of the
+/// saved palettes sheet opened from Settings).
+///
+/// The sheet sets it; the shell switches to the Palette tab; the Palette page
+/// loads the palette and consumes it by setting the value back to `null`,
+/// exactly like [paletteDraft]. The Palette page itself loads a palette
+/// directly, without this slot.
+final ValueNotifier<SavedPalette?> paletteSavedDraft =
+    ValueNotifier<SavedPalette?>(null);

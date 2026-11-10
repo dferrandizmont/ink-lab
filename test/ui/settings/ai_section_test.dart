@@ -215,6 +215,76 @@ void main() {
     });
   });
 
+  group('Apple Intelligence switched off', () {
+    const ValueKey<String> hintKey = ValueKey<String>(
+      'ai-on-device-not-enabled',
+    );
+
+    testWidgets('iOS shows where to turn it on and hides the option', (
+      WidgetTester tester,
+    ) async {
+      await pumpSection(
+        tester,
+        enabled: true,
+        onDevice: FakeOnDevicePlatform(
+          currentStatus: OnDeviceStatus.notEnabled,
+        ),
+      );
+
+      expect(_text(tester, 'ai-on-device-not-enabled'), contains('Apple'));
+      expect(find.text(l10n.settingsAiOnDeviceNotEnabledIos), findsOneWidget);
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsNothing);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+    testWidgets('iOS shows nothing extra for a plain unavailable model', (
+      WidgetTester tester,
+    ) async {
+      await pumpSection(
+        tester,
+        enabled: true,
+        onDevice: FakeOnDevicePlatform(
+          currentStatus: OnDeviceStatus.unavailable,
+        ),
+      );
+
+      expect(find.byKey(hintKey), findsNothing);
+      expect(find.text(l10n.settingsAiOnDeviceNotEnabledIos), findsNothing);
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsNothing);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+    testWidgets('Android never shows the hint', (WidgetTester tester) async {
+      await pumpSection(
+        tester,
+        enabled: true,
+        onDevice: FakeOnDevicePlatform(
+          currentStatus: OnDeviceStatus.notEnabled,
+        ),
+      );
+
+      expect(find.byKey(hintKey), findsNothing);
+      expect(find.text(l10n.settingsAiOnDeviceNotEnabledIos), findsNothing);
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsNothing);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.android));
+
+    testWidgets('re-checks on resume and drops the hint once it is on', (
+      WidgetTester tester,
+    ) async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        currentStatus: OnDeviceStatus.notEnabled,
+      );
+      await pumpSection(tester, enabled: true, onDevice: platform);
+      expect(find.byKey(hintKey), findsOneWidget);
+
+      platform.currentStatus = OnDeviceStatus.available;
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(hintKey), findsNothing);
+      expect(find.text(l10n.settingsAiProviderOnDevice), findsOneWidget);
+    }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+  });
+
   group('on-device download', () {
     const ValueKey<String> downloadKey = ValueKey<String>(
       'ai-on-device-download',

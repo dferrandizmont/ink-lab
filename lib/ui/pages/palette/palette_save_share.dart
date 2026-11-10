@@ -25,15 +25,7 @@ extension _PaletteSaveShare on _PalettePageState {
         mode: _mode,
         paletteSize: (_suggestions.length + 1).clamp(3, 5),
         createdAtEpochMs: now.millisecondsSinceEpoch,
-        // A chain is saved in painting order, light to dark, base in place.
-        colorCodes: <String>[
-          if (_shownChain != null)
-            for (final MarkerColor c in _shownChain!.colors) c.newCode
-          else ...<String>[
-            base.newCode,
-            for (final suggestion in _suggestions) suggestion.color.newCode,
-          ],
-        ],
+        colorCodes: _currentCodes(base),
         isCustom: _mode == PaletteMode.customPalette,
         scenarioName: _photoMode
             ? PhotoScene.savedName
@@ -53,7 +45,51 @@ extension _PaletteSaveShare on _PalettePageState {
       ),
     );
     if (!mounted) return;
-    _setState(() => _notice = context.l10n.paletteSavedNotice(name));
+    // The confirmation is where the finger is: the Save button turns into
+    // "Saved" (see [_isSaved]) and a snack bar names the palette. A banner at
+    // the top of the page would be out of view, and would outlive the palette.
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    messenger
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          key: const ValueKey<String>('palette-saved-snack'),
+          content: Text(context.l10n.paletteSavedNotice(name)),
+        ),
+      );
+    _setState(() {});
+  }
+
+  /// The codes saved for the palette on screen: a chain in painting order,
+  /// light to dark, base in place; otherwise the base plus the companions.
+  List<String> _currentCodes(MarkerColor base) => <String>[
+    if (_shownChain != null)
+      for (final MarkerColor c in _shownChain!.colors) c.newCode
+    else ...<String>[
+      base.newCode,
+      for (final suggestion in _suggestions) suggestion.color.newCode,
+    ],
+  ];
+
+  /// Whether the palette on screen is already among the saved ones (the same
+  /// markers in the same order). Deleting the saved palette makes it
+  /// saveable again; changing the palette does too.
+  bool get _isSaved {
+    final AppScope? scope = _scope;
+    final MarkerColor? base = _stripBase;
+    if (scope == null || base == null || _suggestions.isEmpty) return false;
+    final List<String> codes = <String>[
+      for (final String code in _currentCodes(base)) code.toUpperCase(),
+    ];
+    return scope.savedPalettes.palettesOf(_brand).any((SavedPalette saved) {
+      if (saved.colorCodes.length != codes.length) return false;
+      for (int i = 0; i < codes.length; i++) {
+        if (saved.colorCodes[i].toUpperCase() != codes[i]) return false;
+      }
+      return true;
+    });
   }
 
   /// The type or scene name that titles the palette on screen.

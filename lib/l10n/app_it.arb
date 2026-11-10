@@ -225,6 +225,7 @@
   "paletteSuggestAiLoading": "Sto suggerendo…",
   "paletteAiBadge": "IA",
   "paletteSaveButton": "Salva palette",
+  "paletteSavedButton": "Palette salvata",
   "paletteShareButton": "Condividi",
   "shareFailed": "Non è stato possibile condividere l’immagine.",
   "paletteOkButton": "OK",
@@ -284,8 +285,11 @@
   "swatchesLabelLayout": "Vista",
   "swatchesAllPacks": "Tutti i set",
   "swatchesClearFilters": "Azzera filtri",
+  "swatchesClearSearch": "Azzera ricerca",
+  "swatchesClearSearchAndFilters": "Azzera ricerca e filtri",
   "swatchesLoadingSemantics": "Caricamento colori",
   "swatchesClosestAlternatives": "Alternative più vicine",
+  "swatchesNoCloseAlternatives": "Nessuna alternativa vicina",
   "swatchesInPacks": "Nei set",
   "swatchesLocation": "Posizione",
   "swatchesAddToPalette": "Aggiungi alla palette",
@@ -316,6 +320,12 @@
   "swatchesEmptySearchBody": "Nessun colore di questa collezione corrisponde alla ricerca.",
   "swatchesEmptyFiltersTitle": "Niente da mostrare",
   "swatchesEmptyFiltersBody": "Questa marca non ha colori per i set e i filtri scelti.",
+  "swatchesEmptyNoFavoritesTitle": "Ancora nessun preferito",
+  "swatchesEmptyNoFavoritesBody": "Tocca la stella nei dettagli di un colore per aggiungerlo.",
+  "swatchesEmptyNoFavoritesAction": "Mostra tutti i colori",
+  "swatchesEmptyFavoritesNotMineTitle": "Nessun preferito nella tua collezione",
+  "swatchesEmptyFavoritesNotMineBody": "Nessuno dei tuoi preferiti è tra i pennarelli che hai.",
+  "swatchesEmptyFavoritesNotMineAction": "Mostra tutti i preferiti",
   "swatchesLoading": "Caricamento colori…",
   "swatchesLoadFailedTitle": "Colori non disponibili",
   "swatchesLoadFailedBody": "Non è stato possibile leggere il catalogo dei pennarelli, quindi non si possono mostrare i colori.",
@@ -597,7 +607,7 @@
   "ideasTriadStep3": "Usa il secondo colore su circa un quarto del disegno e non farlo mai toccare il primo quando è bagnato.",
   "ideasTriadStep4": "Usa il terzo colore solo in qualche piccolo punto.",
   "ideasTriadStep5": "Ombreggia tutti e tre i colori con lo stesso grigio, così stanno bene insieme.",
-  "ideasSplitComplementTitle": "Complementare diviso",
+  "ideasSplitComplementTitle": "Complementare divisa",
   "ideasSplitComplementSummary": "Una famiglia di colori e i due colori ai lati del suo opposto.",
   "ideasSplitComplementPractice": "Bilanciare una famiglia principale con due colori vicini al suo opposto.",
   "ideasSplitComplementSubject": "Un vaso con due fiori o una tazza con due oggetti piccoli accanto.",
@@ -1331,6 +1341,7 @@
   "settingsAiUseTyped": "Usa «{id}»",
   "settingsAiFallbacksHint": "Provati in ordine quando il modello qui sopra fallisce (fino a {max}).",
   "settingsAiOnDeviceUnavailable": "L’IA sul dispositivo al momento non è disponibile su questo telefono. Si usa la teoria del colore finché non lo sarà.",
+  "settingsAiOnDeviceNotEnabledIos": "Per usare l’IA sul dispositivo, attiva Apple Intelligence in Impostazioni → Apple Intelligence e Siri.",
   "paletteSizeChip": "{size} colori",
   "paletteAiLabel": "IA · {name}",
   "paletteAiLabelPartial": "IA + teoria del colore · {name} · {aiCount}/{total}",
@@ -1345,7 +1356,7 @@
   "paletteUnknownCode": "{brand, select, decoTime{{input} non è un codice di pennarello DecoTime. Prova {example}.} copic{{input} non è un codice di pennarello Copic. Prova {example}.} finecolour{{input} non è un codice di pennarello Finecolour. Prova {example}.} touchTwin{{input} non è un codice di pennarello Touch Twin. Prova {example}.} promarker{{input} non è un codice di pennarello Promarker. Prova {example}.} prismacolor{{input} non è un codice di pennarello Prismacolor Premier. Prova {example}.} spectrumNoir{{input} non è un codice di pennarello Spectrum Noir. Prova {example}.} promarkerBrush{{input} non è un codice di pennarello Promarker Brush. Prova {example}.} arrtx{{input} non è un codice di pennarello Arrtx. Prova {example}.} kurecolor{{input} non è un codice di pennarello ZIG Kurecolor. Prova {example}.} graphit{{input} non è un codice di pennarello Graph'it. Prova {example}.} marvyLePlume{{input} non è un codice di pennarello Marvy Le Plume. Prova {example}.} blickBrush{{input} non è un codice di pennarello Blick Studio Brush. Prova {example}.} artistsLoft{{input} non è un codice di pennarello Artist's Loft. Prova {example}.} other{{input} non è un codice di pennarello Ink Lab. Prova {example}.}}",
   "paletteNotAvailable": "{brand, select, decoTime{{input} non è nella tua collezione. Prova {example} o aggiungilo in La mia collezione.} copic{{input} non è nella tua collezione. Prova {example} o aggiungilo in La mia collezione.} finecolour{{input} non è nella tua collezione. Prova {example} o aggiungilo in La mia collezione.} other{{input} non è nella tua collezione. Prova {example} o aggiungilo in La mia collezione.}}",
   "paletteNoAvailableColors": "{brand, select, decoTime{Non hai ancora pennarelli DecoTime nella tua collezione. Aggiungili in La mia collezione.} copic{Non hai ancora pennarelli Copic nella tua collezione. Aggiungili in La mia collezione.} finecolour{Non hai ancora pennarelli Finecolour nella tua collezione. Aggiungili in La mia collezione.} touchTwin{Non hai ancora pennarelli Touch Twin nella tua collezione. Aggiungili in La mia collezione.} promarker{Non hai ancora pennarelli Promarker nella tua collezione. Aggiungili in La mia collezione.} prismacolor{Non hai ancora pennarelli Prismacolor Premier nella tua collezione. Aggiungili in La mia collezione.} spectrumNoir{Non hai ancora pennarelli Spectrum Noir nella tua collezione. Aggiungili in La mia collezione.} promarkerBrush{Non hai ancora pennarelli Promarker Brush nella tua collezione. Aggiungili in La mia collezione.} arrtx{Non hai ancora pennarelli Arrtx nella tua collezione. Aggiungili in La mia collezione.} kurecolor{Non hai ancora pennarelli ZIG Kurecolor nella tua collezione. Aggiungili in La mia collezione.} graphit{Non hai ancora pennarelli Graph'it nella tua collezione. Aggiungili in La mia collezione.} marvyLePlume{Non hai ancora pennarelli Marvy Le Plume nella tua collezione. Aggiungili in La mia collezione.} blickBrush{Non hai ancora pennarelli Blick Studio Brush nella tua collezione. Aggiungili in La mia collezione.} artistsLoft{Non hai ancora pennarelli Artist's Loft nella tua collezione. Aggiungili in La mia collezione.} other{Non hai ancora pennarelli nella tua collezione. Aggiungili in La mia collezione.}}",
-  "paletteMissingBase": "Scegli un pennarello base, come {example}, oppure una scena con il chip Scene.",
+  "paletteMissingBase": "Scegli un pennarello base, come {example}, oppure scegli Scene come tipo di palette.",
   "swatchesFiltersCount": "Filtri · {count}",
   "swatchesCodeCopied": "{code} copiato. Incollalo come colore base nella scheda Palette.",
   "swatchesAlternativeSemantics": "{code}, {name}, delta E {value}",
@@ -1674,6 +1685,15 @@
   "collectionWholeRange": "Tutta la gamma",
   "collectionSearchHint": "Cerca codice o nome",
   "collectionTickVisible": "Spunta tutti",
+  "collectionTickManyTitle": "Spuntare {count} pennarelli?",
+  "@collectionTickManyTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionTickManyBody": "Contano tutti come pennarelli che hai. Puoi toglierli di nuovo con «Togli tutti».",
   "collectionUntickVisible": "Togli tutti",
   "collectionInYourSets": "Nel tuo set",
   "collectionNoResults": "Nessun pennarello corrisponde alla ricerca.",
@@ -1795,6 +1815,17 @@
   "collectionResetTitle": "Azzerare la tua collezione {brand}?",
   "collectionResetBody": "I tuoi set e i pennarelli extra di questa marca vengono rimossi. Preferiti e palette restano.",
   "collectionOwnedCount": "{owned} di {total}",
+  "collectionLooseTicked": "{loose} singoli spuntati · {sets} nei tuoi set",
+  "@collectionLooseTicked": {
+    "placeholders": {
+      "loose": {
+        "type": "int"
+      },
+      "sets": {
+        "type": "int"
+      }
+    }
+  },
   "onboardingWelcomeTitle": "Benvenuto in Ink Lab",
   "onboardingWelcomeBody": "Sfoglia i tuoi pennarelli, abbina i colori dalle foto e crea palette. Prima, dicci quali pennarelli hai.",
   "onboardingOhuhuLine": "Set per serie: Oahu, Honolulu, Kaala",
@@ -1809,6 +1840,9 @@
   "onboardingNext": "Avanti",
   "onboardingBack": "Indietro",
   "onboardingFinish": "Inizia",
+  "onboardingStepFirst": "Passo 1",
+  "onboardingMarkersTicked": "{count, plural, =1{1 spuntato} other{{count} spuntati}}",
+  "onboardingMarkersNoneTicked": "Nessuno spuntato · {range}",
   "onboardingStep": "Passo {step} di {total}",
   "collectionSeriesOahuTips": "Punte fini e scalpello",
   "collectionSeriesHonoluluTips": "Pennello e scalpello",
@@ -1820,6 +1854,7 @@
   "collectionExtrasCount": "{count, plural, =0{Nessun pennarello singolo} =1{1 pennarello singolo} other{{count} pennarelli singoli}}",
   "wishlistTitle": "Lista dei desideri",
   "wishlistCount": "{count, plural, =0{Ancora niente nella lista dei desideri} =1{1 pennarello da comprare} other{{count} pennarelli da comprare}}",
+  "wishlistSubtitle": "Aggiungili dal dettaglio di un colore",
   "wishlistEmpty": "Aggiungi i pennarelli che vuoi comprare dal dettaglio di qualsiasi pennarello.",
   "wishlistAdd": "Aggiungi ai desideri",
   "wishlistRemove": "Togli dai desideri",
@@ -1921,13 +1956,13 @@
   "diaryDeleteConfirm": "Elimina",
   "diaryAddedNotice": "Aggiunto al diario",
   "diaryStatsArtworks": "{count, plural, =1{1 opera} other{{count} opere}}",
-  "diaryStatsFinished": "{count} finite",
+  "diaryStatsFinished": "{count, plural, =1{1 finita} other{{count} finite}}",
   "diaryStatsInProgress": "{count} in corso",
   "diaryStatsOpen": "Vedi i numeri",
   "diaryStatsTitle": "Numeri del diario",
   "diaryStatsStatusTitle": "Finite e in corso",
   "diaryStatsMonthsTitle": "Voci per mese",
-  "diaryStatsMonthsLatest": "Gli ultimi {count} mesi.",
+  "diaryStatsMonthsLatest": "{count, plural, =1{L’ultimo mese.} other{Gli ultimi {count} mesi.}}",
   "diaryStatsMarkersTitle": "Pennarelli che usi di più",
   "diaryStatsMarkersEmpty": "Nessuna voce ha ancora pennarelli.",
   "diaryStatsEntries": "{count, plural, =1{1 voce} other{{count} voci}}",

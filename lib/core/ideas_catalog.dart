@@ -706,7 +706,7 @@ const List<IdeaPreset> _ideaPresets = <IdeaPreset>[
   ),
   IdeaPreset(
     id: 'split_complement',
-    title: 'Split complement',
+    title: 'Split Complementary',
     summary: 'One colour family and the two colours on either side of its opposite.',
     category: IdeaCategory.colorChallenge,
     difficulty: IdeaDifficulty.medium,

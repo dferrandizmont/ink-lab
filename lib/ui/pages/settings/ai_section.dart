@@ -282,6 +282,16 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
                   : context.l10n.settingsAiExplainOnDevice),
             AiProvider.openRouter => context.l10n.settingsAiExplainOpenRouter,
           }, textKey: const ValueKey<String>('ai-provider-explanation')),
+          // Apple Intelligence is switched off: the option stays hidden, but the
+          // user is told where to turn it on. With on-device already selected
+          // the status block below says it.
+          if (_ios &&
+              !onDevice &&
+              _controller.onDeviceStatus == OnDeviceStatus.notEnabled)
+            SettingsCaption(
+              context.l10n.settingsAiOnDeviceNotEnabledIos,
+              textKey: const ValueKey<String>('ai-on-device-not-enabled'),
+            ),
           if (onDevice) _buildOnDevice(),
           if (openRouter) ...<Widget>[
             _buildApiKey(),
@@ -327,6 +337,10 @@ class _AiSettingsSectionState extends State<AiSettingsSection>
                 context.l10n.settingsAiOnDeviceDownloading,
               OnDeviceStatus.unavailable =>
                 context.l10n.settingsAiOnDeviceUnavailable,
+              OnDeviceStatus.notEnabled =>
+                (_ios
+                    ? context.l10n.settingsAiOnDeviceNotEnabledIos
+                    : context.l10n.settingsAiOnDeviceUnavailable),
               OnDeviceStatus.downloadable =>
                 context.l10n.settingsAiOnDeviceDownloadable,
             },

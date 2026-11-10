@@ -72,7 +72,7 @@ void main() {
       expect(choice.hitTestable(), findsOneWidget);
       await tester.tap(choice);
       await tester.pumpAndSettle();
-      expect(find.text(l10n.onboardingStep(1, 3)), findsOneWidget);
+      expect(find.text(l10n.onboardingStepFirst), findsOneWidget);
       await tester.tap(_key('onboarding-next'));
       await tester.pumpAndSettle();
       expect(

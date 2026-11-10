@@ -10,6 +10,29 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.2.2 · 2026-11-10
+
+Fixes from a full review of every screen: clearer texts, saved palettes that open, and nothing that jumps or gets
+cut.
+
+- Saved palettes open in Palette with a tap, from Palette and from Settings, with the same menu in both places.
+  Saving shows «Palette saved» right on the button.
+- On Android, Back from another tab returns to Swatches instead of closing the app.
+- First-run setup: the first step reads «Step 1» without a total, and the markers step for brands sold one by one
+  (Copic, Finecolour, DecoTime…) is one card that opens the list and shows a sample of the range or the markers
+  you ticked. «Tick all» asks before ticking many markers at once.
+- Swatches: «Series» everywhere (it said «Line» in some places), the list view no longer counts as a filter, the
+  empty-state button says what it clears, a proper message when you have no favourites yet, the keyboard stays
+  closed after a colour's details, and far matches are no longer offered as close alternatives.
+- Ideas: titles never break in the middle of a word, and the split complementary idea uses the same name as the
+  palette type. Rows of chips that scroll fade at the edge so you can tell there is more.
+- Diary counts use the right singular and plural, and an empty new entry can't be shared.
+- My collection: clearer wishlist and loose-markers rows, and the loose-markers counter shows what you ticked apart
+  from your sets. The colour map no longer clips its edge dots, and the backup screen explains before it asks.
+- Palette: the help text points to Scenes where it really is, long marker names stay on one line, and the colour
+  vision sheet no longer jumps when you switch modes.
+- iPhone: if Apple Intelligence is switched off, Settings now tells you where to turn it on to use on-device AI.
+
 ## 1.2.1 · 2026-11-09
 
 Small fixes to the Ideas tab and the Swatches grid.

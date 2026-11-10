@@ -104,8 +104,10 @@ class PaletteBaseAndSize extends StatelessWidget {
               ],
             );
           }
+          // Aligned by the top: the two captions and the two controls start
+          // on the same lines whatever the base's name is.
           return Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(child: _buildBaseInput(context)),
               const SizedBox(width: gap),
@@ -272,8 +274,10 @@ class PaletteBaseAndSize extends StatelessWidget {
               ),
               const SizedBox(width: InkSpacing.s10),
               Expanded(
-                // The code on top and, once a marker is resolved, its whole
-                // name on a second line: nothing is cut to fit one row.
+                // The code on top and, once a marker is resolved, its name on
+                // a second line, one line at most (an ellipsis; the whole name
+                // is in the tooltip and read by screen readers), so the card
+                // is the height of the size control beside it with any name.
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -314,7 +318,7 @@ class PaletteBaseAndSize extends StatelessWidget {
                         child: Text(
                           base.newName,
                           key: const ValueKey<String>('palette-base-name'),
-                          maxLines: 2,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTypography.caption.copyWith(color: ink.fg2),
                         ),

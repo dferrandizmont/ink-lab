@@ -13,6 +13,7 @@ import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/ui/icons/ink_icons.dart';
 import 'package:ink_lab/ui/pages/swatches/swatch_detail_sheet.dart';
 import 'package:ink_lab/ui/pages/swatches/swatches_page.dart';
+import 'package:ink_lab/ui/shell/app_shortcuts.dart' show swatchesSearchFocus;
 import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
 import 'package:ink_lab/ui/widgets/color_swatch_tile.dart';
@@ -466,18 +467,242 @@ void main() {
     expect(find.text(l10n.swatchesEmptySearchTitle), findsOneWidget);
   });
 
-  testWidgets('clear filters in the empty state restores the grid', (
+  testWidgets('clear search in the empty state restores the grid', (
     WidgetTester tester,
   ) async {
     await pumpSwatches(tester);
 
     await tester.enterText(find.byType(TextField), 'zzzz');
     await tester.pumpAndSettle();
-    await tester.tap(find.text(l10n.swatchesClearFilters));
+    // Only a search is on: the button says so, and clears the search.
+    expect(find.text(l10n.swatchesClearFilters), findsNothing);
+    await tester.tap(find.text(l10n.swatchesClearSearch));
     await tester.pumpAndSettle();
 
     expect(find.text(l10n.swatchesEmptySearchTitle), findsNothing);
     expect(find.byType(ColorSwatchTile), findsWidgets);
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller!.text,
+      isEmpty,
+    );
+  });
+
+  testWidgets('the empty state clears what its button says: search and '
+      'filters', (WidgetTester tester) async {
+    final AppScope scope = await pumpSwatches(tester);
+    await scope.settings.setFavorites(<String>{'ohuhu_oahu:B08'});
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.swatchesFavoritesOnly));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'zzzz');
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.swatchesClearSearchAndFilters), findsOneWidget);
+    await tester.tap(find.text(l10n.swatchesClearSearchAndFilters));
+    await tester.pumpAndSettle();
+
+    // Both are gone: the search text and the favourites switch.
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller!.text,
+      isEmpty,
+    );
+    expect(find.text('B010'), findsOneWidget);
+    final InkChip favourites = tester.widget<InkChip>(
+      find.widgetWithText(InkChip, l10n.swatchesFavoritesOnly),
+    );
+    expect(favourites.selected, isFalse);
+  });
+
+  testWidgets('filters alone, no search: the button reads "clear filters" and '
+      'clears them', (WidgetTester tester) async {
+    final AppScope scope = await pumpSwatches(tester);
+    // B010 is not sold in Honolulu.
+    await scope.settings.setFavorites(<String>{'ohuhu_oahu:B010'});
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.swatchesFavoritesOnly));
+    await tester.pumpAndSettle();
+    await openFilters(tester);
+    await tester.tap(find.widgetWithText(InkChip, 'Honolulu'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip(l10n.commonClose));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ColorSwatchTile), findsNothing);
+    expect(find.text(l10n.swatchesClearSearch), findsNothing);
+    await tester.tap(find.text(l10n.swatchesClearFilters));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ColorSwatchTile), findsWidgets);
+    // The series filter went too.
+    expect(find.text(l10n.swatchesFilters), findsOneWidget);
+  });
+
+  testWidgets('the list layout does not count as a filter', (
+    WidgetTester tester,
+  ) async {
+    await pumpSwatches(tester);
+    expect(find.text(l10n.swatchesFilters), findsOneWidget);
+
+    await openFilters(tester);
+    await tester.tap(find.text(l10n.swatchesLayoutList));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip(l10n.commonClose));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SwatchListTile), findsWidgets);
+    expect(find.text(l10n.swatchesFilters), findsOneWidget);
+    expect(find.text(l10n.swatchesFiltersCount(1)), findsNothing);
+    final InkChip chip = tester.widget<InkChip>(
+      find.byKey(const ValueKey<String>('swatches-filters')),
+    );
+    expect(chip.selected, isFalse);
+  });
+
+  for (final Locale locale in testSupportedLocales) {
+    testWidgets('the Filters chip with a count is never cut at 320 dp '
+        '(${locale.languageCode})', (WidgetTester tester) async {
+      final AppLocalizations t = lookupAppLocalizations(locale);
+      await pumpSwatches(tester, size: const Size(320, 700), locale: locale);
+
+      final Finder chip = find.byKey(const ValueKey<String>('swatches-filters'));
+      await tester.tap(chip);
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(InkChip, 'Honolulu').first);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip(t.commonClose));
+      await tester.pumpAndSettle();
+
+      expect(find.text(t.swatchesFiltersCount(1)), findsOneWidget);
+      final Rect rect = tester.getRect(chip);
+      expect(rect.left, greaterThanOrEqualTo(0));
+      expect(rect.right, lessThanOrEqualTo(320));
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('Favourites with no favourites says so, not "sets and filters"', (
+    WidgetTester tester,
+  ) async {
+    await pumpSwatches(tester);
+    await tester.tap(find.text(l10n.swatchesFavoritesOnly));
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.swatchesEmptyNoFavoritesTitle), findsOneWidget);
+    expect(find.text(l10n.swatchesEmptyNoFavoritesBody), findsOneWidget);
+    expect(find.text(l10n.swatchesEmptyFiltersBody), findsNothing);
+    expect(find.text(l10n.swatchesEmptyFiltersTitle), findsNothing);
+
+    await tester.tap(find.text(l10n.swatchesEmptyNoFavoritesAction));
+    await tester.pumpAndSettle();
+    expect(find.byType(ColorSwatchTile), findsWidgets);
+  });
+
+  testWidgets('"Mine" and Favourites together: favourites that are not owned '
+      'get their own text', (WidgetTester tester) async {
+    final AppScope scope = await pumpSwatches(tester);
+    await scope.settings.setCollection(
+      AppSettings(extraMarkerIds: <String>{'B010'}),
+    );
+    await scope.settings.setFavorites(<String>{'ohuhu_oahu:B08'});
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.swatchesOwnedOnly));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.swatchesFavoritesOnly));
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.swatchesEmptyFavoritesNotMineTitle), findsOneWidget);
+    expect(find.text(l10n.swatchesEmptyNoFavoritesTitle), findsNothing);
+    await tester.tap(find.text(l10n.swatchesEmptyFavoritesNotMineAction));
+    await tester.pumpAndSettle();
+    expect(find.text('B08'), findsOneWidget);
+  });
+
+  testWidgets('opening a detail after a search drops the focus of the field, '
+      'so the keyboard does not come back', (WidgetTester tester) async {
+    await pumpSwatches(tester);
+    await tester.tap(find.byType(TextField));
+    await tester.enterText(find.byType(TextField), 'B08');
+    await tester.pumpAndSettle();
+    expect(swatchesSearchFocus.hasFocus, isTrue);
+
+    await tester.tap(find.byType(ColorSwatchTile).first);
+    await tester.pumpAndSettle();
+    expect(find.byType(SwatchDetailSheet), findsOneWidget);
+
+    Navigator.of(tester.element(find.byType(SwatchDetailSheet))).pop();
+    await tester.pumpAndSettle();
+    expect(find.byType(SwatchDetailSheet), findsNothing);
+    expect(swatchesSearchFocus.hasFocus, isFalse);
+    expect(tester.testTextInput.isVisible, isFalse);
+  });
+
+  test('the series filter, the details and the collection use one word', () {
+    for (final AppLocalizations t in <AppLocalizations>[
+      l10n,
+      l10nEs,
+      l10nDe,
+      l10nFr,
+      l10nPt,
+      l10nIt,
+    ]) {
+      final String lang = t.localeName;
+      final String series = t.swatchesLabelLine.toLowerCase();
+      final String stem = series.substring(0, 4);
+      // "Series you own" and "Which series do you have?" name the same thing
+      // as the filter heading, its "all" chip, the details line and Settings.
+      expect(t.collectionSeriesTitle.toLowerCase(), contains(series), reason: lang);
+      expect(t.onboardingSeriesTitle.toLowerCase(), contains(stem), reason: lang);
+      expect(t.swatchesAllLines.toLowerCase(), contains(stem), reason: lang);
+      expect(t.swatchesLines.toLowerCase(), contains(stem), reason: lang);
+      expect(t.settingsLinesTitle.toLowerCase(), contains(stem), reason: lang);
+    }
+    expect(l10n.swatchesLabelLine, 'Series');
+    expect(l10n.swatchesAllLines, 'All series');
+    expect(l10nEs.swatchesLabelLine, 'Serie');
+  });
+
+  testWidgets('a colour with nothing close says "No close alternatives" in '
+      'the room of the section', (WidgetTester tester) async {
+    await pumpSwatches(tester);
+    // The darkest marker: the nearest one is far away.
+    await tester.tap(find.text('120').first);
+    await tester.pumpAndSettle();
+
+    final Finder none = find.byKey(
+      const ValueKey<String>('swatch-alternatives-none'),
+    );
+    await scrollSheetTo(tester, none);
+    expect(none, findsOneWidget);
+    expect(find.text(l10n.swatchesNoCloseAlternatives), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey<String>('swatch-alternatives')),
+      findsNothing,
+    );
+    // As high as the closed header of the section (a 44 dp row or more).
+    expect(tester.getSize(none).height, greaterThanOrEqualTo(44));
+  });
+
+  test('closestAlternatives never offers a colour farther than the cut-off',
+      () async {
+    final MarkerRepository repo = diskMarkers();
+    final List<MarkerColor> all = await repo.loadColors(MarkerBrand.ohuhuOahu);
+    final MarkerColor black = all.firstWhere(
+      (MarkerColor c) => c.hex.toLowerCase() == '000000',
+    );
+    final List<SwatchAlternative> found = closestAlternatives(black, all);
+    for (final SwatchAlternative a in found) {
+      expect(a.deltaE, lessThanOrEqualTo(20));
+    }
+    // With the cut-off lifted the nearest one is far, which is why it was
+    // wrongly offered before.
+    final List<SwatchAlternative> any = closestAlternatives(
+      black,
+      all,
+      maxDeltaE: double.infinity,
+    );
+    expect(any, isNotEmpty);
+    expect(any.first.deltaE, greaterThan(20));
+    expect(found, isEmpty);
   });
 
   testWidgets('the filters sheet holds view filters only', (

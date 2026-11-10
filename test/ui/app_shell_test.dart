@@ -3,7 +3,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
-import 'package:flutter/services.dart' show LogicalKeyboardKey;
+import 'package:flutter/services.dart'
+    show LogicalKeyboardKey, MethodCall, SystemChannels;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app.dart';
 import 'package:ink_lab/app_scope.dart';
@@ -113,6 +114,123 @@ void main() {
     await tester.tap(navItem('Swatches'));
     await tester.pumpAndSettle();
     expect(find.byKey(SwatchesPage.pageKey), findsOneWidget);
+  });
+
+  group('system Back', () {
+    late List<MethodCall> platformCalls;
+
+    void trackPlatformCalls(WidgetTester tester) {
+      platformCalls = <MethodCall>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (MethodCall call) async {
+          platformCalls.add(call);
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+    }
+
+    bool exited() =>
+        platformCalls.any((MethodCall c) => c.method == 'SystemNavigator.pop');
+
+    Future<void> back(WidgetTester tester) async {
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('from another tab goes to Swatches and keeps the app open', (
+      WidgetTester tester,
+    ) async {
+      await pumpShell(tester);
+      trackPlatformCalls(tester);
+
+      for (final String label in <String>[
+        'Ideas',
+        'Settings',
+        'Palette',
+        'Match',
+      ]) {
+        await tester.tap(navItem(label));
+        await tester.pumpAndSettle();
+        expect(find.byKey(SwatchesPage.pageKey), findsNothing);
+
+        await back(tester);
+        expect(find.byKey(SwatchesPage.pageKey), findsOneWidget, reason: label);
+        expect(exited(), isFalse, reason: label);
+      }
+    });
+
+    testWidgets('from Swatches leaves the app', (WidgetTester tester) async {
+      await pumpShell(tester);
+      trackPlatformCalls(tester);
+
+      await back(tester);
+      expect(exited(), isTrue);
+    });
+
+    testWidgets('goes to Swatches first, then leaves', (
+      WidgetTester tester,
+    ) async {
+      await pumpShell(tester);
+      trackPlatformCalls(tester);
+      await tester.tap(navItem('Ideas'));
+      await tester.pumpAndSettle();
+
+      await back(tester);
+      expect(exited(), isFalse);
+      await back(tester);
+      expect(exited(), isTrue);
+    });
+
+    testWidgets('closes a page pushed over a tab first, and stays on the tab', (
+      WidgetTester tester,
+    ) async {
+      await pumpShell(tester);
+      trackPlatformCalls(tester);
+      await tester.tap(navItem('Settings'));
+      await tester.pumpAndSettle();
+      Navigator.of(tester.element(find.byType(AppShell))).push(
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) =>
+              const Scaffold(body: Text('pushed page')),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('pushed page'), findsOneWidget);
+
+      await back(tester);
+      expect(find.text('pushed page'), findsNothing);
+      expect(find.byKey(SettingsPage.pageKey), findsOneWidget);
+      expect(exited(), isFalse);
+
+      await back(tester);
+      expect(find.byKey(SwatchesPage.pageKey), findsOneWidget);
+      expect(exited(), isFalse);
+    });
+
+    testWidgets('works the same with the side rail of a tablet', (
+      WidgetTester tester,
+    ) async {
+      await pumpShell(tester, size: const Size(1024, 768));
+      expect(find.byType(NavigationRail), findsOneWidget);
+      trackPlatformCalls(tester);
+
+      await tester.tap(find.text('Ideas'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(IdeasPage.pageKey), findsOneWidget);
+
+      await back(tester);
+      expect(find.byKey(SwatchesPage.pageKey), findsOneWidget);
+      expect(exited(), isFalse);
+      await back(tester);
+      expect(exited(), isTrue);
+    });
   });
 
   testWidgets('every page title starts below the system status bar', (
