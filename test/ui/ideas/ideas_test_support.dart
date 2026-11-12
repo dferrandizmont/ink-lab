@@ -47,6 +47,7 @@ Future<AppScope> pumpIdeas(
   VoidCallback? onOpenPalette,
   Size size = const Size(800, 4000),
   Locale locale = const Locale('en'),
+  Future<void> Function(AppScope scope)? setup,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -63,6 +64,7 @@ Future<AppScope> pumpIdeas(
   if (ownedMarkerCodes != null) {
     await scope.settings.setOwnedMarkerCodes(ownedMarkerCodes);
   }
+  if (setup != null) await setup(scope);
 
   await tester.pumpWidget(scope);
   await tester.pumpAndSettle();

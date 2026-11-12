@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -675,53 +676,139 @@ class _SwatchesPageState extends State<SwatchesPage> {
     List<MarkerColor> colors,
   ) {
     final int active = _activeFilterCount(state);
-    // The Filters chip stays outside the scrolling chips: it carries a count
-    // and must never be cut by the edge of the screen, in any language.
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: InkChipRow(
-            fadeEnds: true,
-            padding: const EdgeInsetsDirectional.only(
-              start: InkSpacing.gutter,
-              end: InkSpacing.chipGap,
-            ),
-            children: <Widget>[
-              InkChip(
-                label: context.l10n.swatchesAllFilter,
-                selected: !_favoritesOnly && !_ownedOnly,
-                onSelected: (_) => setState(() {
-                  _favoritesOnly = false;
-                  _ownedOnly = false;
-                }),
-              ),
-              InkChip(
-                key: const ValueKey<String>('swatches-mine'),
-                label: context.l10n.swatchesOwnedOnly,
-                selected: _ownedOnly,
-                onSelected: (bool on) => setState(() => _ownedOnly = on),
-              ),
-              InkChip(
-                label: context.l10n.swatchesFavoritesOnly,
-                selected: _favoritesOnly,
-                onSelected: (bool on) => setState(() => _favoritesOnly = on),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsetsDirectional.only(end: InkSpacing.gutter),
-          child: InkChip(
-            key: const ValueKey<String>('swatches-filters'),
-            label: active > 0
-                ? context.l10n.swatchesFiltersCount(active)
-                : context.l10n.swatchesFilters,
+    final AppLocalizations l10n = context.l10n;
+    final String allLabel = l10n.swatchesAllFilter;
+    final String mineLabel = l10n.swatchesOwnedOnly;
+    final String favouritesLabel = l10n.swatchesFavoritesOnly;
+    // The Filters chip carries the count of the filters that narrow the
+    // results; with no filter on, it is the plain word.
+    final String filtersLabel = active > 0
+        ? l10n.swatchesFiltersCount(active)
+        : l10n.swatchesFilters;
+    // The same chip with its icon only and the count on its own: it says how
+    // many filters are on without taking the room of the word.
+    final String compactLabel = active > 0 ? '$active' : '';
+
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        // The width the three chips take when nothing squeezes them: the
+        // gutter of the row, the chips, the gap between them and the trailing
+        // padding of the chip row.
+        final double chipsWidth =
+            InkSpacing.gutter +
+            InkChip.naturalWidth(context, allLabel) +
+            InkSpacing.chipGap +
+            InkChip.naturalWidth(context, mineLabel) +
+            InkSpacing.chipGap +
+            InkChip.naturalWidth(context, favouritesLabel) +
+            InkSpacing.chipGap;
+        // Decide the icon-only state with the widest variant of the Filters
+        // label, including the count badge, so that toggling a filter never
+        // switches the chip between word and icon-only (no layout jump).
+        final double filtersWidth = math.max(
+          InkChip.naturalWidth(
+            context,
+            l10n.swatchesFilters,
             icon: InkIcons.filterLines,
-            selected: active > 0,
-            onSelected: (_) => _openFilters(context, scope, colors),
           ),
-        ),
-      ],
+          math.max(
+            InkChip.naturalWidth(
+              context,
+              l10n.swatchesFiltersCount(1),
+              icon: InkIcons.filterLines,
+            ),
+            InkChip.naturalWidth(
+              context,
+              l10n.swatchesFiltersCount(2),
+              icon: InkIcons.filterLines,
+            ),
+          ),
+        );
+        // The widest count digit the compact chip can show, so its width
+        // stays stable when a filter is toggled.
+        final double compactWidth = math.max(
+          InkChip.naturalWidth(context, '1', icon: InkIcons.filterLines),
+          InkChip.naturalWidth(context, '2', icon: InkIcons.filterLines),
+        );
+        // The chips are whole when they fit in the room the pinned chip
+        // leaves them (the pinned chip keeps its own gutter at the end).
+        final double available = constraints.maxWidth;
+        final bool fits =
+            chipsWidth + filtersWidth + InkSpacing.gutter <= available;
+        final bool fitsCompact =
+            chipsWidth + compactWidth + InkSpacing.gutter <= available;
+        // The pinned chip shrinks to its icon when the row would overflow, and
+        // the row wraps when even that is not enough: a chip is never cut by
+        // the edge, nor hidden behind the pinned one.
+        final bool compact = !fits;
+        final bool wrap = compact && !fitsCompact;
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: InkChipRow(
+                fadeEnds: !wrap,
+                wrap: wrap,
+                padding: const EdgeInsetsDirectional.only(
+                  start: InkSpacing.gutter,
+                  end: InkSpacing.chipGap,
+                ),
+                children: <Widget>[
+                  InkChip(
+                    label: allLabel,
+                    selected: !_favoritesOnly && !_ownedOnly,
+                    onSelected: (_) => setState(() {
+                      _favoritesOnly = false;
+                      _ownedOnly = false;
+                    }),
+                  ),
+                  InkChip(
+                    key: const ValueKey<String>('swatches-mine'),
+                    label: mineLabel,
+                    selected: _ownedOnly,
+                    onSelected: (bool on) => setState(() => _ownedOnly = on),
+                  ),
+                  InkChip(
+                    label: favouritesLabel,
+                    selected: _favoritesOnly,
+                    onSelected: (bool on) =>
+                        setState(() => _favoritesOnly = on),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: InkSpacing.gutter),
+              child: compact
+                  ? Tooltip(
+                      message: filtersLabel,
+                      // The chip says it in its own semantics label.
+                      excludeFromSemantics: true,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minWidth: compactWidth),
+                        child: InkChip(
+                          key: const ValueKey<String>('swatches-filters'),
+                          label: compactLabel,
+                          semanticLabel: filtersLabel,
+                          icon: InkIcons.filterLines,
+                          selected: active > 0,
+                          onSelected: (_) =>
+                              _openFilters(context, scope, colors),
+                        ),
+                      ),
+                    )
+                  : InkChip(
+                      key: const ValueKey<String>('swatches-filters'),
+                      label: filtersLabel,
+                      icon: InkIcons.filterLines,
+                      selected: active > 0,
+                      onSelected: (_) => _openFilters(context, scope, colors),
+                    ),
+            ),
+          ],
+        );
+      },
     );
   }
 

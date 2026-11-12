@@ -105,7 +105,7 @@ void main() {
     );
   });
 
-  stabilityTest('ideas: Ideas | Diary with no collection (whole range)', (
+  stabilityTest('ideas: Ideas | Diary with no collection', (
     WidgetTester tester,
     StabilityEnv env,
   ) async {
@@ -114,7 +114,7 @@ void main() {
       env,
       IdeasPage(today: DateTime(2026, 10, 29)),
     );
-    // No sets and no markers: the subtitle becomes the whole-range one.
+    // No sets and no markers: the subtitle says there are none available.
     await scope.settings.setCollection(
       AppSettings(ownedSetIds: const <String>{}),
     );
@@ -123,7 +123,7 @@ void main() {
     await expectStableAcrossSegments(
       tester,
       env: env,
-      where: 'whole range',
+      where: 'no collection',
       anchors: <String, Finder>{
         'header': find.byType(InkPageHeader),
         'control': view,

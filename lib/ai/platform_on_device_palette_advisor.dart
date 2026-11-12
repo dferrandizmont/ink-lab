@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:ink_lab/core/collection_selection.dart';
-import 'package:ink_lab/core/models.dart' show AiProviderPaletteResponse;
+import 'package:ink_lab/core/models.dart'
+    show AiProviderPaletteResponse, MarkerColor;
 import 'package:ink_lab/core/palette_advisor.dart' show PaletteAdvisorRequest;
 
 import 'on_device_ai_platform.dart';
@@ -42,14 +43,34 @@ final class PlatformOnDevicePaletteAdvisor implements OnDevicePaletteAdvisor {
 
   @override
   Future<PaletteAdvice> advise(PaletteAdvisorRequest request) async {
+    // The collection of the request, narrowed to the markers the user owns:
+    // there is no fallback to the whole range, so an empty collection simply
+    // has nothing to offer.
     final candidates = paletteCandidateColors(
       colors: request.availableColors,
       brand: request.brand,
+      scope: request.scope,
+      driedColorIds: request.driedColorIds,
       activeSetIds: request.activeSetIds,
       ownedMarkerCodes: request.ownedMarkerCodes,
     );
     if (candidates.isEmpty) {
       return PaletteAdviceFailure(PaletteFailureReason.noAvailableColors);
+    }
+
+    // The base must be one of the user's own markers, like in the local
+    // engine: a base out of the collection is refused, never sent to the
+    // model and never painted as the user's.
+    final MarkerColor? base = request.baseColor;
+    if (base != null &&
+        !candidates.any((MarkerColor c) => c.colorId == base.colorId)) {
+      // A marker the user owns but that ran dry has its own reason: it is not
+      // out of the collection, it just does not paint.
+      return PaletteAdviceFailure(
+        request.driedColorIds.contains(base.colorId)
+            ? PaletteFailureReason.baseDried
+            : PaletteFailureReason.invalidBaseColor,
+      );
     }
 
     if (!await isAvailable()) {

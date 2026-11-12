@@ -902,6 +902,14 @@ class AppLocalizationsPt extends AppLocalizations {
       'Escolhe um marcador base para criar uma paleta, ou escolhe Cenas como tipo de paleta.';
 
   @override
+  String missingMarkersTitle(String brand) {
+    return 'Ainda não tens marcadores $brand';
+  }
+
+  @override
+  String get missingMarkersAction => 'Ir para A minha coleção';
+
+  @override
   String get paletteCustomModeHint =>
       'O modo de paleta personalizada é manual: carrega uma paleta guardada ou aplica uma das Ideias.';
 
@@ -1135,10 +1143,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get ideasHeaderSubtitle => 'Exercícios com os teus marcadores';
 
   @override
-  String get ideasHeaderSubtitleWholeRange =>
-      'Exercícios com a paleta tirada de toda a gama';
-
-  @override
   String get ideasSearchHint => 'Procurar ideias';
 
   @override
@@ -1155,10 +1159,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'Este exercício usa toda a tua coleção, por isso não tem uma paleta fixa.';
 
   @override
-  String get ideasNoMarkersOther =>
-      'Junta em A minha coleção os marcadores que tens para veres uma paleta para esta ideia.';
-
-  @override
   String get ideasCategoriesLabel => 'Categorias';
 
   @override
@@ -1172,6 +1172,14 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get ideasNoMarkers => 'Neste momento não há marcadores disponíveis';
+
+  @override
+  String get missingMarkersHint =>
+      'Assinala os teus marcadores em A minha coleção para veres quais usar';
+
+  @override
+  String get allMarkersDried =>
+      'Todos os teus marcadores estão secos. Marca-os de novo como utilizáveis para os usar.';
 
   @override
   String get ideasTulipFieldTitle => 'Campo de tulipas';
@@ -5881,6 +5889,11 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String paletteBaseDried(String code) {
+    return '$code está seco. Marca-o como utilizável em Detalhes ou escolhe outro.';
+  }
+
+  @override
   String swatchesFiltersCount(int count) {
     return 'Filtros · $count';
   }
@@ -6018,6 +6031,14 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get errNoAvailableColors =>
       'Não há marcadores disponíveis entre os quais escolher.';
+
+  @override
+  String get errInvalidBaseColor =>
+      'O marcador de base não está na tua coleção.';
+
+  @override
+  String get errBaseDried =>
+      'O marcador de base está seco. Marca-o como utilizável ou escolhe outro.';
 
   @override
   String get errNoSuggestions => 'Não foi possível gerar nenhuma sugestão.';
@@ -6966,6 +6987,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get collectionDecoMarkersTitle => 'Os teus marcadores';
 
   @override
+  String get collectionIndividualMarkersShort => 'Assinala os que tens';
+
+  @override
   String get collectionDecoHint =>
       'A DecoTime não publica que cores traz cada conjunto: assinala as que tens ou junta uma família inteira.';
 
@@ -6997,6 +7021,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get collectionFamilyGreenGrey => 'Cinzentos esverdeados';
 
   @override
+  String get collectionImportCodesTitle => 'Importar códigos';
+
+  @override
+  String get collectionImportCodesHint => 'Cola uma lista de códigos';
+
+  @override
   String get collectionDecoRange => 'Gama DecoTime';
 
   @override
@@ -7015,10 +7045,49 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get collectionTickManyBody =>
-      'Todos contam como marcadores que tens. Podes tirá-los outra vez com «Desmarcar».';
+      'Todos contam como marcadores que tens. Podes tirá-los outra vez com «Tirar tudo».';
 
   @override
-  String get collectionUntickVisible => 'Desmarcar';
+  String get collectionUntickVisible => 'Tirar tudo';
+
+  @override
+  String collectionRemoveMarkersTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Remover $count marcadores?',
+      one: 'Remover 1 marcador?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String collectionRemoveFromTitle(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name: remover $count marcadores?',
+      one: '$name: remover 1 marcador?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get collectionRemoveMarkersBody =>
+      'Os marcadores que já tens saem da tua coleção. Podes voltar a juntá-los quando quiseres.';
+
+  @override
+  String get collectionRemoveConfirm => 'Remover';
+
+  @override
+  String get collectionReplaceTitle => 'Substituir a tua coleção?';
+
+  @override
+  String get collectionReplaceBody =>
+      'Quando a configuração acaba, os conjuntos e marcadores que tens agora são substituídos pelos que escolheres aqui.';
+
+  @override
+  String get collectionReplaceConfirm => 'Substituir';
 
   @override
   String get collectionInYourSets => 'No teu conjunto';
@@ -7065,9 +7134,6 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get toolsTransferHint =>
       'Partilha os teus marcadores como lista ou CSV, ou adiciona muitos por código.';
-
-  @override
-  String get toolsMapEmptyTitle => 'Ainda não há marcadores para mapear';
 
   @override
   String get toolsMapIntro =>
@@ -7562,7 +7628,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get collectionSummaryNoSets =>
-      'Ainda não escolheste conjuntos: usa-se toda a gama';
+      'Ainda não escolheste conjuntos: Comparar e Amostras mostram toda a gama; Paleta e Ideias precisam dos marcadores que tens';
 
   @override
   String get collectionSummaryNoMarkers => 'Ainda não assinalaste marcadores';
@@ -7697,7 +7763,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String onboardingDoneWholeRange(String brand) {
-    return 'Até escolheres conjuntos, a app mostra toda a gama $brand.';
+    return 'Até escolheres conjuntos, Comparar e Amostras mostram toda a gama $brand. Paleta e Ideias precisam dos marcadores que tens.';
   }
 
   @override
@@ -7848,11 +7914,6 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String onboardingNoMarkers(String brand) {
     return 'Ainda não assinalaste marcadores $brand: assinala-os em A minha coleção.';
-  }
-
-  @override
-  String ideasNoMarkersBrand(String brand) {
-    return 'Junta os marcadores $brand que tens em A minha coleção para veres uma paleta para esta ideia.';
   }
 
   @override
@@ -8430,4 +8491,47 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get swatchesDetailPaneEmpty =>
       'Toca num marcador para veres aqui os detalhes.';
+
+  @override
+  String get collectionMixBrands => 'Misturar as minhas marcas';
+
+  @override
+  String collectionMoreBrands(String first, String second, int count) {
+    return '$first, $second e mais $count';
+  }
+
+  @override
+  String collectionBrandsCount(int count) {
+    return '$count marcas';
+  }
+
+  @override
+  String get paletteChanged => 'Paleta alterada';
+
+  @override
+  String get paletteReplaceTitle => 'Substituir esta paleta?';
+
+  @override
+  String get paletteReplaceBody =>
+      'A paleta no ecrã será substituída, com as tuas alterações e as tuas cores fixadas. Poderás anular logo a seguir.';
+
+  @override
+  String get paletteReplaceButton => 'Substituir';
+
+  @override
+  String get paletteAmbiguousBase =>
+      'Este código existe em mais de uma das tuas marcas. Escolhe a marca na lista.';
+
+  @override
+  String get paletteChainWholeRangeNoteMixed =>
+      'A mostrar toda a gama das tuas marcas, também marcadores que não tens.';
+
+  @override
+  String paletteBaseOtherBrand(String code, String brand, String example) {
+    return '$code é um marcador da $brand, e a $brand não está em uso neste momento. Experimenta $example ou muda a marca em A minha coleção.';
+  }
+
+  @override
+  String get paletteImportTooFew =>
+      'Adiciona pelo menos dois códigos de marcadores diferentes e reconhecidos para importar uma paleta.';
 }

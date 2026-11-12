@@ -13,6 +13,15 @@ import '../../support/l10n.dart';
 
 Finder _key(String key) => find.byKey(ValueKey<String>(key));
 
+/// The setup asks before it replaces the collection the user already has.
+Future<void> _confirmReplace(WidgetTester tester) async {
+  if (find.byType(AlertDialog).evaluate().isEmpty) return;
+  await tester.tap(
+    find.widgetWithText(FilledButton, l10n.collectionReplaceConfirm),
+  );
+  await tester.pumpAndSettle();
+}
+
 Future<AppScope> _pumpApp(
   WidgetTester tester, {
   AppSettingsState? state,
@@ -78,6 +87,7 @@ void main() {
           expect(find.text('1 marker'), findsOneWidget);
           await tester.tap(_key('onboarding-next'));
           await tester.pumpAndSettle();
+          await _confirmReplace(tester);
           expect(scope.settings.brand, MarkerBrand.finecolour);
           expect(scope.settings.settings.extraMarkerIds, {
             'finecolour:BV321',

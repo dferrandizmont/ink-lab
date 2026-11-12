@@ -5,6 +5,106 @@ import 'package:ink_lab/data/data.dart';
 import 'fixtures.dart';
 
 void main() {
+  test(
+    'legacy palette JSON loads unchanged and mixed IDs survive storage',
+    () async {
+      final legacy = palette(id: 'old', name: 'Old');
+      final old = SavedPalette.fromJson(legacy.toJson()..remove('brandId'));
+      expect(old.brandId, 'ohuhu_oahu');
+      expect(old.colorCodes, legacy.colorCodes);
+      expect(old.colorIds, [
+        for (final c in legacy.colorCodes) 'ohuhu_oahu:$c',
+      ]);
+      final mixed = SavedPalette.fromJson({
+        ...legacy.toJson(),
+        'id': 'mixed',
+        'baseCode': 'ohuhu_oahu:91',
+        'colorCodes': ['ohuhu_oahu:91', 'decotime:91'],
+      });
+      final h = await harness();
+      await h.savedPalettes.save(mixed);
+      final reopened = StoredSavedPaletteRepository(h.store);
+      await reopened.load();
+      final saved = reopened.palettesOf(MarkerBrand.ohuhuOahu).single;
+      expect(saved.colorIds, ['ohuhu_oahu:91', 'decotime:91']);
+      expect(saved.brandOf('decotime:91'), MarkerBrand.decoTime);
+      expect(saved.bareCode('decotime:91'), '91');
+      expect(saved.showsBrandsUnder(saved.brandId), isTrue);
+      expect(saved.mixed, isTrue);
+    },
+  );
+  test(
+    'a palette that mixes brands is listed under each of them, once',
+    () async {
+      final h = await harness();
+      SavedPalette mixed(String id, int at, {String brandId = 'ohuhu_oahu'}) =>
+          SavedPalette.fromJson({
+            ...palette(id: id, name: id, brandId: brandId).toJson(),
+            'baseCode': 'ohuhu_oahu:91',
+            'colorCodes': ['ohuhu_oahu:91', 'decotime:91'],
+            'createdAtEpochMs': at,
+          });
+      SavedPalette plain(String id, int at, {String brandId = 'ohuhu_oahu'}) =>
+          SavedPalette.fromJson({
+            ...palette(id: id, name: id, brandId: brandId).toJson(),
+            'createdAtEpochMs': at,
+          });
+      await h.savedPalettes.save(plain('ohuhu', 1));
+      await h.savedPalettes.save(plain('deco', 2, brandId: 'decotime'));
+      await h.savedPalettes.save(mixed('mix', 3));
+      List<String> listed(MarkerBrand brand) =>
+          h.savedPalettes.listedFor(brand).map((p) => p.id).toList();
+
+      // Stored once, under the brand in use when it was saved...
+      expect(
+        h.savedPalettes.palettesOf(MarkerBrand.decoTime).map((p) => p.id),
+        ['deco'],
+      );
+      // ...and listed under both, newest first, with each brand's own.
+      expect(listed(MarkerBrand.ohuhuOahu), ['mix', 'ohuhu']);
+      expect(listed(MarkerBrand.decoTime), ['mix', 'deco']);
+      expect(listed(MarkerBrand.copic), isEmpty);
+      expect(h.savedPalettes.all.map((p) => p.id).toSet(), {
+        'ohuhu',
+        'deco',
+        'mix',
+      });
+      final shown = h.savedPalettes.listedFor(MarkerBrand.decoTime).first;
+      expect(shown.showsBrandsUnder('decotime'), isTrue);
+      expect(shown.brandOf('decotime:91'), MarkerBrand.decoTime);
+      expect(shown.bareCode('decotime:91'), '91');
+      // A palette of one brand never shows up under another.
+      expect(
+        h.savedPalettes
+            .listedFor(MarkerBrand.ohuhuOahu)
+            .last
+            .showsBrandsUnder('ohuhu_oahu'),
+        isFalse,
+      );
+
+      // The list of a brand follows a save under another brand.
+      final seen = <List<String>>[];
+      final subscription = h.savedPalettes
+          .watchListed(MarkerBrand.decoTime)
+          .listen((list) => seen.add([for (final p in list) p.id]));
+      var changes = 0;
+      final all = h.savedPalettes.changes.listen((_) => changes++);
+      await pumpEventQueue();
+      expect(seen.single, ['mix', 'deco']);
+      await h.savedPalettes.save(mixed('mix2', 4));
+      await pumpEventQueue();
+      expect(seen.last, ['mix2', 'mix', 'deco']);
+      expect(changes, 1);
+      // It is deleted under the brand it is stored with, and leaves both lists.
+      await h.savedPalettes.delete(MarkerBrand.ohuhuOahu, 'mix');
+      await pumpEventQueue();
+      expect(seen.last, ['mix2', 'deco']);
+      expect(listed(MarkerBrand.ohuhuOahu), ['mix2', 'ohuhu']);
+      await subscription.cancel();
+      await all.cancel();
+    },
+  );
+
   test('saves newest first and survives a reopen', () async {
     final h = await harness();
     await h.savedPalettes.save(palette(id: 'a', name: 'A'));

@@ -399,7 +399,7 @@ void main() {
     );
     final List<MarkerColor> classic80 = collection('classic_80');
     final List<MarkerColor> classic160 = collection('classic_160');
-    final List<MarkerColor> decoRange = paletteCandidateColors(
+    final List<MarkerColor> decoRange = brandRangeColors(
       colors: deco,
       brand: MarkerBrand.decoTime,
     );
@@ -458,24 +458,22 @@ void main() {
           ('DecoTime', decoRange),
           (
             'Copic',
-            paletteCandidateColors(
+            brandRangeColors(
               colors: parseColors(
                 File(MarkerBrand.copic.assetPath).readAsStringSync(),
                 brand: MarkerBrand.copic,
               ),
               brand: MarkerBrand.copic,
-              activeSetIds: {'classic_160'},
             ),
           ),
           (
             'Finecolour',
-            paletteCandidateColors(
+            brandRangeColors(
               colors: parseColors(
                 File(MarkerBrand.finecolour.assetPath).readAsStringSync(),
                 brand: MarkerBrand.finecolour,
               ),
               brand: MarkerBrand.finecolour,
-              activeSetIds: {'classic_160'},
             ),
           ),
         ]) {
@@ -623,6 +621,7 @@ void main() {
           baseColor: base,
           availableColors: <MarkerColor>[base],
           mode: PaletteMode.blendingChain,
+          activeSetIds: {'classic_160'},
         ),
       );
       expect(advice, isA<PaletteAdviceFailure>());

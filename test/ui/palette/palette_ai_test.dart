@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -6,10 +7,14 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:ink_lab/ai/ai.dart';
 import 'package:ink_lab/app_scope.dart';
+import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
+import 'package:ink_lab/ui/pages/palette/palette_base_field.dart';
+import 'package:ink_lab/ui/pages/palette/palette_suggestion_row.dart';
 
 import '../../ai/ai_test_support.dart';
 import '../../ai/fake_on_device_platform.dart';
+import '../../support/l10n.dart';
 import 'palette_test_support.dart';
 
 const String _key = 'sk-or-v1-abcdef0123456789abcdef0123456789';
@@ -100,6 +105,134 @@ Future<AppScope> pumpOnDevice(
 }
 
 void main() {
+  testWidgets(
+    'mixed AI request carries brands and undo restores the prior AI state',
+    (tester) async {
+      final prompts = <String>[];
+      final scope = await pumpAi(
+        tester,
+        enabled: true,
+        withKey: true,
+        client: MockClient((request) async {
+          final body = jsonDecode(request.body) as Map<String, dynamic>;
+          final last =
+              (body['messages'] as List<dynamic>).last as Map<String, dynamic>;
+          final prompt = last['content'] as String;
+          prompts.add(prompt);
+          final codes = prompt
+              .split('AVAILABLE_COLORS=')
+              .last
+              .split(',')
+              .take(3)
+              .map((c) => c.split('#').first);
+          return completionResponse(
+            paletteJson([
+              for (final c in codes)
+                {'code': c, 'role': 'Shadow', 'reason': 'Depth'},
+            ]),
+          );
+        }),
+      );
+      await scope.settings.setOwnedMarkerCodes({'decotime:91', 'decotime:92'});
+      await scope.settings.setScope(BrandScope.mixedBrands);
+      await tester.pumpAndSettle();
+      await enterBaseCode(tester, 'Ohuhu B08');
+      final before = [
+        for (final r in tester.widgetList<PaletteSuggestionRow>(
+          find.byType(PaletteSuggestionRow),
+        ))
+          r.suggestion.toJson(),
+      ];
+      await tester.tap(_aiButton);
+      await tester.pumpAndSettle();
+      expect(prompts.single, contains('DECOTIME:'));
+      expect(prompts.single, contains('BASE_CODE=OHUHU_OAHU:B08'));
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(
+        find.byKey(const ValueKey<String>('palette-ai-badge')),
+        findsOneWidget,
+      );
+      await tester.tap(find.text(l10n.paletteUndoButton));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey<String>('palette-ai-badge')),
+        findsNothing,
+      );
+      expect([
+        for (final r in tester.widgetList<PaletteSuggestionRow>(
+          find.byType(PaletteSuggestionRow),
+        ))
+          r.suggestion.toJson(),
+      ], before);
+      await tester.tap(_aiButton);
+      await tester.pumpAndSettle();
+      final badge = tester
+          .widget<Text>(find.byKey(const ValueKey<String>('palette-ai-badge')))
+          .data;
+      await tester.tap(
+        find.byKey(const ValueKey<String>('palette-regenerate')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(l10n.paletteUndoButton));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(const ValueKey<String>('palette-ai-badge')),
+            )
+            .data,
+        badge,
+      );
+    },
+  );
+  testWidgets(
+    'a change of collection drops the AI answer that was on its way',
+    (WidgetTester tester) async {
+      final Completer<http.Response> answer = Completer<http.Response>();
+      final scope = await pumpAi(
+        tester,
+        enabled: true,
+        withKey: true,
+        client: MockClient((_) => answer.future),
+      );
+      await enterBaseCode(tester, 'B08');
+      // A marker the user owns that is not in the palette: a valid answer.
+      final String code = tester
+          .widget<PaletteBaseAndSize>(find.byType(PaletteBaseAndSize))
+          .catalog
+          .map((c) => c.newCode)
+          .firstWhere((c) => c != 'B08' && !rowCodes(tester).contains(c));
+      await tester.tap(_aiButton);
+      await tester.pump();
+      expect(find.text(l10n.paletteSuggestAiLoading), findsOneWidget);
+
+      // The collection changes while the model is thinking.
+      await scope.settings.setOwnedMarkerCodes({'decotime:91'});
+      await tester.pumpAndSettle();
+      expect(find.text(l10n.paletteSuggestAiLoading), findsNothing);
+      final List<String> rebuilt = rowCodes(tester);
+
+      // The answer was asked of the old collection: it is not applied.
+      answer.complete(
+        completionResponse(
+          paletteJson([
+            {'code': code, 'role': 'Shadow', 'reason': 'deep'},
+          ]),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(rowCodes(tester), rebuilt);
+      expect(
+        find.byKey(const ValueKey<String>('palette-ai-badge')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('palette-changed')),
+        findsNothing,
+      );
+    },
+  );
+
   testWidgets('AI off: opening the palette never reaches the on-device model', (
     WidgetTester tester,
   ) async {

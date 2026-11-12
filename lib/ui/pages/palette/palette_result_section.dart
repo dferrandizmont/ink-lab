@@ -11,13 +11,12 @@ extension _PaletteResultSection on _PalettePageState {
     // The base is the first band of the strip; companions follow it.
     final int offset = base == null ? 0 : 1;
     final bool photo = _photoMode;
-    final List<String> stripHexes = <String>[
-      if (base != null) base.hex,
-      for (final suggestion in _suggestions) suggestion.color.hex,
+    final List<MarkerColor> stripMarkers = <MarkerColor>[
+      ?base,
+      for (final suggestion in _suggestions) suggestion.color,
     ];
-    final List<String> stripCodes = <String>[
-      if (base != null) base.newCode,
-      for (final suggestion in _suggestions) suggestion.color.newCode,
+    final List<String> stripHexes = <String>[
+      for (final MarkerColor c in stripMarkers) c.hex,
     ];
     final Set<int> locked = photo
         ? const <int>{}
@@ -36,7 +35,8 @@ extension _PaletteResultSection on _PalettePageState {
       paletteInset(
         PaletteStrip(
           colors: _seenAll(stripHexes),
-          labels: stripCodes,
+          labels: _stripCodes(stripMarkers),
+          brandLabels: _stripBrands(stripMarkers),
           lockedIndices: locked,
         ),
         top: InkSpacing.headingGap,
@@ -48,9 +48,10 @@ extension _PaletteResultSection on _PalettePageState {
               for (var index = 0; index < _suggestions.length; index++)
                 PaletteSuggestionRow(
                   key: ValueKey<String>(
-                    'palette-row-${_suggestions[index].color.newCode}',
+                    'palette-row-${_rowId(_suggestions[index].color)}',
                   ),
                   suggestion: _suggestions[index],
+                  mixed: _mixed,
                   role: _roleFor(_suggestions[index]),
                   locked: _isLocked(_suggestions[index]),
                   last: index == _suggestions.length - 1,
@@ -88,44 +89,57 @@ extension _PaletteResultSection on _PalettePageState {
 
   /// What to tell the user about the chain on screen, or why there is none:
   /// a short chain, a base at the end of its family, the missing marker.
+  ///
+  /// The whole range is offered even when there is no chain yet (the
+  /// collection is empty, or the base is not in it): that is the one way to
+  /// get a chain without owning a single marker of the family.
   List<Widget> _buildChainNotes() {
+    if (!_chainMode) return const <Widget>[];
     final BlendingChainResult? result = _chainResult;
-    if (!_chainMode || result == null) return const <Widget>[];
     final AppLocalizations t = context.l10n;
-    final BlendingChain? chain = result.best == null ? null : _chain;
+    final BlendingChain? chain = (result == null || result.best == null)
+        ? null
+        : _chain;
     final List<String> messages = <String>[];
-    if (chain == null) {
-      messages.add(switch (result.gap) {
-        BlendingGap.lighter => t.paletteChainNeedLighter,
-        BlendingGap.darker => t.paletteChainNeedDarker,
-        _ => t.paletteChainNeedBoth,
-      });
-    } else {
-      if (result.isShort) {
-        messages.add(
-          t.paletteChainShort(chain.colors.length, result.requested),
-        );
-      }
-      if (chain.baseIsLightest && !result.lighterAvailable) {
-        messages.add(t.paletteChainBaseLightest);
-      }
-      if (chain.baseIsDarkest && !result.darkerAvailable) {
-        messages.add(t.paletteChainBaseDarkest);
+    if (result != null) {
+      if (chain == null) {
+        messages.add(switch (result.gap) {
+          BlendingGap.lighter => t.paletteChainNeedLighter,
+          BlendingGap.darker => t.paletteChainNeedDarker,
+          _ => t.paletteChainNeedBoth,
+        });
+      } else {
+        if (result.isShort) {
+          messages.add(
+            t.paletteChainShort(chain.colors.length, result.requested),
+          );
+        }
+        if (chain.baseIsLightest && !result.lighterAvailable) {
+          messages.add(t.paletteChainBaseLightest);
+        }
+        if (chain.baseIsDarkest && !result.darkerAvailable) {
+          messages.add(t.paletteChainBaseDarkest);
+        }
       }
     }
+    // "Search the whole range" is offered when there is no chain yet only for
+    // users with no usable marker; owners must type a base first, and a chain
+    // loaded from a saved palette must not show it (it already has its chain).
+    final bool noResultNoChain = _chainResult == null && _chain == null;
     final bool canWiden =
         !_chainWholeRange &&
-        _catalog.length > _available.length &&
-        (chain == null || result.isShort);
+        _range.length > _available.length &&
+        (_chainResult != null
+            ? (chain == null || result?.isShort == true)
+            : (noResultNoChain && !_hasMarkers));
     return <Widget>[
       if (_chainWholeRange)
         paletteInset(
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              PaletteInfoCard(
-                message: t.paletteChainWholeRangeNote(_brand.label),
-              ),
+              // The range the chain came from, not the one in use now.
+              PaletteInfoCard(message: _chainRangeNote(t)),
               Align(
                 alignment: AlignmentDirectional.centerStart,
                 child: InkButton.text(
@@ -174,9 +188,6 @@ extension _PaletteResultSection on _PalettePageState {
     final List<String> chainHexes = <String>[
       for (final MarkerColor c in chain.colors) c.hex,
     ];
-    final List<String> chainCodes = <String>[
-      for (final MarkerColor c in chain.colors) c.newCode,
-    ];
     return <Widget>[
       paletteInset(
         _resultHeader(title: t.paletteChainResultTitle(count)),
@@ -185,7 +196,8 @@ extension _PaletteResultSection on _PalettePageState {
       paletteInset(
         PaletteStrip(
           colors: _seenAll(chainHexes),
-          labels: chainCodes,
+          labels: _stripCodes(chain.colors),
+          brandLabels: _stripBrands(chain.colors),
           lockedIndices: <int>{chain.baseIndex},
         ),
         top: InkSpacing.headingGap,
@@ -197,8 +209,9 @@ extension _PaletteResultSection on _PalettePageState {
               for (int i = 0; i < count; i++)
                 PaletteSuggestionRow(
                   key: ValueKey<String>(
-                    'palette-row-${chain.colors[i].newCode}',
+                    'palette-row-${_rowId(chain.colors[i])}',
                   ),
+                  mixed: _mixed,
                   suggestion: PaletteSuggestion(
                     color: chain.colors[i],
                     reason: roles[i],
@@ -243,6 +256,22 @@ extension _PaletteResultSection on _PalettePageState {
       ..._buildPaintOrder(),
     ];
   }
+
+  /// The labels under the strip: the bare codes, at the size they always
+  /// have. When the palette mixes brands the brand goes on a line of its own
+  /// above each ([_stripBrands]), never in the same line.
+  List<String> _stripCodes(List<MarkerColor> markers) => <String>[
+    for (final MarkerColor c in markers) c.newCode,
+  ];
+
+  /// The short brand name over each code of the strip, or `null` when the
+  /// codes are shown without their brand (see [_mixed]).
+  List<String>? _stripBrands(List<MarkerColor> markers) => _mixed
+      ? <String>[
+          for (final MarkerColor c in markers)
+            MarkerBrand.fromId(c.brandId).shortLabel,
+        ]
+      : null;
 
   List<String> _seenAll(List<String> hexes) => <String>[
     for (final String hex in hexes) seenHex(hex, _vision, values: _values),
@@ -312,7 +341,9 @@ extension _PaletteResultSection on _PalettePageState {
     if (chain != null) {
       return (
         hexes: <String>[for (final MarkerColor c in chain.colors) c.hex],
-        codes: <String>[for (final MarkerColor c in chain.colors) c.newCode],
+        codes: <String>[
+          for (final MarkerColor c in chain.colors) _codeLabel(c),
+        ],
       );
     }
     final MarkerColor? base = _stripBase;
@@ -322,8 +353,8 @@ extension _PaletteResultSection on _PalettePageState {
         for (final PaletteSuggestion s in _suggestions) s.color.hex,
       ],
       codes: <String>[
-        if (base != null) base.newCode,
-        for (final PaletteSuggestion s in _suggestions) s.color.newCode,
+        if (base != null) _codeLabel(base),
+        for (final PaletteSuggestion s in _suggestions) _codeLabel(s.color),
       ],
     );
   }
@@ -376,6 +407,7 @@ extension _PaletteResultSection on _PalettePageState {
   }
 
   List<PlanStep> _paintPlan() => buildPaintPlan(
+    mixed: _mixed,
     t: context.l10n,
     chain: _shownChain,
     base: _stripBase,

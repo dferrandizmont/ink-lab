@@ -482,14 +482,14 @@ void main() {
         ),
         isEmpty,
       );
-      // Nothing configured: the whole range minus the dried ones.
+      // Nothing owned: no fallback to the whole range.
       expect(
         paletteCandidateColors(
           colors: catalog,
           brand: MarkerBrand.ohuhuOahu,
           driedColorIds: <String>{g1.colorId},
         ),
-        <MarkerColor>[r1, r2],
+        isEmpty,
       );
     });
   });

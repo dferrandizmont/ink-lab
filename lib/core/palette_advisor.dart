@@ -38,21 +38,30 @@ final class PaletteAdvisorRequest {
     this.paletteSize = 5,
     this.mode = PaletteMode.recommended,
     this.brand = MarkerBrand.ohuhuOahu,
+    this.scope = BrandScope.singleBrand,
     Set<String> ownedMarkerCodes = const {},
     Set<String> activeSetIds = const {},
+    Set<String> driedColorIds = const {},
     this.variationToken = 0,
   }) : availableColors = List.unmodifiable(availableColors),
        ownedMarkerCodes = Set.unmodifiable(ownedMarkerCodes),
-       activeSetIds = Set.unmodifiable(activeSetIds);
+       activeSetIds = Set.unmodifiable(activeSetIds),
+       driedColorIds = Set.unmodifiable(driedColorIds);
   final Scene? scenario;
   final MarkerColor? baseColor;
   final List<MarkerColor> availableColors;
   final int paletteSize, variationToken;
   final PaletteMode mode;
   final MarkerBrand brand;
+  final BrandScope scope;
 
   /// Uses brand:code IDs; legacy bare codes apply only to Ohuhu.
   final Set<String> ownedMarkerCodes, activeSetIds;
+
+  /// The markers the user owns that ran dry (`brandId:CODE`). They are left
+  /// out of [availableColors], and a base among them is refused with its own
+  /// reason: the user has it, it just does not paint.
+  final Set<String> driedColorIds;
 }
 
 sealed class PaletteAdvice {
@@ -69,6 +78,10 @@ enum PaletteFailureReason {
   noAvailableColors,
   missingBaseColor,
   invalidBaseColor,
+
+  /// The base is a marker the user owns, but it ran dry: it is not out of
+  /// the collection, it just does not paint.
+  baseDried,
   noSuggestions,
 }
 

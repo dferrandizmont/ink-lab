@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/ideas_engine.dart';
 import 'package:ink_lab/core/models.dart';
+import 'package:ink_lab/ui/pages/collection/collection_page.dart';
 import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
+import 'package:ink_lab/ui/pages/ideas/idea_detail_sheet.dart';
 import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
 import 'package:ink_lab/ui/theme/tokens.dart';
+import 'package:ink_lab/ui/widgets/branded_code.dart';
 import 'package:ink_lab/ui/widgets/ink_sheet.dart';
 
 import 'ideas_test_support.dart';
@@ -30,6 +34,55 @@ List<String> _markerSteps(IdeaPreset preset) => <String>[
 ];
 
 void main() {
+  testWidgets(
+    'mixed Ideas use markers from both brands and label their codes',
+    (tester) async {
+      await pumpIdeas(
+        tester,
+        setup: (scope) async {
+          await scope.settings.setOwnedMarkerCodes({
+            'decotime:91',
+            'decotime:92',
+          });
+          await scope.settings.setScope(BrandScope.mixedBrands);
+        },
+      );
+      final featured = IdeasEngine.featuredFor(DateTime(2026, 10, 29));
+      await tester.tap(_key('ideas-open-${featured.id}'));
+      await tester.pumpAndSettle();
+      final sheet = tester.widget<IdeaDetailSheet>(
+        find.byType(IdeaDetailSheet),
+      );
+      expect(sheet.candidates.map((c) => c.brandId).toSet(), {
+        'ohuhu_oahu',
+        'decotime',
+      });
+      expect(
+        sheet.candidates.where((c) => c.brandId == 'decotime'),
+        hasLength(2),
+      );
+      final markers = _key('ideas-markers-${featured.id}');
+      await tester.ensureVisible(markers);
+      await tester.tap(markers);
+      await tester.pumpAndSettle();
+      // Each marker says its brand, drawn by the one shared widget: the
+      // short brand name, then the code.
+      final color = sheet.initial.palette.first.color;
+      expect(
+        tester
+            .widgetList<BrandedCode>(find.byType(BrandedCode))
+            .where((w) => w.mixed && w.marker.colorId == color.colorId),
+        isNotEmpty,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(BrandedCode),
+          matching: find.text(MarkerBrand.fromId(color.brandId).shortLabel),
+        ),
+        findsWidgets,
+      );
+    },
+  );
   // The real fonts: the summary wraps in full now, and the test font (one em
   // per glyph) would make it far longer than any language does.
   setUpAll(loadAppFonts);
@@ -228,15 +281,56 @@ void main() {
     expect(find.text(AppTypography.caps(l10n.ideasStepsTitle)), findsOneWidget);
   });
 
-  testWidgets(
-    'a DecoTime idea without a collection uses the whole range like Ohuhu',
-    (WidgetTester tester) async {
-      await pumpIdeas(tester, brand: MarkerBrand.decoTime);
+  testWidgets('a DecoTime idea without a collection asks for the markers, '
+      'instead of using the whole range', (WidgetTester tester) async {
+    await pumpIdeas(tester, brand: MarkerBrand.decoTime);
 
-      await tester.tap(_key('ideas-preset-one_color'));
-      await tester.pumpAndSettle();
+    await tester.tap(_key('ideas-preset-one_color'));
+    await tester.pumpAndSettle();
 
-      expect(_key('ideas-apply-one_color'), findsOneWidget);
-    },
-  );
+    // No palette out of the brand's range, and no "Your markers" list.
+    expect(_key('ideas-apply-one_color'), findsNothing);
+    expect(find.text(AppTypography.caps(l10n.ideasMarkersTitle)), findsNothing);
+    expect(find.text(l10n.missingMarkersHint), findsOneWidget);
+    expect(_key('ideas-open-collection-one_color'), findsOneWidget);
+  });
+
+  testWidgets('the idea sheet opens the collection, where they are ticked', (
+    WidgetTester tester,
+  ) async {
+    await pumpIdeas(tester, brand: MarkerBrand.decoTime);
+
+    await tester.tap(_key('ideas-preset-one_color'));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(_key('ideas-open-collection-one_color'));
+    await tester.tap(_key('ideas-open-collection-one_color'));
+    await tester.pumpAndSettle();
+
+    // The collection is open, and the sheet is closed.
+    expect(find.byKey(CollectionPage.pageKey), findsOneWidget);
+    expect(_key('ideas-detail-one_color'), findsNothing);
+  });
+
+  testWidgets('with every marker dried out: the sheet says so', (
+    WidgetTester tester,
+  ) async {
+    await pumpIdeas(
+      tester,
+      setup: (AppScope scope) async {
+        await scope.settings.setCollection(
+          AppSettings(extraMarkerIds: const <String>{'B08'}),
+        );
+        await scope.dried.add('ohuhu_oahu:B08');
+      },
+    );
+
+    await tester.tap(_key('ideas-preset-one_color'));
+    await tester.pumpAndSettle();
+
+    // The collection is not empty: the sheet does not ask for markers the
+    // user already has, it says they ran dry.
+    expect(find.text(l10n.allMarkersDried), findsOneWidget);
+    expect(find.text(l10n.missingMarkersHint), findsNothing);
+  });
 }

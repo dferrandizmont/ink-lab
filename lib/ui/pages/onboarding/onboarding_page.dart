@@ -17,6 +17,7 @@ import '../collection/collection_pickers.dart';
 import '../collection/collection_summary.dart';
 import '../collection/collection_summary_card.dart';
 import '../collection/loose_markers_page.dart';
+import '../settings/dialogs.dart';
 import 'markers_preview_card.dart';
 
 enum _Step { brand, series, sets, markers, done }
@@ -83,7 +84,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
     _sets = <String>{...state.settings.ownedSetIds};
     _series = <MarkerLine>{...state.settings.ownedSeries};
     _extras = <String>{...state.settings.extraMarkerIds};
-    _restore(_scope.settings.onboardingDraft);
+    if (_scope.settings.onboardingCompleted) {
+      // A repeat setup starts from the current collection, never a draft
+      // left by an earlier visit. First-run setup still resumes its draft.
+      unawaited(_scope.settings.setOnboardingDraft(null));
+    } else {
+      _restore(_scope.settings.onboardingDraft);
+    }
   }
 
   /// Picks up a setup left half-way. A draft that names a brand, series, set
@@ -171,6 +178,24 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Future<void> _finish({required bool apply}) async {
     final AppSettingsRepository settings = _scope.settings;
+    if (apply) {
+      // The setup replaces the whole collection when it finishes. The user
+      // is asked first when there is something to lose.
+      final AppSettings current = settings.settings;
+      final bool has =
+          current.ownedSetIds.isNotEmpty ||
+          current.extraMarkerIds.isNotEmpty ||
+          current.chosenSeriesIds.isNotEmpty;
+      if (has) {
+        final bool ok = await confirmAction(
+          context,
+          title: context.l10n.collectionReplaceTitle,
+          body: context.l10n.collectionReplaceBody,
+          confirmLabel: context.l10n.collectionReplaceConfirm,
+        );
+        if (!ok || !mounted) return;
+      }
+    }
     _finished = true;
     if (apply) {
       await settings.setBrand(_brand);

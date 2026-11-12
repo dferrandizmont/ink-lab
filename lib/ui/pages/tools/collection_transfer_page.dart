@@ -17,24 +17,49 @@ import '../settings/dialogs.dart';
 import 'collection_snapshot.dart';
 import 'tools_widgets.dart';
 
+/// The part of the page the user is sent to when it opens.
+enum CollectionTransferSection {
+  /// The export of the collection (the default).
+  export,
+
+  /// The import of codes: the field is on screen and takes the focus.
+  import,
+}
+
 /// "Export and import": the collection out as a CSV for a spreadsheet or a
 /// short list grouped by brand for a message, and codes in: the user picks a
 /// brand, pastes a list of codes and sees what would be added, what they
 /// already own and what was not recognised. Nothing changes until they press
 /// the button that adds the new markers.
 class CollectionTransferPage extends StatefulWidget {
-  const CollectionTransferPage({super.key, this.shareSink});
+  const CollectionTransferPage({
+    super.key,
+    this.shareSink,
+    this.initialSection = CollectionTransferSection.export,
+  });
 
   /// Where the files go. Production opens the system share sheet; tests
   /// inject a fake.
   final ShareSink? shareSink;
 
+  /// The section the page opens at: the export, or the import of codes.
+  final CollectionTransferSection initialSection;
+
   /// Key of the page body.
   static const Key pageKey = Key('collection-transfer-page');
 
   /// Pushes the page on the nearest navigator.
-  static Future<void> open(BuildContext context, {ShareSink? shareSink}) =>
-      AppScope.push(context, CollectionTransferPage(shareSink: shareSink));
+  static Future<void> open(
+    BuildContext context, {
+    ShareSink? shareSink,
+    CollectionTransferSection initialSection = CollectionTransferSection.export,
+  }) => AppScope.push(
+    context,
+    CollectionTransferPage(
+      shareSink: shareSink,
+      initialSection: initialSection,
+    ),
+  );
 
   @override
   State<CollectionTransferPage> createState() => _CollectionTransferPageState();
@@ -44,6 +69,14 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
   AppScope? _scope;
   late Future<CollectionSnapshot> _snapshot;
   final TextEditingController _codes = TextEditingController();
+  final FocusNode _codesFocus = FocusNode();
+
+  /// The head of the import section: the page scrolls to it when it opens
+  /// there.
+  final GlobalKey _importKey = GlobalKey();
+
+  /// Whether the page already went to the section it had to open at.
+  bool _openedAtSection = false;
   MarkerBrand? _brand;
   bool _newOpen = false;
   bool _ownedOpen = false;
@@ -65,6 +98,7 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
   @override
   void dispose() {
     _codes.dispose();
+    _codesFocus.dispose();
     super.dispose();
   }
 
@@ -108,8 +142,9 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
     final AppScope scope = AppScope.of(context);
     final AppLocalizations l10n = context.l10n;
     setState(() => _adding = true);
-    await scope.settings.setExtraMarkerIds(<String>{
-      ...scope.settings.settings.extraMarkerIds,
+    // The import only adds: the markers the user already owns stay, even
+    // the ones added while the import was on screen.
+    await scope.settings.addExtraMarkerIds(<String>{
       for (final MarkerColor c in preview.toAdd) c.colorId,
     });
     if (!mounted) return;
@@ -151,6 +186,13 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
       range: snapshot.rangeOf(brand),
       ownedIds: snapshot.ownedIds,
     );
+    if (widget.initialSection == CollectionTransferSection.import &&
+        !_openedAtSection) {
+      // The body is only there once the snapshot has loaded: the scroll waits
+      // for the frame that draws it.
+      _openedAtSection = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _openImport());
+    }
     return SingleChildScrollView(
       key: CollectionTransferPage.pageKey,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -225,7 +267,7 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
                 : () => _copy(collectionTextList(owned)),
           ),
           const SizedBox(height: InkSpacing.section),
-          InkGroupHead(l10n.toolsTransferImport),
+          InkGroupHead(key: _importKey, l10n.toolsTransferImport),
           Text(l10n.toolsTransferImportHelp, style: caption),
           const SizedBox(height: InkSpacing.block),
           InkListCard(
@@ -243,6 +285,7 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
           TextField(
             key: const ValueKey<String>('transfer-codes'),
             controller: _codes,
+            focusNode: _codesFocus,
             // A fixed height, so what is typed never moves the page; a longer
             // list scrolls inside the field.
             minLines: 4,
@@ -298,6 +341,17 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
         ],
       ),
     );
+  }
+
+  /// Goes to the import section: the section is on screen and the field of
+  /// the codes takes the focus, so the user can paste them right away.
+  void _openImport() {
+    if (!mounted) return;
+    final BuildContext? target = _importKey.currentContext;
+    if (target != null) {
+      Scrollable.ensureVisible(target, alignment: 0, duration: Duration.zero);
+    }
+    _codesFocus.requestFocus();
   }
 
   /// A folded group of the preview: its title and how many codes it holds,

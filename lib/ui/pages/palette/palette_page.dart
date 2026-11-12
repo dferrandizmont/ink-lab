@@ -27,6 +27,7 @@ import '../../screen_awake.dart';
 import '../../share/share_actions.dart';
 import '../../share/share_sink.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/empty_state.dart';
 import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
@@ -34,6 +35,8 @@ import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
+import '../collection/collection_page.dart';
+import '../settings/dialogs.dart';
 import '../diary/artwork_entry_page.dart';
 import '../match/color_sampling.dart';
 import '../match/image_picker_service.dart';
@@ -69,6 +72,7 @@ part 'palette_photo_flow.dart';
 part 'palette_result_section.dart';
 part 'palette_save_share.dart';
 part 'palette_snapshot.dart';
+part 'palette_notice.dart';
 part 'palette_text_flow.dart';
 
 /// Composition root above the page, or `null` in isolated previews/tests.
@@ -184,13 +188,15 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _settingsSubscription;
 
-  /// The saved palettes of the brand: the Save button follows them (saved,
-  /// or saveable again once the palette is deleted).
-  StreamSubscription<List<SavedPalette>>? _savedSubscription;
+  /// The saved palettes of every brand: the Save button follows them (saved,
+  /// or saveable again once the palette is deleted), whatever brand the
+  /// palette on screen was saved under.
+  StreamSubscription<void>? _savedSubscription;
   StreamSubscription<Map<String, String>>? _ownColorsSubscription;
   StreamSubscription<Set<String>>? _driedSubscription;
   StreamSubscription<AiSettings>? _aiSubscription;
   String _collectionSignature = '';
+  int _catalogVersion = 0;
 
   /// Whether the optional AI advisor is configured (enabled + OpenRouter +
   /// stored key). Drives the "Suggest with AI" button.
@@ -215,9 +221,84 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   String? _aiError;
 
   MarkerBrand _brand = MarkerBrand.ohuhuOahu;
+
+  /// Every colour the page can name: the range of the brands in use and,
+  /// after a saved or imported palette of another brand was loaded, that
+  /// brand's too (so its markers still resolve).
   List<MarkerColor> _catalog = const <MarkerColor>[];
+
+  /// The whole range of the brands in use: the active brand, or, with "Mix
+  /// my brands", every brand the user has a usable marker of. The only range
+  /// ever offered (the blending chain in whole-range mode, the previews).
+  List<MarkerColor> _range = const <MarkerColor>[];
+
+  /// The markers to build with: the user's usable ones, of the active brand
+  /// or, with "Mix my brands", of every brand they own.
   List<MarkerColor> _available = const <MarkerColor>[];
+
+  /// Whether "Mix my brands" is in effect: [_available] holds markers of more
+  /// than one brand.
+  bool _scopeMixed = false;
+
+  /// The markers the user owns, the dried-out ones included: they are in the
+  /// collection, they just cannot be used to build anything.
+  List<MarkerColor> _owned = const <MarkerColor>[];
   bool _loading = true;
+
+  /// Whether the collection was read at least once: from then on a reload
+  /// is a change of collection, brand or scope under a page in use.
+  bool _ready = false;
+
+  /// Whether the codes on screen are shown with their brand ("Ohuhu BV04"):
+  /// "Mix my brands" is in effect, or the palette on screen holds a marker of
+  /// another brand than the active one (a saved or imported mixed palette,
+  /// or one kept across a change of brand). Without either the page is
+  /// exactly the single-brand one.
+  ///
+  /// The base counts as the palette shows it: the first colour of a photo
+  /// palette, which the base field knows nothing of, the typed one otherwise
+  /// (the default base of a scene is one of [_available], so it is of the
+  /// active brand whenever the scope is not mixed).
+  bool get _mixed {
+    if (_scopeMixed) return true;
+    if (_suggestions.any((s) => s.color.brandId != _brand.id)) return true;
+    final MarkerColor? base = _photoMode ? _stripBase : _resolvedBase;
+    return base != null && base.brandId != _brand.id;
+  }
+
+  /// The code of [c] as the page shows it (see [_mixed]).
+  String _codeLabel(MarkerColor c) => markerCodeLabel(c, mixed: _mixed);
+
+  /// What the base field holds for [c]: its code, with the brand when the
+  /// code alone would not say which marker it is.
+  String _baseValue(MarkerColor c) =>
+      markerCodeLabel(c, mixed: _scopeMixed || c.brandId != _brand.id);
+
+  /// The key part of the row of [c]: the colour id where two brands may
+  /// share a code, the bare code otherwise (as before brands could mix).
+  /// Locks are always kept by colour id.
+  String _rowId(MarkerColor c) => _mixed ? c.colorId : c.newCode;
+
+  /// Whether the collection has a marker to work with. When it has none,
+  /// the page says so instead of building a palette out of the brand's range.
+  bool get _hasMarkers => _available.isNotEmpty;
+
+  /// Whether the collection is not empty but every marker in it ran dry: the
+  /// page says so, instead of claiming the user owns nothing.
+  bool get _allMarkersDried => _available.isEmpty && _owned.isNotEmpty;
+
+  /// Whether a palette can be built: there is a base the user owns (or a
+  /// scene, which brings its own) and at least one marker of the collection
+  /// to build it with. A base out of the brand's range is not a base: the
+  /// engines refuse it.
+  bool get _canBuild {
+    if (!_hasMarkers) return false;
+    final String input = _baseInput.trim();
+    if (input.isEmpty) return _useScenario;
+    final MarkerColor? base = _resolvedBase;
+    if (base == null) return false;
+    return _available.any((MarkerColor c) => c.colorId == base.colorId);
+  }
 
   late final TextEditingController _baseController;
   final FocusNode _baseFocus = FocusNode();
@@ -269,6 +350,12 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   int _chainIndex = 0;
   bool _chainWholeRange = false;
 
+  /// The brands of the range the chains on screen were searched in (whole
+  /// range mode; empty otherwise). The chain may outlive a change of brand
+  /// or of "Mix my brands", so its note names the range it really came from
+  /// (see [_chainRangeNote]).
+  Set<String> _chainRangeBrands = const <String>{};
+
   /// Whether the type in use is the Blending Chain.
   bool get _chainMode => _mode == PaletteMode.blendingChain && !_useScenario;
 
@@ -285,7 +372,34 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   /// A note about what just happened (a palette loaded, an import's counts).
   /// It is dismissable and it goes when the user leaves the tab.
-  String? _notice;
+  _PaletteNotice? _notice;
+
+  /// Whether the palette on screen is one the user keeps: it was loaded from
+  /// "My palettes" or it was saved.
+  bool _workedPalette = false;
+
+  /// Whether that kept palette was changed by hand since (a lock, the size,
+  /// a variation). Replacing such a palette asks first; a fresh result never
+  /// does (see [_approveReplacement]).
+  bool _paletteEdited = false;
+
+  /// The "Replace this palette?" dialog is open.
+  bool _confirmingReplacement = false;
+
+  /// The palette the Undo snack bar on screen brings back, while it is up,
+  /// whether that undo came from typing in the base field, a count of the
+  /// snack bars shown (a closing one must not clear a newer one's) and the
+  /// snack bar itself, to take it down (see [_dropUndo]).
+  _PaletteSnapshot? _undoTarget;
+  bool _undoFromTyping = false;
+  int _undoGeneration = 0;
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _undoSnack;
+
+  /// The base last resolved, with what it was resolved from (see
+  /// [_resolvedBase]: it is read many times in one build).
+  ({String input, List<MarkerColor> catalog, List<MarkerColor> choices})?
+  _baseMemoKey;
+  MarkerColor? _baseMemo;
 
   /// Whether the tab was on screen the last time the dependencies changed.
   /// The shell keeps every visited tab alive in an IndexedStack, so a note
@@ -323,11 +437,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _collectionSignature = _signatureOf(scope.settings.state);
     _settingsSubscription = scope.settings.changes.listen(_onSettingsChanged);
     _savedSubscription?.cancel();
-    _savedSubscription = scope.savedPalettes.watch(scope.settings.brand).listen(
-      (_) {
-        if (mounted) setState(() {});
-      },
-    );
+    _savedSubscription = scope.savedPalettes.changes.listen((_) {
+      if (mounted) setState(() {});
+    });
     // The colours of the markers changed (an own colour was set or reset).
     _ownColorsSubscription?.cancel();
     _driedSubscription?.cancel();
@@ -375,6 +487,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _settingsSubscription?.cancel();
     _savedSubscription?.cancel();
     _ownColorsSubscription?.cancel();
+    _driedSubscription?.cancel();
     _aiSubscription?.cancel();
     _photoToken++;
     _photoScene?.dispose();
@@ -390,7 +503,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   String _signatureOf(AppSettingsState state) {
     final sets = state.settings.effectiveSetIds().toList()..sort();
     final owned = state.settings.ownedMarkerCodes.toList()..sort();
-    return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}|'
+    return '${state.brand.id}|${state.scope.name}|${sets.join(',')}|${owned.join(',')}|'
         '${_scope?.markers.colorRevision}|${_scope?.dried.revision}';
   }
 
@@ -401,15 +514,52 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     unawaited(_reload());
   }
 
+  /// Reads the collection again: at start, and whenever the brand, "Mix my
+  /// brands", the owned markers, a marker's own colour or a dried-out mark
+  /// change.
+  ///
+  /// What was asked of the old collection goes with it: an AI answer still
+  /// on its way is dropped, and so is the Undo on screen (its palette was
+  /// built from the old collection).
+  ///
+  /// The palette on screen is never destroyed by a change of brand or of
+  /// "Mix my brands": it stays as it is, each marker with its brand, until
+  /// the user builds another one (which the Undo then covers). The base
+  /// field is rewritten so it still names the same marker; a scene palette
+  /// built on the scene's default base gets that base written in the field
+  /// when the new collection would pick another one, so its base stays the
+  /// marker it was built on. Any other change
+  /// (a marker added, removed or dried out) recomputes the palette as it
+  /// always did; so does a change of brand or mix that comes with the loss
+  /// of one of the palette's own markers, so a palette never keeps a marker
+  /// the user can no longer use.
   Future<void> _reload() async {
     final scope = _scope;
     if (scope == null) return;
+    final version = ++_catalogVersion;
+    _cancelAi();
+    _dropUndo();
     final brand = scope.settings.brand;
     final settings = scope.settings.settings;
+    final selectionScope = scope.settings.scope;
+    // The brands of the palette on screen stay readable: a loaded palette may
+    // hold markers of a brand that is not in use.
+    final Set<String> shown = <String>{
+      for (final PaletteSuggestion s in _suggestions) s.color.brandId,
+      if (_resolvedBase case final MarkerColor base) base.brandId,
+      if (_stripBase case final MarkerColor base) base.brandId,
+    };
     setState(() => _loading = true);
     List<MarkerColor> catalog;
     try {
-      catalog = await scope.markers.loadColors(brand);
+      catalog = await _withBrands(
+        await scope.markers.loadCollectionCatalog(
+          brand: brand,
+          settings: settings,
+          scope: selectionScope,
+        ),
+        shown,
+      );
     } catch (_) {
       catalog = const <MarkerColor>[];
     }
@@ -418,24 +568,146 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     } catch (_) {
       // Without the scene catalogue the Scenes type is simply not offered.
     }
-    if (!mounted) return;
+    if (!mounted || version != _catalogVersion) return;
+    final Set<String> ownedSetIds = settings.effectiveSetIds();
+    final Set<String> ownedMarkerCodes = settings.ownedMarkerCodes;
+    // The markers the user owns (the dried-out ones included) and the ones
+    // that can be used: the difference tells an empty collection from one
+    // whose markers all ran dry.
     final available = paletteCandidateColors(
       colors: catalog,
+      scope: selectionScope,
       brand: brand,
-      activeSetIds: settings.effectiveSetIds(),
-      ownedMarkerCodes: settings.ownedMarkerCodes,
+      activeSetIds: ownedSetIds,
+      ownedMarkerCodes: ownedMarkerCodes,
       driedColorIds: scope.dried.ids,
     );
+    // "Mix my brands" is in effect only with usable markers of two brands;
+    // otherwise the page works with the active brand alone.
+    final bool mixed = hasMixedBrands(available);
+    final List<MarkerColor> owned = ownedCandidateColors(
+      colors: catalog,
+      scope: selectionScope,
+      brand: brand,
+      activeSetIds: ownedSetIds,
+      ownedMarkerCodes: ownedMarkerCodes,
+      driedColorIds: scope.dried.ids,
+    );
+    final Set<String> brandIds = <String>{
+      brand.id,
+      if (mixed)
+        for (final MarkerColor c in available) c.brandId,
+    };
+    final List<MarkerColor> range = <MarkerColor>[
+      for (final MarkerColor c in catalog)
+        if (brandIds.contains(c.brandId)) c,
+    ];
+    // Read before the brand and the scope move: the base the field names
+    // and the base as the palette on screen shows it, which is the typed
+    // one, the first colour of a photo or the default base of a scene.
+    final MarkerColor? typedBase = _resolvedBase;
+    final MarkerColor? shownBase = _stripBase;
+    // The default base of a scene is found among the usable markers every
+    // time it is read: under another brand or mix it would be another
+    // marker, or none.
+    final MarkerColor? sceneBase =
+        typedBase == null && _useScenario && !_photoMode ? shownBase : null;
+    // Whether a marker of the palette on screen that the user could use no
+    // longer can be (it left the collection, or it ran dry), whatever its
+    // brand.
+    final Set<String> had = <String>{
+      for (final MarkerColor c in _available) c.colorId,
+    };
+    final Set<String> usable = <String>{
+      for (final String id in <String>{
+        for (final PaletteSuggestion s in _suggestions) s.color.brandId,
+        ?shownBase?.brandId,
+      })
+        if (MarkerBrand.byId[id] case final MarkerBrand shownBrand)
+          for (final MarkerColor c in ownedColors(
+            colors: catalog,
+            brand: shownBrand,
+            ownedSetIds: ownedSetIds,
+            ownedMarkerCodes: ownedMarkerCodes,
+            driedColorIds: scope.dried.ids,
+          ))
+            c.colorId,
+    };
+    bool lost(MarkerColor c) =>
+        had.contains(c.colorId) && !usable.contains(c.colorId);
+    final bool keep =
+        _ready &&
+        _suggestions.isNotEmpty &&
+        (brand != _brand || mixed != _scopeMixed) &&
+        !_suggestions.any((PaletteSuggestion s) => lost(s.color)) &&
+        !(shownBase != null && lost(shownBase));
+    final _PaletteSnapshot? previous = _snapshot();
     setState(() {
       _brand = brand;
       _catalog = catalog;
-      _previews = ScenePreviews(catalog);
+      _range = range;
+      _scopeMixed = mixed;
+      _previews = ScenePreviews(range);
+      _owned = owned;
       _available = available;
       _loading = false;
+      _ready = true;
+      if (keep && typedBase != null) {
+        // "BV04" would now be read as a marker of the new brand.
+        _baseInput = _baseValue(typedBase);
+        _baseController.text = _baseInput;
+      } else if (keep &&
+          sceneBase != null &&
+          findScenarioDefaultBase(available, _scenario)?.colorId !=
+              sceneBase.colorId) {
+        // The scene would now choose another base (or none) for the
+        // companions on screen: the one they were built on is written down.
+        _baseInput = _baseValue(sceneBase);
+        _baseController.text = _baseInput;
+      }
     });
-    _recompute();
-    // A saved palette handed over before the catalogue was ready.
+    if (!keep) {
+      _recompute();
+      if (previous != null && previous.differsFrom(this)) {
+        // Another palette took its place: it is a fresh result, and the
+        // note about the one that went ("Palette loaded") goes with it.
+        _workedPalette = false;
+        _paletteEdited = false;
+        if (_notice != null && identical(_notice, previous.notice)) {
+          setState(() => _notice = null);
+        }
+      }
+    }
+    // A saved palette or a base handed over before the catalogue was ready.
     _onSavedDraftChanged();
+    unawaited(_onBaseDraftChanged());
+  }
+
+  /// [catalog] plus the range of every brand of [brandIds] it does not hold
+  /// yet. A brand whose catalogue cannot be read adds nothing.
+  Future<List<MarkerColor>> _withBrands(
+    List<MarkerColor> catalog,
+    Iterable<String> brandIds,
+  ) async {
+    final markers = _scope?.markers;
+    final Set<String> have = <String>{
+      for (final MarkerColor c in catalog) c.brandId,
+    };
+    final List<MarkerBrand> missing = <MarkerBrand>[
+      for (final String id in brandIds.toSet())
+        if (!have.contains(id) && MarkerBrand.byId[id] != null)
+          MarkerBrand.byId[id]!,
+    ];
+    if (markers == null || missing.isEmpty) return catalog;
+    final List<MarkerColor> all = List<MarkerColor>.of(catalog);
+    for (final MarkerBrand brand in missing) {
+      try {
+        all.addAll(await markers.loadColors(brand));
+      } catch (_) {
+        // Its markers simply do not resolve.
+      }
+    }
+    return all;
   }
 
   // ---------------------------------------------------------------------------
@@ -475,24 +747,31 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   ///
   /// When that replaces a palette already on screen, a snackbar offers to
   /// undo it, so nothing is lost silently.
-  void _onBaseDraftChanged() {
+  ///
+  /// Like a saved palette, it waits (stays in the slot) until the catalogue
+  /// is loaded: only then the page knows whether the code needs its brand.
+  Future<void> _onBaseDraftChanged() async {
     final color = paletteBaseDraft.value;
-    if (color == null || !mounted) return;
+    if (color == null || !mounted || _loading) return;
     paletteBaseDraft.value = null;
     // The type asked for together with the marker (Swatches > Blending chain).
     final PaletteMode? asked = paletteBaseMode.value;
     paletteBaseMode.value = null;
-    final bool sameBase =
-        _baseInput.trim().toUpperCase() == color.newCode.toUpperCase() &&
+    // The palette of this very marker, in the type asked for, is already on
+    // screen: nothing changes, so there is nothing to ask, clear or undo.
+    if (_suggestions.isNotEmpty &&
+        _resolvedBase?.colorId == color.colorId &&
         _mode != PaletteMode.customPalette &&
         (asked == null || asked == _mode) &&
-        !_useScenario;
-    // A palette made from a photo cannot be brought back (the photo is not
-    // kept), so replacing one offers no undo.
-    final _PaletteSnapshot? previous =
-        _suggestions.isEmpty || sameBase || _photoMode
-        ? null
-        : _PaletteSnapshot.of(this);
+        !_useScenario) {
+      return;
+    }
+    if (await _approveReplacement(dropsLocks: true) == _Approval.refused ||
+        !mounted) {
+      return;
+    }
+    final _PaletteSnapshot? previous = _snapshot();
+    _cancelAi();
     setState(() {
       if (asked != null) {
         _mode = asked;
@@ -502,73 +781,247 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _useScenario = false;
       _dropPhoto();
       _dropChain();
-      _baseInput = color.newCode;
-      _baseController.text = color.newCode;
+      _baseInput = _baseValue(color);
+      _baseController.text = _baseInput;
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
       _aiUsed = false;
       _notice = null;
     });
     _recompute();
-    if (previous != null) _offerUndo(color, previous);
+    _afterReplacement(previous, newBase: color);
   }
 
-  /// Shows "E08 is now the base" with an Undo action that brings back the
-  /// palette [previous].
-  void _offerUndo(MarkerColor color, _PaletteSnapshot previous) {
+  // ---------------------------------------------------------------------------
+  // Undo and "Replace this palette?"
+  // ---------------------------------------------------------------------------
+
+  /// The palette on screen, to bring it back; `null` when there is none.
+  _PaletteSnapshot? _snapshot() =>
+      _suggestions.isEmpty ? null : _PaletteSnapshot.of(this);
+
+  /// Drops an AI answer still on its way: what the user just chose must not
+  /// be overwritten by it.
+  void _cancelAi() {
+    ++_aiVersion;
+    if (_aiLoading) setState(() => _aiLoading = false);
+  }
+
+  /// Shows "Palette changed" (or "E08 is now the base" when Swatches handed
+  /// [newBase] over) with an Undo action that brings back [previous]: the
+  /// markers, the locks, the base, the type, the notes and the AI state.
+  void _offerUndo(
+    _PaletteSnapshot previous, {
+    MarkerColor? newBase,
+    bool typing = false,
+  }) {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
     if (messenger == null) return;
     messenger.hideCurrentSnackBar();
-    messenger.showSnackBar(
-      SnackBar(
-        key: const ValueKey<String>('palette-base-replaced'),
-        // The Undo button is drawn here, not as a SnackBarAction: the snack
-        // bar forces the Material default pill shape on its action.
-        padding: const EdgeInsetsDirectional.only(start: 16, end: 4),
-        content: Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(context.l10n.paletteBaseReplaced(color.newCode)),
+    final int generation = ++_undoGeneration;
+    _undoTarget = previous;
+    _undoFromTyping = typing;
+    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snack =
+        messenger.showSnackBar(
+          SnackBar(
+            key: ValueKey<String>(
+              newBase == null ? 'palette-changed' : 'palette-base-replaced',
             ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: InkColors.of(context).pale,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: InkRadii.controlRadius,
+            duration: InkMotion.undoSnack,
+            behavior: SnackBarBehavior.floating,
+            // Keep the final Save action reachable at the foot of the list.
+            margin: EdgeInsets.fromLTRB(
+              InkSpacing.pageMargin,
+              0,
+              InkSpacing.pageMargin,
+              InkGeometry.buttonHeight +
+                  InkSpacing.pageBottomOf(context) +
+                  InkSpacing.buttonGap,
+            ),
+            // The Undo button is drawn here, not as a SnackBarAction: the
+            // snack bar forces the Material default pill shape on its action.
+            padding: const EdgeInsetsDirectional.only(
+              start: InkSpacing.cardH,
+              end: InkSpacing.s4,
+            ),
+            content: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    newBase == null
+                        ? context.l10n.paletteChanged
+                        : context.l10n.paletteBaseReplaced(_codeLabel(newBase)),
+                  ),
                 ),
-              ),
-              onPressed: () {
-                messenger.hideCurrentSnackBar();
-                if (!mounted) return;
-                setState(() => previous.restore(this));
-              },
-              child: Text(context.l10n.paletteUndoButton),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: InkColors.of(context).pale,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: InkRadii.controlRadius,
+                    ),
+                  ),
+                  onPressed: () {
+                    messenger.hideCurrentSnackBar();
+                    if (!mounted) return;
+                    setState(() => previous.restore(this));
+                  },
+                  child: Text(context.l10n.paletteUndoButton),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+    _undoSnack = snack;
+    snack.closed.whenComplete(() {
+      // The snack bar is gone (its time, Undo, or the page left).
+      if (generation == _undoGeneration) {
+        _undoTarget = null;
+        _undoFromTyping = false;
+        _undoSnack = null;
+      }
+    });
+  }
+
+  /// Takes the Undo snack bar down and forgets its palette: what it would
+  /// bring back no longer fits the collection (see [_reload]).
+  void _dropUndo() {
+    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? snack =
+        _undoSnack;
+    if (snack == null) return;
+    ++_undoGeneration;
+    _undoTarget = null;
+    _undoFromTyping = false;
+    _undoSnack = null;
+    snack.close();
+  }
+
+  /// Whether the palette on screen may be replaced, asking first when the
+  /// user would lose work. There are exactly two such cases:
+  ///
+  /// 1. it is a palette loaded from "My palettes" or saved that was then
+  ///    changed by hand (a lock, the size, a variation);
+  /// 2. it has a locked colour the action will not keep ([dropsLocks], or
+  ///    more locks than the [wanted] companions). This holds for any
+  ///    palette, a fresh result included: locking a colour is the one way
+  ///    the user says "keep this", so a result with a lock is no longer
+  ///    untouched. An action that keeps every lock (Regenerate, Suggest with
+  ///    AI, a variation) does not ask.
+  ///
+  /// A fresh, untouched result never asks: the Undo snack bar covers it. So
+  /// does everything that is asked and confirmed.
+  Future<_Approval> _approveReplacement({
+    bool dropsLocks = false,
+    int? wanted,
+  }) async {
+    // A second action while the question is open is not an answer to it.
+    if (_confirmingReplacement) return _Approval.refused;
+    if (_suggestions.isEmpty) return _Approval.free;
+    final bool losesLocks =
+        _lockedCodes.isNotEmpty &&
+        (dropsLocks || (wanted != null && _lockedCodes.length > wanted));
+    if (!(_workedPalette && _paletteEdited) && !losesLocks) {
+      return _Approval.free;
+    }
+    _confirmingReplacement = true;
+    try {
+      final bool ok = await confirmAction(
+        context,
+        title: context.l10n.paletteReplaceTitle,
+        body: context.l10n.paletteReplaceBody,
+        confirmLabel: context.l10n.paletteReplaceButton,
+      );
+      return ok ? _Approval.confirmed : _Approval.refused;
+    } finally {
+      _confirmingReplacement = false;
+    }
+  }
+
+  /// Runs [action], which replaces the palette on screen, after
+  /// [_approveReplacement]; then offers the undo ([_afterReplacement]).
+  ///
+  /// [edit] marks a change made by hand to the palette on screen (the size,
+  /// a variation) rather than a new result.
+  Future<void> _replacePalette(
+    VoidCallback action, {
+    bool dropsLocks = false,
+    int? wanted,
+    bool edit = false,
+  }) async {
+    final _Approval approval = await _approveReplacement(
+      dropsLocks: dropsLocks,
+      wanted: wanted,
     );
+    if (approval == _Approval.refused || !mounted) return;
+    final _PaletteSnapshot? previous = _snapshot();
+    _cancelAi();
+    action();
+    _afterReplacement(previous, edit: edit && approval != _Approval.confirmed);
+  }
+
+  /// Call once the palette on screen was replaced: offers to undo it back to
+  /// [previous] when it did change, and settles whether what is on screen now
+  /// is still a palette the user worked on. An [edit] of a kept palette makes
+  /// it an edited one; anything else (a new result, an empty page, or a
+  /// replacement the user already agreed to) is fresh.
+  void _afterReplacement(
+    _PaletteSnapshot? previous, {
+    bool edit = false,
+    MarkerColor? newBase,
+    bool typing = false,
+  }) {
+    final bool changed = previous == null
+        ? _suggestions.isNotEmpty
+        : previous.differsFrom(this);
+    if (!changed) return;
+    if (edit && _suggestions.isNotEmpty) {
+      if (_workedPalette) _paletteEdited = true;
+    } else {
+      _workedPalette = false;
+      _paletteEdited = false;
+    }
+    // A note about the palette that was replaced ("Palette loaded", what an
+    // import left out) goes with it, unless the action wrote its own.
+    if (previous != null &&
+        _notice != null &&
+        identical(_notice, previous.notice)) {
+      setState(() => _notice = null);
+    }
+    if (previous != null) {
+      _offerUndo(previous, newBase: newBase, typing: typing);
+    }
   }
 
   /// Opens the searchable list of markers and uses the chosen one as base.
   Future<void> _pickBase() async {
     _baseFocus.unfocus();
-    final List<MarkerColor> markers = _available.isNotEmpty
-        ? _available
-        : _catalog;
+    final List<MarkerColor> markers = _baseChoices;
     final MarkerColor? picked = await showInkSheet<MarkerColor>(
       context: context,
       builder: (BuildContext context) =>
           PaletteBasePickerSheet(markers: markers),
     );
     if (picked == null || !mounted) return;
-    _baseController.text = picked.newCode;
-    if (_mode == PaletteMode.customPalette) {
-      setState(() => _mode = PaletteMode.recommended);
+    // The marker that is the base already: its palette stays as it is (the
+    // field only takes the marker's own spelling).
+    if (_suggestions.isNotEmpty &&
+        _mode != PaletteMode.customPalette &&
+        _resolvedBase?.colorId == picked.colorId) {
+      final String value = _baseValue(picked);
+      if (value != _baseInput) {
+        setState(() {
+          _baseInput = value;
+          _baseController.text = value;
+        });
+      }
+      return;
     }
-    _onBaseInputChanged(picked.newCode);
+    await _replacePalette(() {
+      _baseController.text = _baseValue(picked);
+      if (_mode == PaletteMode.customPalette) _mode = PaletteMode.recommended;
+      _onBaseInputChangedNow(_baseValue(picked));
+    });
   }
 
   void _applyDraft(
@@ -589,15 +1042,15 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _lockedSuggestions.clear();
       _aiUsed = false;
       _notice = title == null
-          ? context.l10n.paletteDraftApplied(count)
-          : context.l10n.paletteIdeaApplied(title, count);
+          ? _PaletteNotice(_PaletteNoticeKind.draft, count: count)
+          : _PaletteNotice(_PaletteNoticeKind.idea, name: title, count: count);
     }
 
     if (!mounted) {
       apply();
       return;
     }
-    setState(apply);
+    unawaited(_replacePalette(() => setState(apply), dropsLocks: true));
   }
 
   // ---------------------------------------------------------------------------
@@ -618,29 +1071,73 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       ? (_photoPicks.isEmpty ? null : _photoPicks.first.marker)
       : _resolvedBase ?? _scenarioDefaultBase;
 
+  /// The marker the base field names, or `null`.
+  ///
+  /// A base written with its brand ("DecoTime 91", `decotime:91`) is that
+  /// marker. A bare code is a marker of the active brand; with "Mix my
+  /// brands" it is the user's marker with that code, and when two of their
+  /// brands share it the code alone resolves to nothing: the page asks which
+  /// (see [_errorMessage]) and the suggestions list offers both.
   MarkerColor? get _resolvedBase {
-    final input = _baseInput.trim();
+    final String input = _baseInput.trim();
     if (input.isEmpty) return null;
-    return resolveBaseColor(input, _catalog);
+    final key = (input: input, catalog: _catalog, choices: _baseChoices);
+    final memo = _baseMemoKey;
+    if (memo != null &&
+        memo.input == key.input &&
+        identical(memo.catalog, key.catalog) &&
+        identical(memo.choices, key.choices)) {
+      return _baseMemo;
+    }
+    _baseMemoKey = key;
+    return _baseMemo = _resolveBase(input);
   }
 
+  MarkerColor? _resolveBase(String input) {
+    final MarkerColor? branded = resolveBrandedBaseColor(input, _catalog);
+    if (branded != null) return branded;
+    if (!_scopeMixed) {
+      return resolveBaseColor(input, <MarkerColor>[
+        for (final MarkerColor c in _range)
+          if (c.brandId == _brand.id) c,
+      ]);
+    }
+    final List<MarkerColor> mine = baseCodeMatches(input, _baseChoices);
+    if (mine.isNotEmpty) return hasMixedBrands(mine) ? null : mine.first;
+    // None of the user's: a marker of the range gets its own reason (not in
+    // the collection, dried out) instead of "unknown code".
+    return resolveBaseColor(input, _range);
+  }
+
+  /// Whether the bare code in the base field is one two of the user's brands
+  /// share ("Mix my brands"), so it needs its brand.
+  bool get _ambiguousBase =>
+      _scopeMixed &&
+      resolveBrandedBaseColor(_baseInput, _catalog) == null &&
+      hasMixedBrands(baseCodeMatches(_baseInput, _baseChoices));
+
+  /// The markers the base may be: the ones the user owns, or the whole range
+  /// of the brand when the blending chain is in whole-range mode (the only
+  /// place where the range is offered, and the user is told so).
+  List<MarkerColor> get _baseChoices =>
+      _chainMode && _chainWholeRange ? _range : _available;
+
   String get _exampleCode {
-    final source = _available.isNotEmpty ? _available : _catalog;
-    if (source.isNotEmpty) return source.first.newCode;
+    final source = _baseChoices;
+    if (source.isNotEmpty) return _codeLabel(source.first);
     return 'A1';
   }
 
   /// The hint of the empty base field: two real codes of the markers the user
   /// owns in this brand (the first two of the collection, in catalogue order,
-  /// so it never changes between rebuilds), or of the brand's range when none
-  /// is owned. One code if that is all there is; the field's label if the
-  /// catalogue has not loaded.
+  /// so it never changes between rebuilds). One code if that is all there is;
+  /// the field's label when the collection has no marker to show, so the page
+  /// never offers a code of the brand's range as if it were the user's. The
+  /// range is only offered where the user asked for it explicitly (the
+  /// blending chain in whole-range mode), whose base is a marker of the range.
   String get _baseHint {
-    final List<MarkerColor> source = _available.isNotEmpty
-        ? _available
-        : _catalog;
     final List<String> codes = <String>[
-      for (final MarkerColor c in source.take(2)) c.newCode,
+      for (final MarkerColor c in _baseChoices.take(2)) _codeLabel(c),
     ];
     return switch (codes.length) {
       0 => context.l10n.paletteBaseCodeLabel,
@@ -711,7 +1208,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   /// Builds the blending chains around [base] from the user's markers, or from
   /// the whole range of the brand when the user asked for it.
   void _applyChain(MarkerColor base) {
-    final List<MarkerColor> pool = _chainWholeRange ? _catalog : _available;
+    final List<MarkerColor> pool = _chainMode && _chainWholeRange
+        ? _range
+        : _available;
     final MarkerColor? inPool = pool
         .where((MarkerColor c) => c.colorId == base.colorId)
         .firstOrNull;
@@ -721,10 +1220,18 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _aiError = null;
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
+      _chainRangeBrands = _chainWholeRange
+          ? <String>{for (final MarkerColor c in pool) c.brandId}
+          : const <String>{};
       if (inPool == null) {
         // Same rule as every other type: the base must be one of the markers.
+        // A marker that ran dry has its own reason: it is not out of the
+        // collection, it just does not paint.
+        final bool dried = _scope?.dried.ids.contains(base.colorId) ?? false;
         _failure = pool.isEmpty
             ? PaletteFailureReason.noAvailableColors
+            : dried
+            ? PaletteFailureReason.baseDried
             : PaletteFailureReason.invalidBaseColor;
         _chainResult = null;
         _showChain(null);
@@ -758,7 +1265,10 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     ];
   }
 
-  void _selectChain(int index) {
+  Future<void> _selectChain(int index) =>
+      _replacePalette(() => _selectChainNow(index));
+
+  void _selectChainNow(int index) {
     final BlendingChainResult? result = _chainResult;
     if (result == null || index < 0 || index >= result.chains.length) return;
     setState(() {
@@ -767,7 +1277,10 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     });
   }
 
-  void _setChainWholeRange(bool value) {
+  Future<void> _setChainWholeRange(bool value) =>
+      _replacePalette(() => _setChainWholeRangeNow(value), dropsLocks: true);
+
+  void _setChainWholeRangeNow(bool value) {
     setState(() => _chainWholeRange = value);
     _recompute();
   }
@@ -778,6 +1291,28 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _chain = null;
     _chainIndex = 0;
     _chainWholeRange = false;
+    _chainRangeBrands = const <String>{};
+  }
+
+  /// What the whole-range note says: whose range the chain was searched in.
+  ///
+  /// A chain on screen names the range it was built from, which is not the
+  /// one in use any more when it was kept across a change of brand or of
+  /// "Mix my brands" (see [_reload]). Without a chain it is the range a
+  /// search would use now: the active brand's, or with "Mix my brands" the
+  /// one of every brand in the mix, which names no single brand.
+  String _chainRangeNote(AppLocalizations t) {
+    final Set<String> built = _chain == null
+        ? const <String>{}
+        : _chainRangeBrands;
+    if (built.isEmpty) {
+      return _scopeMixed
+          ? t.paletteChainWholeRangeNoteMixed
+          : t.paletteChainWholeRangeNote(_brand.label);
+    }
+    return built.length > 1
+        ? t.paletteChainWholeRangeNoteMixed
+        : t.paletteChainWholeRangeNote(MarkerBrand.fromId(built.single).label);
   }
 
   /// The request for the current UI state, shared by the local engine and the
@@ -789,61 +1324,88 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     paletteSize: _companions,
     mode: _mode,
     brand: _brand,
+    scope: _scope?.settings.scope ?? BrandScope.singleBrand,
     ownedMarkerCodes: _scope?.settings.settings.ownedMarkerCodes ?? const {},
     activeSetIds: _scope?.settings.settings.effectiveSetIds() ?? const {},
+    // The markers the user owns that ran dry: a base among them is refused
+    // with its own reason, not as a marker out of the collection.
+    driedColorIds: _scope?.dried.ids ?? const {},
     variationToken: _variationToken,
   );
 
+  /// Puts the locked colours into [base] without moving anything the user
+  /// sees: a locked colour stays in the slot it has on screen now (and keeps
+  /// its own reason), and only the free slots take [base]'s colours, in
+  /// order. A locked colour that is not on screen takes the first free slot.
   List<PaletteSuggestion> _mergeLocked(List<PaletteSuggestion> base) {
     final wanted = _wanted;
     if (_lockedCodes.isEmpty) return base.take(wanted).toList();
+    final slots = List<PaletteSuggestion?>.filled(wanted, null);
     final used = <String>{};
-    final merged = <PaletteSuggestion>[];
+    final pending = <String>[];
     for (final code in _lockedCodes) {
-      if (merged.length >= wanted) break;
       final normalized = code.toUpperCase();
-      PaletteSuggestion? locked =
-          _lockedSuggestions[code] ?? _lockedSuggestions[normalized];
-      if (locked == null) {
-        for (final suggestion in base) {
-          if (suggestion.color.newCode.toUpperCase() == normalized) {
-            locked = suggestion;
-            break;
-          }
-        }
-      }
-      if (locked == null) {
-        for (final color in _catalog) {
-          if (color.newCode.toUpperCase() == normalized) {
-            locked = PaletteSuggestion(
-              color: color,
-              reason: context.l10n.paletteLockButton,
-            );
-            break;
-          }
-        }
-      }
-      if (locked != null && used.add(locked.color.newCode.toUpperCase())) {
-        merged.add(
-          PaletteSuggestion(
-            color: locked.color,
-            reason: context.l10n.paletteLockButton,
-            role: locked.role,
-          ),
-        );
+      if (used.contains(normalized)) continue;
+      final int onScreen = _suggestions.indexWhere(
+        (s) => s.color.colorId.toUpperCase() == normalized,
+      );
+      final PaletteSuggestion? locked = _lockedSuggestion(code, base);
+      if (locked == null) continue;
+      if (onScreen >= 0 && onScreen < wanted && slots[onScreen] == null) {
+        slots[onScreen] = locked;
+        used.add(normalized);
+      } else {
+        pending.add(code);
       }
     }
+    for (final code in pending) {
+      final int free = slots.indexOf(null);
+      if (free < 0) break;
+      final normalized = code.toUpperCase();
+      if (!used.add(normalized)) continue;
+      slots[free] = _lockedSuggestion(code, base);
+    }
+    final Iterator<PaletteSuggestion> rest = base
+        .where((s) => !used.contains(s.color.colorId.toUpperCase()))
+        .iterator;
+    for (var i = 0; i < wanted; i++) {
+      if (slots[i] != null) continue;
+      while (rest.moveNext()) {
+        final String normalized = rest.current.color.colorId.toUpperCase();
+        if (used.add(normalized)) {
+          slots[i] = rest.current;
+          break;
+        }
+      }
+    }
+    return slots.whereType<PaletteSuggestion>().toList();
+  }
+
+  /// The suggestion to show for the locked [code]: the one it had when it was
+  /// locked, else the one in [base], else a bare catalog colour.
+  PaletteSuggestion? _lockedSuggestion(
+    String code,
+    List<PaletteSuggestion> base,
+  ) {
+    final normalized = code.toUpperCase();
+    final PaletteSuggestion? kept =
+        _lockedSuggestions[code] ?? _lockedSuggestions[normalized];
+    if (kept != null) return kept;
     for (final suggestion in base) {
-      if (merged.length >= wanted) break;
-      if (used.add(suggestion.color.newCode.toUpperCase())) {
-        merged.add(suggestion);
+      if (suggestion.color.colorId.toUpperCase() == normalized) {
+        return suggestion;
       }
     }
-    return merged.take(wanted).toList();
+    for (final color in _catalog) {
+      if (color.colorId.toUpperCase() == normalized) {
+        return PaletteSuggestion(color: color, reason: PaletteReasons.loaded);
+      }
+    }
+    return null;
   }
 
   void _toggleLock(PaletteSuggestion suggestion) {
-    final code = suggestion.color.newCode;
+    final code = suggestion.color.colorId;
     final normalized = code.toUpperCase();
     setState(() {
       if (_lockedCodes.any((value) => value.toUpperCase() == normalized)) {
@@ -858,24 +1420,29 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         _lockedSuggestions[normalized] = suggestion;
       }
       _suggestions = _mergeLocked(_suggestions);
+      if (_workedPalette) _paletteEdited = true;
     });
   }
 
-  void _applyVariation(QuickPaletteVariation variation) {
+  Future<void> _applyVariation(QuickPaletteVariation variation) =>
+      _replacePalette(() => _applyVariationNow(variation), edit: true);
+
+  void _applyVariationNow(QuickPaletteVariation variation) {
     if (_suggestions.isEmpty || _available.isEmpty || _chainMode) return;
     final varied = remixPaletteWithVariation(
       _suggestions,
       _available,
       _lockedCodes.toSet(),
-      _resolvedBase?.newCode,
+      _resolvedBase?.colorId,
       variation,
       size: _companions,
     );
     setState(() {
       _suggestions = _mergeLocked(varied);
       _aiUsed = false;
-      _notice = context.l10n.paletteVariationApplied(
-        context.l10n.variationName(variation),
+      _notice = _PaletteNotice(
+        _PaletteNoticeKind.variation,
+        variation: variation,
       );
     });
   }
@@ -893,10 +1460,10 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     switch (choice) {
       case ModeChoice(:final PaletteMode mode):
         if (mode == _mode && !_useScenario) return;
-        _selectMode(mode);
+        await _selectMode(mode);
       case ScenesChoice():
         if (_useScenario) return;
-        _selectScenes();
+        await _selectScenes();
     }
   }
 
@@ -912,7 +1479,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     if (picked == null || !mounted) return;
     switch (picked) {
       case ScenePicked(:final Scene scene):
-        _selectScenario(scene);
+        await _selectScenario(scene);
       case PhotoScenePicked():
         await _pickPhotoScene();
     }
@@ -922,7 +1489,10 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   // Type, scene and size
   // ---------------------------------------------------------------------------
 
-  void _selectMode(PaletteMode mode) {
+  Future<void> _selectMode(PaletteMode mode) =>
+      _replacePalette(() => _selectModeNow(mode), dropsLocks: true);
+
+  void _selectModeNow(PaletteMode mode) {
     setState(() {
       _mode = mode;
       // A type is one choice among the others: a colour-theory mode leaves
@@ -943,16 +1513,25 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _recompute();
   }
 
-  void _selectScenes() {
+  Future<void> _selectScenes() =>
+      _replacePalette(_selectScenesNow, dropsLocks: true);
+
+  void _selectScenesNow() {
     setState(() {
       _useScenario = true;
+      // The scenes leave the chain behind: the whole-range flag goes with it,
+      // so the range is never offered outside the chain.
+      _dropChain();
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
     });
     _recompute();
   }
 
-  void _selectScenario(Scene scene) {
+  Future<void> _selectScenario(Scene scene) =>
+      _replacePalette(() => _selectScenarioNow(scene), dropsLocks: _photoMode);
+
+  void _selectScenarioNow(Scene scene) {
     setState(() {
       _sceneChoice = scene;
       // A scene replaces the photo palette.
@@ -961,17 +1540,50 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _recompute();
   }
 
-  void _selectSize(int size) {
+  Future<void> _selectSize(int size) => _replacePalette(
+    () => _selectSizeNow(size),
+    // The companions that fit the new size: a lock beyond them is lost.
+    wanted: (size - 1).clamp(2, 4),
+    edit: true,
+  );
+
+  void _selectSizeNow(int size) {
     setState(() => _paletteSize = size);
     _recompute();
   }
 
-  void _onBaseInputChanged(String value) {
-    setState(() => _baseInput = value);
+  /// The base field changed (a keystroke, or a suggestion of its list).
+  ///
+  /// Typing a code replaces the palette more than once on the way ("1",
+  /// "12", "120"): while the Undo of the first of those changes is still on
+  /// screen, it keeps pointing at the palette the user started from.
+  Future<void> _onBaseInputChanged(String value) async {
+    final _Approval approval = await _approveReplacement();
+    if (!mounted) return;
+    if (approval == _Approval.refused) {
+      // Nothing changes: the field goes back to the base of the palette.
+      _baseController.text = _baseInput;
+      return;
+    }
+    final _PaletteSnapshot? previous = _undoFromTyping && _undoTarget != null
+        ? _undoTarget
+        : _snapshot();
+    _onBaseInputChangedNow(value);
+    _afterReplacement(previous, typing: true);
+  }
+
+  void _onBaseInputChangedNow(String value) {
+    _cancelAi();
+    setState(() {
+      _baseInput = value;
+      _notice = null;
+    });
     _recompute();
   }
 
-  void _clear() {
+  Future<void> _clear() => _replacePalette(_clearNow, dropsLocks: true);
+
+  void _clearNow() {
     setState(() {
       _baseInput = '';
       _baseController.text = '';
@@ -992,13 +1604,16 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   // Presentation helpers
   // ---------------------------------------------------------------------------
 
-  /// A stored code may not resolve to a catalog color; fall back to a neutral.
-  String _hexForCode(String code) {
-    for (final color in _catalog) {
-      if (color.newCode.toUpperCase() == code.toUpperCase()) return color.hex;
-    }
-    return '#CFCFCF';
-  }
+  /// The colour of a code as the page shows it (bare, or with its brand); a
+  /// code that names no marker falls back to the theme's neutral.
+  String _hexForCode(String code) =>
+      (resolveBrandedBaseColor(code, _catalog) ??
+              resolveBaseColor(code, <MarkerColor>[
+                for (final MarkerColor c in _catalog)
+                  if (c.brandId == _brand.id) c,
+              ]))
+          ?.hex ??
+      InkColors.of(context).unknownSwatchHex;
 
   String _roleFor(PaletteSuggestion suggestion) {
     // An AI item carries its own role, from the same item as its reason.
@@ -1015,6 +1630,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final input = _baseInput.trim().toUpperCase();
     final example = _exampleCode;
     if (_unknownInput) {
+      // Two of the user's brands have this code: it needs its brand.
+      if (_ambiguousBase) return context.l10n.paletteAmbiguousBase;
       return context.l10n.paletteUnknownCode(_brandSelector, input, example);
     }
     return switch (failure!) {
@@ -1023,17 +1640,33 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       PaletteFailureReason.missingBaseColor => context.l10n.paletteMissingBase(
         example,
       ),
-      PaletteFailureReason.invalidBaseColor => context.l10n.paletteNotAvailable(
-        _brandSelector,
-        input,
-        example,
-      ),
+      PaletteFailureReason.invalidBaseColor =>
+        _baseOfUnusedBrand(example) ??
+            context.l10n.paletteNotAvailable(_brandSelector, input, example),
+      PaletteFailureReason.baseDried => context.l10n.paletteBaseDried(input),
       PaletteFailureReason.noSuggestions => context.l10n.paletteNoSuggestions,
     };
   }
 
-  /// Selector of the brand-aware messages, with ICU's `other` fallback.
-  String get _brandSelector => _brand.name;
+  /// What to say when the base is a marker of a brand that is not in use (a
+  /// palette kept across a change of brand, or loaded from another brand):
+  /// "not in your collection" would be false. `null` for any other base.
+  String? _baseOfUnusedBrand(String example) {
+    final MarkerColor? base = _resolvedBase;
+    if (base == null ||
+        _range.any((MarkerColor c) => c.brandId == base.brandId)) {
+      return null;
+    }
+    return context.l10n.paletteBaseOtherBrand(
+      base.newCode,
+      MarkerBrand.fromId(base.brandId).label,
+      example,
+    );
+  }
+
+  /// Selector of the brand-aware messages, with ICU's `other` fallback
+  /// (which names no brand: the one used with "Mix my brands").
+  String get _brandSelector => _scopeMixed ? 'mixed' : _brand.name;
 
   Scene? get _defaultScenarioBaseNotice {
     if (!_useScenario || _photoMode) return null;
@@ -1071,7 +1704,17 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     }
 
     final bool customMode = _mode == PaletteMode.customPalette;
-    final String? error = _photoError ?? _errorMessage();
+    // The empty collection state (no markers, or all of them dried) already
+    // says what is wrong and offers the way out, so the failure note must not
+    // repeat it above it.
+    final bool emptyCollectionStateVisible =
+        !_hasMarkers &&
+        _suggestions.isEmpty &&
+        !(_chainMode && _chainWholeRange) &&
+        !customMode &&
+        !_photoMode;
+    final String? error =
+        _photoError ?? (emptyCollectionStateVisible ? null : _errorMessage());
     final bool hasResult = _suggestions.isNotEmpty;
 
     return LayoutBuilder(
@@ -1139,7 +1782,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         customMode: customMode || _photoMode,
         paletteSize: _paletteSize,
         onSizeChanged: _selectSize,
-        catalog: _catalog,
+        catalog: _baseChoices,
         resolvedBase: _resolvedBase,
         exampleCode: _exampleCode,
         hint: _baseHint,
@@ -1152,7 +1795,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         paletteInset(
           PaletteInfoCard(
             message: context.l10n.paletteUsingDefaultBase(
-              _scenarioDefaultBase!.newCode,
+              _codeLabel(_scenarioDefaultBase!),
               context.l10n.scenarioLabel(_scenario),
             ),
           ),
@@ -1176,7 +1819,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       if (_notice != null)
         paletteInset(
           PaletteNoticeCard(
-            message: _notice!,
+            message: _notice!.message(context.l10n),
             onDismiss: () => setState(() => _notice = null),
           ),
           top: InkSpacing.block,
@@ -1187,7 +1830,17 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final List<Widget> result = <Widget>[
       ..._buildChainNotes(),
       if (hasResult) ..._buildResult(split: split),
-      if (!hasResult &&
+      // Without a marker of the collection there is nothing to build: the
+      // page says so and offers the collection, instead of the hint that
+      // asks for a base marker the user does not have. The blending chain
+      // can still use the whole range when the user asks for it.
+      if (!_hasMarkers &&
+          !hasResult &&
+          !(_chainMode && _chainWholeRange) &&
+          !customMode &&
+          !_photoMode)
+        paletteInset(_emptyCollectionState(), top: InkSpacing.block)
+      else if (!hasResult &&
           error == null &&
           !customMode &&
           !(_chainMode && _chainResult != null))
@@ -1206,10 +1859,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       hasResult: hasResult,
       saved: hasResult && _isSaved,
       canRegenerate: _canRegenerate,
-      canGenerate: _baseInput.trim().isNotEmpty || _useScenario,
+      canGenerate: _canBuild,
+      canSuggestAi: _canBuild,
       onSuggestAi: _suggestWithAi,
       onRegenerate: _regenerate,
-      onGenerate: _recompute,
+      onGenerate: () => _replacePalette(_recompute),
       onSave: _save,
     );
     final EdgeInsets listPadding = EdgeInsets.only(
@@ -1264,6 +1918,36 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     return false;
   }
 
+  /// The empty state of a collection with no markers of the brand: the page
+  /// says which brand is empty and opens the collection, the way Settings
+  /// does.
+  ///
+  /// A collection whose markers all ran dry is not an empty one: it says
+  /// that, instead of claiming the user owns nothing.
+  ///
+  /// With "Mix my brands" in effect there are usable markers of two brands,
+  /// so the title only ever speaks of the active brand. "All dried out"
+  /// counts every brand the switch covers (see `ownedCandidateColors`).
+  Widget _emptyCollectionState() {
+    final AppLocalizations l10n = context.l10n;
+    return EmptyState(
+      key: const ValueKey<String>('palette-empty-collection'),
+      icon: InkIcons.grid,
+      title: _allMarkersDried
+          ? l10n.driedTitle
+          : l10n.missingMarkersTitle(_brand.label),
+      message: _allMarkersDried ? l10n.allMarkersDried : null,
+      actions: <Widget>[
+        InkButton.secondary(
+          key: const ValueKey<String>('palette-empty-collection-action'),
+          label: l10n.missingMarkersAction,
+          expand: true,
+          onPressed: () => CollectionPage.open(context),
+        ),
+      ],
+    );
+  }
+
   String _subtitle() {
     if (_useScenario) {
       return context.l10n.commonMarkersAvailable(_available.length);
@@ -1283,7 +1967,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   }
 
   bool _isLocked(PaletteSuggestion suggestion) => _lockedCodes.any(
-    (code) => code.toUpperCase() == suggestion.color.newCode.toUpperCase(),
+    (code) => code.toUpperCase() == suggestion.color.colorId.toUpperCase(),
   );
 
   /// Whether Regenerate has anything else to show. A blending chain has
@@ -1295,11 +1979,13 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   /// Regenerates the palette on screen: another variation of the same type
   /// (the base marker and the locked ones stay), or, for a blending chain,
   /// the next alternative chain.
-  void _regenerate() {
+  Future<void> _regenerate() => _replacePalette(_regenerateNow);
+
+  void _regenerateNow() {
     if (_chainMode) {
       final BlendingChainResult? result = _chainResult;
       if (result == null || result.chains.length < 2) return;
-      _selectChain((_chainIndex + 1) % result.chains.length);
+      _selectChainNow((_chainIndex + 1) % result.chains.length);
       return;
     }
     setState(() => _variationToken++);

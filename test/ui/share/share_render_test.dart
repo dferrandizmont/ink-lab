@@ -172,7 +172,11 @@ void main() {
             createdAtEpochMs: 1,
             colorCodes: const <String>['B2', 'Y9', 'B1'],
           ),
-          catalog: catalog,
+          // The palette is DecoTime: colours are looked up by colour id.
+          catalog: <MarkerColor>[
+            for (final MarkerColor c in catalog)
+              c.copyWith(brandId: MarkerBrand.decoTime.id),
+          ],
           baseRole: 'Base',
         );
         expect(card.title, 'My sky');

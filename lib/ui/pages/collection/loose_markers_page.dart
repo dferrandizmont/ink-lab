@@ -127,6 +127,12 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
     final List<MarkerColor> tickable = visible
         .where((MarkerColor c) => !viaSet(c))
         .toList(growable: false);
+    // The loose markers on screen that the user owns: "Untick all" has
+    // nothing to take out when there are none.
+    final Set<String> ownedVisible = <String>{
+      for (final MarkerColor c in visible)
+        if (extras.contains(c.newCode.toUpperCase())) c.colorId,
+    };
     // What "Tick all" would add: the tickable markers not ticked yet.
     final List<MarkerColor> toTick = tickable
         .where((MarkerColor c) => !owned(c))
@@ -160,7 +166,7 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
               label: context.l10n.collectionTickVisible,
               onPressed: tickable.isEmpty
                   ? null
-                  : () => _tickAll(scope, settings, tickable, toTick.length),
+                  : () => _tickAll(scope, tickable, toTick.length),
             ),
           ),
           const SizedBox(width: InkSpacing.buttonGap),
@@ -168,9 +174,9 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
             child: InkButton.secondary(
               key: const ValueKey<String>('collection-untick-visible'),
               label: context.l10n.collectionUntickVisible,
-              onPressed: visible.isEmpty
+              onPressed: ownedVisible.isEmpty
                   ? null
-                  : () => _setExtras(scope, settings, visible, add: false),
+                  : () => _untickVisible(scope, visible),
             ),
           ),
         ],
@@ -235,9 +241,8 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
                   inSet: inSet,
                   onChanged: inSet
                       ? null
-                      : (bool on) => _setExtras(scope, settings, <MarkerColor>[
-                          color,
-                        ], add: on),
+                      : (bool on) =>
+                            _setExtras(scope, <MarkerColor>[color], add: on),
                 );
               },
             ),
@@ -259,7 +264,6 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
   /// is easy to do by mistake).
   Future<void> _tickAll(
     AppScope scope,
-    AppSettings settings,
     List<MarkerColor> colors,
     int adding,
   ) async {
@@ -272,20 +276,62 @@ class _LooseMarkersPageState extends State<LooseMarkersPage> {
       );
       if (!ok || !mounted) return;
     }
-    await _setExtras(scope, settings, colors, add: true);
+    await _setExtras(scope, colors, add: true);
   }
 
+  /// Takes the markers on screen out of the collection.
+  ///
+  /// It asks first: the markers of a list are ticked one by one, and a tap
+  /// on "Untick all" would take them all away at once.
+  Future<void> _untickVisible(AppScope scope, List<MarkerColor> colors) async {
+    final AppSettingsRepository repository = widget.settings ?? scope.settings;
+    final Set<String> owned = _ownedNow(repository, colors);
+    if (owned.isNotEmpty) {
+      final bool ok = await confirmAction(
+        context,
+        title: context.l10n.collectionRemoveMarkersTitle(owned.length),
+        body: context.l10n.collectionRemoveMarkersBody,
+        confirmLabel: context.l10n.collectionRemoveConfirm,
+      );
+      if (!ok || !mounted) return;
+    }
+    await repository.removeExtraMarkerIds(owned);
+  }
+
+  /// Adds [colors] to the collection or takes them out of it.
+  ///
+  /// The change is applied to the collection the repository holds now, not
+  /// to the copy this page was built with: markers the user imported in
+  /// between are never lost.
   Future<void> _setExtras(
     AppScope scope,
-    AppSettings settings,
     List<MarkerColor> colors, {
     required bool add,
   }) {
-    final Set<String> next = <String>{...settings.extraMarkerIds};
-    for (final MarkerColor color in colors) {
-      add ? next.add(color.colorId) : next.remove(color.colorId);
-    }
-    return (widget.settings ?? scope.settings).setExtraMarkerIds(next);
+    final AppSettingsRepository repository = widget.settings ?? scope.settings;
+    final Set<String> ids = <String>{
+      for (final MarkerColor color in colors) color.colorId,
+    };
+    return add
+        ? repository.addExtraMarkerIds(ids)
+        : repository.removeExtraMarkerIds(ids);
+  }
+
+  /// The ids of [colors] the user owns right now: the collection of the
+  /// repository at this moment, not the copy the page was built with.
+  Set<String> _ownedNow(
+    AppSettingsRepository repository,
+    List<MarkerColor> colors,
+  ) {
+    if (colors.isEmpty) return const <String>{};
+    final Set<String> extras = scopedCodesForBrand(
+      repository.settings.extraMarkerIds,
+      colors.first.brandId,
+    );
+    return <String>{
+      for (final MarkerColor color in colors)
+        if (extras.contains(color.newCode.toUpperCase())) color.colorId,
+    };
   }
 }
 

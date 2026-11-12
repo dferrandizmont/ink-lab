@@ -96,6 +96,24 @@ Matcher refused(BackupArchiveReason reason) => throwsA(
 );
 
 void main() {
+  test('archive preserves mixed scope and per-marker brands', () async {
+    final source = await harness();
+    await source.appSettings.setScope(BrandScope.mixedBrands);
+    await source.savedPalettes.save(
+      palette(
+        baseCode: 'ohuhu_oahu:120',
+        colorCodes: ['ohuhu_oahu:120', 'decotime:120'],
+      ),
+    );
+    final bytes = await service(source).exportArchive();
+    final target = await harness();
+    await service(target).importArchive(bytes);
+    expect(target.appSettings.scope, BrandScope.mixedBrands);
+    expect(
+      target.savedPalettes.palettesOf(MarkerBrand.ohuhuOahu).single.colorIds,
+      ['ohuhu_oahu:120', 'decotime:120'],
+    );
+  });
   test(
     'ZIP preserves a migrated file diary and persists the restored diary',
     () async {

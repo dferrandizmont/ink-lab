@@ -186,6 +186,9 @@ class _AppShellState extends State<AppShell> {
 
   int _selectedIndex = _homeIndex;
   final Set<int> _visited = <int>{_homeIndex};
+  // The chrome reparents the tab content when the bottom bar becomes a rail.
+  // Keep the whole subtree, including scroll positions and sheet callers.
+  final GlobalKey _tabsKey = GlobalKey(debugLabel: 'shell-tabs');
 
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _brandSubscription;
@@ -333,6 +336,7 @@ class _AppShellState extends State<AppShell> {
     // One top safe area for every page, so no title is drawn under the
     // system status bar (pages must not add their own).
     final Widget body = SafeArea(
+      key: _tabsKey,
       bottom: false,
       child: IndexedStack(
         index: _selectedIndex,

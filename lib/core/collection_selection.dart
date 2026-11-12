@@ -73,40 +73,135 @@ List<MarkerColor> swatchCandidateColors({
   required MarkerBrand brand,
 }) => brandRangeColors(colors: colors, brand: brand);
 
-/// The colours the palette engines may use: the user's markers.
+/// The colours the palette engines may use: the user's own markers.
 ///
-/// A collection that is not set up yet (no owned set, no extra marker) uses
-/// the whole range of the brand so palettes and ideas still work; this holds
-/// for every brand.
+/// Only the markers the user owns are offered, and never the dried-out ones
+/// (see [ownedColors]). A collection that owns nothing of the brand offers
+/// nothing: there is no fallback to the whole range, so no screen can pretend
+/// that a marker the user does not have is theirs.
 ///
-/// [driedColorIds] are never offered (see [ownedColors]). A collection whose
-/// markers are all dried is still a configured collection: the result is then
-/// empty rather than the whole range.
+/// The whole range is still one click away, but only where the user asks for
+/// it explicitly and the control says so (see [brandRangeColors]).
 List<MarkerColor> paletteCandidateColors({
   required List<MarkerColor> colors,
   required MarkerBrand brand,
+  BrandScope scope = BrandScope.singleBrand,
+  Set<String> activeSetIds = const {},
+  Set<String> ownedMarkerCodes = const {},
+  Set<String> driedColorIds = const {},
+}) => mixedCandidateColors(
+  colors: colors,
+  brand: brand,
+  scope: scope,
+  activeSetIds: activeSetIds,
+  ownedMarkerCodes: ownedMarkerCodes,
+  driedColorIds: driedColorIds,
+);
+
+/// The one selection rule behind every palette producer (Palette, the AI
+/// advisors, Ideas, the Colour map and the home widget).
+///
+/// With [BrandScope.mixedBrands] ("Mix my brands") it is the union of the
+/// usable markers of every brand the user owns, brand by brand in
+/// [MarkerBrand.values] order, so two markers that share a code stay apart
+/// (`ohuhu_oahu:120`, `decotime:120`). [colors] must then hold the catalogue
+/// of every owned brand (`MarkerRepository.loadCollectionCatalog`).
+///
+/// With [BrandScope.singleBrand] it is the usable markers of [brand] alone.
+/// A mixed preference left on while fewer than two brands have a usable
+/// marker behaves as single: there is nothing to mix.
+List<MarkerColor> mixedCandidateColors({
+  required List<MarkerColor> colors,
+  required MarkerBrand brand,
+  BrandScope scope = BrandScope.mixedBrands,
   Set<String> activeSetIds = const {},
   Set<String> ownedMarkerCodes = const {},
   Set<String> driedColorIds = const {},
 }) {
-  final owned = ownedColors(
+  List<MarkerColor> of(MarkerBrand b) => ownedColors(
     colors: colors,
-    brand: brand,
+    brand: b,
+    ownedSetIds: activeSetIds,
+    ownedMarkerCodes: ownedMarkerCodes,
+    driedColorIds: driedColorIds,
+  );
+  if (scope == BrandScope.mixedBrands) {
+    final all = <MarkerColor>[for (final b in MarkerBrand.values) ...of(b)];
+    if (hasMixedBrands(all)) return all;
+  }
+  return of(brand);
+}
+
+/// The markers of the collection the palette producers work with, the
+/// dried-out ones included: what tells a collection whose markers all ran dry
+/// from one that owns nothing.
+///
+/// It follows [mixedCandidateColors]: with [BrandScope.singleBrand], or with
+/// "Mix my brands" left on while only one brand has a usable marker, it is
+/// the markers of [brand]. With "Mix my brands" and two or more usable
+/// brands, or none at all (every marker of every brand ran dry), it is the
+/// markers of every brand the user owns.
+List<MarkerColor> ownedCandidateColors({
+  required List<MarkerColor> colors,
+  required MarkerBrand brand,
+  BrandScope scope = BrandScope.singleBrand,
+  Set<String> activeSetIds = const {},
+  Set<String> ownedMarkerCodes = const {},
+  Set<String> driedColorIds = const {},
+}) {
+  List<MarkerColor> of(MarkerBrand b) => ownedColors(
+    colors: colors,
+    brand: b,
     ownedSetIds: activeSetIds,
     ownedMarkerCodes: ownedMarkerCodes,
   );
-  List<MarkerColor> usable(List<MarkerColor> list) => driedColorIds.isEmpty
-      ? list
-      : list.where((color) => !driedColorIds.contains(color.colorId)).toList();
-  if (owned.isNotEmpty) return usable(owned);
-  // Leftover retail set ids do not configure individually collected brands.
-  final configured =
-      (brand.hasRetailSets && activeSetIds.isNotEmpty) ||
-      scopedCodesForBrand(ownedMarkerCodes, brand.id).isNotEmpty;
-  return configured
-      ? owned
-      : usable(brandRangeColors(colors: colors, brand: brand));
+  if (scope == BrandScope.mixedBrands &&
+      usableOwnedBrands(
+            colors: colors,
+            activeSetIds: activeSetIds,
+            ownedMarkerCodes: ownedMarkerCodes,
+            driedColorIds: driedColorIds,
+          ).length !=
+          1) {
+    return <MarkerColor>[for (final b in MarkerBrand.values) ...of(b)];
+  }
+  return of(brand);
 }
+
+/// The brands the user owns a usable (not dried) marker of, in
+/// [MarkerBrand.values] order. Two or more make "Mix my brands" available.
+List<MarkerBrand> usableOwnedBrands({
+  required List<MarkerColor> colors,
+  Set<String> activeSetIds = const {},
+  Set<String> ownedMarkerCodes = const {},
+  Set<String> driedColorIds = const {},
+}) => <MarkerBrand>[
+  for (final b in MarkerBrand.values)
+    if (ownedColors(
+      colors: colors,
+      brand: b,
+      ownedSetIds: activeSetIds,
+      ownedMarkerCodes: ownedMarkerCodes,
+      driedColorIds: driedColorIds,
+    ).isNotEmpty)
+      b,
+];
+
+/// Whether [colors] hold markers of more than one brand.
+bool hasMixedBrands(Iterable<MarkerColor> colors) {
+  String? first;
+  for (final c in colors) {
+    first ??= c.brandId;
+    if (c.brandId != first) return true;
+  }
+  return false;
+}
+
+/// The code of [color] as a list shows it: alone in a single-brand list, with
+/// its brand in front (`Ohuhu BV04`, `DecoTime 91`) when the list is [mixed].
+String markerCodeLabel(MarkerColor color, {required bool mixed}) => mixed
+    ? '${MarkerBrand.fromId(color.brandId).label} ${color.newCode}'
+    : color.newCode;
 
 List<MarkerColor> _sorted(Iterable<MarkerColor> colors) =>
     // MainActivity orders the active collection before generating palettes.

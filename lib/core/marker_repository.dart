@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'json_value.dart';
+import 'collection_selection.dart';
 import 'models.dart';
 import 'own_colors.dart';
 import 'scene_catalog.dart';
@@ -143,6 +144,42 @@ final class MarkerRepository {
     );
     _effectiveFutures[brand] = (revision: revision, future: future);
     return future;
+  }
+
+  /// The colours of [brand] and, with [BrandScope.mixedBrands] ("Mix my
+  /// brands") or [allOwnedBrands], of every other brand the user owns a
+  /// marker of: what `paletteCandidateColors` chooses from. [brand] comes
+  /// first. With the single scope it is the catalogue of [brand] alone.
+  ///
+  /// Each brand is read through [loadColors] (the same cache, the user's own
+  /// colours applied); a brand that cannot be read adds nothing.
+  Future<List<MarkerColor>> loadCollectionCatalog({
+    required MarkerBrand brand,
+    required AppSettings settings,
+    bool allOwnedBrands = false,
+    BrandScope scope = BrandScope.singleBrand,
+  }) async {
+    final brands = <MarkerBrand>{brand};
+    if (allOwnedBrands || scope == BrandScope.mixedBrands) {
+      for (final b in MarkerBrand.values) {
+        if ((b.hasRetailSets && settings.effectiveSetIds().isNotEmpty) ||
+            scopedCodesForBrand(settings.ownedMarkerCodes, b.id).isNotEmpty) {
+          brands.add(b);
+        }
+      }
+    }
+    return <MarkerColor>[
+      for (final colors in await Future.wait(
+        brands.map((b) async {
+          try {
+            return await loadColors(b);
+          } catch (_) {
+            return <MarkerColor>[];
+          }
+        }),
+      ))
+        ...colors,
+    ];
   }
 
   /// The colours of [brand] when they are already in memory, else `null`.

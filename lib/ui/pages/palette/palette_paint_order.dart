@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/blending_chain.dart';
+import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
 import '../../../core/palette_advisor.dart';
 import '../../../core/palette_generator.dart';
 import '../../../l10n/l10n.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/branded_code.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_disclosure.dart';
+import '../../widgets/one_line_text.dart';
 import 'palette_layout.dart';
-import 'palette_one_line.dart';
 import 'palette_reasons.dart';
 import 'palette_roles.dart';
 
@@ -22,10 +24,19 @@ final class PlanStep {
     required this.code,
     required this.name,
     required this.tip,
+    this.marker,
   });
 
   final int order;
+
+  /// [code] is the marker as plain text: with its brand ("DecoTime 91") when
+  /// the palette mixes brands.
   final String zone, code, name, tip;
+
+  /// The marker of the step when the palette mixes brands, so the row draws
+  /// its brand and its code apart; `null` in a palette of one brand, whose
+  /// row shows [code].
+  final MarkerColor? marker;
 }
 
 /// One row of the paint order: number, then the step (zone) with the marker
@@ -89,10 +100,13 @@ class PaintStepRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: InkSpacing.s6),
-              Text(
-                step.code,
-                style: AppTypography.code.copyWith(color: ink.fg),
-              ),
+              if (step.marker case final MarkerColor marker)
+                BrandedCode(marker: marker, mixed: true)
+              else
+                Text(
+                  step.code,
+                  style: AppTypography.code.copyWith(color: ink.fg),
+                ),
             ],
           ),
         ),
@@ -112,10 +126,12 @@ List<PlanStep> buildPaintPlan({
   required bool photoMode,
   required bool keepOrder,
   required List<PaletteSuggestion> suggestions,
+  // Whether the codes carry their brand (the palette mixes brands).
+  bool mixed = false,
   required String Function(MarkerColor marker) photoRole,
   required String Function(PaletteSuggestion suggestion) roleFor,
 }) {
-  if (chain != null) return _chainPlan(t, chain);
+  if (chain != null) return _chainPlan(t, chain, mixed);
   final steps = <PlanStep>[];
   var order = 1;
   if (base != null) {
@@ -123,7 +139,8 @@ List<PlanStep> buildPaintPlan({
       PlanStep(
         order: order++,
         zone: photoMode ? photoRole(base) : t.roleLabel(PaletteRoles.base),
-        code: base.newCode,
+        code: markerCodeLabel(base, mixed: mixed),
+        marker: mixed ? base : null,
         name: base.newName,
         tip: photoMode ? '' : t.palettePaintTipBase,
       ),
@@ -165,7 +182,8 @@ List<PlanStep> buildPaintPlan({
         PlanStep(
           order: order++,
           zone: t.roleLabel(role),
-          code: suggestion.color.newCode,
+          code: markerCodeLabel(suggestion.color, mixed: mixed),
+          marker: mixed ? suggestion.color : null,
           name: suggestion.color.newName,
           tip: tip,
         ),
@@ -176,7 +194,7 @@ List<PlanStep> buildPaintPlan({
 }
 
 /// A blending chain is painted in its own order, light to dark.
-List<PlanStep> _chainPlan(AppLocalizations t, BlendingChain chain) {
+List<PlanStep> _chainPlan(AppLocalizations t, BlendingChain chain, bool mixed) {
   final List<String> roles = blendingChainRoles(chain);
   final int last = chain.colors.length - 1;
   return <PlanStep>[
@@ -184,7 +202,8 @@ List<PlanStep> _chainPlan(AppLocalizations t, BlendingChain chain) {
       PlanStep(
         order: i + 1,
         zone: t.roleLabel(roles[i]),
-        code: chain.colors[i].newCode,
+        code: markerCodeLabel(chain.colors[i], mixed: mixed),
+        marker: mixed ? chain.colors[i] : null,
         name: chain.colors[i].newName,
         tip: i == 0
             ? t.palettePaintTipChainFirst

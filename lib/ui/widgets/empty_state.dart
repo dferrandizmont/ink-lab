@@ -88,9 +88,17 @@ class EmptyState extends StatelessWidget {
               ] else if (actionLabel != null && onAction != null) ...<Widget>[
                 const SizedBox(height: 16),
                 if (primaryAction)
-                  InkButton(label: actionLabel!, onPressed: onAction)
+                  InkButton(
+                    label: actionLabel!,
+                    onPressed: onAction,
+                    maxLines: null,
+                  )
                 else
-                  InkButton.secondary(label: actionLabel!, onPressed: onAction),
+                  InkButton.secondary(
+                    label: actionLabel!,
+                    onPressed: onAction,
+                    maxLines: null,
+                  ),
               ],
             ],
           ),

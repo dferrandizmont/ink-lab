@@ -25,6 +25,7 @@ Future<PaletteAdviceSuccess> adviseWith(
       baseColor: base,
       paletteSize: 5,
       brand: MarkerBrand.ohuhuOahu,
+      activeSetIds: collectionSetIds,
     ),
   );
   return result as PaletteAdviceSuccess;

@@ -11,6 +11,50 @@ import 'package:ink_lab/core/scene_catalog.dart';
 import 'fixtures.dart';
 
 void main() {
+  test('a base written with its brand names one marker', () {
+    final ohuhu = color('120', '000000', sets: ['classic_160']);
+    final deco = color('120', '999999', brandId: 'decotime', sets: []);
+    final brush = color('B12', '0000ff', brandId: 'promarker_brush', sets: []);
+    final all = [ohuhu, deco, brush];
+    expect(resolveBrandedBaseColor('decotime:120', all), deco);
+    expect(resolveBrandedBaseColor(' DECOTIME 120 ', all), deco);
+    expect(resolveBrandedBaseColor('ohuhu 120', all), ohuhu);
+    // A brand whose name starts like another one's.
+    expect(resolveBrandedBaseColor('Promarker Brush B12', all), brush);
+    expect(resolveBrandedBaseColor('Promarker B12', all), isNull);
+    expect(resolveBrandedBaseColor('120', all), isNull);
+    expect(resolveBrandedBaseColor('copic:120', all), isNull);
+    // The bare code says which markers share it.
+    expect(baseCodeMatches('120', all), [ohuhu, deco]);
+    expect(baseCodeMatches('b 12', all), [brush]);
+    expect(baseCodeMatches('', all), isEmpty);
+    expect(resolveBaseColor('B12', all), brush);
+  });
+
+  test('mixed generation and base resolution distinguish shared codes', () {
+    final base = color('B08', '6666ff', sets: ['classic_160']);
+    final ohuhu = color('120', '000000', sets: ['classic_160']);
+    final deco = color('120', '999999', brandId: 'decotime', sets: []);
+    final green = color('G1', '00ff00', sets: ['classic_160']);
+    final all = [base, ohuhu, deco, green];
+    expect(resolveBaseColor('120', all), isNull);
+    expect(resolveBaseColor('Ohuhu 120', all), ohuhu);
+    expect(resolveBaseColor('decotime:120', all), deco);
+    final advice = const PaletteGenerator().advise(
+      PaletteAdvisorRequest(
+        baseColor: base,
+        availableColors: all,
+        activeSetIds: {'classic_160'},
+        ownedMarkerCodes: {'decotime:120'},
+        scope: BrandScope.mixedBrands,
+        paletteSize: 3,
+      ),
+    ) as PaletteAdviceSuccess;
+    expect(
+      advice.suggestions.map((s) => s.color.colorId),
+      containsAll(['ohuhu_oahu:120', 'decotime:120']),
+    );
+  });
   final ohuhu = parseColors(
     File(MarkerBrand.ohuhuOahu.assetPath).readAsStringSync(),
     brand: MarkerBrand.ohuhuOahu,
@@ -382,8 +426,8 @@ void main() {
         colors: [...ohuhu, ...deco],
         brand: MarkerBrand.decoTime,
       ).toSet(),
-      // Not set up yet: the whole DecoTime range, like Ohuhu.
-      deco.toSet(),
+      // Not set up yet: nothing to offer, never the whole range.
+      isEmpty,
     );
     final owned = paletteCandidateColors(
       colors: [...ohuhu, ...deco],
@@ -463,12 +507,21 @@ void main() {
         PaletteFailureReason.noAvailableColors,
       );
       expect(
-        failure(PaletteAdvisorRequest(availableColors: ohuhu)),
+        failure(
+          PaletteAdvisorRequest(
+            availableColors: ohuhu,
+            activeSetIds: {'classic_40'},
+          ),
+        ),
         PaletteFailureReason.missingBaseColor,
       );
       expect(
         failure(
-          PaletteAdvisorRequest(availableColors: ohuhu, baseColor: deco[1]),
+          PaletteAdvisorRequest(
+            availableColors: ohuhu,
+            baseColor: deco[1],
+            activeSetIds: {'classic_40'},
+          ),
         ),
         PaletteFailureReason.invalidBaseColor,
       );
@@ -482,26 +535,31 @@ void main() {
         ),
         PaletteFailureReason.noAvailableColors,
       );
-      // A DecoTime collection that is not set up palettes from the range.
+      // The request carries the collection: the engine never widens it.
       expect(
         advisor.advise(
           PaletteAdvisorRequest(
             availableColors: deco,
             brand: MarkerBrand.decoTime,
             baseColor: deco[1],
+            ownedMarkerCodes: {for (final MarkerColor c in deco) c.colorId},
           ),
         ),
         isA<PaletteAdviceSuccess>(),
       );
       expect(
         failure(
-          PaletteAdvisorRequest(availableColors: [base], baseColor: base),
+          PaletteAdvisorRequest(
+            availableColors: [base],
+            baseColor: base,
+            activeSetIds: {'classic_40'},
+          ),
         ),
         PaletteFailureReason.noSuggestions,
       );
       final success = advisor.advise(
         PaletteAdvisorRequest(
-          availableColors: ohuhu,
+          availableColors: collection,
           activeSetIds: {'classic_40'},
           scenario: Scene.byId('forestScene'),
         ),
@@ -515,6 +573,37 @@ void main() {
       );
     },
   );
+  test('a base the user owns but that ran dry has its own reason', () {
+    const advisor = PaletteGenerator();
+    PaletteFailureReason failure(PaletteAdvisorRequest request) =>
+        (advisor.advise(request) as PaletteAdviceFailure).reason;
+    // The base ran dry, so it is left out of the usable collection; the
+    // engine says so, instead of saying it is not in the collection.
+    expect(
+      failure(
+        PaletteAdvisorRequest(
+          availableColors: collection
+              .where((MarkerColor c) => c.colorId != base.colorId)
+              .toList(),
+          baseColor: base,
+          activeSetIds: {'classic_40'},
+          driedColorIds: {base.colorId},
+        ),
+      ),
+      PaletteFailureReason.baseDried,
+    );
+    // A base the user does not own at all keeps the old reason.
+    expect(
+      failure(
+        PaletteAdvisorRequest(
+          availableColors: collection,
+          baseColor: deco[1],
+          activeSetIds: {'classic_40'},
+        ),
+      ),
+      PaletteFailureReason.invalidBaseColor,
+    );
+  });
   test('base input resolves current and legacy codes case-insensitively', () {
     final first = color('R1', 'ff0000').copyWith(oldCode: 'OLD7');
     final later = color('OLD7', '00ff00');
@@ -527,19 +616,25 @@ void main() {
   test('palette builders accept supplied candidates from other brands', () {
     final seed = color('base', 'ff0000');
     final foreign = color('companion', '00ffff', brandId: 'decotime');
+    // Another brand's marker with the code of the base is another marker
+    // ("Mix my brands"): only the base itself is left out.
     final duplicateCode = foreign.copyWith(newCode: seed.newCode);
     final candidates = [seed, duplicateCode, foreign];
     expect(
-      buildPalette(seed, candidates, PaletteMode.triad).single.color,
-      same(foreign),
+      buildPalette(
+        seed,
+        candidates,
+        PaletteMode.triad,
+      ).map((s) => s.color.colorId).toSet(),
+      {duplicateCode.colorId, foreign.colorId},
     );
     expect(
       buildScenarioPalette(
         seed,
         candidates,
         Scene.byId('forestScene'),
-      ).single.color,
-      same(foreign),
+      ).map((s) => s.color.colorId).toSet(),
+      {duplicateCode.colorId, foreign.colorId},
     );
   });
   test('scenario minimum saturation adds Kotlin penalty only below bound', () {

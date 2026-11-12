@@ -11,6 +11,128 @@ import 'package:ink_lab/data/ai_settings.dart';
 import 'ai_test_support.dart';
 
 void main() {
+  test('a mixed answer is read as leniently as a single-brand one', () {
+    final base = marker('B08', '2255aa');
+    final five = marker('05', 'aa2222').copyWith(brandId: 'decotime');
+    final ohuhuFive = marker('05', '22aa22');
+    final seven = marker('07', '888888').copyWith(brandId: 'decotime');
+    final request = PaletteAdvisorRequest(
+      baseColor: base,
+      availableColors: [base, five, ohuhuFive, seven],
+      scope: BrandScope.mixedBrands,
+      activeSetIds: collectionSetIds,
+      ownedMarkerCodes: {'decotime:05', 'decotime:07'},
+    );
+    final prepared = preparePaletteWire(request, request.availableColors, 40);
+    List<String> read(List<String> codes) => validatePaletteItems(
+      parsePaletteContent(
+        jsonEncode({
+          'palette': [
+            for (final code in codes) {'code': code, 'role': 'Shadow'},
+          ],
+        }),
+      ).items,
+      prepared.byCode,
+      prepared.baseCode,
+      4,
+    ).map((s) => s.color.colorId).toList();
+
+    // The model dropped the leading zero, or wrote the id its own way.
+    expect(read(['DECOTIME:5']), ['decotime:05']);
+    expect(read(['decotime:5', 'Ohuhu_Oahu:5']), [
+      'decotime:05',
+      'ohuhu_oahu:05',
+    ]);
+    expect(read(['DECOTIME: 07', 'decotime:7.']), ['decotime:07']);
+    expect(read(['DecoTime 5', 'Ohuhu 5']), ['decotime:05', 'ohuhu_oahu:05']);
+    // A code only one brand has still needs no brand.
+    expect(read(['7']), ['decotime:07']);
+    // A shared code without its brand names no marker, zero or not.
+    expect(read(['5', '05']), isEmpty);
+    // The base is the base however it is spelled.
+    expect(read(['ohuhu_oahu:b08', 'OHUHU_OAHU:B08']), isEmpty);
+    expect(normalizeColorIdForMatch(' decotime :5'), 'DECOTIME:05');
+    expect(normalizeColorIdForMatch('5'), '05');
+  });
+
+  test('a model item with an overlong code is skipped unread', () {
+    final base = marker('B08', '2255aa');
+    final other = marker('E08', 'aa5522');
+    final byCode = {'B08': base, 'E08': other};
+    AiPaletteItem item(String code) => AiPaletteItem(
+      code: code,
+      rawCode: code,
+      name: 'Name E08',
+      role: 'Shadow',
+      reason: 'deep',
+    );
+    final long = 'E08${'.' * maxModelCodeLength}';
+    expect(long.length, greaterThan(maxModelCodeLength));
+    // Its name would resolve it: it is not looked at at all.
+    expect(validatePaletteItems([item(long)], byCode, 'B08', 4), isEmpty);
+    expect(
+      validatePaletteItems(
+        [item(long), item('E08')],
+        byCode,
+        'B08',
+        4,
+      ).map((s) => s.color.newCode),
+      ['E08'],
+    );
+  });
+
+  test('mixed AI wire keeps brands in prompt and parser identifiers', () {
+    final base = marker('91', 'ffffff');
+    final other = base.copyWith(brandId: 'decotime');
+    final next = marker('92', '000000');
+    final request = PaletteAdvisorRequest(
+      baseColor: base,
+      availableColors: [base, other, next],
+      scope: BrandScope.mixedBrands,
+      activeSetIds: collectionSetIds,
+      ownedMarkerCodes: {'decotime:91'},
+    );
+    final prepared = preparePaletteWire(request, request.availableColors, 40);
+    final prompt = buildPaletteUserPrompt(prepared.wire);
+    expect(prompt, contains('DECOTIME:91#'));
+    expect(buildOnDevicePrompt(prepared.wire), contains('DECOTIME:91 |'));
+    expect(buildOnDevicePrompt(prepared.wire), contains('OHUHU_OAHU:92 |'));
+    expect(prompt, contains('BASE_CODE=OHUHU_OAHU:91'));
+    final found = validatePaletteItems(
+      parsePaletteContent(
+        '{"palette":[{"code":"decotime:91","role":"Shadow"},{"code":"ohuhu_oahu:92","role":"Accent"}]}',
+      ).items,
+      prepared.byCode,
+      prepared.baseCode,
+      4,
+    );
+    expect(found.map((s) => s.color.colorId), ['decotime:91', 'ohuhu_oahu:92']);
+    expect(
+      validatePaletteItems(
+        parsePaletteContent('{"palette":[{"code":"91"}]}').items,
+        prepared.byCode,
+        prepared.baseCode,
+        4,
+      ),
+      isEmpty,
+    );
+    // A code only one candidate has, or the label the app shows, names one
+    // marker for certain; a name or a hex never picks a brand.
+    expect(
+      validatePaletteItems(
+        parsePaletteContent(
+          '{"palette":[{"code":"92"},{"code":"DecoTime 91"},'
+          '{"code":"#000000"}]}',
+        ).items,
+        prepared.byCode,
+        prepared.baseCode,
+        4,
+      ).map((s) => s.color.colorId),
+      ['ohuhu_oahu:92', 'decotime:91'],
+    );
+    expect(prepared.wire.mixed, isTrue);
+    expect(buildPaletteSystemPrompt(prepared.wire), contains('BRAND:CODE'));
+  });
   AiSettings buildSettings({
     String textModel = 'model-a',
     List<String> fallbacks = const [],
@@ -47,6 +169,7 @@ void main() {
     paletteSize: paletteSize,
     mode: PaletteMode.recommended,
     brand: MarkerBrand.ohuhuOahu,
+    activeSetIds: collectionSetIds,
   );
 
   MockClient okClient(String content) =>
@@ -95,6 +218,56 @@ void main() {
 
     final success = result as PaletteAdviceSuccess;
     expect(success.suggestions.map((s) => s.color.newCode), ['R101']);
+  });
+
+  test('refuses a base the user does not own, like the local engine', () async {
+    final client = MockClient(
+      (_) async => completionResponse(
+        paletteJson([
+          {'code': 'R101', 'role': 'Shadow', 'reason': 'deep'},
+        ]),
+      ),
+    );
+
+    final result = await buildAdvisor(client)
+        .advise(buildRequest(base: markerOutsideCollection()));
+
+    expect(result, isA<PaletteAdviceFailure>());
+    expect(
+      (result as PaletteAdviceFailure).reason,
+      PaletteFailureReason.invalidBaseColor,
+    );
+  });
+
+  test('a base that ran dry has its own reason', () async {
+    final client = MockClient(
+      (_) async => completionResponse(
+        paletteJson([
+          {'code': 'R101', 'role': 'Shadow', 'reason': 'deep'},
+        ]),
+      ),
+    );
+    final MarkerColor base = collection.first;
+
+    final result = await buildAdvisor(client).advise(
+      PaletteAdvisorRequest(
+        availableColors: collection
+            .where((MarkerColor c) => c.colorId != base.colorId)
+            .toList(),
+        baseColor: base,
+        paletteSize: 3,
+        mode: PaletteMode.recommended,
+        brand: MarkerBrand.ohuhuOahu,
+        activeSetIds: collectionSetIds,
+        driedColorIds: {base.colorId},
+      ),
+    );
+
+    expect(result, isA<PaletteAdviceFailure>());
+    expect(
+      (result as PaletteAdviceFailure).reason,
+      PaletteFailureReason.baseDried,
+    );
   });
 
   test('respects palette size', () async {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_switch.dart';
+import '../../widgets/one_line_text.dart';
 import '../../widgets/section_card.dart';
 
 /// A group of the settings page (design G "Settings list card").
@@ -218,10 +219,21 @@ class SettingsSwitchRow extends StatelessWidget {
     required this.value,
     required this.onChanged,
     this.subtitle,
+    this.singleLine = false,
+    this.shortSubtitle,
   });
 
   final String label;
   final String? subtitle;
+
+  /// Whether the label and the subtitle keep to one line each, for a row
+  /// among one-line list rows ("My collection").
+  final bool singleLine;
+
+  /// With [singleLine], what the second line says instead of [subtitle] when
+  /// that does not fit on one line (a narrow screen, a large text size, long
+  /// names), so the line is never cut.
+  final String? shortSubtitle;
   final bool value;
   final ValueChanged<bool>? onChanged;
 
@@ -245,15 +257,27 @@ class SettingsSwitchRow extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      label,
-                      style: AppTypography.body.copyWith(color: ink.fg),
-                    ),
+                    if (singleLine)
+                      // One line: it shrinks a little to fit rather than
+                      // wrap (a long translation), so the row is as tall as
+                      // its neighbours. It never shrinks past
+                      // [paletteMinLineScale]: at a very large text size it
+                      // wraps, whole, instead of becoming too small to read.
+                      PaletteOneLine(
+                        text: label,
+                        style: AppTypography.body.copyWith(color: ink.fg),
+                        wrapLines: null,
+                      )
+                    else
+                      Text(
+                        label,
+                        style: AppTypography.body.copyWith(color: ink.fg),
+                      ),
                     if (subtitle != null) ...<Widget>[
                       const SizedBox(height: InkSpacing.s4),
-                      Text(
-                        subtitle!,
-                        style: AppTypography.secondary.copyWith(color: ink.fg2),
+                      _subtitle(
+                        context,
+                        AppTypography.secondary.copyWith(color: ink.fg2),
                       ),
                     ],
                   ],
@@ -269,6 +293,32 @@ class SettingsSwitchRow extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// The second line: as long as it needs, or one line when [singleLine],
+  /// with [shortSubtitle] in its place when [subtitle] would be cut.
+  Widget _subtitle(BuildContext context, TextStyle style) {
+    final String text = subtitle!;
+    final String? short = shortSubtitle;
+    if (!singleLine) return Text(text, style: style);
+    Widget line(String value) =>
+        Text(value, maxLines: 1, overflow: TextOverflow.ellipsis, style: style);
+    if (short == null) return line(text);
+    final TextDirection direction = Directionality.of(context);
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final TextPainter painter = TextPainter(
+          text: TextSpan(text: text, style: style),
+          textDirection: direction,
+          textScaler: scaler,
+          maxLines: 1,
+        )..layout();
+        final bool fits = painter.width <= constraints.maxWidth;
+        painter.dispose();
+        return line(fits ? text : short);
+      },
     );
   }
 }

@@ -79,19 +79,25 @@ void main() {
           colors: colors,
           brand: MarkerBrand.copic,
           activeSetIds: {'classic_160'},
-          ownedMarkerCodes: {chosen.colorId},
           driedColorIds: {chosen.colorId},
         ),
         isEmpty,
       );
+      // Nothing owned at all: no fallback to the range.
       expect(
         paletteCandidateColors(
           colors: colors,
           brand: MarkerBrand.copic,
           activeSetIds: {'classic_160'},
           driedColorIds: {chosen.colorId},
+          ownedMarkerCodes: const {},
         ),
-        hasLength(colors.length - 1),
+        isEmpty,
+      );
+      // The whole range is still there for the screens that ask for it.
+      expect(
+        swatchCandidateColors(colors: colors, brand: MarkerBrand.copic),
+        hasLength(colors.length),
       );
     },
   );
@@ -139,13 +145,14 @@ void main() {
       ),
       mine,
     );
+    // Nothing owned: no fallback to the range.
     expect(
       paletteCandidateColors(
         colors: colors,
         brand: MarkerBrand.copic,
         activeSetIds: {'classic_160'},
       ),
-      hasLength(358),
+      isEmpty,
     );
     expect(
       swatchCandidateColors(colors: colors, brand: MarkerBrand.copic),

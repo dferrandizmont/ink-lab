@@ -903,6 +903,14 @@ class AppLocalizationsEs extends AppLocalizations {
       'Elige un rotulador base para crear una paleta, o elige Escenas como tipo de paleta.';
 
   @override
+  String missingMarkersTitle(String brand) {
+    return 'Aún no tienes rotuladores de $brand';
+  }
+
+  @override
+  String get missingMarkersAction => 'Ir a Mi colección';
+
+  @override
   String get paletteCustomModeHint =>
       'El modo de paleta personalizada es manual: carga una paleta guardada o aplica una desde Ideas.';
 
@@ -1135,10 +1143,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get ideasHeaderSubtitle => 'Ejercicios con tus rotuladores';
 
   @override
-  String get ideasHeaderSubtitleWholeRange =>
-      'Ejercicios con la paleta sacada de toda la gama';
-
-  @override
   String get ideasSearchHint => 'Buscar ideas';
 
   @override
@@ -1155,10 +1159,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Este ejercicio usa toda tu colección, así que no tiene una paleta fija.';
 
   @override
-  String get ideasNoMarkersOther =>
-      'Añade en Mi colección los rotuladores que tienes para ver una paleta para esta idea.';
-
-  @override
   String get ideasCategoriesLabel => 'Categorías';
 
   @override
@@ -1172,6 +1172,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ideasNoMarkers => 'Ahora mismo no hay rotuladores disponibles';
+
+  @override
+  String get missingMarkersHint =>
+      'Marca tus rotuladores en Mi colección para ver cuáles usar';
+
+  @override
+  String get allMarkersDried =>
+      'Todos tus rotuladores están secos. Márcalos como usables para volver a usarlos.';
 
   @override
   String get ideasTulipFieldTitle => 'Campo de tulipanes';
@@ -5883,6 +5891,11 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String paletteBaseDried(String code) {
+    return '$code está seco. Márcalo como usable en Detalles o elige otro.';
+  }
+
+  @override
   String swatchesFiltersCount(int count) {
     return 'Filtros · $count';
   }
@@ -6021,6 +6034,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get errNoAvailableColors =>
       'No hay rotuladores disponibles entre los que elegir.';
+
+  @override
+  String get errInvalidBaseColor =>
+      'El rotulador base no está en tu colección.';
+
+  @override
+  String get errBaseDried =>
+      'El rotulador base está seco. Márcalo como usable o elige otro.';
 
   @override
   String get errNoSuggestions => 'No se pudo generar ninguna sugerencia.';
@@ -6969,6 +6990,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get collectionDecoMarkersTitle => 'Tus rotuladores';
 
   @override
+  String get collectionIndividualMarkersShort => 'Marca los que tienes';
+
+  @override
   String get collectionDecoHint =>
       'DecoTime no publica qué colores trae cada set: marca los que tienes o añade una familia entera.';
 
@@ -7000,6 +7024,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get collectionFamilyGreenGrey => 'Grises verdosos';
 
   @override
+  String get collectionImportCodesTitle => 'Importar códigos';
+
+  @override
+  String get collectionImportCodesHint => 'Pega una lista de códigos';
+
+  @override
   String get collectionDecoRange => 'Gama DecoTime';
 
   @override
@@ -7022,6 +7052,45 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get collectionUntickVisible => 'Quitar todos';
+
+  @override
+  String collectionRemoveMarkersTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '¿Quitar $count rotuladores?',
+      one: '¿Quitar 1 rotulador?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String collectionRemoveFromTitle(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '¿Quitar $count rotuladores de $name?',
+      one: '¿Quitar 1 rotulador de $name?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get collectionRemoveMarkersBody =>
+      'Los rotuladores que ya tienes salen de tu colección. Puedes volver a añadirlos cuando quieras.';
+
+  @override
+  String get collectionRemoveConfirm => 'Quitar';
+
+  @override
+  String get collectionReplaceTitle => '¿Sustituir tu colección?';
+
+  @override
+  String get collectionReplaceBody =>
+      'Al terminar la configuración, los sets y rotuladores que tienes ahora se sustituyen por los que elijas aquí.';
+
+  @override
+  String get collectionReplaceConfirm => 'Sustituir';
 
   @override
   String get collectionInYourSets => 'En tu set';
@@ -7069,9 +7138,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get toolsTransferHint =>
       'Comparte tus rotuladores como lista o CSV, o añade muchos por código.';
-
-  @override
-  String get toolsMapEmptyTitle => 'Aún no hay rotuladores que mapear';
 
   @override
   String get toolsMapIntro =>
@@ -7562,7 +7628,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get collectionSummaryNoSets =>
-      'Aún no has elegido sets: se usa toda la gama';
+      'Aún no hay sets: Emparejar y Muestras muestran toda la gama; Paleta e Ideas necesitan los rotuladores que tienes';
 
   @override
   String get collectionSummaryNoMarkers => 'Aún no has marcado rotuladores';
@@ -7697,7 +7763,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String onboardingDoneWholeRange(String brand) {
-    return 'Hasta que elijas sets, la app muestra toda la gama de $brand.';
+    return 'Hasta que elijas sets, Emparejar y Muestras muestran toda la gama de $brand. Paleta e Ideas necesitan los rotuladores que tienes.';
   }
 
   @override
@@ -7848,11 +7914,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String onboardingNoMarkers(String brand) {
     return 'Todavía no has marcado rotuladores $brand: márcalos en Mi colección.';
-  }
-
-  @override
-  String ideasNoMarkersBrand(String brand) {
-    return 'Añade en Mi colección los rotuladores $brand que tienes para ver una paleta para esta idea.';
   }
 
   @override
@@ -8432,4 +8493,47 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get swatchesDetailPaneEmpty =>
       'Toca un rotulador para ver aquí sus detalles.';
+
+  @override
+  String get collectionMixBrands => 'Mezclar mis marcas';
+
+  @override
+  String collectionMoreBrands(String first, String second, int count) {
+    return '$first, $second y $count más';
+  }
+
+  @override
+  String collectionBrandsCount(int count) {
+    return '$count marcas';
+  }
+
+  @override
+  String get paletteChanged => 'Paleta cambiada';
+
+  @override
+  String get paletteReplaceTitle => '¿Sustituir esta paleta?';
+
+  @override
+  String get paletteReplaceBody =>
+      'Se sustituirá la paleta que tienes en pantalla, con tus cambios y tus colores bloqueados. Podrás deshacerlo justo después.';
+
+  @override
+  String get paletteReplaceButton => 'Sustituir';
+
+  @override
+  String get paletteAmbiguousBase =>
+      'Este código está en más de una de tus marcas. Elige la marca en la lista.';
+
+  @override
+  String get paletteChainWholeRangeNoteMixed =>
+      'Se muestra toda la gama de tus marcas, también rotuladores que no tienes.';
+
+  @override
+  String paletteBaseOtherBrand(String code, String brand, String example) {
+    return '$code es un rotulador de $brand, y $brand no está en uso ahora mismo. Prueba con $example o cambia la marca en Mi colección.';
+  }
+
+  @override
+  String get paletteImportTooFew =>
+      'Añade al menos dos códigos de rotuladores distintos y reconocidos para importar una paleta.';
 }

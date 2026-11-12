@@ -3030,11 +3030,12 @@ export const ui = {
   ideasMaterialPencil: ['pencil', 'lápiz'],
   ideasMaterialTape: ['masking tape', 'cinta de carrocero'],
   ideasGuideOnlyNote: ['This exercise uses your whole collection, so it has no fixed palette.', 'Este ejercicio usa toda tu colección, así que no tiene una paleta fija.'],
-  ideasNoMarkersOther: ['Add the markers you own in My collection to get a palette for this idea.', 'Añade en Mi colección los rotuladores que tienes para ver una paleta para esta idea.'],
+  missingMarkersHint: ['Tick the markers you own in My collection to see which ones to use', 'Marca tus rotuladores en Mi colección para ver cuáles usar'],
   ideasBackLabel: ['Back to ideas', 'Volver a las ideas'],
   // Removed: inline card and "Generate" flow.
   ideasOpenButton: null,
   ideasSelectedLabel: null,
+  ideasNoMarkersOther: null,
   ideasBadgeGuideOnly: null,
   ideasBadgeGuideAndPalette: null,
   ideasShowTechnique: null,

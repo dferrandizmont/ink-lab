@@ -15,13 +15,16 @@ import '../../widgets/page_header.dart';
 /// The sheet only gathers the text. [onImport] reads it and either loads the
 /// palette, answering `null` (the sheet closes), or answers why it could not,
 /// which the sheet shows under the field and keeps open so the text can be
-/// fixed. The text comes from the clipboard (the "Paste" button, only on a
-/// tap) or from typing; nothing is read in the background.
+/// fixed. An empty answer keeps the sheet open with nothing to say: the user
+/// chose not to replace the palette on screen, and the text is still there.
+/// The text comes from the clipboard (the "Paste" button, only on a tap) or
+/// from typing; nothing is read in the background.
 class PaletteImportSheet extends StatefulWidget {
   const PaletteImportSheet({super.key, required this.onImport});
 
-  /// Loads the palette in the text; returns the reason when it cannot.
-  final String? Function(String text) onImport;
+  /// Loads the palette in the text; returns the reason when it cannot (an
+  /// empty one when the user decided not to load it).
+  final Future<String?> Function(String text) onImport;
 
   @override
   State<PaletteImportSheet> createState() => _PaletteImportSheetState();
@@ -32,8 +35,17 @@ class _PaletteImportSheetState extends State<PaletteImportSheet> {
   static const double _errorLine = 20;
   static const int _errorLines = 4;
 
+  /// What the field holds at most: one character more than the parser
+  /// reads, so the parser can tell a text that was cut and leave out the
+  /// code the cut fell in (see `PaletteText.parse`).
+  static const int _fieldLength = PaletteText.maxLength + 1;
+
   final TextEditingController _controller = TextEditingController();
   String? _error;
+
+  /// The text is being read (the question about the palette on screen may be
+  /// open): a second tap must not load it twice.
+  bool _loading = false;
 
   @override
   void dispose() {
@@ -51,9 +63,7 @@ class _PaletteImportSheetState extends State<PaletteImportSheet> {
     String? text = data?.text;
     if (!mounted || text == null || text.trim().isEmpty) return;
     // Only what the parser reads: a pasted wall of text is cut.
-    if (text.length > PaletteText.maxLength) {
-      text = text.substring(0, PaletteText.maxLength);
-    }
+    if (text.length > _fieldLength) text = text.substring(0, _fieldLength);
     _controller.value = TextEditingValue(
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
@@ -61,13 +71,23 @@ class _PaletteImportSheetState extends State<PaletteImportSheet> {
     setState(() => _error = null);
   }
 
-  void _load() {
-    final String? error = widget.onImport(_controller.text);
-    if (error == null) {
-      Navigator.of(context).maybePop();
-    } else {
-      setState(() => _error = error);
+  Future<void> _load() async {
+    if (_loading) return;
+    _loading = true;
+    final String? reason;
+    try {
+      reason = await widget.onImport(_controller.text);
+    } finally {
+      _loading = false;
     }
+    if (!mounted) return;
+    if (reason == null) {
+      Navigator.of(context).maybePop();
+      return;
+    }
+    // An empty reason: the user kept the palette on screen. Nothing to say.
+    final String? message = reason.isEmpty ? null : reason;
+    setState(() => _error = message);
   }
 
   @override
@@ -100,7 +120,7 @@ class _PaletteImportSheetState extends State<PaletteImportSheet> {
             maxLines: 4,
             keyboardType: TextInputType.multiline,
             textInputAction: TextInputAction.newline,
-            maxLength: PaletteText.maxLength,
+            maxLength: _fieldLength,
             // The counter would add a line under the field: not shown.
             buildCounter: (
               BuildContext context, {

@@ -25,6 +25,7 @@ void main() {
     paletteSize: 3,
     mode: PaletteMode.recommended,
     brand: MarkerBrand.ohuhuOahu,
+    activeSetIds: collectionSetIds,
   );
 
   OpenRouterPaletteAdvisor advisor(MockClient client, {AiSettings? settings}) =>

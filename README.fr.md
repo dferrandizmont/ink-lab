@@ -140,7 +140,7 @@ sauvegarde `.zip`, le fichier ne va qu’à l’appli que tu choisis, et nulle p
 
 ## Nouveautés
 
-La version 1.2.2 corrige ce qu’une revue de tous les écrans a trouvé : les palettes enregistrées s’ouvrent d’un toucher, Retour sur Android ramène aux Nuanciers et les textes sont plus clairs. La version 1.2.1 affiche les descriptions des idées en entier et corrige de petits défauts d’affichage. La 1.2.0 a apporté 100 idées au lieu de 28, rangées par difficulté et par saison pour les trouver
+La version 1.2.3 garde tes marqueurs où ils sont : verrouiller une couleur ne la déplace plus, ajouter une famille n’efface plus les marqueurs importés, sans marqueur l’app le dit au lieu de prendre toute la gamme, et tu peux mélanger toutes tes marques. La version 1.2.2 corrige ce qu’une revue de tous les écrans a trouvé : les palettes enregistrées s’ouvrent d’un toucher, Retour sur Android ramène aux Nuanciers et les textes sont plus clairs. La version 1.2.1 affiche les descriptions des idées en entier et corrige de petits défauts d’affichage. La 1.2.0 a apporté 100 idées au lieu de 28, rangées par difficulté et par saison pour les trouver
 facilement, et un menu latéral plus net sur les tablettes. La liste complète est dans
 [CHANGELOG.md](CHANGELOG.md) et dans les
 [versions](https://github.com/dferrandizmont/ink-lab/releases).

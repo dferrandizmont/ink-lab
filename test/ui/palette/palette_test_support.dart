@@ -8,6 +8,7 @@ import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
+import 'package:ink_lab/ui/pages/palette/palette_suggestion_row.dart';
 import 'package:ink_lab/ui/screen_awake.dart';
 import 'package:ink_lab/ui/share/share_sink.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
@@ -207,3 +208,27 @@ Future<void> tapResultItem(
   itemKey,
   settle: settle,
 );
+
+/// The codes of the suggestion rows, in the order they are on screen.
+List<String> rowCodes(WidgetTester tester) => tester
+    .widgetList<PaletteSuggestionRow>(find.byType(PaletteSuggestionRow))
+    .map((PaletteSuggestionRow row) => row.suggestion.color.newCode)
+    .toList();
+
+/// Taps the lock (or unlock) button of the row of [code].
+Future<void> toggleRowLock(WidgetTester tester, String code) async {
+  final Finder row = find.byKey(ValueKey<String>('palette-row-$code'));
+  final Finder lock = find.descendant(
+    of: row,
+    matching: find.byTooltip(l10n.paletteLockButton),
+  );
+  final Finder button = lock.evaluate().isNotEmpty
+      ? lock
+      : find.descendant(
+          of: row,
+          matching: find.byTooltip(l10n.paletteUnlockButton),
+        );
+  await tester.ensureVisible(button.first);
+  await tester.tap(button.first);
+  await tester.pumpAndSettle();
+}

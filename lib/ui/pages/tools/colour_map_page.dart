@@ -1,15 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../app_scope.dart';
 import '../../../core/collection_wheel.dart';
 import '../../../core/models.dart';
 import '../../../l10n/l10n.dart';
+import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
-import '../../widgets/ink_adaptive.dart';
 import '../../widgets/empty_state.dart';
+import '../../widgets/ink_adaptive.dart';
+import '../../widgets/ink_button.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/section_card.dart';
+import '../collection/collection_page.dart';
 import '../settings/settings_widgets.dart';
 import 'collection_snapshot.dart';
 import 'colour_map_painter.dart';
@@ -78,6 +83,7 @@ class _MapData {
 class _ColourMapPageState extends State<ColourMapPage> {
   AppScope? _scope;
   Future<_MapData>? _data;
+  StreamSubscription<Object?>? _settingsChanges, _driedChanges, _ownChanges;
   bool _showRange = false;
   String? _selectedId;
 
@@ -87,8 +93,38 @@ class _ColourMapPageState extends State<ColourMapPage> {
     final AppScope scope = AppScope.of(context);
     if (!identical(scope, _scope)) {
       _scope = scope;
-      _data = CollectionSnapshot.load(scope).then(_MapData.new);
+      _settingsChanges?.cancel();
+      _driedChanges?.cancel();
+      _ownChanges?.cancel();
+      // The map follows the collection: the brand, "Mix my brands", a
+      // marker added, dried out or given a colour of its own.
+      void reload(Object? _) {
+        if (!mounted) return;
+        setState(() {
+          _selectedId = null;
+          _data = CollectionSnapshot.load(
+            scope,
+            respectScope: true,
+          ).then(_MapData.new);
+        });
+      }
+
+      _settingsChanges = scope.settings.changes.listen(reload);
+      _driedChanges = scope.dried.changes.listen(reload);
+      _ownChanges = scope.ownColors.changes.listen(reload);
+      _data = CollectionSnapshot.load(
+        scope,
+        respectScope: true,
+      ).then(_MapData.new);
     }
+  }
+
+  @override
+  void dispose() {
+    _settingsChanges?.cancel();
+    _driedChanges?.cancel();
+    _ownChanges?.cancel();
+    super.dispose();
   }
 
   Future<void> _showInfo(
@@ -131,13 +167,98 @@ class _ColourMapPageState extends State<ColourMapPage> {
               return const Center(child: CircularProgressIndicator());
             }
             if (data.wheel.coloured.isEmpty && data.wheel.greys.isEmpty) {
-              return EmptyState(
-                title: context.l10n.toolsMapEmptyTitle,
-                message: context.l10n.collectionChartEmpty,
-              );
+              return _empty(context, data);
             }
             return _content(context, data);
           },
+        ),
+      ),
+    );
+  }
+
+  /// A collection with no marker at all: the map has nothing to draw, so the
+  /// page says which brand is empty and opens the collection, the way
+  /// Settings does.
+  ///
+  /// The whole range can still be laid under the map, so the user sees what
+  /// the brand has and what is missing: the switch stays under the empty
+  /// state, and the faint dots of the range appear when it is on.
+  ///
+  /// A collection whose markers all ran dry is not an empty one: it says
+  /// that, instead of claiming the user owns nothing.
+  Widget _empty(BuildContext context, _MapData data) {
+    final AppLocalizations l10n = context.l10n;
+    final InkColors ink = InkColors.of(context);
+    final bool allDried =
+        data.snapshot.owned.isNotEmpty && data.snapshot.usable.isEmpty;
+    return KeyedSubtree(
+      key: ColourMapPage.pageKey,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(
+          InkSpacing.gutter,
+          InkSpacing.group,
+          InkSpacing.gutter,
+          InkSpacing.pageBottomOf(context),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            EmptyState(
+              key: const ValueKey<String>('colour-map-empty'),
+              icon: InkIcons.grid,
+              title: allDried
+                  ? l10n.driedTitle
+                  : l10n.missingMarkersTitle(data.snapshot.activeBrand.label),
+              message: allDried ? l10n.allMarkersDried : null,
+              actions: <Widget>[
+                InkButton.secondary(
+                  key: const ValueKey<String>('colour-map-empty-action'),
+                  label: l10n.missingMarkersAction,
+                  expand: true,
+                  onPressed: () => CollectionPage.open(context),
+                ),
+              ],
+            ),
+            const SizedBox(height: InkSpacing.block),
+            InkListCard(
+              children: <Widget>[
+                SettingsSwitchRow(
+                  key: const ValueKey<String>('colour-map-range-switch'),
+                  label: l10n.toolsMapShowRange,
+                  subtitle: l10n.toolsMapShowRangeHint,
+                  value: _showRange,
+                  onChanged: (bool on) => setState(() => _showRange = on),
+                ),
+              ],
+            ),
+            if (_showRange) ...<Widget>[
+              const SizedBox(height: InkSpacing.block),
+              _frame(
+                context,
+                key: const ValueKey<String>('colour-map-chart'),
+                height: _mapHeight,
+                semanticLabel: l10n.toolsMapShowRangeHint,
+                paint: (Size size) => CustomPaint(
+                  size: size,
+                  painter: ColourMapPainter(
+                    wheel: data.wheel,
+                    range: data.rangeDots,
+                    colors: ink,
+                    selectedId: _selectedId,
+                  ),
+                ),
+                onTap: (Offset at, Size size) {
+                  final ColourMapHit? hit = colourMapHit(
+                    at,
+                    size,
+                    data.wheel,
+                    range: data.rangeDots,
+                  );
+                  if (hit != null) _showInfo(data, hit.dot, owned: hit.owned);
+                },
+              ),
+            ],
+          ],
         ),
       ),
     );

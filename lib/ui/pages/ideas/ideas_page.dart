@@ -22,6 +22,7 @@ import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
 import '../../widgets/palette_strip.dart';
+import '../collection/collection_page.dart';
 import '../diary/artwork_diary_view.dart';
 import '../diary/artwork_entry_page.dart';
 import '../match/image_picker_service.dart';
@@ -75,13 +76,13 @@ class _IdeasPageState extends State<IdeasPage> {
   StreamSubscription<Set<String>>? _favoritesSubscription;
   StreamSubscription<List<String>>? _recentSubscription;
   String _collectionSignature = '';
+  int _catalogVersion = 0;
 
-  MarkerBrand _brand = MarkerBrand.ohuhuOahu;
   List<MarkerColor> _available = const <MarkerColor>[];
 
-  /// True while the palette comes from the whole range because the active
-  /// brand has no collection configured.
-  bool _wholeRange = false;
+  /// The markers the user owns, the dried-out ones included: they are in the
+  /// collection, they just cannot be used to build anything.
+  List<MarkerColor> _owned = const <MarkerColor>[];
   bool _loading = true;
 
   _IdeasView _view = _IdeasView.ideas;
@@ -159,7 +160,7 @@ class _IdeasPageState extends State<IdeasPage> {
   String _signatureOf(AppSettingsState state) {
     final sets = state.settings.effectiveSetIds().toList()..sort();
     final owned = state.settings.ownedMarkerCodes.toList()..sort();
-    return '${state.brand.id}|${sets.join(',')}|${owned.join(',')}|'
+    return '${state.brand.id}|${state.scope.name}|${sets.join(',')}|${owned.join(',')}|'
         '${_scope?.markers.colorRevision}|${_scope?.dried.revision}';
   }
 
@@ -173,27 +174,38 @@ class _IdeasPageState extends State<IdeasPage> {
   Future<void> _reload() async {
     final scope = _scope;
     if (scope == null) return;
+    final version = ++_catalogVersion;
     final brand = scope.settings.brand;
     final settings = scope.settings.settings;
+    final selectionScope = scope.settings.scope;
     setState(() => _loading = true);
     List<MarkerColor> catalog;
     try {
-      catalog = await scope.markers.loadColors(brand);
+      catalog = await scope.markers.loadCollectionCatalog(
+        brand: brand,
+        settings: settings,
+        scope: selectionScope,
+      );
     } catch (_) {
       catalog = const <MarkerColor>[];
     }
-    if (!mounted) return;
-    final bool hasCollection = ownedColors(
-      colors: catalog,
-      brand: brand,
-      ownedSetIds: settings.effectiveSetIds(),
-      ownedMarkerCodes: settings.ownedMarkerCodes,
-    ).isNotEmpty;
+    if (!mounted || version != _catalogVersion) return;
     setState(() {
-      _brand = brand;
-      _wholeRange = !hasCollection;
+      // Only the markers the user owns: an idea never shows a palette out of
+      // the brand's range.
       _available = paletteCandidateColors(
         colors: catalog,
+        scope: selectionScope,
+        brand: brand,
+        activeSetIds: settings.effectiveSetIds(),
+        ownedMarkerCodes: settings.ownedMarkerCodes,
+        driedColorIds: scope.dried.ids,
+      );
+      // The same collection with the dried-out markers in: what tells "all
+      // dried out" from "you own nothing", with one brand or several.
+      _owned = ownedCandidateColors(
+        colors: catalog,
+        scope: selectionScope,
         brand: brand,
         activeSetIds: settings.effectiveSetIds(),
         ownedMarkerCodes: settings.ownedMarkerCodes,
@@ -276,9 +288,13 @@ class _IdeasPageState extends State<IdeasPage> {
           IdeaDetailSheet(
             initial: initial,
             candidates: _available,
-            brand: _brand,
+            // A collection whose markers all ran dry is not an empty one:
+            // the sheet says that, instead of asking for markers the user
+            // already has.
+            allMarkersDried: _available.isEmpty && _owned.isNotEmpty,
             favorites: favorites,
             onAddToDiary: _addToDiary,
+            onOpenCollection: _openCollection,
             scrollController: scroll,
           ),
     );
@@ -331,6 +347,10 @@ class _IdeasPageState extends State<IdeasPage> {
 
   void _openPaletteTab() => widget.onOpenPalette?.call();
 
+  /// Opens the collection, the way Settings does: from there the user can
+  /// tick the markers they own.
+  void _openCollection() => CollectionPage.open(context);
+
   // ---------------------------------------------------------------------------
   // Build
   // ---------------------------------------------------------------------------
@@ -381,15 +401,12 @@ class _IdeasPageState extends State<IdeasPage> {
                 ? context.l10n.ideasDiarySubtitle
                 : _available.isEmpty
                 ? context.l10n.ideasNoMarkers
-                : _wholeRange
-                ? context.l10n.ideasHeaderSubtitleWholeRange
                 : context.l10n.ideasHeaderSubtitle,
             // The control below must not jump when the segment (or the
             // collection) swaps the subtitle: reserve the tallest one.
             reserveSubtitleFor: <String>[
               context.l10n.ideasDiarySubtitle,
               context.l10n.ideasNoMarkers,
-              context.l10n.ideasHeaderSubtitleWholeRange,
               context.l10n.ideasHeaderSubtitle,
             ],
           ),

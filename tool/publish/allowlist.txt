@@ -382,6 +382,7 @@ lib/ui/theme/app_shapes.dart
 lib/ui/theme/app_theme.dart
 lib/ui/theme/app_typography.dart
 lib/ui/theme/tokens.dart
+lib/ui/widgets/branded_code.dart
 lib/ui/widgets/color_swatch_tile.dart
 lib/ui/widgets/empty_state.dart
 lib/ui/widgets/ink_button.dart
@@ -392,6 +393,7 @@ lib/ui/widgets/ink_search_field.dart
 lib/ui/widgets/ink_segmented.dart
 lib/ui/widgets/ink_sheet.dart
 lib/ui/widgets/ink_switch.dart
+lib/ui/widgets/one_line_text.dart
 lib/ui/widgets/page_header.dart
 lib/ui/widgets/palette_strip.dart
 lib/ui/widgets/section_card.dart
@@ -464,6 +466,8 @@ test/ui/match/white_balance_match_test.dart
 test/ui/palette/palette_ai_test.dart
 test/ui/palette/palette_blending_chain_test.dart
 test/ui/palette/palette_page_test.dart
+test/ui/palette/palette_mixed_undo_test.dart
+test/ui/palette/palette_mixed_review2_test.dart
 test/ui/palette/palette_round3_test.dart
 test/ui/palette/palette_test_support.dart
 test/ui/palette/palette_vision_test.dart
@@ -473,6 +477,7 @@ test/ui/settings/ai_section_test.dart
 test/ui/settings/backup_file_test.dart
 test/ui/settings/language_picker_test.dart
 test/ui/settings/settings_page_test.dart
+test/ui/settings/settings_switch_row_test.dart
 test/ui/share/diary_entry_share_test.dart
 test/ui/share/share_flows_test.dart
 test/ui/share/share_render_test.dart
@@ -480,7 +485,9 @@ test/ui/spacing_test.dart
 test/ui/spanish_layout_test.dart
 test/ui/swatches/brand_equivalents_section_test.dart
 test/ui/swatches/own_color_page_test.dart
+test/ui/swatches/swatches_chip_row_test.dart
 test/ui/swatches/swatches_page_test.dart
+test/ui/widgets/branded_code_test.dart
 tool/brand/render.py
 tool/data/README.md
 tool/data/baseline/oahu_colors_v1.json
@@ -522,6 +529,8 @@ lib/ui/widgets/select_card.dart
 test/support/pill_shapes.dart
 test/support/tap_targets.dart
 test/support/truncation.dart
+test/ui/collection/collection_confirm_test.dart
+test/ui/collection/collection_import_keep_test.dart
 test/ui/collection/collection_test.dart
 test/ui/collection/wishlist_dried_test.dart
 test/ui/no_pill_test.dart
@@ -545,6 +554,7 @@ test/ui/palette/palette_photo_scene_test.dart
 lib/ui/pages/palette/ai_report.dart
 test/ui/palette/ai_report_test.dart
 test/ui/palette/palette_ai_report_test.dart
+test/ui/palette/palette_empty_collection_test.dart
 lib/core/model/artwork_entry.dart
 lib/data/artwork_diary_repository.dart
 lib/data/artwork_photo_store.dart
@@ -686,8 +696,8 @@ lib/ui/pages/palette/palette_base_picker_sheet.dart
 lib/ui/pages/palette/palette_easel_page.dart
 lib/ui/pages/palette/palette_import_sheet.dart
 lib/ui/pages/palette/palette_layout.dart
+lib/ui/pages/palette/palette_notice.dart
 lib/ui/pages/palette/palette_notes.dart
-lib/ui/pages/palette/palette_one_line.dart
 lib/ui/pages/palette/palette_paint_order.dart
 lib/ui/pages/palette/palette_photo_flow.dart
 lib/ui/pages/palette/palette_result_header.dart

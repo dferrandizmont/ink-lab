@@ -239,12 +239,17 @@ class IdeaWidgetSync with WidgetsBindingObserver {
     final AppSettings collection = settings.settings;
     List<MarkerColor> catalog;
     try {
-      catalog = await markers.loadColors(brand);
+      catalog = await markers.loadCollectionCatalog(
+        brand: brand,
+        settings: collection,
+        scope: settings.scope,
+      );
     } catch (_) {
       catalog = const <MarkerColor>[];
     }
     final List<MarkerColor> candidates = paletteCandidateColors(
       colors: catalog,
+      scope: settings.scope,
       brand: brand,
       activeSetIds: collection.effectiveSetIds(),
       ownedMarkerCodes: collection.ownedMarkerCodes,

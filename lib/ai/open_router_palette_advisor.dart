@@ -55,14 +55,34 @@ final class OpenRouterPaletteAdvisor implements PaletteAdvisor {
       return PaletteAdviceFailure(PaletteFailureReason.missingKey);
     }
 
+    // The collection of the request, narrowed to the markers the user owns:
+    // there is no fallback to the whole range, so an empty collection simply
+    // has nothing to offer.
     final candidates = paletteCandidateColors(
       colors: request.availableColors,
       brand: request.brand,
+      scope: request.scope,
+      driedColorIds: request.driedColorIds,
       activeSetIds: request.activeSetIds,
       ownedMarkerCodes: request.ownedMarkerCodes,
     );
     if (candidates.isEmpty) {
       return PaletteAdviceFailure(PaletteFailureReason.noAvailableColors);
+    }
+
+    // The base must be one of the user's own markers, like in the local
+    // engine: a base out of the collection is refused, never sent to the
+    // model and never painted as the user's.
+    final MarkerColor? base = request.baseColor;
+    if (base != null &&
+        !candidates.any((MarkerColor c) => c.colorId == base.colorId)) {
+      // A marker the user owns but that ran dry has its own reason: it is not
+      // out of the collection, it just does not paint.
+      return PaletteAdviceFailure(
+        request.driedColorIds.contains(base.colorId)
+            ? PaletteFailureReason.baseDried
+            : PaletteFailureReason.invalidBaseColor,
+      );
     }
 
     final models = _attemptedModels(settings);
@@ -155,6 +175,11 @@ typedef PreparedPaletteRequest = ({
 
 /// Builds the capped wire request shared by the cloud and the on-device
 /// advisors. [candidates] must already be filtered to the active collection.
+///
+/// When the candidates are of several brands ("Mix my brands") the request
+/// is a mixed one (`AiPaletteRequest.mixed`): every marker travels as its
+/// colour id (`DECOTIME:91`) and the lookup is keyed by it, so the model and
+/// the parser keep two brands that share a code apart.
 PreparedPaletteRequest preparePaletteWire(
   PaletteAdvisorRequest request,
   List<MarkerColor> candidates,
@@ -162,28 +187,47 @@ PreparedPaletteRequest preparePaletteWire(
   List<MarkerColor> Function(List<MarkerColor>, MarkerColor?, int)? capper,
 }) {
   final baseColor = resolvePaletteBase(request.baseColor, candidates);
-  final baseCode = baseColor == null
-      ? null
-      : normalizeCodeForMatch(baseColor.newCode);
+  final mixed =
+      request.scope == BrandScope.mixedBrands && hasMixedBrands(candidates);
+  String keyOf(MarkerColor color) =>
+      mixed ? normalizeColorIdForMatch(color.colorId) : _codeKey(color);
+  final baseCode = baseColor == null ? null : keyOf(baseColor);
   final byCode = <String, MarkerColor>{
-    for (final color in candidates) normalizeCodeForMatch(color.newCode): color,
+    for (final color in candidates) keyOf(color): color,
   };
   final sendable = candidates
-      .where(
-        (color) =>
-            baseCode == null ||
-            normalizeCodeForMatch(color.newCode) != baseCode,
-      )
+      .where((color) => baseCode == null || keyOf(color) != baseCode)
       .toList();
+  final capped = (capper ?? capPaletteCandidates)(
+    sendable,
+    baseColor,
+    maxCandidates,
+  ).toList();
+  if (mixed) {
+    // Keep at least one candidate per owned brand when the cap allows it:
+    // sampling by colour alone can leave a small collection out.
+    for (final id in <String>{for (final c in sendable) c.brandId}) {
+      if (capped.any((c) => c.brandId == id)) continue;
+      final counts = <String, int>{};
+      for (final c in capped) {
+        counts.update(c.brandId, (n) => n + 1, ifAbsent: () => 1);
+      }
+      final slot = capped.lastIndexWhere((c) => counts[c.brandId]! > 1);
+      if (slot >= 0) {
+        capped[slot] = sendable.firstWhere((c) => c.brandId == id);
+      }
+    }
+  }
   final wire = AiPaletteRequest(
-    brandId: request.brand.id,
-    brandLabel: request.brand.label,
+    brandId: mixed ? AiPaletteRequest.mixedBrandId : request.brand.id,
+    brandLabel: mixed
+        ? candidates
+              .map((c) => MarkerBrand.fromId(c.brandId).label)
+              .toSet()
+              .join(' + ')
+        : request.brand.label,
     baseColor: baseColor,
-    candidates: (capper ?? capPaletteCandidates)(
-      sendable,
-      baseColor,
-      maxCandidates,
-    ),
+    candidates: capped,
     scenario: request.scenario,
     mode: request.mode,
     paletteSize: request.paletteSize,
@@ -214,6 +258,24 @@ bool hasEnoughPaletteSuggestions(List<PaletteSuggestion> suggestions) =>
 /// mapped onto the nearest marker of the active collection.
 const double paletteHexMatchMaxDeltaE = 10;
 
+/// The longest code of a model item that is resolved; a longer one is
+/// skipped unread.
+const int maxModelCodeLength = 64;
+
+String _codeKey(MarkerColor color) => normalizeCodeForMatch(color.newCode);
+
+/// Normalizes a colour id (`decotime:5`) the way [normalizeCodeForMatch]
+/// does a code, brand and code apart: the brand in upper case, the code with
+/// its spellings folded (`DECOTIME:05`). So a model that drops or adds a
+/// leading zero in a mixed request still names the same marker. Text without
+/// a `:` is normalized as a bare code.
+String normalizeColorIdForMatch(String raw) {
+  final colon = raw.indexOf(':');
+  if (colon < 0) return normalizeCodeForMatch(raw);
+  final brand = raw.substring(0, colon).trim().toUpperCase();
+  return '$brand:${normalizeCodeForMatch(raw.substring(colon + 1))}';
+}
+
 /// Turns parsed model items into validated suggestions: only colours of the
 /// active collection ([byCode]), never the base, unique, at most
 /// [paletteSize], with the role and reason normalised from the same item.
@@ -223,6 +285,10 @@ const double paletteHexMatchMaxDeltaE = 10;
 /// the colour name (case-insensitive), the code extracted from loose text, a
 /// hex value mapped to the nearest marker within [paletteHexMatchMaxDeltaE],
 /// and a name found inside the text. Nothing outside [byCode] is invented.
+///
+/// When [byCode] is keyed by colour id (a request that mixes brands, see
+/// [preparePaletteWire]) only what names one marker for certain is accepted:
+/// its colour id, its label with the brand, or a code no other candidate has.
 List<PaletteSuggestion> validatePaletteItems(
   List<AiPaletteItem> items,
   Map<String, MarkerColor> byCode,
@@ -236,9 +302,17 @@ List<PaletteSuggestion> validatePaletteItems(
   final result = <PaletteSuggestion>[];
   for (final item in items) {
     if (result.length >= wanted) break;
+    // No marker code is this long: the item is not looked at any further
+    // (normalising a code is not linear in a long run of dots).
+    if (item.rawCode.length > maxModelCodeLength ||
+        item.code.length > maxModelCodeLength) {
+      continue;
+    }
     final color = lookup.resolve(item);
     if (color == null) continue;
-    final code = normalizeCodeForMatch(color.newCode);
+    final code = lookup.scoped
+        ? normalizeColorIdForMatch(color.colorId)
+        : _codeKey(color);
     if (code.isEmpty) continue;
     if (baseCode != null && code == baseCode) continue;
     if (!seen.add(code)) continue;
@@ -354,22 +428,39 @@ String _normalizeName(String raw) =>
 
 /// Resolves a model item to a colour of the active collection, or `null`.
 final class _PaletteLookup {
-  _PaletteLookup(this.byCode) {
+  _PaletteLookup(this.byCode)
+    : scoped = byCode.keys.any((String key) => key.contains(':')) {
     for (final color in byCode.values) {
       for (final name in {color.newName, color.oldName}) {
         final key = _normalizeName(name);
         if (key.isEmpty) continue;
         (_byName[key] ??= <MarkerColor>[]).add(color);
       }
+      if (scoped) {
+        _byLabel[_labelKey(
+              MarkerBrand.fromId(color.brandId).label,
+              color.newCode,
+            )] =
+            color;
+        (_byBareCode[normalizeCodeForMatch(color.newCode)] ??= <MarkerColor>[])
+            .add(color);
+      }
     }
   }
 
   final Map<String, MarkerColor> byCode;
+
+  /// Whether [byCode] is keyed by colour id (`DECOTIME:91`): the candidates
+  /// are of several brands, so a code alone may name two markers.
+  final bool scoped;
   final Map<String, List<MarkerColor>> _byName = {};
+  final Map<String, MarkerColor> _byLabel = {};
+  final Map<String, List<MarkerColor>> _byBareCode = {};
   final Map<String, LabColor?> _labs = {};
 
   MarkerColor? resolve(AiPaletteItem item) {
     final raw = item.rawCode.isEmpty ? item.code : item.rawCode;
+    if (scoped) return _resolveScoped(raw);
     final stripped = _stripBrandPrefix(raw);
 
     // 1. The code as written.
@@ -395,6 +486,31 @@ final class _PaletteLookup {
     // 5. A known name inside longer text.
     return _byContainedName(item.name) ?? _byContainedName(stripped);
   }
+
+  /// A marker of a mixed request: the colour id as it was listed, the label
+  /// the app shows (`DecoTime 91`), or a bare code only one of the candidates
+  /// has. The code part is read as leniently as a single-brand code (`5` is
+  /// `05`); a brand is never guessed from a shared code, a name or a hex.
+  MarkerColor? _resolveScoped(String raw) {
+    final exact = byCode[normalizeColorIdForMatch(raw)];
+    if (exact != null) return exact;
+    final text = raw.trim();
+    final space = text.lastIndexOf(' ');
+    if (space > 0) {
+      final labelled =
+          _byLabel[_labelKey(
+            text.substring(0, space),
+            text.substring(space + 1),
+          )];
+      if (labelled != null) return labelled;
+    }
+    final bare = _byBareCode[normalizeCodeForMatch(raw)];
+    return bare != null && bare.length == 1 ? bare.single : null;
+  }
+
+  /// The key of a marker written as the app shows it, brand then code.
+  static String _labelKey(String brand, String code) =>
+      '${brand.trim().toUpperCase()} ${normalizeCodeForMatch(code)}';
 
   MarkerColor? _byCodeText(String text) {
     if (text.trim().isEmpty) return null;
@@ -470,7 +586,7 @@ List<MarkerColor> capPaletteCandidates(
   final pickedCodes = <String>{};
   void add(MarkerColor color) {
     if (picked.length >= limit) return;
-    if (pickedCodes.add(color.newCode.toUpperCase())) picked.add(color);
+    if (pickedCodes.add(color.colorId.toUpperCase())) picked.add(color);
   }
 
   final baseLab = base == null ? null : _safeLab(base.hex);
@@ -488,7 +604,7 @@ List<MarkerColor> capPaletteCandidates(
   }
 
   final rest = stableSortedBy(
-    colors.where((color) => !pickedCodes.contains(color.newCode.toUpperCase())),
+    colors.where((color) => !pickedCodes.contains(color.colorId.toUpperCase())),
     (color) => _safeHue(color.hex),
   );
   final remaining = limit - picked.length;
@@ -792,19 +908,20 @@ String buildPaletteSystemPrompt(AiPaletteRequest request) =>
     '''
 You are a marker palette assistant for BRAND=${request.brandLabel}.
 Return ONLY valid minified JSON with this schema:
-{"palette":[{"code":"B315","role":"Shadow","reason":"..."}],"tips":["..."]}
-Rules: use only codes in AVAILABLE_COLORS; code must be marker code only (no #HEX); if BASE_CODE is not NONE, exclude BASE_CODE; max PALETTE_SIZE items; unique codes; short reasons/tips; no prose; no markdown; no analysis.''';
+{"palette":[{"code":"${request.mixed ? 'BRAND:B315' : 'B315'}","role":"Shadow","reason":"..."}],"tips":["..."]}
+Rules: use only codes in AVAILABLE_COLORS${request.mixed ? ', written exactly as listed, BRAND:CODE (two brands may share a code)' : ''}; code must be marker code only (no #HEX); if BASE_CODE is not NONE, exclude BASE_CODE; max PALETTE_SIZE items; unique codes; short reasons/tips; no prose; no markdown; no analysis.''';
 
 /// User prompt (one line of KEY=value fields) shared by the palette advisors.
 String buildPaletteUserPrompt(AiPaletteRequest request) {
-  final baseCode = request.baseColor?.newCode.toUpperCase() ?? 'NONE';
-  final baseName = _oneLine(request.baseColor?.newName ?? 'None');
+  final base = request.baseColor;
+  final baseCode = base == null ? 'NONE' : request.promptCode(base);
+  final baseName = _oneLine(base?.newName ?? 'None');
   final available = request.candidates
       .map(
         // The catalogue's hex, never a colour the user read from their own
         // photo: those stay on the phone.
         (color) =>
-            '${color.newCode.toUpperCase()}#${color.originalHex.toUpperCase()}',
+            '${request.promptCode(color)}#${color.originalHex.toUpperCase()}',
       )
       .join(',');
   return 'BRAND_ID=${request.brandId}'

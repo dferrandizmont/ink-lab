@@ -721,7 +721,10 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
       (WidgetTester tester, _Env env) async {
         await _pump(tester, env, SwatchesPage(onBlendingChain: (_) {}));
         _check(tester, 'swatches');
-        await _tap(tester, find.textContaining(env.t.swatchesFilters));
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatches-filters')),
+        );
         _check(tester, 'filters sheet');
         final Finder packs = find.text(env.t.swatchesAllPacks);
         if (packs.evaluate().isNotEmpty) {
@@ -2779,7 +2782,10 @@ final Map<String, _Scenario> _tabletScenarios = <String, _Scenario>{
       (WidgetTester tester, _Env env) async {
         await _pump(tester, env, SwatchesPage(onBlendingChain: (_) {}));
         _check(tester, 'swatches');
-        await _tap(tester, find.textContaining(env.t.swatchesFilters));
+        await _tap(
+          tester,
+          find.byKey(const ValueKey<String>('swatches-filters')),
+        );
         _check(tester, 'filters sheet');
         await _close(tester);
         await _tap(tester, find.text(env.t.swatchesAllFilter));

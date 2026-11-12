@@ -326,6 +326,8 @@
   },
   "paletteAiFellBack": "IA no disponible. Se muestran sugerencias locales.",
   "paletteEmptyHint": "Elige un rotulador base para crear una paleta, o elige Escenas como tipo de paleta.",
+  "missingMarkersTitle": "Aún no tienes rotuladores de {brand}",
+  "missingMarkersAction": "Ir a Mi colección",
   "paletteCustomModeHint": "El modo de paleta personalizada es manual: carga una paleta guardada o aplica una desde Ideas.",
   "paletteNoSuggestions": "No se pudo crear ninguna paleta con tu colección. Prueba otro modo o añade más rotuladores.",
   "paletteScenarioTitle": "Escenas",
@@ -399,18 +401,18 @@
   "swatchesScopePack": "Pack",
   "ideasTitle": "Ideas",
   "ideasHeaderSubtitle": "Ejercicios con tus rotuladores",
-  "ideasHeaderSubtitleWholeRange": "Ejercicios con la paleta sacada de toda la gama",
   "ideasSearchHint": "Buscar ideas",
   "ideasCategoryAll": "Todas",
   "ideasApplyButton": "Usar en Paleta",
   "ideasMoreDetails": "Más detalles",
   "ideasGuideOnlyNote": "Este ejercicio usa toda tu colección, así que no tiene una paleta fija.",
-  "ideasNoMarkersOther": "Añade en Mi colección los rotuladores que tienes para ver una paleta para esta idea.",
   "ideasCategoriesLabel": "Categorías",
   "ideasEmptyTitle": "No hay ideas",
   "ideasClearFilters": "Quitar filtros",
   "ideasEmptySearch": "Ninguna idea coincide con tu búsqueda.",
   "ideasNoMarkers": "Ahora mismo no hay rotuladores disponibles",
+  "missingMarkersHint": "Marca tus rotuladores en Mi colección para ver cuáles usar",
+  "allMarkersDried": "Todos tus rotuladores están secos. Márcalos como usables para volver a usarlos.",
   "ideasTulipFieldTitle": "Campo de tulipanes",
   "ideasTulipFieldSummary": "Hileras de tulipanes rojos y amarillos hasta el horizonte, con verde de primavera entre ellas.",
   "ideasTulipFieldPractice": "Bandas planas que se rompen en puntos al acercarse.",
@@ -1607,6 +1609,7 @@
   "paletteNotAvailable": "{brand, select, decoTime{{input} no está en tu colección. Prueba con {example} o añádelo en Mi colección.} copic{{input} no está en tu colección. Prueba con {example} o añádelo en Mi colección.} finecolour{{input} no está en tu colección. Prueba con {example} o añádelo en Mi colección.} other{{input} no está en tu colección. Prueba con {example} o añádelo en Mi colección.}}",
   "paletteNoAvailableColors": "{brand, select, decoTime{Aún no hay rotuladores DecoTime en tu colección. Añádelos en Mi colección.} copic{Aún no hay rotuladores Copic en tu colección. Añádelos en Mi colección.} finecolour{Aún no hay rotuladores Finecolour en tu colección. Añádelos en Mi colección.} touchTwin{Aún no hay rotuladores Touch Twin en tu colección. Añádelos en Mi colección.} promarker{Aún no hay rotuladores Promarker en tu colección. Añádelos en Mi colección.} prismacolor{Aún no hay rotuladores Prismacolor Premier en tu colección. Añádelos en Mi colección.} spectrumNoir{Aún no hay rotuladores Spectrum Noir en tu colección. Añádelos en Mi colección.} promarkerBrush{Aún no hay rotuladores Promarker Brush en tu colección. Añádelos en Mi colección.} arrtx{Aún no hay rotuladores Arrtx en tu colección. Añádelos en Mi colección.} kurecolor{Aún no hay rotuladores ZIG Kurecolor en tu colección. Añádelos en Mi colección.} graphit{Aún no hay rotuladores Graph'it en tu colección. Añádelos en Mi colección.} marvyLePlume{Aún no hay rotuladores Marvy Le Plume en tu colección. Añádelos en Mi colección.} blickBrush{Aún no hay rotuladores Blick Studio Brush en tu colección. Añádelos en Mi colección.} artistsLoft{Aún no hay rotuladores Artist's Loft en tu colección. Añádelos en Mi colección.} other{Aún no hay rotuladores en tu colección. Añádelos en Mi colección.}}",
   "paletteMissingBase": "Elige un rotulador base, como {example}, o elige Escenas como tipo de paleta.",
+  "paletteBaseDried": "{code} está seco. Márcalo como usable en Detalles o elige otro.",
   "swatchesFiltersCount": "Filtros · {count}",
   "swatchesCodeCopied": "{code} copiado. Pégalo como color base en la pestaña Paleta.",
   "swatchesAlternativeSemantics": "{code}, {name}, delta E {value}",
@@ -1636,6 +1639,8 @@
   "errInvalidResponse": "El proveedor no ha devuelto ninguna paleta utilizable.",
   "errNoValidSuggestions": "El proveedor ha sugerido colores que no están en la colección activa.",
   "errNoAvailableColors": "No hay rotuladores disponibles entre los que elegir.",
+  "errInvalidBaseColor": "El rotulador base no está en tu colección.",
+  "errBaseDried": "El rotulador base está seco. Márcalo como usable o elige otro.",
   "errNoSuggestions": "No se pudo generar ninguna sugerencia.",
   "errTimeout": "El modelo del dispositivo ha tardado demasiado. Inténtalo de nuevo.",
   "errOnDeviceUnavailable": "El modelo del dispositivo no está listo en este móvil.",
@@ -1922,6 +1927,7 @@
   "collectionExtrasTitle": "Rotuladores sueltos",
   "collectionExtrasHint": "¿Compraste rotuladores sueltos? Márcalos aquí. Los de tus sets ya cuentan.",
   "collectionDecoMarkersTitle": "Tus rotuladores",
+  "collectionIndividualMarkersShort": "Marca los que tienes",
   "collectionDecoHint": "DecoTime no publica qué colores trae cada set: marca los que tienes o añade una familia entera.",
   "collectionDecoSizesHint": "Action vende sets DecoTime de 100, 150, 160, 200 y 300 rotuladores.",
   "collectionFamiliesTitle": "Añadir por familia",
@@ -1931,6 +1937,8 @@
   "collectionFamilyCoolGrey": "Grises fríos",
   "collectionFamilyBlueGrey": "Grises azulados",
   "collectionFamilyGreenGrey": "Grises verdosos",
+  "collectionImportCodesTitle": "Importar códigos",
+  "collectionImportCodesHint": "Pega una lista de códigos",
   "collectionDecoRange": "Gama DecoTime",
   "collectionWholeRange": "Toda la gama",
   "collectionSearchHint": "Buscar código o nombre",
@@ -1945,6 +1953,30 @@
   },
   "collectionTickManyBody": "Todos cuentan como rotuladores que tienes. Puedes quitarlos otra vez con «Quitar todos».",
   "collectionUntickVisible": "Quitar todos",
+  "collectionRemoveMarkersTitle": "{count, plural, =1{¿Quitar 1 rotulador?} other{¿Quitar {count} rotuladores?}}",
+  "@collectionRemoveMarkersTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionRemoveFromTitle": "{count, plural, =1{¿Quitar 1 rotulador de {name}?} other{¿Quitar {count} rotuladores de {name}?}}",
+  "@collectionRemoveFromTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionRemoveMarkersBody": "Los rotuladores que ya tienes salen de tu colección. Puedes volver a añadirlos cuando quieras.",
+  "collectionRemoveConfirm": "Quitar",
+  "collectionReplaceTitle": "¿Sustituir tu colección?",
+  "collectionReplaceBody": "Al terminar la configuración, los sets y rotuladores que tienes ahora se sustituyen por los que elijas aquí.",
+  "collectionReplaceConfirm": "Sustituir",
   "collectionInYourSets": "En tu set",
   "collectionNoResults": "Ningún rotulador coincide con la búsqueda.",
   "collectionReset": "Vaciar colección",
@@ -1959,7 +1991,6 @@
   "toolsBlendsHint": "Degradados que guardas: rotuladores en orden, una nota y una foto.",
   "toolsTransferTitle": "Exportar e importar",
   "toolsTransferHint": "Comparte tus rotuladores como lista o CSV, o añade muchos por código.",
-  "toolsMapEmptyTitle": "Aún no hay rotuladores que mapear",
   "toolsMapIntro": "Cada punto es un rotulador que tienes. Las zonas rayadas no tienen ninguno.",
   "toolsMapShowRange": "Mostrar toda la gama",
   "toolsMapShowRangeHint": "Puntos tenues con todos los rotuladores de tus marcas, para ver qué falta.",
@@ -2097,7 +2128,7 @@
   "collectionSeriesOahuTips": "Punta fina y cincel",
   "collectionSeriesHonoluluTips": "Pincel y cincel",
   "collectionSeriesKaalaTips": "Punta pincel",
-  "collectionSummaryNoSets": "Aún no has elegido sets: se usa toda la gama",
+  "collectionSummaryNoSets": "Aún no hay sets: Emparejar y Muestras muestran toda la gama; Paleta e Ideas necesitan los rotuladores que tienes",
   "collectionSummaryNoMarkers": "Aún no has marcado rotuladores",
   "collectionExtrasAddTitle": "Añadir rotuladores sueltos",
   "collectionDecoMarkersButton": "Marcar rotuladores",
@@ -2127,7 +2158,7 @@
   "buyNextNoCollection": "Marca los rotuladores que tienes para ver qué comprar.",
   "buyNextComplete": "Nada que sugerir: tus rotuladores ya cubren bien todas las escenas.",
   "buyNextRefill": "Seco: una recarga lo recupera.",
-  "onboardingDoneWholeRange": "Hasta que elijas sets, la app muestra toda la gama de {brand}.",
+  "onboardingDoneWholeRange": "Hasta que elijas sets, Emparejar y Muestras muestran toda la gama de {brand}. Paleta e Ideas necesitan los rotuladores que tienes.",
   "onboardingDoneNext": "Qué sigue: mira tus colores en Muestras, empareja una foto en Emparejar o crea una paleta en Paleta.",
   "collectionVisibleScope": "Afecta a los rotuladores que coinciden con la búsqueda.",
   "matchWhiteBalanceButton": "Corregir blancos",
@@ -2168,7 +2199,6 @@
   "onboardingFinecolourLine": "480 colores · Marca los rotuladores que tienes",
   "onboardingMarkersTitle": "Tus rotuladores {brand}",
   "onboardingNoMarkers": "Todavía no has marcado rotuladores {brand}: márcalos en Mi colección.",
-  "ideasNoMarkersBrand": "Añade en Mi colección los rotuladores {brand} que tienes para ver una paleta para esta idea.",
   "ideasDiarySegment": "Diario",
   "ideasDiarySubtitle": "Tus obras, las más recientes primero",
   "diaryEmptyTitle": "Tu diario está vacío",
@@ -2340,5 +2370,16 @@
   "swatchesOtherBrandsYours": "Tus marcas",
   "inkLevelFullNote": "Lleno: Emparejar, Paleta e Ideas pueden sugerirlo.",
   "inkLevelRunningOutNote": "Se acaba: se sigue usando en todas partes. Aparece en el grupo «Se acaba» de tu lista de deseos.",
-  "swatchesDetailPaneEmpty": "Toca un rotulador para ver aquí sus detalles."
+  "swatchesDetailPaneEmpty": "Toca un rotulador para ver aquí sus detalles.",
+  "collectionMixBrands": "Mezclar mis marcas",
+  "collectionMoreBrands": "{first}, {second} y {count} más",
+  "collectionBrandsCount": "{count} marcas",
+  "paletteChanged": "Paleta cambiada",
+  "paletteReplaceTitle": "¿Sustituir esta paleta?",
+  "paletteReplaceBody": "Se sustituirá la paleta que tienes en pantalla, con tus cambios y tus colores bloqueados. Podrás deshacerlo justo después.",
+  "paletteReplaceButton": "Sustituir",
+  "paletteAmbiguousBase": "Este código está en más de una de tus marcas. Elige la marca en la lista.",
+  "paletteChainWholeRangeNoteMixed": "Se muestra toda la gama de tus marcas, también rotuladores que no tienes.",
+  "paletteBaseOtherBrand": "{code} es un rotulador de {brand}, y {brand} no está en uso ahora mismo. Prueba con {example} o cambia la marca en Mi colección.",
+  "paletteImportTooFew": "Añade al menos dos códigos de rotuladores distintos y reconocidos para importar una paleta."
 }

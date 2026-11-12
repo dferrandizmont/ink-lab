@@ -905,6 +905,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wähle einen Basismarker für eine Palette oder Szenen als Palettentyp.';
 
   @override
+  String missingMarkersTitle(String brand) {
+    return 'Du hast noch keine $brand-Marker';
+  }
+
+  @override
+  String get missingMarkersAction => 'Zu Meiner Sammlung';
+
+  @override
   String get paletteCustomModeHint =>
       'Der Modus Eigene Palette ist manuell: Lade eine gespeicherte Palette oder übernimm eine aus Ideen.';
 
@@ -1138,10 +1146,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get ideasHeaderSubtitle => 'Übungen für deine Marker';
 
   @override
-  String get ideasHeaderSubtitleWholeRange =>
-      'Übungen mit einer Palette aus dem ganzen Sortiment';
-
-  @override
   String get ideasSearchHint => 'Ideen suchen';
 
   @override
@@ -1158,10 +1162,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Diese Übung nutzt deine ganze Sammlung und hat daher keine feste Palette.';
 
   @override
-  String get ideasNoMarkersOther =>
-      'Füge in Meine Sammlung die Marker hinzu, die du besitzt, um eine Palette für diese Idee zu erhalten.';
-
-  @override
   String get ideasCategoriesLabel => 'Kategorien';
 
   @override
@@ -1175,6 +1175,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ideasNoMarkers => 'Derzeit keine Marker verfügbar';
+
+  @override
+  String get missingMarkersHint =>
+      'Hake deine Marker in Meiner Sammlung an, um zu sehen, welche du verwenden kannst';
+
+  @override
+  String get allMarkersDried =>
+      'Alle deine Marker sind ausgetrocknet. Markiere sie wieder als nutzbar, um sie weiter zu verwenden.';
 
   @override
   String get ideasTulipFieldTitle => 'Tulpenfeld';
@@ -5886,6 +5894,11 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String paletteBaseDried(String code) {
+    return '$code ist ausgetrocknet. Markiere ihn unter „Details“ als nutzbar oder wähle einen anderen.';
+  }
+
+  @override
   String swatchesFiltersCount(int count) {
     return 'Filter · $count';
   }
@@ -6018,6 +6031,14 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get errNoAvailableColors =>
       'Es sind keine Marker zur Auswahl verfügbar.';
+
+  @override
+  String get errInvalidBaseColor =>
+      'Der Basis-Marker ist nicht in deiner Sammlung.';
+
+  @override
+  String get errBaseDried =>
+      'Der Basis-Marker ist ausgetrocknet. Markiere ihn als nutzbar oder wähle einen anderen.';
 
   @override
   String get errNoSuggestions => 'Es konnten keine Vorschläge erstellt werden.';
@@ -6902,7 +6923,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get matchWholeRangeAction => 'Zu Meine Sammlung';
+  String get matchWholeRangeAction => 'Zu Meiner Sammlung';
 
   @override
   String get collectionTitle => 'Meine Sammlung';
@@ -6966,6 +6987,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get collectionDecoMarkersTitle => 'Deine Marker';
 
   @override
+  String get collectionIndividualMarkersShort => 'Hake an, was du hast';
+
+  @override
   String get collectionDecoHint =>
       'DecoTime veröffentlicht nicht, welche Farben in welchem Set stecken. Hake also an, was du besitzt, oder füge eine ganze Familie hinzu.';
 
@@ -6997,6 +7021,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get collectionFamilyGreenGrey => 'Grüngrautöne';
 
   @override
+  String get collectionImportCodesTitle => 'Codes importieren';
+
+  @override
+  String get collectionImportCodesHint => 'Füge eine Liste von Codes ein';
+
+  @override
   String get collectionDecoRange => 'DecoTime-Sortiment';
 
   @override
@@ -7019,6 +7049,45 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get collectionUntickVisible => 'Alle abwählen';
+
+  @override
+  String collectionRemoveMarkersTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Marker entfernen?',
+      one: '1 Marker entfernen?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String collectionRemoveFromTitle(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name: $count Marker entfernen?',
+      one: '$name: 1 Marker entfernen?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get collectionRemoveMarkersBody =>
+      'Die Marker, die du schon hast, verlassen deine Sammlung. Du kannst sie jederzeit wieder hinzufügen.';
+
+  @override
+  String get collectionRemoveConfirm => 'Entfernen';
+
+  @override
+  String get collectionReplaceTitle => 'Deine Sammlung ersetzen?';
+
+  @override
+  String get collectionReplaceBody =>
+      'Wenn die Einrichtung endet, werden die Sets und Marker, die du jetzt hast, durch die ersetzt, die du hier auswählst.';
+
+  @override
+  String get collectionReplaceConfirm => 'Ersetzen';
 
   @override
   String get collectionInYourSets => 'In deinem Set';
@@ -7065,9 +7134,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get toolsTransferHint =>
       'Teile deine Marker als Liste oder CSV oder füge viele per Code hinzu.';
-
-  @override
-  String get toolsMapEmptyTitle => 'Noch keine Marker für die Karte';
 
   @override
   String get toolsMapIntro =>
@@ -7563,7 +7629,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get collectionSummaryNoSets =>
-      'Du hast noch keine Sets gewählt: Es wird das ganze Sortiment genutzt';
+      'Noch keine Sets: Abgleich und Farbmuster zeigen das ganze Sortiment; Palette und Ideen brauchen deine eigenen Marker';
 
   @override
   String get collectionSummaryNoMarkers => 'Du hast noch keine Marker angehakt';
@@ -7698,7 +7764,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String onboardingDoneWholeRange(String brand) {
-    return 'Bis du Sets wählst, zeigt die App das ganze $brand-Sortiment.';
+    return 'Bis du Sets wählst, zeigen Abgleich und Farbmuster das ganze $brand-Sortiment. Palette und Ideen brauchen deine eigenen Marker.';
   }
 
   @override
@@ -7849,11 +7915,6 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String onboardingNoMarkers(String brand) {
     return 'Du hast noch keine $brand-Marker markiert: Markiere sie unter „Meine Sammlung“.';
-  }
-
-  @override
-  String ideasNoMarkersBrand(String brand) {
-    return 'Füge unter „Meine Sammlung“ deine $brand-Marker hinzu, um eine Palette für diese Idee zu erhalten.';
   }
 
   @override
@@ -8427,4 +8488,47 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get swatchesDetailPaneEmpty =>
       'Tippe auf einen Marker, um hier seine Details zu sehen.';
+
+  @override
+  String get collectionMixBrands => 'Meine Marken mischen';
+
+  @override
+  String collectionMoreBrands(String first, String second, int count) {
+    return '$first, $second und $count weitere';
+  }
+
+  @override
+  String collectionBrandsCount(int count) {
+    return '$count Marken';
+  }
+
+  @override
+  String get paletteChanged => 'Palette geändert';
+
+  @override
+  String get paletteReplaceTitle => 'Diese Palette ersetzen?';
+
+  @override
+  String get paletteReplaceBody =>
+      'Die Palette auf dem Bildschirm wird ersetzt, mit deinen Änderungen und deinen gesperrten Farben. Du kannst das direkt danach rückgängig machen.';
+
+  @override
+  String get paletteReplaceButton => 'Ersetzen';
+
+  @override
+  String get paletteAmbiguousBase =>
+      'Diesen Code gibt es in mehreren deiner Marken. Wähle die Marke in der Liste.';
+
+  @override
+  String get paletteChainWholeRangeNoteMixed =>
+      'Das ganze Sortiment deiner Marken wird angezeigt, auch Marker, die du nicht besitzt.';
+
+  @override
+  String paletteBaseOtherBrand(String code, String brand, String example) {
+    return '$code ist ein Marker von $brand, und $brand ist gerade nicht in Gebrauch. Versuche $example oder wechsle die Marke in Meiner Sammlung.';
+  }
+
+  @override
+  String get paletteImportTooFew =>
+      'Füge mindestens zwei unterschiedliche, bekannte Markercodes hinzu, um eine Palette zu importieren.';
 }

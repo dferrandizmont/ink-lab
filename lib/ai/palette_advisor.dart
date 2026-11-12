@@ -48,6 +48,13 @@ enum PaletteFailureReason {
   /// The active collection has no usable colours.
   noAvailableColors,
 
+  /// The base marker is not one of the markers the user owns.
+  invalidBaseColor,
+
+  /// The base marker is one of the user's own markers, but it ran dry: it
+  /// does not paint, so no palette can be built on it.
+  baseDried,
+
   /// Nothing to suggest (domain-level failure of the local engine).
   noSuggestions,
 
@@ -83,6 +90,10 @@ enum PaletteFailureReason {
       'The provider suggested colours that are not in the active collection.',
     PaletteFailureReason.noAvailableColors =>
       'There are no available markers to choose from.',
+    PaletteFailureReason.invalidBaseColor =>
+      'The base marker is not in your collection.',
+    PaletteFailureReason.baseDried =>
+      'The base marker is dried out. Mark it as usable or choose another.',
     PaletteFailureReason.noSuggestions => 'No suggestions could be generated.',
     PaletteFailureReason.timeout =>
       'The on-device model took too long. Try again.',

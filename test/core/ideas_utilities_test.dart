@@ -175,14 +175,14 @@ void main() {
     activeSetIds: <String>{'classic_160'},
   );
   // The whole range of a brand: every marker it sells, owned or not.
-  final fullOhuhu = paletteCandidateColors(
+  final fullOhuhu = brandRangeColors(
     colors: parseColors(
       File(MarkerBrand.ohuhuOahu.assetPath).readAsStringSync(),
       brand: MarkerBrand.ohuhuOahu,
     ),
     brand: MarkerBrand.ohuhuOahu,
   );
-  final fullCopic = paletteCandidateColors(
+  final fullCopic = brandRangeColors(
     colors: parseColors(
       File(MarkerBrand.copic.assetPath).readAsStringSync(),
       brand: MarkerBrand.copic,

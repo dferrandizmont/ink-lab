@@ -16,7 +16,14 @@ final class CollectionSnapshot {
   });
 
   /// Reads the catalogue of every brand and the collection of the user.
-  static Future<CollectionSnapshot> load(AppScope scope) async {
+  ///
+  /// With [respectScope] the collection is the one Palette and Ideas work
+  /// with: the markers of the active brand, or of every brand the user owns
+  /// when "Mix my brands" is on (and there are two brands to mix).
+  static Future<CollectionSnapshot> load(
+    AppScope scope, {
+    bool respectScope = false,
+  }) async {
     final AppSettings settings = scope.settings.settings;
     final Map<MarkerBrand, List<MarkerColor>> catalogues =
         <MarkerBrand, List<MarkerColor>>{};
@@ -37,6 +44,21 @@ final class CollectionSnapshot {
           ownedMarkerCodes: settings.ownedMarkerCodes,
         ),
       );
+    }
+    if (respectScope) {
+      final selected = paletteCandidateColors(
+        colors: owned,
+        brand: scope.settings.brand,
+        scope: scope.settings.scope,
+        activeSetIds: settings.effectiveSetIds(),
+        ownedMarkerCodes: settings.ownedMarkerCodes,
+        driedColorIds: scope.dried.ids,
+      );
+      if (!hasMixedBrands(selected)) {
+        owned.removeWhere(
+          (MarkerColor c) => c.brandId != scope.settings.brand.id,
+        );
+      }
     }
     return CollectionSnapshot(
       catalogues: catalogues,

@@ -37,9 +37,14 @@ final class PaletteGenerator implements PaletteAdvisor {
   const PaletteGenerator();
   @override
   PaletteAdvice advise(PaletteAdvisorRequest request) {
+    // The collection of the request, narrowed to the markers the user owns:
+    // there is no fallback to the whole range, so an empty collection simply
+    // has nothing to offer.
     final available = paletteCandidateColors(
       colors: request.availableColors,
       brand: request.brand,
+      scope: request.scope,
+      driedColorIds: request.driedColorIds,
       activeSetIds: request.activeSetIds,
       ownedMarkerCodes: request.ownedMarkerCodes,
     );
@@ -54,8 +59,15 @@ final class PaletteGenerator implements PaletteAdvisor {
           .where((c) => c.colorId == request.baseColor!.colorId)
           .firstOrNull;
       if (base == null) {
-        return const PaletteAdviceFailure(
-          PaletteFailureReason.invalidBaseColor,
+        // A marker the user owns but that ran dry is not out of the
+        // collection: it has its own reason, so the page can say so.
+        final bool dried = request.driedColorIds.contains(
+          request.baseColor!.colorId,
+        );
+        return PaletteAdviceFailure(
+          dried
+              ? PaletteFailureReason.baseDried
+              : PaletteFailureReason.invalidBaseColor,
         );
       }
     } else if (request.scenario != null) {
@@ -85,20 +97,61 @@ final class PaletteGenerator implements PaletteAdvisor {
   }
 }
 
-/// Resolves the first catalog match using either current or legacy code.
+/// Resolves a base typed by the user, by its current or its legacy code.
+///
+/// A base written with its brand (see [resolveBrandedBaseColor]) is that
+/// marker. A bare code is the marker of [colors] with that code; when
+/// markers of two brands share it ("Mix my brands"), the code alone says
+/// nothing and `null` is returned, so the page can ask which one.
 ///
 /// Spaces inside [input] are ignored when nothing matches as typed, so `PM 23`
 /// finds Prismacolor's `PM23`.
 MarkerColor? resolveBaseColor(String input, List<MarkerColor> colors) {
+  final branded = resolveBrandedBaseColor(input, colors);
+  if (branded != null) return branded;
+  final matches = baseCodeMatches(input, colors);
+  return matches.isEmpty || hasMixedBrands(matches) ? null : matches.first;
+}
+
+/// The marker of [colors] that [input] names together with its brand: a
+/// colour id (`decotime:91`) or the label a mixed list shows (`DecoTime 91`),
+/// in any letter case. `null` when [input] names no brand, or no such marker.
+MarkerColor? resolveBrandedBaseColor(String input, List<MarkerColor> colors) {
   final normalized = input.trim().toUpperCase();
-  MarkerColor? find(String code) => colors
-      .where(
-        (color) =>
-            color.newCode.toUpperCase() == code ||
-            color.oldCode.toUpperCase() == code,
-      )
-      .firstOrNull;
-  return find(normalized) ?? find(normalized.replaceAll(RegExp(r'\s+'), ''));
+  for (final brand in MarkerBrand.values) {
+    for (final prefix in <String>[
+      '${brand.id.toUpperCase()}:',
+      '${brand.label.toUpperCase()} ',
+    ]) {
+      if (!normalized.startsWith(prefix)) continue;
+      final code = normalized.substring(prefix.length).trim();
+      if (code.isEmpty) continue;
+      for (final c in colors) {
+        if (c.brandId == brand.id &&
+            (c.newCode.toUpperCase() == code ||
+                c.oldCode.toUpperCase() == code)) {
+          return c;
+        }
+      }
+    }
+  }
+  return null;
+}
+
+/// Every marker of [colors] whose current or legacy code is the bare code
+/// [input] (as typed, else without its inner spaces). More than one brand
+/// among them means the code is shared.
+List<MarkerColor> baseCodeMatches(String input, List<MarkerColor> colors) {
+  final normalized = input.trim().toUpperCase();
+  if (normalized.isEmpty) return const <MarkerColor>[];
+  List<MarkerColor> find(String code) => <MarkerColor>[
+    for (final c in colors)
+      if (c.newCode.toUpperCase() == code || c.oldCode.toUpperCase() == code) c,
+  ];
+  final matches = find(normalized);
+  if (matches.isNotEmpty) return matches;
+  final compact = normalized.replaceAll(RegExp(r'\s+'), '');
+  return compact == normalized ? matches : find(compact);
 }
 
 MarkerColor? findScenarioDefaultBase(
@@ -150,7 +203,7 @@ List<PaletteSuggestion> buildPalette(
   }
   final base = hexToHsv(baseColor.hex);
   final options = candidates
-      .where((c) => c.newCode != baseColor.newCode)
+      .where((c) => c.colorId != baseColor.colorId)
       .toList();
   if (options.isEmpty) return [];
   if (mode == PaletteMode.recommended) {
@@ -191,7 +244,7 @@ List<PaletteSuggestion> buildScenarioPalette(
   final wanted = size.clamp(3, 5);
   final base = hexToHsv(baseColor.hex);
   final options = candidates
-      .where((c) => c.newCode != baseColor.newCode)
+      .where((c) => c.colorId != baseColor.colorId)
       .toList();
   if (options.isEmpty) return [];
   final selected = <String>{};
@@ -200,23 +253,23 @@ List<PaletteSuggestion> buildScenarioPalette(
   for (var i = 0; i < targets.length; i++) {
     final target = targets[i];
     final best = stableSortedBy(
-      options.where((c) => !selected.contains(c.newCode)),
+      options.where((c) => !selected.contains(c.colorId)),
       (c) => scoreScenarioTarget(base, hexToHsv(c.hex), target),
     ).take(5).toList();
     if (best.isEmpty) continue;
     final offset = (variationToken + i).abs() % math.min(4, best.length);
     final color = best[offset.toInt()];
-    selected.add(color.newCode);
+    selected.add(color.colorId);
     result.add(PaletteSuggestion(color: color, reason: target.role));
   }
   if (result.length < wanted) {
     final fallback = stableSortedBy(
-      options.where((c) => !selected.contains(c.newCode)),
+      options.where((c) => !selected.contains(c.colorId)),
       (c) => _recommendedScore(base, hexToHsv(c.hex)),
     );
     for (final c in fallback) {
       if (result.length >= wanted) break;
-      if (selected.add(c.newCode)) {
+      if (selected.add(c.colorId)) {
         result.add(PaletteSuggestion(color: c, reason: 'Scenario support'));
       }
     }
@@ -282,7 +335,7 @@ List<PaletteSuggestion> _buildRecommended(
       // Another palette: this role takes one of its few best candidates that
       // no other role has taken.
       final top = stableSortedBy(
-        scored.where((c) => filter(c) && !byCode.containsKey(c.color.newCode)),
+        scored.where((c) => filter(c) && !byCode.containsKey(c.color.colorId)),
         score,
       ).take(_variationDepth).toList();
       best = top.isEmpty
@@ -291,7 +344,7 @@ List<PaletteSuggestion> _buildRecommended(
     }
     role++;
     if (best != null) {
-      byCode[best.color.newCode] = PaletteSuggestion(
+      byCode[best.color.colorId] = PaletteSuggestion(
         color: best.color,
         reason: reason,
       );
@@ -327,7 +380,7 @@ List<PaletteSuggestion> _buildRecommended(
     for (final c in stableSortedBy(scored, (c) => c.score)) {
       if (byCode.length >= size) break;
       byCode.putIfAbsent(
-        c.color.newCode,
+        c.color.colorId,
         () => PaletteSuggestion(color: c.color, reason: 'Balanced pairing'),
       );
     }
@@ -452,7 +505,7 @@ List<_ScoredColor> _diversifyVaried(
   final selected = <_ScoredColor>[];
   for (var slot = 0; slot < size; slot++) {
     final left = scored.where(
-      (c) => !selected.any((s) => s.color.newCode == c.color.newCode),
+      (c) => !selected.any((s) => s.color.colorId == c.color.colorId),
     );
     var pool = spread
         ? left
@@ -504,7 +557,7 @@ List<_ScoredColor> _diversify(
   }
   for (final c in scored) {
     if (selected.length >= size) break;
-    if (!selected.any((current) => current.color.newCode == c.color.newCode)) {
+    if (!selected.any((current) => current.color.colorId == c.color.colorId)) {
       selected.add(c);
     }
   }
@@ -525,31 +578,36 @@ List<PaletteSuggestion> remixPaletteWithVariation(
       .where(
         (c) =>
             baseCode == null ||
-            c.newCode.toUpperCase() != baseCode.toUpperCase(),
+            c.colorId.toUpperCase() != baseCode.toUpperCase() &&
+                c.newCode.toUpperCase() != baseCode.toUpperCase(),
       )
       .toList();
   if (pool.isEmpty) return currentPalette.take(wanted).toList();
   final selected = <String>{};
   final result = <PaletteSuggestion>[];
   for (final locked in currentPalette.where(
-    (s) => lockedCodes.contains(s.color.newCode),
+    (s) =>
+        (lockedCodes.contains(s.color.colorId) ||
+        lockedCodes.contains(s.color.newCode)),
   )) {
     if (result.length >= wanted) break;
-    if (selected.add(locked.color.newCode.toUpperCase())) {
+    if (selected.add(locked.color.colorId.toUpperCase())) {
       result.add(PaletteSuggestion(color: locked.color, reason: 'Locked'));
     }
   }
   for (final s in currentPalette.where(
-    (s) => !lockedCodes.contains(s.color.newCode),
+    (s) =>
+        !(lockedCodes.contains(s.color.colorId) ||
+            lockedCodes.contains(s.color.newCode)),
   )) {
     if (result.length >= wanted) break;
     final target = _shiftedHsv(hexToHsv(s.color.hex), variation);
     final best = minBy(
-      pool.where((c) => !selected.contains(c.newCode.toUpperCase())),
+      pool.where((c) => !selected.contains(c.colorId.toUpperCase())),
       (c) => _scoreVariationTarget(target, hexToHsv(c.hex), variation),
     );
     if (best != null) {
-      selected.add(best.newCode.toUpperCase());
+      selected.add(best.colorId.toUpperCase());
       result.add(
         PaletteSuggestion(
           color: best,
@@ -561,7 +619,7 @@ List<PaletteSuggestion> remixPaletteWithVariation(
   }
   for (final s in currentPalette) {
     if (result.length >= wanted) break;
-    if (selected.add(s.color.newCode.toUpperCase())) {
+    if (selected.add(s.color.colorId.toUpperCase())) {
       result.add(
         PaletteSuggestion(
           color: s.color,
@@ -572,7 +630,7 @@ List<PaletteSuggestion> remixPaletteWithVariation(
   }
   for (final c in pool) {
     if (result.length >= wanted) break;
-    if (selected.add(c.newCode.toUpperCase())) {
+    if (selected.add(c.colorId.toUpperCase())) {
       result.add(PaletteSuggestion(color: c, reason: 'Variation support'));
     }
   }

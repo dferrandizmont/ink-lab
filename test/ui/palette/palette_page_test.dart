@@ -131,6 +131,38 @@ void main() {
     expect(find.textContaining('not an Ink Lab marker code'), findsOneWidget);
   });
 
+  testWidgets('a base the user owns but that ran dry has its own message', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(
+      tester,
+      setup: (AppScope scope) async {
+        // The marker stays in the collection (the classic 160 set), it just
+        // does not paint any more.
+        await scope.dried.add('ohuhu-oahu:B08');
+      },
+    );
+
+    await enterBaseCode(tester, 'B08');
+
+    expect(find.text(l10n.paletteBaseDried('B08')), findsOneWidget);
+    // The old "not in your collection" message must not show up.
+    expect(find.textContaining('is not in your collection'), findsNothing);
+  });
+
+  testWidgets('a base the user does not own keeps the old message', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(tester);
+
+    // BV04 is a real marker of the brand, but it is not in the classic 160
+    // set the test scope starts with.
+    await enterBaseCode(tester, 'BV04');
+
+    expect(find.textContaining('is not in your collection'), findsOneWidget);
+    expect(find.textContaining('is dried out'), findsNothing);
+  });
+
   testWidgets('the palette size chip changes the result size', (
     WidgetTester tester,
   ) async {
@@ -569,6 +601,50 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byTooltip(l10n.paletteUnlockButton), findsOneWidget);
     expect(find.textContaining('variation applied'), findsOneWidget);
+  });
+
+  // Tester report (App Hive, 1.2.2): unlocking the second colour moved it up.
+  testWidgets('locking and unlocking never moves a colour', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(tester);
+    await enterBaseCode(tester, 'B08');
+
+    final List<String> before = rowCodes(tester);
+    expect(before.length, greaterThanOrEqualTo(3));
+
+    // Lock the last one, then the first and second, then unlock the second.
+    await toggleRowLock(tester, before.last);
+    expect(rowCodes(tester), before);
+    await toggleRowLock(tester, before[0]);
+    await toggleRowLock(tester, before[1]);
+    expect(rowCodes(tester), before);
+    await toggleRowLock(tester, before[1]);
+    expect(rowCodes(tester), before);
+    expect(find.byTooltip(l10n.paletteUnlockButton), findsNWidgets(2));
+    // A locked colour keeps its own reason, not the button's label.
+    expect(find.text(l10n.paletteLockButton), findsNothing);
+  });
+
+  testWidgets('a variation keeps each locked colour in its slot', (
+    WidgetTester tester,
+  ) async {
+    await pumpPalette(tester);
+    await enterBaseCode(tester, 'B08');
+
+    final List<String> before = rowCodes(tester);
+    final String lastCode = before.last;
+    await toggleRowLock(tester, lastCode);
+
+    await tester.ensureVisible(find.text('Warmer'));
+    await tester.tap(find.text('Warmer'));
+    await tester.pumpAndSettle();
+
+    final List<String> after = rowCodes(tester);
+    expect(after.length, before.length);
+    expect(after.last, lastCode);
+    expect(after.toSet().length, after.length);
+    expect(find.text(l10n.paletteLockButton), findsNothing);
   });
 
   testWidgets('the base marker can be picked from a searchable list', (

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../app_scope.dart';
@@ -16,6 +18,7 @@ import '../../share/share_sink.dart';
 import '../settings/dialogs.dart';
 import '../settings/settings_widgets.dart';
 import '../tools/collection_tools_rows.dart';
+import '../tools/collection_transfer_page.dart';
 import 'brand_picker.dart';
 import 'collection_pickers.dart';
 import 'collection_summary.dart';
@@ -52,9 +55,23 @@ class CollectionPage extends StatefulWidget {
   State<CollectionPage> createState() => _CollectionPageState();
 }
 
+/// What the page reads: the colours of the active brand, and the colours of
+/// every brand the user owns a marker of.
+typedef _Catalogs = ({List<MarkerColor> catalog, List<MarkerColor> owned});
+
 class _CollectionPageState extends State<CollectionPage> {
   AppScope? _scope;
   Stream<AppSettingsState>? _changes;
+
+  /// A marker ran dry or is usable again: "Mix my brands" is offered only
+  /// with usable markers of two brands.
+  StreamSubscription<Set<String>>? _driedChanges;
+
+  /// The catalogues the page reads, kept while what they depend on (the
+  /// brand, the collection, the user's own colours) stays the same, so a
+  /// rebuild never starts the reading again.
+  String? _catalogsKey;
+  Future<_Catalogs>? _catalogs;
 
   /// Whether the "Series you own" and "Sets you own" groups of the Ohuhu
   /// collection are open (both start folded).
@@ -68,7 +85,42 @@ class _CollectionPageState extends State<CollectionPage> {
     if (!identical(scope, _scope)) {
       _scope = scope;
       _changes = scope.settings.changes;
+      _driedChanges?.cancel();
+      _driedChanges = scope.dried.changes.listen((_) {
+        if (mounted) setState(() {});
+      });
     }
+  }
+
+  @override
+  void dispose() {
+    _driedChanges?.cancel();
+    super.dispose();
+  }
+
+  /// The colours of the active brand, and the colours of every brand the
+  /// user owns a marker of (to know which brands can be mixed).
+  Future<_Catalogs> _catalogsOf(AppScope scope, AppSettingsState state) {
+    final List<String> owned = <String>[
+      ...state.settings.effectiveSetIds(),
+      ...state.settings.ownedMarkerCodes,
+    ]..sort();
+    final String key =
+        '${state.brand.id}|${scope.markers.colorRevision}|${owned.join(',')}';
+    final Future<_Catalogs>? current = _catalogs;
+    if (current != null && key == _catalogsKey) return current;
+    _catalogsKey = key;
+    return _catalogs = () async {
+      final List<MarkerColor> catalog = await scope.markers.loadColors(
+        state.brand,
+      );
+      final List<MarkerColor> owned = await scope.markers.loadCollectionCatalog(
+        brand: state.brand,
+        settings: state.settings,
+        allOwnedBrands: true,
+      );
+      return (catalog: catalog, owned: owned);
+    }();
   }
 
   @override
@@ -82,15 +134,20 @@ class _CollectionPageState extends State<CollectionPage> {
           initialData: scope.settings.state,
           builder: (BuildContext context, AsyncSnapshot<AppSettingsState> s) {
             final AppSettingsState state = s.data ?? scope.settings.state;
-            return FutureBuilder<List<MarkerColor>>(
-              future: scope.markers.loadColors(state.brand),
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<MarkerColor>> c) {
-                    if (!c.hasData) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    return _content(context, scope, state, c.data!);
-                  },
+            return FutureBuilder<_Catalogs>(
+              future: _catalogsOf(scope, state),
+              builder: (BuildContext context, AsyncSnapshot<_Catalogs> c) {
+                if (!c.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return _content(
+                  context,
+                  scope,
+                  state,
+                  c.data!.catalog,
+                  c.data!.owned,
+                );
+              },
             );
           },
         ),
@@ -103,6 +160,7 @@ class _CollectionPageState extends State<CollectionPage> {
     AppScope scope,
     AppSettingsState state,
     List<MarkerColor> catalog,
+    List<MarkerColor> ownedCatalog,
   ) {
     final InkColors ink = InkColors.of(context);
     final MarkerBrand brand = state.brand;
@@ -117,12 +175,34 @@ class _CollectionPageState extends State<CollectionPage> {
       settings.extraMarkerIds,
       brand.id,
     );
+    // The brands with a usable marker: two or more can be mixed.
+    final List<MarkerBrand> mixable = usableOwnedBrands(
+      colors: ownedCatalog,
+      activeSetIds: settings.effectiveSetIds(),
+      ownedMarkerCodes: settings.ownedMarkerCodes,
+      driedColorIds: scope.dried.ids,
+    );
     final CollectionSummary summary = CollectionSummary.of(state, catalog);
     final String seriesLabel = <String>[
       for (final MarkerLine line in MarkerLine.values)
         if (series.contains(line)) line.label,
     ].join(' + ');
     final TextStyle caption = AppTypography.secondary.copyWith(color: ink.fg2);
+    // The row that opens the text import, for every brand: it is defined
+    // once, so the two branches of the collection never drift apart.
+    final Widget importCodesRow = InkListRow(
+      key: const ValueKey<String>('collection-import-codes'),
+      label: context.l10n.collectionImportCodesTitle,
+      // One line under the title, like the Sets row; the help sentence is
+      // on the page the row opens.
+      subtitle: context.l10n.collectionImportCodesHint,
+      chevron: true,
+      onTap: () => CollectionTransferPage.open(
+        context,
+        shareSink: widget.shareSink,
+        initialSection: CollectionTransferSection.import,
+      ),
+    );
 
     return SingleChildScrollView(
       key: CollectionPage.pageKey,
@@ -148,6 +228,33 @@ class _CollectionPageState extends State<CollectionPage> {
                 chevron: true,
                 onTap: () => showBrandPicker(context, scope: scope),
               ),
+              // "Mix my brands": Palette, Ideas, the Colour map, the AI and
+              // the home widget use the markers of every brand the user owns.
+              // Only offered when there are two brands to mix; with fewer the
+              // stored choice does nothing.
+              if (mixable.length >= 2)
+                SettingsSwitchRow(
+                  key: const ValueKey<String>('collection-mix-brands'),
+                  label: context.l10n.collectionMixBrands,
+                  // One line, like the rows around it: the brands that are
+                  // mixed ("Ohuhu + DecoTime", "Ohuhu, DecoTime and 1 more"),
+                  // or how many when their names do not fit ("3 brands").
+                  subtitle: mixable.length == 2
+                      ? '${mixable[0].label} + ${mixable[1].label}'
+                      : context.l10n.collectionMoreBrands(
+                          mixable[0].label,
+                          mixable[1].label,
+                          mixable.length - 2,
+                        ),
+                  singleLine: true,
+                  shortSubtitle: context.l10n.collectionBrandsCount(
+                    mixable.length,
+                  ),
+                  value: state.scope == BrandScope.mixedBrands,
+                  onChanged: (bool on) => scope.settings.setScope(
+                    on ? BrandScope.mixedBrands : BrandScope.singleBrand,
+                  ),
+                ),
               KeyedSubtree(
                 key: const ValueKey<String>('collection-summary'),
                 child: CollectionSummaryCard(summary: summary, embedded: true),
@@ -172,7 +279,7 @@ class _CollectionPageState extends State<CollectionPage> {
                         SeriesChips(
                           selected: series,
                           onToggle: (MarkerLine line, bool on) =>
-                              _toggleSeries(scope, settings, line, on),
+                              _toggleSeries(context, scope, line, on, catalog),
                         ),
                         if (series.contains(MarkerLine.honolulu)) ...<Widget>[
                           const SizedBox(height: InkSpacing.group),
@@ -207,16 +314,12 @@ class _CollectionPageState extends State<CollectionPage> {
                         : SeriesSetPicker(
                             series: series,
                             ownedSetIds: settings.ownedSetIds,
-                            onToggle: (OahuSet set, bool on) {
-                              final Set<String> next = <String>{
-                                ...settings.ownedSetIds,
-                              };
-                              on ? next.add(set.id) : next.remove(set.id);
-                              scope.settings.setOwnedSetIds(next);
-                            },
+                            onToggle: (OahuSet set, bool on) =>
+                                _toggleSet(context, scope, set, on, catalog),
                           ),
                   ),
                 ),
+                importCodesRow,
                 InkListRow(
                   key: const ValueKey<String>('collection-add-loose'),
                   label: context.l10n.collectionExtrasTitle,
@@ -244,15 +347,18 @@ class _CollectionPageState extends State<CollectionPage> {
                         ),
                         const SizedBox(height: InkSpacing.block),
                         InkGroupHead(context.l10n.collectionFamiliesTitle),
-                        _familyChips(context, scope, settings, range, extras),
+                        _familyChips(context, scope, range, extras),
                       ],
                     ),
                   ),
+                importCodesRow,
                 InkListRow(
                   key: const ValueKey<String>('collection-add-loose'),
                   label: context.l10n.collectionDecoMarkersTitle,
                   value: context.l10n.collectionMarkers(extras.length),
-                  subtitle: context.l10n.individualMarkersHint(brand),
+                  // One line under the title, like the Sets row; the help
+                  // sentence is on the page the row opens.
+                  subtitle: context.l10n.collectionIndividualMarkersShort,
                   chevron: true,
                   onTap: () => LooseMarkersPage.open(context),
                 ),
@@ -312,7 +418,7 @@ class _CollectionPageState extends State<CollectionPage> {
                 summary.isEmpty &&
                     !(ohuhu && settings.chosenSeriesIds.isNotEmpty)
                 ? null
-                : () => _reset(context, scope, settings, brand),
+                : () => _reset(context, scope, brand),
           ),
         ],
       ),
@@ -322,15 +428,14 @@ class _CollectionPageState extends State<CollectionPage> {
   Widget _familyChips(
     BuildContext context,
     AppScope scope,
-    AppSettings settings,
     List<MarkerColor> range,
     Set<String> extras,
   ) {
     bool all(List<MarkerColor> colors) => colors.every(
       (MarkerColor c) => extras.contains(c.newCode.toUpperCase()),
     );
-    void toggle(List<MarkerColor> colors) =>
-        _setExtras(scope, settings, colors, add: !all(colors));
+    void toggle(List<MarkerColor> colors, String? name) =>
+        _toggleFamily(context, scope, colors, name);
     final List<_FamilyChipData> chips = <_FamilyChipData>[
       _FamilyChipData(
         id: 'all',
@@ -338,6 +443,7 @@ class _CollectionPageState extends State<CollectionPage> {
         widest: context.l10n.collectionWholeRange,
         selected: range.isNotEmpty && all(range),
         members: range,
+        name: null,
       ),
       for (final String id in decoTimeFamilyIds)
         if (range.any((MarkerColor c) => c.sets.contains(id)))
@@ -367,6 +473,7 @@ class _CollectionPageState extends State<CollectionPage> {
               ),
               selected: ownedCount == members.length,
               members: members,
+              name: family,
             );
           }(),
     ];
@@ -403,7 +510,7 @@ class _CollectionPageState extends State<CollectionPage> {
           selected: data.selected,
           expand: true,
           lines: lines,
-          onSelected: (_) => toggle(data.members),
+          onSelected: (_) => toggle(data.members, data.name),
         );
 
         return Column(
@@ -451,44 +558,151 @@ class _CollectionPageState extends State<CollectionPage> {
     return lines;
   }
 
-  void _toggleSeries(
+  Future<void> _toggleSeries(
+    BuildContext context,
     AppScope scope,
-    AppSettings settings,
     MarkerLine line,
     bool on,
-  ) {
+    List<MarkerColor> catalog,
+  ) async {
     // The series is stored on its own, so it stays when no set is picked yet.
     // The sets of a series the user does not own leave the collection.
-    final Set<String> chosen = <String>{...settings.chosenSeriesIds};
-    final Set<String> sets = <String>{...settings.ownedSetIds};
     if (on) {
-      chosen.add(line.id);
-    } else {
-      chosen.remove(line.id);
-      sets.removeWhere((String id) => OahuSet.byId[id]?.line == line);
+      final AppSettings current = scope.settings.settings;
+      await scope.settings.setCollection(
+        current.copyWith(
+          chosenSeriesIds: <String>{...current.chosenSeriesIds, line.id},
+        ),
+      );
+      return;
     }
-    scope.settings.setCollection(
-      settings.copyWith(chosenSeriesIds: chosen, ownedSetIds: sets),
+    // Taking the series out takes its sets with it, and the markers of those
+    // sets leave the collection: the user is asked first.
+    final Set<String> lost = _setsOfSeries(scope, line);
+    final int markers = catalog
+        .where((MarkerColor color) => color.sets.any(lost.contains))
+        .length;
+    if (markers > 0) {
+      final bool ok = await confirmAction(
+        context,
+        title: context.l10n.collectionRemoveFromTitle(markers, line.label),
+        body: context.l10n.collectionRemoveMarkersBody,
+        confirmLabel: context.l10n.collectionRemoveConfirm,
+      );
+      if (!ok || !mounted) return;
+    }
+    // The state is read again after the question: nothing that happened
+    // meanwhile is lost.
+    final AppSettings current = scope.settings.settings;
+    final Set<String> lostNow = <String>{
+      for (final String id in current.ownedSetIds)
+        if (OahuSet.byId[id]?.line == line) id,
+    };
+    await scope.settings.setCollection(
+      current.copyWith(
+        chosenSeriesIds: <String>{...current.chosenSeriesIds}..remove(line.id),
+        ownedSetIds: <String>{...current.ownedSetIds}..removeAll(lostNow),
+      ),
     );
   }
 
-  Future<void> _setExtras(
+  /// The ids of the sets of [line] the user owns right now.
+  Set<String> _setsOfSeries(AppScope scope, MarkerLine line) => <String>{
+    for (final String id in scope.settings.settings.ownedSetIds)
+      if (OahuSet.byId[id]?.line == line) id,
+  };
+
+  /// Adds a family (or the whole range) to the collection, or takes it out
+  /// of it.
+  ///
+  /// The decision is made with the collection the repository holds now, not
+  /// with the copy this page was built with: markers the user imported in
+  /// between are never lost. Taking markers out asks first: the user may
+  /// have added them one by one.
+  Future<void> _toggleFamily(
+    BuildContext context,
     AppScope scope,
-    AppSettings settings,
-    List<MarkerColor> colors, {
-    required bool add,
-  }) {
-    final Set<String> next = <String>{...settings.extraMarkerIds};
-    for (final MarkerColor color in colors) {
-      add ? next.add(color.colorId) : next.remove(color.colorId);
+    List<MarkerColor> colors,
+    String? name,
+  ) async {
+    if (colors.isEmpty) return;
+    final Set<String> owned = _ownedNow(scope, colors);
+    if (owned.length == colors.length) {
+      final bool ok = await confirmAction(
+        context,
+        title: name == null
+            ? context.l10n.collectionRemoveMarkersTitle(owned.length)
+            : context.l10n.collectionRemoveFromTitle(owned.length, name),
+        body: context.l10n.collectionRemoveMarkersBody,
+        confirmLabel: context.l10n.collectionRemoveConfirm,
+      );
+      if (!ok || !mounted) return;
+      await scope.settings.removeExtraMarkerIds(owned);
+      return;
     }
-    return scope.settings.setExtraMarkerIds(next);
+    await scope.settings.addExtraMarkerIds(<String>{
+      for (final MarkerColor color in colors) color.colorId,
+    });
+  }
+
+  /// The ids of [colors] the user owns right now: the collection of the
+  /// repository at this moment, not the copy the page was built with.
+  Set<String> _ownedNow(AppScope scope, List<MarkerColor> colors) {
+    final String brandId = colors.isEmpty
+        ? scope.settings.brand.id
+        : colors.first.brandId;
+    final Set<String> extras = scopedCodesForBrand(
+      scope.settings.settings.extraMarkerIds,
+      brandId,
+    );
+    return <String>{
+      for (final MarkerColor color in colors)
+        if (extras.contains(color.newCode.toUpperCase())) color.colorId,
+    };
+  }
+
+  /// Adds a set to the collection, or takes it out of it. Taking it out
+  /// asks first: the markers of the set leave the collection.
+  Future<void> _toggleSet(
+    BuildContext context,
+    AppScope scope,
+    OahuSet set,
+    bool on,
+    List<MarkerColor> catalog,
+  ) async {
+    if (on) {
+      final Set<String> next = <String>{
+        ...scope.settings.settings.ownedSetIds,
+        set.id,
+      };
+      await scope.settings.setOwnedSetIds(next);
+      return;
+    }
+    final int markers = catalog
+        .where((MarkerColor color) => color.sets.contains(set.id))
+        .length;
+    if (markers > 0) {
+      final bool ok = await confirmAction(
+        context,
+        // The name of the set ("Honolulu 48"), not only the line it belongs
+        // to: the question says what leaves the collection.
+        title: context.l10n.collectionRemoveFromTitle(
+          markers,
+          context.l10n.packSetFullLabel(set),
+        ),
+        body: context.l10n.collectionRemoveMarkersBody,
+        confirmLabel: context.l10n.collectionRemoveConfirm,
+      );
+      if (!ok || !mounted) return;
+    }
+    final Set<String> next = <String>{...scope.settings.settings.ownedSetIds}
+      ..remove(set.id);
+    await scope.settings.setOwnedSetIds(next);
   }
 
   Future<void> _reset(
     BuildContext context,
     AppScope scope,
-    AppSettings settings,
     MarkerBrand brand,
   ) async {
     final bool ok = await confirmAction(
@@ -499,11 +713,14 @@ class _CollectionPageState extends State<CollectionPage> {
     );
     if (!ok) return;
     final bool ohuhu = brand.hasRetailSets;
+    // The collection is read again after the question: the markers the user
+    // added in between are kept.
+    final AppSettings current = scope.settings.settings;
     await scope.settings.setCollection(
       AppSettings(
-        ownedSetIds: ohuhu ? const <String>{} : settings.ownedSetIds,
-        chosenSeriesIds: ohuhu ? const <String>{} : settings.chosenSeriesIds,
-        extraMarkerIds: settings.extraMarkerIds
+        ownedSetIds: ohuhu ? const <String>{} : current.ownedSetIds,
+        chosenSeriesIds: ohuhu ? const <String>{} : current.chosenSeriesIds,
+        extraMarkerIds: current.extraMarkerIds
             .where((String id) => !colorIdBelongsToBrand(id, brand))
             .toSet(),
       ),
@@ -545,8 +762,8 @@ class _DestructiveButton extends StatelessWidget {
 }
 
 /// One chip of the "Add by family" grid: its key id, the label it shows, the
-/// label at its longest (every marker owned), whether it is on and the
-/// markers it toggles.
+/// label at its longest (every marker owned), whether it is on, the markers
+/// it toggles and the name of the family (null for the whole range).
 class _FamilyChipData {
   const _FamilyChipData({
     required this.id,
@@ -554,9 +771,14 @@ class _FamilyChipData {
     required this.widest,
     required this.selected,
     required this.members,
+    required this.name,
   });
 
   final String id, label, widest;
   final bool selected;
   final List<MarkerColor> members;
+
+  /// The name of the family, shown when the chips ask before removing
+  /// markers; null for the whole range.
+  final String? name;
 }

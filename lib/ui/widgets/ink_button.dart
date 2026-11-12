@@ -34,6 +34,7 @@ class InkButton extends StatelessWidget {
     this.tag,
     this.expand = false,
     this.loading = false,
+    this.maxLines = 1,
   });
 
   const InkButton.secondary({
@@ -45,6 +46,7 @@ class InkButton extends StatelessWidget {
     this.tag,
     this.expand = false,
     this.loading = false,
+    this.maxLines = 1,
   }) : variant = InkButtonVariant.secondary;
 
   const InkButton.text({
@@ -56,9 +58,13 @@ class InkButton extends StatelessWidget {
     this.tag,
     this.expand = false,
     this.loading = false,
+    this.maxLines = 1,
   }) : variant = InkButtonVariant.text;
 
   final String label;
+
+  /// Allow action labels in narrow empty states to wrap at large text sizes.
+  final int? maxLines;
   final VoidCallback? onPressed;
   final InkButtonVariant variant;
   final InkIcons? icon;
@@ -94,7 +100,14 @@ class InkButton extends StatelessWidget {
         InkIcon(icon!, size: InkGeometry.smallIcon),
         const SizedBox(width: 8),
       ],
-      Flexible(child: Text(label, maxLines: 1, softWrap: false)),
+      Flexible(
+        child: Text(
+          label,
+          maxLines: maxLines,
+          softWrap: maxLines != 1,
+          textAlign: maxLines == 1 ? TextAlign.start : TextAlign.center,
+        ),
+      ),
       if (tag != null) ...<Widget>[
         const SizedBox(width: 8),
         Text(

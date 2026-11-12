@@ -909,6 +909,14 @@ class AppLocalizationsIt extends AppLocalizations {
       'Scegli un pennarello base per creare una palette, oppure scegli Scene come tipo di palette.';
 
   @override
+  String missingMarkersTitle(String brand) {
+    return 'Non hai ancora pennarelli $brand';
+  }
+
+  @override
+  String get missingMarkersAction => 'Vai alla collezione';
+
+  @override
   String get paletteCustomModeHint =>
       'La modalità palette personalizzata è manuale: carica una palette salvata o applicane una da Idee.';
 
@@ -1142,10 +1150,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get ideasHeaderSubtitle => 'Esercizi con i tuoi pennarelli';
 
   @override
-  String get ideasHeaderSubtitleWholeRange =>
-      'Esercizi con una palette di tutta la gamma';
-
-  @override
   String get ideasSearchHint => 'Cerca idee';
 
   @override
@@ -1162,10 +1166,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questo esercizio usa tutta la tua collezione, quindi non ha una palette fissa.';
 
   @override
-  String get ideasNoMarkersOther =>
-      'Aggiungi in La mia collezione i pennarelli che hai per ottenere una palette per questa idea.';
-
-  @override
   String get ideasCategoriesLabel => 'Categorie';
 
   @override
@@ -1179,6 +1179,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get ideasNoMarkers => 'Nessun pennarello disponibile al momento';
+
+  @override
+  String get missingMarkersHint =>
+      'Spunta i tuoi pennarelli in «La mia collezione» per vedere quali usare';
+
+  @override
+  String get allMarkersDried =>
+      'Tutti i tuoi pennarelli sono secchi. Segna di nuovo come utilizzabili quelli che vuoi usare.';
 
   @override
   String get ideasTulipFieldTitle => 'Campo di tulipani';
@@ -5897,6 +5905,11 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String paletteBaseDried(String code) {
+    return '$code è secco. Segnalo come utilizzabile in Dettagli o scegline un altro.';
+  }
+
+  @override
   String swatchesFiltersCount(int count) {
     return 'Filtri · $count';
   }
@@ -6029,6 +6042,14 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get errNoAvailableColors =>
       'Non ci sono pennarelli disponibili tra cui scegliere.';
+
+  @override
+  String get errInvalidBaseColor =>
+      'Il pennarello di base non è nella tua collezione.';
+
+  @override
+  String get errBaseDried =>
+      'Il pennarello di base è secco. Segnalo come utilizzabile o scegline un altro.';
 
   @override
   String get errNoSuggestions => 'Non è stato possibile generare suggerimenti.';
@@ -6902,7 +6923,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String swatchesWholeRangeNotice(String brand) {
-    return 'Mostra tutta la gamma $brand';
+    return 'Stai vedendo tutta la gamma $brand';
   }
 
   @override
@@ -6978,6 +6999,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get collectionDecoMarkersTitle => 'I tuoi pennarelli';
 
   @override
+  String get collectionIndividualMarkersShort => 'Spunta quelli che hai';
+
+  @override
   String get collectionDecoHint =>
       'DecoTime non pubblica quali colori contiene ogni set, quindi spunta quelli che hai o aggiungi un’intera famiglia.';
 
@@ -7009,6 +7033,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get collectionFamilyGreenGrey => 'Grigi verdi';
 
   @override
+  String get collectionImportCodesTitle => 'Importa codici';
+
+  @override
+  String get collectionImportCodesHint => 'Incolla un elenco di codici';
+
+  @override
   String get collectionDecoRange => 'Gamma DecoTime';
 
   @override
@@ -7031,6 +7061,45 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get collectionUntickVisible => 'Togli tutti';
+
+  @override
+  String collectionRemoveMarkersTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Togliere $count pennarelli?',
+      one: 'Togliere 1 pennarello?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String collectionRemoveFromTitle(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$name: togliere $count pennarelli?',
+      one: '$name: togliere 1 pennarello?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get collectionRemoveMarkersBody =>
+      'I pennarelli che hai già escono dalla tua collezione. Puoi aggiungerli di nuovo quando vuoi.';
+
+  @override
+  String get collectionRemoveConfirm => 'Togli';
+
+  @override
+  String get collectionReplaceTitle => 'Sostituire la tua collezione?';
+
+  @override
+  String get collectionReplaceBody =>
+      'Quando la configurazione finisce, i set e i pennarelli che hai adesso vengono sostituiti da quelli che scegli qui.';
+
+  @override
+  String get collectionReplaceConfirm => 'Sostituisci';
 
   @override
   String get collectionInYourSets => 'Nel tuo set';
@@ -7078,9 +7147,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get toolsTransferHint =>
       'Condividi i tuoi pennarelli come elenco o CSV, oppure aggiungine molti con i codici.';
-
-  @override
-  String get toolsMapEmptyTitle => 'Ancora nessun pennarello da mappare';
 
   @override
   String get toolsMapIntro =>
@@ -7573,7 +7639,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get collectionSummaryNoSets =>
-      'Non hai ancora scelto nessun set: si usa tutta la gamma';
+      'Ancora nessun set: Abbina e Campioni mostrano tutta la gamma; Palette e Idee hanno bisogno dei pennarelli che possiedi';
 
   @override
   String get collectionSummaryNoMarkers =>
@@ -7709,7 +7775,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String onboardingDoneWholeRange(String brand) {
-    return 'Finché non scegli i set, l’app mostra tutta la gamma $brand.';
+    return 'Finché non scegli i set, Abbina e Campioni mostrano tutta la gamma $brand. Palette e Idee hanno bisogno dei pennarelli che possiedi.';
   }
 
   @override
@@ -7860,11 +7926,6 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String onboardingNoMarkers(String brand) {
     return 'Non hai ancora spuntato pennarelli $brand: spuntali in La mia collezione.';
-  }
-
-  @override
-  String ideasNoMarkersBrand(String brand) {
-    return 'Aggiungi i pennarelli $brand che hai in La mia collezione per ottenere una palette per questa idea.';
   }
 
   @override
@@ -8441,4 +8502,53 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get swatchesDetailPaneEmpty =>
       'Tocca un pennarello per vederne qui i dettagli.';
+
+  @override
+  String get collectionMixBrands => 'Mescola le mie marche';
+
+  @override
+  String collectionMoreBrands(String first, String second, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'altre $count',
+      one: 'un’altra',
+    );
+    return '$first, $second e $_temp0';
+  }
+
+  @override
+  String collectionBrandsCount(int count) {
+    return '$count marche';
+  }
+
+  @override
+  String get paletteChanged => 'Palette modificata';
+
+  @override
+  String get paletteReplaceTitle => 'Sostituire questa palette?';
+
+  @override
+  String get paletteReplaceBody =>
+      'La palette sullo schermo verrà sostituita, con le tue modifiche e i tuoi colori bloccati. Potrai annullare subito dopo.';
+
+  @override
+  String get paletteReplaceButton => 'Sostituisci';
+
+  @override
+  String get paletteAmbiguousBase =>
+      'Questo codice è in più di una delle tue marche. Scegli la marca nell’elenco.';
+
+  @override
+  String get paletteChainWholeRangeNoteMixed =>
+      'Mostra tutta la gamma delle tue marche, anche i pennarelli che non hai.';
+
+  @override
+  String paletteBaseOtherBrand(String code, String brand, String example) {
+    return '$code è un pennarello $brand, e $brand non è in uso in questo momento. Prova $example o cambia marca in La mia collezione.';
+  }
+
+  @override
+  String get paletteImportTooFew =>
+      'Aggiungi almeno due codici di pennarelli diversi e riconosciuti per importare una palette.';
 }

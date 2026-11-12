@@ -480,7 +480,10 @@ void main() {
       await tester.pumpAndSettle();
 
       await enterBaseCode(tester, dry.newCode);
-      expect(find.textContaining('is not in your collection'), findsOneWidget);
+      // The marker is owned but ran dry: it has its own message, not the one
+      // for a marker that is not in the collection.
+      expect(find.text(l10n.paletteBaseDried(dry.newCode)), findsOneWidget);
+      expect(find.textContaining('is not in your collection'), findsNothing);
 
       await tester.tap(_key('palette-pick-base'));
       await tester.pumpAndSettle();

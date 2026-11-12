@@ -63,14 +63,15 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  /// The palettes of [brand].
+  /// The palettes listed for [brand]: its own and the mixed ones that hold
+  /// one of its markers, as the sheet the row opens lists them.
   ///
   /// The stream is kept per brand, so the same stream object is used every
   /// time the page is rebuilt.
   Stream<List<SavedPalette>> _palettesOf(AppScope scope, MarkerBrand brand) =>
       _paletteStreams.putIfAbsent(
         brand,
-        () => scope.savedPalettes.watch(brand),
+        () => scope.savedPalettes.watchListed(brand),
       );
 
   @override

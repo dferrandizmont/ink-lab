@@ -829,6 +829,75 @@ void main() {
     });
   });
 
+  // The base of a photo palette is its first colour, which the base field
+  // knows nothing of: it must still count when the page decides whether the
+  // codes need their brand.
+  testWidgets(
+    'a photo palette kept after the mix is turned off still names the brand '
+    'of its base',
+    (WidgetTester tester) async {
+      // The widest band is the exact colour of DecoTime 91; the other four
+      // are Ohuhu markers.
+      const List<int> oak = <int>[0x6a, 0x39, 0x2f];
+      final List<List<int>> row = <List<int>>[
+        for (var i = 0; i < _bandColumns[0]; i++) oak,
+        for (var band = 1; band < _bandColours.length; band++)
+          for (var i = 0; i < _bandColumns[band]; i++) _bandColours[band],
+      ];
+      final AppScope scope = await _pumpPhotoPalette(
+        tester,
+        picker: _picks(),
+        decoder: fixedDecoder(
+          imageFromRgb(10, 10, <List<int>>[
+            for (var y = 0; y < 10; y++) ...row,
+          ]),
+        ),
+        owned: const <String>{'G312', 'BV310', 'Y19', 'RV315', 'decotime:91'},
+      );
+      await scope.settings.setScope(BrandScope.mixedBrands);
+      await tester.pumpAndSettle();
+      await _fromPhoto(tester);
+      PaletteStrip strip() =>
+          tester.widget<PaletteStrip>(find.byType(PaletteStrip).first);
+      // The oak leads (the widest band); the Ohuhu four follow it.
+      final List<String> codes = _stripCodes(tester);
+      expect(codes.first, '91');
+      expect(codes.skip(1), unorderedEquals(_bandMarkers.skip(1)));
+      expect(strip().brandLabels, <String>[
+        'DecoTime',
+        'Ohuhu',
+        'Ohuhu',
+        'Ohuhu',
+        'Ohuhu',
+      ]);
+      final List<String> rows = rowCodes(tester);
+
+      // Every companion is of the active brand: only the base says that the
+      // palette mixes brands.
+      await scope.settings.setScope(BrandScope.singleBrand);
+      await tester.pumpAndSettle();
+      expect(_stripCodes(tester), codes);
+      expect(rowCodes(tester), rows);
+      expect(strip().brandLabels, <String>[
+        'DecoTime',
+        'Ohuhu',
+        'Ohuhu',
+        'Ohuhu',
+        'Ohuhu',
+      ]);
+
+      // Its base runs dry, which also ends the mix (it was the only
+      // DecoTime marker): a palette is never kept with a marker the user
+      // can no longer use, so the photo is matched again with what is left.
+      await scope.settings.setScope(BrandScope.mixedBrands);
+      await tester.pumpAndSettle();
+      expect(_stripCodes(tester).first, '91');
+      await scope.dried.add('decotime:91');
+      await tester.pumpAndSettle();
+      expect(_stripCodes(tester), isNot(contains('91')));
+    },
+  );
+
   testWidgets('Spanish names the photo and its colours', (
     WidgetTester tester,
   ) async {

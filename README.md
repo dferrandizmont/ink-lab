@@ -131,7 +131,7 @@ Sharing a palette, a chart or the `.zip` backup hands the file to the app you pi
 
 ## What's new
 
-Version 1.2.2 fixes what a full review of every screen found: saved palettes open with a tap, Back on Android returns to Swatches, and texts are clearer. Version 1.2.1 shows idea descriptions in full and fixes a few small display issues. Version 1.2.0 brought 100 ideas instead of 28, grouped by difficulty and by season so they are easy to
+Version 1.2.3 keeps your markers where they are: locking a colour no longer moves it, adding a family no longer wipes imported markers, with no markers the app says so instead of using the whole range, and you can mix all your brands. Version 1.2.2 fixes what a full review of every screen found: saved palettes open with a tap, Back on Android returns to Swatches, and texts are clearer. Version 1.2.1 shows idea descriptions in full and fixes a few small display issues. Version 1.2.0 brought 100 ideas instead of 28, grouped by difficulty and by season so they are easy to
 browse, and a tidier side menu on tablets. Full list in [CHANGELOG.md](CHANGELOG.md) and in the
 [releases](https://github.com/dferrandizmont/ink-lab/releases).
 

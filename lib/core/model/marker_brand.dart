@@ -50,6 +50,20 @@ enum MarkerBrand {
   final String label;
   final String assetFile;
 
+  /// The brand's name where there is room for one short word: over a segment
+  /// of a palette strip, or in front of a code in a row. It is [label], or
+  /// its recognisable part when that is longer than eleven characters.
+  String get shortLabel => switch (this) {
+    promarkerBrush => 'Brushmarker',
+    prismacolor => 'Prismacolor',
+    spectrumNoir => 'Spectrum N.',
+    kurecolor => 'Kurecolor',
+    marvyLePlume => 'Marvy',
+    blickBrush => 'Blick',
+    artistsLoft => "Artist's L.",
+    _ => label,
+  };
+
   /// Selectable Ohuhu product lines (retail sets are per line). The line ids
   /// of every other brand are only metadata on its colours, see [productLines];
   /// ownership is selected marker by marker.

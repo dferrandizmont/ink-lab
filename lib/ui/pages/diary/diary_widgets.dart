@@ -23,8 +23,9 @@ SavedPalette? findSavedPalette(AppScope scope, String id) {
 
 /// The marker ids (`brandId:CODE`) a saved palette holds.
 List<String> paletteMarkerIds(SavedPalette palette) => <String>[
-  for (final String code in palette.colorCodes)
-    '${palette.brandId}:${code.toUpperCase()}',
+  for (final String id in palette.colorIds)
+    '${id.substring(0, id.indexOf(':'))}:'
+        '${id.substring(id.indexOf(':') + 1).toUpperCase()}',
 ];
 
 /// The markers with the `brandId:CODE` [ids], own colours applied; an id the

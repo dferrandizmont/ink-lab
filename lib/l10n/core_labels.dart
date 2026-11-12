@@ -197,6 +197,8 @@ extension CoreLabelLocalizations on AppLocalizations {
     ai.PaletteFailureReason.invalidResponse => errInvalidResponse,
     ai.PaletteFailureReason.noValidSuggestions => errNoValidSuggestions,
     ai.PaletteFailureReason.noAvailableColors => errNoAvailableColors,
+    ai.PaletteFailureReason.invalidBaseColor => errInvalidBaseColor,
+    ai.PaletteFailureReason.baseDried => errBaseDried,
     ai.PaletteFailureReason.noSuggestions => errNoSuggestions,
     ai.PaletteFailureReason.timeout => errTimeout,
     ai.PaletteFailureReason.onDeviceUnavailable => errOnDeviceUnavailable,

@@ -29,10 +29,33 @@ void main() {
         : brand == MarkerBrand.copic
         ? 'BV04'
         : 'B08';
+    // The markers the user owns: a brand without retail sets is collected
+    // marker by marker, and the app only works with the owned ones.
+    final Set<String>? owned = switch (brand) {
+      MarkerBrand.copic => const <String>{
+        'copic:BV04',
+        'copic:R29',
+        'copic:B05',
+        'copic:Y08',
+        'copic:G17',
+      },
+      MarkerBrand.finecolour => const <String>{
+        'finecolour:BV321',
+        'finecolour:R140',
+        'finecolour:B94',
+        'finecolour:Y1',
+        'finecolour:G45',
+      },
+      _ => null,
+    };
     testWidgets(
       '${brand.label}: Palette builds from the own colour of the base marker',
       (WidgetTester tester) async {
-        final AppScope scope = await pumpPalette(tester, brand: brand);
+        final AppScope scope = await pumpPalette(
+          tester,
+          brand: brand,
+          ownedMarkerCodes: owned,
+        );
         await enterBaseCode(tester, code);
         final PaletteStrip before = tester.widget(
           find.byType(PaletteStrip).first,
@@ -57,7 +80,11 @@ void main() {
     testWidgets('${brand.label}: Ideas plans are made from the own colours', (
       WidgetTester tester,
     ) async {
-      final AppScope scope = await pumpIdeas(tester, brand: brand);
+      final AppScope scope = await pumpIdeas(
+        tester,
+        brand: brand,
+        ownedMarkerCodes: owned,
+      );
       expect(_stripHexes(tester), isNot(contains('123456')));
 
       final List<MarkerColor> all = await scope.markers.loadColors(brand);

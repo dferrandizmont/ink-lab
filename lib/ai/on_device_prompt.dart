@@ -94,20 +94,26 @@ List<MarkerColor> capOnDeviceCandidates(
 /// `reason`), and a one-shot example uses two real codes of the list.
 String buildOnDevicePrompt(AiPaletteRequest request) {
   final candidates = request.candidates;
+  // In a mixed request a code is a colour id (`DECOTIME:91`), see
+  // [AiPaletteRequest.promptCode].
+  final String Function(MarkerColor) code = request.promptCode;
+  String colorLine(MarkerColor c) =>
+      '${code(c)} | ${_oneLine(c.newName)} | '
+      '#${c.hex.replaceFirst('#', '').toUpperCase()}';
   final base = request.baseColor;
   final size = request.paletteSize <= 0 ? 1 : request.paletteSize;
-  final list = candidates.map(_colorLine).join('\n');
+  final list = candidates.map(colorLine).join('\n');
 
   final exampleItems = <String>[];
   if (candidates.isNotEmpty) {
     exampleItems.add(
-      '{"code":"${_code(candidates.first)}","role":"Shadow",'
+      '{"code":"${code(candidates.first)}","role":"Shadow",'
       '"reason":"Darker tone for depth."}',
     );
   }
   if (candidates.length > 1) {
     exampleItems.add(
-      '{"code":"${_code(candidates[candidates.length ~/ 2])}",'
+      '{"code":"${code(candidates[candidates.length ~/ 2])}",'
       '"role":"Highlight"}',
     );
   }
@@ -115,7 +121,7 @@ String buildOnDevicePrompt(AiPaletteRequest request) {
   final scene = request.scenario?.label;
   return '''
 You pick marker colours for a palette. Brand: ${_oneLine(request.brandLabel)}.
-BASE: ${base == null ? 'none' : _colorLine(base)}
+BASE: ${base == null ? 'none' : colorLine(base)}
 TASK: choose $size colours that go well with the base. Harmony: ${request.mode.label}.${scene == null ? '' : ' Scene: $scene.'}
 RULES:
 - Use ONLY codes from the COLORS list, exactly as written.
@@ -131,12 +137,6 @@ ROLE is one of: Shadow, Midtone, Highlight, Accent, Companion, Neutral, Compleme
 EXAMPLE: {"palette":[${exampleItems.join(',')}]}
 Now reply with exactly $size items.''';
 }
-
-String _code(MarkerColor color) => color.newCode.toUpperCase();
-
-String _colorLine(MarkerColor color) =>
-    '${_code(color)} | ${_oneLine(color.newName)} | '
-    '#${color.hex.replaceFirst('#', '').toUpperCase()}';
 
 String _oneLine(String value) =>
     value.replaceAll(RegExp(r'[\r\n|]+'), ' ').trim();

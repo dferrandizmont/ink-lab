@@ -11,6 +11,12 @@ extension _PalettePhotoFlow on _PalettePageState {
   /// result is ignored.
   Future<void> _pickPhotoScene() async {
     if (_photoBusy) return;
+    // A photo palette has no locks: the ones on screen go.
+    if (await _approveReplacement(dropsLocks: true) == _Approval.refused ||
+        !mounted) {
+      return;
+    }
+    final _PaletteSnapshot? previous = _snapshot();
     final PhotoSource? source = await showPhotoSourceSheet(context);
     if (source == null || !mounted) return;
     final int token = ++_photoToken;
@@ -24,7 +30,7 @@ extension _PalettePhotoFlow on _PalettePageState {
     final AppLocalizations t = context.l10n;
     switch (result) {
       case PhotoPicked(:final Uint8List bytes):
-        await _loadPhotoScene(bytes, token);
+        await _loadPhotoScene(bytes, token, previous);
       case PhotoPickCancelled():
         _setState(() => _photoBusy = false);
       case PhotoPickDenied(:final PhotoSource source):
@@ -42,7 +48,11 @@ extension _PalettePhotoFlow on _PalettePageState {
     }
   }
 
-  Future<void> _loadPhotoScene(Uint8List bytes, int token) async {
+  Future<void> _loadPhotoScene(
+    Uint8List bytes,
+    int token,
+    _PaletteSnapshot? previous,
+  ) async {
     final AppLocalizations t = context.l10n;
     Map<int, List<PhotoColor>> colors;
     try {
@@ -98,6 +108,7 @@ extension _PalettePhotoFlow on _PalettePageState {
       _aiError = null;
     });
     _recompute();
+    _afterReplacement(previous);
   }
 
   /// Shows the photo as a palette of the chosen size (call from [_recompute]):
@@ -137,7 +148,7 @@ extension _PalettePhotoFlow on _PalettePageState {
   /// The role line of [marker] in a photo palette: "Photo colour · 32 %".
   String _photoRole(MarkerColor marker) {
     for (final PhotoMarkerPick pick in _photoPicks) {
-      if (pick.marker.newCode == marker.newCode) {
+      if (pick.marker.colorId == marker.colorId) {
         return context.l10n.paletteFromPhotoRole(
           (pick.source.share * 100).round(),
         );

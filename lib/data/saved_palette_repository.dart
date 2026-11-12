@@ -12,6 +12,11 @@ import 'replay_stream.dart';
 /// id and by its content signature (name, base, mode, size and codes), then the
 /// list is capped at [SavedPaletteRepository.maxPerBrand] entries with the
 /// oldest dropped.
+///
+/// A palette is stored once, under its `brandId` (the brand in use when it
+/// was saved). One that mixes brands is still *listed* under every brand it
+/// holds a marker of ([listedFor]), so it does not vanish when the user
+/// changes brand; [delete] takes the brand it is stored under.
 abstract class SavedPaletteRepository {
   /// Kotlin kept a bounded history; the cap and the de-duplication rule are
   /// re-stated here as named constants so they are easy to audit and adjust.
@@ -21,6 +26,20 @@ abstract class SavedPaletteRepository {
 
   /// Emits the brand's current list, then every change to that brand.
   Stream<List<SavedPalette>> watch(MarkerBrand brand);
+
+  /// The palettes a list of [brand] shows, newest first: the ones stored
+  /// under it and the ones stored under another brand that hold one of its
+  /// markers (a palette saved with "Mix my brands"). Each palette once.
+  List<SavedPalette> listedFor(MarkerBrand brand);
+
+  /// Emits [listedFor] now, then after every change to any brand.
+  Stream<List<SavedPalette>> watchListed(MarkerBrand brand);
+
+  /// Every stored palette, of every brand.
+  Iterable<SavedPalette> get all;
+
+  /// Emits after every change to the palettes of any brand.
+  Stream<void> get changes;
 
   Future<void> load();
   Future<void> save(SavedPalette palette);
@@ -61,6 +80,52 @@ final class StoredSavedPaletteRepository implements SavedPaletteRepository {
             .where((changed) => changed == brand)
             .map((_) => palettesOf(brand)),
       );
+
+  @override
+  List<SavedPalette> listedFor(MarkerBrand brand) {
+    final List<SavedPalette> own = palettesOf(brand);
+    final List<SavedPalette> others = <SavedPalette>[
+      for (final MarkerBrand other in MarkerBrand.values)
+        if (other != brand)
+          for (final SavedPalette palette in palettesOf(other))
+            if (palette.brandIds.contains(brand.id)) palette,
+    ];
+    if (others.isEmpty) return own;
+    final Set<String> ids = <String>{};
+    final List<SavedPalette> listed = <SavedPalette>[
+      for (final SavedPalette palette in <SavedPalette>[...own, ...others])
+        if (palette.id.isEmpty || ids.add(palette.id)) palette,
+    ];
+    // Newest first, like each brand's own list; a stable sort keeps the
+    // stored order of palettes saved at the same instant.
+    final List<int> order = <int>[for (int i = 0; i < listed.length; i++) i]
+      ..sort((int a, int b) {
+        final int byDate = listed[b].createdAtEpochMs.compareTo(
+          listed[a].createdAtEpochMs,
+        );
+        return byDate != 0 ? byDate : a.compareTo(b);
+      });
+    return List<SavedPalette>.unmodifiable(<SavedPalette>[
+      for (final int i in order) listed[i],
+    ]);
+  }
+
+  @override
+  Stream<List<SavedPalette>> watchListed(MarkerBrand brand) =>
+      replayStream<List<SavedPalette>>(
+        () => listedFor(brand),
+        _brands.stream.map((_) => listedFor(brand)),
+      );
+
+  @override
+  Iterable<SavedPalette> get all sync* {
+    for (final MarkerBrand brand in MarkerBrand.values) {
+      yield* palettesOf(brand);
+    }
+  }
+
+  @override
+  Stream<void> get changes => _brands.stream.map<void>((_) {});
 
   @override
   Future<void> load() async {

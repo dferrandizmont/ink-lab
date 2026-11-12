@@ -8,12 +8,21 @@ const int paletteWrapLines = 2;
 
 /// A single line of text that is scaled down, never cut, when it is wider
 /// than the space it has. It shrinks to [paletteMinLineScale] at most; beyond that
-/// it wraps to two lines and ends with an ellipsis.
+/// it wraps to [wrapLines] lines (two) and ends with an ellipsis.
 class PaletteOneLine extends StatelessWidget {
-  const PaletteOneLine({super.key, required this.text, required this.style});
+  const PaletteOneLine({
+    super.key,
+    required this.text,
+    required this.style,
+    this.wrapLines = paletteWrapLines,
+  });
 
   final String text;
   final TextStyle style;
+
+  /// The lines it wraps to once it cannot shrink further; `null` for as many
+  /// as it needs, so the text is never cut (a title, a label).
+  final int? wrapLines;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +51,8 @@ class PaletteOneLine extends StatelessWidget {
         }
         return Text(
           text,
-          maxLines: paletteWrapLines,
-          overflow: TextOverflow.ellipsis,
+          maxLines: wrapLines,
+          overflow: wrapLines == null ? null : TextOverflow.ellipsis,
           style: style.copyWith(
             fontSize: (style.fontSize ?? 14) * paletteMinLineScale,
           ),

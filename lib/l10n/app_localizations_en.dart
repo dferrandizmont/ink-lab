@@ -897,6 +897,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Pick a base marker to build a palette, or choose Scenes as the palette type.';
 
   @override
+  String missingMarkersTitle(String brand) {
+    return 'You don\'t own $brand markers yet';
+  }
+
+  @override
+  String get missingMarkersAction => 'Go to My collection';
+
+  @override
   String get paletteCustomModeHint =>
       'Custom palette mode is manual: load a saved palette or apply one from Ideas.';
 
@@ -1129,10 +1137,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ideasHeaderSubtitle => 'Exercises for your markers';
 
   @override
-  String get ideasHeaderSubtitleWholeRange =>
-      'Exercises with a palette from the whole range';
-
-  @override
   String get ideasSearchHint => 'Search ideas';
 
   @override
@@ -1149,10 +1153,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'This exercise uses your whole collection, so it has no fixed palette.';
 
   @override
-  String get ideasNoMarkersOther =>
-      'Add the markers you own in My collection to get a palette for this idea.';
-
-  @override
   String get ideasCategoriesLabel => 'Categories';
 
   @override
@@ -1166,6 +1166,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ideasNoMarkers => 'No markers currently available';
+
+  @override
+  String get missingMarkersHint =>
+      'Tick the markers you own in My collection to see which ones to use';
+
+  @override
+  String get allMarkersDried =>
+      'All your markers are dried out. Mark them as usable again to use them.';
 
   @override
   String get ideasTulipFieldTitle => 'Tulip field';
@@ -5857,6 +5865,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String paletteBaseDried(String code) {
+    return '$code is dried out. Mark it as usable in Details or choose another.';
+  }
+
+  @override
   String swatchesFiltersCount(int count) {
     return 'Filters · $count';
   }
@@ -5987,6 +6000,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errNoAvailableColors =>
       'There are no available markers to choose from.';
+
+  @override
+  String get errInvalidBaseColor =>
+      'The base marker is not in your collection.';
+
+  @override
+  String get errBaseDried =>
+      'The base marker is dried out. Mark it as usable or choose another.';
 
   @override
   String get errNoSuggestions => 'No suggestions could be generated.';
@@ -6933,6 +6954,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get collectionDecoMarkersTitle => 'Your markers';
 
   @override
+  String get collectionIndividualMarkersShort => 'Tick the ones you have';
+
+  @override
   String get collectionDecoHint =>
       'DecoTime does not publish which colours each set holds, so tick the ones you own or add a whole family.';
 
@@ -6964,6 +6988,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get collectionFamilyGreenGrey => 'Green greys';
 
   @override
+  String get collectionImportCodesTitle => 'Import codes';
+
+  @override
+  String get collectionImportCodesHint => 'Paste a list of codes';
+
+  @override
   String get collectionDecoRange => 'DecoTime range';
 
   @override
@@ -6986,6 +7016,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get collectionUntickVisible => 'Untick all';
+
+  @override
+  String collectionRemoveMarkersTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Remove $count markers?',
+      one: 'Remove 1 marker?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String collectionRemoveFromTitle(int count, String name) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Remove $count markers of $name?',
+      one: 'Remove 1 marker of $name?',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get collectionRemoveMarkersBody =>
+      'The markers you already own leave your collection. You can add them again at any time.';
+
+  @override
+  String get collectionRemoveConfirm => 'Remove';
+
+  @override
+  String get collectionReplaceTitle => 'Replace your collection?';
+
+  @override
+  String get collectionReplaceBody =>
+      'When the setup ends, the sets and markers you own now are replaced by the ones you choose here.';
+
+  @override
+  String get collectionReplaceConfirm => 'Replace';
 
   @override
   String get collectionInYourSets => 'In your set';
@@ -7032,9 +7101,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get toolsTransferHint =>
       'Share your markers as a list or CSV, or add many by code.';
-
-  @override
-  String get toolsMapEmptyTitle => 'No markers to map yet';
 
   @override
   String get toolsMapIntro =>
@@ -7522,7 +7588,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get collectionSummaryNoSets =>
-      'You have not picked any sets yet: the whole range is used';
+      'No sets yet: Match and Swatches show the whole range; Palette and Ideas need markers you own';
 
   @override
   String get collectionSummaryNoMarkers =>
@@ -7658,7 +7724,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String onboardingDoneWholeRange(String brand) {
-    return 'Until you pick sets, the app shows the whole $brand range.';
+    return 'Until you pick sets, Match and Swatches show the whole $brand range. Palette and Ideas need the markers you own.';
   }
 
   @override
@@ -7808,11 +7874,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String onboardingNoMarkers(String brand) {
     return 'You have not ticked any $brand markers yet: tick them in My collection.';
-  }
-
-  @override
-  String ideasNoMarkersBrand(String brand) {
-    return 'Add the $brand markers you own in My collection to get a palette for this idea.';
   }
 
   @override
@@ -8374,4 +8435,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get swatchesDetailPaneEmpty => 'Tap a marker to see its details here.';
+
+  @override
+  String get collectionMixBrands => 'Mix my brands';
+
+  @override
+  String collectionMoreBrands(String first, String second, int count) {
+    return '$first, $second and $count more';
+  }
+
+  @override
+  String collectionBrandsCount(int count) {
+    return '$count brands';
+  }
+
+  @override
+  String get paletteChanged => 'Palette changed';
+
+  @override
+  String get paletteReplaceTitle => 'Replace this palette?';
+
+  @override
+  String get paletteReplaceBody =>
+      'The palette on screen will be replaced, with your changes and your locked colours. You can undo it right afterwards.';
+
+  @override
+  String get paletteReplaceButton => 'Replace';
+
+  @override
+  String get paletteAmbiguousBase =>
+      'More than one of your brands has this code. Choose the brand in the list.';
+
+  @override
+  String get paletteChainWholeRangeNoteMixed =>
+      'Showing the whole range of your brands, markers you don\'t own included.';
+
+  @override
+  String paletteBaseOtherBrand(String code, String brand, String example) {
+    return '$code is a $brand marker, and $brand is not in use right now. Try $example, or change the brand in My collection.';
+  }
+
+  @override
+  String get paletteImportTooFew =>
+      'Add at least two different recognised marker codes to import a palette.';
 }

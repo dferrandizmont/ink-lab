@@ -6,12 +6,15 @@ extension _PaletteSaveShare on _PalettePageState {
     final scope = _scope;
     final base = _stripBase;
     if (scope == null || base == null || _suggestions.isEmpty) return;
+    // The base as the field names it: with its brand when the code alone
+    // would not say which marker it is ("DecoTime 91 Recommended").
+    final String baseLabel = _baseValue(base);
     final name = await _askName(
       _photoMode
-          ? '${base.newCode} ${context.l10n.paletteFromPhotoTitle}'
+          ? '$baseLabel ${context.l10n.paletteFromPhotoTitle}'
           : _useScenario
-          ? '${base.newCode} ${context.l10n.scenarioLabel(_scenario)}'
-          : '${base.newCode} ${context.l10n.modeLabel(_mode)}',
+          ? '$baseLabel ${context.l10n.scenarioLabel(_scenario)}'
+          : '$baseLabel ${context.l10n.modeLabel(_mode)}',
     );
     if (name == null || name.isEmpty) return;
     final now = DateTime.now();
@@ -20,7 +23,7 @@ extension _PaletteSaveShare on _PalettePageState {
         id: now.microsecondsSinceEpoch.toString(),
         brandId: _brand.id,
         name: name,
-        baseCode: base.newCode,
+        baseCode: _storedCodes(<MarkerColor>[base]).single,
         baseName: base.newName,
         mode: _mode,
         paletteSize: (_suggestions.length + 1).clamp(3, 5),
@@ -59,34 +62,59 @@ extension _PaletteSaveShare on _PalettePageState {
           content: Text(context.l10n.paletteSavedNotice(name)),
         ),
       );
-    _setState(() {});
+    _setState(() {
+      _workedPalette = true;
+      _paletteEdited = false;
+    });
   }
 
-  /// The codes saved for the palette on screen: a chain in painting order,
-  /// light to dark, base in place; otherwise the base plus the companions.
-  List<String> _currentCodes(MarkerColor base) => <String>[
+  /// The markers of the palette on screen in saved order: a chain in painting
+  /// order, light to dark, base in place; otherwise the base plus the
+  /// companions.
+  List<MarkerColor> _currentColors(MarkerColor base) => <MarkerColor>[
     if (_shownChain != null)
-      for (final MarkerColor c in _shownChain!.colors) c.newCode
-    else ...<String>[
-      base.newCode,
-      for (final suggestion in _suggestions) suggestion.color.newCode,
+      ..._shownChain!.colors
+    else ...<MarkerColor>[
+      base,
+      for (final PaletteSuggestion suggestion in _suggestions) suggestion.color,
     ],
   ];
 
+  /// [colors] as a saved palette stores them. A palette of the active brand
+  /// alone is stored as it always was, by bare codes that belong to the
+  /// palette's `brandId`; as soon as the palette on screen holds a marker of
+  /// another brand, every marker is stored with its brand (`decotime:91`).
+  List<String> _storedCodes(List<MarkerColor> colors) {
+    final MarkerColor? base = _stripBase;
+    final bool branded = <MarkerColor>[
+      ...?(base == null ? null : _currentColors(base)),
+      ...colors,
+    ].any((MarkerColor c) => c.brandId != _brand.id);
+    return <String>[
+      for (final MarkerColor c in colors) branded ? c.colorId : c.newCode,
+    ];
+  }
+
+  /// The codes saved for the palette on screen.
+  List<String> _currentCodes(MarkerColor base) =>
+      _storedCodes(_currentColors(base));
+
   /// Whether the palette on screen is already among the saved ones (the same
-  /// markers in the same order). Deleting the saved palette makes it
+  /// markers in the same order), under any brand: a palette that mixes
+  /// brands is stored under the brand in use when it was saved, and must not
+  /// be saved again under another. Deleting the saved palette makes it
   /// saveable again; changing the palette does too.
   bool get _isSaved {
     final AppScope? scope = _scope;
     final MarkerColor? base = _stripBase;
     if (scope == null || base == null || _suggestions.isEmpty) return false;
     final List<String> codes = <String>[
-      for (final String code in _currentCodes(base)) code.toUpperCase(),
+      for (final MarkerColor c in _currentColors(base)) c.colorId.toUpperCase(),
     ];
-    return scope.savedPalettes.palettesOf(_brand).any((SavedPalette saved) {
+    return scope.savedPalettes.all.any((SavedPalette saved) {
       if (saved.colorCodes.length != codes.length) return false;
       for (int i = 0; i < codes.length; i++) {
-        if (saved.colorCodes[i].toUpperCase() != codes[i]) return false;
+        if (saved.colorIds[i].toUpperCase() != codes[i]) return false;
       }
       return true;
     });
@@ -141,19 +169,25 @@ extension _PaletteSaveShare on _PalettePageState {
     ];
   }
 
-  /// Shares a saved palette as an image.
-  Future<void> _shareSaved(SavedPalette palette) {
-    if (_sharing) return Future<void>.value();
-    final PaletteCardData data = savedPaletteCardData(
-      palette: palette,
-      catalog: _catalog,
-      baseRole: context.l10n.roleLabel(PaletteRoles.base),
-    );
-    // None of its codes are in the catalogue any more: nothing to draw.
-    if (data.entries.isEmpty) {
-      return _runShare(() => throw StateError('empty palette'));
-    }
-    return _runShare(() => sharePaletteCard(_share, data));
+  /// Shares a saved palette as an image. Its markers may be of other brands
+  /// than the ones in use: their catalogues are read first.
+  Future<void> _shareSaved(SavedPalette palette) async {
+    if (_sharing) return;
+    final String baseRole = context.l10n.roleLabel(PaletteRoles.base);
+    await _runShare(() async {
+      final List<MarkerColor> catalog = await _withBrands(
+        _catalog,
+        palette.brandIds,
+      );
+      final PaletteCardData data = savedPaletteCardData(
+        palette: palette,
+        catalog: catalog,
+        baseRole: baseRole,
+      );
+      // None of its codes are in the catalogue any more: nothing to draw.
+      if (data.entries.isEmpty) throw StateError('empty palette');
+      await sharePaletteCard(_share, data);
+    });
   }
 
   Future<void> _runShare(Future<void> Function() share) async {
@@ -183,18 +217,40 @@ extension _PaletteSaveShare on _PalettePageState {
     builder: (BuildContext context) => PaletteSaveNameDialog(initial: initial),
   );
 
-  void _loadSaved(SavedPalette palette) {
+  /// Puts [palette] on screen and returns whether it did (the user may refuse
+  /// to replace a palette they worked on; [approved] when they were already
+  /// asked).
+  ///
+  /// The markers of a mixed palette keep their brands whatever brand is in
+  /// use; a palette saved before brands could mix holds bare codes of its
+  /// own brand and loads as it always did.
+  Future<bool> _loadSaved(SavedPalette palette, {bool approved = false}) async {
+    // The sheet that hands the palette over closes right after this call: a
+    // question must not open under it and be closed in its place.
+    await Future<void>.delayed(Duration.zero);
+    if (!mounted) return false;
+    if (!approved &&
+        (await _approveReplacement(dropsLocks: true) == _Approval.refused ||
+            !mounted)) {
+      return false;
+    }
+    final List<MarkerColor> catalog = await _withBrands(
+      _catalog,
+      palette.brandIds,
+    );
+    if (!mounted) return false;
+    final _PaletteSnapshot? previous = _snapshot();
     final byCode = <String, MarkerColor>{
-      for (final color in _catalog) color.newCode.toUpperCase(): color,
+      for (final color in catalog) color.colorId.toUpperCase(): color,
     };
     final suggestions = <PaletteSuggestion>[];
-    final String baseCode = palette.baseCode.toUpperCase();
+    final String baseCode = palette.baseColorId.toUpperCase();
     // A saved blending chain holds every step in painting order, base in place.
     BlendingChain? chain;
     final MarkerColor? chainBase = byCode[baseCode];
     if (palette.mode == PaletteMode.blendingChain && chainBase != null) {
       final List<MarkerColor> steps = <MarkerColor>[
-        for (final String code in palette.colorCodes)
+        for (final String code in palette.colorIds)
           if (byCode[code.toUpperCase()] != null) byCode[code.toUpperCase()]!,
       ];
       if (steps.length >= 2 &&
@@ -202,7 +258,7 @@ extension _PaletteSaveShare on _PalettePageState {
         chain = BlendingChain(colors: steps, base: chainBase);
       }
     }
-    for (final code in palette.colorCodes) {
+    for (final code in palette.colorIds) {
       // The base is the first band of the strip, not a companion row. Older
       // saved palettes hold the companions only.
       if (code.toUpperCase() == baseCode) continue;
@@ -213,9 +269,18 @@ extension _PaletteSaveShare on _PalettePageState {
         );
       }
     }
+    final MarkerColor? base = byCode[baseCode];
+    // The base field names the brand when the palette (or the collection)
+    // holds more than the active one.
+    final bool branded =
+        _scopeMixed || palette.brandIds.any((String id) => id != _brand.id);
+    _cancelAi();
     _setState(() {
-      _baseInput = palette.baseCode;
-      _baseController.text = palette.baseCode;
+      _catalog = catalog;
+      _baseInput = base == null
+          ? palette.baseCode
+          : markerCodeLabel(base, mixed: branded);
+      _baseController.text = _baseInput;
       _mode = palette.mode;
       _paletteSize = (suggestions.length + 1).clamp(3, 5);
       _useScenario = false;
@@ -232,20 +297,25 @@ extension _PaletteSaveShare on _PalettePageState {
       }
       _aiUsed = false;
       _aiError = null;
-      _notice = context.l10n.paletteLoadedNotice(palette.name);
+      // A palette of "My palettes" is one the user keeps; a pasted one is a
+      // fresh result.
+      _workedPalette = palette.id != _importedPaletteId;
+      _paletteEdited = false;
+      _notice = _PaletteNotice(_PaletteNoticeKind.loaded, name: palette.name);
     });
+    if (previous != null && previous.differsFrom(this)) _offerUndo(previous);
+    return true;
   }
 
   /// Starts a diary entry linked to [palette], with its markers.
   Future<void> _addSavedToDiary(SavedPalette palette) async {
-    final String notice = context.l10n.diaryAddedNotice;
     final bool saved = await ArtworkEntryPage.open(
       context,
       palette: palette,
       picker: widget.picker,
     );
     if (!saved || !mounted) return;
-    _setState(() => _notice = notice);
+    _setState(() => _notice = const _PaletteNotice(_PaletteNoticeKind.diary));
   }
 
   /// Opens the brand's saved palettes as a draggable selector (spec §2.2):

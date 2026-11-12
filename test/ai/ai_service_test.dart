@@ -41,6 +41,7 @@ PaletteAdvisorRequest request() => PaletteAdvisorRequest(
   baseColor: collection.first,
   paletteSize: 3,
   brand: MarkerBrand.ohuhuOahu,
+  activeSetIds: collectionSetIds,
 );
 
 void main() {

@@ -2,11 +2,13 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
 import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/branded_code.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_segmented.dart';
@@ -37,7 +39,13 @@ class PaletteBaseAndSize extends StatelessWidget {
   final int paletteSize;
   final ValueChanged<int> onSizeChanged;
 
-  /// Every marker of the brand, to suggest codes from.
+  /// The markers the base may be chosen from: the ones the user owns, or the
+  /// whole range of the brand when the blending chain is in whole-range mode.
+  ///
+  /// When they are of several brands ("Mix my brands") a suggestion carries
+  /// its brand ("DecoTime 91"), which is also what choosing it writes in the
+  /// field, and a code two brands share suggests both: that is how the page
+  /// asks which one is meant.
   final List<MarkerColor> catalog;
 
   /// The marker the typed code resolves to, if any.
@@ -176,32 +184,44 @@ class PaletteBaseAndSize extends StatelessWidget {
   }
 
   Widget _buildBaseInput(BuildContext context) {
+    final bool mixed = hasMixedBrands(catalog);
+    String label(MarkerColor option) => markerCodeLabel(option, mixed: mixed);
+    bool isCode(MarkerColor c, String query) =>
+        c.newCode.toUpperCase() == query || c.oldCode.toUpperCase() == query;
     return RawAutocomplete<MarkerColor>(
       textEditingController: baseController,
       focusNode: baseFocus,
-      displayStringForOption: (MarkerColor option) => option.newCode,
+      displayStringForOption: label,
       optionsBuilder: (TextEditingValue value) {
         final query = value.text.trim().toUpperCase();
         if (query.isEmpty) return const Iterable<MarkerColor>.empty();
+        if (mixed) {
+          // A code that two brands share: the list is the question.
+          final List<MarkerColor> shared = catalog
+              .where((MarkerColor c) => isCode(c, query))
+              .toList();
+          if (hasMixedBrands(shared)) return shared;
+        }
         final List<MarkerColor> matches = catalog
             .where(
               (color) =>
                   color.newCode.toUpperCase().contains(query) ||
-                  color.oldCode.toUpperCase().contains(query),
+                  color.oldCode.toUpperCase().contains(query) ||
+                  (mixed && label(color).toUpperCase().contains(query)),
             )
             .take(8)
             .toList();
         // A complete code that already produced its result has nothing left
         // to suggest: the list would only hover over the strip.
         if (matches.length == 1 &&
-            (matches.first.newCode.toUpperCase() == query ||
-                matches.first.oldCode.toUpperCase() == query)) {
+            (isCode(matches.first, query) ||
+                label(matches.first).toUpperCase() == query)) {
           return const Iterable<MarkerColor>.empty();
         }
         return matches;
       },
       onSelected: (MarkerColor option) {
-        onBaseChanged(option.newCode);
+        onBaseChanged(label(option));
         // Close the suggestions: losing focus hides the overlay.
         baseFocus.unfocus();
       },
@@ -215,7 +235,7 @@ class PaletteBaseAndSize extends StatelessWidget {
         BuildContext context,
         AutocompleteOnSelected<MarkerColor> onSelected,
         Iterable<MarkerColor> options,
-      ) => _buildOptions(context, onSelected, options),
+      ) => _buildOptions(context, onSelected, options, mixed: mixed),
     );
   }
 
@@ -331,7 +351,9 @@ class PaletteBaseAndSize extends StatelessWidget {
                 icon: InkIcons.search,
                 iconSize: InkGeometry.smallIcon + 2,
                 tooltip: context.l10n.palettePickBaseTooltip,
-                onPressed: onPickBase,
+                // Nothing usable to pick from: keep the button disabled, the way
+                // Generate is, instead of opening an empty sheet.
+                onPressed: catalog.isEmpty ? null : onPickBase,
               ),
             ],
           ),
@@ -343,8 +365,9 @@ class PaletteBaseAndSize extends StatelessWidget {
   Widget _buildOptions(
     BuildContext context,
     AutocompleteOnSelected<MarkerColor> onSelected,
-    Iterable<MarkerColor> options,
-  ) {
+    Iterable<MarkerColor> options, {
+    required bool mixed,
+  }) {
     final InkColors ink = InkColors.of(context);
     return Align(
       alignment: Alignment.topLeft,
@@ -407,12 +430,7 @@ class PaletteBaseAndSize extends StatelessWidget {
                                       CrossAxisAlignment.baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: <Widget>[
-                                    Text(
-                                      option.newCode,
-                                      style: AppTypography.code.copyWith(
-                                        color: ink.fg,
-                                      ),
-                                    ),
+                                    BrandedCode(marker: option, mixed: mixed),
                                     if (hasOld) ...<Widget>[
                                       const SizedBox(width: InkSpacing.s8),
                                       Text(

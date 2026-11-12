@@ -24,6 +24,25 @@ final List<MarkerColor> collection = [
   marker('N505', '777777'),
 ];
 
+/// A marker of the brand that the user does not own: it is never a
+/// candidate, so it can never be the base of a palette.
+MarkerColor markerOutsideCollection() => MarkerColor(
+  brandId: MarkerBrand.ohuhuOahu.id,
+  newCode: 'Z999',
+  newName: 'Name Z999',
+  oldCode: 'Z999',
+  oldName: 'Name Z999',
+  hex: '123456',
+  sets: const <String>[],
+);
+
+/// The owned set of the fixture collection.
+///
+/// A request says which markers the user owns, and the engines take only
+/// those: without this in the request they have nothing to work with (there
+/// is no fallback to the whole range any more).
+const Set<String> collectionSetIds = <String>{'classic_160'};
+
 /// JSON body of a successful chat completion whose assistant content is [text].
 http.Response completionResponse(
   String text, {

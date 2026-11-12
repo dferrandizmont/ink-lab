@@ -27,6 +27,7 @@ class PaletteStrip extends StatelessWidget {
     this.onLockTap,
     this.lockTooltip,
     this.labelStyle,
+    this.brandLabels,
   });
 
   /// Colours of the strip, as hex strings.
@@ -68,6 +69,13 @@ class PaletteStrip extends StatelessWidget {
   /// Overrides the label style (defaults to `code`).
   final TextStyle? labelStyle;
 
+  /// The brand of every colour, for a strip that mixes brands; must match
+  /// [colors] in length. Each is a small `caption` line in `fg2` over its
+  /// label (cut with an ellipsis when the segment is narrower), so the code
+  /// below keeps the size it has in a strip of one brand. `null` (one brand)
+  /// leaves the labels exactly as they are.
+  final List<String>? brandLabels;
+
   double get _radius =>
       radius ?? (colorHeight < 20 ? InkRadii.xs : InkRadii.control);
 
@@ -95,6 +103,14 @@ class PaletteStrip extends StatelessWidget {
     if (stripLabels == null) {
       return bar;
     }
+    final List<String>? brands = brandLabels;
+    // The brand line adds its own height to the labels' only in a strip that
+    // mixes brands; it follows the text size like the caption it is.
+    final TextStyle brandStyle = AppTypography.caption.copyWith(color: ink.fg2);
+    final double brandHeight = brands == null
+        ? 0
+        : MediaQuery.textScalerOf(context)
+              .scale(brandStyle.fontSize! * brandStyle.height!);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -102,21 +118,39 @@ class PaletteStrip extends StatelessWidget {
         bar,
         const SizedBox(height: InkSpacing.group),
         SizedBox(
-          height: labelHeight,
+          height: labelHeight + brandHeight,
           child: Row(
+            crossAxisAlignment: brands == null
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
             children: <Widget>[
               for (int index = 0; index < colors.length; index++) ...<Widget>[
                 if (index > 0 && spacing > 0) SizedBox(width: spacing),
                 Expanded(
-                  child: Text(
-                    index < stripLabels.length ? stripLabels[index] : '',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: (labelStyle ?? AppTypography.code).copyWith(
-                      color: labelStyle?.color ?? ink.fg,
-                    ),
-                  ),
+                  child: brands == null
+                      ? _label(ink, _at(stripLabels, index))
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            SizedBox(
+                              height: brandHeight,
+                              child: Text(
+                                _at(brands, index),
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: brandStyle,
+                              ),
+                            ),
+                            SizedBox(
+                              height: labelHeight,
+                              child: Center(
+                                child: _label(ink, _at(stripLabels, index)),
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
               ],
             ],
@@ -125,6 +159,19 @@ class PaletteStrip extends StatelessWidget {
       ],
     );
   }
+
+  static String _at(List<String> values, int index) =>
+      index < values.length ? values[index] : '';
+
+  Widget _label(InkColors ink, String label) => Text(
+    label,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    textAlign: TextAlign.center,
+    style: (labelStyle ?? AppTypography.code).copyWith(
+      color: labelStyle?.color ?? ink.fg,
+    ),
+  );
 
   Widget _segment(BuildContext context, InkColors ink, int index) {
     final Color colour = swatchColor(colors[index]);

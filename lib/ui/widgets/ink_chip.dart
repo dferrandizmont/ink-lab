@@ -42,6 +42,30 @@ class InkChip extends StatelessWidget {
   final int lines;
   final String? semanticLabel;
 
+  /// The width a chip takes when nothing squeezes it: its label, the icon
+  /// and the padding around them, never less than the touch target.
+  ///
+  /// A row of chips uses it to know whether it fits before it lays it out,
+  /// so a chip is never cut by the edge of the screen (see
+  /// `InkChipRow`, which scrolls or wraps according to it).
+  static double naturalWidth(
+    BuildContext context,
+    String label, {
+    InkIcons? icon,
+  }) {
+    final TextPainter painter = TextPainter(
+      text: TextSpan(text: label, style: AppTypography.button),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      maxLines: 1,
+    )..layout();
+    // The padding of the chip, the border around it and the icon in front of
+    // the label.
+    double width = painter.width + 2 * InkSpacing.s10 + 2 * InkGeometry.border;
+    if (icon != null) width += InkGeometry.smallIcon + InkSpacing.chipGap;
+    return math.max(InkGeometry.target, width);
+  }
+
   /// The visual height of a chip that makes room for [lines] lines.
   static double visualHeight(BuildContext context, int lines) {
     if (lines <= 1) return InkGeometry.chipHeight;

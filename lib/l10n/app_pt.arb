@@ -262,6 +262,8 @@
   "paletteAiReportCopied": "Não há app de e-mail. O relatório foi copiado: cola-o num e-mail para inklab@mainshai.com",
   "paletteAiFellBack": "IA indisponível. A mostrar sugestões locais.",
   "paletteEmptyHint": "Escolhe um marcador base para criar uma paleta, ou escolhe Cenas como tipo de paleta.",
+  "missingMarkersTitle": "Ainda não tens marcadores {brand}",
+  "missingMarkersAction": "Ir para A minha coleção",
   "paletteCustomModeHint": "O modo de paleta personalizada é manual: carrega uma paleta guardada ou aplica uma das Ideias.",
   "paletteNoSuggestions": "Não foi possível criar nenhuma paleta com a tua coleção. Experimenta outro modo ou junta mais marcadores.",
   "paletteScenarioTitle": "Cenas",
@@ -335,18 +337,18 @@
   "swatchesScopePack": "Conjunto",
   "ideasTitle": "Ideias",
   "ideasHeaderSubtitle": "Exercícios com os teus marcadores",
-  "ideasHeaderSubtitleWholeRange": "Exercícios com a paleta tirada de toda a gama",
   "ideasSearchHint": "Procurar ideias",
   "ideasCategoryAll": "Todas",
   "ideasApplyButton": "Usar na Paleta",
   "ideasMoreDetails": "Mais detalhes",
   "ideasGuideOnlyNote": "Este exercício usa toda a tua coleção, por isso não tem uma paleta fixa.",
-  "ideasNoMarkersOther": "Junta em A minha coleção os marcadores que tens para veres uma paleta para esta ideia.",
   "ideasCategoriesLabel": "Categorias",
   "ideasEmptyTitle": "Não há ideias",
   "ideasClearFilters": "Limpar filtros",
   "ideasEmptySearch": "Nenhuma ideia corresponde à pesquisa.",
   "ideasNoMarkers": "Neste momento não há marcadores disponíveis",
+  "missingMarkersHint": "Assinala os teus marcadores em A minha coleção para veres quais usar",
+  "allMarkersDried": "Todos os teus marcadores estão secos. Marca-os de novo como utilizáveis para os usar.",
   "ideasFeatheredEdgeTitle": "Bordo esbatido",
   "ideasFeatheredEdgeSummary": "Faz um lado de uma forma desaparecer no papel branco e mantém o outro lado nítido.",
   "ideasFeatheredEdgePractice": "Um bordo suave ao lado de um duro: a maneira mais simples de dar luz a uma forma.",
@@ -1357,6 +1359,7 @@
   "paletteNotAvailable": "{brand, select, decoTime{{input} não está na tua coleção. Experimenta {example} ou junta-o em A minha coleção.} copic{{input} não está na tua coleção. Experimenta {example} ou junta-o em A minha coleção.} finecolour{{input} não está na tua coleção. Experimenta {example} ou junta-o em A minha coleção.} other{{input} não está na tua coleção. Experimenta {example} ou junta-o em A minha coleção.}}",
   "paletteNoAvailableColors": "{brand, select, decoTime{Ainda não há marcadores DecoTime na tua coleção. Junta-os em A minha coleção.} copic{Ainda não há marcadores Copic na tua coleção. Junta-os em A minha coleção.} finecolour{Ainda não há marcadores Finecolour na tua coleção. Junta-os em A minha coleção.} touchTwin{Ainda não há marcadores Touch Twin na tua coleção. Junta-os em A minha coleção.} promarker{Ainda não há marcadores Promarker na tua coleção. Junta-os em A minha coleção.} prismacolor{Ainda não há marcadores Prismacolor Premier na tua coleção. Junta-os em A minha coleção.} spectrumNoir{Ainda não há marcadores Spectrum Noir na tua coleção. Junta-os em A minha coleção.} promarkerBrush{Ainda não há marcadores Promarker Brush na tua coleção. Junta-os em A minha coleção.} arrtx{Ainda não há marcadores Arrtx na tua coleção. Junta-os em A minha coleção.} kurecolor{Ainda não há marcadores ZIG Kurecolor na tua coleção. Junta-os em A minha coleção.} graphit{Ainda não há marcadores Graph'it na tua coleção. Junta-os em A minha coleção.} marvyLePlume{Ainda não há marcadores Marvy Le Plume na tua coleção. Junta-os em A minha coleção.} blickBrush{Ainda não há marcadores Blick Studio Brush na tua coleção. Junta-os em A minha coleção.} artistsLoft{Ainda não há marcadores Artist's Loft na tua coleção. Junta-os em A minha coleção.} other{Ainda não há marcadores na tua coleção. Junta-os em A minha coleção.}}",
   "paletteMissingBase": "Escolhe um marcador base, como {example}, ou escolhe Cenas como tipo de paleta.",
+  "paletteBaseDried": "{code} está seco. Marca-o como utilizável em Detalhes ou escolhe outro.",
   "swatchesFiltersCount": "Filtros · {count}",
   "swatchesCodeCopied": "{code} copiado. Cola-o como cor base no separador Paleta.",
   "swatchesAlternativeSemantics": "{code}, {name}, delta E {value}",
@@ -1386,6 +1389,8 @@
   "errInvalidResponse": "O fornecedor não devolveu nenhuma paleta utilizável.",
   "errNoValidSuggestions": "O fornecedor sugeriu cores que não estão na coleção ativa.",
   "errNoAvailableColors": "Não há marcadores disponíveis entre os quais escolher.",
+  "errInvalidBaseColor": "O marcador de base não está na tua coleção.",
+  "errBaseDried": "O marcador de base está seco. Marca-o como utilizável ou escolhe outro.",
   "errNoSuggestions": "Não foi possível gerar nenhuma sugestão.",
   "errTimeout": "O modelo do dispositivo demorou demasiado. Tenta de novo.",
   "errOnDeviceUnavailable": "O modelo do dispositivo não está pronto neste telemóvel.",
@@ -1672,6 +1677,7 @@
   "collectionExtrasTitle": "Marcadores avulsos",
   "collectionExtrasHint": "Compraste marcadores avulsos? Assinala-os aqui. Os dos teus conjuntos já contam.",
   "collectionDecoMarkersTitle": "Os teus marcadores",
+  "collectionIndividualMarkersShort": "Assinala os que tens",
   "collectionDecoHint": "A DecoTime não publica que cores traz cada conjunto: assinala as que tens ou junta uma família inteira.",
   "collectionDecoSizesHint": "A Action vende conjuntos DecoTime de 100, 150, 160, 200 e 300 marcadores.",
   "collectionFamiliesTitle": "Juntar por família",
@@ -1681,6 +1687,8 @@
   "collectionFamilyCoolGrey": "Cinzentos frios",
   "collectionFamilyBlueGrey": "Cinzentos azulados",
   "collectionFamilyGreenGrey": "Cinzentos esverdeados",
+  "collectionImportCodesTitle": "Importar códigos",
+  "collectionImportCodesHint": "Cola uma lista de códigos",
   "collectionDecoRange": "Gama DecoTime",
   "collectionWholeRange": "Toda a gama",
   "collectionSearchHint": "Procurar código ou nome",
@@ -1693,8 +1701,32 @@
       }
     }
   },
-  "collectionTickManyBody": "Todos contam como marcadores que tens. Podes tirá-los outra vez com «Desmarcar».",
-  "collectionUntickVisible": "Desmarcar",
+  "collectionTickManyBody": "Todos contam como marcadores que tens. Podes tirá-los outra vez com «Tirar tudo».",
+  "collectionUntickVisible": "Tirar tudo",
+  "collectionRemoveMarkersTitle": "{count, plural, =1{Remover 1 marcador?} other{Remover {count} marcadores?}}",
+  "@collectionRemoveMarkersTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionRemoveFromTitle": "{count, plural, =1{{name}: remover 1 marcador?} other{{name}: remover {count} marcadores?}}",
+  "@collectionRemoveFromTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionRemoveMarkersBody": "Os marcadores que já tens saem da tua coleção. Podes voltar a juntá-los quando quiseres.",
+  "collectionRemoveConfirm": "Remover",
+  "collectionReplaceTitle": "Substituir a tua coleção?",
+  "collectionReplaceBody": "Quando a configuração acaba, os conjuntos e marcadores que tens agora são substituídos pelos que escolheres aqui.",
+  "collectionReplaceConfirm": "Substituir",
   "collectionInYourSets": "No teu conjunto",
   "collectionNoResults": "Nenhum marcador corresponde à pesquisa.",
   "collectionReset": "Esvaziar coleção",
@@ -1709,7 +1741,6 @@
   "toolsBlendsHint": "Misturas que guardas: marcadores por ordem, uma nota e uma foto.",
   "toolsTransferTitle": "Exportar e importar",
   "toolsTransferHint": "Partilha os teus marcadores como lista ou CSV, ou adiciona muitos por código.",
-  "toolsMapEmptyTitle": "Ainda não há marcadores para mapear",
   "toolsMapIntro": "Cada ponto é um marcador que tens. As zonas tracejadas não têm nenhum.",
   "toolsMapShowRange": "Mostrar toda a gama",
   "toolsMapShowRangeHint": "Pontos ténues com todos os marcadores das tuas marcas, para ver o que falta.",
@@ -1847,7 +1878,7 @@
   "collectionSeriesOahuTips": "Ponta fina e cinzel",
   "collectionSeriesHonoluluTips": "Pincel e cinzel",
   "collectionSeriesKaalaTips": "Ponta de pincel",
-  "collectionSummaryNoSets": "Ainda não escolheste conjuntos: usa-se toda a gama",
+  "collectionSummaryNoSets": "Ainda não escolheste conjuntos: Comparar e Amostras mostram toda a gama; Paleta e Ideias precisam dos marcadores que tens",
   "collectionSummaryNoMarkers": "Ainda não assinalaste marcadores",
   "collectionExtrasAddTitle": "Juntar marcadores avulsos",
   "collectionDecoMarkersButton": "Assinalar marcadores",
@@ -1877,7 +1908,7 @@
   "buyNextNoCollection": "Assinala os marcadores que tens para ver o que comprar.",
   "buyNextComplete": "Nada a sugerir: os teus marcadores já cobrem bem todas as cenas.",
   "buyNextRefill": "Seco: uma recarga recupera-o.",
-  "onboardingDoneWholeRange": "Até escolheres conjuntos, a app mostra toda a gama {brand}.",
+  "onboardingDoneWholeRange": "Até escolheres conjuntos, Comparar e Amostras mostram toda a gama {brand}. Paleta e Ideias precisam dos marcadores que tens.",
   "onboardingDoneNext": "A seguir: vê as tuas cores em Amostras, compara uma foto em Comparar ou cria uma paleta em Paleta.",
   "collectionVisibleScope": "Afeta os marcadores que correspondem à pesquisa.",
   "matchWhiteBalanceButton": "Corrigir brancos",
@@ -1918,7 +1949,6 @@
   "onboardingFinecolourLine": "480 cores · Assinala os marcadores que tens",
   "onboardingMarkersTitle": "Os teus marcadores {brand}",
   "onboardingNoMarkers": "Ainda não assinalaste marcadores {brand}: assinala-os em A minha coleção.",
-  "ideasNoMarkersBrand": "Junta os marcadores {brand} que tens em A minha coleção para veres uma paleta para esta ideia.",
   "ideasDiarySegment": "Diário",
   "ideasDiarySubtitle": "As tuas obras, as mais recentes primeiro",
   "diaryEmptyTitle": "O teu diário está vazio",
@@ -2276,5 +2306,16 @@
   "ideasNewYearFireworksStep3": "Traça as linhas da primeira explosão com a primeira cor, pressionando mais nas pontas.",
   "ideasNewYearFireworksStep4": "As linhas da segunda explosão com a segunda cor.",
   "ideasNewYearFireworksStep5": "As linhas da terceira explosão com a terceira cor.",
-  "ideasNewYearFireworksStep6": "Gel branco no centro de cada explosão e algumas faíscas nas pontas."
+  "ideasNewYearFireworksStep6": "Gel branco no centro de cada explosão e algumas faíscas nas pontas.",
+  "collectionMixBrands": "Misturar as minhas marcas",
+  "collectionMoreBrands": "{first}, {second} e mais {count}",
+  "collectionBrandsCount": "{count} marcas",
+  "paletteChanged": "Paleta alterada",
+  "paletteReplaceTitle": "Substituir esta paleta?",
+  "paletteReplaceBody": "A paleta no ecrã será substituída, com as tuas alterações e as tuas cores fixadas. Poderás anular logo a seguir.",
+  "paletteReplaceButton": "Substituir",
+  "paletteAmbiguousBase": "Este código existe em mais de uma das tuas marcas. Escolhe a marca na lista.",
+  "paletteChainWholeRangeNoteMixed": "A mostrar toda a gama das tuas marcas, também marcadores que não tens.",
+  "paletteBaseOtherBrand": "{code} é um marcador da {brand}, e a {brand} não está em uso neste momento. Experimenta {example} ou muda a marca em A minha coleção.",
+  "paletteImportTooFew": "Adiciona pelo menos dois códigos de marcadores diferentes e reconhecidos para importar uma paleta."
 }

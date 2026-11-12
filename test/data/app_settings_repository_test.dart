@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/core/collection_selection.dart';
 import 'package:ink_lab/core/models.dart';
@@ -194,6 +196,165 @@ void main() {
       await h.appSettings.restore(AppSettingsState(onboardingCompleted: true));
       expect(h.appSettings.onboardingDraft, draft);
     });
+  });
+
+  group('the single markers of the collection', () {
+    test('adding keeps the ones already there, persists and tells', () async {
+      final h = await harness();
+      await h.appSettings.setExtraMarkerIds(<String>{'decotime:01'});
+
+      final List<AppSettingsState> seen = <AppSettingsState>[];
+      final StreamSubscription<AppSettingsState> subscription = h
+          .appSettings
+          .changes
+          .listen(seen.add);
+      await pumpEventQueue();
+
+      await h.appSettings.addExtraMarkerIds(<String>{'decotime:02'});
+      await pumpEventQueue();
+
+      expect(h.appSettings.settings.extraMarkerIds, <String>{
+        'decotime:01',
+        'decotime:02',
+      });
+      // It is on the disk, not only in the memory.
+      expect(
+        await h.store.getStringList(
+          StoredAppSettingsRepository.keyExtraMarkerIds,
+        ),
+        <String>['decotime:01', 'decotime:02'],
+      );
+      // And the change was told.
+      expect(seen, hasLength(2));
+      expect(seen.last.settings.extraMarkerIds, contains('decotime:02'));
+      await subscription.cancel();
+    });
+
+    test('removing takes the ids out, persists and tells', () async {
+      final h = await harness();
+      await h.appSettings.setExtraMarkerIds(<String>{
+        'decotime:01',
+        'decotime:02',
+      });
+
+      final List<AppSettingsState> seen = <AppSettingsState>[];
+      final StreamSubscription<AppSettingsState> subscription = h
+          .appSettings
+          .changes
+          .listen(seen.add);
+      await pumpEventQueue();
+
+      await h.appSettings.removeExtraMarkerIds(<String>{'decotime:01'});
+      await pumpEventQueue();
+
+      expect(h.appSettings.settings.extraMarkerIds, <String>{'decotime:02'});
+      expect(
+        await h.store.getStringList(
+          StoredAppSettingsRepository.keyExtraMarkerIds,
+        ),
+        <String>['decotime:02'],
+      );
+      expect(seen, hasLength(2));
+      expect(seen.last.settings.extraMarkerIds, isNot(contains('decotime:01')));
+      await subscription.cancel();
+    });
+
+    test('two adds that overlap keep both markers', () async {
+      final h = await harness();
+
+      // Neither is awaited: the second one starts before the first landed.
+      final Future<void> first = h.appSettings.addExtraMarkerIds(<String>{
+        'decotime:01',
+      });
+      final Future<void> second = h.appSettings.addExtraMarkerIds(<String>{
+        'decotime:02',
+      });
+      await Future.wait(<Future<void>>[first, second]);
+
+      expect(h.appSettings.settings.extraMarkerIds, <String>{
+        'decotime:01',
+        'decotime:02',
+      });
+      expect(
+        await h.store.getStringList(
+          StoredAppSettingsRepository.keyExtraMarkerIds,
+        ),
+        <String>['decotime:01', 'decotime:02'],
+      );
+    });
+
+    test('an add and a remove that overlap end with the last word', () async {
+      final h = await harness();
+      await h.appSettings.setExtraMarkerIds(<String>{'decotime:01'});
+
+      final Future<void> add = h.appSettings.addExtraMarkerIds(<String>{
+        'decotime:02',
+      });
+      final Future<void> remove = h.appSettings.removeExtraMarkerIds(<String>{
+        'decotime:01',
+      });
+      await Future.wait(<Future<void>>[add, remove]);
+
+      expect(h.appSettings.settings.extraMarkerIds, <String>{'decotime:02'});
+    });
+
+    test('addExtraMarkerIds + setOwnedSetIds without awaiting keeps both', () async {
+      final h = await harness();
+      await h.appSettings.setExtraMarkerIds(<String>{'decotime:01'});
+
+      final Future<void> first = h.appSettings.addExtraMarkerIds(<String>{
+        'decotime:02',
+      });
+      final Future<void> second = h.appSettings.setOwnedSetIds(<String>{
+        'classic_80',
+      });
+      await Future.wait(<Future<void>>[first, second]);
+
+      expect(h.appSettings.settings.extraMarkerIds, <String>{
+        'decotime:01',
+        'decotime:02',
+      });
+      expect(h.appSettings.settings.ownedSetIds, <String>{'classic_80'});
+    });
+
+    test(
+      'addExtraMarkerIds + setCollection without awaiting: later call fields win, '
+      'add is not lost unless setCollection replaces extraMarkerIds',
+      () async {
+        final h = await harness();
+        await h.appSettings.setExtraMarkerIds(<String>{'decotime:01'});
+
+        final Future<void> first = h.appSettings.addExtraMarkerIds(<String>{
+          'decotime:02',
+        });
+        final Future<void> second = h.appSettings.setCollection(
+          AppSettings(ownedSetIds: const <String>{'classic_80'}),
+        );
+        await Future.wait(<Future<void>>[first, second]);
+
+        expect(h.appSettings.settings.ownedSetIds, <String>{'classic_80'});
+        // setCollection replaces extraMarkerIds, so the add is lost.
+        expect(h.appSettings.settings.extraMarkerIds, isEmpty);
+      },
+    );
+  });
+
+  test('restore queued after an add: restore result wins', () async {
+    final h = await harness();
+    await h.appSettings.setExtraMarkerIds(<String>{'decotime:01'});
+
+    final Future<void> add = h.appSettings.addExtraMarkerIds(<String>{
+      'decotime:02',
+    });
+    final Future<void> restore = h.appSettings.restore(
+      AppSettingsState(
+        settings: AppSettings(ownedSetIds: const <String>{'classic_80'}),
+      ),
+    );
+    await Future.wait(<Future<void>>[add, restore]);
+
+    expect(h.appSettings.settings.ownedSetIds, <String>{'classic_80'});
+    expect(h.appSettings.settings.extraMarkerIds, isEmpty);
   });
 
   test('changes replays the current snapshot then emits updates', () async {

@@ -1678,6 +1678,18 @@ abstract class AppLocalizations {
   /// **'Pick a base marker to build a palette, or choose Scenes as the palette type.'**
   String get paletteEmptyHint;
 
+  /// Title of the empty state of a collection that owns no marker of the brand yet.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t own {brand} markers yet'**
+  String missingMarkersTitle(String brand);
+
+  /// Button that opens the collection, where the user ticks the markers they own.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to My collection'**
+  String get missingMarkersAction;
+
   /// No description provided for @paletteCustomModeHint.
   ///
   /// In en, this message translates to:
@@ -2110,12 +2122,6 @@ abstract class AppLocalizations {
   /// **'Exercises for your markers'**
   String get ideasHeaderSubtitle;
 
-  /// No description provided for @ideasHeaderSubtitleWholeRange.
-  ///
-  /// In en, this message translates to:
-  /// **'Exercises with a palette from the whole range'**
-  String get ideasHeaderSubtitleWholeRange;
-
   /// No description provided for @ideasSearchHint.
   ///
   /// In en, this message translates to:
@@ -2146,12 +2152,6 @@ abstract class AppLocalizations {
   /// **'This exercise uses your whole collection, so it has no fixed palette.'**
   String get ideasGuideOnlyNote;
 
-  /// No description provided for @ideasNoMarkersOther.
-  ///
-  /// In en, this message translates to:
-  /// **'Add the markers you own in My collection to get a palette for this idea.'**
-  String get ideasNoMarkersOther;
-
   /// No description provided for @ideasCategoriesLabel.
   ///
   /// In en, this message translates to:
@@ -2181,6 +2181,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No markers currently available'**
   String get ideasNoMarkers;
+
+  /// Line shown in an idea when the collection owns no marker of the brand yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick the markers you own in My collection to see which ones to use'**
+  String get missingMarkersHint;
+
+  /// Line shown when the collection owns markers but all of them are dried out.
+  ///
+  /// In en, this message translates to:
+  /// **'All your markers are dried out. Mark them as usable again to use them.'**
+  String get allMarkersDried;
 
   /// No description provided for @ideasTulipFieldTitle.
   ///
@@ -9367,6 +9379,12 @@ abstract class AppLocalizations {
   /// **'Pick a base marker, such as {example}, or choose Scenes as the palette type.'**
   String paletteMissingBase(String example);
 
+  /// No description provided for @paletteBaseDried.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} is dried out. Mark it as usable in Details or choose another.'**
+  String paletteBaseDried(String code);
+
   /// No description provided for @swatchesFiltersCount.
   ///
   /// In en, this message translates to:
@@ -9540,6 +9558,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'There are no available markers to choose from.'**
   String get errNoAvailableColors;
+
+  /// No description provided for @errInvalidBaseColor.
+  ///
+  /// In en, this message translates to:
+  /// **'The base marker is not in your collection.'**
+  String get errInvalidBaseColor;
+
+  /// No description provided for @errBaseDried.
+  ///
+  /// In en, this message translates to:
+  /// **'The base marker is dried out. Mark it as usable or choose another.'**
+  String get errBaseDried;
 
   /// No description provided for @errNoSuggestions.
   ///
@@ -11257,6 +11287,12 @@ abstract class AppLocalizations {
   /// **'Your markers'**
   String get collectionDecoMarkersTitle;
 
+  /// No description provided for @collectionIndividualMarkersShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick the ones you have'**
+  String get collectionIndividualMarkersShort;
+
   /// No description provided for @collectionDecoHint.
   ///
   /// In en, this message translates to:
@@ -11311,6 +11347,18 @@ abstract class AppLocalizations {
   /// **'Green greys'**
   String get collectionFamilyGreenGrey;
 
+  /// No description provided for @collectionImportCodesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import codes'**
+  String get collectionImportCodesTitle;
+
+  /// No description provided for @collectionImportCodesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a list of codes'**
+  String get collectionImportCodesHint;
+
   /// No description provided for @collectionDecoRange.
   ///
   /// In en, this message translates to:
@@ -11352,6 +11400,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Untick all'**
   String get collectionUntickVisible;
+
+  /// No description provided for @collectionRemoveMarkersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Remove 1 marker?} other{Remove {count} markers?}}'**
+  String collectionRemoveMarkersTitle(int count);
+
+  /// No description provided for @collectionRemoveFromTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Remove 1 marker of {name}?} other{Remove {count} markers of {name}?}}'**
+  String collectionRemoveFromTitle(int count, String name);
+
+  /// No description provided for @collectionRemoveMarkersBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The markers you already own leave your collection. You can add them again at any time.'**
+  String get collectionRemoveMarkersBody;
+
+  /// No description provided for @collectionRemoveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get collectionRemoveConfirm;
+
+  /// No description provided for @collectionReplaceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace your collection?'**
+  String get collectionReplaceTitle;
+
+  /// No description provided for @collectionReplaceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When the setup ends, the sets and markers you own now are replaced by the ones you choose here.'**
+  String get collectionReplaceBody;
+
+  /// No description provided for @collectionReplaceConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get collectionReplaceConfirm;
 
   /// No description provided for @collectionInYourSets.
   ///
@@ -11436,12 +11526,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share your markers as a list or CSV, or add many by code.'**
   String get toolsTransferHint;
-
-  /// No description provided for @toolsMapEmptyTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'No markers to map yet'**
-  String get toolsMapEmptyTitle;
 
   /// No description provided for @toolsMapIntro.
   ///
@@ -12208,7 +12292,7 @@ abstract class AppLocalizations {
   /// No description provided for @collectionSummaryNoSets.
   ///
   /// In en, this message translates to:
-  /// **'You have not picked any sets yet: the whole range is used'**
+  /// **'No sets yet: Match and Swatches show the whole range; Palette and Ideas need markers you own'**
   String get collectionSummaryNoSets;
 
   /// No description provided for @collectionSummaryNoMarkers.
@@ -12388,7 +12472,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingDoneWholeRange.
   ///
   /// In en, this message translates to:
-  /// **'Until you pick sets, the app shows the whole {brand} range.'**
+  /// **'Until you pick sets, Match and Swatches show the whole {brand} range. Palette and Ideas need the markers you own.'**
   String onboardingDoneWholeRange(String brand);
 
   /// No description provided for @onboardingDoneNext.
@@ -12630,12 +12714,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You have not ticked any {brand} markers yet: tick them in My collection.'**
   String onboardingNoMarkers(String brand);
-
-  /// No description provided for @ideasNoMarkersBrand.
-  ///
-  /// In en, this message translates to:
-  /// **'Add the {brand} markers you own in My collection to get a palette for this idea.'**
-  String ideasNoMarkersBrand(String brand);
 
   /// No description provided for @ideasDiarySegment.
   ///
@@ -13518,6 +13596,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap a marker to see its details here.'**
   String get swatchesDetailPaneEmpty;
+
+  /// Switch in My collection: Palette, Ideas, the Colour map, the AI and the home widget use the markers of every brand the user owns, not only the active brand. One line.
+  ///
+  /// In en, this message translates to:
+  /// **'Mix my brands'**
+  String get collectionMixBrands;
+
+  /// One-line subtitle of the Mix my brands switch when more than two brands are mixed: the first two brand names and how many more.
+  ///
+  /// In en, this message translates to:
+  /// **'{first}, {second} and {count} more'**
+  String collectionMoreBrands(String first, String second, int count);
+
+  /// One-line subtitle of the Mix my brands switch when the brand names do not fit on the line: how many brands are mixed (two or more).
+  ///
+  /// In en, this message translates to:
+  /// **'{count} brands'**
+  String collectionBrandsCount(int count);
+
+  /// Snack bar shown after an action replaced the palette on screen (Regenerate, Suggest with AI, a variation, another type, scene or size). It has an Undo button.
+  ///
+  /// In en, this message translates to:
+  /// **'Palette changed'**
+  String get paletteChanged;
+
+  /// Title of the question asked before replacing a palette the user worked on (loaded or saved and then changed, or with locked colours that would be lost).
+  ///
+  /// In en, this message translates to:
+  /// **'Replace this palette?'**
+  String get paletteReplaceTitle;
+
+  /// Body of the question asked before replacing a palette the user worked on.
+  ///
+  /// In en, this message translates to:
+  /// **'The palette on screen will be replaced, with your changes and your locked colours. You can undo it right afterwards.'**
+  String get paletteReplaceBody;
+
+  /// Button that confirms replacing the palette on screen.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get paletteReplaceButton;
+
+  /// Error under the base marker field when Mix my brands is on and the typed code exists in two of the brands the user owns.
+  ///
+  /// In en, this message translates to:
+  /// **'More than one of your brands has this code. Choose the brand in the list.'**
+  String get paletteAmbiguousBase;
+
+  /// Note over a blending chain built from the whole range when Mix my brands is on: the range is the one of every brand in the mix, so no single brand is named.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing the whole range of your brands, markers you don\'t own included.'**
+  String get paletteChainWholeRangeNoteMixed;
+
+  /// Error under the base marker field when the base is a marker of a brand that is not the one in use (the palette on screen was kept after the brand changed, or was loaded from another brand). It replaces 'not in your collection', which would be false.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} is a {brand} marker, and {brand} is not in use right now. Try {example}, or change the brand in My collection.'**
+  String paletteBaseOtherBrand(String code, String brand, String example);
+
+  /// Import error when fewer than two different known markers were found; the current palette is kept.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least two different recognised marker codes to import a palette.'**
+  String get paletteImportTooFew;
 }
 
 class _AppLocalizationsDelegate

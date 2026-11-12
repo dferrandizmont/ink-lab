@@ -16,8 +16,22 @@ final class AiPaletteRequest with JsonValue {
     this.imageDataUrl,
     this.imageHint,
   }) : candidates = List.unmodifiable(candidates);
+
+  /// [brandId] of a request whose candidates are of several brands ("Mix my
+  /// brands"). Its prompt writes every marker as a colour id (`DECOTIME:91`)
+  /// instead of a bare code, so two brands that share a code stay apart.
+  static const String mixedBrandId = 'mixed';
+
   final String brandId;
   final String brandLabel;
+
+  /// Whether the candidates are of several brands (see [mixedBrandId]).
+  bool get mixed => brandId == mixedBrandId;
+
+  /// [color] as the prompt names it and the answer must name it back.
+  String promptCode(MarkerColor color) =>
+      (mixed ? color.colorId : color.newCode).toUpperCase();
+
   final MarkerColor? baseColor;
   final List<MarkerColor> candidates;
   final Scene? scenario;

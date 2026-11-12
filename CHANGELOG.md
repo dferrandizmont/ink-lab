@@ -10,6 +10,28 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.2.3 · 2026-11-12
+
+Your markers stay where you left them, you can mix the brands you own, and a palette you replaced can be brought back.
+
+- Mix my brands: a switch in My collection, shown when you own markers of two or more brands. When it is on, Palette,
+  «Suggest with AI», Ideas, the Colour map and the «Idea of the day» widget use the markers of every brand you own,
+  together; each code shows its brand, and saved and shared palettes keep the brand of each colour.
+- Palette undo: after Regenerate, «Suggest with AI», a variation or any other change that replaces the palette, an
+  «Undo» button appears for a few seconds. A palette you opened from «Saved palettes», or saved and then worked on,
+  asks before it is replaced.
+- Palette: locking or unlocking a colour no longer moves it. Locked colours keep their place when you regenerate or
+  apply a variation, and they keep their own explanation.
+- My collection: adding a family no longer removes the markers you imported from text. Anything that removes or
+  replaces markers asks first and says how many, and quick taps no longer overwrite each other.
+- My collection: a new «Import codes» row, to paste a list of codes.
+- With no markers ticked, Palette, Ideas and Colour map no longer use the whole range as if it were yours: they
+  say so and take you to My collection. «Suggest with AI» follows the same rule as «Generate», and the base
+  marker can only be one of yours. If all your markers are dried out, the app says that instead.
+- Colour map keeps «Show the whole range» even with no markers.
+- Small fixes: the Favourites chip in Swatches is no longer hidden at large text, a dried base marker gets its own
+  message, and My collection has shorter one-line texts.
+
 ## 1.2.2 · 2026-11-10
 
 Fixes from a full review of every screen: clearer texts, saved palettes that open, and nothing that jumps or gets

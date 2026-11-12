@@ -13,6 +13,88 @@ void main() {
   final decoOther = color('R2', '0000aa', brandId: 'decotime', sets: []);
   final catalog = [classic, otherPack, deco, classicFirst, addon, decoOther];
 
+  test('the brands that can be mixed are the ones with a usable marker', () {
+    List<MarkerBrand> brands({Set<String> dried = const {}}) =>
+        usableOwnedBrands(
+          colors: catalog,
+          activeSetIds: {'classic_160'},
+          ownedMarkerCodes: {'decotime:R10'},
+          driedColorIds: dried,
+        );
+    expect(brands(), [MarkerBrand.ohuhuOahu, MarkerBrand.decoTime]);
+    // Its only marker ran dry: nothing of that brand is left to mix.
+    expect(brands(dried: {deco.colorId}), [MarkerBrand.ohuhuOahu]);
+    expect(usableOwnedBrands(colors: catalog), isEmpty);
+  });
+
+  test('mixed candidates keep identical codes in distinct brands and omit dried markers', () {
+    final selected = mixedCandidateColors(
+      colors: catalog,
+      brand: MarkerBrand.ohuhuOahu,
+      activeSetIds: {'classic_160'},
+      ownedMarkerCodes: {'decotime:R10', 'decotime:R2'},
+      driedColorIds: {decoOther.colorId},
+    );
+    expect(selected.map((c) => c.colorId), [
+      classicFirst.colorId,
+      classic.colorId,
+      deco.colorId,
+    ]);
+    expect(selected.where((c) => c.newCode == 'R10'), hasLength(2));
+    expect(
+      mixedCandidateColors(
+        colors: catalog,
+        brand: MarkerBrand.ohuhuOahu,
+        scope: BrandScope.singleBrand,
+        activeSetIds: {'classic_160'},
+        ownedMarkerCodes: {'decotime:R10'},
+      ),
+      [classicFirst, classic],
+    );
+    expect(
+      mixedCandidateColors(
+        colors: catalog,
+        brand: MarkerBrand.ohuhuOahu,
+        ownedMarkerCodes: {'decotime:R10'},
+      ),
+      isEmpty,
+    );
+  });
+
+  test('the owned markers follow the scope, dried ones included', () {
+    List<String> owned({
+      BrandScope scope = BrandScope.mixedBrands,
+      Set<String> codes = const {'decotime:R10', 'decotime:R2'},
+      Set<String> sets = const {'classic_160'},
+      Set<String> dried = const {},
+    }) => ownedCandidateColors(
+      colors: catalog,
+      brand: MarkerBrand.ohuhuOahu,
+      scope: scope,
+      activeSetIds: sets,
+      ownedMarkerCodes: codes,
+      driedColorIds: dried,
+    ).map((c) => c.colorId).toList();
+    final ohuhu = [classicFirst.colorId, classic.colorId];
+    final decoTime = [decoOther.colorId, deco.colorId];
+    // One brand: its markers, whatever else the user owns.
+    expect(owned(scope: BrandScope.singleBrand), ohuhu);
+    // Two usable brands are mixed: the markers of both, a dried one too.
+    expect(owned(), [...ohuhu, ...decoTime]);
+    expect(owned(dried: {decoOther.colorId}), [...ohuhu, ...decoTime]);
+    // Only one brand is usable, so the scope works as the active brand.
+    expect(owned(dried: {deco.colorId, decoOther.colorId}), ohuhu);
+    // The active brand is empty and the other brand ran dry: no brand is
+    // usable, and the collection is still not empty (it is all dried out).
+    expect(
+      owned(sets: const {}, dried: {deco.colorId, decoOther.colorId}),
+      decoTime,
+    );
+    // The other brand is usable and the active one is empty: the scope
+    // works as the active brand, which owns nothing.
+    expect(owned(sets: const {}), isEmpty);
+  });
+
   test('swatches "All" is the whole range of the brand, owned or not', () {
     expect(
       swatchCandidateColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
@@ -57,34 +139,28 @@ void main() {
     );
   });
 
-  test(
-    'an Ohuhu collection that is not set up yet palettes from the range',
-    () {
-      expect(
-        paletteCandidateColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
-        [otherPack, classicFirst, addon, classic],
-      );
-      expect(
-        ownedColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
-        isEmpty,
-      );
-      expect(
-        paletteCandidateColors(
-          colors: catalog,
-          brand: MarkerBrand.ohuhuOahu,
-          activeSetIds: {'missing'},
-        ),
-        isEmpty,
-      );
-    },
-  );
+  test('an Ohuhu collection that is not set up yet offers nothing', () {
+    expect(
+      paletteCandidateColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
+      isEmpty,
+    );
+    expect(ownedColors(colors: catalog, brand: MarkerBrand.ohuhuOahu), isEmpty);
+    expect(
+      paletteCandidateColors(
+        colors: catalog,
+        brand: MarkerBrand.ohuhuOahu,
+        activeSetIds: {'missing'},
+      ),
+      isEmpty,
+    );
+  });
 
   test('DecoTime owns extra markers only: sets never apply', () {
-    // A DecoTime collection that is not set up yet palettes from the range,
-    // like Ohuhu.
+    // A DecoTime collection that is not set up yet offers nothing, like
+    // Ohuhu: the range is never offered in its place.
     expect(
       paletteCandidateColors(colors: catalog, brand: MarkerBrand.decoTime),
-      [decoOther, deco],
+      isEmpty,
     );
     expect(
       paletteCandidateColors(
@@ -108,8 +184,56 @@ void main() {
         ownedMarkerCodes: {'R10', 'ohuhu_oahu:R2'},
       ),
       // Only Ohuhu codes and sets: DecoTime is still not set up.
-      [decoOther, deco],
+      isEmpty,
     );
+  });
+
+  group('the palette candidates', () {
+    test('nothing owned: nothing to build a palette with', () {
+      expect(
+        paletteCandidateColors(colors: catalog, brand: MarkerBrand.ohuhuOahu),
+        isEmpty,
+      );
+      expect(
+        paletteCandidateColors(colors: catalog, brand: MarkerBrand.decoTime),
+        isEmpty,
+      );
+      // The whole range is still one call away, for the screens that ask
+      // for it explicitly.
+      expect(brandRangeColors(colors: catalog, brand: MarkerBrand.decoTime), [
+        decoOther,
+        deco,
+      ]);
+    });
+
+    test('only the owned markers, and never the dried-out ones', () {
+      expect(
+        paletteCandidateColors(
+          colors: catalog,
+          brand: MarkerBrand.ohuhuOahu,
+          activeSetIds: {'classic_160'},
+        ),
+        [classicFirst, classic],
+      );
+      expect(
+        paletteCandidateColors(
+          colors: catalog,
+          brand: MarkerBrand.ohuhuOahu,
+          activeSetIds: {'classic_160'},
+          driedColorIds: {classicFirst.colorId},
+        ),
+        [classic],
+      );
+      // The markers added by hand are owned too.
+      expect(
+        paletteCandidateColors(
+          colors: catalog,
+          brand: MarkerBrand.ohuhuOahu,
+          ownedMarkerCodes: {'ohuhu_oahu:R1'},
+        ),
+        [otherPack],
+      );
+    });
   });
 
   group('migration of the old pack selection', () {

@@ -72,9 +72,10 @@ Future<AppScope> pumpSwatches(
   return scope;
 }
 
-/// Opens the filters sheet (the chip reads `Filters` or `Filters · n`).
+/// Opens the filters sheet (the chip reads `Filters` or `Filters · n`, or
+/// only its icon when the row is narrow).
 Future<void> openFilters(WidgetTester tester) async {
-  final Finder chip = find.textContaining(l10n.swatchesFilters);
+  final Finder chip = find.byKey(const ValueKey<String>('swatches-filters'));
   await tester.ensureVisible(chip);
   await tester.pumpAndSettle();
   await tester.tap(chip);
@@ -572,7 +573,11 @@ void main() {
       await tester.tap(find.byTooltip(t.commonClose));
       await tester.pumpAndSettle();
 
-      expect(find.text(t.swatchesFiltersCount(1)), findsOneWidget);
+      // The count is on the chip: as its word when the row has room for it,
+      // as its own label when the chip keeps only its icon.
+      final InkChip filters = tester.widget<InkChip>(chip);
+      expect(filters.semanticLabel ?? filters.label, t.swatchesFiltersCount(1));
+      expect(filters.icon, InkIcons.filterLines);
       final Rect rect = tester.getRect(chip);
       expect(rect.left, greaterThanOrEqualTo(0));
       expect(rect.right, lessThanOrEqualTo(320));
@@ -911,7 +916,9 @@ void main() {
       final AppLocalizations t = lookupAppLocalizations(locale);
       await pumpSwatches(tester, size: const Size(360, 740), locale: locale);
 
-      final Finder chip = find.textContaining(t.swatchesFilters);
+      final Finder chip = find.byKey(
+        const ValueKey<String>('swatches-filters'),
+      );
       await tester.tap(chip);
       await tester.pumpAndSettle();
       expect(find.text(t.swatchesAllLines), findsOneWidget);

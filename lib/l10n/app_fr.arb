@@ -262,6 +262,8 @@
   "paletteAiReportCopied": "Aucune appli de messagerie trouvée. Le signalement a été copié : colle-le dans un e-mail à inklab@mainshai.com",
   "paletteAiFellBack": "IA indisponible. Affichage de suggestions locales.",
   "paletteEmptyHint": "Choisis un marqueur de base pour créer une palette, ou sélectionne Scènes comme type de palette.",
+  "missingMarkersTitle": "Tu n’as pas encore de marqueurs {brand}",
+  "missingMarkersAction": "Aller à Ma collection",
   "paletteCustomModeHint": "Le mode palette personnalisée est manuel : charge une palette enregistrée ou applique-en une depuis Idées.",
   "paletteNoSuggestions": "Impossible de créer une palette avec ta collection. Essaie un autre mode ou ajoute des marqueurs.",
   "paletteScenarioTitle": "Scènes",
@@ -335,18 +337,18 @@
   "swatchesScopePack": "Coffret",
   "ideasTitle": "Idées",
   "ideasHeaderSubtitle": "Exercices avec tes marqueurs",
-  "ideasHeaderSubtitleWholeRange": "Des exercices avec une palette tirée de toute la gamme",
   "ideasSearchHint": "Chercher des idées",
   "ideasCategoryAll": "Toutes",
   "ideasApplyButton": "Utiliser dans Palette",
   "ideasMoreDetails": "Plus de détails",
   "ideasGuideOnlyNote": "Cet exercice utilise toute ta collection, il n’a donc pas de palette fixe.",
-  "ideasNoMarkersOther": "Ajoute dans Ma collection les marqueurs que tu possèdes pour obtenir une palette pour cette idée.",
   "ideasCategoriesLabel": "Catégories",
   "ideasEmptyTitle": "Aucune idée trouvée",
   "ideasClearFilters": "Retirer les filtres",
   "ideasEmptySearch": "Aucune idée ne correspond à ta recherche.",
   "ideasNoMarkers": "Aucun marqueur disponible pour le moment",
+  "missingMarkersHint": "Coche tes marqueurs dans Ma collection pour voir lesquels utiliser",
+  "allMarkersDried": "Tous tes marqueurs sont à sec. Marque-les à nouveau comme utilisables pour les utiliser.",
   "ideasFeatheredEdgeTitle": "Bord fondu",
   "ideasFeatheredEdgeSummary": "Fais disparaître un côté d’une forme dans le papier blanc et garde l’autre bord net.",
   "ideasFeatheredEdgePractice": "Un bord doux à côté d’un bord dur : le moyen le plus simple de donner de la lumière à une forme.",
@@ -1357,6 +1359,7 @@
   "paletteNotAvailable": "{brand, select, decoTime{{input} n’est pas dans ta collection. Essaie {example} ou ajoute-le dans Ma collection.} copic{{input} n’est pas dans ta collection. Essaie {example} ou ajoute-le dans Ma collection.} finecolour{{input} n’est pas dans ta collection. Essaie {example} ou ajoute-le dans Ma collection.} other{{input} n’est pas dans ta collection. Essaie {example} ou ajoute-le dans Ma collection.}}",
   "paletteNoAvailableColors": "{brand, select, decoTime{Aucun marqueur DecoTime dans ta collection pour l’instant. Ajoute-en dans Ma collection.} copic{Aucun marqueur Copic dans ta collection pour l’instant. Ajoute-en dans Ma collection.} finecolour{Aucun marqueur Finecolour dans ta collection pour l’instant. Ajoute-en dans Ma collection.} touchTwin{Aucun marqueur Touch Twin dans ta collection pour l’instant. Ajoute-en dans Ma collection.} promarker{Aucun marqueur Promarker dans ta collection pour l’instant. Ajoute-en dans Ma collection.} prismacolor{Aucun marqueur Prismacolor Premier dans ta collection pour l’instant. Ajoute-en dans Ma collection.} spectrumNoir{Aucun marqueur Spectrum Noir dans ta collection pour l’instant. Ajoute-en dans Ma collection.} promarkerBrush{Aucun marqueur Promarker Brush dans ta collection pour l’instant. Ajoute-en dans Ma collection.} arrtx{Aucun marqueur Arrtx dans ta collection pour l’instant. Ajoute-en dans Ma collection.} kurecolor{Aucun marqueur ZIG Kurecolor dans ta collection pour l’instant. Ajoute-en dans Ma collection.} graphit{Aucun marqueur Graph'it dans ta collection pour l’instant. Ajoute-en dans Ma collection.} marvyLePlume{Aucun marqueur Marvy Le Plume dans ta collection pour l’instant. Ajoute-en dans Ma collection.} blickBrush{Aucun marqueur Blick Studio Brush dans ta collection pour l’instant. Ajoute-en dans Ma collection.} artistsLoft{Aucun marqueur Artist's Loft dans ta collection pour l’instant. Ajoute-en dans Ma collection.} other{Aucun marqueur dans ta collection pour l’instant. Ajoute-en dans Ma collection.}}",
   "paletteMissingBase": "Choisis un marqueur de base, comme {example}, ou sélectionne Scènes comme type de palette.",
+  "paletteBaseDried": "{code} est à sec. Marque-le comme utilisable dans sa fiche ou choisis-en un autre.",
   "swatchesFiltersCount": "Filtres · {count}",
   "swatchesCodeCopied": "{code} copié. Colle-le comme couleur de base dans l’onglet Palette.",
   "swatchesAlternativeSemantics": "{code}, {name}, delta E {value}",
@@ -1386,6 +1389,8 @@
   "errInvalidResponse": "Le fournisseur n’a renvoyé aucune palette exploitable.",
   "errNoValidSuggestions": "Le fournisseur a suggéré des couleurs qui ne sont pas dans la collection active.",
   "errNoAvailableColors": "Aucun marqueur disponible parmi lesquels choisir.",
+  "errInvalidBaseColor": "Le marqueur de base n’est pas dans ta collection.",
+  "errBaseDried": "Le marqueur de base est à sec. Marque-le comme utilisable ou choisis-en un autre.",
   "errNoSuggestions": "Impossible de générer une suggestion.",
   "errTimeout": "Le modèle sur l’appareil a mis trop de temps. Réessaie.",
   "errOnDeviceUnavailable": "Le modèle sur l’appareil n’est pas prêt sur ce téléphone.",
@@ -1672,6 +1677,7 @@
   "collectionExtrasTitle": "Marqueurs à l’unité",
   "collectionExtrasHint": "Tu as acheté des marqueurs à l’unité ? Coche-les ici. Ceux de tes coffrets comptent déjà.",
   "collectionDecoMarkersTitle": "Tes marqueurs",
+  "collectionIndividualMarkersShort": "Coche ceux que tu as",
   "collectionDecoHint": "DecoTime ne publie pas les couleurs de chaque coffret : coche celles que tu possèdes ou ajoute une famille entière.",
   "collectionDecoSizesHint": "Action vend des coffrets DecoTime de 100, 150, 160, 200 et 300 marqueurs.",
   "collectionFamiliesTitle": "Ajouter par famille",
@@ -1681,6 +1687,8 @@
   "collectionFamilyCoolGrey": "Gris froids",
   "collectionFamilyBlueGrey": "Gris bleutés",
   "collectionFamilyGreenGrey": "Gris verdâtres",
+  "collectionImportCodesTitle": "Importer des codes",
+  "collectionImportCodesHint": "Colle une liste de codes",
   "collectionDecoRange": "Gamme DecoTime",
   "collectionWholeRange": "Toute la gamme",
   "collectionSearchHint": "Chercher code ou nom",
@@ -1693,8 +1701,32 @@
       }
     }
   },
-  "collectionTickManyBody": "Tous comptent comme des marqueurs que tu as. Tu peux les retirer avec « Décocher ».",
-  "collectionUntickVisible": "Décocher",
+  "collectionTickManyBody": "Tous comptent comme des marqueurs que tu as. Tu peux tous les enlever avec « Tout retirer ».",
+  "collectionUntickVisible": "Tout retirer",
+  "collectionRemoveMarkersTitle": "{count, plural, =1{Retirer 1 marqueur ?} other{Retirer {count} marqueurs ?}}",
+  "@collectionRemoveMarkersTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionRemoveFromTitle": "{count, plural, =1{{name} : retirer 1 marqueur ?} other{{name} : retirer {count} marqueurs ?}}",
+  "@collectionRemoveFromTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionRemoveMarkersBody": "Les marqueurs que tu as déjà quittent ta collection. Tu peux les rajouter à tout moment.",
+  "collectionRemoveConfirm": "Retirer",
+  "collectionReplaceTitle": "Remplacer ta collection ?",
+  "collectionReplaceBody": "À la fin de la configuration, les coffrets et marqueurs que tu as maintenant sont remplacés par ceux que tu choisis ici.",
+  "collectionReplaceConfirm": "Remplacer",
   "collectionInYourSets": "Dans ton coffret",
   "collectionNoResults": "Aucun marqueur ne correspond à la recherche.",
   "collectionReset": "Vider la collection",
@@ -1709,7 +1741,6 @@
   "toolsBlendsHint": "Tes dégradés enregistrés : marqueurs dans l’ordre, une note et une photo.",
   "toolsTransferTitle": "Export et import",
   "toolsTransferHint": "Partage tes marqueurs en liste ou en CSV, ou ajoute-en beaucoup par code.",
-  "toolsMapEmptyTitle": "Aucun marqueur à afficher",
   "toolsMapIntro": "Chaque point est un marqueur que tu possèdes. Les zones hachurées n’en ont aucun.",
   "toolsMapShowRange": "Afficher toute la gamme",
   "toolsMapShowRangeHint": "Points pâles pour tous les marqueurs de tes marques, pour voir ce qui manque.",
@@ -1847,7 +1878,7 @@
   "collectionSeriesOahuTips": "Pointe fine et biseautée",
   "collectionSeriesHonoluluTips": "Pointe pinceau et biseautée",
   "collectionSeriesKaalaTips": "Pointe pinceau",
-  "collectionSummaryNoSets": "Tu n’as pas encore choisi de coffrets : toute la gamme est utilisée",
+  "collectionSummaryNoSets": "Aucun coffret : Associer et Nuanciers montrent toute la gamme ; Palette et Idées ont besoin des marqueurs que tu possèdes",
   "collectionSummaryNoMarkers": "Tu n’as pas encore coché de marqueurs",
   "collectionExtrasAddTitle": "Marqueurs à l’unité",
   "collectionDecoMarkersButton": "Cocher tes marqueurs",
@@ -1877,7 +1908,7 @@
   "buyNextNoCollection": "Coche les marqueurs que tu possèdes pour voir quoi acheter ensuite.",
   "buyNextComplete": "Rien à suggérer : tes marqueurs couvrent déjà bien toutes les scènes.",
   "buyNextRefill": "À sec : une recharge le ranime.",
-  "onboardingDoneWholeRange": "Tant que tu n’as pas choisi de coffrets, l’appli affiche toute la gamme {brand}.",
+  "onboardingDoneWholeRange": "Tant que tu n’as pas choisi de coffrets, Associer et Nuanciers montrent toute la gamme {brand}. Palette et Idées ont besoin des marqueurs que tu possèdes.",
   "onboardingDoneNext": "Et ensuite : parcours les couleurs dans Nuanciers, associe une photo dans Associer ou crée une palette dans Palette.",
   "collectionVisibleScope": "S’applique aux marqueurs qui correspondent à la recherche.",
   "matchWhiteBalanceButton": "Corriger les blancs",
@@ -1918,7 +1949,6 @@
   "onboardingFinecolourLine": "480 couleurs · Coche les marqueurs que tu possèdes",
   "onboardingMarkersTitle": "Tes marqueurs {brand}",
   "onboardingNoMarkers": "Tu n’as pas encore coché de marqueurs {brand} : coche-les dans Ma collection.",
-  "ideasNoMarkersBrand": "Ajoute les marqueurs {brand} que tu possèdes dans Ma collection pour obtenir une palette pour cette idée.",
   "ideasDiarySegment": "Journal",
   "ideasDiarySubtitle": "Tes œuvres, les plus récentes d’abord",
   "diaryEmptyTitle": "Ton journal est vide",
@@ -2276,5 +2306,16 @@
   "ideasNewYearFireworksStep3": "Repasse les lignes du premier bouquet avec la première couleur, en appuyant plus aux extrémités.",
   "ideasNewYearFireworksStep4": "Les lignes du deuxième bouquet avec la deuxième couleur.",
   "ideasNewYearFireworksStep5": "Les lignes du troisième bouquet avec la troisième couleur.",
-  "ideasNewYearFireworksStep6": "Du stylo gel blanc au centre de chaque bouquet et quelques étincelles aux extrémités."
+  "ideasNewYearFireworksStep6": "Du stylo gel blanc au centre de chaque bouquet et quelques étincelles aux extrémités.",
+  "collectionMixBrands": "Mélanger mes marques",
+  "collectionMoreBrands": "{first}, {second} et {count} de plus",
+  "collectionBrandsCount": "{count} marques",
+  "paletteChanged": "Palette modifiée",
+  "paletteReplaceTitle": "Remplacer cette palette ?",
+  "paletteReplaceBody": "La palette à l’écran sera remplacée, avec tes modifications et tes couleurs verrouillées. Tu pourras annuler juste après.",
+  "paletteReplaceButton": "Remplacer",
+  "paletteAmbiguousBase": "Ce code existe dans plusieurs de tes marques. Choisis la marque dans la liste.",
+  "paletteChainWholeRangeNoteMixed": "Toute la gamme de tes marques s’affiche, y compris les marqueurs que tu n’as pas.",
+  "paletteBaseOtherBrand": "{code} est un marqueur {brand}, et {brand} n’est pas utilisée en ce moment. Essaie {example} ou change de marque dans Ma collection.",
+  "paletteImportTooFew": "Ajoute au moins deux codes de marqueurs différents et reconnus pour importer une palette."
 }

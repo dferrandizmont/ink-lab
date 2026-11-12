@@ -18,12 +18,15 @@ PaletteAdvisorRequest _request({
   List<MarkerColor>? colors,
   MarkerColor? base,
   int paletteSize = 3,
+  Set<String> driedColorIds = const {},
 }) => PaletteAdvisorRequest(
   availableColors: colors ?? collection,
   baseColor: base,
   paletteSize: paletteSize,
   mode: PaletteMode.recommended,
   brand: MarkerBrand.ohuhuOahu,
+  activeSetIds: collectionSetIds,
+  driedColorIds: driedColorIds,
 );
 
 void main() {
@@ -301,6 +304,53 @@ void main() {
         ]);
       },
     );
+
+    test(
+      'a base the user does not own is refused, like the local engine',
+      () async {
+        final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+          output: paletteJson(<Map<String, String>>[
+            {'code': 'R101', 'role': 'Accent', 'reason': 'warm'},
+          ]),
+        );
+
+        final PaletteAdvice advice = await advisorOver(platform)
+            .advise(_request(base: markerOutsideCollection()));
+
+        expect(
+          (advice as PaletteAdviceFailure).reason,
+          PaletteFailureReason.invalidBaseColor,
+        );
+        // The model is never asked with a base the user does not own.
+        expect(platform.prompts, isEmpty);
+      },
+    );
+
+    test('a base that ran dry has its own reason', () async {
+      final FakeOnDevicePlatform platform = FakeOnDevicePlatform(
+        output: paletteJson(<Map<String, String>>[
+          {'code': 'R101', 'role': 'Accent', 'reason': 'warm'},
+        ]),
+      );
+      final MarkerColor base = collection.first;
+
+      final PaletteAdvice advice = await advisorOver(platform).advise(
+        _request(
+          colors: collection
+              .where((MarkerColor c) => c.colorId != base.colorId)
+              .toList(),
+          base: base,
+          driedColorIds: <String>{base.colorId},
+        ),
+      );
+
+      expect(
+        (advice as PaletteAdviceFailure).reason,
+        PaletteFailureReason.baseDried,
+      );
+      // The model is never asked with a base that does not paint.
+      expect(platform.prompts, isEmpty);
+    });
 
     test('a reply with no valid code is a typed failure', () async {
       final FakeOnDevicePlatform platform = FakeOnDevicePlatform(

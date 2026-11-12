@@ -27,6 +27,7 @@ void main() {
     paletteSize: 3,
     mode: PaletteMode.recommended,
     brand: MarkerBrand.ohuhuOahu,
+    activeSetIds: collectionSetIds,
   );
 
   test('passes through a successful AI result unchanged', () async {
@@ -96,6 +97,36 @@ void main() {
     expect(
       (result as PaletteAdviceFailure).reason,
       PaletteFailureReason.noAvailableColors,
+    );
+  });
+
+  test('a base that ran dry keeps its own reason', () async {
+    final primary = _FakeAdvisor(
+      PaletteAdviceFailure(PaletteFailureReason.networkError),
+    );
+    final advisor = FallbackPaletteAdvisor(
+      primary: primary,
+      local: const PaletteGenerator(),
+    );
+
+    final result = await advisor.advise(
+      PaletteAdvisorRequest(
+        availableColors: collection
+            .where((MarkerColor c) => c.colorId != base.colorId)
+            .toList(),
+        baseColor: base,
+        paletteSize: 3,
+        mode: PaletteMode.recommended,
+        brand: MarkerBrand.ohuhuOahu,
+        activeSetIds: collectionSetIds,
+        driedColorIds: <String>{base.colorId},
+      ),
+    );
+
+    expect(result, isA<PaletteAdviceFailure>());
+    expect(
+      (result as PaletteAdviceFailure).reason,
+      PaletteFailureReason.baseDried,
     );
   });
 }

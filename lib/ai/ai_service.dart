@@ -312,8 +312,10 @@ PaletteFailureReason _mapCoreReason(core.PaletteFailureReason reason) =>
         PaletteFailureReason.noAvailableColors,
       core.PaletteFailureReason.noSuggestions =>
         PaletteFailureReason.noSuggestions,
-      core.PaletteFailureReason.missingBaseColor ||
       core.PaletteFailureReason.invalidBaseColor =>
+        PaletteFailureReason.invalidBaseColor,
+      core.PaletteFailureReason.baseDried => PaletteFailureReason.baseDried,
+      core.PaletteFailureReason.missingBaseColor =>
         PaletteFailureReason.noSuggestions,
     };
 

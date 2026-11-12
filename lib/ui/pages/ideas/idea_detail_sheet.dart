@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../core/ideas_engine.dart';
 import '../../../core/models.dart';
+import '../../../core/collection_selection.dart';
 import '../../../core/palette_advisor.dart';
 import '../../../data/idea_favorites_repository.dart';
 import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
+import '../../widgets/branded_code.dart';
 import '../../widgets/color_swatch_tile.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_disclosure.dart';
@@ -30,10 +32,11 @@ class IdeaDetailSheet extends StatefulWidget {
     super.key,
     required this.initial,
     required this.candidates,
-    required this.brand,
     required this.scrollController,
     this.favorites,
     this.onAddToDiary,
+    this.onOpenCollection,
+    this.allMarkersDried = false,
   });
 
   /// The plan shown first (the same markers as the list strip).
@@ -41,7 +44,10 @@ class IdeaDetailSheet extends StatefulWidget {
 
   /// The markers of the collection to pick from.
   final List<MarkerColor> candidates;
-  final MarkerBrand brand;
+
+  /// Whether the user owns markers of the brand but all of them ran dry:
+  /// the collection is not empty, there is just nothing usable in it.
+  final bool allMarkersDried;
 
   /// The scroll controller of the sheet content, handed over by
   /// [showInkDraggableSheet] so a drag on the content resizes the sheet.
@@ -53,6 +59,11 @@ class IdeaDetailSheet extends StatefulWidget {
   /// Called with the idea's title after the sheet closed, to start a diary
   /// entry; without it the sheet has no "Add to diary" entry in its menu.
   final ValueChanged<String>? onAddToDiary;
+
+  /// Opens the collection, where the user ticks the markers they own; it is
+  /// offered when the collection has no marker of this brand yet. Without it
+  /// the sheet only says how to fill the collection.
+  final VoidCallback? onOpenCollection;
 
   @override
   State<IdeaDetailSheet> createState() => _IdeaDetailSheetState();
@@ -177,6 +188,7 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
         caps(l10n.ideasStepsTitle),
         for (var i = 0; i < steps.length; i++)
           _StepRow(
+            mixed: hasMixedBrands(widget.candidates),
             number: i + 1,
             text: steps[i],
             marker: i < _preset.stepRoles.length
@@ -225,6 +237,13 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
     callback(title);
   }
 
+  /// Closes the sheet and opens the collection, so the user can tick the
+  /// markers they own.
+  void _openCollection() {
+    Navigator.of(context).pop();
+    widget.onOpenCollection?.call();
+  }
+
   List<Widget> _buildMarkers(
     BuildContext context,
     Widget Function(String, {double top}) caps,
@@ -240,14 +259,26 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
       ];
     }
     if (widget.candidates.isEmpty) {
+      // The collection has no marker of this brand: there is no "Your
+      // markers" list to show, only the way to fill the collection. The idea
+      // itself (the summary and the steps) stays on screen.
       return <Widget>[
-        caps(l10n.ideasMarkersTitle),
+        const SizedBox(height: InkSpacing.block),
         body(
-          widget.brand.hasRetailSets
-              ? l10n.ideasNoMarkersOther
-              : l10n.ideasNoMarkersBrand(widget.brand.label),
+          widget.allMarkersDried
+              ? l10n.allMarkersDried
+              : l10n.missingMarkersHint,
           color: ink.fg2,
         ),
+        if (widget.onOpenCollection != null) ...<Widget>[
+          const SizedBox(height: InkSpacing.block),
+          InkButton.secondary(
+            key: ValueKey<String>('ideas-open-collection-${_preset.id}'),
+            label: l10n.missingMarkersAction,
+            expand: true,
+            onPressed: _openCollection,
+          ),
+        ],
       ];
     }
     return <Widget>[
@@ -288,7 +319,10 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
           children: <Widget>[
             const SizedBox(height: InkSpacing.s4),
             for (final PaletteSuggestion s in palette)
-              _MarkerRow(suggestion: s),
+              _MarkerRow(
+                suggestion: s,
+                mixed: hasMixedBrands(widget.candidates),
+              ),
           ],
         ),
       ),
@@ -298,9 +332,10 @@ class _IdeaDetailSheetState extends State<IdeaDetailSheet> {
 
 /// A marker of the idea: colour, code and name, its role and why.
 class _MarkerRow extends StatelessWidget {
-  const _MarkerRow({required this.suggestion});
+  const _MarkerRow({required this.suggestion, required this.mixed});
 
   final PaletteSuggestion suggestion;
+  final bool mixed;
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +346,7 @@ class _MarkerRow extends StatelessWidget {
       container: true,
       label: context.l10n.ideasMarkerSemantic(
         role,
-        color.newCode,
+        markerCodeLabel(color, mixed: mixed),
         color.newName,
       ),
       child: ExcludeSemantics(
@@ -337,22 +372,42 @@ class _MarkerRow extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: InkSpacing.s2),
-                    Text.rich(
-                      TextSpan(
-                        children: <InlineSpan>[
-                          TextSpan(
-                            text: color.newCode,
-                            style: AppTypography.code.copyWith(color: ink.fg),
-                          ),
-                          TextSpan(
-                            text: '  ${color.newName}',
-                            style: AppTypography.secondary.copyWith(
-                              color: ink.fg2,
+                    if (mixed)
+                      // The brand, the code and the name: the brand is the
+                      // part that gives way when the line is short.
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: <Widget>[
+                          BrandedCode(marker: color, mixed: true),
+                          const SizedBox(width: InkSpacing.s8),
+                          Expanded(
+                            child: Text(
+                              color.newName,
+                              style: AppTypography.secondary.copyWith(
+                                color: ink.fg2,
+                              ),
                             ),
                           ),
                         ],
+                      )
+                    else
+                      Text.rich(
+                        TextSpan(
+                          children: <InlineSpan>[
+                            TextSpan(
+                              text: color.newCode,
+                              style: AppTypography.code.copyWith(color: ink.fg),
+                            ),
+                            TextSpan(
+                              text: '  ${color.newName}',
+                              style: AppTypography.secondary.copyWith(
+                                color: ink.fg2,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                     const SizedBox(height: InkSpacing.s2),
                     Text(
                       context.l10n.reasonLabel(suggestion.reason),
@@ -372,11 +427,17 @@ class _MarkerRow extends StatelessWidget {
 /// A numbered step; when it uses one of the idea's markers, its colour dot
 /// and code sit on the right (design G "Paint order").
 class _StepRow extends StatelessWidget {
-  const _StepRow({required this.number, required this.text, this.marker});
+  const _StepRow({
+    required this.number,
+    required this.text,
+    this.marker,
+    required this.mixed,
+  });
 
   final int number;
   final String text;
   final MarkerColor? marker;
+  final bool mixed;
 
   @override
   Widget build(BuildContext context) {
@@ -415,10 +476,15 @@ class _StepRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: InkSpacing.s6),
-            Text(
-              marker.newCode,
-              key: ValueKey<String>('ideas-step-$number-${marker.newCode}'),
-              style: AppTypography.data.copyWith(color: ink.fg),
+            // With brands mixed the short brand name comes first, in a
+            // bounded width, so it never squeezes the step's text.
+            BrandedCode(
+              key: ValueKey<String>(
+                'ideas-step-$number-${mixed ? marker.colorId : marker.newCode}',
+              ),
+              marker: marker,
+              mixed: mixed,
+              dense: true,
             ),
           ],
         ],

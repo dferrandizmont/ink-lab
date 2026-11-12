@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app.dart';
 import 'package:ink_lab/app_scope.dart';
@@ -10,6 +11,7 @@ import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
 import 'package:ink_lab/ui/icons/ink_icons.dart';
 import 'package:ink_lab/ui/pages/collection/collection_page.dart';
+import 'package:ink_lab/ui/pages/collection/collection_summary.dart';
 import 'package:ink_lab/ui/pages/collection/loose_markers_page.dart';
 import 'package:ink_lab/ui/pages/ideas/ideas_page.dart';
 import 'package:ink_lab/ui/pages/match/match_page.dart';
@@ -32,6 +34,7 @@ Future<AppScope> _pumpCollection(
   AppSettingsState? state,
   Size size = const Size(412, 900),
   double textScale = 1,
+  String locale = 'en',
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -40,7 +43,7 @@ Future<AppScope> _pumpCollection(
     markers: _markers(),
     settingsState: state,
     child: MaterialApp(
-      locale: const Locale('en'),
+      locale: Locale(locale),
       localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: testSupportedLocales,
       theme: AppTheme.light(),
@@ -112,7 +115,42 @@ Finder _nav(String label) => find.descendant(
   matching: find.text(label),
 );
 
+/// Answers the question that is on screen: yes or no.
+Future<void> _answer(WidgetTester tester, {required bool confirm}) async {
+  expect(find.byType(AlertDialog), findsOneWidget);
+  if (confirm) {
+    await tester.tap(
+      find.widgetWithText(FilledButton, l10n.collectionRemoveConfirm),
+    );
+  } else {
+    await tester.tap(find.text(l10n.settingsCancel));
+  }
+  await tester.pumpAndSettle();
+}
+
 void main() {
+  testWidgets(
+    'mix brands switch is hidden with one brand and persists with two',
+    (tester) async {
+      await _pumpCollection(tester);
+      expect(_key('collection-mix-brands'), findsNothing);
+      await tester.pumpWidget(const SizedBox.shrink());
+      final scope = await _pumpCollection(
+        tester,
+        state: AppSettingsState(
+          settings: AppSettings(
+            ownedSetIds: {'classic_160'},
+            extraMarkerIds: {'decotime:91'},
+          ),
+        ),
+      );
+      expect(_key('collection-mix-brands'), findsOneWidget);
+      expect(find.text('Ohuhu + DecoTime'), findsOneWidget);
+      await tester.tap(_key('collection-mix-brands'));
+      await tester.pumpAndSettle();
+      expect(scope.settings.scope, BrandScope.mixedBrands);
+    },
+  );
   group('My collection screen', () {
     testWidgets('Ohuhu: series, sets and extras add up to one count', (
       WidgetTester tester,
@@ -161,7 +199,8 @@ void main() {
       await tester.pageBack();
       await tester.pumpAndSettle();
 
-      // Dropping the series drops its sets.
+      // Dropping the series drops its sets. It asks first: the markers of
+      // the set leave the collection.
       await tester.fling(
         find.byType(SingleChildScrollView).first,
         const Offset(0, 3000),
@@ -170,6 +209,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(_key('collection-series-honolulu'));
       await tester.pumpAndSettle();
+      await _answer(tester, confirm: true);
       expect(scope.settings.settings.ownedSetIds, <String>{'classic_160'});
     });
 
@@ -231,9 +271,10 @@ void main() {
         findsOneWidget,
       );
 
-      // Tapping a complete family removes it again.
+      // Tapping a complete family removes it again. It asks first.
       await tester.tap(_key('collection-family-decotime_warm_grey'));
       await tester.pumpAndSettle();
+      await _answer(tester, confirm: true);
       expect(scope.settings.settings.extraMarkerIds, isEmpty);
 
       await tester.tap(_key('collection-family-all'));
@@ -260,13 +301,20 @@ void main() {
             ),
           ),
         );
-        expect(find.text(l10n.collectionCopicHint), findsOneWidget);
+        // The row shows one short line; the brand's sentence is on the page
+        // the row opens.
+        expect(
+          find.text(l10n.collectionIndividualMarkersShort),
+          findsOneWidget,
+        );
+        expect(find.text(l10n.collectionCopicHint), findsNothing);
         expect(find.text(l10n.collectionDecoHint), findsNothing);
         expect(_key('collection-series-oahu'), findsNothing);
         expect(_key('collection-family-all'), findsNothing);
         await tester.ensureVisible(_key('collection-add-loose'));
         await tester.tap(_key('collection-add-loose'));
         await tester.pumpAndSettle();
+        expect(find.text(l10n.collectionCopicHint), findsOneWidget);
         await tester.enterText(find.byType(TextField), 'BV04');
         await tester.pumpAndSettle();
         await tester.tap(_key('collection-marker-BV04'));
@@ -278,6 +326,7 @@ void main() {
         );
         await tester.tap(_key('collection-untick-visible'));
         await tester.pumpAndSettle();
+        await _answer(tester, confirm: true);
         expect(
           scope.settings.settings.extraMarkerIds,
           isNot(contains('copic:BV04')),
@@ -288,7 +337,9 @@ void main() {
         await tester.pumpAndSettle();
         await scope.settings.setBrand(MarkerBrand.decoTime);
         await tester.pumpAndSettle();
-        expect(find.text(l10n.collectionDecoHint), findsOneWidget);
+        // The DecoTime sentence is on the loose markers page too.
+        expect(find.text(l10n.collectionDecoHint), findsNothing);
+        expect(find.text(l10n.collectionDecoSizesHint), findsOneWidget);
         await scope.settings.setBrand(MarkerBrand.copic);
         await tester.pumpAndSettle();
         await tester.ensureVisible(_key('collection-reset'));
@@ -326,13 +377,18 @@ void main() {
             ),
           ),
         );
-        expect(find.text(l10n.collectionFinecolourHint), findsOneWidget);
+        expect(
+          find.text(l10n.collectionIndividualMarkersShort),
+          findsOneWidget,
+        );
+        expect(find.text(l10n.collectionFinecolourHint), findsNothing);
         expect(find.text(l10n.collectionDecoHint), findsNothing);
         expect(_key('collection-series-oahu'), findsNothing);
         expect(_key('collection-family-all'), findsNothing);
         await tester.ensureVisible(_key('collection-add-loose'));
         await tester.tap(_key('collection-add-loose'));
         await tester.pumpAndSettle();
+        expect(find.text(l10n.collectionFinecolourHint), findsOneWidget);
         await tester.enterText(find.byType(TextField), 'BV321');
         await tester.pumpAndSettle();
         await tester.tap(_key('collection-marker-BV321'));
@@ -347,6 +403,7 @@ void main() {
         );
         await tester.tap(_key('collection-untick-visible'));
         await tester.pumpAndSettle();
+        await _answer(tester, confirm: true);
         expect(
           scope.settings.settings.extraMarkerIds,
           isNot(contains('finecolour:BV321')),
@@ -357,7 +414,9 @@ void main() {
         await tester.pumpAndSettle();
         await scope.settings.setBrand(MarkerBrand.decoTime);
         await tester.pumpAndSettle();
-        expect(find.text(l10n.collectionDecoHint), findsOneWidget);
+        // The DecoTime sentence is on the loose markers page too.
+        expect(find.text(l10n.collectionDecoHint), findsNothing);
+        expect(find.text(l10n.collectionDecoSizesHint), findsOneWidget);
         await _pickBrand(tester, MarkerBrand.finecolour);
         await tester.ensureVisible(_key('collection-reset'));
         await tester.tap(_key('collection-reset'));
@@ -533,6 +592,7 @@ void main() {
       );
       await tester.tap(_key('collection-untick-visible'));
       await tester.pumpAndSettle();
+      await _answer(tester, confirm: true);
       expect(scope.settings.settings.extraMarkerIds, isEmpty);
     });
 
@@ -816,6 +876,12 @@ void main() {
             expect(find.text('1 marker'), findsOneWidget);
             await tester.tap(_key('onboarding-next'));
             await tester.pumpAndSettle();
+            // The setup asks before it replaces the collection the user has.
+            expect(find.byType(AlertDialog), findsOneWidget);
+            await tester.tap(
+              find.widgetWithText(FilledButton, l10n.collectionReplaceConfirm),
+            );
+            await tester.pumpAndSettle();
             expect(scope.settings.brand, MarkerBrand.copic);
             expect(scope.settings.settings.extraMarkerIds, {
               'copic:BV04',
@@ -913,6 +979,81 @@ void main() {
           expect(find.text('B08'), findsNothing);
         },
       );
+    }
+  });
+
+  group('the individual markers row', () {
+    // Real metrics: the test font makes every glyph one em wide and would
+    // wrap a line that fits on the phone.
+    setUpAll(loadAppFonts);
+
+    /// How many lines a paragraph is laid out on (distinct tops of its text
+    /// boxes).
+    int lineCount(RenderParagraph paragraph) {
+      final int length = paragraph.text.toPlainText().length;
+      if (length == 0) return 0;
+      return paragraph
+          .getBoxesForSelection(
+            TextSelection(baseOffset: 0, extentOffset: length),
+          )
+          .map((TextBox box) => box.top.round())
+          .toSet()
+          .length;
+    }
+
+    final Map<String, AppLocalizations> languages = <String, AppLocalizations>{
+      'en': l10n,
+      'es': l10nEs,
+      'de': l10nDe,
+      'fr': l10nFr,
+      'it': l10nIt,
+      'pt': l10nPt,
+    };
+
+    for (final MapEntry<String, AppLocalizations> entry in languages.entries) {
+      testWidgets('${entry.key}: one line of help under the title', (
+        WidgetTester tester,
+      ) async {
+        final AppLocalizations t = entry.value;
+        await _pumpCollection(
+          tester,
+          state: AppSettingsState(
+            brand: MarkerBrand.copic,
+            onboardingCompleted: true,
+          ),
+          size: const Size(360, 900),
+          textScale: 1.3,
+          locale: entry.key,
+        );
+
+        await tester.ensureVisible(_key('collection-add-loose'));
+        await tester.pumpAndSettle();
+
+        // The row shows the short help, on a single line.
+        final Finder subtitle = find.descendant(
+          of: _key('collection-add-loose'),
+          matching: find.text(t.collectionIndividualMarkersShort),
+        );
+        expect(subtitle, findsOneWidget);
+        final RenderParagraph paragraph = tester.renderObject(
+          find.descendant(of: subtitle, matching: find.byType(RichText)),
+        );
+        expect(lineCount(paragraph), 1);
+        expect(paragraph.didExceedMaxLines, isFalse);
+        expect(tester.takeException(), isNull);
+
+        // The full sentence is on the page the row opens, not twice.
+        expect(
+          find.text(t.individualMarkersHint(MarkerBrand.copic)),
+          findsNothing,
+        );
+        await tester.tap(_key('collection-add-loose'));
+        await tester.pumpAndSettle();
+        expect(
+          find.text(t.individualMarkersHint(MarkerBrand.copic)),
+          findsOneWidget,
+        );
+      });
     }
   });
 }

@@ -71,6 +71,23 @@ abstract class AppSettingsRepository {
   /// The single markers the user added by hand (brand-scoped ids).
   Future<void> setExtraMarkerIds(Set<String> ids);
 
+  /// Adds [ids] to the single markers the user owns, keeping the ones they
+  /// already have.
+  ///
+  /// The ids are added to the collection the repository holds when the write
+  /// runs: a marker the user added elsewhere in between is never lost. Two
+  /// calls that overlap are applied one after the other, never on the same
+  /// state.
+  Future<void> addExtraMarkerIds(Set<String> ids);
+
+  /// Removes [ids] from the single markers the user owns.
+  ///
+  /// The ids are taken from the collection the repository holds when the
+  /// write runs: a marker the user added elsewhere in between is never lost.
+  /// Two calls that overlap are applied one after the other, never on the
+  /// same state.
+  Future<void> removeExtraMarkerIds(Set<String> ids);
+
   /// Same as [setExtraMarkerIds] (the name older call sites use).
   Future<void> setOwnedMarkerCodes(Set<String> codes);
 
@@ -335,18 +352,38 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
 
   @override
   Future<void> setOwnedSetIds(Set<String> ids) =>
-      setCollection(_state.settings.copyWith(ownedSetIds: ids));
+      _mutate((AppSettings settings) => settings.copyWith(ownedSetIds: ids));
 
   @override
   Future<void> setExtraMarkerIds(Set<String> ids) =>
-      setCollection(_state.settings.copyWith(extraMarkerIds: ids));
+      _mutate((AppSettings settings) => settings.copyWith(extraMarkerIds: ids));
+
+  @override
+  Future<void> addExtraMarkerIds(Set<String> ids) => _mutate(
+    (AppSettings settings) => settings.copyWith(
+      extraMarkerIds: <String>{...settings.extraMarkerIds, ...ids},
+    ),
+  );
+
+  @override
+  Future<void> removeExtraMarkerIds(Set<String> ids) =>
+      _mutate((AppSettings settings) {
+        final Set<String> next = <String>{...settings.extraMarkerIds}
+          ..removeAll(ids);
+        return settings.copyWith(extraMarkerIds: next);
+      });
 
   @override
   Future<void> setOwnedMarkerCodes(Set<String> codes) =>
       setExtraMarkerIds(codes);
 
   @override
-  Future<void> setCollection(AppSettings settings) {
+  Future<void> setCollection(AppSettings settings) =>
+      _enqueue(() => _writeCollection(settings));
+
+  /// Low-level write of a collection snapshot: normalises it and persists it.
+  /// Not queued on its own; callers are expected to run it inside the queue.
+  Future<void> _writeCollection(AppSettings settings) {
     final next = AppSettings(
       ownedSetIds: {
         for (final id in settings.ownedSetIds)
@@ -451,7 +488,10 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   }
 
   @override
-  Future<void> restore(AppSettingsState state) => _apply(
+  Future<void> restore(AppSettingsState state) =>
+      _enqueue(() => _restore(state));
+
+  Future<void> _restore(AppSettingsState state) => _apply(
     state.copyWith(lastBackupAtEpochMs: _state.lastBackupAtEpochMs),
     keys: {
       keyBrand: state.brand.id,
@@ -492,6 +532,32 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
     }
     return setFavorites(next);
   }
+
+  /// The writes of the collection, one after the other.
+  ///
+  /// Two changes that overlap (the user ticks two markers before the first
+  /// write lands) must not read the same state: the second one would write
+  /// the collection of before the first one and the marker of the first one
+  /// would be lost.
+  Future<void> _writes = Future<void>.value();
+
+  /// Enqueue primitive shared by every writer of collection state: each job
+  /// waits for the previous one to finish, then runs. A failed job is swallowed
+  /// for the chain (the error still reaches its own caller) so the next job
+  /// still runs from the stored state.
+  Future<void> _enqueue(Future<void> Function() action) {
+    final Future<void> run = _writes.then((_) => action());
+    _writes = run.catchError((Object _) {});
+    return run;
+  }
+
+  /// Applies [change] to the collection the repository holds when the write
+  /// runs, not when it was asked for.
+  ///
+  /// The writes are serialised: each one starts when the previous one has
+  /// landed, so the merge is always made on the latest collection.
+  Future<void> _mutate(AppSettings Function(AppSettings) change) =>
+      _enqueue(() => _writeCollection(change(_state.settings)));
 
   Future<void> _apply(
     AppSettingsState next, {

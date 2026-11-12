@@ -24,6 +24,7 @@ class PaletteActions extends StatelessWidget {
     this.saved = false,
     required this.canRegenerate,
     required this.canGenerate,
+    required this.canSuggestAi,
     required this.onSuggestAi,
     required this.onRegenerate,
     required this.onGenerate,
@@ -51,6 +52,11 @@ class PaletteActions extends StatelessWidget {
 
   /// Whether there is a base (or a scene) to generate from.
   final bool canGenerate;
+
+  /// Whether "Suggest with AI" may run: there is a base (or a scene) to
+  /// suggest from and the collection has a marker to suggest. Without
+  /// markers there is nothing to suggest, so the button stays off.
+  final bool canSuggestAi;
   final VoidCallback onSuggestAi;
   final VoidCallback onRegenerate;
   final VoidCallback onGenerate;
@@ -111,7 +117,7 @@ class PaletteActions extends StatelessWidget {
               : context.l10n.paletteSuggestAiButton,
           loading: aiLoading,
           expand: true,
-          onPressed: onSuggestAi,
+          onPressed: canSuggestAi ? onSuggestAi : null,
         ),
       if (showSecondary)
         hasResult

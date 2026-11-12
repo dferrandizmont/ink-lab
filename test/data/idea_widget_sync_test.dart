@@ -66,6 +66,27 @@ int _kotlinIndex(DateTime day, int count) {
 }
 
 void main() {
+  test(
+    'the home widget includes other owned brands only in mixed scope',
+    () async {
+      final rig = _rig();
+      await rig.settings.setOwnedSetIds({});
+      await rig.settings.setOwnedMarkerCodes({'ohuhu_oahu:B08', 'decotime:91'});
+      await rig.settings.setScope(BrandScope.mixedBrands);
+      await rig.sync.sync();
+      final deco = (await _markers().loadColors(MarkerBrand.decoTime))
+          .firstWhere((c) => c.newCode == '91');
+      final hex = ideaWidgetHex(deco.hex)!;
+      // Whether an idea of the last write uses the DecoTime marker.
+      bool usesDeco() => (_decode(rig.writes.last)['items']! as List<Object?>)
+          .cast<Map<String, Object?>>()
+          .any((item) => (item['colors']! as List<Object?>).contains(hex));
+      expect(usesDeco(), isTrue);
+      await rig.settings.setScope(BrandScope.singleBrand);
+      await rig.sync.sync();
+      expect(usesDeco(), isFalse);
+    },
+  );
   group('the widget JSON', () {
     test('lists every idea in the catalogue order, with the epoch', () async {
       final rig = _rig();

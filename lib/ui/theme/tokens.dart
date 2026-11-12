@@ -110,6 +110,12 @@ class InkColors extends ThemeExtension<InkColors> {
   static const Color reticleRing = Color(0xFFFFFFFF);
   static const Color reticleOuter = Color(0xFF20211F);
 
+  /// The swatch of a code that no longer names a marker (a saved palette
+  /// whose marker left the catalogue), as the hex string the swatch widgets
+  /// take: the hairline colour, a quiet neutral in both themes.
+  String get unknownSwatchHex =>
+      '#${(line.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0').toUpperCase()}';
+
   /// 1 px border for a marker colour: [edge] when it is lighter than
   /// [edgeAt], the colour itself otherwise (swatch edge rule, spec §1).
   Color swatchEdge(Color swatch) =>
@@ -373,6 +379,11 @@ abstract final class InkGeometry {
   /// A row of the paint order: its minimum height, the width of the step
   /// number and the size of the colour dot.
   static const double stepRowHeight = 22, stepNumberWidth = 12, stepDot = 12;
+
+  /// The most room a code with its brand in front ("DecoTime 91") takes in
+  /// a row; past it the brand is cut with an ellipsis, never the code (a
+  /// code wider than this at a very large text size takes what it needs).
+  static const double brandedCodeWidth = 120;
 }
 
 /// Alpha values of the things drawn over something else.
@@ -397,6 +408,9 @@ abstract final class InkMotion {
   static const Duration sheetOut = Duration(milliseconds: 200);
   static const Duration crossFade = Duration(milliseconds: 150);
   static const Duration swatchFade = Duration(milliseconds: 120);
+
+  /// How long a snack bar that offers to undo what just happened stays.
+  static const Duration undoSnack = Duration(seconds: 6);
 
   /// Folding or unfolding the navigation rail on wide screens.
   static const Duration railFold = Duration(milliseconds: 220);

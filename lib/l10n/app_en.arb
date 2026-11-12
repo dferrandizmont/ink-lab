@@ -400,6 +400,19 @@
   },
   "paletteAiFellBack": "AI unavailable. Showing local suggestions.",
   "paletteEmptyHint": "Pick a base marker to build a palette, or choose Scenes as the palette type.",
+  "missingMarkersTitle": "You don't own {brand} markers yet",
+  "@missingMarkersTitle": {
+    "description": "Title of the empty state of a collection that owns no marker of the brand yet.",
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "missingMarkersAction": "Go to My collection",
+  "@missingMarkersAction": {
+    "description": "Button that opens the collection, where the user ticks the markers they own."
+  },
   "paletteCustomModeHint": "Custom palette mode is manual: load a saved palette or apply one from Ideas.",
   "paletteNoSuggestions": "No palette could be built from your collection. Try another mode or add more markers.",
   "paletteScenarioTitle": "Scenes",
@@ -497,18 +510,24 @@
   "swatchesScopePack": "Pack",
   "ideasTitle": "Ideas",
   "ideasHeaderSubtitle": "Exercises for your markers",
-  "ideasHeaderSubtitleWholeRange": "Exercises with a palette from the whole range",
   "ideasSearchHint": "Search ideas",
   "ideasCategoryAll": "All",
   "ideasApplyButton": "Use in Palette",
   "ideasMoreDetails": "More details",
   "ideasGuideOnlyNote": "This exercise uses your whole collection, so it has no fixed palette.",
-  "ideasNoMarkersOther": "Add the markers you own in My collection to get a palette for this idea.",
   "ideasCategoriesLabel": "Categories",
   "ideasEmptyTitle": "No ideas found",
   "ideasClearFilters": "Clear filters",
   "ideasEmptySearch": "No ideas match your search.",
   "ideasNoMarkers": "No markers currently available",
+  "missingMarkersHint": "Tick the markers you own in My collection to see which ones to use",
+  "@missingMarkersHint": {
+    "description": "Line shown in an idea when the collection owns no marker of the brand yet."
+  },
+  "allMarkersDried": "All your markers are dried out. Mark them as usable again to use them.",
+  "@allMarkersDried": {
+    "description": "Line shown when the collection owns markers but all of them are dried out."
+  },
   "ideasTulipFieldTitle": "Tulip field",
   "ideasTulipFieldSummary": "Rows of red and yellow tulips running to the horizon, spring green between them.",
   "ideasTulipFieldPractice": "Flat bands that break into dots as they come closer.",
@@ -2063,6 +2082,14 @@
       }
     }
   },
+  "paletteBaseDried": "{code} is dried out. Mark it as usable in Details or choose another.",
+  "@paletteBaseDried": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "swatchesFiltersCount": "Filters · {count}",
   "@swatchesFiltersCount": {
     "placeholders": {
@@ -2194,6 +2221,8 @@
   "errInvalidResponse": "The provider returned no usable palette.",
   "errNoValidSuggestions": "The provider suggested colours that are not in the active collection.",
   "errNoAvailableColors": "There are no available markers to choose from.",
+  "errInvalidBaseColor": "The base marker is not in your collection.",
+  "errBaseDried": "The base marker is dried out. Mark it as usable or choose another.",
   "errNoSuggestions": "No suggestions could be generated.",
   "errTimeout": "The on-device model took too long. Try again.",
   "errOnDeviceUnavailable": "The on-device model is not ready on this phone.",
@@ -2708,6 +2737,7 @@
   "collectionExtrasTitle": "Extra markers",
   "collectionExtrasHint": "Bought single markers? Tick them here. Markers in your sets already count.",
   "collectionDecoMarkersTitle": "Your markers",
+  "collectionIndividualMarkersShort": "Tick the ones you have",
   "collectionDecoHint": "DecoTime does not publish which colours each set holds, so tick the ones you own or add a whole family.",
   "collectionDecoSizesHint": "Action sells DecoTime sets of 100, 150, 160, 200 and 300 markers.",
   "collectionFamiliesTitle": "Add by family",
@@ -2730,6 +2760,8 @@
   "collectionFamilyCoolGrey": "Cool greys",
   "collectionFamilyBlueGrey": "Blue greys",
   "collectionFamilyGreenGrey": "Green greys",
+  "collectionImportCodesTitle": "Import codes",
+  "collectionImportCodesHint": "Paste a list of codes",
   "collectionDecoRange": "DecoTime range",
   "collectionWholeRange": "Whole range",
   "collectionSearchHint": "Search code or name",
@@ -2744,6 +2776,30 @@
   },
   "collectionTickManyBody": "They all count as markers you own. You can take them out again with “Untick all”.",
   "collectionUntickVisible": "Untick all",
+  "collectionRemoveMarkersTitle": "{count, plural, =1{Remove 1 marker?} other{Remove {count} markers?}}",
+  "@collectionRemoveMarkersTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionRemoveFromTitle": "{count, plural, =1{Remove 1 marker of {name}?} other{Remove {count} markers of {name}?}}",
+  "@collectionRemoveFromTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "collectionRemoveMarkersBody": "The markers you already own leave your collection. You can add them again at any time.",
+  "collectionRemoveConfirm": "Remove",
+  "collectionReplaceTitle": "Replace your collection?",
+  "collectionReplaceBody": "When the setup ends, the sets and markers you own now are replaced by the ones you choose here.",
+  "collectionReplaceConfirm": "Replace",
   "collectionInYourSets": "In your set",
   "collectionNoResults": "No marker matches the search.",
   "collectionReset": "Reset collection",
@@ -2758,7 +2814,6 @@
   "toolsBlendsHint": "Blends you save: markers in order, a note and a photo.",
   "toolsTransferTitle": "Export and import",
   "toolsTransferHint": "Share your markers as a list or CSV, or add many by code.",
-  "toolsMapEmptyTitle": "No markers to map yet",
   "toolsMapIntro": "Each dot is a marker you own. Hatched areas have none.",
   "toolsMapShowRange": "Show the whole range",
   "toolsMapShowRangeHint": "Faint dots for every marker of your brands, to see what is missing.",
@@ -3095,7 +3150,7 @@
   "collectionSeriesOahuTips": "Fine and chisel tips",
   "collectionSeriesHonoluluTips": "Brush and chisel tips",
   "collectionSeriesKaalaTips": "Brush tip",
-  "collectionSummaryNoSets": "You have not picked any sets yet: the whole range is used",
+  "collectionSummaryNoSets": "No sets yet: Match and Swatches show the whole range; Palette and Ideas need markers you own",
   "collectionSummaryNoMarkers": "You have not ticked any markers yet",
   "collectionExtrasAddTitle": "Add loose markers",
   "collectionDecoMarkersButton": "Tick your markers",
@@ -3163,7 +3218,7 @@
   "buyNextNoCollection": "Tick the markers you own to see what to buy next.",
   "buyNextComplete": "Nothing to suggest: your markers already cover every scene well.",
   "buyNextRefill": "Dried out: a refill brings it back.",
-  "onboardingDoneWholeRange": "Until you pick sets, the app shows the whole {brand} range.",
+  "onboardingDoneWholeRange": "Until you pick sets, Match and Swatches show the whole {brand} range. Palette and Ideas need the markers you own.",
   "@onboardingDoneWholeRange": {
     "placeholders": {
       "brand": {
@@ -3241,14 +3296,6 @@
   },
   "onboardingNoMarkers": "You have not ticked any {brand} markers yet: tick them in My collection.",
   "@onboardingNoMarkers": {
-    "placeholders": {
-      "brand": {
-        "type": "String"
-      }
-    }
-  },
-  "ideasNoMarkersBrand": "Add the {brand} markers you own in My collection to get a palette for this idea.",
-  "@ideasNoMarkersBrand": {
     "placeholders": {
       "brand": {
         "type": "String"
@@ -3560,5 +3607,76 @@
   "swatchesDetailPaneEmpty": "Tap a marker to see its details here.",
   "@swatchesDetailPaneEmpty": {
     "description": "Shown in the detail pane next to the Swatches grid on tablets while no marker is selected."
+  },
+  "collectionMixBrands": "Mix my brands",
+  "@collectionMixBrands": {
+    "description": "Switch in My collection: Palette, Ideas, the Colour map, the AI and the home widget use the markers of every brand the user owns, not only the active brand. One line."
+  },
+  "collectionMoreBrands": "{first}, {second} and {count} more",
+  "@collectionMoreBrands": {
+    "description": "One-line subtitle of the Mix my brands switch when more than two brands are mixed: the first two brand names and how many more.",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "second": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionBrandsCount": "{count} brands",
+  "@collectionBrandsCount": {
+    "description": "One-line subtitle of the Mix my brands switch when the brand names do not fit on the line: how many brands are mixed (two or more).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "paletteChanged": "Palette changed",
+  "@paletteChanged": {
+    "description": "Snack bar shown after an action replaced the palette on screen (Regenerate, Suggest with AI, a variation, another type, scene or size). It has an Undo button."
+  },
+  "paletteReplaceTitle": "Replace this palette?",
+  "@paletteReplaceTitle": {
+    "description": "Title of the question asked before replacing a palette the user worked on (loaded or saved and then changed, or with locked colours that would be lost)."
+  },
+  "paletteReplaceBody": "The palette on screen will be replaced, with your changes and your locked colours. You can undo it right afterwards.",
+  "@paletteReplaceBody": {
+    "description": "Body of the question asked before replacing a palette the user worked on."
+  },
+  "paletteReplaceButton": "Replace",
+  "@paletteReplaceButton": {
+    "description": "Button that confirms replacing the palette on screen."
+  },
+  "paletteAmbiguousBase": "More than one of your brands has this code. Choose the brand in the list.",
+  "@paletteAmbiguousBase": {
+    "description": "Error under the base marker field when Mix my brands is on and the typed code exists in two of the brands the user owns."
+  },
+  "paletteChainWholeRangeNoteMixed": "Showing the whole range of your brands, markers you don't own included.",
+  "@paletteChainWholeRangeNoteMixed": {
+    "description": "Note over a blending chain built from the whole range when Mix my brands is on: the range is the one of every brand in the mix, so no single brand is named."
+  },
+  "paletteBaseOtherBrand": "{code} is a {brand} marker, and {brand} is not in use right now. Try {example}, or change the brand in My collection.",
+  "@paletteBaseOtherBrand": {
+    "description": "Error under the base marker field when the base is a marker of a brand that is not the one in use (the palette on screen was kept after the brand changed, or was loaded from another brand). It replaces 'not in your collection', which would be false.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "brand": {
+        "type": "String"
+      },
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "paletteImportTooFew": "Add at least two different recognised marker codes to import a palette.",
+  "@paletteImportTooFew": {
+    "description": "Import error when fewer than two different known markers were found; the current palette is kept."
   }
 }

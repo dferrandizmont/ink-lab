@@ -33,6 +33,12 @@ extension _PaletteAiFlow on _PalettePageState {
   Future<void> _suggestWithAi() async {
     final scope = _scope;
     if (scope == null || _aiLoading) return;
+    // Nothing to suggest without a marker of the collection: the button is
+    // off, and the request never carries the whole range of the brand.
+    if (!_hasMarkers) return;
+    // The locked colours stay, so only a palette the user worked on asks.
+    if (await _approveReplacement() == _Approval.refused || !mounted) return;
+    final _PaletteSnapshot? previous = _snapshot();
     final request = _buildRequest();
     final int version = ++_aiVersion;
     _setState(() {
@@ -87,6 +93,9 @@ extension _PaletteAiFlow on _PalettePageState {
         _keepLocalResult(request, null);
       });
     }
+    // Only a suggestion that changed the palette offers its undo: a failed
+    // call keeps the palette that was on screen.
+    if (mounted && version == _aiVersion) _afterReplacement(previous);
   }
 
   /// Keeps the local result on screen after a failed AI call (call inside
@@ -122,13 +131,16 @@ extension _PaletteAiFlow on _PalettePageState {
       appVersion: app_version.appVersion,
       provider: provider == AiProvider.onDevice ? 'on-device' : 'OpenRouter',
       model: _aiModel,
-      brand: _brand.label,
+      // Every brand of the result ("Ohuhu + DecoTime"), not only the active
+      // one.
+      brand: paletteBrandsLabel(_sharedColors(), fallback: _brand),
       context: _useScenario ? _scenario.id : _mode.name,
-      baseCode: base?.newCode ?? '-',
+      // With "Mix my brands" a code says its brand ("DecoTime 91").
+      baseCode: base == null ? '-' : _codeLabel(base),
       items: <AiReportItem>[
         for (final PaletteSuggestion suggestion in _suggestions)
           AiReportItem(
-            code: suggestion.color.newCode,
+            code: _codeLabel(suggestion.color),
             role: _roleFor(suggestion),
             reason: suggestion.reason,
           ),

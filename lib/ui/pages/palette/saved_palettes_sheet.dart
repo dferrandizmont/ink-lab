@@ -24,7 +24,10 @@ import 'palette_roles.dart';
 import 'palette_share.dart';
 import '../../../l10n/l10n.dart';
 
-/// The palettes saved for one brand, as a draggable selector (spec §2.2).
+/// The palettes saved for one brand, as a draggable selector (spec §2.2):
+/// the ones saved under it and the ones that mix it with other brands,
+/// whatever brand was in use when they were saved
+/// (`SavedPaletteRepository.listedFor`).
 ///
 /// The list left the Palette page (and the Settings screen, which keeps a
 /// summary row): it opens on demand from the page header, one row per palette
@@ -54,8 +57,8 @@ class SavedPalettesSheet extends StatelessWidget {
   /// The brand whose palettes are listed.
   final MarkerBrand brand;
 
-  /// The palettes of [brand]; created once by [show] so the builder of the
-  /// draggable sheet never resubscribes.
+  /// The palettes listed for [brand]; created once by [show] so the builder
+  /// of the draggable sheet never resubscribes.
   final Stream<List<SavedPalette>> palettes;
 
   /// The markers of [brand], to resolve a saved code to its colour.
@@ -96,10 +99,32 @@ class SavedPalettesSheet extends StatelessWidget {
   }) {
     // Created once here: the draggable sheet rebuilds its builder on every
     // drag, so neither the stream nor the future may be made inside it.
-    final Stream<List<SavedPalette>> palettes = scope.savedPalettes.watch(
+    final Stream<List<SavedPalette>> palettes = scope.savedPalettes.watchListed(
       brand,
     );
-    final Future<List<MarkerColor>> colors = scope.markers.loadColors(brand);
+    // The colours of the brand and of every other brand its saved palettes
+    // hold (a palette saved with "Mix my brands" keeps its brands). A brand
+    // whose catalogue cannot be read just leaves its markers grey.
+    final Set<MarkerBrand> brands = <MarkerBrand>{
+      brand,
+      for (final SavedPalette palette in scope.savedPalettes.listedFor(brand))
+        for (final String id in palette.brandIds)
+          if (MarkerBrand.byId[id] case final MarkerBrand other) other,
+    };
+    final Future<List<MarkerColor>> colors =
+        Future.wait(<Future<List<MarkerColor>>>[
+          for (final MarkerBrand b in brands)
+            scope.markers
+                .loadColors(b)
+                .then(
+                  (List<MarkerColor> list) => list,
+                  onError: (Object _) => const <MarkerColor>[],
+                ),
+        ]).then(
+          (List<List<MarkerColor>> lists) => <MarkerColor>[
+            for (final List<MarkerColor> list in lists) ...list,
+          ],
+        );
     // Without the Palette page's own handlers (Settings), a row opens in the
     // Palette tab and Share / Add to the diary work from the sheet itself.
     final ValueChanged<SavedPalette> load =
@@ -213,6 +238,16 @@ class SavedPalettesSheet extends StatelessWidget {
       confirmLabel: t.settingsClearPalettes,
     );
     if (!confirmed) return;
+    // Everything the sheet lists: the brand's own palettes and the mixed
+    // ones stored under another brand.
+    for (final SavedPalette palette in scope.savedPalettes.listedFor(brand)) {
+      if (palette.brandId != brand.id) {
+        await scope.savedPalettes.delete(
+          MarkerBrand.fromId(palette.brandId),
+          palette.id,
+        );
+      }
+    }
     await scope.savedPalettes.clearBrand(brand);
   }
 
@@ -237,7 +272,12 @@ class SavedPalettesSheet extends StatelessWidget {
       ),
     );
     if (confirmed != true) return;
-    await scope.savedPalettes.delete(brand, palette.id);
+    // Under the brand it is stored with, which a mixed palette listed here
+    // need not share with the list.
+    await scope.savedPalettes.delete(
+      MarkerBrand.fromId(palette.brandId),
+      palette.id,
+    );
   }
 
   @override
@@ -252,7 +292,7 @@ class SavedPalettesSheet extends StatelessWidget {
     );
     return StreamBuilder<List<SavedPalette>>(
       stream: palettes,
-      initialData: scope.savedPalettes.palettesOf(brand),
+      initialData: scope.savedPalettes.listedFor(brand),
       builder:
           (BuildContext context, AsyncSnapshot<List<SavedPalette>> snapshot) {
             final List<SavedPalette> saved =
@@ -283,7 +323,7 @@ class SavedPalettesSheet extends StatelessWidget {
                     final Map<String, String> hexByCode = <String, String>{
                       for (final MarkerColor color
                           in colors.data ?? const <MarkerColor>[])
-                        color.newCode.toUpperCase(): color.hex,
+                        color.colorId.toUpperCase(): color.hex,
                     };
                     return ListView(
                       key: const ValueKey<String>('palette-saved-list'),
@@ -317,8 +357,11 @@ class SavedPalettesSheet extends StatelessWidget {
           key: const ValueKey<String>('palette-import-open'),
           label: context.l10n.paletteImportTitle,
           icon: InkIcons.download,
-          onPressed: () {
-            Navigator.of(context).maybePop();
+          // The import sheet takes the place of this one: it opens once
+          // this one is closed (`maybePop` answers later, so a sheet pushed
+          // right after it would cancel the pop and stack on top).
+          onPressed: () async {
+            await Navigator.of(context).maybePop();
             openImport();
           },
         ),
@@ -334,9 +377,17 @@ class SavedPalettesSheet extends StatelessWidget {
     final AppLocalizations t = context.l10n;
     final InkColors ink = InkColors.of(context);
     final List<String> hexes = <String>[
-      for (final String code in palette.colorCodes)
-        hexByCode[code.toUpperCase()] ?? '#CFCFCF',
+      for (final String code in palette.colorIds)
+        hexByCode[code.toUpperCase()] ?? ink.unknownSwatchHex,
     ];
+    // A palette that holds another brand than the list's names the brand of
+    // every marker, small, over its code.
+    final bool branded = palette.showsBrandsUnder(brand.id);
+    void load() {
+      onLoad(palette);
+      Navigator.of(context).maybePop();
+    }
+
     final List<InkMenuItem> items = <InkMenuItem>[
       InkMenuItem(
         key: ValueKey<String>('palette-share-${palette.id}'),
@@ -396,10 +447,7 @@ class SavedPalettesSheet extends StatelessWidget {
                 ),
                 child: InkWell(
                   key: ValueKey<String>('palette-load-${palette.id}'),
-                  onTap: () {
-                    onLoad(palette);
-                    Navigator.of(context).maybePop();
-                  },
+                  onTap: load,
                   child: details,
                 ),
               ),
@@ -411,11 +459,21 @@ class SavedPalettesSheet extends StatelessWidget {
           ],
         ),
         const SizedBox(height: InkSpacing.s8),
-        PaletteStrip(
-          colors: hexes,
-          labels: palette.colorCodes,
-          colorHeight: 32,
-          labelStyle: AppTypography.data,
+        InkWell(
+          key: ValueKey<String>('palette-load-strip-${palette.id}'),
+          onTap: load,
+          child: PaletteStrip(
+            colors: hexes,
+            labels: palette.colorCodes.map(palette.bareCode).toList(),
+            brandLabels: branded
+                ? <String>[
+                    for (final String code in palette.colorCodes)
+                      palette.brandOf(code).shortLabel,
+                  ]
+                : null,
+            colorHeight: 32,
+            labelStyle: AppTypography.data,
+          ),
         ),
       ],
     );
