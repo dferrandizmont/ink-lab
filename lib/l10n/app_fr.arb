@@ -1830,6 +1830,7 @@
   "paletteImportAction": "Charger la palette",
   "paletteImportNothing": "Aucun code de marqueur trouvé dans ce texte.",
   "paletteImportNoneKnown": "Aucun de ces codes n’est un marqueur {brand} : {codes}.",
+  "paletteImportNoneKnownMixed": "Aucun de ces codes ne correspond à tes marques : {codes}.",
   "paletteImportOtherBrand": "Cette palette est pour {brand}. Change de marque dans les Réglages pour l’importer.",
   "paletteImportDone": "{count, plural, one{Palette de {count} marqueur importée.} other{Palette de {count} marqueurs importée.}}",
   "paletteImportUnknown": "Non reconnus : {codes}.",

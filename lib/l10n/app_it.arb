@@ -1830,6 +1830,7 @@
   "paletteImportAction": "Carica palette",
   "paletteImportNothing": "Nessun codice di pennarello trovato in questo testo.",
   "paletteImportNoneKnown": "Nessuno di questi codici è un pennarello {brand}: {codes}.",
+  "paletteImportNoneKnownMixed": "Nessuno di questi codici appartiene alle tue marche: {codes}.",
   "paletteImportOtherBrand": "Questa palette è per {brand}. Cambia marca nelle Opzioni per importarla.",
   "paletteImportDone": "{count, plural, =1{Palette importata con 1 pennarello.} other{Palette importata con {count} pennarelli.}}",
   "paletteImportUnknown": "Non riconosciuti: {codes}.",

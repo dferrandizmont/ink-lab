@@ -846,30 +846,34 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
               start: InkSpacing.cardH,
               end: InkSpacing.s4,
             ),
-            content: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    newBase == null
-                        ? context.l10n.paletteChanged
-                        : context.l10n.paletteBaseReplaced(_codeLabel(newBase)),
-                  ),
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: InkColors.of(context).pale,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: InkRadii.controlRadius,
+            content: Builder(
+              builder: (BuildContext context) => Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      newBase == null
+                          ? context.l10n.paletteChanged
+                          : context.l10n.paletteBaseReplaced(
+                              _codeLabel(newBase),
+                            ),
                     ),
                   ),
-                  onPressed: () {
-                    messenger.hideCurrentSnackBar();
-                    if (!mounted) return;
-                    setState(() => previous.restore(this));
-                  },
-                  child: Text(context.l10n.paletteUndoButton),
-                ),
-              ],
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: InkColors.of(context).pale,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: InkRadii.controlRadius,
+                      ),
+                    ),
+                    onPressed: () {
+                      messenger.hideCurrentSnackBar();
+                      if (!mounted) return;
+                      setState(() => previous.restore(this));
+                    },
+                    child: Text(context.l10n.paletteUndoButton),
+                  ),
+                ],
+              ),
             ),
           ),
         );

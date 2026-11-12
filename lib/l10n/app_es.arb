@@ -2080,6 +2080,7 @@
   "paletteImportAction": "Cargar paleta",
   "paletteImportNothing": "No se encontró ningún código de rotulador en este texto.",
   "paletteImportNoneKnown": "Ninguno de estos códigos es un rotulador de {brand}: {codes}.",
+  "paletteImportNoneKnownMixed": "Ninguno de estos códigos es de tus marcas: {codes}.",
   "paletteImportOtherBrand": "Esta paleta es de {brand}. Cambia la marca en Ajustes para importarla.",
   "paletteImportDone": "{count, plural, =1{Paleta importada con 1 rotulador.} other{Paleta importada con {count} rotuladores.}}",
   "paletteImportUnknown": "No reconocidos: {codes}.",

@@ -3014,6 +3014,14 @@
       }
     }
   },
+  "paletteImportNoneKnownMixed": "None of these codes belongs to your brands: {codes}.",
+  "@paletteImportNoneKnownMixed": {
+    "placeholders": {
+      "codes": {
+        "type": "String"
+      }
+    }
+  },
   "paletteImportOtherBrand": "This palette is for {brand}. Change the brand in Settings to import it.",
   "@paletteImportOtherBrand": {
     "placeholders": {

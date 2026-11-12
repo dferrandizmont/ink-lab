@@ -136,7 +136,7 @@ se entrega a la app que elijas, y nada más.
 
 ## Novedades
 
-La versión 1.2.3 mantiene tus rotuladores donde están: bloquear un color ya no lo mueve, añadir una familia ya no borra los que importaste, sin rotuladores la app lo dice en vez de usar toda la gama, y puedes mezclar todas tus marcas. La versión 1.2.2 corrige lo que encontró una revisión de todas las pantallas: las paletas guardadas se abren con un toque, Atrás en Android vuelve a Muestras y los textos son más claros. La versión 1.2.1 muestra enteras las descripciones de las ideas y corrige pequeños detalles de pantalla. La 1.2.0 trajo 100 ideas en vez de 28, agrupadas por dificultad y por estación para encontrarlas
+La versión 1.2.4 mantiene la paleta en pantalla al cambiar de marca, y deja Paleta más clara en las tablets. La versión 1.2.3 mantiene tus rotuladores donde están: bloquear un color ya no lo mueve, añadir una familia ya no borra los que importaste, sin rotuladores la app lo dice en vez de usar toda la gama, y puedes mezclar todas tus marcas. La versión 1.2.2 corrige lo que encontró una revisión de todas las pantallas: las paletas guardadas se abren con un toque, Atrás en Android vuelve a Muestras y los textos son más claros. La versión 1.2.1 muestra enteras las descripciones de las ideas y corrige pequeños detalles de pantalla. La 1.2.0 trajo 100 ideas en vez de 28, agrupadas por dificultad y por estación para encontrarlas
 fácilmente, y un menú lateral más limpio en tablets. La lista completa está en
 [CHANGELOG.md](CHANGELOG.md) y en las
 [versiones](https://github.com/dferrandizmont/ink-lab/releases).

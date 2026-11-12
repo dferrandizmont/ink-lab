@@ -154,7 +154,7 @@ extension _PaletteTextFlow on _PalettePageState {
                 code.substring(0, code.indexOf(':')),
             }
           : <String>{?lineBrand};
-      if (readAs.length != 1) return t.paletteImportUnknown(unknownText);
+      if (readAs.length != 1) return t.paletteImportNoneKnownMixed(unknownText);
       return t.paletteImportNoneKnown(
         MarkerBrand.byId[readAs.single]?.label ??
             PaletteText.echo(readAs.single),

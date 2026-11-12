@@ -10,6 +10,16 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.2.4 · 2026-11-12
+
+Four small fixes: changing the brand no longer empties the Palette, and the Palette reads better on a tablet.
+
+- Changing the brand in My collection no longer empties Palette: the palette on screen stays as it is, a Scenes palette
+  too, and Ideas follow the new brand.
+- Palette: on a tablet with large text, the codes under the colour strip are no longer cut.
+- Palette: the «Undo» notice no longer covers the side bar or «Save palette», and it changes language with the app.
+- Importing a shared palette whose codes are not from your brands now says so clearly.
+
 ## 1.2.3 · 2026-11-12
 
 Your markers stay where you left them, you can mix the brands you own, and a palette you replaced can be brought back.

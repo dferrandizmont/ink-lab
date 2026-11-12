@@ -7477,6 +7477,11 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String paletteImportNoneKnownMixed(String codes) {
+    return 'Nessuno di questi codici appartiene alle tue marche: $codes.';
+  }
+
+  @override
   String paletteImportOtherBrand(String brand) {
     return 'Questa palette è per $brand. Cambia marca nelle Opzioni per importarla.';
   }

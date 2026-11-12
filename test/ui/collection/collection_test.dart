@@ -951,14 +951,16 @@ void main() {
           await scope.settings.setBrand(brand);
           await tester.pumpAndSettle();
 
-          // Pages that hold colours of one brand start fresh.
+          // Palette and Ideas keep their State (1.2.4: a brand change must not
+          // wipe the palette on screen); they follow the new brand by
+          // reloading, and the waiting base of the old brand is dropped.
           expect(
             tester.state(find.byType(PalettePage, skipOffstage: false)),
-            isNot(same(palette)),
+            same(palette),
           );
           expect(
             tester.state(find.byType(IdeasPage, skipOffstage: false)),
-            isNot(same(ideas)),
+            same(ideas),
           );
           expect(paletteBaseDraft.value, isNull);
 

@@ -42,7 +42,7 @@ class PaletteStrip extends StatelessWidget {
   /// Height of the colour bar.
   final double colorHeight;
 
-  /// Height reserved for the labels.
+  /// Minimum height reserved for the codes; grows with the text scale.
   final double labelHeight;
 
   /// Called with the index of the tapped colour.
@@ -104,57 +104,43 @@ class PaletteStrip extends StatelessWidget {
       return bar;
     }
     final List<String>? brands = brandLabels;
-    // The brand line adds its own height to the labels' only in a strip that
-    // mixes brands; it follows the text size like the caption it is.
+    // Both lines take their natural text height. Keep the original minimum
+    // code height at normal text size, and allow larger text to grow.
     final TextStyle brandStyle = AppTypography.caption.copyWith(color: ink.fg2);
-    final double brandHeight = brands == null
-        ? 0
-        : MediaQuery.textScalerOf(context)
-              .scale(brandStyle.fontSize! * brandStyle.height!);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         bar,
         const SizedBox(height: InkSpacing.group),
-        SizedBox(
-          height: labelHeight + brandHeight,
-          child: Row(
-            crossAxisAlignment: brands == null
-                ? CrossAxisAlignment.center
-                : CrossAxisAlignment.start,
-            children: <Widget>[
-              for (int index = 0; index < colors.length; index++) ...<Widget>[
-                if (index > 0 && spacing > 0) SizedBox(width: spacing),
-                Expanded(
-                  child: brands == null
-                      ? _label(ink, _at(stripLabels, index))
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            SizedBox(
-                              height: brandHeight,
-                              child: Text(
-                                _at(brands, index),
-                                maxLines: 1,
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: brandStyle,
-                              ),
-                            ),
-                            SizedBox(
-                              height: labelHeight,
-                              child: Center(
-                                child: _label(ink, _at(stripLabels, index)),
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
-              ],
+        Row(
+          crossAxisAlignment: brands == null
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.start,
+          children: <Widget>[
+            for (int index = 0; index < colors.length; index++) ...<Widget>[
+              if (index > 0 && spacing > 0) SizedBox(width: spacing),
+              Expanded(
+                child: brands == null
+                    ? _label(ink, _at(stripLabels, index))
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Text(
+                            _at(brands, index),
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: brandStyle,
+                          ),
+                          _label(ink, _at(stripLabels, index)),
+                        ],
+                      ),
+              ),
             ],
-          ),
+          ],
         ),
       ],
     );
@@ -163,13 +149,18 @@ class PaletteStrip extends StatelessWidget {
   static String _at(List<String> values, int index) =>
       index < values.length ? values[index] : '';
 
-  Widget _label(InkColors ink, String label) => Text(
-    label,
-    maxLines: 1,
-    overflow: TextOverflow.ellipsis,
-    textAlign: TextAlign.center,
-    style: (labelStyle ?? AppTypography.code).copyWith(
-      color: labelStyle?.color ?? ink.fg,
+  Widget _label(InkColors ink, String label) => ConstrainedBox(
+    constraints: BoxConstraints(minHeight: labelHeight),
+    child: Center(
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: (labelStyle ?? AppTypography.code).copyWith(
+          color: labelStyle?.color ?? ink.fg,
+        ),
+      ),
     ),
   );
 

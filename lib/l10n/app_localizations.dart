@@ -12061,6 +12061,12 @@ abstract class AppLocalizations {
   /// **'None of these codes is a {brand} marker: {codes}.'**
   String paletteImportNoneKnown(String brand, String codes);
 
+  /// No description provided for @paletteImportNoneKnownMixed.
+  ///
+  /// In en, this message translates to:
+  /// **'None of these codes belongs to your brands: {codes}.'**
+  String paletteImportNoneKnownMixed(String codes);
+
   /// No description provided for @paletteImportOtherBrand.
   ///
   /// In en, this message translates to:

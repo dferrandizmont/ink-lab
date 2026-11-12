@@ -139,7 +139,7 @@ all’app che scegli, e da nessun’altra parte.
 
 ## Novità
 
-La versione 1.2.3 mantiene i tuoi pennarelli dove sono: bloccare un colore non lo sposta più, aggiungere una famiglia non cancella più i pennarelli importati, senza pennarelli l’app lo dice invece di usare tutta la gamma, e puoi mescolare tutte le tue marche. La versione 1.2.2 corregge ciò che una revisione di tutte le schermate ha trovato: le palette salvate si aprono con un tocco, Indietro su Android torna ai Campioni e i testi sono più chiari. La versione 1.2.1 mostra per intero le descrizioni delle idee e corregge piccoli difetti di visualizzazione. La 1.2.0 ha portato 100 idee invece di 28, ordinate per difficoltà e per stagione per trovarle
+La versione 1.2.4 mantiene la palette sullo schermo quando cambi marchia, e rende Palette più chiaro sui tablet. La versione 1.2.3 mantiene i tuoi pennarelli dove sono: bloccare un colore non lo sposta più, aggiungere una famiglia non cancella più i pennarelli importati, senza pennarelli l’app lo dice invece di usare tutta la gamma, e puoi mescolare tutte le tue marche. La versione 1.2.2 corregge ciò che una revisione di tutte le schermate ha trovato: le palette salvate si aprono con un tocco, Indietro su Android torna ai Campioni e i testi sono più chiari. La versione 1.2.1 mostra per intero le descrizioni delle idee e corregge piccoli difetti di visualizzazione. La 1.2.0 ha portato 100 idee invece di 28, ordinate per difficoltà e per stagione per trovarle
 facilmente, e un menu laterale più ordinato sui tablet. L’elenco completo è in
 [CHANGELOG.md](CHANGELOG.md) e nelle
 [versioni](https://github.com/dferrandizmont/ink-lab/releases).

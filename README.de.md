@@ -136,7 +136,7 @@ werden nie hochgeladen. Beim Teilen einer Palette, einer Farbkarte oder der
 
 ## Neuerungen
 
-Version 1.2.3 behält deine Marker, wo sie sind: Eine Farbe zu sperren bewegt sie nicht mehr, eine Familie hinzuzufügen löscht die importierten Marker nicht mehr, und ohne markierte Marker sagt die App das, statt das ganze Sortiment zu nehmen; du kannst auch alle Marken mischen. Version 1.2.2 behebt, was eine Prüfung aller Bildschirme gefunden hat: Gespeicherte Paletten öffnen sich mit einem Tipp, Zurück unter Android führt zu Farbmuster, und die Texte sind klarer. Version 1.2.1 zeigt Ideenbeschreibungen vollständig und behebt kleine Anzeigefehler. Version 1.2.0 brachte 100 Ideen statt 28, nach Schwierigkeit und Jahreszeit geordnet, damit du sie leicht
+Version 1.2.4 behält die Palette beim Wechsel der Marke auf dem Bildschirm, und macht Palette auf Tablets klarer. Version 1.2.3 behält deine Marker, wo sie sind: Eine Farbe zu sperren bewegt sie nicht mehr, eine Familie hinzuzufügen löscht die importierten Marker nicht mehr, und ohne markierte Marker sagt die App das, statt das ganze Sortiment zu nehmen; du kannst auch alle Marken mischen. Version 1.2.2 behebt, was eine Prüfung aller Bildschirme gefunden hat: Gespeicherte Paletten öffnen sich mit einem Tipp, Zurück unter Android führt zu Farbmuster, und die Texte sind klarer. Version 1.2.1 zeigt Ideenbeschreibungen vollständig und behebt kleine Anzeigefehler. Version 1.2.0 brachte 100 Ideen statt 28, nach Schwierigkeit und Jahreszeit geordnet, damit du sie leicht
 findest, und ein aufgeräumteres Seitenmenü auf Tablets. Die vollständige Liste steht in
 [CHANGELOG.md](CHANGELOG.md) und in den
 [Releases](https://github.com/dferrandizmont/ink-lab/releases).

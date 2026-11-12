@@ -1830,6 +1830,7 @@
   "paletteImportAction": "Carregar paleta",
   "paletteImportNothing": "Não foi encontrado nenhum código de marcador neste texto.",
   "paletteImportNoneKnown": "Nenhum destes códigos é um marcador {brand}: {codes}.",
+  "paletteImportNoneKnownMixed": "Nenhum destes códigos pertence às tuas marcas: {codes}.",
   "paletteImportOtherBrand": "Esta paleta é da {brand}. Muda a marca nas Definições para a importar.",
   "paletteImportDone": "{count, plural, =1{Paleta importada com 1 marcador.} other{Paleta importada com {count} marcadores.}}",
   "paletteImportUnknown": "Não reconhecidos: {codes}.",

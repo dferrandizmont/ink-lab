@@ -193,8 +193,7 @@ class _AppShellState extends State<AppShell> {
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _brandSubscription;
 
-  /// The active brand. Palette and Ideas are keyed by it, so switching brand
-  /// starts them fresh: no colour of the other brand stays on screen.
+  /// The active brand, used to discard pending hand-offs from another brand.
   String _brandId = '';
 
   /// Whether the user unfolded the rail (it only shows from the breakpoint on).
@@ -286,11 +285,10 @@ class _AppShellState extends State<AppShell> {
       if (savedDraft != null && savedDraft.brandId != s.brand.id) {
         paletteSavedDraft.value = null;
       }
-      // A notice of the old brand (Palette undo, Ideas hand-off) would act on
-      // a page that is about to be rebuilt fresh.
+      // Hand-off notices from the old candidates are no longer relevant.
       ScaffoldMessenger.maybeOf(context)?.removeCurrentSnackBar();
-      // Palette and Ideas are re-keyed below, so their own state (base picker,
-      // idea of the day, re-picked palettes, undo snapshot) starts fresh.
+      // Pages react to collection changes themselves: Palette keeps usable
+      // colours and their base, and Ideas recomputes from the new candidates.
       setState(() => _brandId = s.brand.id);
     });
   }
@@ -302,15 +300,6 @@ class _AppShellState extends State<AppShell> {
     appShortcutRequest.removeListener(_onShortcut);
     _brandSubscription?.cancel();
     super.dispose();
-  }
-
-  /// Key of a destination's page: per brand for the pages that hold colours
-  /// of one brand in their own state (Palette, Ideas).
-  String _pageKey(int index) {
-    final String id = appDestinations[index].id;
-    return index == _paletteIndex || index == _ideasIndex
-        ? '$id-$_brandId'
-        : id;
   }
 
   void _goTo(int index) => _onDestinationSelected(index);
@@ -344,7 +333,7 @@ class _AppShellState extends State<AppShell> {
           for (int i = 0; i < appDestinations.length; i++)
             _visited.contains(i)
                 ? KeyedSubtree(
-                    key: ValueKey<String>(_pageKey(i)),
+                    key: ValueKey<String>(appDestinations[i].id),
                     child: Builder(builder: appDestinations[i].builder),
                   )
                 : const SizedBox.shrink(),
@@ -371,8 +360,8 @@ class _AppShellState extends State<AppShell> {
           // The button only exists where the rail has room to unfold.
           final bool canUnfold =
               constraints.maxWidth >= AppShell.extendedRailBreakpoint;
-          return Scaffold(
-            body: Row(
+          return Material(
+            child: Row(
               children: <Widget>[
                 if (canUnfold)
                   _AnimatedRail(
@@ -390,7 +379,9 @@ class _AppShellState extends State<AppShell> {
                     destinations: _foldedDestinations(context),
                   ),
                 const VerticalDivider(width: 1),
-                Expanded(child: body),
+                // Snack bars belong to the page area, so they stay clear of
+                // the rail, including while it unfolds or the device rotates.
+                Expanded(child: Scaffold(body: body)),
               ],
             ),
           );

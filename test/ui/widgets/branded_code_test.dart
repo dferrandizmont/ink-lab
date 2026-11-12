@@ -229,6 +229,77 @@ void main() {
     ];
     const List<String> codes = <String>['BV04', 'PM23', '91', 'IG10', 'B08'];
 
+    for (final size in [const Size(1280, 800), const Size(1376, 1032)]) {
+      for (final mixed in [false, true]) {
+        testWidgets(
+          'tablet labels fit their natural height ($size, mixed=$mixed, 1.5x)',
+          (tester) async {
+            await _pump(
+              tester,
+              PaletteStrip(
+                colors: colors,
+                labels: codes,
+                brandLabels: mixed
+                    ? [
+                        'Ohuhu',
+                        'Prismacolor',
+                        'DecoTime',
+                        'Spectrum N.',
+                        'Ohuhu',
+                      ]
+                    : null,
+              ),
+              width: size.width,
+            );
+            tester.view.physicalSize = size;
+            tester.platformDispatcher.textScaleFactorTestValue = 1.5;
+            addTearDown(
+              tester.platformDispatcher.clearTextScaleFactorTestValue,
+            );
+            await tester.pumpAndSettle();
+            final stripRect = tester.getRect(find.byType(PaletteStrip));
+            for (final element
+                in find
+                    .descendant(
+                      of: find.byType(PaletteStrip),
+                      matching: find.byType(RichText),
+                    )
+                    .evaluate()) {
+              final p = element.renderObject! as RenderParagraph;
+              final painter = TextPainter(
+                text: p.text,
+                textDirection: p.textDirection,
+                textScaler: p.textScaler,
+              )..layout(maxWidth: p.size.width);
+              expect(p.size.height, greaterThanOrEqualTo(painter.height));
+              expect(p.didExceedMaxLines, isFalse);
+              final rect = p.localToGlobal(Offset.zero) & p.size;
+              expect(rect.bottom, lessThanOrEqualTo(stripRect.bottom));
+              painter.dispose();
+            }
+            final codeHeight =
+                1.5 * AppTypography.code.fontSize! * AppTypography.code.height!;
+            final brandHeight = mixed
+                ? 1.5 *
+                      AppTypography.caption.fontSize! *
+                      AppTypography.caption.height!
+                : 0;
+            expect(
+              stripRect.height,
+              closeTo(
+                InkGeometry.paletteStripHeight +
+                    InkSpacing.group +
+                    codeHeight +
+                    brandHeight,
+                0.1,
+              ),
+            );
+            expect(tester.takeException(), isNull);
+          },
+        );
+      }
+    }
+
     testWidgets('one brand: one line of codes, as tall as it always was', (
       tester,
     ) async {
