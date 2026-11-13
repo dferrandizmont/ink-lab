@@ -117,9 +117,12 @@ class _SuggestionRowState extends State<PaletteSuggestionRow> {
   /// marker ("DecoTime 91") at the end of the line.
   ///
   /// The role keeps the room it needs to stay on one line, as in a palette
-  /// of one brand; the marker takes what is left, where its brand is the
-  /// part that gives way. The code is never cut: when even the code does not
-  /// fit beside the role, it is the role that shrinks (see [RoleLabel]).
+  /// of one brand, and the marker takes what is left of the line. When
+  /// "Brand code" does not fit whole there (a large text size on a narrow
+  /// row), the marker moves to a line of its own under the role, in the same
+  /// small type. The brand is never cut with an ellipsis: if even the whole
+  /// pair is wider than the row, it wraps (the code under the brand) and the
+  /// code stays whole.
   Widget _roleAndMarker(
     BuildContext context,
     Widget roleLabel,
@@ -142,25 +145,43 @@ class _SuggestionRowState extends State<PaletteSuggestionRow> {
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        // One pixel of slack on each, so rounding never costs the role its
-        // line or the code its last glyph.
+        // One pixel of slack, so rounding never costs the role its line or
+        // the marker its last glyph.
         final double afterRole =
             constraints.maxWidth -
             widthOf(AppTypography.caps(roleText), AppTypography.capsStyle) -
             InkSpacing.s8 -
             1;
-        final double codeAlone =
-            widthOf(color.newCode, AppTypography.data) + InkSpacing.s4 + 1;
-        return Row(
+        final BrandedCode inline = BrandedCode(
+          marker: color,
+          mixed: true,
+          dense: true,
+          maxWidth: afterRole,
+        );
+        if (inline.naturalWidth(context) + 1 <= afterRole) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(child: roleLabel),
+              const SizedBox(width: InkSpacing.s8),
+              inline,
+            ],
+          );
+        }
+        // The pair does not fit beside the role: under it, with the whole
+        // width of the row.
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Expanded(child: roleLabel),
-            const SizedBox(width: InkSpacing.s8),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: afterRole < codeAlone ? codeAlone : afterRole,
-              ),
-              child: BrandedCode(marker: color, mixed: true, dense: true),
+            roleLabel,
+            const SizedBox(height: InkSpacing.s2),
+            BrandedCode(
+              marker: color,
+              mixed: true,
+              dense: true,
+              maxWidth: constraints.maxWidth,
+              wrap: true,
             ),
           ],
         );

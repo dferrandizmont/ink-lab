@@ -3003,7 +3003,7 @@
   "paletteImportPaste": "Paste",
   "paletteImportAction": "Load palette",
   "paletteImportNothing": "No marker codes found in this text.",
-  "paletteImportNoneKnown": "None of these codes is a {brand} marker: {codes}.",
+  "paletteImportNoneKnown": "None of these codes belongs to {brand}: {codes}.",
   "@paletteImportNoneKnown": {
     "placeholders": {
       "brand": {
@@ -3668,7 +3668,7 @@
   "@paletteChainWholeRangeNoteMixed": {
     "description": "Note over a blending chain built from the whole range when Mix my brands is on: the range is the one of every brand in the mix, so no single brand is named."
   },
-  "paletteBaseOtherBrand": "{code} is a {brand} marker, and {brand} is not in use right now. Try {example}, or change the brand in My collection.",
+  "paletteBaseOtherBrand": "{code} is from {brand}, and {brand} is not in use right now. Try {example}, or change the brand in My collection.",
   "@paletteBaseOtherBrand": {
     "description": "Error under the base marker field when the base is a marker of a brand that is not the one in use (the palette on screen was kept after the brand changed, or was loaded from another brand). It replaces 'not in your collection', which would be false.",
     "placeholders": {

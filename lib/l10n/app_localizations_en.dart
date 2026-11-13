@@ -7423,7 +7423,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paletteImportNoneKnown(String brand, String codes) {
-    return 'None of these codes is a $brand marker: $codes.';
+    return 'None of these codes belongs to $brand: $codes.';
   }
 
   @override
@@ -8477,7 +8477,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String paletteBaseOtherBrand(String code, String brand, String example) {
-    return '$code is a $brand marker, and $brand is not in use right now. Try $example, or change the brand in My collection.';
+    return '$code is from $brand, and $brand is not in use right now. Try $example, or change the brand in My collection.';
   }
 
   @override

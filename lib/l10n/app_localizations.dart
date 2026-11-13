@@ -12058,7 +12058,7 @@ abstract class AppLocalizations {
   /// No description provided for @paletteImportNoneKnown.
   ///
   /// In en, this message translates to:
-  /// **'None of these codes is a {brand} marker: {codes}.'**
+  /// **'None of these codes belongs to {brand}: {codes}.'**
   String paletteImportNoneKnown(String brand, String codes);
 
   /// No description provided for @paletteImportNoneKnownMixed.
@@ -13660,7 +13660,7 @@ abstract class AppLocalizations {
   /// Error under the base marker field when the base is a marker of a brand that is not the one in use (the palette on screen was kept after the brand changed, or was loaded from another brand). It replaces 'not in your collection', which would be false.
   ///
   /// In en, this message translates to:
-  /// **'{code} is a {brand} marker, and {brand} is not in use right now. Try {example}, or change the brand in My collection.'**
+  /// **'{code} is from {brand}, and {brand} is not in use right now. Try {example}, or change the brand in My collection.'**
   String paletteBaseOtherBrand(String code, String brand, String example);
 
   /// Import error when fewer than two different known markers were found; the current palette is kept.

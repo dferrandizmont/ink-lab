@@ -10,6 +10,17 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.2.5 · 2026-11-13
+
+Three small Palette fixes: a palette of a brand you are not using stays as it is, codes of mixed brands are never cut,
+and a variation shows a single notice.
+
+- Palette: Regenerate or a variation on a palette of a brand that is not in use no longer empties it or mixes in
+  markers of another brand. The palette stays as it is and a notice says why.
+- Palette: with mixed brands and large text, the brand and code of each marker are shown whole. When they do not fit
+  beside the colour's role, they go on a line of their own.
+- Palette: a variation shows one notice with Undo, naming the variation, instead of two notices at once.
+
 ## 1.2.4 · 2026-11-12
 
 Four small fixes: changing the brand no longer empties the Palette, and the Palette reads better on a tablet.

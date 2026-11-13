@@ -400,33 +400,42 @@ void main() {
       ),
     );
 
-    testWidgets('a palette row: the code whole, the row no taller', (
-      tester,
-    ) async {
-      final MarkerColor marker = _marker(MarkerBrand.prismacolor, 'PM123');
-      Widget row({required bool mixed}) => PaletteSuggestionRow(
-        suggestion: PaletteSuggestion(color: marker, reason: 'Shadow'),
-        role: 'Shadow',
-        roleText: 'Step 2 · Deepest shadow',
-        mixed: mixed,
-        locked: false,
-        last: true,
-        onToggleLock: () {},
-      );
-      await pumpRow(tester, row(mixed: false));
-      expect(tester.takeException(), isNull);
-      final double single = tester
-          .getSize(find.byType(PaletteSuggestionRow))
-          .height;
-      await pumpRow(tester, row(mixed: true));
-      expect(tester.takeException(), isNull);
-      expect(tester.getSize(find.byType(PaletteSuggestionRow)).height, single);
-      final RenderParagraph code = tester.renderObject<RenderParagraph>(
-        find.text('PM123'),
-      );
-      expect(code.didExceedMaxLines, isFalse);
-      expect(find.text('Prismacolor'), findsOneWidget);
-    });
+    testWidgets(
+      'a palette row: brand and code whole, at most one marker line taller',
+      (tester) async {
+        final MarkerColor marker = _marker(MarkerBrand.prismacolor, 'PM123');
+        Widget row({required bool mixed}) => PaletteSuggestionRow(
+          suggestion: PaletteSuggestion(color: marker, reason: 'Shadow'),
+          role: 'Shadow',
+          roleText: 'Step 2 · Deepest shadow',
+          mixed: mixed,
+          locked: false,
+          last: true,
+          onToggleLock: () {},
+        );
+        await pumpRow(tester, row(mixed: false));
+        expect(tester.takeException(), isNull);
+        final double single = tester
+            .getSize(find.byType(PaletteSuggestionRow))
+            .height;
+        await pumpRow(tester, row(mixed: true));
+        expect(tester.takeException(), isNull);
+        // Beside this long role the whole marker does not fit: it goes under
+        // the role, so the row grows by that one small line and nothing else.
+        expect(
+          tester.getSize(find.byType(PaletteSuggestionRow)).height,
+          lessThanOrEqualTo(single + 16 * 1.3 + InkSpacing.s2 + 1),
+        );
+        final RenderParagraph code = tester.renderObject<RenderParagraph>(
+          find.text('PM123'),
+        );
+        expect(code.didExceedMaxLines, isFalse);
+        final RenderParagraph brand = tester.renderObject<RenderParagraph>(
+          find.text('Prismacolor'),
+        );
+        expect(brand.didExceedMaxLines, isFalse);
+      },
+    );
 
     testWidgets('a paint-order row: the step text keeps most of the line', (
       tester,

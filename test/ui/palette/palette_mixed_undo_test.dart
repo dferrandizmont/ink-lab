@@ -526,15 +526,19 @@ void main() {
       expect(find.byType(PaletteErrorNote), findsNothing);
       expect(key('palette-changed'), findsNothing);
 
-      // The next palette is the user's move. Its base is of a brand that is
-      // not in use, which is what the page says (not "not in your
-      // collection": the user owns it), and Undo brings the palette back.
+      // Regenerate would have to rebuild it around a base of a brand that is
+      // not in use. The palette stays as it is, and the page says why (not
+      // "not in your collection": the user owns it); nothing changed, so
+      // there is no Undo.
       await tester.tap(key('palette-regenerate'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('is a DecoTime marker'), findsOneWidget);
-      expect(find.textContaining('is not in your collection'), findsNothing);
-      await undo(tester);
       expect(snapshot(tester), before);
+      expect(find.byType(PaletteStrip), findsOneWidget);
+      expect(find.byType(PaletteErrorNote), findsNothing);
+      expect(key('palette-changed'), findsNothing);
+      expect(key('palette-other-brand-snack'), findsOneWidget);
+      expect(find.textContaining('is from DecoTime'), findsOneWidget);
+      expect(find.textContaining('is not in your collection'), findsNothing);
     },
   );
   testWidgets(

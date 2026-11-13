@@ -807,12 +807,25 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     if (_aiLoading) setState(() => _aiLoading = false);
   }
 
-  /// Shows "Palette changed" (or "E08 is now the base" when Swatches handed
+  /// Margin of a floating snack bar of this page: it keeps the final Save
+  /// action reachable at the foot of the list.
+  EdgeInsets _snackMargin() => EdgeInsets.fromLTRB(
+    InkSpacing.pageMargin,
+    0,
+    InkSpacing.pageMargin,
+    InkGeometry.buttonHeight +
+        InkSpacing.pageBottomOf(context) +
+        InkSpacing.buttonGap,
+  );
+
+  /// Shows "Palette changed" (or [message], when the action says what it did
+  /// itself, like a variation; or "E08 is now the base" when Swatches handed
   /// [newBase] over) with an Undo action that brings back [previous]: the
   /// markers, the locks, the base, the type, the notes and the AI state.
   void _offerUndo(
     _PaletteSnapshot previous, {
     MarkerColor? newBase,
+    String? message,
     bool typing = false,
   }) {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
@@ -831,15 +844,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
             ),
             duration: InkMotion.undoSnack,
             behavior: SnackBarBehavior.floating,
-            // Keep the final Save action reachable at the foot of the list.
-            margin: EdgeInsets.fromLTRB(
-              InkSpacing.pageMargin,
-              0,
-              InkSpacing.pageMargin,
-              InkGeometry.buttonHeight +
-                  InkSpacing.pageBottomOf(context) +
-                  InkSpacing.buttonGap,
-            ),
+            margin: _snackMargin(),
             // The Undo button is drawn here, not as a SnackBarAction: the
             // snack bar forces the Material default pill shape on its action.
             padding: const EdgeInsetsDirectional.only(
@@ -852,7 +857,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
                   Expanded(
                     child: Text(
                       newBase == null
-                          ? context.l10n.paletteChanged
+                          ? message ?? context.l10n.paletteChanged
                           : context.l10n.paletteBaseReplaced(
                               _codeLabel(newBase),
                             ),
@@ -946,12 +951,14 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   /// [_approveReplacement]; then offers the undo ([_afterReplacement]).
   ///
   /// [edit] marks a change made by hand to the palette on screen (the size,
-  /// a variation) rather than a new result.
+  /// a variation) rather than a new result. [undoMessage] names what the
+  /// action did, in place of "Palette changed", on the Undo snack bar.
   Future<void> _replacePalette(
     VoidCallback action, {
     bool dropsLocks = false,
     int? wanted,
     bool edit = false,
+    String? undoMessage,
   }) async {
     final _Approval approval = await _approveReplacement(
       dropsLocks: dropsLocks,
@@ -961,7 +968,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final _PaletteSnapshot? previous = _snapshot();
     _cancelAi();
     action();
-    _afterReplacement(previous, edit: edit && approval != _Approval.confirmed);
+    _afterReplacement(
+      previous,
+      edit: edit && approval != _Approval.confirmed,
+      undoMessage: undoMessage,
+    );
   }
 
   /// Call once the palette on screen was replaced: offers to undo it back to
@@ -973,6 +984,7 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _PaletteSnapshot? previous, {
     bool edit = false,
     MarkerColor? newBase,
+    String? undoMessage,
     bool typing = false,
   }) {
     final bool changed = previous == null
@@ -993,7 +1005,12 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       setState(() => _notice = null);
     }
     if (previous != null) {
-      _offerUndo(previous, newBase: newBase, typing: typing);
+      _offerUndo(
+        previous,
+        newBase: newBase,
+        message: undoMessage,
+        typing: typing,
+      );
     }
   }
 
@@ -1428,8 +1445,21 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     });
   }
 
-  Future<void> _applyVariation(QuickPaletteVariation variation) =>
-      _replacePalette(() => _applyVariationNow(variation), edit: true);
+  /// The variation is told once, by the Undo snack bar ("Cooler variation
+  /// applied."), not also by a note on the page: two messages for one action,
+  /// and the note would outlive an Undo.
+  Future<void> _applyVariation(QuickPaletteVariation variation) async {
+    // Same as Regenerate: a base of a brand that is not in use is not
+    // remixed with the markers of the brand in use.
+    if (_wouldRebuildOtherBrandBase) return _explainOtherBrandBase();
+    await _replacePalette(
+      () => _applyVariationNow(variation),
+      edit: true,
+      undoMessage: context.l10n.paletteVariationApplied(
+        context.l10n.variationName(variation),
+      ),
+    );
+  }
 
   void _applyVariationNow(QuickPaletteVariation variation) {
     if (_suggestions.isEmpty || _available.isEmpty || _chainMode) return;
@@ -1444,10 +1474,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     setState(() {
       _suggestions = _mergeLocked(varied);
       _aiUsed = false;
-      _notice = _PaletteNotice(
-        _PaletteNoticeKind.variation,
-        variation: variation,
-      );
     });
   }
 
@@ -1652,20 +1678,66 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     };
   }
 
-  /// What to say when the base is a marker of a brand that is not in use (a
-  /// palette kept across a change of brand, or loaded from another brand):
-  /// "not in your collection" would be false. `null` for any other base.
-  String? _baseOfUnusedBrand(String example) {
+  /// The base when its brand is not among the brands in use (the active one,
+  /// or every brand of the mix with "Mix my brands"), `null` for any other
+  /// base. That happens to a palette kept across a change of brand or of the
+  /// mix, and to one loaded from a brand outside the mix. The engines refuse
+  /// such a base, and "not in your collection" would be false.
+  MarkerColor? get _baseOfOtherBrand {
     final MarkerColor? base = _resolvedBase;
     if (base == null ||
         _range.any((MarkerColor c) => c.brandId == base.brandId)) {
       return null;
     }
+    return base;
+  }
+
+  /// What to say when the base is a marker of a brand that is not in use
+  /// (see [_baseOfOtherBrand]); `null` for any other base.
+  String? _baseOfUnusedBrand(String example) {
+    final MarkerColor? base = _baseOfOtherBrand;
+    if (base == null) return null;
     return context.l10n.paletteBaseOtherBrand(
       base.newCode,
       MarkerBrand.fromId(base.brandId).label,
       example,
     );
+  }
+
+  /// Whether Regenerate or a variation would have to rebuild the palette
+  /// around a base whose brand is not among the brands in use (mixed or not,
+  /// see [_baseOfOtherBrand]): the engines refuse it, so the palette on
+  /// screen would be emptied (Regenerate) or silently remixed with the brands
+  /// in use (a variation). Not for a blending chain, whose Regenerate only
+  /// steps through the chains already built, nor for a photo palette or the
+  /// manual mode, which have no base to rebuild around.
+  bool get _wouldRebuildOtherBrandBase =>
+      !_chainMode &&
+      !_photoMode &&
+      _mode != PaletteMode.customPalette &&
+      _suggestions.isNotEmpty &&
+      _baseInput.trim().isNotEmpty &&
+      _baseOfOtherBrand != null;
+
+  /// Says why the palette on screen stays as it is. A snack bar, not a note
+  /// on the page: nothing on the page moves, and nothing changed to undo.
+  void _explainOtherBrandBase() {
+    final String? message = _baseOfUnusedBrand(_exampleCode);
+    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+      context,
+    );
+    if (message == null || messenger == null) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          key: const ValueKey<String>('palette-other-brand-snack'),
+          duration: InkMotion.undoSnack,
+          behavior: SnackBarBehavior.floating,
+          margin: _snackMargin(),
+          content: Text(message),
+        ),
+      );
   }
 
   /// Selector of the brand-aware messages, with ICU's `other` fallback
@@ -1983,7 +2055,13 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   /// Regenerates the palette on screen: another variation of the same type
   /// (the base marker and the locked ones stay), or, for a blending chain,
   /// the next alternative chain.
-  Future<void> _regenerate() => _replacePalette(_regenerateNow);
+  ///
+  /// A palette built on a marker of a brand that is not in use stays as it is
+  /// (the engines would refuse that base and empty it): the user is told why.
+  Future<void> _regenerate() async {
+    if (_wouldRebuildOtherBrandBase) return _explainOtherBrandBase();
+    await _replacePalette(_regenerateNow);
+  }
 
   void _regenerateNow() {
     if (_chainMode) {
