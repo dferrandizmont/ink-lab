@@ -2011,6 +2011,8 @@
   "settingsLicencesLegalese": "Código do Ink Lab: licença MIT. Textos, ideias e documentação: CC BY-SA 4.0. Tipos de letra incluídos: licença SIL Open Font 1.1.",
   "settingsSendFeedback": "Enviar comentários",
   "settingsSendFeedbackSubtitle": "Abre a tua app de e-mail com a versão da app e do sistema. Tu decides se a envias.",
+  "settingsRateApp": "Avaliar o Ink Lab",
+  "settingsRateAppSubtitle": "Uma avaliação ajuda outras pessoas a encontrar a app",
   "settingsFeedbackNoMail": "Não foi encontrada nenhuma app de e-mail. O endereço {address} foi copiado.",
   "@settingsFeedbackNoMail": {
     "placeholders": {

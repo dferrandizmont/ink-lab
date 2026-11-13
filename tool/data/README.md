@@ -284,7 +284,7 @@ channel away from the maker's chart) and its names are only codes.
 
 ```sh
 python -B tool/data/test_generate_markermatch.py
-sh ~/.agents/scripts/heavy.sh flutter test --no-pub test/core/all_brands_catalog_test.dart test/data/all_brands_backup_test.dart test/ui/onboarding/all_brands_onboarding_test.dart
+flutter test --no-pub test/core/all_brands_catalog_test.dart test/data/all_brands_backup_test.dart test/ui/onboarding/all_brands_onboarding_test.dart
 ```
 
 The Python tests reproduce the six committed JSONs byte for byte from the

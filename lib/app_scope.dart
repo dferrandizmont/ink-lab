@@ -69,7 +69,7 @@ class AppScope extends InheritedWidget {
   /// there is none (most tests).
   final ErrorLog? errorLog;
 
-  /// Asks for a store review once, after a milestone, or `null` where there is
+  /// Asks for a store review after successful work, or `null` where there is
   /// no store (most tests).
   final ReviewPrompt? reviewPrompt;
 
@@ -79,7 +79,8 @@ class AppScope extends InheritedWidget {
   /// overridden so a test can seed a stored key, inject a fake HTTP transport
   /// or start from a fresh install; [artworkDiary] lets a test watch the
   /// photo files; [storeReviewer] turns on the review prompt over a fake
-  /// store (there is none by default).
+  /// store (there is none by default). [reviewClock] and [reviewAppVersion]
+  /// make review eligibility deterministic.
   static AppScope inMemory({
     required MarkerRepository markers,
     required Widget child,
@@ -93,6 +94,8 @@ class AppScope extends InheritedWidget {
     BlendRecipeRepository? blendRecipes,
     ErrorLog? errorLog,
     StoreReviewer? storeReviewer,
+    DateTime Function()? reviewClock,
+    String reviewAppVersion = '1.0.0',
   }) {
     final store = InMemoryKeyValueStore();
     final resolvedAiSettings = aiSettings ?? StoredAiSettingsRepository(store);
@@ -101,6 +104,7 @@ class AppScope extends InheritedWidget {
       store,
       initial: settingsState ?? previewSettings(),
     );
+    final savedPalettes = StoredSavedPaletteRepository(store);
     final ownColors = StoredOwnColorRepository(store);
     final wishlist = StoredWishlistRepository(store);
     final dried = StoredDriedMarkerRepository(store);
@@ -122,9 +126,19 @@ class AppScope extends InheritedWidget {
       errorLog: errorLog,
       reviewPrompt: storeReviewer == null
           ? null
-          : ReviewPrompt(settings: settings, reviewer: storeReviewer),
+          : ReviewPrompt(
+              settings: settings,
+              reviewer: storeReviewer,
+              appVersion: reviewAppVersion,
+              clock: reviewClock,
+              hasOwnData: () =>
+                  savedPalettes.exportByBrand().values.any(
+                    (list) => list.isNotEmpty,
+                  ) ||
+                  diary.entries.isNotEmpty,
+            ),
       settings: settings,
-      savedPalettes: StoredSavedPaletteRepository(store),
+      savedPalettes: savedPalettes,
       matchHistory: StoredColorMatchHistoryRepository(store),
       ownColors: ownColors,
       wishlist: wishlist,

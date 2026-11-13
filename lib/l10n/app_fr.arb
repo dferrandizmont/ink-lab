@@ -2011,6 +2011,8 @@
   "settingsLicencesLegalese": "Code d’Ink Lab : licence MIT. Textes, idées et documentation : CC BY-SA 4.0. Polices incluses : licence SIL Open Font 1.1.",
   "settingsSendFeedback": "Envoyer un retour",
   "settingsSendFeedbackSubtitle": "Ouvre ton app de messagerie avec la version de l’app et du système. Tu décides de l’envoyer ou non.",
+  "settingsRateApp": "Noter Ink Lab",
+  "settingsRateAppSubtitle": "Un avis aide d’autres personnes à la trouver",
   "settingsFeedbackNoMail": "Aucune app de messagerie trouvée. L’adresse {address} a été copiée.",
   "@settingsFeedbackNoMail": {
     "placeholders": {

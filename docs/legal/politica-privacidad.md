@@ -1,7 +1,7 @@
 # Política de privacidad de Ink Lab
 
 
-Última actualización: 2026-11-07
+Última actualización: 2026-11-13
 
 Ink Lab es una app para quien dibuja con rotuladores de alcohol: consulta las muestras de color, empareja el color de
 una foto con un rotulador de tu colección y construye paletas con teoría del color. Es una app independiente: no está
@@ -27,16 +27,16 @@ Tu marca activa, los packs y rotuladores que tienes, tus favoritos, tu lista de 
 rotuladores (lleno, se acaba o seco) y tus notas de recarga, las fotos de tus muestras reales, los colores propios que
 guardas para tus rotuladores, tus paletas guardadas, tus recetas de mezcla y sus fotos, el historial de tus últimas
 elecciones al emparejar colores, las entradas y las fotos de tu diario, tus ideas favoritas y vistas hace poco, tus
-ajustes, el punto de la bienvenida en que te quedaste, la fecha en que guardaste tu última copia en archivo y el
-registro de errores (ver más abajo) se guardan solo en el almacenamiento privado de la app, en tu dispositivo. De cada
-color propio solo se guarda su código hex, nunca la foto de la que lo sacaste. Los catálogos de las 15 marcas de
-rotuladores (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum
-Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush y Artist's Loft) van dentro de la app y todo
-funciona sin conexión. «En otras marcas», «Sombra y luz», «Mezclar con…» y el aviso de rotuladores casi iguales (en el
-detalle de un rotulador), la búsqueda por hex, la vista «Valores» en gris, la previsualización de «Visión del color»
-(en Paleta), el «Mapa de color» y el traductor de recetas (en Mi colección → Herramientas) y los «Números del diario»
-se calculan en tu móvil con esos catálogos y tus datos, sin enviar nada. No hay sincronización ni copia en ningún
-servidor nuestro.
+ajustes, el punto de la bienvenida en que te quedaste, la fecha en que guardaste tu última copia en archivo, los
+contadores de la valoración en la tienda y el registro de errores (ver más abajo) se guardan solo en el almacenamiento
+privado de la app, en tu dispositivo. De cada color propio solo se guarda su código hex, nunca la foto de la que lo
+sacaste. Los catálogos de las 15 marcas de rotuladores (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker,
+Promarker Brush, Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush
+y Artist's Loft) van dentro de la app y todo funciona sin conexión. «En otras marcas», «Sombra y luz», «Mezclar con…» y
+el aviso de rotuladores casi iguales (en el detalle de un rotulador), la búsqueda por hex, la vista «Valores» en gris,
+la previsualización de «Visión del color» (en Paleta), el «Mapa de color» y el traductor de recetas (en Mi colección →
+Herramientas) y los «Números del diario» se calculan en tu móvil con esos catálogos y tus datos, sin enviar nada. No hay
+sincronización ni copia en ningún servidor nuestro.
 
 La copia de seguridad del sistema de Android está **desactivada** para esta app: excluye todos sus ficheros de la copia
 en la nube y de la transferencia entre dispositivos, de modo que ni tus ajustes, ni tu clave, ni tus datos, ni las fotos
@@ -82,12 +82,24 @@ copian al portapapeles. «Importar desde texto» y
 la importación de códigos leen únicamente el texto que pegas o escribes; no abren enlaces ni se conectan a nada.
 
 ### Valoración en la tienda
-Una sola vez, después de guardar tu tercera paleta o tu primera entrada del diario, la app pide al sistema que muestre
-el diálogo de valoración de la tienda (Google Play en Android, App Store en iPhone). Es la tienda la que decide si lo
-enseña y la que recibe tu valoración si la escribes, bajo sus propias condiciones; Ink Lab no recibe la nota ni el
-texto, no sabe si has valorado y no envía nada. En Android es una comunicación interna del móvil con la app de Google
-Play. La app solo apunta en tu móvil que ya lo pidió, para no volver a hacerlo, y deja de intentarlo si la tienda no
-puede mostrar el diálogo tres veces.
+De vez en cuando, después de guardar una paleta o una entrada nueva del diario, Ink Lab puede pedirle a la tienda
+(Google Play en Android, la App Store en iPhone y iPad) que te muestre su ventana para valorar la app. No lo pide la
+primera semana, ni durante una restauración o justo después de restaurar o importar una copia, ni más de tres veces en
+total (como mucho una por versión y con al menos 90 días entre una y otra), y **es la tienda la que decide** si la
+ventana aparece. Para pedir esa ventana, la app usa la biblioteca de valoraciones de Google Play en Android (una
+comunicación interna del móvil con la app de Google Play) y la función del sistema en iPhone y iPad. **Ink Lab solo le
+indica a la tienda de qué app se trata:** no le pasa tus paletas, tu colección ni ningún otro dato tuyo, y no sabe si
+has valorado ni qué has escrito. Tu valoración y tu reseña las escribes en la ventana de la tienda y **las recibe Google
+o Apple, con tu cuenta de la tienda** y según sus propias condiciones. También puedes abrir la página de Ink Lab en la
+tienda cuando quieras con «Valorar Ink Lab» (Ajustes → Acerca de).
+
+Para decidir cuándo preguntar, la app guarda en tu móvil unos contadores: el día en que la abriste por primera vez, el
+último día en que la abriste, en cuántos días distintos la has abierto, cuántas veces ha pedido la valoración, el día y
+la versión de la última vez que la pidió, y cuántas veces la tienda no pudo mostrar la ventana (a la tercera deja de
+intentarlo). Son solo fechas y recuentos: no guardan qué haces dentro de la app ni nada de lo que escribes. Esos
+contadores no van en la copia de seguridad de la app (ni en el texto ni en el archivo) e Ink Lab no los envía a nadie.
+En Android tampoco salen del móvil, porque la copia del sistema está desactivada para esta app; en iPhone y iPad pueden
+entrar en la copia del dispositivo o de iCloud, si la tienes activada, como el resto de los ajustes de la app.
 
 ### Modo caballete y accesos directos
 El modo caballete (en Paleta) muestra la paleta en grande y mantiene la pantalla encendida mientras está abierto; al
@@ -232,14 +244,19 @@ uso que envía ML Kit al usarse la IA en el móvil. Si usas la IA con OpenRouter
 **OpenRouter** y el **proveedor del modelo** que elijas, en tu nombre y con tu clave. Si nos envías un correo de
 soporte, unos comentarios, un reporte de una sugerencia o el registro de errores, lo recibe el titular en
 inklab@mainshai.com (o en dev@mainshai.com, el buzón que usaba la app hasta la versión 0.6.2) mediante el servicio que
-elijas. Si compartes el registro de errores con otra persona o servicio, solo lo recibe ese destinatario. Si escribes
-una valoración en el diálogo de la tienda, la recibe **Google** o **Apple** directamente, no la app.
+elijas. Si compartes el registro de errores con otra persona o servicio, solo lo recibe ese destinatario. Si valoras la
+app en la tienda, tu valoración y tu reseña las recibe **Google** o **Apple** directamente, con tu cuenta de la tienda;
+no pasan por la app. El desarrollador solo ve después lo que la tienda publica o le muestra en su consola (la
+valoración, la reseña y tu nombre público; en Google Play, también datos técnicos como el modelo del dispositivo y las
+versiones del sistema y de la app) y puede responderte allí.
 
 ## 5. Transferencias internacionales
 El desarrollador no realiza transferencias de datos. Si usas la IA con OpenRouter, la petición va al proveedor que
-elijas, que puede tratarla en otras regiones y bajo sus propias condiciones. Google puede tratar los diagnósticos de ML Kit en
-otros países, según sus propias condiciones. Los demás servicios que decidas utilizar
-(correo, nube, destino de un texto copiado o de un archivo o imagen compartidos) se rigen por sus propias condiciones.
+elijas, que puede tratarla en otras regiones y bajo sus propias condiciones. Google puede tratar los diagnósticos de ML
+Kit en otros países, según sus propias condiciones. La tienda en la que valores la app (Google Play o la App Store)
+puede tratar tu valoración y tu reseña en otros países, según sus propias condiciones. Los demás servicios que decidas
+utilizar (correo, nube, destino de un texto copiado o de un archivo o imagen compartidos) se rigen por sus propias
+condiciones.
 
 ## 6. Cuánto tiempo se conservan
 
@@ -276,10 +293,11 @@ personales de nadie, tampoco de menores: no hay cuentas y tus datos se quedan en
 una cuenta propia en un tercero, que los menores no deben crear sin permiso de sus padres o tutores.
 
 ## 9. Seguridad
-No hay servidor del desarrollador ni transmisión de datos desde la app salvo con la IA opcional activada. Tus datos están en el
-espacio privado de la app; tu clave, en el Keystore o el Keychain; las conexiones a OpenRouter usan HTTPS y no siguen
-redirecciones. Proteger tu móvil (bloqueo de pantalla, cifrado, sin root ni jailbreak) es cosa tuya. El código es
-público y cualquiera puede comprobar lo que hace.
+No hay servidor del desarrollador ni transmisión de datos desde la app salvo con la IA opcional activada (la ventana de
+valoración la muestra la tienda, no la app; ver «Valoración en la tienda»). Tus datos están en el espacio privado de la
+app; tu clave, en el Keystore o el Keychain; las conexiones a OpenRouter usan HTTPS y no siguen redirecciones. Proteger
+tu móvil (bloqueo de pantalla, cifrado, sin root ni jailbreak) es cosa tuya. El código es público y cualquiera puede
+comprobar lo que hace.
 
 ## 10. Cambios en esta política
 

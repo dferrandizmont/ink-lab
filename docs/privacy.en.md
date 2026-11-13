@@ -1,6 +1,5 @@
 <!--
-Not legal advice. Summarises what the app does with data, checked against the code on 7 Nov 2026;
-have a professional review it before the store launch.
+Not legal advice. Summarises what the app does with data, checked against the code.
 -->
 
 # Privacy and compliance
@@ -51,13 +50,21 @@ Spanish version (authoritative): [`privacy.md`](privacy.md).
   "On device" option uses Apple Intelligence (the Foundation Models framework, `ios/Runner/OnDeviceAiChannel.swift`):
   iOS installs and manages the model, the app downloads nothing, there is no ML Kit or other SDK and nothing leaves the
   phone.
-- **Store review, at most once** (`lib/data/review_prompt.dart`, package `in_app_review`): after the third saved
-  palette or the first diary entry, the app asks the system to show the store's review dialog (Google Play In-App
-  Review on Android, StoreKit on iOS). The store decides whether it appears; the app receives neither the rating nor
-  the text, does not know whether a review was left and sends nothing. On Android it is an inter-process call (IPC) to
-  the Play Store app on the phone. `shared_preferences` records that it was asked (`review_prompt_asked`, outside the
-  backups) and it is never asked again; when the store cannot show the dialog (an app installed without Play, for
-  instance) it counts that (`review_prompt_unavailable`) and stops trying after the third time.
+- **Store review, three times at most** (`lib/core/review_policy.dart`, `lib/data/review_prompt.dart`, package
+  `in_app_review`): when a palette or a new diary entry is saved, the app may ask the system to show the store's review
+  dialog (Google Play In-App Review on Android, StoreKit on iOS), only if 7 days have passed since the first recorded
+  launch, the app was opened on 5 different days, there is a saved palette or a diary entry, the first-run setup is
+  over, no backup restore or import happened in this session, and requests are left (3 in all, one per version, 90
+  days apart). The store decides whether it appears; the app only tells it which app it is (its package or Apple ID),
+  receives neither the rating nor the text, does not know whether a review was left and passes nothing else. Google or Apple
+  receives the review with the user's store account. On Android it is an inter-process call (IPC) to the Play Store
+  app on the phone. "Rate Ink Lab" (Settings → About) opens the app's store page (`openStoreListing`, Apple ID
+  `6830184034`). The counters live in `shared_preferences` (`review_state`, one JSON: first and last day opened,
+  number of distinct days, number of requests, day and version of the last one, times the store had no dialog),
+  outside `AppSettingsState` and both app backups; the old keys `review_prompt_asked` and `review_prompt_unavailable`
+  are moved into `review_state` once and removed. If the store cannot show the dialog (an app installed without Play,
+  for instance) it counts that and stops trying after the third time. On Android the system backup is off; on iOS
+  they are part of the iPhone or iCloud backup when the user has it on, like the rest of `UserDefaults`.
 - **Easel mode** (Palette): while it is open, `wakelock_plus` (`lib/ui/screen_awake.dart`) keeps the screen on (a
   window flag on Android, the idle timer on iOS) and releases it on close. It asks for no permission (no `WAKE_LOCK`)
   and stores or sends no data.
@@ -94,8 +101,8 @@ photo), saved palettes (`saved_palettes:<brandId>`), the history of the latest M
 sampled colour, matched marker and distance; never the photo), the artwork diary (`artwork_diary`, only on installs from
 before 1.0.0: at launch it moves to its own file, see below), the favourite and recently viewed ideas
 (`idea_favorites`, `idea_recent`: idea ids only, `lib/data/idea_favorites_repository.dart`), the onboarding draft
-(`onboarding_draft`: the brand and packs chosen so far, deleted by Start or Skip), whether the store review was asked
-(`review_prompt_asked`, `review_prompt_unavailable`), appearance preferences, the
+(`onboarding_draft`: the brand and packs chosen so far, deleted by Start or Skip), the store review counters
+(`review_state`), appearance preferences, the
 date of the last backup file (`last_backup_at`, epoch milliseconds; shown in Settings and used to suggest a new backup
 after 30 days; never part of a backup) and the AI settings **without the key** (`ai_settings`). No device or user
 identifiers. The OpenRouter key, if the user saves it, is kept apart: Android Keystore (`flutter_secure_storage`) or iOS
@@ -224,7 +231,6 @@ is copied to the clipboard. The privacy policy is published at `https://inklab.m
   declared as not linked to identity and not used for tracking.
 - Google Play, Data safety: declare the data collected by the ML Kit SDK (device IDs, diagnostics and other
   performance data; optional, only with AI on; for analytics; encrypted in transit) and the optional OpenRouter request.
-  Final answers in `docs/tienda/google-play.md`.
 - The photos (diary, swatches, recipes) never leave the phone, so the forms do not change: neither Google Play (Data safety) nor Apple
   (privacy labels) has any new data collected or shared.
 - Nor does 0.8 change them: the backup file and the image of a diary entry only leave through the system share sheet,
@@ -241,9 +247,3 @@ is copied to the clipboard. The privacy policy is published at `https://inklab.m
   the store (Play or App Store) without the app receiving or sending anything. Nothing new to declare in App Privacy;
   the manifest already carries reason `C617.1`.
 - There are no accounts to delete; data is removed by uninstalling the app or clearing its data in the system.
-- Review the forms with the final AAB/IPA and publish a policy URL consistent with these facts.
-
-## Pending before the store launch
-- [ ] Publish the policy (URL), link it from both stores and from Settings if wanted.
-- [ ] Fill in App Privacy (Apple) and Data safety (Play) with the final binary.
-- [ ] Review this document whenever the data flow changes (permissions, backups, AI, exports, support).

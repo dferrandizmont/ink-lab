@@ -1,7 +1,7 @@
 # Ink Lab privacy policy
 
 
-Last updated: 2026-11-07
+Last updated: 2026-11-13
 
 Courtesy translation. The [Spanish version](https://inklab.mainshai.com/es/privacy/) is the one that
 applies.
@@ -30,15 +30,15 @@ Your active brand, the packs and markers you own, your favourites, your wishlist
 running out or dried out) and your refill notes, the photos of your real swatches, the own colours you store for your
 markers, your saved palettes, your blending recipes and their photos, the history of your latest colour matches, the
 entries and photos of your diary, your favourite and recently viewed ideas, your settings, how far you got in the
-welcome steps, the date you last saved a backup file and the error log (see below) are stored only in the app's private
-storage, on your device. For each own colour only its hex code is stored, never the photo you took it from. The
-catalogues of the 15 marker brands (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker, Promarker Brush,
-Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush and Artist's
-Loft) ship inside the app and everything works offline. "In other brands", "Shadow and light", "Blend with…" and the
-warning about near-identical markers (in a marker's detail), the hex search, the greyscale "Values" view, the "Colour
-vision" preview (in Palette), the "Colour map" and the recipe translator (in My collection → Tools) and the "Diary
-numbers" are computed on your phone from those catalogues and your data, sending nothing. There is no synchronisation
-or copy on any server of ours.
+welcome steps, the date you last saved a backup file, the store review counters and the error log (see below) are stored
+only in the app's private storage, on your device. For each own colour only its hex code is stored, never the photo you
+took it from. The catalogues of the 15 marker brands (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker,
+Promarker Brush, Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush
+and Artist's Loft) ship inside the app and everything works offline. "In other brands", "Shadow and light", "Blend
+with…" and the warning about near-identical markers (in a marker's detail), the hex search, the greyscale "Values" view,
+the "Colour vision" preview (in Palette), the "Colour map" and the recipe translator (in My collection → Tools) and the
+"Diary numbers" are computed on your phone from those catalogues and your data, sending nothing. There is no
+synchronisation or copy on any server of ours.
 
 Android's system backup is **switched off** for this app: it excludes all of the app's files from cloud backup and from
 device-to-device transfer, so neither your settings, nor your key, nor your data, nor your photos, nor the error
@@ -84,12 +84,23 @@ clipboard. "Import from text" and the code import only read the text you paste o
 to nothing.
 
 ### Store review
-Once only, after you save your third palette or your first diary entry, the app asks the system to show the store's
-review dialog (Google Play on Android, the App Store on iPhone). The store decides whether to show it and receives your
-review if you write one, under its own terms; Ink Lab receives neither the rating nor the text, does not know whether
-you left a review and sends nothing. On Android it is an internal exchange on the phone with the Google Play app. The
-app only notes on your phone that it has asked, so as not to ask again, and stops trying if the store is unable to show
-the dialog three times.
+Now and then, after you save a palette or a new diary entry, Ink Lab may ask the store (Google Play on Android, the App
+Store on iPhone and iPad) to show you its window for rating the app. It does not ask during the first week, during a
+restore or right after you restore or import a backup, or more than three times in all (at most once per version and at
+least 90 days apart), and **the store decides** whether the window appears. To ask for that window, the app uses Google
+Play's review library on Android (an internal exchange on the phone with the Google Play app) and the system feature on
+iPhone and iPad. **Ink Lab only tells the store which app it is:** it does not pass on your palettes, your collection or
+any other data of yours, and it does not know whether you rated it or what you wrote. You write your rating and your
+review in the store's window, and **Google or Apple receives them, with your store account** and under its own terms.
+You can also open Ink Lab's page in the store at any time with "Rate Ink Lab" (Settings → About).
+
+To decide when to ask, the app keeps a few counters on your phone: the day you first opened it, the last day you opened
+it, on how many different days you have opened it, how many times it has asked for a review, the day and app version of
+the last time it asked, and how many times the store could not show the window (it stops trying after the third). They
+are only dates and counts: they hold nothing about what you do inside the app or what you write. These counters are not
+part of the app's backup (neither the text nor the file), and Ink Lab sends them to no one. On Android they do not leave
+the phone either, because the system backup is turned off for this app; on iPhone and iPad they may be part of your
+device or iCloud backup, if you have it turned on, like the rest of the app's settings.
 
 ### Easel mode and shortcuts
 Easel mode (in Palette) shows the palette in large and keeps the screen on while it is open; when you close it, the
@@ -229,14 +240,18 @@ usage data ML Kit sends when the on-device AI is used. If you use AI with OpenRo
 received by **OpenRouter** and the **model provider** you choose, on your behalf and with your key. If you send us a
 support email, feedback, a suggestion report or the error log, the holder receives it at inklab@mainshai.com (or at
 dev@mainshai.com, the address the app used up to version 0.6.2) through the service you choose. If you share the error
-log with another person or service, only that recipient receives it. If you write a review in the store's dialog,
-**Google** or **Apple** receives it directly, not the app.
+log with another person or service, only that recipient receives it. If you rate the app in the store, **Google** or
+**Apple** receives your rating and your review directly, with your store account; they do not go through the app. The
+developer only sees afterwards what the store publishes or shows in its console (the rating, the review and your public
+name; on Google Play, also technical details such as the device model and the system and app versions) and can reply to
+you there.
 
 ## 5. International transfers
-The developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose,
-which may process it in other regions and under its own terms. Google may process the ML Kit diagnostics in other
-countries, under its own terms. Any other service you decide to use (email, cloud, the
-destination of copied text or of a shared file or image) is governed by its own terms.
+The developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose, which
+may process it in other regions and under its own terms. Google may process the ML Kit diagnostics in other countries,
+under its own terms. The store where you rate the app (Google Play or the App Store) may process your rating and your
+review in other countries, under its own terms. Any other service you decide to use (email, cloud, the destination of
+copied text or of a shared file or image) is governed by its own terms.
 
 ## 6. How long it is kept
 
@@ -273,10 +288,10 @@ AI with OpenRouter requires your own account with a third party, which minors sh
 of a parent or guardian.
 
 ## 9. Security
-There is no developer server and no data transmission from the app, except with the optional AI turned on. Your data is in the app's
-private space; your key, in the Keystore or the Keychain; connections to OpenRouter use HTTPS and follow no redirects.
-Protecting your phone (screen lock, encryption, no root or jailbreak) is up to you. The code is public and anyone can
-check what it does.
+There is no developer server and no data transmission from the app, except with the optional AI turned on (the review
+window is shown by the store, not by the app; see "Store review"). Your data is in the app's private space; your key, in
+the Keystore or the Keychain; connections to OpenRouter use HTTPS and follow no redirects. Protecting your phone (screen
+lock, encryption, no root or jailbreak) is up to you. The code is public and anyone can check what it does.
 
 ## 10. Changes to this policy
 

@@ -13087,6 +13087,18 @@ abstract class AppLocalizations {
   /// **'Opens your email app with the app and system version. You decide whether to send it.'**
   String get settingsSendFeedbackSubtitle;
 
+  /// Settings, About: row that opens the app's own store page so the person can leave a rating or review.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Ink Lab'**
+  String get settingsRateApp;
+
+  /// No description provided for @settingsRateAppSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A review helps others find it'**
+  String get settingsRateAppSubtitle;
+
   /// No description provided for @settingsFeedbackNoMail.
   ///
   /// In en, this message translates to:

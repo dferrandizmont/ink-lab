@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import '../core/json_value.dart';
 import '../core/models.dart';
+import '../core/review_policy.dart';
 import 'app_settings_state.dart';
 import 'brand_scoping.dart';
 import 'key_value_store.dart';
@@ -30,14 +32,8 @@ abstract class AppSettingsRepository {
   NameDisplayMode get nameDisplayMode;
   bool get onboardingCompleted;
 
-  /// Whether the store's review dialog was already asked for on this device.
-  /// Not part of [state] or of backups: a restore must not bring the question
-  /// back, and the question is about this install.
-  bool get reviewPromptAsked;
-
-  /// How many times the store said it has no review dialog on this device
-  /// (a side-loaded app, no Play). Not part of [state] or of backups.
-  int get reviewPromptUnavailable;
+  /// Review history for this installation, outside [state] and backups.
+  ReviewState get reviewState;
 
   /// The first-run setup left half-way (step and choices), or null. Not part
   /// of [state] or of backups: it is cleared when the setup ends.
@@ -115,12 +111,8 @@ abstract class AppSettingsRepository {
   /// Stores [time] as the moment of the last backup file.
   Future<void> setLastBackupAt(DateTime time);
 
-  /// Remembers that the review dialog was asked for (or that it never will
-  /// be). Once true it is never reset.
-  Future<void> setReviewPromptAsked(bool value);
-
-  /// Stores how many times the review dialog was unavailable.
-  Future<void> setReviewPromptUnavailable(int count);
+  /// Persists the local review history as one JSON string.
+  Future<void> setReviewState(ReviewState state);
 
   /// Replaces the whole snapshot, as a backup restore does. The date of the
   /// last backup is kept: it describes this device, not the backup.
@@ -135,10 +127,9 @@ abstract class AppSettingsRepository {
 
 /// [AppSettingsRepository] on top of a [KeyValueStore].
 ///
-/// Storage keys (a design decision documented in the final report: the Kotlin
-/// key names were not readable from this worktree, so stable, descriptive keys
-/// were chosen and the legacy shapes the Kotlin store is known to have written
-/// — bare, unscoped favourite codes — are still read):
+/// Storage keys (stable, descriptive names; the legacy shapes the earlier
+/// Kotlin app is known to have written — bare, unscoped favourite codes — are
+/// still read):
 ///
 /// * `active_brand`, `brand_scope`
 /// * `owned_set_ids`, `extra_marker_ids` (the collection). Older versions
@@ -153,13 +144,16 @@ abstract class AppSettingsRepository {
 /// * `onboarding_draft`: the half-done first-run setup as one JSON string
 ///   (removed when the setup ends; not part of the snapshot or of backups)
 /// * `last_backup_at` (epoch milliseconds; never part of a backup)
-/// * `review_prompt_asked`: whether the store review dialog was asked for
-///   (not part of the snapshot or of backups)
-/// * `review_prompt_unavailable`: how many times the store had no review
-///   dialog (same)
+/// * `review_state`: review history as one JSON string (never part of the
+///   snapshot or backups); [load] migrates and removes `review_prompt_asked`
+///   and `review_prompt_unavailable` once.
 final class StoredAppSettingsRepository implements AppSettingsRepository {
-  StoredAppSettingsRepository(this._store, {AppSettingsState? initial})
-    : _state = initial ?? AppSettingsState();
+  StoredAppSettingsRepository(
+    this._store, {
+    AppSettingsState? initial,
+    DateTime Function()? clock,
+  }) : _state = initial ?? AppSettingsState(),
+       _clock = clock ?? DateTime.now;
 
   /// Convenience: open the platform store and load it.
   static Future<StoredAppSettingsRepository> open() async {
@@ -190,17 +184,23 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   static const String keyLanguage = 'language';
   static const String keyOnboardingDraft = 'onboarding_draft';
   static const String keyLastBackupAt = 'last_backup_at';
+
+  /// Local review history, excluded from settings snapshots and backups.
+  static const String keyReviewState = 'review_state';
   static const String keyReviewPromptAsked = 'review_prompt_asked';
   static const String keyReviewPromptUnavailable = 'review_prompt_unavailable';
 
   final KeyValueStore _store;
+  final DateTime Function() _clock;
   final StreamController<AppSettingsState> _controller =
       StreamController<AppSettingsState>.broadcast();
 
   AppSettingsState _state;
   OnboardingDraft? _draft;
-  bool _reviewPromptAsked = false;
-  int _reviewPromptUnavailable = 0;
+  ReviewState _reviewState = ReviewState();
+
+  /// The stored review history could not be read at [load]: it is left alone.
+  bool _reviewStateUnreadable = false;
 
   @override
   AppSettingsState get state => _state;
@@ -227,10 +227,7 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   OnboardingDraft? get onboardingDraft => _draft;
 
   @override
-  bool get reviewPromptAsked => _reviewPromptAsked;
-
-  @override
-  int get reviewPromptUnavailable => _reviewPromptUnavailable;
+  ReviewState get reviewState => _reviewState;
 
   @override
   AppThemeMode get themeMode => _state.themeMode;
@@ -336,10 +333,58 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
       if (legacyConfigured) await _store.setBool(keyOnboardingCompleted, true);
     }
     _draft = OnboardingDraft.decode(await _store.getString(keyOnboardingDraft));
-    _reviewPromptAsked = await _store.getBool(keyReviewPromptAsked) ?? false;
-    _reviewPromptUnavailable =
-        await _store.getInt(keyReviewPromptUnavailable) ?? 0;
+    await _loadReviewState();
     _controller.add(_state);
+  }
+
+  /// Reads the review history, migrating the old keys once. Review tracking
+  /// must never stop the app from starting. When the stored history cannot be
+  /// read, it is kept as it is on disk: [setReviewState] writes nothing until
+  /// a later load reads it, so the empty history in memory (which never
+  /// allows a request) cannot overwrite the counts and the cooldowns.
+  Future<void> _loadReviewState() async {
+    ReviewState migrated;
+    // A load that reads the history again lifts an earlier failure.
+    _reviewStateUnreadable = false;
+    try {
+      final reviewJson = await _store.getString(keyReviewState);
+      if (reviewJson != null) {
+        _reviewState = ReviewState.fromJson(reviewJson);
+        return;
+      }
+      final int unavailable =
+          (await _store.getInt(keyReviewPromptUnavailable) ?? 0).clamp(
+            0,
+            ReviewPolicy.maxUnavailable,
+          );
+      final asked = await _store.getBool(keyReviewPromptAsked) ?? false;
+      // An ask that was only the give-up after too many unavailable stores
+      // is not a request.
+      migrated = asked && unavailable < ReviewPolicy.maxUnavailable
+          ? ReviewState(
+              requestCount: 1,
+              lastRequestDay: _clock().toLocal(),
+              unavailableCount: unavailable,
+            )
+          : ReviewState(unavailableCount: unavailable);
+    } catch (_) {
+      _reviewState = ReviewState();
+      _reviewStateUnreadable = true;
+      return;
+    }
+    try {
+      await setReviewState(migrated);
+    } catch (_) {
+      // Not written: the old keys stay and the migration runs again next time.
+      _reviewState = migrated;
+      return;
+    }
+    try {
+      await _store.remove(keyReviewPromptAsked);
+      await _store.remove(keyReviewPromptUnavailable);
+    } catch (_) {
+      // Harmless: `review_state` exists now, so the old keys are never read.
+    }
   }
 
   @override
@@ -449,15 +494,10 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   }
 
   @override
-  Future<void> setReviewPromptAsked(bool value) async {
-    await _store.setBool(keyReviewPromptAsked, value);
-    _reviewPromptAsked = value;
-  }
-
-  @override
-  Future<void> setReviewPromptUnavailable(int count) async {
-    await _store.setInt(keyReviewPromptUnavailable, count);
-    _reviewPromptUnavailable = count;
+  Future<void> setReviewState(ReviewState state) async {
+    if (_reviewStateUnreadable) return;
+    await _store.setString(keyReviewState, jsonEncode(state.toJson()));
+    _reviewState = state;
   }
 
   @override

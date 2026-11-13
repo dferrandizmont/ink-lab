@@ -123,7 +123,15 @@ Future<void> _start(ErrorLog errorLog) async {
       secrets: secrets,
       markers: markers,
       errorLog: errorLog,
-      reviewPrompt: ReviewPrompt(settings: settings),
+      reviewPrompt: ReviewPrompt(
+        settings: settings,
+        appVersion: app_version.appVersion,
+        hasOwnData: () =>
+            savedPalettes.exportByBrand().values.any(
+              (list) => list.isNotEmpty,
+            ) ||
+            artworkDiary.entries.isNotEmpty,
+      ),
       aiService: AiService(
         aiSettings: aiSettings,
         secrets: secrets,

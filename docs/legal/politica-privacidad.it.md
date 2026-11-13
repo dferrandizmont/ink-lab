@@ -1,7 +1,7 @@
 # Informativa sulla privacy di Ink Lab
 
 
-Ultimo aggiornamento: 2026-11-07
+Ultimo aggiornamento: 2026-11-13
 
 Traduzione di cortesia. Fa fede la [versione spagnola](https://inklab.mainshai.com/es/privacy/).
 
@@ -27,18 +27,18 @@ tua chiave, viene inviato esattamente ciò che è spiegato più avanti.
 ### Dati che restano sul tuo telefono (non li riceviamo)
 Il tuo marchio attivo, i pack e i pennarelli che possiedi, i tuoi preferiti, la tua lista dei desideri, il livello
 d'inchiostro dei tuoi pennarelli (pieno, in esaurimento o secco) e le tue note di ricarica, le foto dei tuoi campioni
-reali, i colori personali che salvi per i tuoi pennarelli, le tue palette salvate, le tue ricette di sfumatura e le
-loro foto, la cronologia delle tue ultime scelte nell'abbinamento dei colori, le voci e le foto del tuo diario, le tue
-idee preferite e viste di recente, le tue impostazioni, il punto del benvenuto in cui ti sei fermato, la data del tuo
-ultimo file di backup e il registro degli errori (vedi sotto) sono salvati solo nella memoria privata dell'app, sul tuo
-dispositivo. Di ogni colore personale viene salvato solo il codice esadecimale, mai la foto da cui l'hai ricavato. I
-cataloghi delle 15 marche di pennarelli (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker, Promarker Brush,
-Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush e Artist's
-Loft) sono inclusi nell'app e tutto funziona offline. «In altre marche», «Ombra e luce», «Sfuma con…» e l'avviso sui
-pennarelli quasi uguali (nel dettaglio di un pennarello), la ricerca per codice esadecimale, la vista «Valori» in scala
-di grigi, l'anteprima «Visione dei colori» (in «Palette»), la «Mappa dei colori» e la traduzione delle ricette (in «La
-mia collezione» → «Strumenti») e i «Numeri del diario» vengono calcolati sul tuo telefono con quei cataloghi e i tuoi
-dati, senza inviare nulla. Non c'è alcuna sincronizzazione né copia su un nostro server.
+reali, i colori personali che salvi per i tuoi pennarelli, le tue palette salvate, le tue ricette di sfumatura e le loro
+foto, la cronologia delle tue ultime scelte nell'abbinamento dei colori, le voci e le foto del tuo diario, le tue idee
+preferite e viste di recente, le tue impostazioni, il punto del benvenuto in cui ti sei fermato, la data del tuo ultimo
+file di backup, i contatori della recensione nello store e il registro degli errori (vedi sotto) sono salvati solo nella
+memoria privata dell'app, sul tuo dispositivo. Di ogni colore personale viene salvato solo il codice esadecimale, mai la
+foto da cui l'hai ricavato. I cataloghi delle 15 marche di pennarelli (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin,
+Promarker, Promarker Brush, Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick
+Studio Brush e Artist's Loft) sono inclusi nell'app e tutto funziona offline. «In altre marche», «Ombra e luce», «Sfuma
+con…» e l'avviso sui pennarelli quasi uguali (nel dettaglio di un pennarello), la ricerca per codice esadecimale, la
+vista «Valori» in scala di grigi, l'anteprima «Visione dei colori» (in «Palette»), la «Mappa dei colori» e la traduzione
+delle ricette (in «La mia collezione» → «Strumenti») e i «Numeri del diario» vengono calcolati sul tuo telefono con quei
+cataloghi e i tuoi dati, senza inviare nulla. Non c'è alcuna sincronizzazione né copia su un nostro server.
 
 Il backup di sistema di Android è **disattivato** per questa app: esclude tutti i file dell'app dal backup nel cloud e
 dal trasferimento tra dispositivi, quindi né le tue impostazioni, né la tua chiave, né i tuoi dati, né le foto del
@@ -87,12 +87,25 @@ negli appunti. «Importa da testo» e l'importazione dei codici leggono solo il 
 link e non si collegano a nulla.
 
 ### Recensione nello store
-Una sola volta, dopo che hai salvato la terza palette o la prima voce del diario, l'app chiede al sistema di mostrare
-la finestra di recensione dello store (Google Play su Android, App Store su iPhone). È lo store a decidere se mostrarla
-e a ricevere la tua recensione, se ne scrivi una, secondo le sue condizioni; Ink Lab non riceve né il voto né il testo,
-non sa se hai lasciato una recensione e non invia nulla. Su Android si tratta di una comunicazione interna al telefono
-con l'app Google Play. L'app annota solo sul tuo telefono di averlo già chiesto, per non chiederlo di nuovo, e smette
-di provarci se lo store non riesce a mostrare la finestra per tre volte.
+Ogni tanto, dopo che hai salvato una palette o una nuova voce del diario, Ink Lab può chiedere allo store (Google Play
+su Android, l'App Store su iPhone e iPad) di mostrarti la sua finestra per valutare l'app. Non lo chiede durante la
+prima settimana, né durante un ripristino o subito dopo aver ripristinato o importato un backup, né più di tre volte in
+totale (al massimo una per versione e ad almeno 90 giorni di distanza), ed **è lo store a decidere** se la finestra
+compare. Per chiedere quella finestra l'app usa la libreria di recensioni di Google Play su Android (una comunicazione
+interna al telefono con l'app Google Play) e la funzione del sistema su iPhone e iPad. **Ink Lab indica allo store solo
+di quale app si tratta:** non gli passa le tue palette, la tua collezione né altri tuoi dati, e non sa se hai lasciato
+una valutazione né cosa hai scritto. La tua valutazione e la tua recensione le scrivi nella finestra dello store e **le
+riceve Google o Apple, con il tuo account dello store** e secondo i propri termini. Puoi anche aprire la pagina di Ink
+Lab nello store quando vuoi con «Valuta Ink Lab» (Opzioni → Informazioni).
+
+Per decidere quando chiedere, l'app conserva sul tuo telefono alcuni contatori: il giorno in cui l'hai aperta per la
+prima volta, l'ultimo giorno in cui l'hai aperta, in quanti giorni diversi l'hai aperta, quante volte ha chiesto una
+recensione, il giorno e la versione dell'ultima richiesta, e quante volte lo store non è riuscito a mostrare la finestra
+(alla terza smette di provarci). Sono solo date e conteggi: non contengono nulla di ciò che fai nell'app né di ciò che
+scrivi. Questi contatori non fanno parte del backup dell'app (né del testo né del file) e Ink Lab non li invia a
+nessuno. Su Android non escono nemmeno dal telefono, perché il backup di sistema è disattivato per questa app; su iPhone
+e iPad possono far parte del backup del dispositivo o di iCloud, se lo hai attivato, come le altre impostazioni
+dell'app.
 
 ### Modalità cavalletto e scorciatoie
 La modalità cavalletto (in «Palette») mostra la palette in grande e tiene lo schermo acceso finché è aperta; quando la
@@ -242,14 +255,19 @@ viene ricevuta da **OpenRouter** e dal **fornitore del modello** che scegli, per
 invii un'e-mail di assistenza, un commento, una segnalazione di un suggerimento o il registro degli errori, li riceve il
 titolare all'indirizzo inklab@mainshai.com (o dev@mainshai.com, l'indirizzo usato dall'app fino alla versione 0.6.2)
 tramite il servizio che scegli. Se condividi il registro degli errori con un'altra persona o un altro servizio, lo
-riceve solo quel destinatario. Se scrivi una recensione nella finestra dello store, la riceve direttamente **Google** o
-**Apple**, non l'app.
+riceve solo quel destinatario. Se valuti l'app nello store, la tua valutazione e la tua recensione le riceve
+direttamente **Google** o **Apple**, con il tuo account dello store; non passano dall'app. Lo sviluppatore vede poi solo
+ciò che lo store pubblica o gli mostra nella sua console (la valutazione, la recensione e il tuo nome pubblico; su
+Google Play anche dati tecnici come il modello del dispositivo e le versioni del sistema e dell'app) e può risponderti
+lì.
 
 ## 5. Trasferimenti internazionali
 Lo sviluppatore non effettua trasferimenti di dati. Se usi l'IA con OpenRouter, la richiesta va al fornitore che scegli,
 che può trattarla in altre regioni e secondo i propri termini. Google può trattare i dati diagnostici di ML Kit in altri
-Paesi, secondo i propri termini. Gli altri servizi che decidi di usare (posta, cloud, destinazione di un testo copiato
-o di un file o di un'immagine condivisi) sono disciplinati dai rispettivi termini.
+Paesi, secondo i propri termini. Lo store in cui valuti l'app (Google Play o l'App Store) può trattare la tua
+valutazione e la tua recensione in altri Paesi, secondo i propri termini. Gli altri servizi che decidi di usare (posta,
+cloud, destinazione di un testo copiato o di un file o di un'immagine condivisi) sono disciplinati dai rispettivi
+termini.
 
 ## 6. Per quanto tempo vengono conservati
 
@@ -288,10 +306,11 @@ OpenRouter richiede un account personale presso un terzo, che i minori non devon
 o dei tutori.
 
 ## 9. Sicurezza
-Non c'è alcun server dello sviluppatore né trasmissione di dati dall'app, salvo con l'IA facoltativa attivata. I tuoi
-dati si trovano nello spazio privato dell'app; la tua chiave, nel Keystore o nel Portachiavi; le connessioni a
-OpenRouter usano HTTPS e non seguono reindirizzamenti. Proteggere il tuo telefono (blocco schermo, crittografia, niente
-root né jailbreak) spetta a te. Il codice è pubblico e chiunque può verificare cosa fa.
+Non c'è alcun server dello sviluppatore né trasmissione di dati dall'app, salvo con l'IA facoltativa attivata (la
+finestra di valutazione la mostra lo store, non l'app; vedi «Recensione nello store»). I tuoi dati si trovano nello
+spazio privato dell'app; la tua chiave, nel Keystore o nel Portachiavi; le connessioni a OpenRouter usano HTTPS e non
+seguono reindirizzamenti. Proteggere il tuo telefono (blocco schermo, crittografia, niente root né jailbreak) spetta a
+te. Il codice è pubblico e chiunque può verificare cosa fa.
 
 ## 10. Modifiche a questa informativa
 

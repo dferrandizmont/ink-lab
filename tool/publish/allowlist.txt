@@ -466,6 +466,8 @@ test/ui/match/white_balance_match_test.dart
 test/ui/palette/palette_ai_test.dart
 test/ui/palette/palette_blending_chain_test.dart
 test/ui/palette/palette_page_test.dart
+test/ui/palette/palette_regenerate_variation_test.dart
+test/ui/palette/palette_suggestion_row_test.dart
 test/ui/palette/palette_mixed_undo_test.dart
 test/ui/palette/palette_mixed_review2_test.dart
 test/ui/palette/palette_round3_test.dart
@@ -736,3 +738,6 @@ lib/ui/widgets/value_view.dart
 lib/ui/pages/onboarding/markers_preview_card.dart
 test/ui/chip_row_fade_test.dart
 test/ui/diary/diary_plurals_test.dart
+lib/core/review_policy.dart
+test/core/review_policy_test.dart
+test/ui/settings/settings_rate_row_test.dart

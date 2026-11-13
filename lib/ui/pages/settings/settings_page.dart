@@ -198,7 +198,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         SettingsGroup(
                           title: context.l10n.settingsAboutTitle,
                           children: <Widget>[
-                            AboutSection(errorLog: scope.errorLog),
+                            AboutSection(
+                              errorLog: scope.errorLog,
+                              reviewPrompt: scope.reviewPrompt,
+                            ),
                           ],
                         ),
                       ],

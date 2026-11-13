@@ -354,8 +354,8 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
       ),
     );
     navigator.pop(true);
-    // A first-time entry is a milestone for the one-off review prompt.
-    if (previous == null) unawaited(scope.reviewPrompt?.onDiaryEntrySaved());
+    // Only new work triggers the review policy.
+    if (previous == null) unawaited(scope.reviewPrompt?.onSuccess());
   }
 
   Future<void> _delete() async {

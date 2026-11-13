@@ -1,7 +1,7 @@
 # Datenschutzerklärung von Ink Lab
 
 
-Zuletzt aktualisiert: 2026-11-07
+Zuletzt aktualisiert: 2026-11-13
 
 Unverbindliche Übersetzung. Maßgeblich ist die [spanische Fassung](https://inklab.mainshai.com/es/privacy/).
 
@@ -31,15 +31,16 @@ Marker (voll, fast leer oder ausgetrocknet) und Ihre Nachfüll-Notizen, die Foto
 Farben, die Sie für Ihre Marker speichern, Ihre gespeicherten Paletten, Ihre Mischrezepte und deren Fotos, der Verlauf
 Ihrer letzten Auswahlen beim Farbabgleich, die Einträge und Fotos Ihres Tagebuchs, Ihre Favoriten und zuletzt
 angesehenen Ideen, Ihre Einstellungen, wie weit Sie in der Einführung gekommen sind, das Datum Ihrer letzten
-Sicherungsdatei und das Fehlerprotokoll (siehe unten) werden ausschließlich im privaten Speicher der App auf Ihrem Gerät
-gespeichert. Von jeder eigenen Farbe wird nur ihr Hex-Code gespeichert, niemals das Foto, aus dem Sie sie entnommen
-haben. Die Kataloge der 15 Markermarken (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker, Promarker Brush,
-Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush und Artist's
-Loft) sind in der App enthalten, und alles funktioniert ohne Verbindung. „In anderen Marken“, „Schatten und Licht“,
-„Mischen mit …“ und der Hinweis auf fast gleiche Marker (in der Detailansicht eines Markers), die Hex-Suche, die
-Graustufenansicht „Tonwerte“, die Vorschau „Farbsehen“ (in „Palette“), die „Farbkarte“ und die Rezept-Übersetzung (unter
-„Meine Sammlung“ → „Werkzeuge“) sowie die „Zahlen des Tagebuchs“ werden auf Ihrem Handy aus diesen Katalogen und Ihren
-Daten berechnet, ohne etwas zu senden. Es gibt keine Synchronisierung und keine Kopie auf einem unserer Server.
+Sicherungsdatei, die Zähler für die Bewertung im Store und das Fehlerprotokoll (siehe unten) werden ausschließlich im
+privaten Speicher der App auf Ihrem Gerät gespeichert. Von jeder eigenen Farbe wird nur ihr Hex-Code gespeichert,
+niemals das Foto, aus dem Sie sie entnommen haben. Die Kataloge der 15 Markermarken (Ohuhu, DecoTime, Copic, Finecolour,
+Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le
+Plume, Blick Studio Brush und Artist's Loft) sind in der App enthalten, und alles funktioniert ohne Verbindung. „In
+anderen Marken“, „Schatten und Licht“, „Mischen mit …“ und der Hinweis auf fast gleiche Marker (in der Detailansicht
+eines Markers), die Hex-Suche, die Graustufenansicht „Tonwerte“, die Vorschau „Farbsehen“ (in „Palette“), die
+„Farbkarte“ und die Rezept-Übersetzung (unter „Meine Sammlung“ → „Werkzeuge“) sowie die „Zahlen des Tagebuchs“ werden
+auf Ihrem Handy aus diesen Katalogen und Ihren Daten berechnet, ohne etwas zu senden. Es gibt keine Synchronisierung und
+keine Kopie auf einem unserer Server.
 
 Die Systemsicherung von Android ist für diese App **deaktiviert**: Sie schließt alle Dateien der App von der
 Cloud-Sicherung und von der Übertragung zwischen Geräten aus, sodass weder Ihre Einstellungen noch Ihr Schlüssel, Ihre
@@ -91,13 +92,26 @@ oder kopieren ihn in die Zwischenablage. „Aus Text importieren“ und der Impo
 einfügen oder eintippen; sie öffnen keine Links und stellen keine Verbindung her.
 
 ### Bewertung im Store
-Ein einziges Mal, nachdem Sie Ihre dritte Palette oder Ihren ersten Tagebucheintrag gespeichert haben, bittet die App
-das System, den Bewertungsdialog des Stores anzuzeigen (Google Play unter Android, App Store auf dem iPhone). Ob er
-erscheint, entscheidet der Store, und er erhält auch Ihre Bewertung, falls Sie eine schreiben, nach seinen eigenen
-Bedingungen; Ink Lab erhält weder die Sternezahl noch den Text, erfährt nicht, ob Sie bewertet haben, und sendet
-nichts. Unter Android ist das ein interner Austausch auf dem Handy mit der Google-Play-App. Die App merkt sich nur auf
-Ihrem Handy, dass sie gefragt hat, um nicht erneut zu fragen, und gibt auf, wenn der Store den Dialog dreimal nicht
-anzeigen kann.
+Ab und zu, nachdem Sie eine Palette oder einen neuen Tagebucheintrag gespeichert haben, kann Ink Lab den Store (Google
+Play unter Android, den App Store auf iPhone und iPad) bitten, Ihnen sein Fenster zum Bewerten der App zu zeigen. In der
+ersten Woche, während einer Wiederherstellung oder direkt nach dem Wiederherstellen oder Importieren einer Sicherung
+fragt die App nicht, und insgesamt fragt sie höchstens dreimal (höchstens einmal pro Version und mit mindestens 90 Tagen
+Abstand); **ob das Fenster erscheint, entscheidet der Store**. Für die Bitte um das Fenster nutzt die App unter Android
+die Bewertungsbibliothek von Google Play (ein interner Austausch auf dem Handy mit der Google-Play-App) und auf iPhone
+und iPad die Funktion des Systems. **Ink Lab teilt dem Store nur mit, um welche App es geht:** Die App gibt weder Ihre
+Paletten noch Ihre Sammlung oder andere Daten von Ihnen weiter und erfährt nicht, ob Sie bewertet haben oder was Sie
+geschrieben haben. Ihre Bewertung und Ihre Rezension schreiben Sie im Fenster des Stores, und **sie gehen an Google oder
+Apple, mit Ihrem Store-Konto** und nach deren eigenen Bedingungen. Sie können die Seite von Ink Lab im Store auch
+jederzeit mit „Ink Lab bewerten“ (Optionen → Info) öffnen.
+
+Um zu entscheiden, wann sie fragt, speichert die App auf Ihrem Handy einige Zähler: den Tag, an dem Sie sie zum ersten
+Mal geöffnet haben, den letzten Tag, an dem Sie sie geöffnet haben, an wie vielen verschiedenen Tagen Sie sie geöffnet
+haben, wie oft sie um eine Bewertung gebeten hat, Tag und Version der letzten Bitte und wie oft der Store das Fenster
+nicht anzeigen konnte (nach dem dritten Mal versucht sie es nicht mehr). Es sind nur Daten und Zählungen: Die Zähler
+enthalten nichts darüber, was Sie in der App tun oder schreiben. Diese Zähler sind nicht Teil der Sicherung der App
+(weder des Textes noch der Datei), und Ink Lab sendet sie an niemanden. Unter Android verlassen sie das Handy auch sonst
+nicht, weil die Systemsicherung für diese App deaktiviert ist; auf iPhone und iPad können sie Teil Ihrer Geräte- oder
+iCloud-Sicherung sein, wenn Sie diese aktiviert haben, wie die übrigen Einstellungen der App.
 
 ### Staffelei-Modus und Verknüpfungen
 Der Staffelei-Modus (in „Palette“) zeigt die Palette groß an und hält den Bildschirm eingeschaltet, solange er offen
@@ -253,15 +267,19 @@ erhalten **OpenRouter** und der von Ihnen gewählte **Modellanbieter** die oben 
 mit Ihrem Schlüssel. Wenn Sie uns eine Support-E-Mail, Feedback, eine Meldung zu einem Vorschlag oder das
 Fehlerprotokoll senden, erhält der Inhaber diese unter inklab@mainshai.com (oder unter dev@mainshai.com, der Adresse,
 die die App bis Version 0.6.2 verwendet hat) über den Dienst, den Sie wählen. Teilen Sie das Fehlerprotokoll mit einer
-anderen Person oder einem anderen Dienst, erhält es nur dieser Empfänger. Schreiben Sie im Dialog des Stores eine
-Bewertung, erhält sie **Google** oder **Apple** direkt, nicht die App.
+anderen Person oder einem anderen Dienst, erhält es nur dieser Empfänger. Bewerten Sie die App im Store, erhalten
+**Google** oder **Apple** Ihre Bewertung und Ihre Rezension direkt, mit Ihrem Store-Konto; sie laufen nicht über die
+App. Der Entwickler sieht danach nur, was der Store veröffentlicht oder ihm in seiner Konsole zeigt (die Bewertung, die
+Rezension und Ihren öffentlichen Namen; bei Google Play auch technische Angaben wie das Gerätemodell und die Versionen
+des Systems und der App), und kann Ihnen dort antworten.
 
 ## 5. Internationale Übermittlungen
 Der Entwickler nimmt keine Datenübermittlungen vor. Wenn Sie die KI mit OpenRouter nutzen, geht die Anfrage an den von
 Ihnen gewählten Anbieter, der sie in anderen Regionen und nach seinen eigenen Bedingungen verarbeiten kann. Google kann
-die Diagnosedaten von ML Kit nach seinen eigenen Bedingungen in anderen Ländern verarbeiten. Die übrigen Dienste, die
-Sie nutzen möchten (E-Mail, Cloud, Ziel eines kopierten Textes oder einer geteilten Datei oder eines geteilten
-Bildes), unterliegen ihren eigenen Bedingungen.
+die Diagnosedaten von ML Kit nach seinen eigenen Bedingungen in anderen Ländern verarbeiten. Der Store, in dem Sie die
+App bewerten (Google Play oder der App Store), kann Ihre Bewertung und Ihre Rezension nach seinen eigenen Bedingungen in
+anderen Ländern verarbeiten. Die übrigen Dienste, die Sie nutzen möchten (E-Mail, Cloud, Ziel eines kopierten Textes
+oder einer geteilten Datei oder eines geteilten Bildes), unterliegen ihren eigenen Bedingungen.
 
 ## 6. Speicherdauer
 
@@ -300,10 +318,11 @@ Konten, und Ihre Daten bleiben auf dem Gerät. Die KI mit OpenRouter erfordert e
 Minderjährige nicht ohne Erlaubnis ihrer Eltern oder Erziehungsberechtigten anlegen sollten.
 
 ## 9. Sicherheit
-Es gibt keinen Server des Entwicklers und keine Datenübermittlung aus der App, außer bei aktivierter optionaler KI. Ihre
-Daten liegen im privaten Bereich der App, Ihr Schlüssel im Keystore oder im Schlüsselbund; die Verbindungen zu
-OpenRouter nutzen HTTPS und folgen keinen Weiterleitungen. Der Schutz Ihres Handys (Bildschirmsperre, Verschlüsselung,
-kein Root oder Jailbreak) liegt bei Ihnen. Der Code ist öffentlich, und jeder kann überprüfen, was er tut.
+Es gibt keinen Server des Entwicklers und keine Datenübermittlung aus der App, außer bei aktivierter optionaler KI (das
+Bewertungsfenster zeigt der Store, nicht die App; siehe „Bewertung im Store“). Ihre Daten liegen im privaten Bereich der
+App, Ihr Schlüssel im Keystore oder im Schlüsselbund; die Verbindungen zu OpenRouter nutzen HTTPS und folgen keinen
+Weiterleitungen. Der Schutz Ihres Handys (Bildschirmsperre, Verschlüsselung, kein Root oder Jailbreak) liegt bei Ihnen.
+Der Code ist öffentlich, und jeder kann überprüfen, was er tut.
 
 ## 10. Änderungen dieser Datenschutzerklärung
 

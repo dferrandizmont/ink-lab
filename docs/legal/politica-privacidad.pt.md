@@ -1,7 +1,7 @@
 # Política de privacidade do Ink Lab
 
 
-Última atualização: 2026-11-07
+Última atualização: 2026-11-13
 
 Tradução de cortesia. Prevalece a [versão espanhola](https://inklab.mainshai.com/es/privacy/).
 
@@ -30,15 +30,16 @@ marcadores (cheio, a acabar ou seco) e as suas notas de recarga, as fotografias 
 próprias que guarda para os seus marcadores, as suas paletas guardadas, as suas receitas de mistura e as respetivas
 fotografias, o histórico das suas últimas escolhas ao associar cores, as entradas e as fotografias do seu diário, as
 suas ideias favoritas e vistas há pouco, as suas definições, o passo das boas-vindas em que ficou, a data em que guardou
-pela última vez uma cópia em ficheiro e o registo de erros (ver abaixo) são guardados apenas no armazenamento privado da
-aplicação, no seu dispositivo. De cada cor própria guarda-se apenas o código hexadecimal, nunca a fotografia de onde a
-tirou. Os catálogos das 15 marcas de marcadores (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker, Promarker
-Brush, Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush e
-Artist's Loft) vêm incluídos na aplicação e tudo funciona sem ligação. «Noutras marcas», «Sombra e luz», «Misturar
-com…» e o aviso de marcadores quase iguais (no detalhe de um marcador), a pesquisa por código hexadecimal, a vista
-«Valores» em tons de cinzento, a pré-visualização «Visão das cores» (em «Paleta»), o «Mapa de cores» e a tradução de
-receitas (em «A minha coleção» → «Ferramentas») e os «Números do diário» são calculados no seu telemóvel com esses
-catálogos e os seus dados, sem enviar nada. Não há sincronização nem cópia em nenhum servidor nosso.
+pela última vez uma cópia em ficheiro, os contadores da avaliação na loja e o registo de erros (ver abaixo) são
+guardados apenas no armazenamento privado da aplicação, no seu dispositivo. De cada cor própria guarda-se apenas o
+código hexadecimal, nunca a fotografia de onde a tirou. Os catálogos das 15 marcas de marcadores (Ohuhu, DecoTime,
+Copic, Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor,
+Graph'it, Marvy Le Plume, Blick Studio Brush e Artist's Loft) vêm incluídos na aplicação e tudo funciona sem ligação.
+«Noutras marcas», «Sombra e luz», «Misturar com…» e o aviso de marcadores quase iguais (no detalhe de um marcador), a
+pesquisa por código hexadecimal, a vista «Valores» em tons de cinzento, a pré-visualização «Visão das cores» (em
+«Paleta»), o «Mapa de cores» e a tradução de receitas (em «A minha coleção» → «Ferramentas») e os «Números do diário»
+são calculados no seu telemóvel com esses catálogos e os seus dados, sem enviar nada. Não há sincronização nem cópia em
+nenhum servidor nosso.
 
 A cópia de segurança do sistema Android está **desativada** para esta aplicação: exclui todos os ficheiros da aplicação
 da cópia na nuvem e da transferência entre dispositivos, pelo que nem as suas definições, nem a sua chave, nem os seus
@@ -86,12 +87,24 @@ para a área de transferência. «Importar de texto» e a importação de códig
 não abrem ligações nem se ligam a nada.
 
 ### Avaliação na loja
-Uma única vez, depois de guardar a sua terceira paleta ou a sua primeira entrada do diário, a aplicação pede ao sistema
-que mostre a janela de avaliação da loja (Google Play no Android, App Store no iPhone). É a loja que decide se a mostra
-e que recebe a sua avaliação, se a escrever, segundo as suas próprias condições; o Ink Lab não recebe a classificação
-nem o texto, não sabe se avaliou e não envia nada. No Android trata-se de uma comunicação interna do telemóvel com a
-aplicação Google Play. A aplicação apenas regista no seu telemóvel que já fez o pedido, para não o repetir, e desiste se
-a loja não conseguir mostrar a janela três vezes.
+De vez em quando, depois de guardar uma paleta ou uma nova entrada do diário, o Ink Lab pode pedir à loja (Google Play
+no Android, a App Store no iPhone e no iPad) que lhe mostre a janela para avaliar a aplicação. Não o pede na primeira
+semana, nem durante um restauro ou logo depois de restaurar ou importar uma cópia de segurança, nem mais de três vezes
+no total (no máximo uma por versão e com pelo menos 90 dias de intervalo), e **é a loja que decide** se a janela
+aparece. Para pedir essa janela, a aplicação usa a biblioteca de avaliações do Google Play no Android (uma comunicação
+interna do telemóvel com a aplicação Google Play) e a função do sistema no iPhone e no iPad. **O Ink Lab apenas indica à
+loja de que aplicação se trata:** não lhe passa as suas paletas, a sua coleção nem nenhum outro dado seu, e não sabe se
+avaliou nem o que escreveu. A sua classificação e a sua crítica são escritas na janela da loja e **recebe-as a Google ou
+a Apple, com a sua conta da loja** e segundo as suas próprias condições. Também pode abrir a página do Ink Lab na loja
+quando quiser com «Avaliar o Ink Lab» (Definições → Acerca de).
+
+Para decidir quando perguntar, a aplicação guarda no seu telemóvel alguns contadores: o dia em que a abriu pela primeira
+vez, o último dia em que a abriu, em quantos dias diferentes a abriu, quantas vezes pediu a avaliação, o dia e a versão
+do último pedido, e quantas vezes a loja não conseguiu mostrar a janela (à terceira deixa de tentar). São apenas datas e
+contagens: não guardam o que faz dentro da aplicação nem nada do que escreve. Esses contadores não fazem parte da cópia
+de segurança da aplicação (nem do texto nem do ficheiro) e o Ink Lab não os envia a ninguém. No Android também não saem
+do telemóvel, porque a cópia de segurança do sistema está desativada para esta aplicação; no iPhone e no iPad podem
+fazer parte da cópia do dispositivo ou do iCloud, se a tiver ativada, tal como as restantes definições da aplicação.
 
 ### Modo cavalete e atalhos
 O modo cavalete (em «Paleta») mostra a paleta em grande e mantém o ecrã ligado enquanto está aberto; ao fechá-lo, o
@@ -245,15 +258,18 @@ descrito acima é recebido pelo **OpenRouter** e pelo **fornecedor do modelo** q
 chave. Se nos enviar uma mensagem de suporte, comentários, um relatório de uma sugestão ou o registo de erros, recebe-os
 o titular em inklab@mainshai.com (ou em dev@mainshai.com, o endereço que a aplicação utilizava até à versão 0.6.2)
 através do serviço que escolher. Se partilhar o registo de erros com outra pessoa ou serviço, só esse destinatário o
-recebe. Se escrever uma avaliação na janela da loja, quem a recebe diretamente é a **Google** ou a **Apple**, não a
-aplicação.
+recebe. Se avaliar a aplicação na loja, quem recebe diretamente a sua classificação e a sua crítica é a **Google** ou a
+**Apple**, com a sua conta da loja; não passam pela aplicação. O programador só vê depois o que a loja publica ou lhe
+mostra na sua consola (a classificação, a crítica e o seu nome público; no Google Play, também dados técnicos como o
+modelo do dispositivo e as versões do sistema e da aplicação) e pode responder-lhe aí.
 
 ## 5. Transferências internacionais
 O programador não realiza transferências de dados. Se utilizar a IA com o OpenRouter, o pedido vai para o fornecedor que
 escolher, que pode tratá-lo noutras regiões e segundo as suas próprias condições. A Google pode tratar os diagnósticos
-do ML Kit noutros países, segundo as suas próprias condições. Os restantes serviços que decida utilizar (correio
-eletrónico, nuvem, destino de um texto copiado ou de um ficheiro ou imagem partilhados) regem-se pelas suas próprias
-condições.
+do ML Kit noutros países, segundo as suas próprias condições. A loja em que avaliar a aplicação (Google Play ou a App
+Store) pode tratar a sua classificação e a sua crítica noutros países, segundo as suas próprias condições. Os restantes
+serviços que decida utilizar (correio eletrónico, nuvem, destino de um texto copiado ou de um ficheiro ou imagem
+partilhados) regem-se pelas suas próprias condições.
 
 ## 6. Durante quanto tempo são conservados
 
@@ -291,10 +307,11 @@ recolhe dados pessoais de ninguém, incluindo de menores: não há contas e os s
 OpenRouter exige uma conta própria num terceiro, que os menores não devem criar sem autorização dos pais ou tutores.
 
 ## 9. Segurança
-Não há servidor do programador nem transmissão de dados a partir da aplicação, exceto com a IA opcional ativada. Os seus
-dados estão no espaço privado da aplicação; a sua chave, no Keystore ou no Porta-chaves; as ligações ao OpenRouter
-utilizam HTTPS e não seguem redirecionamentos. Proteger o seu telemóvel (bloqueio de ecrã, cifragem, sem root nem
-jailbreak) é da sua responsabilidade. O código é público e qualquer pessoa pode verificar o que faz.
+Não há servidor do programador nem transmissão de dados a partir da aplicação, exceto com a IA opcional ativada (a
+janela de avaliação é mostrada pela loja, não pela aplicação; ver «Avaliação na loja»). Os seus dados estão no espaço
+privado da aplicação; a sua chave, no Keystore ou no Porta-chaves; as ligações ao OpenRouter utilizam HTTPS e não seguem
+redirecionamentos. Proteger o seu telemóvel (bloqueio de ecrã, cifragem, sem root nem jailbreak) é da sua
+responsabilidade. O código é público e qualquer pessoa pode verificar o que faz.
 
 ## 10. Alterações a esta política
 

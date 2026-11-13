@@ -267,6 +267,7 @@ class _BackupSectionState extends State<BackupSection> {
         confirmLabel: l10n.settingsImportConfirm,
       );
       if (!confirmed || !mounted) return;
+      scope.reviewPrompt?.markQuiet();
       setState(() => _work = _FileWork.restoring);
       await _archiveService.importArchive(bytes);
       done = l10n.settingsBackupFileRestored;
@@ -333,7 +334,8 @@ class _BackupSectionState extends State<BackupSection> {
       body: context.l10n.settingsImportConfirmBody,
       confirmLabel: context.l10n.settingsImportConfirm,
     );
-    if (!confirmed) return;
+    if (!confirmed || !context.mounted) return;
+    scope.reviewPrompt?.markQuiet();
 
     try {
       await _service.importJson(text);

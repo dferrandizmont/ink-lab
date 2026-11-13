@@ -37,16 +37,7 @@ extension _PaletteSaveShare on _PalettePageState {
             : null,
       ),
     );
-    // The third saved palette (over every brand) is a milestone for the
-    // one-off review prompt.
-    unawaited(
-      scope.reviewPrompt?.onPaletteSaved(
-        scope.savedPalettes.exportByBrand().values.fold<int>(
-          0,
-          (int sum, List<SavedPalette> list) => sum + list.length,
-        ),
-      ),
-    );
+    unawaited(scope.reviewPrompt?.onSuccess());
     if (!mounted) return;
     // The confirmation is where the finger is: the Save button turns into
     // "Saved" (see [_isSaved]) and a snack bar names the palette. A banner at

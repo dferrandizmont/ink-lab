@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart' as launcher;
 
 import '../../../core/error_log.dart';
 import '../../../core/platform_info.dart';
+import '../../../data/review_prompt.dart';
 import '../../icons/ink_icons.dart';
 import '../../share/share_sink.dart';
 import '../../theme/app_typography.dart';
@@ -16,14 +19,15 @@ import 'feedback_email.dart';
 import 'settings_widgets.dart';
 import '../../../l10n/l10n.dart';
 
-/// The version, the source code, the licences, the feedback and error log
-/// rows and the disclaimer of the project.
+/// The version, the source code, the licences, the feedback, the store
+/// rating and error log rows and the disclaimer of the project.
 ///
 /// Renders rows of the "About" card; the page owns the group.
 class AboutSection extends StatefulWidget {
   const AboutSection({
     super.key,
     this.errorLog,
+    this.reviewPrompt,
     this.launchEmail,
     this.shareSink,
     this.showLicences,
@@ -32,6 +36,10 @@ class AboutSection extends StatefulWidget {
   /// The local error log, or `null` where there is none (the two error log
   /// rows are then left out).
   final ErrorLog? errorLog;
+
+  /// Opens the app's own store page from the rating row, or `null` where
+  /// there is no store (the row and its divider are then left out).
+  final ReviewPrompt? reviewPrompt;
 
   /// Opens the email app with a prepared `mailto:` address and says whether it
   /// opened. Production uses `url_launcher`; tests inject a fake.
@@ -146,6 +154,16 @@ class _AboutSectionState extends State<AboutSection> {
           chevron: true,
           onTap: () => _sendFeedback(context),
         ),
+        if (widget.reviewPrompt != null) ...<Widget>[
+          const Divider(),
+          InkListRow(
+            key: const ValueKey<String>('settings-rate'),
+            label: context.l10n.settingsRateApp,
+            subtitle: context.l10n.settingsRateAppSubtitle,
+            chevron: true,
+            onTap: () => unawaited(widget.reviewPrompt!.openStoreListing()),
+          ),
+        ],
         if (widget.errorLog != null)
           ValueListenableBuilder<bool>(
             valueListenable: widget.errorLog!.hasContent,

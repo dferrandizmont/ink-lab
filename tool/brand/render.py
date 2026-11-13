@@ -15,7 +15,7 @@ Outputs
     (es, de, fr, pt, it), docs/release/store/icon-512.png
 
 Colours are real Ohuhu Oahu markers (code and hex from
-assets/data/ohuhu_colors.json) on the Design G neutrals (docs/DESIGN_SPEC.md).
+assets/data/ohuhu_colors.json) on the app's neutral colours (lib/ui/theme/tokens.dart).
 """
 
 from __future__ import annotations

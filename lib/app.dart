@@ -1,3 +1,5 @@
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -27,6 +29,21 @@ class InkLabApp extends StatefulWidget {
 class _InkLabAppState extends State<InkLabApp> {
   AppScope? _scope;
   Stream<AppSettingsState>? _changes;
+  late final AppLifecycleListener _lifecycle;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycle = AppLifecycleListener(onResume: _recordOpen);
+  }
+
+  void _recordOpen() => unawaited(_scope?.reviewPrompt?.recordOpen());
+
+  @override
+  void dispose() {
+    _lifecycle.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -37,6 +54,7 @@ class _InkLabAppState extends State<InkLabApp> {
       _scope = scope;
       // Captured once so the StreamBuilder does not resubscribe every build.
       _changes = scope?.settings.changes;
+      _recordOpen();
     }
   }
 

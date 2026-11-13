@@ -1,6 +1,5 @@
 <!--
-No es asesoramiento jurídico. Resume qué hace la app con los datos, comprobado contra el código el 7-nov-2026;
-conviene que lo revise un profesional antes del lanzamiento en las tiendas.
+No es asesoramiento jurídico. Resume qué hace la app con los datos, comprobado contra el código.
 -->
 
 # Privacidad y cumplimiento
@@ -52,13 +51,22 @@ English version: [`privacy.en.md`](privacy.en.md).
   Google), no la app. En iOS 26+ la opción «En el dispositivo» usa Apple Intelligence (framework Foundation
   Models, `ios/Runner/OnDeviceAiChannel.swift`): el modelo lo instala y gestiona iOS, la app no descarga nada, no hay
   ML Kit ni otro SDK y no sale nada del teléfono.
-- **Valoración en la tienda, como mucho una vez** (`lib/data/review_prompt.dart`, paquete `in_app_review`): tras la
-  tercera paleta guardada o la primera entrada del diario, la app pide al sistema que muestre el diálogo de valoración de
-  la tienda (Google Play In-App Review en Android, StoreKit en iOS). La tienda decide si aparece; la app no recibe la
-  nota ni el texto, no sabe si se valoró y no envía nada. En Android es una llamada entre procesos (IPC) a la app de Play
-  Store del teléfono. Se apunta en `shared_preferences` que ya se pidió (`review_prompt_asked`, fuera de las copias) y no
-  se vuelve a pedir; si la tienda no puede mostrar el diálogo (una app instalada sin Play, por ejemplo), lo cuenta
-  (`review_prompt_unavailable`) y deja de intentarlo a la tercera.
+- **Valoración en la tienda, como mucho tres veces** (`lib/core/review_policy.dart`, `lib/data/review_prompt.dart`,
+  paquete `in_app_review`): al guardar una paleta o una entrada nueva del diario, la app puede pedir al sistema que
+  muestre el diálogo de valoración de la tienda (Google Play In-App Review en Android, StoreKit en iOS), solo si han
+  pasado 7 días desde la primera apertura registrada, la app se ha abierto en 5 días distintos, hay una paleta guardada
+  o una entrada del diario, no está en la bienvenida, no hay una restauración o importación de copia en esta sesión, y
+  quedan peticiones (3 en total, una por versión, 90 días entre ellas). La tienda decide si aparece; la app solo le
+  dice de qué app se trata (su paquete o su Apple ID), no recibe la nota ni el texto, no sabe si se valoró y no le pasa
+  ningún otro dato. La reseña la recibe Google o Apple con la cuenta de la tienda del usuario. En Android es una llamada entre
+  procesos (IPC) a la app de Play Store del teléfono. «Valorar Ink Lab» (Ajustes → Acerca de) abre la ficha de la app
+  en la tienda (`openStoreListing`, Apple ID `6830184034`). Los contadores van en `shared_preferences`
+  (`review_state`, un JSON: primer día y último día de apertura, número de días distintos, número de peticiones, día y
+  versión de la última, veces que la tienda no tenía diálogo), fuera de `AppSettingsState` y de las dos copias de la
+  app; las claves antiguas `review_prompt_asked` y `review_prompt_unavailable` se pasan a `review_state` una vez y se
+  borran. Si la tienda no puede mostrar el diálogo (una app instalada sin Play, por ejemplo) lo cuenta y deja de
+  intentarlo a la tercera. En Android la copia del sistema está desactivada; en iOS entran en la copia del iPhone o de
+  iCloud si el usuario la tiene activada, como el resto de `UserDefaults`.
 - **Modo caballete** (Paleta): mientras está abierto, `wakelock_plus` (`lib/ui/screen_awake.dart`) mantiene la pantalla
   encendida (una bandera de la ventana en Android, el temporizador de reposo en iOS) y la suelta al cerrarlo. No pide
   permisos (no declara `WAKE_LOCK`) ni guarda o envía datos.
@@ -100,8 +108,8 @@ derivado, nunca la foto), paletas guardadas (`saved_palettes:<brandId>`), histor
 (`artwork_diary`, solo en instalaciones anteriores a la 1.0.0: al arrancar se pasa a su propio fichero, ver abajo),
 las ideas favoritas y las vistas hace poco (`idea_favorites`, `idea_recent`: solo ids de idea,
 `lib/data/idea_favorites_repository.dart`), el borrador de la bienvenida (`onboarding_draft`: marca y packs elegidos
-hasta pulsar Empezar u Omitir, que lo borran), si ya se pidió la valoración en la tienda (`review_prompt_asked`,
-`review_prompt_unavailable`), preferencias de apariencia, la fecha del último archivo de copia
+hasta pulsar Empezar u Omitir, que lo borran), los contadores de la valoración en la tienda
+(`review_state`), preferencias de apariencia, la fecha del último archivo de copia
 (`last_backup_at`, milisegundos desde epoch; se muestra en Ajustes y sirve para proponer una copia nueva pasados 30
 días; nunca entra en una copia) y los ajustes de IA **sin la clave** (`ai_settings`). Sin identificadores de dispositivo
 ni de usuario. La clave de OpenRouter, si el usuario la guarda, va aparte: Android Keystore (`flutter_secure_storage`) o
@@ -233,7 +241,7 @@ fotos. Sin app de correo, el informe se copia al portapapeles. La política de p
   «otros datos de uso» sin vincular a la identidad ni usar para seguimiento.
 - Google Play, Seguridad de los datos: hay que declarar los datos que recoge el SDK ML Kit (identificadores del
   dispositivo, diagnósticos y otros datos de rendimiento; opcionales, solo con la IA activada; para analítica; cifrados
-  en tránsito) y la petición opcional a OpenRouter. Respuestas finales en `docs/tienda/google-play.md`.
+  en tránsito) y la petición opcional a OpenRouter.
 - Las fotos (del diario, de las muestras y de las recetas) nunca salen del móvil, así que los formularios no cambian: ni en Google Play (Seguridad de los
   datos) ni en Apple (etiquetas de privacidad) hay datos nuevos que recoger ni que compartir.
 - Lo de la 0.8 tampoco los cambia: la copia en archivo y la imagen de una entrada del diario solo salen por el menú de
@@ -251,9 +259,3 @@ fotos. Sin app de correo, el informe se copia al portapapeles. La política de p
   directos no tratan datos; y el diálogo de valoración lo muestra la tienda (Play o App Store), sin que la app reciba ni
   envíe nada. En App Privacy no hay nada nuevo que declarar; el manifiesto ya incluye el motivo `C617.1`.
 - No hay cuentas que borrar; los datos se eliminan desinstalando la app o borrando sus datos desde el sistema.
-- Revisar los formularios con el AAB/IPA definitivo y publicar una URL de política coherente con estos hechos.
-
-## Pendiente antes del lanzamiento en las tiendas
-- [ ] Publicar la política (URL), enlazarla desde las dos tiendas y desde Ajustes si se quiere.
-- [ ] Rellenar App Privacy (Apple) y Seguridad de los datos (Play) con el binario final.
-- [ ] Revisar este documento cada vez que cambie el flujo de datos (permisos, copias, IA, exportaciones, soporte).

@@ -1,20 +1,24 @@
 import 'package:in_app_review/in_app_review.dart';
 
+import '../core/review_policy.dart';
 import 'app_settings_repository.dart';
 
-/// The store's own review dialog, behind a seam so tests do not need a store.
+/// Ink Lab's App Store listing identifier.
+const String inkLabAppStoreId = '6830184034';
+
+/// The store's review UI, behind a seam so tests do not need a store.
 abstract interface class StoreReviewer {
   /// Whether the store can show its review dialog on this device.
   Future<bool> isAvailable();
 
-  /// Asks the store to show the review dialog. The store decides whether it
-  /// really appears (both stores limit how often it can).
+  /// Asks for the store dialog; the store decides whether it really appears.
   Future<void> requestReview();
+
+  /// Opens the app's store listing for an explicit review action.
+  Future<void> openStoreListing();
 }
 
-/// [StoreReviewer] on top of the `in_app_review` package (Play In-App Review
-/// on Android, StoreKit on iOS). The app sends nothing: the store shows its
-/// own dialog.
+/// [StoreReviewer] backed by the platform's own review UI.
 final class PlatformStoreReviewer implements StoreReviewer {
   const PlatformStoreReviewer();
 
@@ -23,79 +27,108 @@ final class PlatformStoreReviewer implements StoreReviewer {
 
   @override
   Future<void> requestReview() => InAppReview.instance.requestReview();
+
+  @override
+  Future<void> openStoreListing() =>
+      InAppReview.instance.openStoreListing(appStoreId: inkLabAppStoreId);
 }
 
-/// Asks for a store review once, at most, after a real milestone.
+/// Asks after successful work once the installation meets [ReviewPolicy].
 ///
-/// The milestones are the third saved palette and the first diary entry,
-/// whichever comes first; the app calls [onPaletteSaved] and
-/// [onDiaryEntrySaved] after those saves, so it is never asked on first
-/// launch. Once it has been asked (the answer is kept in
-/// [AppSettingsRepository.reviewPromptAsked], outside the backups) it is never
-/// asked again, and an unavailable or failing store is simply skipped: no
-/// error ever reaches the caller.
+/// `hasOwnData` counts saved palettes in any brand or artwork diary entries.
+/// The collection is configured by every user during first-run setup, so it
+/// says nothing about real use; a saved palette or diary entry is work the
+/// person made. History stays local to this installation, outside backups.
 class ReviewPrompt {
   ReviewPrompt({
     required this._settings,
     this._reviewer = const PlatformStoreReviewer(),
-  });
-
-  /// Saved palettes (in all, over every brand) that make the milestone.
-  static const int palettesMilestone = 3;
-
-  /// After this many times the store has no review dialog (a side-loaded app,
-  /// no Play), it is not asked again: every ask would be a pointless call into
-  /// the store's service.
-  static const int maxUnavailable = 3;
+    required this._appVersion,
+    DateTime Function()? clock,
+    required this._hasOwnData,
+  }) : _clock = clock ?? DateTime.now;
 
   final AppSettingsRepository _settings;
   final StoreReviewer _reviewer;
+  final String _appVersion;
+  final DateTime Function() _clock;
+  final bool Function() _hasOwnData;
+  bool _quiet = false;
 
-  bool _running = false;
-
-  /// A palette was just saved; [totalSaved] is how many are saved now.
-  Future<void> onPaletteSaved(int totalSaved) async {
-    if (totalSaved < palettesMilestone) return;
-    await _ask();
+  Future<void> _tail = Future<void>.value();
+  Future<T> _serial<T>(Future<T> Function() job) {
+    final result = _tail.then((_) => job());
+    _tail = result.then<void>((_) {}, onError: (Object _) {});
+    return result;
   }
 
-  /// A new diary entry was just saved.
-  Future<void> onDiaryEntrySaved() => _ask();
+  DateTime _today() {
+    final local = _clock().toLocal();
+    return DateTime(local.year, local.month, local.day);
+  }
 
-  Future<void> _ask() async {
-    if (_running || _settings.reviewPromptAsked) return;
-    _running = true;
+  bool _shouldAsk(ReviewState state, DateTime today) => ReviewPolicy.shouldAsk(
+    state: state,
+    today: today,
+    appVersion: _appVersion,
+    hasOwnData: _hasOwnData(),
+    inFirstRun: !_settings.onboardingCompleted,
+    quiet: _quiet,
+  );
+
+  /// Records an open day without delaying the UI or exposing storage errors.
+  Future<void> recordOpen() async {
     try {
-      if (!await _isAvailable()) {
-        await _giveUpAfterTooMany();
-        return;
-      }
-      // Marked before asking: if the dialog fails half-way it still counts,
-      // so a user is never asked twice.
-      await _settings.setReviewPromptAsked(true);
-      await _reviewer.requestReview();
+      await _serial(
+        () => _settings.setReviewState(
+          _settings.reviewState.withOpenOn(_today()),
+        ),
+      );
     } catch (_) {
-      // A review prompt must never break a save.
-    } finally {
-      _running = false;
+      // Review tracking must never interrupt app use.
     }
   }
 
-  /// Whether the store can show its dialog; a store that fails to answer
-  /// counts as one that cannot.
-  Future<bool> _isAvailable() async {
+  /// A palette or a new diary entry was saved successfully.
+  Future<void> onSuccess() async {
     try {
-      return await _reviewer.isAvailable();
+      final ask = await _serial(() async {
+        final state = _settings.reviewState;
+        if (!_shouldAsk(state, _today())) return false;
+        bool available;
+        try {
+          available = await _reviewer.isAvailable();
+        } catch (_) {
+          available = false;
+        }
+        if (!available) {
+          await _settings.setReviewState(state.withUnavailable());
+          return false;
+        }
+        // Restore/import or first-run setup may have started during the check.
+        final today = _today();
+        if (!_shouldAsk(state, today)) return false;
+        // Persist first: even a crash in the dialog cannot cause a second ask.
+        await _settings.setReviewState(state.withRequestOn(today, _appVersion));
+        return true;
+      });
+      // A restore or an import confirmed while the request was being written
+      // still wins; the written request stays, which only asks less.
+      if (ask && !_quiet) await _reviewer.requestReview();
     } catch (_) {
-      return false;
+      // Store and storage failures must never break a successful save.
     }
   }
 
-  /// Counts one more time without a dialog; at [maxUnavailable] the prompt is
-  /// marked as asked for good.
-  Future<void> _giveUpAfterTooMany() async {
-    final int count = _settings.reviewPromptUnavailable + 1;
-    await _settings.setReviewPromptUnavailable(count);
-    if (count >= maxUnavailable) await _settings.setReviewPromptAsked(true);
+  /// Suppresses automatic requests for the rest of this session.
+  void markQuiet() => _quiet = true;
+
+  /// Opens the store for an explicit action, swallowing platform errors.
+  Future<void> openStoreListing() async {
+    try {
+      await _reviewer.openStoreListing();
+    } catch (_) {
+      // The store may not be installed on this device.
+    }
   }
 }

@@ -34,9 +34,11 @@ AppScope paletteScope({
   ShareSink? shareSink,
   ScreenAwake? screenAwake,
   StoreReviewer? storeReviewer,
+  DateTime Function()? reviewClock,
 }) => AppScope.inMemory(
   markers: diskMarkerRepository(),
   storeReviewer: storeReviewer,
+  reviewClock: reviewClock,
   secrets: secrets,
   aiSettings: aiSettings,
   aiService: aiService,
@@ -85,6 +87,7 @@ Future<AppScope> pumpPalette(
   ShareSink? shareSink,
   ScreenAwake? screenAwake,
   StoreReviewer? storeReviewer,
+  DateTime Function()? reviewClock,
 }) async {
   tester.view.physicalSize = const Size(600, 3000);
   tester.view.devicePixelRatio = 1.0;
@@ -98,6 +101,7 @@ Future<AppScope> pumpPalette(
     shareSink: shareSink,
     screenAwake: screenAwake,
     storeReviewer: storeReviewer,
+    reviewClock: reviewClock,
   );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);

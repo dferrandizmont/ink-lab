@@ -1,7 +1,7 @@
 # Politique de confidentialité d'Ink Lab
 
 
-Dernière mise à jour : 2026-11-07
+Dernière mise à jour : 2026-11-13
 
 Traduction de courtoisie. Seule la [version espagnole](https://inklab.mainshai.com/es/privacy/) fait foi.
 
@@ -32,16 +32,17 @@ vos feutres (plein, bientôt vide ou sec) et vos notes de recharge, les photos d
 personnelles que vous enregistrez pour vos feutres, vos palettes enregistrées, vos recettes de mélange et leurs photos,
 l'historique de vos derniers choix lors de l'association de couleurs, les entrées et les photos de votre journal, vos
 idées favorites et vues récemment, vos réglages, l'étape de l'accueil où vous vous êtes arrêté, la date de votre dernier
-fichier de sauvegarde et l'historique des erreurs (voir ci-dessous) sont enregistrés uniquement dans l'espace de
-stockage privé de l'application, sur votre appareil. Pour chaque couleur personnelle, seul son code hexadécimal est
-enregistré, jamais la photo dont vous l'avez tirée. Les catalogues des 15 marques de feutres (Ohuhu, DecoTime, Copic,
-Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier, Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it,
-Marvy Le Plume, Blick Studio Brush et Artist's Loft) sont inclus dans l'application et tout fonctionne hors connexion.
-« Dans d’autres marques », « Ombre et lumière », « Mélanger avec… » et l'avertissement sur les feutres presque
-identiques (dans le détail d'un feutre), la recherche par code hexadécimal, la vue « Valeurs » en niveaux de gris,
-l'aperçu « Vision des couleurs » (dans « Palette »), la « Carte des couleurs » et la traduction de recettes (dans « Ma
-collection » → « Outils ») et les « Chiffres du journal » sont calculés sur votre téléphone à partir de ces catalogues et
-de vos données, sans rien envoyer. Il n'y a ni synchronisation ni copie sur aucun de nos serveurs.
+fichier de sauvegarde, les compteurs de l'avis dans la boutique et l'historique des erreurs (voir ci-dessous) sont
+enregistrés uniquement dans l'espace de stockage privé de l'application, sur votre appareil. Pour chaque couleur
+personnelle, seul son code hexadécimal est enregistré, jamais la photo dont vous l'avez tirée. Les catalogues des 15
+marques de feutres (Ohuhu, DecoTime, Copic, Finecolour, Touch Twin, Promarker, Promarker Brush, Prismacolor Premier,
+Spectrum Noir, Arrtx, ZIG Kurecolor, Graph'it, Marvy Le Plume, Blick Studio Brush et Artist's Loft) sont inclus dans
+l'application et tout fonctionne hors connexion. « Dans d’autres marques », « Ombre et lumière », « Mélanger avec… » et
+l'avertissement sur les feutres presque identiques (dans le détail d'un feutre), la recherche par code hexadécimal, la
+vue « Valeurs » en niveaux de gris, l'aperçu « Vision des couleurs » (dans « Palette »), la « Carte des couleurs » et la
+traduction de recettes (dans « Ma collection » → « Outils ») et les « Chiffres du journal » sont calculés sur votre
+téléphone à partir de ces catalogues et de vos données, sans rien envoyer. Il n'y a ni synchronisation ni copie sur
+aucun de nos serveurs.
 
 La sauvegarde système d'Android est **désactivée** pour cette application : elle exclut tous les fichiers de
 l'application de la sauvegarde dans le cloud et du transfert entre appareils, de sorte que ni vos réglages, ni votre
@@ -90,14 +91,29 @@ sont secs) et, uniquement lorsque vous le touchez, le remettent à l'application
 partage du système ou le copient dans le presse-papiers. « Importer depuis un texte » et l'import de codes ne lisent que
 le texte que vous collez ou saisissez ; ils n'ouvrent aucun lien et ne se connectent à rien.
 
-### Avis sur la boutique
-Une seule fois, après l'enregistrement de votre troisième palette ou de votre première entrée du journal,
-l'application demande au système d'afficher la fenêtre d'avis de la boutique (Google Play sur Android, App Store sur
-iPhone). C'est la boutique qui décide de l'afficher et qui reçoit votre avis si vous en écrivez un, selon ses propres
-conditions ; Ink Lab ne reçoit ni la note ni le texte, ne sait pas si vous avez laissé un avis et n'envoie rien. Sur
-Android, il s'agit d'un échange interne au téléphone avec l'application Google Play. L'application note seulement, sur
-votre téléphone, qu'elle a déjà fait la demande, pour ne pas la refaire, et abandonne si la boutique ne peut pas
-afficher la fenêtre à trois reprises.
+### Avis dans la boutique
+De temps en temps, après l'enregistrement d'une palette ou d'une nouvelle entrée du journal, Ink Lab peut demander à la
+boutique (Google Play sur Android, l'App Store sur iPhone et iPad) de vous montrer sa fenêtre pour noter l'application.
+Elle ne le demande pas pendant la première semaine, ni pendant une restauration ou juste après la restauration ou
+l'importation d'une sauvegarde, ni plus de trois fois au total (au plus une fois par version et à au moins 90 jours
+d'intervalle), et **c'est la boutique qui décide** si la fenêtre s'affiche. Pour demander cette fenêtre, l'application
+utilise la bibliothèque d'avis de Google Play sur Android (un échange interne au téléphone avec l'application Google
+Play) et la fonction du système sur iPhone et iPad. **Ink Lab indique seulement à la boutique de quelle application il
+s'agit :** l'application ne lui transmet ni vos palettes, ni votre collection, ni aucune autre donnée vous concernant,
+et elle ne sait pas si vous avez laissé une note ni ce que vous avez écrit. Vous écrivez votre note et votre avis dans
+la fenêtre de la boutique, et **c'est Google ou Apple qui les reçoit, avec votre compte de la boutique**, selon ses
+propres conditions. Vous pouvez aussi ouvrir la page d'Ink Lab dans la boutique quand vous le souhaitez avec « Noter Ink
+Lab » (Réglages → À propos).
+
+Pour décider quand demander, l'application conserve sur votre téléphone quelques compteurs : le jour où vous l'avez
+ouverte pour la première fois, le dernier jour où vous l'avez ouverte, le nombre de jours différents où vous l'avez
+ouverte, le nombre de fois où elle a demandé un avis, le jour et la version de la dernière demande, et combien de fois
+la boutique n'a pas pu afficher la fenêtre (après la troisième, elle n'essaie plus). Ce ne sont que des dates et des
+nombres : ils ne contiennent rien de ce que vous faites dans l'application ni de ce que vous écrivez. Ces compteurs ne
+font pas partie de la sauvegarde de l'application (ni du texte ni du fichier), et Ink Lab ne les envoie à personne. Sur
+Android, ils ne quittent pas non plus le téléphone, car la sauvegarde du système est désactivée pour cette application ;
+sur iPhone et iPad, ils peuvent faire partie de la sauvegarde de l'appareil ou d'iCloud, si vous l'avez activée, comme
+les autres réglages de l'application.
 
 ### Mode chevalet et raccourcis
 Le mode chevalet (dans « Palette ») affiche la palette en grand et garde l'écran allumé tant qu'il est ouvert ; une fois
@@ -260,15 +276,19 @@ OpenRouter, la requête décrite ci-dessus est reçue par **OpenRouter** et par 
 choisissez, en votre nom et avec votre clé. Si vous nous envoyez un e-mail d'assistance, un retour, un signalement de
 suggestion ou l'historique des erreurs, le titulaire le reçoit à l'adresse inklab@mainshai.com (ou à dev@mainshai.com,
 l'adresse utilisée par l'application jusqu'à la version 0.6.2) via le service de votre choix. Si vous partagez
-l'historique des erreurs avec une autre personne ou un autre service, seul ce destinataire le reçoit. Si vous écrivez un
-avis dans la fenêtre de la boutique, c'est **Google** ou **Apple** qui le reçoit directement, pas l'application.
+l'historique des erreurs avec une autre personne ou un autre service, seul ce destinataire le reçoit. Si vous notez
+l'application dans la boutique, c'est **Google** ou **Apple** qui reçoit directement votre note et votre avis, avec
+votre compte de la boutique ; ils ne passent pas par l'application. Le développeur ne voit ensuite que ce que la
+boutique publie ou lui montre dans sa console (la note, l'avis et votre nom public ; sur Google Play, aussi des données
+techniques comme le modèle de l'appareil et les versions du système et de l'application) et peut vous y répondre.
 
 ## 5. Transferts internationaux
 Le développeur n'effectue aucun transfert de données. Si vous utilisez l'IA avec OpenRouter, la requête est adressée au
 fournisseur que vous choisissez, qui peut la traiter dans d'autres régions et selon ses propres conditions. Google peut
-traiter les diagnostics de ML Kit dans d'autres pays, selon ses propres conditions. Les autres services que vous décidez
-d'utiliser (messagerie, cloud, destination d'un texte copié ou d'un fichier ou d'une image partagés) sont régis par
-leurs propres conditions.
+traiter les diagnostics de ML Kit dans d'autres pays, selon ses propres conditions. La boutique où vous notez
+l'application (Google Play ou l'App Store) peut traiter votre note et votre avis dans d'autres pays, selon ses propres
+conditions. Les autres services que vous décidez d'utiliser (messagerie, cloud, destination d'un texte copié ou d'un
+fichier ou d'une image partagés) sont régis par leurs propres conditions.
 
 ## 6. Durée de conservation
 
@@ -309,10 +329,10 @@ les mineurs ne doivent pas créer sans l'autorisation de leurs parents ou tuteur
 
 ## 9. Sécurité
 Il n'y a ni serveur du développeur ni transmission de données depuis l'application, sauf lorsque l'IA facultative est
-activée. Vos données se trouvent dans l'espace privé de l'application ; votre clé, dans le Keystore ou le trousseau ;
-les connexions à OpenRouter utilisent HTTPS et ne suivent pas les redirections. La protection de votre téléphone
-(verrouillage de l'écran, chiffrement, ni root ni jailbreak) vous incombe. Le code est public et chacun peut vérifier ce
-qu'il fait.
+activée (la fenêtre d'avis est affichée par la boutique, pas par l'application ; voir « Avis dans la boutique »). Vos
+données se trouvent dans l'espace privé de l'application ; votre clé, dans le Keystore ou le trousseau ; les connexions
+à OpenRouter utilisent HTTPS et ne suivent pas les redirections. La protection de votre téléphone (verrouillage de
+l'écran, chiffrement, ni root ni jailbreak) vous incombe. Le code est public et chacun peut vérifier ce qu'il fait.
 
 ## 10. Modifications de cette politique
 

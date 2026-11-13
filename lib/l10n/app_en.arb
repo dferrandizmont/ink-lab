@@ -3450,6 +3450,11 @@
   "settingsLicencesLegalese": "Ink Lab code: MIT licence. Texts, ideas and documentation: CC BY-SA 4.0. Bundled fonts: SIL Open Font Licence 1.1.",
   "settingsSendFeedback": "Send feedback",
   "settingsSendFeedbackSubtitle": "Opens your email app with the app and system version. You decide whether to send it.",
+  "settingsRateApp": "Rate Ink Lab",
+  "@settingsRateApp": {
+    "description": "Settings, About: row that opens the app's own store page so the person can leave a rating or review."
+  },
+  "settingsRateAppSubtitle": "A review helps others find it",
   "settingsFeedbackNoMail": "No email app was found. The address {address} was copied.",
   "@settingsFeedbackNoMail": {
     "placeholders": {

@@ -10,6 +10,16 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.3.0 · 2026-11-13
+
+Ink Lab asks for a store review only once you have used it for a while, and you can rate it from Settings.
+
+- Store review: the app no longer asks on your third saved palette. It may ask now and then, after you save a palette
+  or a new diary entry, but never in your first week, never right after you restore or import a backup, and three
+  times at most (once per version, at least 90 days apart). The store still decides whether its window shows.
+- Settings → About: "Rate Ink Lab" opens the app's page in the store.
+- Privacy policy: the store review section says what the app keeps to decide when to ask and who receives your review.
+
 ## 1.2.5 · 2026-11-13
 
 Three small Palette fixes: a palette of a brand you are not using stays as it is, codes of mixed brands are never cut,

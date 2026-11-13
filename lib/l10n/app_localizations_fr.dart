@@ -8179,6 +8179,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ouvre ton app de messagerie avec la version de l’app et du système. Tu décides de l’envoyer ou non.';
 
   @override
+  String get settingsRateApp => 'Noter Ink Lab';
+
+  @override
+  String get settingsRateAppSubtitle =>
+      'Un avis aide d’autres personnes à la trouver';
+
+  @override
   String settingsFeedbackNoMail(String address) {
     return 'Aucune app de messagerie trouvée. L’adresse $address a été copiée.';
   }

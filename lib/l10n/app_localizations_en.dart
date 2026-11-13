@@ -8121,6 +8121,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Opens your email app with the app and system version. You decide whether to send it.';
 
   @override
+  String get settingsRateApp => 'Rate Ink Lab';
+
+  @override
+  String get settingsRateAppSubtitle => 'A review helps others find it';
+
+  @override
   String settingsFeedbackNoMail(String address) {
     return 'No email app was found. The address $address was copied.';
   }

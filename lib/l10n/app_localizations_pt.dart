@@ -8163,6 +8163,13 @@ class AppLocalizationsPt extends AppLocalizations {
       'Abre a tua app de e-mail com a versão da app e do sistema. Tu decides se a envias.';
 
   @override
+  String get settingsRateApp => 'Avaliar o Ink Lab';
+
+  @override
+  String get settingsRateAppSubtitle =>
+      'Uma avaliação ajuda outras pessoas a encontrar a app';
+
+  @override
   String settingsFeedbackNoMail(String address) {
     return 'Não foi encontrada nenhuma app de e-mail. O endereço $address foi copiado.';
   }

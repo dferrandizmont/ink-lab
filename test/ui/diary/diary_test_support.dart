@@ -84,6 +84,7 @@ Future<AppScope> pumpDiaryPage(
   Size size = const Size(800, 4000),
   Future<void> Function(AppScope scope)? setup,
   StoreReviewer? storeReviewer,
+  DateTime Function()? reviewClock,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -92,6 +93,7 @@ Future<AppScope> pumpDiaryPage(
     markers: diskMarkerRepository(),
     artworkDiary: diary,
     storeReviewer: storeReviewer,
+    reviewClock: reviewClock,
     child: MaterialApp(
       locale: const Locale('en'),
       localizationsDelegates: testLocalizationsDelegates,
@@ -114,6 +116,7 @@ Future<AppScope> pumpDiary(
   StoredArtworkDiaryRepository? diary,
   Future<void> Function(AppScope scope)? setup,
   StoreReviewer? storeReviewer,
+  DateTime Function()? reviewClock,
 }) async {
   final AppScope scope = await pumpDiaryPage(
     tester,
@@ -121,6 +124,7 @@ Future<AppScope> pumpDiary(
     diary: diary,
     setup: setup,
     storeReviewer: storeReviewer,
+    reviewClock: reviewClock,
   );
   await tester.tap(find.text(l10n.ideasDiarySegment));
   await tester.pumpAndSettle();
