@@ -7,6 +7,8 @@ import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
+import 'package:ink_lab/ui/pages/palette/palette_base_field.dart';
+import 'package:ink_lab/ui/pages/palette/palette_draft.dart';
 import 'package:ink_lab/ui/pages/palette/palette_page.dart';
 import 'package:ink_lab/ui/pages/palette/palette_suggestion_row.dart';
 import 'package:ink_lab/ui/screen_awake.dart';
@@ -35,6 +37,7 @@ AppScope paletteScope({
   ScreenAwake? screenAwake,
   StoreReviewer? storeReviewer,
   DateTime Function()? reviewClock,
+  TextDirection? textDirection,
 }) => AppScope.inMemory(
   markers: diskMarkerRepository(),
   storeReviewer: storeReviewer,
@@ -48,6 +51,11 @@ AppScope paletteScope({
     supportedLocales: testSupportedLocales,
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),
+    // A right-to-left reading direction for the tests of the mirrored layout.
+    builder: textDirection == null
+        ? null
+        : (BuildContext context, Widget? child) =>
+              Directionality(textDirection: textDirection, child: child!),
     home: Scaffold(
       body: PalettePage(
         launchEmail: launchEmail,
@@ -88,6 +96,7 @@ Future<AppScope> pumpPalette(
   ScreenAwake? screenAwake,
   StoreReviewer? storeReviewer,
   DateTime Function()? reviewClock,
+  TextDirection? textDirection,
 }) async {
   tester.view.physicalSize = const Size(600, 3000);
   tester.view.devicePixelRatio = 1.0;
@@ -102,6 +111,7 @@ Future<AppScope> pumpPalette(
     screenAwake: screenAwake,
     storeReviewer: storeReviewer,
     reviewClock: reviewClock,
+    textDirection: textDirection,
   );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);
@@ -116,14 +126,79 @@ Future<AppScope> pumpPalette(
   return scope;
 }
 
-/// Types [code] into the base-code field and dismisses the autocomplete.
-Future<void> enterBaseCode(WidgetTester tester, String code) async {
+/// Opens the list of markers by tapping the base field (its search is
+/// focused, as on a phone).
+Future<void> openBaseSheet(WidgetTester tester) async {
+  final Finder field = find.byKey(const ValueKey<String>('palette-base-field'));
+  await tester.ensureVisible(field);
+  await tester.tap(field);
+  await tester.pumpAndSettle();
+  // The rows take taps once a double tap's time has passed since opening.
+  await tester.pump(const Duration(milliseconds: 600));
+}
+
+/// Chooses the marker [code] as the base the way a person does: taps the
+/// base field, types the code in the search of the list and taps its row.
+///
+/// With several brands mixed the rows are told apart by brand: pass [brand]
+/// (the code then has no brand in front of it). The list closes and the page
+/// settles.
+Future<void> chooseBase(
+  WidgetTester tester,
+  String code, {
+  MarkerBrand? brand,
+}) async {
+  await openBaseSheet(tester);
   await tester.enterText(
-    find.byKey(const ValueKey<String>('palette-base-input')),
+    find.byKey(const ValueKey<String>('palette-picker-search')),
     code,
   );
   await tester.pumpAndSettle();
-  FocusManager.instance.primaryFocus?.unfocus();
+  final Finder plain = find.byKey(ValueKey<String>('palette-picker-$code'));
+  final Finder branded = brand == null
+      ? plain
+      : find.byKey(
+          ValueKey<String>('palette-picker-${brand.id}:${code.toUpperCase()}'),
+        );
+  final Finder row = branded.evaluate().isNotEmpty ? branded : plain;
+  if (row.evaluate().isEmpty) {
+    // A long list builds only the rows near the top.
+    await tester.scrollUntilVisible(
+      row,
+      120,
+      scrollable: find
+          .descendant(
+            of: find.byKey(const ValueKey<String>('palette-base-picker')),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+  }
+  await tester.tap(row);
+  await tester.pumpAndSettle();
+}
+
+/// The base as the page holds it (what the base field shows as its code).
+String baseInputOf(WidgetTester tester) => tester
+    .widget<PaletteBaseAndSize>(find.byType(PaletteBaseAndSize))
+    .baseInput;
+
+/// Hands the marker [code] over to the page as Swatches does ("Add to
+/// palette"): the only way to give the page a base it does not offer in its
+/// own list (a marker the user does not own, or any marker of the range while
+/// the collection is empty). [mode] is the type asked for with it.
+Future<void> handBaseOver(
+  WidgetTester tester,
+  AppScope scope,
+  String code, {
+  MarkerBrand brand = MarkerBrand.ohuhuOahu,
+  PaletteMode? mode,
+}) async {
+  final List<MarkerColor> colors = await scope.markers.loadColors(brand);
+  paletteBaseMode.value = mode;
+  paletteBaseDraft.value = colors.firstWhere(
+    (MarkerColor c) => c.newCode == code,
+  );
   await tester.pumpAndSettle();
 }
 
@@ -206,12 +281,7 @@ Future<void> tapResultItem(
   WidgetTester tester,
   String itemKey, {
   bool settle = true,
-}) => tapOverflowItem(
-  tester,
-  'palette-overflow',
-  itemKey,
-  settle: settle,
-);
+}) => tapOverflowItem(tester, 'palette-overflow', itemKey, settle: settle);
 
 /// The codes of the suggestion rows, in the order they are on screen.
 List<String> rowCodes(WidgetTester tester) => tester

@@ -465,6 +465,7 @@ Future<PaletteTypeChoice?> showPaletteTypeSheet(
   required bool scenesAvailable,
 }) => showInkSheet<PaletteTypeChoice>(
   context: context,
+  whenGone: true,
   builder: (BuildContext context) => _TypeSheet(
     mode: mode,
     scenesSelected: scenesSelected,
@@ -685,6 +686,7 @@ Future<SceneSheetResult?> showPaletteSceneSheet(
   bool photoSelected = false,
 }) => showInkSheet<SceneSheetResult>(
   context: context,
+  whenGone: true,
   builder: (BuildContext context) => _SceneSheet(
     selected: selected,
     previews: previews,

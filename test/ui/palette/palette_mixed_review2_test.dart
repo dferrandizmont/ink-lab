@@ -15,7 +15,7 @@ import 'palette_test_support.dart';
 /// scene's default base, and the base field stays empty.
 Future<void> chooseScenes(WidgetTester tester) async {
   await choosePaletteType(tester, 'palette-scenario-toggle');
-  expect(baseField(tester).baseController.text, isEmpty);
+  expect(baseField(tester).baseInput, isEmpty);
   expect(find.byType(PaletteStrip), findsWidgets);
 }
 
@@ -44,7 +44,7 @@ void main() {
       expect(snapshot(tester)['strip'], before['strip']);
       expect(strip(tester).brandLabels, everyElement('Ohuhu'));
       // The base it was built on is now written down.
-      expect(baseField(tester).baseController.text, 'Ohuhu $base');
+      expect(baseField(tester).baseInput, 'Ohuhu $base');
       expect(baseField(tester).resolvedBase!.colorId, 'ohuhu_oahu:$base');
       expect(find.byType(PaletteErrorNote), findsNothing);
       expect(key('palette-changed'), findsNothing);
@@ -62,7 +62,7 @@ void main() {
       expect(snapshot(tester)['rows'], before['rows']);
       expect(snapshot(tester)['strip'], before['strip']);
       expect(strip(tester).brandLabels, isNull);
-      expect(baseField(tester).baseController.text, base);
+      expect(baseField(tester).baseInput, base);
     });
 
     testWidgets('keeps its base band under a brand the user owns nothing of', (
@@ -106,10 +106,7 @@ void main() {
       expect(strip(tester).brandLabels, everyElement('Ohuhu'));
       // The field is empty while the scene still picks that base by itself,
       // and names it as soon as it would pick another.
-      expect(
-        baseField(tester).baseController.text,
-        anyOf(isEmpty, 'Ohuhu $base'),
-      );
+      expect(baseField(tester).baseInput, anyOf(isEmpty, 'Ohuhu $base'));
       final SavedPalette saved = await savePaletteAs(tester, scope, 'Mix');
       expect(saved.baseColorId, 'ohuhu_oahu:$base');
     });
@@ -124,7 +121,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(rowCodes(tester), isNot(contains(gone)));
       // Nothing was written in the field: it is still the scene's default.
-      expect(baseField(tester).baseController.text, isEmpty);
+      expect(baseField(tester).baseInput, isEmpty);
     });
   });
 
@@ -145,7 +142,7 @@ void main() {
         },
       );
       await choosePaletteType(tester, 'palette-mode-blendingChain');
-      await enterBaseCode(tester, 'DecoTime 91');
+      await chooseBase(tester, '91', brand: MarkerBrand.decoTime);
       await tester.ensureVisible(key('palette-chain-whole-range'));
       await tester.tap(key('palette-chain-whole-range'));
       await tester.pumpAndSettle();
@@ -175,7 +172,7 @@ void main() {
         ),
       );
       await choosePaletteType(tester, 'palette-mode-blendingChain');
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await tester.ensureVisible(key('palette-chain-whole-range'));
       await tester.tap(key('palette-chain-whole-range'));
       await tester.pumpAndSettle();
@@ -199,7 +196,7 @@ void main() {
       );
 
       // A new search is one in the range in use now, and says so.
-      await enterBaseCode(tester, '91');
+      await chooseBase(tester, '91');
       expect(
         find.text(l10n.paletteChainWholeRangeNote('DecoTime')),
         findsOneWidget,

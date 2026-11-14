@@ -24,7 +24,7 @@ Map<String, Object?> snapshot(WidgetTester tester) {
   );
   final type = tester.widget<PaletteTypeFields>(find.byType(PaletteTypeFields));
   return {
-    'base': field.baseController.text,
+    'base': field.baseInput,
     'size': field.paletteSize,
     'mode': type.mode,
     'scenes': type.useScenario,
@@ -96,7 +96,7 @@ void main() {
           tester.platformDispatcher.textScaleFactorTestValue = scale;
           addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
           await tester.pumpAndSettle();
-          await enterBaseCode(tester, 'B08');
+          await chooseBase(tester, 'B08');
           final Finder scrollable = find
               .descendant(
                 of: find.byType(ListView),
@@ -170,7 +170,7 @@ void main() {
     expect(rows().map((r) => r.locked), [false, true]);
   });
   testWidgets(
-    'a bare shared base code asks for its brand and scoped input resolves',
+    'a code two brands share lists both under their brand and the choice resolves',
     (tester) async {
       await pumpPalette(
         tester,
@@ -182,14 +182,23 @@ void main() {
           await scope.settings.setScope(BrandScope.mixedBrands);
         },
       );
-      await tester.enterText(key('palette-base-input'), '120');
+      await openBaseSheet(tester);
+      await tester.enterText(key('palette-picker-search'), '120');
       await tester.pumpAndSettle();
-      expect(find.text(l10n.paletteAmbiguousBase), findsOneWidget);
-      final field = tester.widget<PaletteBaseAndSize>(
-        find.byType(PaletteBaseAndSize),
+      // The list is the question: the code under each brand that has it.
+      expect(
+        find.byWidgetPredicate(
+          (w) =>
+              w.key is ValueKey<String> &&
+              (w.key! as ValueKey<String>).value.startsWith(
+                'palette-picker-brand-',
+              ),
+        ),
+        findsAtLeastNWidgets(2),
       );
-      expect(field.resolvedBase, isNull);
-      await enterBaseCode(tester, 'decotime:120');
+      expect(baseField(tester).resolvedBase, isNull);
+      await tester.tap(key('palette-picker-decotime:120'));
+      await tester.pumpAndSettle();
       expect(
         tester
             .widget<PaletteBaseAndSize>(find.byType(PaletteBaseAndSize))
@@ -215,7 +224,7 @@ void main() {
       tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       if (action == 'scene') {
         await choosePaletteType(tester, 'palette-scenario-toggle');
       }
@@ -255,7 +264,7 @@ void main() {
     tester,
   ) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     tester
         .widgetList<PaletteSuggestionRow>(find.byType(PaletteSuggestionRow))
         .last
@@ -348,7 +357,7 @@ void main() {
   );
   testWidgets('a size that cannot keep every lock asks first', (tester) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     for (var i = 0; i < 3; i++) {
       tester
           .widgetList<PaletteSuggestionRow>(find.byType(PaletteSuggestionRow))
@@ -374,34 +383,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(snapshot(tester), before);
   });
-  testWidgets('typing a base keeps Undo on the palette the user started from', (
-    tester,
-  ) async {
-    await pumpPalette(
-      tester,
-      brand: MarkerBrand.decoTime,
-      ownedMarkerCodes: {
-        for (final code in ['03', '05', '07', '12', '91', '92', '120'])
-          'decotime:$code',
-      },
-    );
-    await enterBaseCode(tester, '91');
-    final before = snapshot(tester);
-    // "12" is a marker on the way to "120": two palettes replace the first.
-    await tester.enterText(key('palette-base-input'), '12');
-    await tester.pump();
-    expect(key('palette-changed'), findsOneWidget);
-    await tester.enterText(key('palette-base-input'), '120');
-    await tester.pumpAndSettle();
-    expect(find.byType(AlertDialog), findsNothing);
-    await undo(tester);
-    expect(snapshot(tester), before);
-  });
   testWidgets('doing the same again changes nothing and offers no undo', (
     tester,
   ) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     tester
         .widget<PaletteBaseAndSize>(find.byType(PaletteBaseAndSize))
         .onSizeChanged(5);
@@ -425,7 +411,7 @@ void main() {
       }
 
       // One brand: bare codes of the palette's brand, as always.
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       final single = await saveAs('Single');
       expect(single.baseCode, 'B08');
       expect(single.colorCodes.any((c) => c.contains(':')), isFalse);
@@ -434,7 +420,7 @@ void main() {
       await scope.settings.setOwnedMarkerCodes({'decotime:91', 'decotime:92'});
       await scope.settings.setScope(BrandScope.mixedBrands);
       await tester.pumpAndSettle();
-      await enterBaseCode(tester, 'DecoTime 91');
+      await chooseBase(tester, '91', brand: MarkerBrand.decoTime);
       final mixed = await saveAs('Mixed');
       expect(mixed.baseCode, 'decotime:91');
       expect(mixed.colorCodes.every((c) => c.contains(':')), isTrue);
@@ -455,7 +441,7 @@ void main() {
           await scope.settings.setScope(BrandScope.mixedBrands);
         },
       );
-      await enterBaseCode(tester, 'decotime:91');
+      await chooseBase(tester, '91', brand: MarkerBrand.decoTime);
       // The strip: the bare code, never scaled, under its brand.
       final labels = strip(tester).labels!;
       final brands = strip(tester).brandLabels!;
@@ -503,7 +489,13 @@ void main() {
         ),
         findsOneWidget,
       );
-      expect(find.text('DecoTime 91'), findsNothing);
+      expect(
+        find.descendant(
+          of: key('palette-base-picker'),
+          matching: find.text('DecoTime 91'),
+        ),
+        findsNothing,
+      );
     },
   );
 
@@ -512,7 +504,7 @@ void main() {
     'turning the mix off keeps the mixed palette, with no false error',
     (tester) async {
       final scope = await pumpPalette(tester, setup: mixOhuhuAndDecoTime);
-      await enterBaseCode(tester, 'DecoTime 91');
+      await chooseBase(tester, '91', brand: MarkerBrand.decoTime);
       final before = snapshot(tester);
       expect(before['rows'], isNotEmpty);
       expect(strip(tester).brandLabels, isNotNull);
@@ -551,7 +543,7 @@ void main() {
           await scope.settings.setScope(BrandScope.mixedBrands);
         },
       );
-      await enterBaseCode(tester, 'DecoTime 91');
+      await chooseBase(tester, '91', brand: MarkerBrand.decoTime);
       expect(find.byType(PaletteStrip), findsOneWidget);
       // The only DecoTime marker runs dry: there is nothing left to mix, and
       // the palette built on it goes, with the true reason.
@@ -568,7 +560,7 @@ void main() {
       tester,
       ownedMarkerCodes: {'decotime:91', 'decotime:92'},
     );
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     final before = snapshot(tester);
     expect(strip(tester).brandLabels, isNull);
 
@@ -577,7 +569,7 @@ void main() {
     expect(snapshot(tester)['rows'], before['rows']);
     expect(snapshot(tester)['strip'], before['strip']);
     // "B08" alone would now be read as a DecoTime code.
-    expect(baseField(tester).baseController.text, 'Ohuhu B08');
+    expect(baseField(tester).baseInput, 'Ohuhu B08');
     expect(baseField(tester).resolvedBase!.colorId, 'ohuhu_oahu:B08');
     expect(strip(tester).brandLabels, everyElement('Ohuhu'));
     expect(find.byType(PaletteErrorNote), findsNothing);
@@ -662,7 +654,7 @@ void main() {
       final ohuhu = await scope.markers.loadColors(MarkerBrand.ohuhuOahu);
       MarkerColor marker(String code) =>
           ohuhu.firstWhere((c) => c.newCode == code);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await tester.tap(key('palette-regenerate'));
       await tester.pumpAndSettle();
       tester
@@ -705,7 +697,7 @@ void main() {
     'a fresh palette with a lock asks only when the action drops the lock',
     (tester) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       tester
           .widgetList<PaletteSuggestionRow>(find.byType(PaletteSuggestionRow))
           .first
@@ -735,7 +727,7 @@ void main() {
     'a saved mixed palette is listed under each of its brands and saved once',
     (tester) async {
       final scope = await pumpPalette(tester, setup: mixOhuhuAndDecoTime);
-      await enterBaseCode(tester, 'DecoTime 91');
+      await chooseBase(tester, '91', brand: MarkerBrand.decoTime);
       final SavedPalette saved = await savePaletteAs(tester, scope, 'Mixed');
       expect(saved.brandId, 'ohuhu_oahu');
       expect(saved.brandIds, {'decotime', 'ohuhu_oahu'});
@@ -782,7 +774,7 @@ void main() {
     'a saved palette is named after its base with the brand it needs',
     (tester) async {
       final scope = await pumpPalette(tester, setup: mixOhuhuAndDecoTime);
-      await enterBaseCode(tester, 'DecoTime 91');
+      await chooseBase(tester, '91', brand: MarkerBrand.decoTime);
       await tester.ensureVisible(key('palette-save'));
       await tester.tap(key('palette-save'));
       await tester.pumpAndSettle();
@@ -795,7 +787,7 @@ void main() {
       // With one brand the name is the bare code, as always.
       await scope.settings.setScope(BrandScope.singleBrand);
       await tester.pumpAndSettle();
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await tester.ensureVisible(key('palette-save'));
       await tester.tap(key('palette-save'));
       await tester.pumpAndSettle();
@@ -853,7 +845,7 @@ void main() {
       },
     );
     await choosePaletteType(tester, 'palette-mode-blendingChain');
-    await enterBaseCode(tester, 'DecoTime 91');
+    await chooseBase(tester, '91', brand: MarkerBrand.decoTime);
     await tester.ensureVisible(key('palette-chain-whole-range'));
     await tester.tap(key('palette-chain-whole-range'));
     await tester.pumpAndSettle();

@@ -2,53 +2,53 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../core/collection_selection.dart';
 import '../../../core/models.dart';
 import '../../../l10n/l10n.dart';
 import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
-import '../../widgets/branded_code.dart';
 import '../../widgets/color_swatch_tile.dart';
-import '../../widgets/ink_button.dart';
 import '../../widgets/ink_segmented.dart';
 import 'palette_layout.dart';
 
 /// The base marker field and the palette size control: they share a row while
 /// both fit and stack when they do not (both widths are measured).
-class PaletteBaseAndSize extends StatelessWidget {
+///
+/// The base marker is not typed on the page: its field is a button that opens
+/// the searchable list of markers ([onPickBase]), so the page never rebuilds
+/// its palette at each letter.
+class PaletteBaseAndSize extends StatefulWidget {
   const PaletteBaseAndSize({
     super.key,
     required this.customMode,
     required this.paletteSize,
     required this.onSizeChanged,
-    required this.catalog,
+    required this.hasChoices,
+    required this.baseInput,
     required this.resolvedBase,
     required this.exampleCode,
     required this.hint,
-    required this.baseController,
-    required this.baseFocus,
-    required this.onBaseChanged,
     required this.onPickBase,
   });
 
-  /// A custom or photo palette has no base to type: only the size shows.
+  /// A custom or photo palette has no base to choose: only the size shows.
   final bool customMode;
 
   /// Number of colours of the palette, base included (3, 4 or 5).
   final int paletteSize;
   final ValueChanged<int> onSizeChanged;
 
-  /// The markers the base may be chosen from: the ones the user owns, or the
-  /// whole range of the brand when the blending chain is in whole-range mode.
-  ///
-  /// When they are of several brands ("Mix my brands") a suggestion carries
-  /// its brand ("DecoTime 91"), which is also what choosing it writes in the
-  /// field, and a code two brands share suggests both: that is how the page
-  /// asks which one is meant.
-  final List<MarkerColor> catalog;
+  /// Whether there is any marker the base may be chosen from (the ones the
+  /// user owns, or the whole range of the brand when the blending chain is in
+  /// whole-range mode); without one the field is disabled, the way Generate
+  /// is, instead of opening an empty list.
+  final bool hasChoices;
 
-  /// The marker the typed code resolves to, if any.
+  /// The base as the page holds it, in the spelling the field shows ("BV04",
+  /// or "DecoTime 91" with several brands); empty while there is none.
+  final String baseInput;
+
+  /// The marker the base resolves to, if any.
   final MarkerColor? resolvedBase;
 
   /// A real code of the collection, to size the field for.
@@ -56,12 +56,112 @@ class PaletteBaseAndSize extends StatelessWidget {
 
   /// The hint of the empty base field.
   final String hint;
-  final TextEditingController baseController;
-  final FocusNode baseFocus;
-  final ValueChanged<String> onBaseChanged;
 
-  /// Opens the searchable list of markers.
+  /// Opens the searchable list of markers, ready to type in.
   final VoidCallback onPickBase;
+
+  @override
+  State<PaletteBaseAndSize> createState() => _PaletteBaseAndSizeState();
+}
+
+/// How many times the widths of the row were measured (for the test that the
+/// cache is dropped when what they depend on changes).
+@visibleForTesting
+int paletteBaseMeasureCount = 0;
+
+class _PaletteBaseAndSizeState extends State<PaletteBaseAndSize> {
+  /// What the measured widths were measured for: the text as it is drawn
+  /// (the two styles after the inherited text style and bold text are
+  /// merged), the scale, the reading direction, the language, the two texts
+  /// and the fonts installed. They only change with one of those, not with
+  /// every build of the page.
+  ({
+    TextStyle code,
+    TextStyle secondary,
+    TextScaler scaler,
+    TextDirection direction,
+    Locale? locale,
+    String example,
+    String hint,
+    int fonts,
+  })?
+  _measuredFor;
+  double _sizeWidth = 0;
+  double _baseWanted = 0;
+
+  /// Bumped when the fonts of the system change: a measurement made with the
+  /// old ones is no longer true.
+  int _fontsEpoch = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    PaintingBinding.instance.systemFonts.addListener(_onFontsChanged);
+  }
+
+  @override
+  void dispose() {
+    PaintingBinding.instance.systemFonts.removeListener(_onFontsChanged);
+    super.dispose();
+  }
+
+  void _onFontsChanged() => setState(() => _fontsEpoch++);
+
+  /// [style] as a [Text] draws it: on top of the inherited text style, bold
+  /// when the system asks for bold text.
+  static TextStyle _drawn(BuildContext context, TextStyle style) {
+    TextStyle drawn = DefaultTextStyle.of(context).style.merge(style);
+    if (MediaQuery.boldTextOf(context)) {
+      drawn = drawn.merge(const TextStyle(fontWeight: FontWeight.bold));
+    }
+    return drawn;
+  }
+
+  void _measure(BuildContext context) {
+    final TextScaler scaler = MediaQuery.textScalerOf(context);
+    final TextDirection direction = Directionality.of(context);
+    final Locale? locale = Localizations.maybeLocaleOf(context);
+    final TextStyle code = _drawn(context, AppTypography.code);
+    final TextStyle secondary = _drawn(context, AppTypography.secondary);
+    final key = (
+      code: code,
+      secondary: secondary,
+      scaler: scaler,
+      direction: direction,
+      locale: locale,
+      example: widget.exampleCode,
+      hint: widget.hint,
+      fonts: _fontsEpoch,
+    );
+    if (_measuredFor == key) return;
+    _measuredFor = key;
+    paletteBaseMeasureCount++;
+    double width(String text, TextStyle style) {
+      final TextPainter painter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: direction,
+        textScaler: scaler,
+        locale: locale,
+        maxLines: 1,
+      )..layout();
+      final double w = painter.width;
+      painter.dispose();
+      return w;
+    }
+
+    _sizeWidth = _sizeControlWidth(<double>[
+      for (final String d in const <String>['3', '4', '5']) width(d, code),
+    ]);
+    _baseWanted = math.max(
+      _baseFieldMinWidth(
+        math.max(
+          width(widget.exampleCode, code),
+          width(widget.hint, secondary),
+        ),
+      ),
+      _baseFieldFloor * scaler.scale(1),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,31 +182,26 @@ class PaletteBaseAndSize extends StatelessWidget {
                 semantic: context.l10n.paletteSizeChip(value),
               ),
           ],
-          selected: paletteSize,
-          onChanged: onSizeChanged,
+          selected: widget.paletteSize,
+          onChanged: widget.onSizeChanged,
         ),
       ],
     );
     return paletteInset(
       LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          if (customMode) return size;
+          if (widget.customMode) return size;
           // Base marker and Size share a row while both fit; past that (a
           // narrow phone at a large text scale) Size drops below the field.
           // Both widths are measured, so the switch is exact in every
           // language and at every text scale (like InkDefinitionRow).
           const double gap = InkSpacing.buttonGap;
-          final double sizeWidth = _sizeControlWidth(context);
-          final double scale = MediaQuery.textScalerOf(context).scale(1);
-          final double baseWanted = math.max(
-            _baseFieldMinWidth(context),
-            _baseFieldFloor * scale,
-          );
-          if (constraints.maxWidth < baseWanted + gap + sizeWidth) {
+          _measure(context);
+          if (constraints.maxWidth < _baseWanted + gap + _sizeWidth) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                _buildBaseInput(context),
+                _buildBaseField(context),
                 const SizedBox(height: InkSpacing.block),
                 size,
               ],
@@ -117,7 +212,7 @@ class PaletteBaseAndSize extends StatelessWidget {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Expanded(child: _buildBaseInput(context)),
+              Expanded(child: _buildBaseField(context)),
               const SizedBox(width: gap),
               size,
             ],
@@ -132,337 +227,65 @@ class PaletteBaseAndSize extends StatelessWidget {
   /// (scaled by the text scale at build time).
   static const double _baseFieldFloor = 150;
 
-  /// Width of the three-segment size control: each 3 / 4 / 5 segment is at
-  /// least `InkGeometry.target` wide plus its 10 dp padding, in a 48-high
-  /// container (3 dp side padding, 2 dp between segments).
-  double _sizeControlWidth(BuildContext context) {
-    final TextScaler scaler = MediaQuery.textScalerOf(context);
-    final TextDirection direction = Directionality.of(context);
-    double widest = 0;
-    for (final String label in const <String>['3', '4', '5']) {
-      final TextPainter painter = TextPainter(
-        text: TextSpan(text: label, style: AppTypography.code),
-        textDirection: direction,
-        textScaler: scaler,
-        maxLines: 1,
-      )..layout();
-      final double width = painter.width + 20;
-      painter.dispose();
-      if (width > widest) widest = width;
-    }
+  /// Width of the three-segment size control, from the width of its digits:
+  /// each 3 / 4 / 5 segment is at least `InkGeometry.target` wide plus its
+  /// 10 dp padding, in a 48-high container (3 dp side padding, 2 dp between
+  /// segments).
+  static double _sizeControlWidth(List<double> digitWidths) {
+    final double widest = digitWidths.fold(
+      0,
+      (double a, double w) => math.max(a, w + 20),
+    );
     final double segment = math.max(widest, InkGeometry.target);
     return segment * 3 + 2 * 2 + 2 * 3;
   }
 
   /// What the base field needs to hold its swatch, the text it shows (its
-  /// code, or its hint while it is empty) and the pick button, measured like
-  /// the size control: the row only keeps the base and the size together when
-  /// neither text is cut.
-  double _baseFieldMinWidth(BuildContext context) {
-    final TextDirection direction = Directionality.of(context);
-    final TextScaler scaler = MediaQuery.textScalerOf(context);
-    double text = 0;
-    for (final (String value, TextStyle style) in <(String, TextStyle)>[
-      (exampleCode, AppTypography.code),
-      (hint, AppTypography.secondary),
-    ]) {
-      final TextPainter painter = TextPainter(
-        text: TextSpan(text: value, style: style),
-        textDirection: direction,
-        textScaler: scaler,
-        maxLines: 1,
-      )..layout();
-      if (painter.width > text) text = painter.width;
-      painter.dispose();
-    }
-    // Left padding 12, swatch 24, gap 10, pick button 44, right padding 2.
-    const double chrome = 12 + 24 + 10 + InkGeometry.target + 2;
+  /// code, or its hint while it is empty, [text] wide) and the search glyph,
+  /// measured like the size control: the row only keeps the base and the size
+  /// together when neither text is cut.
+  static double _baseFieldMinWidth(double text) {
+    // Side padding 12 + 12, swatch 24, gap 10, gap 8, search glyph 20.
+    const double chrome =
+        InkSpacing.s12 +
+        InkGeometry.swatchSm +
+        InkSpacing.s10 +
+        InkSpacing.s8 +
+        InkGeometry.mediumIcon +
+        InkSpacing.s12;
     // A little slack so the row/stack boundary never lands exactly on the
     // measured width: rounding the Expanded down by a fraction of a pixel
     // would otherwise ellipsise the last glyph of the hint.
     return chrome + text + InkSpacing.buttonGap;
   }
 
-  Widget _buildBaseInput(BuildContext context) {
-    final bool mixed = hasMixedBrands(catalog);
-    String label(MarkerColor option) => markerCodeLabel(option, mixed: mixed);
-    bool isCode(MarkerColor c, String query) =>
-        c.newCode.toUpperCase() == query || c.oldCode.toUpperCase() == query;
-    return RawAutocomplete<MarkerColor>(
-      textEditingController: baseController,
-      focusNode: baseFocus,
-      displayStringForOption: label,
-      optionsBuilder: (TextEditingValue value) {
-        final query = value.text.trim().toUpperCase();
-        if (query.isEmpty) return const Iterable<MarkerColor>.empty();
-        if (mixed) {
-          // A code that two brands share: the list is the question.
-          final List<MarkerColor> shared = catalog
-              .where((MarkerColor c) => isCode(c, query))
-              .toList();
-          if (hasMixedBrands(shared)) return shared;
-        }
-        final List<MarkerColor> matches = catalog
-            .where(
-              (color) =>
-                  color.newCode.toUpperCase().contains(query) ||
-                  color.oldCode.toUpperCase().contains(query) ||
-                  (mixed && label(color).toUpperCase().contains(query)),
-            )
-            .take(8)
-            .toList();
-        // A complete code that already produced its result has nothing left
-        // to suggest: the list would only hover over the strip.
-        if (matches.length == 1 &&
-            (isCode(matches.first, query) ||
-                label(matches.first).toUpperCase() == query)) {
-          return const Iterable<MarkerColor>.empty();
-        }
-        return matches;
-      },
-      onSelected: (MarkerColor option) {
-        onBaseChanged(label(option));
-        // Close the suggestions: losing focus hides the overlay.
-        baseFocus.unfocus();
-      },
-      fieldViewBuilder: (
-        BuildContext context,
-        TextEditingController controller,
-        FocusNode focusNode,
-        VoidCallback onFieldSubmitted,
-      ) => _buildBaseField(context, controller, focusNode, onFieldSubmitted),
-      optionsViewBuilder: (
-        BuildContext context,
-        AutocompleteOnSelected<MarkerColor> onSelected,
-        Iterable<MarkerColor> options,
-      ) => _buildOptions(context, onSelected, options, mixed: mixed),
-    );
-  }
-
   /// The base-marker field: caps label, then a 48-high rounded box with the
-  /// marker colour chip, the code input and the marker name.
-  Widget _buildBaseField(
-    BuildContext context,
-    TextEditingController controller,
-    FocusNode focusNode,
-    VoidCallback onFieldSubmitted,
-  ) {
-    final InkColors ink = InkColors.of(context);
-    final MarkerColor? base = resolvedBase;
-    const InputBorder none = InputBorder.none;
+  /// marker colour chip, the code and the marker name. The whole box is one
+  /// button that opens the list of markers.
+  Widget _buildBaseField(BuildContext context) {
+    final MarkerColor? base = widget.resolvedBase;
+    final String input = widget.baseInput.trim();
+    final String spoken = base == null
+        ? (input.isEmpty ? widget.hint : input)
+        : '${input.isEmpty ? base.newCode : input}, ${base.newName}';
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        _caps(context, context.l10n.paletteBaseMarkerTitle),
+        _caps(context, l10n.paletteBaseMarkerTitle),
         const SizedBox(height: InkSpacing.group),
-        ListenableBuilder(
-          listenable: focusNode,
-          builder: (BuildContext context, Widget? child) => Container(
-            constraints: const BoxConstraints(
-              minHeight: InkGeometry.fieldHeight,
-            ),
-            padding: const EdgeInsets.only(
-              left: InkSpacing.s12,
-              right: InkSpacing.s2,
-              top: InkSpacing.s4,
-              bottom: InkSpacing.s4,
-            ),
-            decoration: BoxDecoration(
-              color: ink.surface,
-              borderRadius: InkRadii.inputRadius,
-              border: Border.all(
-                color: focusNode.hasFocus ? ink.action : ink.strong,
-              ),
-            ),
-            child: child,
-          ),
-          child: Row(
-            children: <Widget>[
-              Container(
-                width: InkGeometry.swatchSm,
-                height: InkGeometry.swatchSm,
-                decoration: BoxDecoration(
-                  color: base == null ? null : swatchColor(base.hex),
-                  borderRadius: InkRadii.xsRadius,
-                  border: Border.all(
-                    color: base == null
-                        ? ink.line
-                        : ink.swatchEdge(swatchColor(base.hex)),
-                  ),
-                ),
-              ),
-              const SizedBox(width: InkSpacing.s10),
-              Expanded(
-                // The code on top and, once a marker is resolved, its name on
-                // a second line, one line at most (an ellipsis; the whole name
-                // is in the tooltip and read by screen readers), so the card
-                // is the height of the size control beside it with any name.
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Semantics(
-                      label: context.l10n.paletteBaseCodeLabel,
-                      child: TextField(
-                        key: const ValueKey<String>('palette-base-input'),
-                        controller: controller,
-                        focusNode: focusNode,
-                        textCapitalization: TextCapitalization.characters,
-                        onChanged: onBaseChanged,
-                        onSubmitted: (_) => onFieldSubmitted(),
-                        onTapOutside: (_) => focusNode.unfocus(),
-                        style: AppTypography.code.copyWith(color: ink.fg),
-                        cursorColor: ink.action,
-                        decoration: InputDecoration(
-                          hintText: hint,
-                          hintStyle: AppTypography.secondary.copyWith(
-                            color: ink.fg2,
-                          ),
-                          filled: false,
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                          border: none,
-                          enabledBorder: none,
-                          focusedBorder: none,
-                          disabledBorder: none,
-                          errorBorder: none,
-                          focusedErrorBorder: none,
-                        ),
-                      ),
-                    ),
-                    if (base != null)
-                      Tooltip(
-                        message: base.newName,
-                        excludeFromSemantics: true,
-                        child: Text(
-                          base.newName,
-                          key: const ValueKey<String>('palette-base-name'),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTypography.caption.copyWith(color: ink.fg2),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              InkIconButton(
-                key: const ValueKey<String>('palette-pick-base'),
-                icon: InkIcons.search,
-                iconSize: InkGeometry.smallIcon + 2,
-                tooltip: context.l10n.palettePickBaseTooltip,
-                // Nothing usable to pick from: keep the button disabled, the way
-                // Generate is, instead of opening an empty sheet.
-                onPressed: catalog.isEmpty ? null : onPickBase,
-              ),
-            ],
-          ),
+        _BaseFieldButton(
+          key: const ValueKey<String>('palette-base-field'),
+          semanticLabel: l10n.paletteBaseMarkerTitle,
+          semanticValue: spoken,
+          semanticHint: l10n.palettePickBaseTooltip,
+          onTap: widget.hasChoices ? widget.onPickBase : null,
+          base: base,
+          code: input.isEmpty ? null : input,
+          hint: widget.hint,
         ),
       ],
-    );
-  }
-
-  Widget _buildOptions(
-    BuildContext context,
-    AutocompleteOnSelected<MarkerColor> onSelected,
-    Iterable<MarkerColor> options, {
-    required bool mixed,
-  }) {
-    final InkColors ink = InkColors.of(context);
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(top: InkSpacing.group),
-        child: Material(
-          key: const ValueKey<String>('palette-base-options'),
-          color: ink.surface,
-          elevation: 0,
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: InkRadii.inputRadius,
-            side: BorderSide(color: ink.line),
-          ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: 280,
-              maxWidth: math.min(
-                MediaQuery.sizeOf(context).width - 2 * InkSpacing.pageMargin,
-                420,
-              ),
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              padding: EdgeInsets.zero,
-              itemCount: options.length,
-              itemBuilder: (BuildContext context, int index) {
-                final MarkerColor option = options.elementAt(index);
-                final bool hasOld =
-                    option.oldCode.toUpperCase() !=
-                    option.newCode.toUpperCase();
-                return InkWell(
-                  onTap: () => onSelected(option),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      minHeight: InkGeometry.target,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: InkSpacing.cardH,
-                        vertical: InkSpacing.s6,
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          SwatchBlock(
-                            hex: option.hex,
-                            size: InkGeometry.swatchSm,
-                            radius: InkRadii.xs,
-                            own: option.hasOwnColor,
-                          ),
-                          const SizedBox(width: InkSpacing.s10),
-                          Expanded(
-                            // Code (and former code) on the first line, the
-                            // whole name below it.
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: <Widget>[
-                                    BrandedCode(marker: option, mixed: mixed),
-                                    if (hasOld) ...<Widget>[
-                                      const SizedBox(width: InkSpacing.s8),
-                                      Text(
-                                        option.oldCode,
-                                        style: AppTypography.data.copyWith(
-                                          color: ink.fg2,
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                                Text(
-                                  option.newName,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTypography.secondary.copyWith(
-                                    color: ink.fg2,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -471,6 +294,182 @@ class PaletteBaseAndSize extends StatelessWidget {
     return Text(
       AppTypography.caps(text),
       style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+    );
+  }
+}
+
+/// The box of the base marker field: swatch, code (or hint) on top and the
+/// marker's name below, a search glyph at the end. One tap target; Enter and
+/// Space open the list; a focus ring (the `action` border, like the old
+/// focused input) shows while it has the keyboard focus. Disabled (no tap,
+/// muted border and glyph) when [onTap] is null.
+class _BaseFieldButton extends StatefulWidget {
+  const _BaseFieldButton({
+    super.key,
+    required this.semanticLabel,
+    required this.semanticValue,
+    required this.semanticHint,
+    required this.onTap,
+    required this.base,
+    required this.code,
+    required this.hint,
+  });
+
+  final String semanticLabel;
+  final String semanticValue;
+  final String semanticHint;
+  final VoidCallback? onTap;
+  final MarkerColor? base;
+
+  /// The base as written, or `null` while there is none (the hint shows).
+  final String? code;
+  final String hint;
+
+  @override
+  State<_BaseFieldButton> createState() => _BaseFieldButtonState();
+}
+
+class _BaseFieldButtonState extends State<_BaseFieldButton> {
+  bool _focused = false;
+
+  /// One line of [style] at the text scale in use (a line is as tall as the
+  /// whole pixels it is drawn in).
+  static double _lineHeight(BuildContext context, TextStyle style) =>
+      (MediaQuery.textScalerOf(context).scale(style.fontSize!) * style.height!)
+          .ceilToDouble();
+
+  @override
+  Widget build(BuildContext context) {
+    final InkColors ink = InkColors.of(context);
+    final MarkerColor? base = widget.base;
+    final bool enabled = widget.onTap != null;
+    // Nothing chosen: the hint shows alone, centred.
+    final bool empty = base == null && widget.code == null;
+    final Color border = !enabled
+        ? ink.line
+        : _focused
+        ? ink.action
+        : ink.strong;
+    return Semantics(
+      container: true,
+      button: true,
+      enabled: enabled,
+      label: widget.semanticLabel,
+      value: widget.semanticValue,
+      hint: widget.semanticHint,
+      excludeSemantics: true,
+      onTap: widget.onTap,
+      child: Material(
+        color: ink.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: InkRadii.inputRadius,
+          side: BorderSide(color: border),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: widget.onTap,
+          onFocusChange: (bool value) => setState(() => _focused = value),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: InkGeometry.fieldHeight,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: InkSpacing.s12,
+                vertical: InkSpacing.s4,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: InkGeometry.swatchSm,
+                    height: InkGeometry.swatchSm,
+                    decoration: BoxDecoration(
+                      color: base == null ? null : swatchColor(base.hex),
+                      borderRadius: InkRadii.xsRadius,
+                      border: Border.all(
+                        color: base == null
+                            ? ink.line
+                            : ink.swatchEdge(swatchColor(base.hex)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: InkSpacing.s10),
+                  Expanded(
+                    // The code on top and, once a marker is resolved, its name
+                    // on a second line, one line at most (an ellipsis; the
+                    // whole name is in the tooltip and read by screen
+                    // readers), so the card is the height of the size control
+                    // beside it with any name.
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        // Both lines keep their height whatever the box shows
+                        // (the hint is a line shorter than the code, the name
+                        // is not there until a marker is resolved): the box,
+                        // and the row it is in, never change height. With
+                        // nothing chosen the hint is centred in the two lines,
+                        // level with the swatch and the glyph.
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight:
+                                _lineHeight(context, AppTypography.code) +
+                                (empty
+                                    ? _lineHeight(
+                                        context,
+                                        AppTypography.caption,
+                                      )
+                                    : 0),
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              widget.code ?? widget.hint,
+                              key: const ValueKey<String>('palette-base-value'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: widget.code == null
+                                  ? AppTypography.secondary.copyWith(
+                                      color: ink.fg2,
+                                    )
+                                  : AppTypography.code.copyWith(color: ink.fg),
+                            ),
+                          ),
+                        ),
+                        if (base != null)
+                          Tooltip(
+                            message: base.newName,
+                            excludeFromSemantics: true,
+                            child: Text(
+                              base.newName,
+                              key: const ValueKey<String>('palette-base-name'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTypography.caption.copyWith(
+                                color: ink.fg2,
+                              ),
+                            ),
+                          )
+                        else if (!empty)
+                          // No name yet: the line is kept, empty and unspoken.
+                          SizedBox(
+                            height: _lineHeight(context, AppTypography.caption),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: InkSpacing.s8),
+                  InkIcon(
+                    InkIcons.search,
+                    size: InkGeometry.mediumIcon,
+                    color: enabled ? ink.fg2 : ink.line,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

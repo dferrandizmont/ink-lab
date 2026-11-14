@@ -1,5 +1,4 @@
 import 'models.dart';
-import 'collection_utils.dart';
 import 'natural_sort.dart';
 
 /// Legacy unscoped codes belong to Ohuhu. Namespaced codes belong only to
@@ -98,6 +97,122 @@ List<MarkerColor> paletteCandidateColors({
   driedColorIds: driedColorIds,
 );
 
+/// Cache entry for the candidate selection. Keyed on the *contents* of [colors]
+/// compared by element identity (same length and `identical` elements), plus
+/// the brand, scope and the *contents* of the three sets.
+///
+/// A snapshot of [colors] is taken at store time so that a caller mutating its
+/// input list in place (e.g. `collection_snapshot.dart`) cannot make a later
+/// lookup return a stale result, while two distinct lists with the same elements
+/// still share a cache entry. A lookup scans the list once (O(n), no
+/// allocation): microseconds for the whole catalogue, after the cheap brand
+/// and scope checks.
+class _CandidateCacheEntry {
+  _CandidateCacheEntry({
+    required List<MarkerColor> colors,
+    required this.brand,
+    required this.scope,
+    required this.activeSetIds,
+    required this.ownedMarkerCodes,
+    required this.driedColorIds,
+    required this.result,
+  }) : colorsSnapshot = List<MarkerColor>.unmodifiable(colors);
+
+  final List<MarkerColor> colorsSnapshot;
+  final MarkerBrand brand;
+  final BrandScope scope;
+  final Set<String> activeSetIds;
+  final Set<String> ownedMarkerCodes;
+  final Set<String> driedColorIds;
+  final List<MarkerColor> result;
+
+  /// Same markers in the same order. The snapshot was taken at store time, so
+  /// a list mutated in place since then no longer matches.
+  bool _colorsMatch(List<MarkerColor> otherColors) {
+    if (colorsSnapshot.length != otherColors.length) return false;
+    for (var i = 0; i < colorsSnapshot.length; i++) {
+      if (!identical(colorsSnapshot[i], otherColors[i])) return false;
+    }
+    return true;
+  }
+
+  bool matches(
+    List<MarkerColor> otherColors,
+    MarkerBrand otherBrand,
+    BrandScope otherScope,
+    Set<String> otherActive,
+    Set<String> otherOwned,
+    Set<String> otherDried,
+  ) =>
+      brand == otherBrand &&
+      scope == otherScope &&
+      _sameSet(activeSetIds, otherActive) &&
+      _sameSet(ownedMarkerCodes, otherOwned) &&
+      _sameSet(driedColorIds, otherDried) &&
+      _colorsMatch(otherColors);
+}
+
+bool _sameSet(Set<String> a, Set<String> b) =>
+    a.length == b.length && a.containsAll(b);
+
+const int _candidateCacheCapacity = 4;
+final List<_CandidateCacheEntry> _mixedCandidateCache = [];
+final List<_CandidateCacheEntry> _ownedCandidateCache = [];
+
+List<MarkerColor>? _lookupCandidateCache(
+  List<_CandidateCacheEntry> cache,
+  List<MarkerColor> colors,
+  MarkerBrand brand,
+  BrandScope scope,
+  Set<String> activeSetIds,
+  Set<String> ownedMarkerCodes,
+  Set<String> driedColorIds,
+) {
+  for (var i = cache.length - 1; i >= 0; i--) {
+    final e = cache[i];
+    if (e.matches(
+      colors,
+      brand,
+      scope,
+      activeSetIds,
+      ownedMarkerCodes,
+      driedColorIds,
+    )) {
+      // LRU: move to the end.
+      cache.removeAt(i);
+      cache.add(e);
+      return e.result;
+    }
+  }
+  return null;
+}
+
+void _storeCandidateCache(
+  List<_CandidateCacheEntry> cache,
+  List<MarkerColor> colors,
+  MarkerBrand brand,
+  BrandScope scope,
+  Set<String> activeSetIds,
+  Set<String> ownedMarkerCodes,
+  Set<String> driedColorIds,
+  List<MarkerColor> result,
+) {
+  cache.add(
+    _CandidateCacheEntry(
+      colors: colors,
+      brand: brand,
+      scope: scope,
+      activeSetIds: Set<String>.unmodifiable(activeSetIds),
+      ownedMarkerCodes: Set<String>.unmodifiable(ownedMarkerCodes),
+      driedColorIds: Set<String>.unmodifiable(driedColorIds),
+      result: result,
+    ),
+  );
+  if (cache.length > _candidateCacheCapacity) {
+    cache.removeAt(0);
+  }
+}
+
 /// The one selection rule behind every palette producer (Palette, the AI
 /// advisors, Ideas, the Colour map and the home widget).
 ///
@@ -118,6 +233,17 @@ List<MarkerColor> mixedCandidateColors({
   Set<String> ownedMarkerCodes = const {},
   Set<String> driedColorIds = const {},
 }) {
+  final cached = _lookupCandidateCache(
+    _mixedCandidateCache,
+    colors,
+    brand,
+    scope,
+    activeSetIds,
+    ownedMarkerCodes,
+    driedColorIds,
+  );
+  if (cached != null) return cached;
+
   List<MarkerColor> of(MarkerBrand b) => ownedColors(
     colors: colors,
     brand: b,
@@ -125,11 +251,28 @@ List<MarkerColor> mixedCandidateColors({
     ownedMarkerCodes: ownedMarkerCodes,
     driedColorIds: driedColorIds,
   );
+  List<MarkerColor> computed;
   if (scope == BrandScope.mixedBrands) {
     final all = <MarkerColor>[for (final b in MarkerBrand.values) ...of(b)];
-    if (hasMixedBrands(all)) return all;
+    if (hasMixedBrands(all)) {
+      computed = List<MarkerColor>.unmodifiable(all);
+    } else {
+      computed = List<MarkerColor>.unmodifiable(of(brand));
+    }
+  } else {
+    computed = List<MarkerColor>.unmodifiable(of(brand));
   }
-  return of(brand);
+  _storeCandidateCache(
+    _mixedCandidateCache,
+    colors,
+    brand,
+    scope,
+    activeSetIds,
+    ownedMarkerCodes,
+    driedColorIds,
+    computed,
+  );
+  return computed;
 }
 
 /// The markers of the collection the palette producers work with, the
@@ -149,12 +292,24 @@ List<MarkerColor> ownedCandidateColors({
   Set<String> ownedMarkerCodes = const {},
   Set<String> driedColorIds = const {},
 }) {
+  final cached = _lookupCandidateCache(
+    _ownedCandidateCache,
+    colors,
+    brand,
+    scope,
+    activeSetIds,
+    ownedMarkerCodes,
+    driedColorIds,
+  );
+  if (cached != null) return cached;
+
   List<MarkerColor> of(MarkerBrand b) => ownedColors(
     colors: colors,
     brand: b,
     ownedSetIds: activeSetIds,
     ownedMarkerCodes: ownedMarkerCodes,
   );
+  List<MarkerColor> computed;
   if (scope == BrandScope.mixedBrands &&
       usableOwnedBrands(
             colors: colors,
@@ -163,9 +318,23 @@ List<MarkerColor> ownedCandidateColors({
             driedColorIds: driedColorIds,
           ).length !=
           1) {
-    return <MarkerColor>[for (final b in MarkerBrand.values) ...of(b)];
+    computed = List<MarkerColor>.unmodifiable(<MarkerColor>[
+      for (final b in MarkerBrand.values) ...of(b),
+    ]);
+  } else {
+    computed = List<MarkerColor>.unmodifiable(of(brand));
   }
-  return of(brand);
+  _storeCandidateCache(
+    _ownedCandidateCache,
+    colors,
+    brand,
+    scope,
+    activeSetIds,
+    ownedMarkerCodes,
+    driedColorIds,
+    computed,
+  );
+  return computed;
 }
 
 /// The brands the user owns a usable (not dried) marker of, in
@@ -203,9 +372,17 @@ String markerCodeLabel(MarkerColor color, {required bool mixed}) => mixed
     ? '${MarkerBrand.fromId(color.brandId).label} ${color.newCode}'
     : color.newCode;
 
-List<MarkerColor> _sorted(Iterable<MarkerColor> colors) =>
-    // MainActivity orders the active collection before generating palettes.
-    stableSorted(
-      colors.toList(),
-      (a, b) => naturalCodeComparator(a.newCode, b.newCode),
-    );
+List<MarkerColor> _sorted(Iterable<MarkerColor> colors) {
+  // MainActivity orders the active collection before generating palettes.
+  final list = colors.toList();
+  if (list.length < 2) return list;
+  // Precompute upper-cased keys once instead of re-tokenising on every
+  // comparison.
+  final keys = <String>[for (final c in list) c.newCode.toUpperCase()];
+  final order = List<int>.generate(list.length, (i) => i);
+  order.sort((ia, ib) {
+    final r = naturalCodeCompareUpper(keys[ia], keys[ib]);
+    return r == 0 ? ia.compareTo(ib) : r;
+  });
+  return <MarkerColor>[for (final i in order) list[i]];
+}

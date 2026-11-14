@@ -22,7 +22,7 @@ void main() {
         tester,
         ownedMarkerCodes: <String>{'decotime:91', 'decotime:92'},
       );
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       expect(find.byType(PaletteStrip), findsOneWidget);
       // The brand changes under the palette: it stays, as Ohuhu's.
       await scope.settings.setBrand(MarkerBrand.decoTime);
@@ -170,7 +170,7 @@ void main() {
       tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await tester.ensureVisible(_key('palette-regenerate'));
       await tester.tap(_key('palette-regenerate'));
       await tester.pumpAndSettle();
@@ -184,7 +184,7 @@ void main() {
       tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
 
       await tester.ensureVisible(find.text('Warmer'));
       await tester.tap(find.text('Warmer'));

@@ -519,14 +519,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get paletteBaseCodeLabel => 'Código del rotulador base';
 
   @override
-  String paletteBaseCodeHint(String first, String second) {
-    return '$first o $second';
-  }
-
-  @override
-  String paletteBaseCodeHintOne(String code) {
-    return '$code';
-  }
+  String get paletteBaseChooseHint => 'Elige un rotulador';
 
   @override
   String get paletteScenarioToggle => 'Escenas';
@@ -929,6 +922,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get palettePickerSearchHint => 'Código o nombre';
+
+  @override
+  String palettePickerSearchExample(String code) {
+    return 'Código o nombre, p. ej. $code';
+  }
 
   @override
   String get palettePickerEmpty => 'Ningún rotulador coincide con tu búsqueda.';

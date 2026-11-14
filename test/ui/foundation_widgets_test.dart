@@ -1108,4 +1108,176 @@ void _t0Tests() {
       );
     });
   });
+
+  group('reserved subtitle height follows every input', () {
+    const String shortText = 'A short line of text';
+    const String otherShort = 'Another short one';
+    final String longText = List<String>.filled(
+      12,
+      'many words here',
+    ).join(' ');
+
+    // One state of the header: every input the cached height depends on.
+    ({
+      double width,
+      double scale,
+      TextDirection dir,
+      bool dark,
+      String text,
+      List<String> alts,
+    })
+    base({
+      double width = 300,
+      double scale = 1,
+      TextDirection dir = TextDirection.ltr,
+      bool dark = false,
+      String text = shortText,
+      List<String> alts = const <String>[otherShort],
+    }) => (
+      width: width,
+      scale: scale,
+      dir: dir,
+      dark: dark,
+      text: text,
+      alts: alts,
+    );
+
+    final steps =
+        <
+          ({
+            String name,
+            ({
+              double width,
+              double scale,
+              TextDirection dir,
+              bool dark,
+              String text,
+              List<String> alts,
+            })
+            p,
+            bool taller,
+          })
+        >[
+          (name: 'base', p: base(), taller: false),
+          (name: 'narrower', p: base(width: 90), taller: true),
+          (name: 'base again', p: base(), taller: false),
+          (name: 'text scale', p: base(scale: 2), taller: true),
+          (name: 'base 2', p: base(), taller: false),
+          (name: 'rtl', p: base(dir: TextDirection.rtl), taller: false),
+          (name: 'base 3', p: base(), taller: false),
+          (name: 'style (dark)', p: base(dark: true), taller: false),
+          (name: 'base 4', p: base(), taller: false),
+          (name: 'text', p: base(text: longText), taller: true),
+          (name: 'base 5', p: base(), taller: false),
+          (
+            name: 'alternatives',
+            p: base(alts: <String>[otherShort, longText]),
+            taller: true,
+          ),
+          (name: 'base 6', p: base(), taller: false),
+          (
+            name: 'no alternatives',
+            p: base(alts: const <String>[]),
+            taller: false,
+          ),
+          (name: 'base 7', p: base(), taller: false),
+        ];
+
+    Widget harness(
+      ({
+        double width,
+        double scale,
+        TextDirection dir,
+        bool dark,
+        String text,
+        List<String> alts,
+      })
+      p,
+      Key key,
+    ) => MaterialApp(
+      locale: const Locale('en'),
+      localizationsDelegates: testLocalizationsDelegates,
+      supportedLocales: testSupportedLocales,
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: p.dark ? ThemeMode.dark : ThemeMode.light,
+      home: Scaffold(
+        body: KeyedSubtree(
+          key: key,
+          child: Builder(
+            builder: (BuildContext context) => MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: TextScaler.linear(p.scale)),
+              child: Directionality(
+                textDirection: p.dir,
+                child: Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: SizedBox(
+                    width: p.width,
+                    child: InkPageHeader(
+                      title: 'T',
+                      subtitle: p.text,
+                      reserveSubtitleFor: p.alts,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final Finder reserved = find.byWidgetPredicate(
+      (Widget w) => w.runtimeType.toString() == '_ReservedSubtitle',
+    );
+
+    testWidgets('one State pumped through every change matches fresh builds', (
+      WidgetTester tester,
+    ) async {
+      const Key kept = ValueKey<String>('kept');
+      State<StatefulWidget>? state;
+      final List<double> keptHeights = <double>[];
+      for (final step in steps) {
+        await tester.pumpWidget(harness(step.p, kept));
+        await tester.pumpAndSettle();
+        if (step.p.alts.isEmpty) {
+          // Nothing to reserve: the plain text, no measuring.
+          keptHeights.add(tester.getSize(find.text(step.p.text)).height);
+          continue;
+        }
+        final State<StatefulWidget> now =
+            (tester.element(reserved) as StatefulElement).state;
+        state ??= now;
+        expect(identical(now, state), isTrue, reason: step.name);
+        keptHeights.add(tester.getSize(reserved).height);
+      }
+
+      // Every step again in a brand new tree (a new State each time).
+      final List<double> fresh = <double>[];
+      for (final step in steps) {
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpWidget(harness(step.p, UniqueKey()));
+        await tester.pumpAndSettle();
+        fresh.add(
+          step.p.alts.isEmpty
+              ? tester.getSize(find.text(step.p.text)).height
+              : tester.getSize(reserved).height,
+        );
+      }
+
+      for (var i = 0; i < steps.length; i++) {
+        expect(keptHeights[i], fresh[i], reason: 'step ${steps[i].name}');
+        if (steps[i].taller) {
+          expect(
+            keptHeights[i],
+            greaterThan(keptHeights[0]),
+            reason: '${steps[i].name} should be taller than the base',
+          );
+        } else if (steps[i].name.startsWith('base')) {
+          expect(keptHeights[i], keptHeights[0], reason: steps[i].name);
+        }
+      }
+    });
+  });
 }

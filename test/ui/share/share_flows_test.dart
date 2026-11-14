@@ -93,7 +93,7 @@ void main() {
     ) async {
       await pumpPalette(tester, shareSink: FakeShareSink());
       expect(_key('palette-overflow'), findsNothing);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       // Share lives in the result's "⋯" now, which appears with a result.
       expect(_key('palette-overflow'), findsOneWidget);
       await tester.tap(_key('palette-overflow'));
@@ -107,7 +107,7 @@ void main() {
     ) async {
       final FakeShareSink sink = FakeShareSink();
       await pumpPalette(tester, shareSink: sink);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
 
       await tapResultItem(tester, 'palette-share', settle: false);
       await _untilShared(tester, sink);
@@ -180,7 +180,7 @@ void main() {
     ) async {
       final FakeShareSink sink = FakeShareSink(fail: true);
       await pumpPalette(tester, shareSink: sink);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await tapResultItem(tester, 'palette-share', settle: false);
       await _untilFound(tester, _key('palette-share-failed'));
 

@@ -12,22 +12,38 @@ import '../../l10n/l10n.dart';
 /// 8/16/16, grabber 36×4 `strong`, close button top-right, scrim behind.
 /// Slides up in 240 ms ease-out-cubic and down in 200 ms ease-in-cubic
 /// (no animation when the platform disables animations).
+///
+/// The result is ready as soon as the sheet is popped, while the sheet is
+/// still sliding out and the page behind it is still blocked for the
+/// accessibility tree. With [whenGone] the future waits for the closing
+/// transition to finish first: use it when the page changes what it shows
+/// because of the result.
 Future<T?> showInkSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,
   bool showClose = true,
   String? closeTooltip,
   bool isScrollControlled = true,
-}) {
-  return _showSheetRoute<T>(
+  bool whenGone = false,
+}) async {
+  ModalRoute<dynamic>? route;
+  final T? result = await _showSheetRoute<T>(
     context: context,
     isScrollControlled: isScrollControlled,
     builder: (BuildContext sheetContext) => InkSheet(
       showClose: showClose,
       closeTooltip: closeTooltip,
-      child: Builder(builder: builder),
+      child: Builder(
+        builder: (BuildContext context) {
+          route ??= ModalRoute.of(context);
+          return builder(context);
+        },
+      ),
     ),
   );
+  final ModalRoute<dynamic>? shown = route;
+  if (whenGone && shown != null) await shown.completed;
+  return result;
 }
 
 /// The modal route shared by [showInkSheet] and [showInkDraggableSheet]:

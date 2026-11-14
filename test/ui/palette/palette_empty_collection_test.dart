@@ -23,6 +23,18 @@ Finder _key(String key) => find.byKey(ValueKey<String>(key));
 bool _enabled(WidgetTester tester, Finder finder) =>
     tester.widget<InkButton>(finder).onPressed != null;
 
+/// Whether the base field can be tapped (it cannot with nothing to choose).
+bool _baseFieldEnabled(WidgetTester tester) =>
+    tester
+        .widget<InkWell>(
+          find.descendant(
+            of: _key('palette-base-field'),
+            matching: find.byType(InkWell),
+          ),
+        )
+        .onTap !=
+    null;
+
 /// The palette page with the AI on, so the "Suggest with AI" button shows.
 Future<AppScope> pumpWithAi(
   WidgetTester tester, {
@@ -103,53 +115,43 @@ void main() {
     expect(_enabled(tester, _key('palette-generate')), isFalse);
 
     // A base of the collection: the AI may suggest from it.
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     expect(_enabled(tester, _key('palette-suggest-ai')), isTrue);
     expect(find.byType(PaletteStrip), findsWidgets);
   });
 
-  testWidgets('the base picker button is disabled with no usable markers', (
+  testWidgets('the base field is disabled with no usable markers', (
     WidgetTester tester,
   ) async {
     await pumpWithAi(tester, brand: MarkerBrand.decoTime);
 
-    // Nothing usable to pick from: the button is disabled, like Generate.
-    expect(
-      tester.widget<InkIconButton>(_key('palette-pick-base')).onPressed,
-      isNull,
-    );
-  });
-
-  testWidgets('the base field suggests no marker of the range', (
-    WidgetTester tester,
-  ) async {
-    await pumpWithAi(tester, brand: MarkerBrand.decoTime);
-
-    await tester.enterText(_key('palette-base-input'), '0');
+    // Nothing usable to pick from: the field is disabled, like Generate, and
+    // never opens a list with a marker of the brand's range in it.
+    expect(_baseFieldEnabled(tester), isFalse);
+    await tester.tap(_key('palette-base-field'));
     await tester.pumpAndSettle();
-
-    // No suggestion out of the brand's range.
-    expect(_key('palette-base-options'), findsNothing);
+    expect(_key('palette-base-picker'), findsNothing);
   });
 
   testWidgets('a base the user does not own cannot be built', (
     WidgetTester tester,
   ) async {
-    await pumpWithAi(
+    final AppScope scope = await pumpWithAi(
       tester,
       setup: (AppScope scope) => scope.settings.setCollection(
         AppSettings(extraMarkerIds: const <String>{'B08'}),
       ),
     );
 
-    // A marker of the range the user does not own: it resolves, but the
-    // engines refuse it, so there is nothing to build.
-    await enterBaseCode(tester, 'R38');
+    // A marker of the range the user does not own (Swatches can hand any
+    // marker over): it resolves, but the engines refuse it, so there is
+    // nothing to build. The list of the page never offers it.
+    await handBaseOver(tester, scope, 'R38');
     expect(_enabled(tester, _key('palette-generate')), isFalse);
     expect(_enabled(tester, _key('palette-suggest-ai')), isFalse);
 
     // The user's own marker: the palette can be built.
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     expect(_enabled(tester, _key('palette-generate')), isTrue);
     expect(_enabled(tester, _key('palette-suggest-ai')), isTrue);
   });
@@ -157,13 +159,14 @@ void main() {
   testWidgets('with no marker: the chain offers the whole range', (
     WidgetTester tester,
   ) async {
-    await pumpWithAi(
+    final AppScope scope = await pumpWithAi(
       tester,
       setup: (AppScope scope) => scope.settings.setCollection(AppSettings()),
     );
 
     await choosePaletteType(tester, 'palette-mode-blendingChain');
-    await enterBaseCode(tester, 'B08');
+    // Nothing to choose from on the page: the marker comes from Swatches.
+    await handBaseOver(tester, scope, 'B08');
 
     // There is no chain, but the whole range is the way out of it.
     expect(find.byType(PaletteStrip), findsNothing);
@@ -185,13 +188,13 @@ void main() {
   testWidgets('the whole range never leaves the chain', (
     WidgetTester tester,
   ) async {
-    await pumpWithAi(
+    final AppScope scope = await pumpWithAi(
       tester,
       setup: (AppScope scope) => scope.settings.setCollection(AppSettings()),
     );
 
     await choosePaletteType(tester, 'palette-mode-blendingChain');
-    await enterBaseCode(tester, 'B08');
+    await handBaseOver(tester, scope, 'B08');
     await tester.ensureVisible(_key('palette-chain-whole-range'));
     await tester.tap(_key('palette-chain-whole-range'));
     await tester.pumpAndSettle();
@@ -204,9 +207,10 @@ void main() {
 
     expect(_key('palette-chain-my-markers'), findsNothing);
     expect(_key('palette-empty-collection'), findsOneWidget);
-    await tester.enterText(_key('palette-base-input'), 'B');
+    expect(_baseFieldEnabled(tester), isFalse);
+    await tester.tap(_key('palette-base-field'));
     await tester.pumpAndSettle();
-    expect(_key('palette-base-options'), findsNothing);
+    expect(_key('palette-base-picker'), findsNothing);
   });
 
   testWidgets('with every marker dried out: the page says so', (
@@ -288,6 +292,27 @@ void main() {
         findsOneWidget,
       );
       expect(find.text(l10n.allMarkersDried), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'whole-range chain with no marker of your own: the list search has no example code',
+    (WidgetTester tester) async {
+      final AppScope scope = await pumpWithAi(
+        tester,
+        setup: (AppScope scope) => scope.settings.setCollection(AppSettings()),
+      );
+      await choosePaletteType(tester, 'palette-mode-blendingChain');
+      await handBaseOver(tester, scope, 'B08');
+      await tester.ensureVisible(_key('palette-chain-whole-range'));
+      await tester.tap(_key('palette-chain-whole-range'));
+      await tester.pumpAndSettle();
+
+      // The list is the brand's range, but none of it is the user's: the
+      // search offers no code as an example.
+      await openBaseSheet(tester);
+      expect(find.text(l10n.palettePickerSearchHint), findsOneWidget);
+      expect(find.textContaining(', e.g. '), findsNothing);
     },
   );
 }

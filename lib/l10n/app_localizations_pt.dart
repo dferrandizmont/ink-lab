@@ -519,14 +519,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get paletteBaseCodeLabel => 'Código do marcador base';
 
   @override
-  String paletteBaseCodeHint(String first, String second) {
-    return '$first ou $second';
-  }
-
-  @override
-  String paletteBaseCodeHintOne(String code) {
-    return '$code';
-  }
+  String get paletteBaseChooseHint => 'Escolhe um marcador';
 
   @override
   String get paletteScenarioToggle => 'Cenas';
@@ -928,6 +921,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get palettePickerSearchHint => 'Código ou nome';
+
+  @override
+  String palettePickerSearchExample(String code) {
+    return 'Código ou nome, p. ex. $code';
+  }
 
   @override
   String get palettePickerEmpty => 'Nenhum marcador corresponde à pesquisa.';

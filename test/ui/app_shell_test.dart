@@ -531,10 +531,14 @@ void main() {
 
       expect(paletteBaseDraft.value, isNull);
       expect(find.byKey(SwatchesPage.pageKey).hitTestable(), findsNothing);
-      final TextField base = tester.widget(
-        find.byKey(const ValueKey<String>('palette-base-input')),
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(const ValueKey<String>('palette-base-value')),
+            )
+            .data,
+        'B08',
       );
-      expect(base.controller?.text, 'B08');
     },
   );
 
@@ -570,10 +574,14 @@ void main() {
       expect(paletteBaseDraft.value, isNull);
       expect(paletteBaseMode.value, isNull);
       expect(find.byKey(SwatchesPage.pageKey).hitTestable(), findsNothing);
-      final TextField base = tester.widget(
-        find.byKey(const ValueKey<String>('palette-base-input')),
+      expect(
+        tester
+            .widget<Text>(
+              find.byKey(const ValueKey<String>('palette-base-value')),
+            )
+            .data,
+        'B08',
       );
-      expect(base.controller?.text, 'B08');
       expect(
         tester
             .widget<Text>(

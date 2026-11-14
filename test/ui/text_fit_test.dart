@@ -56,7 +56,7 @@ import '../support/pill_shapes.dart';
 import '../support/tap_targets.dart';
 import '../support/truncation.dart';
 import 'match/match_test_support.dart';
-import 'palette/palette_test_support.dart' show markerColor;
+import 'palette/palette_test_support.dart' show chooseBase, markerColor;
 
 // Regression test for text that does not fit. Spanish, German, French and
 // Portuguese run 20-40 % longer than English, so every page and main sheet is
@@ -766,13 +766,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
       (WidgetTester tester, _Env env) async {
         await _pump(tester, env, const PalettePage());
         _check(tester, 'palette');
-        await tester.enterText(
-          find.byKey(const ValueKey<String>('palette-base-input')),
-          'B08',
-        );
-        await tester.pumpAndSettle();
-        FocusManager.instance.primaryFocus?.unfocus();
-        await tester.pumpAndSettle();
+        await chooseBase(tester, 'B08');
         _check(tester, 'palette with base');
         // "Add to palette" from Swatches replaces the base: undo notice.
         addTearDown(() => paletteBaseDraft.value = null);
@@ -784,7 +778,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await tester.pumpAndSettle();
         await _tap(
           tester,
-          find.byKey(const ValueKey<String>('palette-pick-base')),
+          find.byKey(const ValueKey<String>('palette-base-field')),
         );
         _check(tester, 'base picker');
         await _close(tester);
@@ -871,13 +865,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
             const Offset(0, 9000),
           );
           await tester.pumpAndSettle();
-          await tester.enterText(
-            find.byKey(const ValueKey<String>('palette-base-input')),
-            code,
-          );
-          await tester.pumpAndSettle();
-          FocusManager.instance.primaryFocus?.unfocus();
-          await tester.pumpAndSettle();
+          await chooseBase(tester, code);
         }
 
         Future<void> toTop() async {
@@ -1106,13 +1094,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           secrets: secrets,
           aiService: service,
         );
-        await tester.enterText(
-          find.byKey(const ValueKey<String>('palette-base-input')),
-          'B08',
-        );
-        await tester.pumpAndSettle();
-        FocusManager.instance.primaryFocus?.unfocus();
-        await tester.pumpAndSettle();
+        await chooseBase(tester, 'B08');
         await tester.scrollUntilVisible(
           find.byKey(const ValueKey<String>('palette-suggest-ai')),
           200,
@@ -1487,13 +1469,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
     await tester.pumpAndSettle();
     // No palette yet: nothing to preview.
     _check(tester, 'colour vision with saved palettes');
-    await tester.enterText(
-      find.byKey(const ValueKey<String>('palette-base-input')),
-      'B08',
-    );
-    await tester.pumpAndSettle();
-    FocusManager.instance.primaryFocus?.unfocus();
-    await tester.pumpAndSettle();
+    await chooseBase(tester, 'B08');
     // The preview moved into a sheet, opened from the result's "⋯".
     await _tap(tester, find.byKey(const ValueKey<String>('palette-overflow')));
     await _tap(

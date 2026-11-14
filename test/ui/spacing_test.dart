@@ -37,15 +37,10 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
 
-    final Finder field = find.ancestor(
-      of: find.byKey(const ValueKey<String>('palette-base-input')),
-      matching: find.byWidgetPredicate(
-        (Widget w) =>
-            w is Container &&
-            w.constraints?.minHeight == InkGeometry.fieldHeight,
-      ),
+    final Finder field = find.byKey(
+      const ValueKey<String>('palette-base-field'),
     );
     final Finder strip = find.byType(PaletteStrip).first;
     final Finder rolesCard = find

@@ -13,10 +13,6 @@ import 'palette_ai_test.dart' show pumpAi;
 import 'palette_test_support.dart';
 import '../../support/l10n.dart';
 
-Finder get _baseInput =>
-    find.byKey(const ValueKey<String>('palette-base-input'));
-Finder get _options =>
-    find.byKey(const ValueKey<String>('palette-base-options'));
 Finder get _aiButton =>
     find.byKey(const ValueKey<String>('palette-suggest-ai'));
 
@@ -48,7 +44,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
 
       final PaletteStrip strip = _strip(tester);
       expect(strip.labels!.first, 'B08');
@@ -76,7 +72,7 @@ void main() {
         WidgetTester tester,
       ) async {
         await pumpPalette(tester);
-        await enterBaseCode(tester, 'B08');
+        await chooseBase(tester, 'B08');
         await tester.tap(
           find.descendant(
             of: find.byType(InkSegmented<int>),
@@ -93,62 +89,6 @@ void main() {
     }
   });
 
-  group('base marker suggestions', () {
-    Future<void> typeWithoutUnfocus(WidgetTester tester, String text) async {
-      await tester.tap(_baseInput);
-      await tester.enterText(_baseInput, text);
-      await tester.pumpAndSettle();
-    }
-
-    testWidgets('close when a suggestion is picked', (
-      WidgetTester tester,
-    ) async {
-      await pumpPalette(tester);
-      await typeWithoutUnfocus(tester, 'B0');
-      expect(_options, findsOneWidget);
-
-      await tester.tap(
-        find.descendant(of: _options, matching: find.byType(InkWell)).first,
-      );
-      await tester.pumpAndSettle();
-
-      expect(_options, findsNothing);
-      expect(tester.widget<TextField>(_baseInput).focusNode!.hasFocus, isFalse);
-      expect(find.textContaining('Combinations ('), findsOneWidget);
-    });
-
-    testWidgets('close when the field loses focus', (
-      WidgetTester tester,
-    ) async {
-      await pumpPalette(tester);
-      await typeWithoutUnfocus(tester, 'B0');
-      expect(_options, findsOneWidget);
-
-      await tester.tapAt(const Offset(590, 2990));
-      await tester.pumpAndSettle();
-
-      expect(_options, findsNothing);
-    });
-
-    testWidgets('close when the page scrolls', (WidgetTester tester) async {
-      await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
-      await typeWithoutUnfocus(tester, 'B1');
-      expect(_options, findsOneWidget);
-
-      tester.view.physicalSize = const Size(600, 500);
-      await tester.pumpAndSettle();
-      await tester.drag(
-        find.byType(ListView).first,
-        const Offset(0, -150),
-        warnIfMissed: false,
-      );
-      await tester.pumpAndSettle();
-
-      expect(_options, findsNothing);
-    });
-  });
-
   group('Suggest with AI', () {
     testWidgets('shows a spinner while it works, then the AI model label', (
       WidgetTester tester,
@@ -163,7 +103,7 @@ void main() {
           return _echoCandidate(request);
         }),
       );
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
 
       await tester.tap(_aiButton);
       await tester.pump();
@@ -206,7 +146,7 @@ void main() {
         withKey: true,
         client: MockClient((_) async => errorResponse('no', 401)),
       );
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       final List<String> before = _strip(tester).labels!;
 
       await tester.tap(_aiButton);

@@ -479,13 +479,15 @@ void main() {
       await scope.dried.add(dry.colorId);
       await tester.pumpAndSettle();
 
-      await enterBaseCode(tester, dry.newCode);
+      // Swatches may hand a dried-out marker over, even if the list of the
+      // page never offers it.
+      await handBaseOver(tester, scope, dry.newCode);
       // The marker is owned but ran dry: it has its own message, not the one
       // for a marker that is not in the collection.
       expect(find.text(l10n.paletteBaseDried(dry.newCode)), findsOneWidget);
       expect(find.textContaining('is not in your collection'), findsNothing);
 
-      await tester.tap(_key('palette-pick-base'));
+      await tester.tap(_key('palette-base-field'));
       await tester.pumpAndSettle();
       expect(_key('palette-picker-${dry.newCode}'), findsNothing);
       expect(_key('palette-picker-${classic[1].newCode}'), findsOneWidget);
@@ -540,9 +542,7 @@ Future<List<String>> _allSuggestedIds(WidgetTester tester) async {
                   ),
             )
             .evaluate())
-      (e.widget.key! as ValueKey<String>).value.substring(
-        'buy-all-'.length,
-      ),
+      (e.widget.key! as ValueKey<String>).value.substring('buy-all-'.length),
   ];
   expect(ids, hasLength(10));
   await tester.tap(find.byTooltip(l10n.commonClose));

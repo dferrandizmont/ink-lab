@@ -271,7 +271,6 @@ extension _PaletteSaveShare on _PalettePageState {
       _baseInput = base == null
           ? palette.baseCode
           : markerCodeLabel(base, mixed: branded);
-      _baseController.text = _baseInput;
       _mode = palette.mode;
       _paletteSize = (suggestions.length + 1).clamp(3, 5);
       _useScenario = false;

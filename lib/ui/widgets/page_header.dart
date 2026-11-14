@@ -118,7 +118,7 @@ class InkPageHeader extends StatelessWidget {
 
 /// The subtitle text, at least as tall as the tallest of [alternatives] would
 /// be at the same width, text scale and style (measured, never clipped).
-class _ReservedSubtitle extends StatelessWidget {
+class _ReservedSubtitle extends StatefulWidget {
   const _ReservedSubtitle({
     required this.text,
     required this.alternatives,
@@ -130,27 +130,70 @@ class _ReservedSubtitle extends StatelessWidget {
   final TextStyle style;
 
   @override
+  State<_ReservedSubtitle> createState() => _ReservedSubtitleState();
+}
+
+class _ReservedSubtitleState extends State<_ReservedSubtitle> {
+  double? _cachedMaxWidth;
+  TextScaler? _cachedScaler;
+  TextDirection? _cachedDirection;
+  TextStyle? _cachedStyle;
+  String? _cachedText;
+  List<String>? _cachedAlternatives;
+  double _cachedTallest = 0;
+
+  bool _sameInputs(
+    double maxWidth,
+    TextScaler scaler,
+    TextDirection direction,
+    TextStyle style,
+  ) {
+    if (_cachedMaxWidth != maxWidth) return false;
+    if (_cachedScaler != scaler) return false;
+    if (_cachedDirection != direction) return false;
+    if (_cachedStyle != style) return false;
+    if (_cachedText != widget.text) return false;
+    final alts = widget.alternatives;
+    if (_cachedAlternatives == null || _cachedAlternatives!.length != alts.length) {
+      return false;
+    }
+    for (var i = 0; i < alts.length; i++) {
+      if (_cachedAlternatives![i] != alts[i]) return false;
+    }
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final Text subtitle = Text(text, style: style);
-    if (alternatives.isEmpty) return subtitle;
+    final Text subtitle = Text(widget.text, style: widget.style);
+    if (widget.alternatives.isEmpty) return subtitle;
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         final TextStyle resolved = DefaultTextStyle.of(context).style
-            .merge(style);
+            .merge(widget.style);
         final TextScaler scaler = MediaQuery.textScalerOf(context);
         final TextDirection direction = Directionality.of(context);
-        double tallest = 0;
-        for (final String candidate in <String>[text, ...alternatives]) {
-          final TextPainter painter = TextPainter(
-            text: TextSpan(text: candidate, style: resolved),
-            textDirection: direction,
-            textScaler: scaler,
-          )..layout(maxWidth: constraints.maxWidth);
-          if (painter.height > tallest) tallest = painter.height;
-          painter.dispose();
+        if (!_sameInputs(constraints.maxWidth, scaler, direction, resolved)) {
+          _cachedMaxWidth = constraints.maxWidth;
+          _cachedScaler = scaler;
+          _cachedDirection = direction;
+          _cachedStyle = resolved;
+          _cachedText = widget.text;
+          _cachedAlternatives = List<String>.from(widget.alternatives);
+          double tallest = 0;
+          for (final String candidate in <String>[widget.text, ...widget.alternatives]) {
+            final TextPainter painter = TextPainter(
+              text: TextSpan(text: candidate, style: resolved),
+              textDirection: direction,
+              textScaler: scaler,
+            )..layout(maxWidth: constraints.maxWidth);
+            if (painter.height > tallest) tallest = painter.height;
+            painter.dispose();
+          }
+          _cachedTallest = tallest;
         }
         return ConstrainedBox(
-          constraints: BoxConstraints(minHeight: tallest),
+          constraints: BoxConstraints(minHeight: _cachedTallest),
           child: subtitle,
         );
       },

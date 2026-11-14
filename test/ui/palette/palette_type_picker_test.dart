@@ -84,7 +84,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
 
       await choosePaletteType(tester, 'palette-mode-triad');
 
@@ -122,7 +122,7 @@ void main() {
       (WidgetTester tester) async {
         // Regression: once Scenes was on, a mode chip looked dead.
         await pumpPalette(tester);
-        await enterBaseCode(tester, 'B08');
+        await chooseBase(tester, 'B08');
         final List<String> recommended = _resultColors(tester);
         expect(_typeValue(tester), l10n.modeRecommended);
 
@@ -310,7 +310,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await choosePaletteType(tester, 'palette-scenario-toggle');
       await openPaletteSceneSheet(tester);
       await tester.tap(_key('palette-scene-clearSky'));
@@ -327,5 +327,51 @@ void main() {
 
   test('the search folds case and accents', () {
     expect(foldForSearch('Dragón ÁÉÍÓÚ ñ ü'), 'dragon aeiou n u');
+  });
+
+  group('one sheet at a time', () {
+    testWidgets('the type field ignores taps while its choice is pending', (
+      WidgetTester tester,
+    ) async {
+      await pumpPalette(tester);
+      await chooseBase(tester, 'B08');
+      await openPaletteTypeSheet(tester);
+      await tester.tap(_key('palette-mode-triad'));
+      // Mid-way through the closing animation: the choice is not applied yet.
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.tap(
+        find.byKey(const ValueKey<String>('palette-type-field')),
+        warnIfMissed: false,
+      );
+      await tester.pumpAndSettle();
+      // The first choice was applied and no second sheet was opened.
+      expect(_key('palette-type-sheet'), findsNothing);
+      expect(_typeValue(tester), l10n.modeLabel(PaletteMode.triad));
+
+      // Once everything is over, reopening works and shows the new mode.
+      await openPaletteTypeSheet(tester);
+      expect(_key('palette-type-sheet'), findsOneWidget);
+    });
+
+    testWidgets('the base field ignores taps while its choice is pending', (
+      WidgetTester tester,
+    ) async {
+      await pumpPalette(tester);
+      await openBaseSheet(tester);
+      await tester.enterText(_key('palette-picker-search'), 'B08');
+      await tester.pumpAndSettle();
+      await tester.tap(_key('palette-picker-B08'));
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.tap(
+        find.byKey(const ValueKey<String>('palette-base-field')),
+        warnIfMissed: false,
+      );
+      await tester.pumpAndSettle();
+      expect(_key('palette-base-picker'), findsNothing);
+      expect(baseInputOf(tester), 'B08');
+
+      await openBaseSheet(tester);
+      expect(_key('palette-base-picker'), findsOneWidget);
+    });
   });
 }

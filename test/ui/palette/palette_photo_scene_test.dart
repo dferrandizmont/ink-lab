@@ -293,7 +293,7 @@ void main() {
       );
       // The base is the photo's: no base field; nothing to lock, vary or
       // regenerate; and no note while every colour has a close marker.
-      expect(_key('palette-base-input'), findsNothing);
+      expect(_key('palette-base-field'), findsNothing);
       expect(_key('palette-regenerate'), findsNothing);
       expect(_key('palette-generate'), findsNothing);
       expect(_key('palette-suggest-ai'), findsNothing);
@@ -415,7 +415,7 @@ void main() {
       await choosePaletteType(tester, 'palette-mode-complementary');
       expect(_key('palette-photo-thumb'), findsNothing);
       expect(_key('palette-scene-field'), findsNothing);
-      expect(_key('palette-base-input'), findsOneWidget);
+      expect(_key('palette-base-field'), findsOneWidget);
 
       await _fromPhoto(tester);
       expect(_key('palette-photo-thumb'), findsOneWidget);

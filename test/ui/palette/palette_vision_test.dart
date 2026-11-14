@@ -53,7 +53,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await tapResultItem(tester, 'palette-vision-open');
       await _choose(tester, colorVisionLabelOf(ColorVisionType.protanopia));
 
@@ -70,7 +70,7 @@ void main() {
       expect(_key('palette-overflow'), findsNothing);
       expect(_key('palette-vision'), findsNothing);
 
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
 
       // The preview lives in its own sheet, opened from the result's "⋯".
       expect(_key('palette-overflow'), findsOneWidget);
@@ -100,7 +100,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await tapResultItem(tester, 'palette-vision-open');
 
       // Normal already says every colour is easy to tell apart, and holds the
@@ -127,7 +127,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       final List<String> normal = _stripColors(tester);
       expect(normal, isNotEmpty);
       await tapResultItem(tester, 'palette-vision-open');
@@ -157,7 +157,7 @@ void main() {
     ) async {
       final FakeShareSink sink = FakeShareSink();
       await pumpPalette(tester, shareSink: sink);
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
 
       await tapResultItem(tester, 'palette-share', settle: false);
       await _untilShared(tester, sink, 1);

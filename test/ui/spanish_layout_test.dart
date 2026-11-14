@@ -13,6 +13,7 @@ import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
 
 import '../support/l10n.dart';
+import 'palette/palette_test_support.dart' show chooseBase;
 
 /// About the width a role label has in a suggestion row at 360 dp (the row
 /// minus the card padding and the lock button).
@@ -186,13 +187,7 @@ void main() {
         findsOneWidget,
       );
 
-      await tester.enterText(
-        find.byKey(const ValueKey<String>('palette-base-input')),
-        'B08',
-      );
-      await tester.pumpAndSettle();
-      FocusManager.instance.primaryFocus?.unfocus();
-      await tester.pumpAndSettle();
+      await chooseBase(tester, 'B08');
 
       expect(find.textContaining('Combinaciones ('), findsOneWidget);
       expect(find.textContaining('Combinations'), findsNothing);

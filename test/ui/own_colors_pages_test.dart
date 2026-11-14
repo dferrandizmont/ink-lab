@@ -56,7 +56,7 @@ void main() {
           brand: brand,
           ownedMarkerCodes: owned,
         );
-        await enterBaseCode(tester, code);
+        await chooseBase(tester, code);
         final PaletteStrip before = tester.widget(
           find.byType(PaletteStrip).first,
         );

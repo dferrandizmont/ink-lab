@@ -10,6 +10,14 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.3.1 · 2026-11-14
+
+- Ideas and Palette: a row of chips that goes past the edge of the screen now shows a small arrow and a clearer fade
+  on that side, so it is clear there are more options. Once you scroll, an arrow on the other side shows the way back.
+- Palette: tapping the base marker field now opens the list of markers with its search ready to type in. The list can
+  be scrolled, and the palette no longer changes (and flashes a notice) at each letter you type. The Palette page also
+  responds faster.
+
 ## 1.3.0 · 2026-11-13
 
 Ink Lab asks for a store review only once you have used it for a while, and you can rate it from Settings.

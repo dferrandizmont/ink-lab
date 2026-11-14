@@ -149,78 +149,73 @@ class _BrandEquivalentsSectionState extends State<BrandEquivalentsSection> {
         const SizedBox(height: InkSpacing.block),
         FutureBuilder<_Loaded>(
           future: _future,
-          builder:
-              (BuildContext context, AsyncSnapshot<_Loaded> snapshot) {
-                if (snapshot.hasError) {
-                  return _note(
-                    context,
-                    ink,
-                    'swatch-equivalents-failed',
-                    context.l10n.swatchesOtherBrandsFailed,
-                  );
-                }
-                final _Loaded? loaded = snapshot.data;
-                if (loaded == null) {
-                  return const SkeletonBlock(height: InkGeometry.skeletonList);
-                }
-                final List<BrandEquivalentGroup> groups = <BrandEquivalentGroup>[
-                  for (final BrandEquivalentGroup g in loaded.groups)
-                    if (g.matches.isNotEmpty) g,
-                ];
-                if (groups.isEmpty) {
-                  return _note(
-                    context,
-                    ink,
-                    'swatch-equivalents-empty',
-                    _onlyMine
-                        ? context.l10n.swatchesOtherBrandsNoneMine
-                        : context.l10n.swatchesOtherBrandsNone,
-                  );
-                }
-                // The user's brands first, the closest one first.
-                final List<BrandEquivalentGroup> yours = <BrandEquivalentGroup>[
-                  for (final BrandEquivalentGroup g in groups)
-                    if (loaded.ownedBrandIds.contains(g.brandId)) g,
-                ]..sort(_byDistance);
-                // With "Only mine" every brand is the user's: the list of all
-                // brands would only repeat them.
-                final bool showAll = !_onlyMine;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    if (yours.isNotEmpty && showAll)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: InkSpacing.s4),
-                        child: Text(
-                          AppTypography.caps(
-                            context.l10n.swatchesOtherBrandsYours,
-                          ),
-                          style: AppTypography.capsStyle.copyWith(
-                            color: ink.fg2,
-                          ),
-                        ),
-                      ),
-                    for (final BrandEquivalentGroup group in yours)
-                      _BrandGroup(
-                        group: group,
-                        expanded: _open.contains(group.brandId),
-                        onToggle: () => _toggle(group.brandId),
-                        onSelect: widget.onSelect,
-                      ),
-                    if (showAll) ...<Widget>[
-                      if (yours.isNotEmpty)
-                        const SizedBox(height: InkSpacing.group),
-                      _AllBrands(
-                        groups: <BrandEquivalentGroup>[...groups]
-                          ..sort(_byDistance),
-                        expanded: _allOpen,
-                        onToggle: () => setState(() => _allOpen = !_allOpen),
-                        onSelect: widget.onSelect,
-                      ),
-                    ],
-                  ],
-                );
-              },
+          builder: (BuildContext context, AsyncSnapshot<_Loaded> snapshot) {
+            if (snapshot.hasError) {
+              return _note(
+                context,
+                ink,
+                'swatch-equivalents-failed',
+                context.l10n.swatchesOtherBrandsFailed,
+              );
+            }
+            final _Loaded? loaded = snapshot.data;
+            if (loaded == null) {
+              return const SkeletonBlock(height: InkGeometry.skeletonList);
+            }
+            final List<BrandEquivalentGroup> groups = <BrandEquivalentGroup>[
+              for (final BrandEquivalentGroup g in loaded.groups)
+                if (g.matches.isNotEmpty) g,
+            ];
+            if (groups.isEmpty) {
+              return _note(
+                context,
+                ink,
+                'swatch-equivalents-empty',
+                _onlyMine
+                    ? context.l10n.swatchesOtherBrandsNoneMine
+                    : context.l10n.swatchesOtherBrandsNone,
+              );
+            }
+            // The user's brands first, the closest one first.
+            final List<BrandEquivalentGroup> yours = <BrandEquivalentGroup>[
+              for (final BrandEquivalentGroup g in groups)
+                if (loaded.ownedBrandIds.contains(g.brandId)) g,
+            ]..sort(_byDistance);
+            // With "Only mine" every brand is the user's: the list of all
+            // brands would only repeat them.
+            final bool showAll = !_onlyMine;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                if (yours.isNotEmpty && showAll)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: InkSpacing.s4),
+                    child: Text(
+                      AppTypography.caps(context.l10n.swatchesOtherBrandsYours),
+                      style: AppTypography.capsStyle.copyWith(color: ink.fg2),
+                    ),
+                  ),
+                for (final BrandEquivalentGroup group in yours)
+                  _BrandGroup(
+                    group: group,
+                    expanded: _open.contains(group.brandId),
+                    onToggle: () => _toggle(group.brandId),
+                    onSelect: widget.onSelect,
+                  ),
+                if (showAll) ...<Widget>[
+                  if (yours.isNotEmpty)
+                    const SizedBox(height: InkSpacing.group),
+                  _AllBrands(
+                    groups: <BrandEquivalentGroup>[...groups]
+                      ..sort(_byDistance),
+                    expanded: _allOpen,
+                    onToggle: () => setState(() => _allOpen = !_allOpen),
+                    onSelect: widget.onSelect,
+                  ),
+                ],
+              ],
+            );
+          },
         ),
       ],
     );

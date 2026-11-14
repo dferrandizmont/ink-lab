@@ -125,9 +125,8 @@ class _PurchaseCardState extends State<PurchaseCard> {
             return StreamBuilder<Set<String>>(
               stream: _wishChanges,
               initialData: scope.wishlist.ids,
-              builder:
-                  (BuildContext context, AsyncSnapshot<Set<String>> _) =>
-                      _content(context, scope, ink),
+              builder: (BuildContext context, AsyncSnapshot<Set<String>> _) =>
+                  _content(context, scope, ink),
             );
           },
         );
@@ -180,9 +179,7 @@ class _PurchaseCardState extends State<PurchaseCard> {
           )
           ..add(
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: InkSpacing.cardH,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: InkSpacing.cardH),
               child: _row(context, scope, s, l10n, language),
             ),
           );

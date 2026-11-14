@@ -45,7 +45,7 @@ Future<AppScope> _pumpChain(
     },
   );
   await choosePaletteType(tester, 'palette-mode-blendingChain');
-  await enterBaseCode(tester, base);
+  await chooseBase(tester, base);
   return scope;
 }
 
@@ -291,7 +291,7 @@ void main() {
       expect(find.byType(PaletteStrip), findsNothing);
 
       // And the other way round.
-      await enterBaseCode(tester, 'B411');
+      await chooseBase(tester, 'B411');
       expect(find.text(l10n.paletteChainNeedDarker), findsOneWidget);
       expect(find.text(l10n.paletteChainNeedLighter), findsNothing);
     });
@@ -321,11 +321,14 @@ void main() {
     testWidgets('a base outside the collection is refused like in any type', (
       WidgetTester tester,
     ) async {
-      await _pumpChain(
+      final AppScope scope = await pumpPalette(
         tester,
-        base: 'R38',
-        owned: const <String>{'B08', 'B010', 'B411'},
+        setup: (AppScope scope) =>
+            _own(scope, const <String>{'B08', 'B010', 'B411'}),
       );
+      await choosePaletteType(tester, 'palette-mode-blendingChain');
+      // The list of the page never offers R38: Swatches hands it over.
+      await handBaseOver(tester, scope, 'R38');
       expect(find.textContaining('R38'), findsWidgets);
       expect(find.byType(PaletteStrip), findsNothing);
       expect(_key('palette-save'), findsNothing);
@@ -424,7 +427,7 @@ void main() {
       final FakeShareSink sink = FakeShareSink();
       await pumpPalette(tester, shareSink: sink);
       await choosePaletteType(tester, 'palette-mode-blendingChain');
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       await _selectSize(tester, 4);
 
       await tapResultItem(tester, 'palette-share', settle: false);
@@ -487,7 +490,7 @@ void main() {
         paletteBaseMode.value = null;
       });
       await pumpPalette(tester);
-      await enterBaseCode(tester, 'R16');
+      await chooseBase(tester, 'R16');
       final List<String> before = _stripLabels(tester);
       expect(_typeValue(tester), l10n.modeRecommended);
 

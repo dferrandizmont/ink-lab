@@ -93,7 +93,6 @@ final class _PaletteSnapshot {
     s._mode = mode;
     s._useScenario = useScenario;
     s._baseInput = baseInput;
-    s._baseController.text = baseInput;
     s._paletteSize = paletteSize;
     s._suggestions = suggestions;
     s._lockedCodes = lockedCodes;

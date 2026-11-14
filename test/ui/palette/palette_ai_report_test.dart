@@ -62,7 +62,7 @@ Future<void> _pump(
 }
 
 Future<void> _suggest(WidgetTester tester) async {
-  await enterBaseCode(tester, 'B08');
+  await chooseBase(tester, 'B08');
   await tester.ensureVisible(_k('palette-suggest-ai'));
   await tester.tap(_k('palette-suggest-ai'));
   await tester.pumpAndSettle();
@@ -78,7 +78,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await _pump(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     // There is a result, but no AI one: no report entry.
     expect(_k('palette-ai-report'), findsNothing);
 

@@ -524,14 +524,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get paletteBaseCodeLabel => 'Codice del pennarello base';
 
   @override
-  String paletteBaseCodeHint(String first, String second) {
-    return '$first o $second';
-  }
-
-  @override
-  String paletteBaseCodeHintOne(String code) {
-    return '$code';
-  }
+  String get paletteBaseChooseHint => 'Scegli un pennarello';
 
   @override
   String get paletteScenarioToggle => 'Scene';
@@ -935,6 +928,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get palettePickerSearchHint => 'Codice o nome';
+
+  @override
+  String palettePickerSearchExample(String code) {
+    return 'Codice o nome, ad es. $code';
+  }
 
   @override
   String get palettePickerEmpty =>

@@ -9,7 +9,7 @@ import 'package:ink_lab/ai/ai.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/data/data.dart';
-import 'package:ink_lab/ui/pages/palette/palette_base_field.dart';
+import 'package:ink_lab/ui/pages/palette/palette_base_picker_sheet.dart';
 import 'package:ink_lab/ui/pages/palette/palette_suggestion_row.dart';
 
 import '../../ai/ai_test_support.dart';
@@ -136,7 +136,7 @@ void main() {
       await scope.settings.setOwnedMarkerCodes({'decotime:91', 'decotime:92'});
       await scope.settings.setScope(BrandScope.mixedBrands);
       await tester.pumpAndSettle();
-      await enterBaseCode(tester, 'Ohuhu B08');
+      await chooseBase(tester, 'B08', brand: MarkerBrand.ohuhuOahu);
       final before = [
         for (final r in tester.widgetList<PaletteSuggestionRow>(
           find.byType(PaletteSuggestionRow),
@@ -195,11 +195,14 @@ void main() {
         withKey: true,
         client: MockClient((_) => answer.future),
       );
-      await enterBaseCode(tester, 'B08');
+      await chooseBase(tester, 'B08');
       // A marker the user owns that is not in the palette: a valid answer.
-      final String code = tester
-          .widget<PaletteBaseAndSize>(find.byType(PaletteBaseAndSize))
-          .catalog
+      await openBaseSheet(tester);
+      final List<MarkerColor> owned = tester
+          .widget<PaletteBasePickerSheet>(find.byType(PaletteBasePickerSheet))
+          .markers;
+      await closeSheet(tester);
+      final String code = owned
           .map((c) => c.newCode)
           .firstWhere((c) => c != 'B08' && !rowCodes(tester).contains(c));
       await tester.tap(_aiButton);
@@ -311,7 +314,7 @@ void main() {
       ),
     );
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     expect(_aiButton, findsOneWidget);
     await tester.tap(_aiButton);
     await tester.pumpAndSettle();
@@ -356,7 +359,7 @@ void main() {
       client: _echoCandidateClient(),
     );
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     await tester.tap(_aiButton);
     await tester.pumpAndSettle();
 
@@ -377,7 +380,7 @@ void main() {
       client: MockClient((_) async => errorResponse('no', 401)),
     );
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     await tester.tap(_aiButton);
     await tester.pumpAndSettle();
 
@@ -400,7 +403,7 @@ void main() {
       client: _echoCandidateClient(models: models),
     );
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     await tester.tap(_aiButton);
     await tester.pumpAndSettle();
     expect(models, ['model-a']);
@@ -425,7 +428,7 @@ void main() {
       client: _echoCandidateClient(count: 4),
     );
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     await tester.tap(_aiButton);
     await tester.pumpAndSettle();
 
@@ -449,7 +452,7 @@ void main() {
       client: _echoCandidateClient(),
     );
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     await tester.tap(_aiButton);
     await tester.pumpAndSettle();
 
@@ -474,7 +477,7 @@ void main() {
       ),
     );
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     await tester.tap(_aiButton);
     await tester.pumpAndSettle();
 
@@ -496,7 +499,7 @@ void main() {
       client: _echoCandidateClient(reason: reason),
     );
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     await tester.tap(_aiButton);
     await tester.pumpAndSettle();
 

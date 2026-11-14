@@ -218,11 +218,57 @@ class InkChipRow extends StatelessWidget {
   }
 }
 
-/// Width of the fade at the edge of a scrolling chip row.
-const double _chipFadeWidth = 32;
+/// Size of the chevron painted over a faded edge.
+const double _chipHintSize = 20;
+
+/// Gap between the chevron and the edge of the row.
+const double _chipHintInset = 6;
+
+/// Width of the fully clear zone at a faded edge: the chips are gone under the
+/// chevron, so it never lands on top of a label.
+const double _chipClearWidth = _chipHintInset + _chipHintSize + 4;
+
+/// Width of the ramp from clear to opaque after the clear zone. Wide enough
+/// that a cut chip clearly dissolves, also in dark mode.
+const double _chipFadeWidth = 44;
+
+/// The clear zone and ramp never take more than this share of each side of
+/// the row (a very narrow row).
+const double _chipFadeMaxShare = 1 / 3;
+
+/// The least ramp that must follow the clear zone for the chevron to show: a
+/// narrower side would leave labels cut hard right next to the chevron.
+const double _chipMinRamp = 12;
+
+/// The clear zone and ramp of a faded edge on a row [width] wide, and whether
+/// the chevron still fits inside the clear zone. On a very narrow row the
+/// fade shrinks with the share cap and the chevron is dropped: it would land
+/// on visible label text.
+({double clear, double ramp, bool hintFits}) _fadeGeometry(double width) {
+  final double side = width * _chipFadeMaxShare;
+  if (side >= _chipClearWidth + _chipMinRamp) {
+    return (
+      clear: _chipClearWidth,
+      ramp: math.min(_chipClearWidth + _chipFadeWidth, side),
+      hintFits: true,
+    );
+  }
+  const double total = _chipClearWidth + _chipFadeWidth;
+  return (clear: _chipClearWidth * side / total, ramp: side, hintFits: false);
+}
+
+/// Keys of the two edge chevrons, for tests.
+const ValueKey<String> chipRowHintStartKey = ValueKey<String>(
+  'chip-row-hint-start',
+);
+const ValueKey<String> chipRowHintEndKey = ValueKey<String>(
+  'chip-row-hint-end',
+);
 
 /// Fades the sides of a horizontally scrolling child that still have content
-/// beyond them. The layout does not change: only the paint does.
+/// beyond them, and paints a small chevron over each faded edge so the fade
+/// reads as "scroll for more". The layout does not change: only the paint
+/// does, and the chevrons take no touches and are hidden from screen readers.
 class _EdgeFade extends StatefulWidget {
   const _EdgeFade({required this.child});
 
@@ -246,9 +292,50 @@ class _EdgeFadeState extends State<_EdgeFade> {
     });
   }
 
+  Widget _hint({
+    required Key key,
+    required bool shown,
+    required bool atEnd,
+    required TextDirection direction,
+    required Duration duration,
+    required Color color,
+  }) {
+    // The end chevron points towards the end of the row, the start one back.
+    final bool pointsRight = atEnd == (direction == TextDirection.ltr);
+    final Widget glyph = InkIcon(
+      InkIcons.chevronRight,
+      size: _chipHintSize,
+      color: color,
+    );
+    return Align(
+      alignment: atEnd
+          ? AlignmentDirectional.centerEnd
+          : AlignmentDirectional.centerStart,
+      child: Padding(
+        padding: EdgeInsetsDirectional.only(
+          start: atEnd ? 0 : _chipHintInset,
+          end: atEnd ? _chipHintInset : 0,
+        ),
+        child: AnimatedOpacity(
+          key: key,
+          opacity: shown ? 1 : 0,
+          duration: duration,
+          curve: Curves.easeOut,
+          child: pointsRight
+              ? glyph
+              : Transform.flip(flipX: true, child: glyph),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final TextDirection direction = Directionality.of(context);
+    final Color hint = InkColors.of(context).fg2;
+    final Duration duration = MediaQuery.of(context).disableAnimations
+        ? Duration.zero
+        : const Duration(milliseconds: 150);
     return NotificationListener<ScrollMetricsNotification>(
       onNotification: (ScrollMetricsNotification n) {
         _update(n.metrics);
@@ -259,23 +346,81 @@ class _EdgeFadeState extends State<_EdgeFade> {
           if (n.metrics.axis == Axis.horizontal) _update(n.metrics);
           return false;
         },
-        child: ShaderMask(
-          blendMode: BlendMode.dstIn,
-          shaderCallback: (Rect bounds) {
-            final double fade = (_chipFadeWidth / bounds.width).clamp(0.0, 0.5);
-            return LinearGradient(
-              begin: AlignmentDirectional.centerStart,
-              end: AlignmentDirectional.centerEnd,
-              colors: <Color>[
-                _fadeStart ? Colors.transparent : Colors.black,
-                Colors.black,
-                Colors.black,
-                _fadeEnd ? Colors.transparent : Colors.black,
-              ],
-              stops: <double>[0, fade, 1 - fade, 1],
-            ).createShader(bounds, textDirection: direction);
-          },
-          child: widget.child,
+        child: Stack(
+          fit: StackFit.passthrough,
+          children: <Widget>[
+            ShaderMask(
+              blendMode: BlendMode.dstIn,
+              shaderCallback: (Rect bounds) {
+                // Clear zone under the chevron, then a ramp to opaque.
+                if (bounds.width <= 0) {
+                  return const LinearGradient(
+                    colors: <Color>[Colors.black, Colors.black],
+                  ).createShader(bounds);
+                }
+                final geometry = _fadeGeometry(bounds.width);
+                final double clear = geometry.clear / bounds.width;
+                final double ramp = geometry.ramp / bounds.width;
+                const Color gone = Colors.transparent;
+                const Color kept = Colors.black;
+                return LinearGradient(
+                  begin: AlignmentDirectional.centerStart,
+                  end: AlignmentDirectional.centerEnd,
+                  colors: <Color>[
+                    _fadeStart ? gone : kept,
+                    _fadeStart ? gone : kept,
+                    kept,
+                    kept,
+                    _fadeEnd ? gone : kept,
+                    _fadeEnd ? gone : kept,
+                  ],
+                  stops: <double>[0, clear, ramp, 1 - ramp, 1 - clear, 1],
+                ).createShader(bounds, textDirection: direction);
+              },
+              child: widget.child,
+            ),
+            Positioned.fill(
+              child: IgnorePointer(
+                child: ExcludeSemantics(
+                  child: LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints box) {
+                      final bool fits = _fadeGeometry(box.maxWidth).hintFits;
+                      return Stack(
+                        children: <Widget>[
+                          Positioned.fill(
+                            child: _hint(
+                              key: chipRowHintStartKey,
+                              shown: _fadeStart && fits,
+                              atEnd: false,
+                              direction: direction,
+                              // When the row turns too narrow, the chevron
+                              // goes at once: fading out it would cross the
+                              // label text in the shrunken clear zone.
+                              duration: fits ? duration : Duration.zero,
+                              color: hint,
+                            ),
+                          ),
+                          Positioned.fill(
+                            child: _hint(
+                              key: chipRowHintEndKey,
+                              shown: _fadeEnd && fits,
+                              atEnd: true,
+                              direction: direction,
+                              // When the row turns too narrow, the chevron
+                              // goes at once: fading out it would cross the
+                              // label text in the shrunken clear zone.
+                              duration: fits ? duration : Duration.zero,
+                              color: hint,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

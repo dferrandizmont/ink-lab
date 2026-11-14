@@ -151,26 +151,9 @@
   "settingsDisclaimer": "Ink Lab is an independent community project: it is not affiliated with, endorsed by or sponsored by any of the marker brands it lists. It uses their marker codes, names and colour values only as factual reference data.",
   "paletteTitle": "Palette",
   "paletteBaseCodeLabel": "Base marker code",
-  "paletteBaseCodeHint": "{first} or {second}",
-  "@paletteBaseCodeHint": {
-    "description": "Hint of the empty base marker field: two real codes of the user's markers in the current brand.",
-    "placeholders": {
-      "first": {
-        "type": "String"
-      },
-      "second": {
-        "type": "String"
-      }
-    }
-  },
-  "paletteBaseCodeHintOne": "{code}",
-  "@paletteBaseCodeHintOne": {
-    "description": "Hint of the empty base marker field when only one code is known.",
-    "placeholders": {
-      "code": {
-        "type": "String"
-      }
-    }
+  "paletteBaseChooseHint": "Choose a marker",
+  "@paletteBaseChooseHint": {
+    "description": "Hint of the empty base marker field, a button that opens the list of markers."
   },
   "paletteScenarioToggle": "Scenes",
   "paletteTypeTitle": "Palette type",
@@ -419,6 +402,15 @@
   "palettePickBaseTooltip": "Choose from your markers",
   "palettePickerTitle": "Choose a base marker",
   "palettePickerSearchHint": "Code or name",
+  "palettePickerSearchExample": "Code or name, e.g. {code}",
+  "@palettePickerSearchExample": {
+    "description": "Hint of the search field of the base marker list, with one real code of the user's markers as an example.",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "palettePickerEmpty": "No marker matches your search.",
   "paletteUndoButton": "Undo",
   "paletteBaseReplaced": "{code} is now the base. Your previous palette was replaced.",
@@ -450,7 +442,7 @@
       }
     }
   },
-  "swatchesClearSearch": "Clear the search",
+  "swatchesClearSearch": "Clear search",
   "swatchesAllFilter": "All",
   "swatchesFavoritesOnly": "Favourites",
   "swatchesOwnedOnly": "Mine",
@@ -460,7 +452,6 @@
   "swatchesLabelLayout": "Layout",
   "swatchesAllPacks": "All sets",
   "swatchesClearFilters": "Clear filters",
-  "swatchesClearSearch": "Clear search",
   "swatchesClearSearchAndFilters": "Clear search and filters",
   "swatchesLoadingSemantics": "Loading colours",
   "swatchesClosestAlternatives": "Closest alternatives",

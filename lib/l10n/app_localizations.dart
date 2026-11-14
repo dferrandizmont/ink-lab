@@ -1012,17 +1012,11 @@ abstract class AppLocalizations {
   /// **'Base marker code'**
   String get paletteBaseCodeLabel;
 
-  /// Hint of the empty base marker field: two real codes of the user's markers in the current brand.
+  /// Hint of the empty base marker field, a button that opens the list of markers.
   ///
   /// In en, this message translates to:
-  /// **'{first} or {second}'**
-  String paletteBaseCodeHint(String first, String second);
-
-  /// Hint of the empty base marker field when only one code is known.
-  ///
-  /// In en, this message translates to:
-  /// **'{code}'**
-  String paletteBaseCodeHintOne(String code);
+  /// **'Choose a marker'**
+  String get paletteBaseChooseHint;
 
   /// No description provided for @paletteScenarioToggle.
   ///
@@ -1725,6 +1719,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Code or name'**
   String get palettePickerSearchHint;
+
+  /// Hint of the search field of the base marker list, with one real code of the user's markers as an example.
+  ///
+  /// In en, this message translates to:
+  /// **'Code or name, e.g. {code}'**
+  String palettePickerSearchExample(String code);
 
   /// No description provided for @palettePickerEmpty.
   ///

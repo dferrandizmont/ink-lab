@@ -422,6 +422,7 @@ test/core/color_utils_test.dart
 test/core/fixtures.dart
 test/core/ideas_utilities_test.dart
 test/core/models_repository_test.dart
+test/core/natural_sort_test.dart
 test/core/ohuhu_catalog_test.dart
 test/core/own_colors_test.dart
 test/core/palette_card_layout_test.dart
@@ -464,6 +465,7 @@ test/ui/match/match_test_support.dart
 test/ui/match/photo_box_test.dart
 test/ui/match/white_balance_match_test.dart
 test/ui/palette/palette_ai_test.dart
+test/ui/palette/palette_base_field_test.dart
 test/ui/palette/palette_blending_chain_test.dart
 test/ui/palette/palette_page_test.dart
 test/ui/palette/palette_regenerate_variation_test.dart

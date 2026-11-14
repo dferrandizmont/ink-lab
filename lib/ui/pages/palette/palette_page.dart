@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:url_launcher/url_launcher.dart' as launcher;
 
@@ -150,7 +148,7 @@ class PalettePage extends StatefulWidget {
 ///
 /// The widgets that need no state of the page (fields, actions, rows, sheets,
 /// dialogs) are libraries of their own with explicit constructors.
-class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
+class _PalettePageState extends State<PalettePage> {
   late final ImagePickerService _picker =
       widget.picker ?? PlatformImagePickerService();
   late final PhotoDecoder _decode =
@@ -300,8 +298,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     return _available.any((MarkerColor c) => c.colorId == base.colorId);
   }
 
-  late final TextEditingController _baseController;
-  final FocusNode _baseFocus = FocusNode();
   String _baseInput = '';
 
   PaletteMode _mode = PaletteMode.recommended;
@@ -386,12 +382,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   /// The "Replace this palette?" dialog is open.
   bool _confirmingReplacement = false;
 
-  /// The palette the Undo snack bar on screen brings back, while it is up,
-  /// whether that undo came from typing in the base field, a count of the
-  /// snack bars shown (a closing one must not clear a newer one's) and the
-  /// snack bar itself, to take it down (see [_dropUndo]).
-  _PaletteSnapshot? _undoTarget;
-  bool _undoFromTyping = false;
+  /// A count of the Undo snack bars shown (a closing one must not clear a
+  /// newer one's) and the one on screen, to take it down (see [_dropUndo]).
   int _undoGeneration = 0;
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _undoSnack;
 
@@ -406,14 +398,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   /// would otherwise still be there when the user comes back.
   bool _tabVisible = true;
 
-  /// Keyboard height at the last metrics change, to notice it closing.
-  double _keyboardInset = 0;
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _baseController = TextEditingController();
     paletteDraft.addListener(_onDraftChanged);
     paletteBaseDraft.addListener(_onBaseDraftChanged);
     paletteSavedDraft.addListener(_onSavedDraftChanged);
@@ -465,22 +452,8 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     unawaited(_reload());
   }
 
-  /// Dismissing the keyboard (back gesture, "done") leaves the field focused,
-  /// so the suggestions would keep floating over the page: drop the focus
-  /// as soon as the keyboard closes.
-  @override
-  void didChangeMetrics() {
-    final Iterable<ui.FlutterView> views =
-        WidgetsBinding.instance.platformDispatcher.views;
-    final double inset = views.isEmpty ? 0 : views.first.viewInsets.bottom;
-    final bool closed = inset == 0 && _keyboardInset > 0;
-    _keyboardInset = inset;
-    if (closed && _baseFocus.hasFocus) _baseFocus.unfocus();
-  }
-
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     paletteDraft.removeListener(_onDraftChanged);
     paletteBaseDraft.removeListener(_onBaseDraftChanged);
     paletteSavedDraft.removeListener(_onSavedDraftChanged);
@@ -491,8 +464,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _aiSubscription?.cancel();
     _photoToken++;
     _photoScene?.dispose();
-    _baseController.dispose();
-    _baseFocus.dispose();
     super.dispose();
   }
 
@@ -655,7 +626,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       if (keep && typedBase != null) {
         // "BV04" would now be read as a marker of the new brand.
         _baseInput = _baseValue(typedBase);
-        _baseController.text = _baseInput;
       } else if (keep &&
           sceneBase != null &&
           findScenarioDefaultBase(available, _scenario)?.colorId !=
@@ -663,7 +633,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         // The scene would now choose another base (or none) for the
         // companions on screen: the one they were built on is written down.
         _baseInput = _baseValue(sceneBase);
-        _baseController.text = _baseInput;
       }
     });
     if (!keep) {
@@ -782,7 +751,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _dropPhoto();
       _dropChain();
       _baseInput = _baseValue(color);
-      _baseController.text = _baseInput;
       _lockedCodes = const <String>[];
       _lockedSuggestions.clear();
       _aiUsed = false;
@@ -826,7 +794,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _PaletteSnapshot previous, {
     MarkerColor? newBase,
     String? message,
-    bool typing = false,
   }) {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
@@ -834,8 +801,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     if (messenger == null) return;
     messenger.hideCurrentSnackBar();
     final int generation = ++_undoGeneration;
-    _undoTarget = previous;
-    _undoFromTyping = typing;
     final ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snack =
         messenger.showSnackBar(
           SnackBar(
@@ -886,22 +851,18 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     snack.closed.whenComplete(() {
       // The snack bar is gone (its time, Undo, or the page left).
       if (generation == _undoGeneration) {
-        _undoTarget = null;
-        _undoFromTyping = false;
         _undoSnack = null;
       }
     });
   }
 
-  /// Takes the Undo snack bar down and forgets its palette: what it would
+  /// Takes the Undo snack bar down: what it would
   /// bring back no longer fits the collection (see [_reload]).
   void _dropUndo() {
     final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? snack =
         _undoSnack;
     if (snack == null) return;
     ++_undoGeneration;
-    _undoTarget = null;
-    _undoFromTyping = false;
     _undoSnack = null;
     snack.close();
   }
@@ -985,7 +946,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     bool edit = false,
     MarkerColor? newBase,
     String? undoMessage,
-    bool typing = false,
   }) {
     final bool changed = previous == null
         ? _suggestions.isNotEmpty
@@ -1005,23 +965,42 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       setState(() => _notice = null);
     }
     if (previous != null) {
-      _offerUndo(
-        previous,
-        newBase: newBase,
-        message: undoMessage,
-        typing: typing,
-      );
+      _offerUndo(previous, newBase: newBase, message: undoMessage);
     }
   }
 
-  /// Opens the searchable list of markers and uses the chosen one as base.
-  Future<void> _pickBase() async {
-    _baseFocus.unfocus();
+  /// True from the moment a base, type or scene sheet opens until its choice
+  /// has been applied or dropped. The sheet only returns once it is gone, so
+  /// taps during its closing animation reach the page; they are ignored.
+  bool _sheetPending = false;
+
+  Future<void> _oneSheetAtATime(Future<void> Function() pick) async {
+    if (_sheetPending) return;
+    _sheetPending = true;
+    try {
+      await pick();
+    } finally {
+      _sheetPending = false;
+    }
+  }
+
+  /// Opens the searchable list of markers, its search ready to type in with
+  /// the keyboard up, and uses the chosen one as base. This is the only way
+  /// to choose the base on the page: nothing is typed on the page itself, so
+  /// the palette is replaced once, when a marker is chosen.
+  Future<void> _pickBase() => _oneSheetAtATime(_pickBaseNow);
+
+  Future<void> _pickBaseNow() async {
     final List<MarkerColor> markers = _baseChoices;
     final MarkerColor? picked = await showInkSheet<MarkerColor>(
       context: context,
-      builder: (BuildContext context) =>
-          PaletteBasePickerSheet(markers: markers),
+      whenGone: true,
+      builder: (BuildContext context) => PaletteBasePickerSheet(
+        markers: markers,
+        autofocusSearch: true,
+        // Only one of the user's own markers is an example.
+        exampleCode: _available.isEmpty ? null : _available.first.newCode,
+      ),
     );
     if (picked == null || !mounted) return;
     // The marker that is the base already: its palette stays as it is (the
@@ -1033,15 +1012,18 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       if (value != _baseInput) {
         setState(() {
           _baseInput = value;
-          _baseController.text = value;
         });
       }
       return;
     }
     await _replacePalette(() {
-      _baseController.text = _baseValue(picked);
       if (_mode == PaletteMode.customPalette) _mode = PaletteMode.recommended;
-      _onBaseInputChangedNow(_baseValue(picked));
+      _cancelAi();
+      setState(() {
+        _baseInput = _baseValue(picked);
+        _notice = null;
+      });
+      _recompute();
     });
   }
 
@@ -1055,7 +1037,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       _useScenario = false;
       _dropPhoto();
       _baseInput = '';
-      _baseController.text = '';
       _failure = null;
       _unknownInput = false;
       _suggestions = suggestions;
@@ -1147,24 +1128,6 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     final source = _baseChoices;
     if (source.isNotEmpty) return _codeLabel(source.first);
     return 'A1';
-  }
-
-  /// The hint of the empty base field: two real codes of the markers the user
-  /// owns in this brand (the first two of the collection, in catalogue order,
-  /// so it never changes between rebuilds). One code if that is all there is;
-  /// the field's label when the collection has no marker to show, so the page
-  /// never offers a code of the brand's range as if it were the user's. The
-  /// range is only offered where the user asked for it explicitly (the
-  /// blending chain in whole-range mode), whose base is a marker of the range.
-  String get _baseHint {
-    final List<String> codes = <String>[
-      for (final MarkerColor c in _baseChoices.take(2)) _codeLabel(c),
-    ];
-    return switch (codes.length) {
-      0 => context.l10n.paletteBaseCodeLabel,
-      1 => context.l10n.paletteBaseCodeHintOne(codes[0]),
-      _ => context.l10n.paletteBaseCodeHint(codes[0], codes[1]),
-    };
   }
 
   /// Computes the palette for the current inputs. Anything but Regenerate
@@ -1478,8 +1441,9 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
   }
 
   /// Opens the palette type sheet: a colour-theory mode or the scenes.
-  Future<void> _pickType() async {
-    _baseFocus.unfocus();
+  Future<void> _pickType() => _oneSheetAtATime(_pickTypeNow);
+
+  Future<void> _pickTypeNow() async {
     final PaletteTypeChoice? choice = await showPaletteTypeSheet(
       context,
       mode: _mode,
@@ -1499,19 +1463,28 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
 
   /// Opens the tall, searchable list of scenes.
   Future<void> _pickScene() async {
-    _baseFocus.unfocus();
+    bool photo = false;
+    await _oneSheetAtATime(() async => photo = await _pickSceneNow());
+    // The photo flow can take long (reading the photo): it is not part of the
+    // pending sheet, so the page stays usable meanwhile.
+    if (photo && mounted) await _pickPhotoScene();
+  }
+
+  /// Returns true when the photo scene was chosen.
+  Future<bool> _pickSceneNow() async {
     final SceneSheetResult? picked = await showPaletteSceneSheet(
       context,
       selected: _photoScene == null ? _scenario : null,
       previews: _previews,
       photoSelected: _photoScene != null,
     );
-    if (picked == null || !mounted) return;
+    if (picked == null || !mounted) return false;
     switch (picked) {
       case ScenePicked(:final Scene scene):
         await _selectScenario(scene);
+        return false;
       case PhotoScenePicked():
-        await _pickPhotoScene();
+        return true;
     }
   }
 
@@ -1582,41 +1555,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
     _recompute();
   }
 
-  /// The base field changed (a keystroke, or a suggestion of its list).
-  ///
-  /// Typing a code replaces the palette more than once on the way ("1",
-  /// "12", "120"): while the Undo of the first of those changes is still on
-  /// screen, it keeps pointing at the palette the user started from.
-  Future<void> _onBaseInputChanged(String value) async {
-    final _Approval approval = await _approveReplacement();
-    if (!mounted) return;
-    if (approval == _Approval.refused) {
-      // Nothing changes: the field goes back to the base of the palette.
-      _baseController.text = _baseInput;
-      return;
-    }
-    final _PaletteSnapshot? previous = _undoFromTyping && _undoTarget != null
-        ? _undoTarget
-        : _snapshot();
-    _onBaseInputChangedNow(value);
-    _afterReplacement(previous, typing: true);
-  }
-
-  void _onBaseInputChangedNow(String value) {
-    _cancelAi();
-    setState(() {
-      _baseInput = value;
-      _notice = null;
-    });
-    _recompute();
-  }
-
   Future<void> _clear() => _replacePalette(_clearNow, dropsLocks: true);
 
   void _clearNow() {
     setState(() {
       _baseInput = '';
-      _baseController.text = '';
       _suggestions = const <PaletteSuggestion>[];
       _failure = null;
       _unknownInput = false;
@@ -1858,13 +1801,11 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
         customMode: customMode || _photoMode,
         paletteSize: _paletteSize,
         onSizeChanged: _selectSize,
-        catalog: _baseChoices,
+        hasChoices: _baseChoices.isNotEmpty,
+        baseInput: _baseInput,
         resolvedBase: _resolvedBase,
         exampleCode: _exampleCode,
-        hint: _baseHint,
-        baseController: _baseController,
-        baseFocus: _baseFocus,
-        onBaseChanged: _onBaseInputChanged,
+        hint: context.l10n.paletteBaseChooseHint,
         onPickBase: _pickBase,
       ),
       if (_scenarioDefaultBase != null)
@@ -1951,47 +1892,35 @@ class _PalettePageState extends State<PalettePage> with WidgetsBindingObserver {
       children: <Widget>[
         ...header,
         Expanded(
-          child: NotificationListener<UserScrollNotification>(
-            onNotification: _onUserScroll,
-            child: split
-                // The controls and the buttons on one side, the palette they
-                // make on the other.
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Expanded(
-                        child: ListView(
-                          key: const ValueKey<String>('palette-controls-side'),
-                          padding: listPadding,
-                          children: <Widget>[...top, actions],
-                        ),
+          child: split
+              // The controls and the buttons on one side, the palette they
+              // make on the other.
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView(
+                        key: const ValueKey<String>('palette-controls-side'),
+                        padding: listPadding,
+                        children: <Widget>[...top, actions],
                       ),
-                      Expanded(
-                        child: ListView(
-                          key: const ValueKey<String>('palette-result-side'),
-                          padding: listPadding,
-                          children: result,
-                        ),
+                    ),
+                    Expanded(
+                      child: ListView(
+                        key: const ValueKey<String>('palette-result-side'),
+                        padding: listPadding,
+                        children: result,
                       ),
-                    ],
-                  )
-                : ListView(
-                    padding: listPadding,
-                    children: <Widget>[...top, ...result, actions],
-                  ),
-          ),
+                    ),
+                  ],
+                )
+              : ListView(
+                  padding: listPadding,
+                  children: <Widget>[...top, ...result, actions],
+                ),
         ),
       ],
     );
-  }
-
-  /// Closes the base-marker suggestions when the user scrolls the page, so the
-  /// floating list never outlives the field it belongs to.
-  bool _onUserScroll(UserScrollNotification notification) {
-    if (notification.direction != ScrollDirection.idle && _baseFocus.hasFocus) {
-      _baseFocus.unfocus();
-    }
-    return false;
   }
 
   /// The empty state of a collection with no markers of the brand: the page

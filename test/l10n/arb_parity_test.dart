@@ -32,7 +32,6 @@ const Set<String> _sameEverywhere = <String>{
   'commonRgb',
   'matchOkButton',
   'packFullLabel',
-  'paletteBaseCodeHintOne',
   'paletteOkButton',
   'settingsAiProviderOpenRouter',
   'settingsLanguageEnglish',

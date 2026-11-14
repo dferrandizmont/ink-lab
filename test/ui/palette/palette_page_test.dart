@@ -23,7 +23,7 @@ void main() {
 
     expect(find.byKey(PalettePage.pageKey), findsOneWidget);
     expect(
-      find.byKey(const ValueKey<String>('palette-base-input')),
+      find.byKey(const ValueKey<String>('palette-base-field')),
       findsOneWidget,
     );
     expect(
@@ -48,7 +48,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
 
     final List<InkButton> primaries = tester
         .widgetList<InkButton>(find.byType(InkButton))
@@ -79,7 +79,7 @@ void main() {
         .height;
     expect(find.byKey(const ValueKey<String>('palette-save')), findsNothing);
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
 
     // With a result the slot is the same, so nothing below it moves.
     final Rect slotAfter = tester.getRect(
@@ -105,36 +105,33 @@ void main() {
     );
   });
 
-  testWidgets('generates a palette from a base code, new or old spelling', (
+  testWidgets('generates a palette from a base marker, found by either code', (
     WidgetTester tester,
   ) async {
     await pumpPalette(tester);
 
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     expect(find.textContaining('Combinations ('), findsOneWidget);
     expect(find.byType(PaletteStrip), findsWidgets);
     expect(find.textContaining('B08'), findsWidgets);
 
-    // The legacy spelling of the same marker resolves to the same colour.
-    await enterBaseCode(tester, 'B289');
+    // The legacy code of the same marker finds the same marker in the list.
+    await openBaseSheet(tester);
+    await tester.enterText(
+      find.byKey(const ValueKey<String>('palette-picker-search')),
+      'B289',
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey<String>('palette-picker-B08')));
+    await tester.pumpAndSettle();
     expect(find.textContaining('B08'), findsWidgets);
     expect(find.textContaining('Combinations ('), findsOneWidget);
-  });
-
-  testWidgets('reports an unknown code in brand-aware language', (
-    WidgetTester tester,
-  ) async {
-    await pumpPalette(tester);
-
-    await enterBaseCode(tester, 'ZZZZ');
-
-    expect(find.textContaining('not an Ink Lab marker code'), findsOneWidget);
   });
 
   testWidgets('a base the user owns but that ran dry has its own message', (
     WidgetTester tester,
   ) async {
-    await pumpPalette(
+    final AppScope scope = await pumpPalette(
       tester,
       setup: (AppScope scope) async {
         // The marker stays in the collection (the classic 160 set), it just
@@ -143,7 +140,8 @@ void main() {
       },
     );
 
-    await enterBaseCode(tester, 'B08');
+    // The list of the page does not offer it: Swatches hands it over.
+    await handBaseOver(tester, scope, 'B08');
 
     expect(find.text(l10n.paletteBaseDried('B08')), findsOneWidget);
     // The old "not in your collection" message must not show up.
@@ -153,11 +151,11 @@ void main() {
   testWidgets('a base the user does not own keeps the old message', (
     WidgetTester tester,
   ) async {
-    await pumpPalette(tester);
+    final AppScope scope = await pumpPalette(tester);
 
     // BV04 is a real marker of the brand, but it is not in the classic 160
-    // set the test scope starts with.
-    await enterBaseCode(tester, 'BV04');
+    // set the test scope starts with (so the list does not offer it).
+    await handBaseOver(tester, scope, 'BV04');
 
     expect(find.textContaining('is not in your collection'), findsOneWidget);
     expect(find.textContaining('is dried out'), findsNothing);
@@ -167,7 +165,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
 
     await tester.tap(
       find.descendant(
@@ -196,10 +194,10 @@ void main() {
     MarkerBrand.copic,
     MarkerBrand.finecolour,
   ]) {
-    testWidgets('${brand.label}: codes and ownership are validated', (
+    testWidgets('${brand.label}: ownership is validated', (
       WidgetTester tester,
     ) async {
-      await pumpPalette(
+      final AppScope scope = await pumpPalette(
         tester,
         brand: brand,
         // Ownership is brand-scoped for non-Ohuhu brands (`brandId:code`).
@@ -216,23 +214,21 @@ void main() {
             : {'decotime:01', 'decotime:02', 'decotime:03'},
       );
 
-      await enterBaseCode(tester, 'ZZZ');
-      expect(
-        find.textContaining('is not a ${brand.label} marker code'),
-        findsOneWidget,
-      );
-
-      await enterBaseCode(
+      // A marker of the brand the user does not own (Swatches hands it over;
+      // the list of the page never offers it).
+      await handBaseOver(
         tester,
+        scope,
         brand == MarkerBrand.finecolour
             ? 'E12'
             : brand == MarkerBrand.copic
             ? 'E00'
             : '05',
+        brand: brand,
       );
       expect(find.textContaining('is not in your collection'), findsOneWidget);
 
-      await enterBaseCode(
+      await chooseBase(
         tester,
         brand == MarkerBrand.finecolour
             ? 'BV321'
@@ -248,7 +244,7 @@ void main() {
     WidgetTester tester,
   ) async {
     final AppScope scope = await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
 
     await tester.tap(find.byKey(const ValueKey<String>('palette-save')));
     await tester.pumpAndSettle();
@@ -292,10 +288,7 @@ void main() {
     paletteSavedDraft.value = stored;
     await tester.pumpAndSettle();
 
-    final TextField field = tester.widget<TextField>(
-      find.byKey(const ValueKey<String>('palette-base-input')),
-    );
-    expect(field.controller?.text, 'B08');
+    expect(baseInputOf(tester), 'B08');
     expect(find.textContaining('Combinations ('), findsOneWidget);
     // Consumed: it is not replayed.
     expect(paletteSavedDraft.value, isNull);
@@ -304,7 +297,7 @@ void main() {
   testWidgets('saving shows "saved" on the button and a snack bar, and a '
       'deleted palette can be saved again', (WidgetTester tester) async {
     final AppScope scope = await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     expect(find.text(l10n.paletteSavedButton), findsNothing);
 
     await tester.tap(find.byKey(const ValueKey<String>('palette-save')));
@@ -349,7 +342,7 @@ void main() {
   testWidgets('a long marker name stays on one line', (
     WidgetTester tester,
   ) async {
-    await pumpPalette(tester);
+    final AppScope scope = await pumpPalette(tester);
     tester.view.physicalSize = const Size(360, 3000);
     await tester.pumpAndSettle();
     final List<MarkerColor> catalog = await diskMarkerRepository().loadColors(
@@ -359,7 +352,9 @@ void main() {
       (MarkerColor a, MarkerColor b) =>
           a.newName.length >= b.newName.length ? a : b,
     );
-    await enterBaseCode(tester, longest.newCode);
+    // The longest name of the range may not be one the user owns: Swatches
+    // hands any marker over.
+    await handBaseOver(tester, scope, longest.newCode);
 
     final Finder name = find.byKey(const ValueKey<String>('palette-base-name'));
     expect(name, findsOneWidget);
@@ -395,10 +390,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey<String>('palette-load-p1')));
     await tester.pumpAndSettle();
 
-    final TextField field = tester.widget<TextField>(
-      find.byKey(const ValueKey<String>('palette-base-input')),
-    );
-    expect(field.controller?.text, 'B08');
+    expect(baseInputOf(tester), 'B08');
     expect(find.textContaining('Combinations ('), findsOneWidget);
     expect(find.text('120'), findsWidgets);
   });
@@ -587,7 +579,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
 
     // Lock the first suggestion.
     final Finder firstLock = find.byTooltip(l10n.paletteLockButton).first;
@@ -608,7 +600,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
 
     final List<String> before = rowCodes(tester);
     expect(before.length, greaterThanOrEqualTo(3));
@@ -630,7 +622,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
 
     final List<String> before = rowCodes(tester);
     final String lastCode = before.last;
@@ -652,7 +644,7 @@ void main() {
   ) async {
     await pumpPalette(tester);
 
-    await tester.tap(find.byKey(const ValueKey<String>('palette-pick-base')));
+    await tester.tap(find.byKey(const ValueKey<String>('palette-base-field')));
     await tester.pumpAndSettle();
     expect(
       find.byKey(const ValueKey<String>('palette-base-picker')),
@@ -671,10 +663,7 @@ void main() {
       find.byKey(const ValueKey<String>('palette-base-picker')),
       findsNothing,
     );
-    final TextField field = tester.widget(
-      find.byKey(const ValueKey<String>('palette-base-input')),
-    );
-    expect(field.controller!.text, 'B08');
+    expect(baseInputOf(tester), 'B08');
     expect(find.byType(PaletteStrip), findsWidgets);
   });
 
@@ -683,22 +672,19 @@ void main() {
   ) async {
     addTearDown(() => paletteBaseDraft.value = null);
     await pumpPalette(tester);
-    await enterBaseCode(tester, 'B08');
+    await chooseBase(tester, 'B08');
     expect(find.byType(PaletteStrip), findsWidgets);
 
     final MarkerColor other = markerColor('R16', '#f2a6a0');
     paletteBaseDraft.value = other;
     await tester.pumpAndSettle();
 
-    final TextField field = tester.widget(
-      find.byKey(const ValueKey<String>('palette-base-input')),
-    );
-    expect(field.controller!.text, 'R16');
+    expect(baseInputOf(tester), 'R16');
     expect(find.text(l10n.paletteBaseReplaced('R16')), findsOneWidget);
 
     await tester.tap(find.text(l10n.paletteUndoButton));
     await tester.pumpAndSettle();
-    expect(field.controller!.text, 'B08');
+    expect(baseInputOf(tester), 'B08');
   });
 
   testWidgets('"Add to palette" on an empty palette just sets the base', (
@@ -725,7 +711,7 @@ void main() {
         const ValueKey<String>('palette-type-field'),
       );
       final Finder base = find.byKey(
-        const ValueKey<String>('palette-base-input'),
+        const ValueKey<String>('palette-base-field'),
       );
       expect(type, findsOneWidget);
       expect(tester.getRect(type).bottom, lessThan(tester.getRect(base).top));
