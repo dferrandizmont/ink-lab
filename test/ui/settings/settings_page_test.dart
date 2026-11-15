@@ -203,6 +203,59 @@ void main() {
     expect(find.byType(CheckboxListTile), findsNothing);
   });
 
+  group('My collection with nothing owned yet', () {
+    Finder inRow(String text) => find.descendant(
+      of: find.byKey(const ValueKey<String>('settings-collection-row')),
+      matching: find.text(text),
+    );
+
+    testWidgets('a brand with sets says it uses the whole range', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSettings(tester);
+      await scope.settings.setBrand(MarkerBrand.ohuhuOahu);
+      await scope.settings.setCollection(AppSettings());
+      await tester.pumpAndSettle();
+
+      expect(inRow('Ohuhu'), findsOneWidget);
+      expect(inRow('Whole range · no sets yet'), findsOneWidget);
+      expect(inRow(l10n.collectionDetailWholeRange), findsOneWidget);
+      expect(find.text('Not set up yet'), findsNothing);
+    });
+
+    testWidgets('a brand without sets says no markers are ticked', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSettings(tester);
+      await scope.settings.setBrand(MarkerBrand.decoTime);
+      await scope.settings.setCollection(AppSettings());
+      await tester.pumpAndSettle();
+
+      expect(inRow(MarkerBrand.decoTime.label), findsOneWidget);
+      expect(inRow('No markers ticked yet'), findsOneWidget);
+      expect(inRow(l10n.collectionDetailNoMarkers), findsOneWidget);
+      expect(find.text('Not set up yet'), findsNothing);
+    });
+
+    testWidgets('with sets chosen the row shows the counts again', (
+      WidgetTester tester,
+    ) async {
+      final AppScope scope = await pumpSettings(tester);
+      await scope.settings.setBrand(MarkerBrand.ohuhuOahu);
+      await scope.settings.setCollection(AppSettings());
+      await tester.pumpAndSettle();
+      expect(inRow('Whole range · no sets yet'), findsOneWidget);
+
+      await scope.settings.setCollection(
+        AppSettings(ownedSetIds: <String>{'classic_160'}),
+      );
+      await tester.pumpAndSettle();
+
+      expect(inRow('Oahu · 1 set · 161 markers'), findsOneWidget);
+      expect(inRow('Whole range · no sets yet'), findsNothing);
+    });
+  });
+
   testWidgets('the collection row opens the collection screen', (
     WidgetTester tester,
   ) async {

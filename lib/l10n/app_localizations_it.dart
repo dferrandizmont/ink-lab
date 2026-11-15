@@ -6962,7 +6962,10 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get collectionNotSetUp => 'Da configurare';
+  String get collectionDetailWholeRange => 'Tutta la gamma · ancora nessun set';
+
+  @override
+  String get collectionDetailNoMarkers => 'Ancora nessun pennarello spuntato';
 
   @override
   String get collectionSeriesTitle => 'Serie che hai';

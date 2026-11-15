@@ -149,6 +149,30 @@ class _BasePickerSheetState extends State<PaletteBasePickerSheet> {
     return rest.isEmpty || has(rest);
   }
 
+  /// The hint of the search: with a real code as an example while it fits
+  /// the field (its width less the search glyph), the plain one otherwise, so
+  /// the hint is never cut at a large text size or in a long language.
+  String _searchHint(BuildContext context, double fieldWidth) {
+    final String plain = context.l10n.palettePickerSearchHint;
+    final String? code = widget.exampleCode;
+    if (code == null) return plain;
+    final String withExample = context.l10n.palettePickerSearchExample(code);
+    final TextPainter painter = TextPainter(
+      text: TextSpan(
+        text: withExample,
+        style: DefaultTextStyle.of(context).style.merge(AppTypography.body),
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      locale: Localizations.maybeLocaleOf(context),
+      maxLines: 1,
+    )..layout();
+    // The glyph takes 46 dp from the start; a little slack at the end.
+    final bool fits = painter.width <= fieldWidth - 46 - InkSpacing.s8;
+    painter.dispose();
+    return fits ? withExample : plain;
+  }
+
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
@@ -176,14 +200,15 @@ class _BasePickerSheetState extends State<PaletteBasePickerSheet> {
             ),
           ),
           const SizedBox(height: InkSpacing.block),
-          InkSearchField(
-            key: const ValueKey<String>('palette-picker-search'),
-            hintText: widget.exampleCode == null
-                ? context.l10n.palettePickerSearchHint
-                : context.l10n.palettePickerSearchExample(widget.exampleCode!),
-            semanticLabel: context.l10n.palettePickerSearchHint,
-            autofocus: widget.autofocusSearch,
-            onChanged: (String value) => setState(() => _query = value),
+          LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) =>
+                InkSearchField(
+                  key: const ValueKey<String>('palette-picker-search'),
+                  hintText: _searchHint(context, constraints.maxWidth),
+                  semanticLabel: context.l10n.palettePickerSearchHint,
+                  autofocus: widget.autofocusSearch,
+                  onChanged: (String value) => setState(() => _query = value),
+                ),
           ),
           const SizedBox(height: InkSpacing.s8),
           Flexible(

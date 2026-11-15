@@ -279,6 +279,31 @@ void main() {
       );
     });
 
+    test('the first real colour skips the blender, however it is marked', () {
+      final MarkerColor blender = MarkerColor(
+        newCode: '0',
+        newName: 'Colorless Blender',
+        oldCode: '120',
+        oldName: 'Colorless Blender',
+        hex: 'ffffff',
+        sets: const <String>['classic_160'],
+      );
+      final MarkerColor namedBlender = MarkerColor(
+        newCode: 'BL1',
+        newName: 'Blender',
+        oldCode: 'BL1',
+        oldName: 'Blender',
+        hex: 'ffffff',
+        sets: const <String>['classic_160'],
+      );
+      final MarkerColor blue = _marker('B08', 0.60, 0.10, 250);
+      expect(firstRealColour(<MarkerColor>[blender, blue]), same(blue));
+      expect(firstRealColour(<MarkerColor>[namedBlender, blue]), same(blue));
+      expect(firstRealColour(<MarkerColor>[blue, blender]), same(blue));
+      expect(firstRealColour(<MarkerColor>[blender, namedBlender]), isNull);
+      expect(firstRealColour(const <MarkerColor>[]), isNull);
+    });
+
     test('never uses the colourless blender', () {
       final List<MarkerColor> pool = <MarkerColor>[
         ..._blues(),

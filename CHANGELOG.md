@@ -10,6 +10,15 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.3.2 · 2026-11-15
+
+- Palette: buttons that cannot be used yet now look switched off, and the examples in the marker search and in the
+  messages are never the Colorless Blender.
+- Phones in landscape and split screen: the top of Swatches, Ideas and Palette now scrolls away, so the markers get the
+  room. On a tall screen nothing changes. If the side navigation does not fit a short screen, it scrolls.
+- Settings: with a brand chosen but no sets or markers yet, My collection now says it uses the whole range (or that no
+  markers are ticked yet) instead of «Not set up yet», in line with Swatches and Match.
+
 ## 1.3.1 · 2026-11-14
 
 - Ideas and Palette: a row of chips that goes past the edge of the screen now shows a small arrow and a clearer fade

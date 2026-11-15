@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 import 'package:ink_lab/ui/theme/app_typography.dart';
 import 'package:ink_lab/ui/theme/tokens.dart';
+import 'package:ink_lab/ui/widgets/ink_button.dart';
 import 'package:ink_lab/ui/widgets/palette_strip.dart';
 import 'package:ink_lab/ui/widgets/section_card.dart';
 
@@ -44,6 +45,76 @@ void main() {
         expect(contrastRatio(c.action, c.pale), greaterThanOrEqualTo(4.5));
         expect(contrastRatio(c.onAction, c.action), greaterThanOrEqualTo(4.5));
         expect(contrastRatio(c.strong, c.surface), greaterThanOrEqualTo(3));
+      });
+
+      testWidgets('a disabled outlined button looks switched off, an enabled '
+          'one is as before', (WidgetTester tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: testLocalizationsDelegates,
+            supportedLocales: testSupportedLocales,
+            theme: theme,
+            home: Scaffold(
+              body: Column(
+                children: <Widget>[
+                  for (final InkButtonVariant variant in <InkButtonVariant>[
+                    InkButtonVariant.secondary,
+                    InkButtonVariant.smallSecondary,
+                  ]) ...<Widget>[
+                    InkButton(
+                      key: ValueKey<String>('on-${variant.name}'),
+                      variant: variant,
+                      label: 'Generate',
+                      onPressed: () {},
+                    ),
+                    InkButton(
+                      key: ValueKey<String>('off-${variant.name}'),
+                      variant: variant,
+                      label: 'Generate',
+                      onPressed: null,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        );
+        // The border and the label colour the button is drawn with.
+        Material surface(String key) => tester.widget<Material>(
+          find
+              .descendant(
+                of: find.byKey(ValueKey<String>(key)),
+                matching: find.byType(Material),
+              )
+              .first,
+        );
+        Color border(String key) =>
+            (surface(key).shape! as RoundedRectangleBorder).side.color;
+        Color label(String key) => surface(key).textStyle!.color!;
+
+        for (final InkButtonVariant variant in <InkButtonVariant>[
+          InkButtonVariant.secondary,
+          InkButtonVariant.smallSecondary,
+        ]) {
+          final String on = 'on-${variant.name}';
+          final String off = 'off-${variant.name}';
+          // Enabled: the strong border and the normal label, unchanged.
+          expect(border(on), c.strong, reason: on);
+          expect(label(on), c.fg, reason: on);
+          // Disabled: the faint line and a label dimmer than the muted text,
+          // still readable.
+          expect(border(off), c.line, reason: off);
+          expect(label(off), isNot(c.fg2), reason: off);
+          expect(label(off).a, lessThan(c.fg2.a), reason: off);
+          for (final Color back in <Color>[c.bg, c.surface]) {
+            expect(
+              contrastRatio(Color.alphaBlend(label(off), back), back),
+              greaterThanOrEqualTo(3),
+              reason: '$off on $back',
+            );
+          }
+        }
       });
     });
   }

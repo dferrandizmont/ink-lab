@@ -224,16 +224,28 @@ abstract final class AppTheme {
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: c.fg,
-          disabledForegroundColor: c.fg2,
-          side: strongSide,
-          minimumSize: const Size(InkGeometry.target, InkGeometry.buttonHeight),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          shape: control,
-          textStyle: button,
-          iconSize: InkGeometry.smallIcon,
-        ),
+        style:
+            OutlinedButton.styleFrom(
+              foregroundColor: c.fg,
+              // A button that cannot be used yet is clearly switched off: its
+              // label and icon are dimmer than the muted text beside it and
+              // its border is the faint `line`, not the `strong` one.
+              disabledForegroundColor: c.fg2.withValues(alpha: 0.75),
+              side: strongSide,
+              minimumSize: const Size(
+                InkGeometry.target,
+                InkGeometry.buttonHeight,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              shape: control,
+              textStyle: button,
+              iconSize: InkGeometry.smallIcon,
+            ).copyWith(
+              side: WidgetStateProperty.resolveWith<BorderSide>(
+                (Set<WidgetState> s) =>
+                    s.contains(WidgetState.disabled) ? lineSide : strongSide,
+              ),
+            ),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(

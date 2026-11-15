@@ -6917,7 +6917,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get collectionNotSetUp => 'Not set up yet';
+  String get collectionDetailWholeRange => 'Whole range · no sets yet';
+
+  @override
+  String get collectionDetailNoMarkers => 'No markers ticked yet';
 
   @override
   String get collectionSeriesTitle => 'Series you own';

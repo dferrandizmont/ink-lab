@@ -57,6 +57,16 @@ abstract final class InkLayout {
     maxWidth: sheetWidth,
   );
 
+  /// Whether the window is short ([shortPageHeight]): a phone in landscape or
+  /// a split screen. A page with a tall header lets it scroll away with the
+  /// content instead of pinning it.
+  ///
+  /// It reads the height of the window, never the room the body is left
+  /// with, so the keyboard coming up (which shrinks the body) does not flip
+  /// the page between the two layouts while the user types.
+  static bool isShortPage(BuildContext context) =>
+      MediaQuery.sizeOf(context).height < shortPageHeight;
+
   /// Whether a page [width] wide shows a list and its detail side by side.
   static bool isTwoPane(double width) => width >= twoPaneBreakpoint;
 

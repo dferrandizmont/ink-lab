@@ -371,12 +371,14 @@ class _AppShellState extends State<AppShell> {
                     onToggle: () => _setRailExpanded(!_railExpanded),
                   )
                 else
-                  NavigationRail(
-                    selectedIndex: _selectedIndex,
-                    onDestinationSelected: _onDestinationSelected,
-                    labelType: NavigationRailLabelType.all,
-                    minWidth: InkGeometry.railWidth,
-                    destinations: _foldedDestinations(context),
+                  _ScrollingRail(
+                    child: NavigationRail(
+                      selectedIndex: _selectedIndex,
+                      onDestinationSelected: _onDestinationSelected,
+                      labelType: NavigationRailLabelType.all,
+                      minWidth: InkGeometry.railWidth,
+                      destinations: _foldedDestinations(context),
+                    ),
                   ),
                 const VerticalDivider(width: 1),
                 // Snack bars belong to the page area, so they stay clear of
@@ -395,6 +397,31 @@ class _AppShellState extends State<AppShell> {
           ),
         );
       },
+    );
+  }
+}
+
+/// The stock [NavigationRail] in a scroll view: on a window too short for its
+/// five labelled destinations (a phone in landscape, large text) the rail
+/// scrolls instead of overflowing, and the targets keep their size. On a tall
+/// window it fills the height, as it does without this.
+class _ScrollingRail extends StatelessWidget {
+  const _ScrollingRail({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) =>
+          SingleChildScrollView(
+            // The pages take the primary controller (status bar tap).
+            primary: false,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(child: child),
+            ),
+          ),
     );
   }
 }
@@ -649,22 +676,24 @@ class _AnimatedRailState extends State<_AnimatedRail>
   /// The stock rail. While the rail moves it is transparent, and its labels
   /// and indicator fade out over the first part of the opening.
   Widget _foldedRail(BuildContext context, double progress) {
-    Widget rail = NavigationRail(
-      selectedIndex: widget.selectedIndex,
-      onDestinationSelected: widget.onDestinationSelected,
-      labelType: NavigationRailLabelType.all,
-      minWidth: InkGeometry.railWidth,
-      // The rail centres its leading widget, so the button gets a box as wide
-      // as the rail: it stays over the icons.
-      leading: SizedBox(
-        width: InkGeometry.railWidth,
-        child: Center(
-          child: _toggleInExtended
-              ? const SizedBox.square(dimension: InkGeometry.androidTarget)
-              : _toggle(),
+    Widget rail = _ScrollingRail(
+      child: NavigationRail(
+        selectedIndex: widget.selectedIndex,
+        onDestinationSelected: widget.onDestinationSelected,
+        labelType: NavigationRailLabelType.all,
+        minWidth: InkGeometry.railWidth,
+        // The rail centres its leading widget, so the button gets a box as
+        // wide as the rail: it stays over the icons.
+        leading: SizedBox(
+          width: InkGeometry.railWidth,
+          child: Center(
+            child: _toggleInExtended
+                ? const SizedBox.square(dimension: InkGeometry.androidTarget)
+                : _toggle(),
+          ),
         ),
+        destinations: _foldedDestinations(context),
       ),
-      destinations: _foldedDestinations(context),
     );
     if (progress > 0) {
       final double keep = 1 - _foldedFade.transform(progress);

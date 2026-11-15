@@ -6953,7 +6953,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get collectionNotSetUp => 'Sin configurar';
+  String get collectionDetailWholeRange => 'Toda la gama · aún sin sets';
+
+  @override
+  String get collectionDetailNoMarkers => 'Aún sin rotuladores marcados';
 
   @override
   String get collectionSeriesTitle => 'Series que tienes';

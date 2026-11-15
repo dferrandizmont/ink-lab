@@ -388,6 +388,7 @@ lib/ui/widgets/empty_state.dart
 lib/ui/widgets/ink_button.dart
 lib/ui/widgets/ink_chip.dart
 lib/ui/widgets/ink_disclosure.dart
+lib/ui/widgets/ink_header_page.dart
 lib/ui/widgets/ink_overflow_menu.dart
 lib/ui/widgets/ink_search_field.dart
 lib/ui/widgets/ink_segmented.dart
@@ -539,6 +540,7 @@ test/ui/collection/collection_test.dart
 test/ui/collection/wishlist_dried_test.dart
 test/ui/no_pill_test.dart
 test/ui/segment_stability_test.dart
+test/ui/short_window_headers_test.dart
 test/ui/text_fit_test.dart
 tool/ideas/content.mjs
 tool/ideas/gen.mjs

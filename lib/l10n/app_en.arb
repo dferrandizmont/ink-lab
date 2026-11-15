@@ -2711,7 +2711,8 @@
       }
     }
   },
-  "collectionNotSetUp": "Not set up yet",
+  "collectionDetailWholeRange": "Whole range · no sets yet",
+  "collectionDetailNoMarkers": "No markers ticked yet",
   "collectionSeriesTitle": "Series you own",
   "collectionHonoluluNote": "Honolulu B, Honolulu S and Honolulu² use the same colour codes as Honolulu; only the tips differ.",
   "collectionSetsTitle": "Sets you own",

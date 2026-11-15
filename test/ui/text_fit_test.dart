@@ -1943,6 +1943,27 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
     _check(tester, 'settings with the language row');
     await _scroll(tester, 'settings with the language row');
   },
+  'settings: My collection row with nothing owned':
+      (WidgetTester tester, _Env env) async {
+        final AppScope scope = await _pump(tester, env, const SettingsPage());
+        await scope.settings.setCollection(AppSettings());
+        final Finder row = find.byKey(
+          const ValueKey<String>('settings-collection-row'),
+        );
+        for (final (MarkerBrand brand, String text) in <(MarkerBrand, String)>[
+          (MarkerBrand.ohuhuOahu, env.t.collectionDetailWholeRange),
+          (MarkerBrand.decoTime, env.t.collectionDetailNoMarkers),
+        ]) {
+          await scope.settings.setBrand(brand);
+          await tester.pumpAndSettle();
+          expect(
+            find.descendant(of: row, matching: find.text(text)),
+            findsOneWidget,
+            reason: '$_tag ${brand.label} row text',
+          );
+          _check(tester, 'settings, collection row of ${brand.label}');
+        }
+      },
   'switching segments never moves the header: ideas | diary':
       (WidgetTester tester, _Env env) async {
         await _pump(tester, env, IdeasPage(today: DateTime(2026, 10, 29)));

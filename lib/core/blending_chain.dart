@@ -307,6 +307,16 @@ bool isColourlessBlender(MarkerColor color) =>
     color.newName.toLowerCase().contains('blender') ||
     color.oldName.toLowerCase().contains('blender');
 
+/// The first marker of [colors] that is a real colour, never the colourless
+/// blender (an example of a marker code must be one a person would look for),
+/// or `null` when there is none.
+MarkerColor? firstRealColour(Iterable<MarkerColor> colors) {
+  for (final MarkerColor c in colors) {
+    if (!isColourlessBlender(c)) return c;
+  }
+  return null;
+}
+
 /// A marker with its OKLCh coordinates.
 final class _Node {
   _Node(this.color) : _lab = hexToOklab(color.hex);

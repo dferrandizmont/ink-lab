@@ -975,7 +975,10 @@ void main() {
           // The subtitle says the brand, never a count.
           expect(find.text(brand.label), findsOneWidget);
           expect(
-            find.text('${brand.label} · ${l10n.collectionNotSetUp}'),
+            find.text(
+              '${brand.label} · '
+              '${brand.hasRetailSets ? l10n.collectionDetailWholeRange : l10n.collectionDetailNoMarkers}',
+            ),
             findsNothing,
           );
           expect(find.text('B08'), findsNothing);

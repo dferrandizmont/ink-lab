@@ -18,8 +18,9 @@ import 'artwork_photo_viewer.dart';
 import 'diary_summary_card.dart';
 import 'diary_widgets.dart';
 
-/// The artwork diary list, newest first, with a way to add an entry. It lives
-/// in the Ideas tab, next to the ideas.
+/// The artwork diary list, newest first. It lives in the Ideas tab, next to
+/// the ideas, and is a sliver: the Ideas page puts it in its scroll view,
+/// under the header that holds [ArtworkDiaryAddSlot].
 ///
 /// Each entry is a card with its date and status, title, what it was painted
 /// on, photo thumbnails (tap for full screen), the markers as small swatches
@@ -73,6 +74,76 @@ class _ArtworkDiaryViewState extends State<ArtworkDiaryView> {
     super.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final AppScope scope = AppScope.of(context);
+    return StreamBuilder<List<ArtworkEntry>>(
+      key: ArtworkDiaryView.viewKey,
+      stream: scope.artworkDiary.changes,
+      initialData: scope.artworkDiary.entries,
+      builder: (BuildContext context, AsyncSnapshot<List<ArtworkEntry>> s) {
+        final List<ArtworkEntry> entries = s.data ?? const <ArtworkEntry>[];
+        return SliverPadding(
+          padding: EdgeInsets.only(
+            top: InkSpacing.block,
+            bottom: InkSpacing.pageBottomOf(context),
+          ),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(<Widget>[
+              if (entries.isEmpty)
+                EmptyState(
+                  icon: InkIcons.edit3,
+                  title: context.l10n.diaryEmptyTitle,
+                  message: context.l10n.diaryEmptyMessage,
+                )
+              else ...<Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: InkSpacing.gutter,
+                  ),
+                  child: DiarySummaryCard(
+                    key: const ValueKey<String>('diary-stats-card'),
+                    entries: entries,
+                  ),
+                ),
+                // One column on a phone, two on a tablet.
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    InkSpacing.gutter,
+                    InkSpacing.block,
+                    InkSpacing.gutter,
+                    0,
+                  ),
+                  child: InkCardColumns(
+                    runSpacing: InkSpacing.block,
+                    children: <Widget>[
+                      for (final ArtworkEntry entry in entries)
+                        _EntryCard(
+                          key: ValueKey<String>('diary-entry-${entry.id}'),
+                          entry: entry,
+                          picker: picker,
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ]),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// "Add to diary", the primary of the diary segment. It sits in the same 48 dp
+/// slot as the search field of the Ideas segment, so switching segments never
+/// moves anything; the Ideas page puts it in its header.
+class ArtworkDiaryAddSlot extends StatelessWidget {
+  const ArtworkDiaryAddSlot({super.key, this.picker});
+
+  /// Photo picker handed to the entry form (tests inject a fake).
+  final ImagePickerService? picker;
+
   Future<void> _add(BuildContext context) async {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
@@ -92,94 +163,30 @@ class _ArtworkDiaryViewState extends State<ArtworkDiaryView> {
 
   @override
   Widget build(BuildContext context) {
-    final AppScope scope = AppScope.of(context);
-    return StreamBuilder<List<ArtworkEntry>>(
-      key: ArtworkDiaryView.viewKey,
-      stream: scope.artworkDiary.changes,
-      initialData: scope.artworkDiary.entries,
-      builder: (BuildContext context, AsyncSnapshot<List<ArtworkEntry>> s) {
-        final List<ArtworkEntry> entries = s.data ?? const <ArtworkEntry>[];
-        return Column(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        InkSpacing.pageMargin,
+        0,
+        InkSpacing.pageMargin,
+        InkSpacing.group,
+      ),
+      child: SizedBox(
+        key: const ValueKey<String>('diary-add-slot'),
+        height: InkGeometry.fieldHeight,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // "Add to diary" is the primary of the segment and sits in the
-            // same 48 dp slot as the search field of the Ideas segment, so
-            // switching segments never moves anything.
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                InkSpacing.pageMargin,
-                0,
-                InkSpacing.pageMargin,
-                InkSpacing.group,
-              ),
-              child: SizedBox(
-                key: const ValueKey<String>('diary-add-slot'),
-                height: InkGeometry.fieldHeight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    InkButton(
-                      key: const ValueKey<String>('diary-add'),
-                      label: context.l10n.diaryAdd,
-                      icon: InkIcons.plus,
-                      expand: true,
-                      onPressed: () => _add(context),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.only(
-                  top: InkSpacing.block,
-                  bottom: InkSpacing.pageBottomOf(context),
-                ),
-                children: <Widget>[
-                  if (entries.isEmpty)
-                    EmptyState(
-                      icon: InkIcons.edit3,
-                      title: context.l10n.diaryEmptyTitle,
-                      message: context.l10n.diaryEmptyMessage,
-                    )
-                  else ...<Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: InkSpacing.gutter,
-                      ),
-                      child: DiarySummaryCard(
-                        key: const ValueKey<String>('diary-stats-card'),
-                        entries: entries,
-                      ),
-                    ),
-                    // One column on a phone, two on a tablet.
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        InkSpacing.gutter,
-                        InkSpacing.block,
-                        InkSpacing.gutter,
-                        0,
-                      ),
-                      child: InkCardColumns(
-                        runSpacing: InkSpacing.block,
-                        children: <Widget>[
-                          for (final ArtworkEntry entry in entries)
-                            _EntryCard(
-                              key: ValueKey<String>('diary-entry-${entry.id}'),
-                              entry: entry,
-                              picker: picker,
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-              ),
+            InkButton(
+              key: const ValueKey<String>('diary-add'),
+              label: context.l10n.diaryAdd,
+              icon: InkIcons.plus,
+              expand: true,
+              onPressed: () => _add(context),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }

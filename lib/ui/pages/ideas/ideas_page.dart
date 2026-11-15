@@ -17,6 +17,7 @@ import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
+import '../../widgets/ink_header_page.dart';
 import '../../widgets/ink_search_field.dart';
 import '../../widgets/ink_segmented.dart';
 import '../../widgets/ink_sheet.dart';
@@ -389,82 +390,100 @@ class _IdeasPageState extends State<IdeasPage> {
 
     // One width for both segments, so switching never moves the header: the
     // ideas and the diary entries go in columns on a wide page.
+    //
+    // The top of the page (title, segments, search, chips) sits above the
+    // list while the window is tall and goes up with it while it is short (a
+    // phone in landscape).
+    _headerScrolls = InkLayout.isShortPage(context);
     return InkReadableWidth(
       maxWidth: InkLayout.wideWidth,
-      child: Column(
+      child: InkHeaderPage(
         key: IdeasPage.pageKey,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          InkPageHeader(
-            title: context.l10n.ideasTitle,
-            subtitle: diary
-                ? context.l10n.ideasDiarySubtitle
-                : _available.isEmpty
-                ? context.l10n.ideasNoMarkers
-                : context.l10n.ideasHeaderSubtitle,
-            // The control below must not jump when the segment (or the
-            // collection) swaps the subtitle: reserve the tallest one.
-            reserveSubtitleFor: <String>[
-              context.l10n.ideasDiarySubtitle,
-              context.l10n.ideasNoMarkers,
-              context.l10n.ideasHeaderSubtitle,
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              InkSpacing.pageMargin,
-              0,
-              InkSpacing.pageMargin,
-              InkSpacing.block,
-            ),
-            child: InkSegmented<_IdeasView>(
-              key: const ValueKey<String>('ideas-view'),
-              expand: true,
-              semanticLabel: context.l10n.ideasTitle,
-              segments: <InkSegment<_IdeasView>>[
-                InkSegment<_IdeasView>(
-                  value: _IdeasView.ideas,
-                  label: context.l10n.ideasTitle,
-                ),
-                InkSegment<_IdeasView>(
-                  value: _IdeasView.diary,
-                  label: context.l10n.ideasDiarySegment,
-                ),
+        headerKey: _headerKey,
+        slotKey: _slotKey,
+        header: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            InkPageHeader(
+              title: context.l10n.ideasTitle,
+              subtitle: diary
+                  ? context.l10n.ideasDiarySubtitle
+                  : _available.isEmpty
+                  ? context.l10n.ideasNoMarkers
+                  : context.l10n.ideasHeaderSubtitle,
+              // The control below must not jump when the segment (or the
+              // collection) swaps the subtitle: reserve the tallest one.
+              reserveSubtitleFor: <String>[
+                context.l10n.ideasDiarySubtitle,
+                context.l10n.ideasNoMarkers,
+                context.l10n.ideasHeaderSubtitle,
               ],
-              selected: _view,
-              onChanged: (_IdeasView view) => setState(() => _view = view),
             ),
-          ),
-          if (diary)
-            Expanded(child: ArtworkDiaryView(picker: widget.picker))
-          else ...<Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 InkSpacing.pageMargin,
                 0,
                 InkSpacing.pageMargin,
-                InkSpacing.group,
+                InkSpacing.block,
               ),
-              child: InkSearchField(
-                key: const ValueKey<String>('ideas-search'),
-                controller: _searchController,
-                hintText: context.l10n.ideasSearchHint,
-                semanticLabel: context.l10n.ideasSearchHint,
-                onChanged: (String value) => setState(() => _query = value),
+              child: InkSegmented<_IdeasView>(
+                key: const ValueKey<String>('ideas-view'),
+                expand: true,
+                semanticLabel: context.l10n.ideasTitle,
+                segments: <InkSegment<_IdeasView>>[
+                  InkSegment<_IdeasView>(
+                    value: _IdeasView.ideas,
+                    label: context.l10n.ideasTitle,
+                  ),
+                  InkSegment<_IdeasView>(
+                    value: _IdeasView.diary,
+                    label: context.l10n.ideasDiarySegment,
+                  ),
+                ],
+                selected: _view,
+                onChanged: _selectView,
               ),
             ),
-            _buildCategoryChips(),
-            Expanded(
-              // A new list per chip, so every chip starts at the top.
-              child: ListView(
-                key: ValueKey<String>(
-                  'ideas-list-${_category?.name}-$_favoritesOnly',
+            if (diary)
+              ArtworkDiaryAddSlot(picker: widget.picker)
+            else ...<Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  InkSpacing.pageMargin,
+                  0,
+                  InkSpacing.pageMargin,
+                  InkSpacing.group,
                 ),
-                padding: EdgeInsets.only(
-                  top: InkSpacing.block,
-                  bottom: InkSpacing.pageBottomOf(context),
+                child: InkSearchField(
+                  key: const ValueKey<String>('ideas-search'),
+                  controller: _searchController,
+                  hintText: context.l10n.ideasSearchHint,
+                  semanticLabel: context.l10n.ideasSearchHint,
+                  onChanged: (String value) => setState(() => _query = value),
                 ),
-                children: <Widget>[
+              ),
+              _buildCategoryChips(),
+            ],
+          ],
+        ),
+        slivers: <Widget>[
+          if (diary)
+            ArtworkDiaryView(picker: widget.picker)
+          else
+            // A new list per chip (the scroll view stays), so a chip does not
+            // inherit the rows laid out for the one before; the scroll offset
+            // goes back to the top in [_selectCategory].
+            SliverPadding(
+              key: ValueKey<String>(
+                'ideas-list-${_category?.name}-$_favoritesOnly',
+              ),
+              padding: EdgeInsets.only(
+                top: InkSpacing.block,
+                bottom: InkSpacing.pageBottomOf(context),
+              ),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate(<Widget>[
                   if (browsing)
                     _inset(
                       _FeaturedCard(
@@ -504,10 +523,9 @@ class _IdeasPageState extends State<IdeasPage> {
                     ..._categorySections(_category!, filtered, today)
                   else
                     _inset(_rows(filtered, showCategory: _category == null)),
-                ],
+                ]),
               ),
             ),
-          ],
         ],
       ),
     );
@@ -614,6 +632,28 @@ class _IdeasPageState extends State<IdeasPage> {
     ];
   }
 
+  /// The header column (title to chips): one identity, so it keeps its state
+  /// (the search field) when it moves in and out of the scroll view.
+  final GlobalKey _headerKey = GlobalKey();
+
+  /// The permanent first row of the scroll view, to reach its position.
+  final GlobalKey _slotKey = GlobalKey();
+
+  /// Whether the header goes up with the list (a short window).
+  bool _headerScrolls = false;
+
+  /// Starts the list below the header again from its top (see
+  /// [jumpToContentTop]); the one scroll view is shared by every chip and by
+  /// both segments, so each of them does this explicitly.
+  void _toContentTop() =>
+      jumpToContentTop(_slotKey, _headerKey, headerScrolls: _headerScrolls);
+
+  /// Swaps the segment; the new list starts at its top.
+  void _selectView(_IdeasView view) {
+    setState(() => _view = view);
+    _toContentTop();
+  }
+
   /// Selects a chip; the list below starts again from its top.
   ///
   /// [reveal] scrolls the chip row so the selected chip is on screen: a
@@ -628,6 +668,7 @@ class _IdeasPageState extends State<IdeasPage> {
       _category = category;
       _favoritesOnly = favorites;
     });
+    _toContentTop();
     if (!reveal) return;
     final GlobalKey key = _chipKeys.putIfAbsent(
       category?.name ?? (favorites ? 'favorites' : 'all'),

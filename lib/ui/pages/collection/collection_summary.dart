@@ -132,10 +132,17 @@ final class CollectionSummary {
 
   bool get isEmpty => markerCount == 0;
 
-  /// "Oahu + Honolulu · 3 sets · 214 markers", "40 markers" (DecoTime) or
-  /// "Not set up yet".
+  /// "Oahu + Honolulu · 3 sets · 214 markers", "40 markers" (DecoTime), or
+  /// what is true while nothing is owned yet: a brand with retail sets uses
+  /// its whole range ("Whole range · no sets yet"), any other has no markers
+  /// ticked ("No markers ticked yet"). An active brand is always available
+  /// (Ohuhu by default).
   String detail(AppLocalizations l10n) {
-    if (isEmpty) return l10n.collectionNotSetUp;
+    if (isEmpty) {
+      return brand.hasRetailSets
+          ? l10n.collectionDetailWholeRange
+          : l10n.collectionDetailNoMarkers;
+    }
     return <String>[
       if (series.isNotEmpty)
         series.map((MarkerLine line) => line.label).join(' + '),

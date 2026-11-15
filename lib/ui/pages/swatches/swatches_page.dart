@@ -22,6 +22,7 @@ import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/ink_chip.dart';
 import '../../widgets/ink_disclosure.dart';
+import '../../widgets/ink_header_page.dart';
 import '../../widgets/ink_overflow_menu.dart';
 import '../../widgets/ink_search_field.dart';
 import '../../widgets/ink_segmented.dart';
@@ -157,6 +158,32 @@ class _SwatchesPageState extends State<SwatchesPage> {
   /// so a second layout pass does not start the move twice.
   bool _movingDetail = false;
 
+  /// The header column (title to chips): one identity, so it keeps its state
+  /// (the search field) when it moves in and out of the scroll view.
+  final GlobalKey _headerKey = GlobalKey();
+
+  /// The permanent first row of the grid's scroll view, to reach its scroll
+  /// position (the view uses the primary controller, as on every page).
+  final GlobalKey _slotKey = GlobalKey();
+
+  /// Whether the header scrolls away with the grid (a short window).
+  bool _headerScrolls = false;
+
+  @override
+  void initState() {
+    super.initState();
+    swatchesSearchFocus.addListener(_onSearchFocus);
+  }
+
+  /// A hand-off from another tab focuses the search field: when the header
+  /// has gone up with the grid, it comes back first, so the field is on
+  /// screen when the keyboard opens.
+  void _onSearchFocus() {
+    if (!swatchesSearchFocus.hasFocus || !_headerScrolls) return;
+    final ScrollPosition? position = inkPageScroll(_slotKey);
+    if (position != null && position.pixels > 0) position.jumpTo(0);
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -189,6 +216,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
 
   @override
   void dispose() {
+    swatchesSearchFocus.removeListener(_onSearchFocus);
     _handOverRetry?.cancel();
     unawaited(_brandWatch?.cancel());
     _pane?.closed();
@@ -463,143 +491,144 @@ class _SwatchesPageState extends State<SwatchesPage> {
       ];
     }
 
-    return Column(
+    // On a short window (a phone in landscape, a split screen) the header
+    // goes up with the grid instead of taking the screen: it is the first
+    // row of the scroll view there, and above it on a tall window.
+    _headerScrolls = InkLayout.isShortPage(context);
+    return InkHeaderPage(
       key: SwatchesPage.pageKey,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        InkPageHeader(
-          title: context.l10n.swatchesTitle,
-          trailing: context.l10n.swatchesCountOf(visible.length, total),
-          // The count of the range is on the title line already: the subtitle
-          // says the brand and its series, never a number.
-          subtitle: CollectionSummary.of(state, colors).headline(),
-          // The series of the collection change the subtitle: the header
-          // reserves the room of the tallest one, so nothing below moves.
-          reserveSubtitleFor: _subtitleVariants(state.brand),
-        ),
-        if (owned.isEmpty) _wholeRangeNotice(context, state),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: InkSpacing.pageMargin,
+      headerKey: _headerKey,
+      slotKey: _slotKey,
+      header: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          InkPageHeader(
+            title: context.l10n.swatchesTitle,
+            trailing: context.l10n.swatchesCountOf(visible.length, total),
+            // The count of the range is on the title line already: the subtitle
+            // says the brand and its series, never a number.
+            subtitle: CollectionSummary.of(state, colors).headline(),
+            // The series of the collection change the subtitle: the header
+            // reserves the room of the tallest one, so nothing below moves.
+            reserveSubtitleFor: _subtitleVariants(state.brand),
           ),
-          child: InkSearchField(
-            controller: _searchController,
-            focusNode: swatchesSearchFocus,
-            hintText: context.l10n.swatchesSearchHint,
-            semanticLabel: context.l10n.swatchesSearchHint,
-            onChanged: (String value) => setState(() => _query = value.trim()),
+          if (owned.isEmpty) _wholeRangeNotice(context, state),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: InkSpacing.pageMargin,
+            ),
+            child: InkSearchField(
+              controller: _searchController,
+              focusNode: swatchesSearchFocus,
+              hintText: context.l10n.swatchesSearchHint,
+              semanticLabel: context.l10n.swatchesSearchHint,
+              onChanged: (String value) =>
+                  setState(() => _query = value.trim()),
+            ),
           ),
-        ),
-        const SizedBox(height: InkSpacing.group),
-        _chipRow(context, scope, state, colors),
-        const SizedBox(height: InkSpacing.block),
-        Expanded(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              if (hexTarget != null && visible.isNotEmpty)
-                SliverToBoxAdapter(child: _closestTo(context, hexTarget)),
-              if (visible.isEmpty)
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: _emptyState(
-                    context,
-                    noCollection: owned.isEmpty,
-                    noFavorites: !candidates.any(
-                      (MarkerColor color) =>
-                          state.favorites.contains(color.colorId),
+          const SizedBox(height: InkSpacing.group),
+          _chipRow(context, scope, state, colors),
+          const SizedBox(height: InkSpacing.block),
+        ],
+      ),
+      slivers: <Widget>[
+        if (hexTarget != null && visible.isNotEmpty)
+          SliverToBoxAdapter(child: _closestTo(context, hexTarget)),
+        if (visible.isEmpty)
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: _emptyState(
+              context,
+              noCollection: owned.isEmpty,
+              noFavorites: !candidates.any(
+                (MarkerColor color) => state.favorites.contains(color.colorId),
+              ),
+              noOwnedFavorites: !candidates.any(
+                (MarkerColor color) =>
+                    state.favorites.contains(color.colorId) && isOwned(color),
+              ),
+            ),
+          )
+        else if (_listLayout)
+          SliverPadding(
+            padding: EdgeInsets.only(bottom: InkSpacing.pageBottomOf(context)),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate((
+                BuildContext context,
+                int index,
+              ) {
+                final MarkerColor color = visible[index];
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    SwatchListTile(
+                      hex: color.hex,
+                      code: color.displayCode(state.nameDisplayMode),
+                      name: color.displayName(state.nameDisplayMode),
+                      owned: isOwned(color),
+                      favorite: state.favorites.contains(color.colorId),
+                      ownColor: color.hasOwnColor,
+                      dried: scope.dried.contains(color.colorId),
+                      onTap: () =>
+                          _openDetail(context, scope, color, candidates),
                     ),
-                    noOwnedFavorites: !candidates.any(
-                      (MarkerColor color) =>
-                          state.favorites.contains(color.colorId) &&
-                          isOwned(color),
+                    Divider(
+                      height: InkGeometry.border,
+                      thickness: InkGeometry.border,
+                      color: InkColors.of(context).line,
                     ),
-                  ),
-                )
-              else if (_listLayout)
-                SliverPadding(
-                  padding: EdgeInsets.only(
-                    bottom: InkSpacing.pageBottomOf(context),
-                  ),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate((
-                      BuildContext context,
-                      int index,
-                    ) {
-                      final MarkerColor color = visible[index];
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          SwatchListTile(
-                            hex: color.hex,
-                            code: color.displayCode(state.nameDisplayMode),
-                            name: color.displayName(state.nameDisplayMode),
-                            owned: isOwned(color),
-                            favorite: state.favorites.contains(color.colorId),
-                            ownColor: color.hasOwnColor,
-                            dried: scope.dried.contains(color.colorId),
-                            onTap: () =>
-                                _openDetail(context, scope, color, candidates),
-                          ),
-                          Divider(
-                            height: InkGeometry.border,
-                            thickness: InkGeometry.border,
-                            color: InkColors.of(context).line,
-                          ),
-                        ],
-                      );
-                    }, childCount: visible.length),
-                  ),
-                )
-              else
-                SliverPadding(
-                  padding: EdgeInsets.fromLTRB(
-                    InkSpacing.pageMargin,
-                    0,
-                    InkSpacing.pageMargin,
-                    InkSpacing.pageBottomOf(context),
-                  ),
-                  sliver: SliverGrid(
-                    gridDelegate: ColorSwatchTile.gridDelegate(
-                      context,
-                      showHex: false,
-                    ),
-                    delegate: SliverChildBuilderDelegate((
-                      BuildContext context,
-                      int index,
-                    ) {
-                      final MarkerColor color = visible[index];
-                      return ColorSwatchTile(
-                        hex: color.hex,
-                        // The grid cell is too narrow for a "new / old"
-                        // pair: only one code and one name show here; the
-                        // pair stays in the list and the detail sheet.
-                        code: state.nameDisplayMode == NameDisplayMode.oldOnly
-                            ? color.oldCode
-                            : color.newCode,
-                        name: state.nameDisplayMode == NameDisplayMode.oldOnly
-                            ? color.oldName
-                            : color.newName,
-                        // The owned check only says something when the whole
-                        // range is on screen: with "Mine" (or "Favourites")
-                        // every cell would carry it.
-                        owned: showOwnedMark && isOwned(color),
-                        favorite: state.favorites.contains(color.colorId),
-                        ownColor: color.hasOwnColor,
-                        dried: scope.dried.contains(color.colorId),
-                        // The hex stays in the list and in the detail sheet:
-                        // the grid cells are lower without it.
-                        showHex: false,
-                        // The marker of the detail pane, on wide pages.
-                        selected: _twoPane && _paneShown.value == color.colorId,
-                        onTap: () =>
-                            _openDetail(context, scope, color, candidates),
-                      );
-                    }, childCount: visible.length),
-                  ),
-                ),
-            ],
+                  ],
+                );
+              }, childCount: visible.length),
+            ),
+          )
+        else
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(
+              InkSpacing.pageMargin,
+              0,
+              InkSpacing.pageMargin,
+              InkSpacing.pageBottomOf(context),
+            ),
+            sliver: SliverGrid(
+              gridDelegate: ColorSwatchTile.gridDelegate(
+                context,
+                showHex: false,
+              ),
+              delegate: SliverChildBuilderDelegate((
+                BuildContext context,
+                int index,
+              ) {
+                final MarkerColor color = visible[index];
+                return ColorSwatchTile(
+                  hex: color.hex,
+                  // The grid cell is too narrow for a "new / old"
+                  // pair: only one code and one name show here; the
+                  // pair stays in the list and the detail sheet.
+                  code: state.nameDisplayMode == NameDisplayMode.oldOnly
+                      ? color.oldCode
+                      : color.newCode,
+                  name: state.nameDisplayMode == NameDisplayMode.oldOnly
+                      ? color.oldName
+                      : color.newName,
+                  // The owned check only says something when the whole
+                  // range is on screen: with "Mine" (or "Favourites")
+                  // every cell would carry it.
+                  owned: showOwnedMark && isOwned(color),
+                  favorite: state.favorites.contains(color.colorId),
+                  ownColor: color.hasOwnColor,
+                  dried: scope.dried.contains(color.colorId),
+                  // The hex stays in the list and in the detail sheet:
+                  // the grid cells are lower without it.
+                  showHex: false,
+                  // The marker of the detail pane, on wide pages.
+                  selected: _twoPane && _paneShown.value == color.colorId,
+                  onTap: () => _openDetail(context, scope, color, candidates),
+                );
+              }, childCount: visible.length),
+            ),
           ),
-        ),
       ],
     );
   }

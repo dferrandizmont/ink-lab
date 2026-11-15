@@ -149,6 +149,9 @@ class PalettePage extends StatefulWidget {
 /// The widgets that need no state of the page (fields, actions, rows, sheets,
 /// dialogs) are libraries of their own with explicit constructors.
 class _PalettePageState extends State<PalettePage> {
+  /// The title block, which moves in and out of the list (see [_buildBody]).
+  final GlobalKey _headerKey = GlobalKey();
+
   late final ImagePickerService _picker =
       widget.picker ?? PlatformImagePickerService();
   late final PhotoDecoder _decode =
@@ -999,7 +1002,7 @@ class _PalettePageState extends State<PalettePage> {
         markers: markers,
         autofocusSearch: true,
         // Only one of the user's own markers is an example.
-        exampleCode: _available.isEmpty ? null : _available.first.newCode,
+        exampleCode: firstRealColour(_available)?.newCode,
       ),
     );
     if (picked == null || !mounted) return;
@@ -1124,10 +1127,13 @@ class _PalettePageState extends State<PalettePage> {
   List<MarkerColor> get _baseChoices =>
       _chainMode && _chainWholeRange ? _range : _available;
 
+  /// A real code of the markers the base may be, to show as an example (in
+  /// the field's text, the search of the list and the messages): never the
+  /// colourless blender, whose code ("0") says nothing to someone looking for
+  /// a colour.
   String get _exampleCode {
-    final source = _baseChoices;
-    if (source.isNotEmpty) return _codeLabel(source.first);
-    return 'A1';
+    final MarkerColor? example = firstRealColour(_baseChoices);
+    return example == null ? 'A1' : _codeLabel(example);
   }
 
   /// Computes the palette for the current inputs. Anything but Regenerate
@@ -1886,11 +1892,30 @@ class _PalettePageState extends State<PalettePage> {
     final EdgeInsets listPadding = EdgeInsets.only(
       bottom: InkSpacing.pageBottomOf(context),
     );
+    // On a short window (a phone in landscape) the title goes up with the
+    // list instead of taking the screen: it is the first row of the list
+    // there, and above it on a tall window. One identity, so it moves
+    // between the two places in a frame. (Side by side, a tablet in landscape
+    // is never short.)
+    final bool short = !split && InkLayout.isShortPage(context);
+    final Widget headerBox = KeyedSubtree(
+      key: _headerKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: header,
+      ),
+    );
     return Column(
       key: PalettePage.pageKey,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        ...header,
+        if (split)
+          ...header
+        else if (short)
+          const SizedBox.shrink()
+        else
+          headerBox,
         Expanded(
           child: split
               // The controls and the buttons on one side, the palette they
@@ -1916,7 +1941,12 @@ class _PalettePageState extends State<PalettePage> {
                 )
               : ListView(
                   padding: listPadding,
-                  children: <Widget>[...top, ...result, actions],
+                  children: <Widget>[
+                    if (short) headerBox else const SizedBox.shrink(),
+                    ...top,
+                    ...result,
+                    actions,
+                  ],
                 ),
         ),
       ],

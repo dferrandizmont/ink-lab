@@ -11227,11 +11227,17 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{1 set} other{{count} sets}}'**
   String collectionSets(int count);
 
-  /// No description provided for @collectionNotSetUp.
+  /// No description provided for @collectionDetailWholeRange.
   ///
   /// In en, this message translates to:
-  /// **'Not set up yet'**
-  String get collectionNotSetUp;
+  /// **'Whole range · no sets yet'**
+  String get collectionDetailWholeRange;
+
+  /// No description provided for @collectionDetailNoMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'No markers ticked yet'**
+  String get collectionDetailNoMarkers;
 
   /// No description provided for @collectionSeriesTitle.
   ///

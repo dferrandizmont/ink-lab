@@ -6950,7 +6950,10 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get collectionNotSetUp => 'Noch nicht eingerichtet';
+  String get collectionDetailWholeRange => 'Ganzes Sortiment · noch keine Sets';
+
+  @override
+  String get collectionDetailNoMarkers => 'Noch keine Marker angehakt';
 
   @override
   String get collectionSeriesTitle => 'Serien, die du besitzt';
