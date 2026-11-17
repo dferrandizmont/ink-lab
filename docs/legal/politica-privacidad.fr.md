@@ -1,7 +1,7 @@
 # Politique de confidentialité d'Ink Lab
 
 
-Dernière mise à jour : 2026-11-13
+Dernière mise à jour : 2026-11-17
 
 Traduction de courtoisie. Seule la [version espagnole](https://inklab.mainshai.com/es/privacy/) fait foi.
 
@@ -226,20 +226,54 @@ fichiers ; elle ne le fait que pour les fichiers de l'application elle-même, da
 ces informations ne quittent pas le téléphone.
 
 ### Données qui NE sont PAS traitées
-- Nous ne demandons ni ne conservons votre nom, votre adresse e-mail, votre numéro de téléphone, votre âge ni aucune
-  donnée de compte : il n'y a pas de comptes.
+- L'application ne demande ni ne conserve votre nom, votre adresse e-mail, votre numéro de téléphone, votre âge ni
+  aucune donnée de compte : il n'y a pas de comptes. Nous ne connaissons votre adresse e-mail que si vous nous écrivez
+  (voir « Si vous nous écrivez »).
 - Le développeur n'utilise ni outil d'analyse ni rapports de plantage, et il n'y a ni publicité, ni publicité
-  personnalisée, ni pistage entre applications. La seule exception concerne les données de diagnostic et d'utilisation
-  que ML Kit envoie à Google lorsque vous utilisez l'IA sur l'appareil (voir « IA facultative ») ; le développeur ne les
-  reçoit pas.
+  personnalisée, ni pistage entre applications. La seule exception dans l'application concerne les données de diagnostic
+  et d'utilisation que ML Kit envoie à Google lorsque vous utilisez l'IA sur l'appareil (voir « IA facultative ») ; le
+  développeur ne les reçoit pas. En dehors de l'application, nos réponses par e-mail comportent le comptage anonyme des
+  ouvertures et des clics expliqué dans « Si vous nous écrivez ».
 - L'historique des erreurs (voir « Historique des erreurs ») n'est pas un rapport de plantage : rien n'est envoyé
   automatiquement, et il ne quitte votre téléphone que si vous le partagez vous-même.
 - Nous ne recevons ni vos photos, ni vos collections, ni vos palettes, ni votre clé.
 
 ### Si vous nous écrivez
-Vous pouvez nous écrire à inklab@mainshai.com. Nous traiterons votre adresse e-mail et ce que vous nous communiquez
-uniquement pour vous répondre. Ne nous envoyez ni votre clé d'API ni des sauvegardes contenant des données que vous ne
-souhaitez pas partager : pour un bug, des données de test nous suffisent.
+Vous pouvez nous écrire à inklab@mainshai.com. Nous utilisons votre adresse e-mail, votre nom si vous l'indiquez et ce
+que vous nous communiquez uniquement pour vous répondre et résoudre ce que vous nous demandez. Ne nous envoyez ni votre
+clé d'API ni des sauvegardes contenant des données que vous ne souhaitez pas partager : pour un bug, des données de test
+nous suffisent.
+
+Les prestataires suivants interviennent en chemin (il en va de même pour dev@mainshai.com, l'adresse utilisée par les
+versions jusqu'à la 0.6.2) :
+
+- **Cloudflare** (Cloudflare, Inc., États-Unis) reçoit le message sur notre domaine et le transfère aussitôt. Cloudflare
+  ne conserve pas le message, mais conserve un journal technique du transfert (expéditeur, destinataire, objet, date et
+  résultat). Il le conserve pendant la durée que fixe son service, que nous n'avons pas pu confirmer, tout comme les
+  options pour le supprimer ; si vous nous demandez la suppression, nous transmettrons aussi la demande à Cloudflare et
+  nous vous informerons du résultat. Cloudflare traite aussi l'e-mail aux États-Unis.
+- **Google** (Gmail ; Google Ireland Limited) est la boîte aux lettres où nous lisons votre message, vous répondons et
+  conservons la conversation. Google peut aussi traiter ces données aux États-Unis.
+- **Proton** (Proton AG, Suisse) conserve une copie des messages que nous recevons, à titre de sauvegarde. Nous ne
+  répondons pas depuis cette boîte.
+- **Brevo** (Sendinblue SAS, qui opère sous le nom de Brevo, France) envoie nos réponses, et traite donc leur contenu,
+  et conserve un journal de chaque envoi (destinataire, objet, date et remise ou non du message) et une copie de la
+  réponse (qui peut inclure votre message, s’il est cité en dessous). En outre, Brevo ajoute à chaque réponse une image
+  invisible (un pixel) qui enregistre si vous l'ouvrez, et remplace les liens par les siens, qui enregistrent si vous
+  cliquez dessus. Nous ne pouvons pas le retirer avec l'offre que nous utilisons ; nous avons donc activé le suivi
+  anonyme de Brevo : selon Brevo, il compte les ouvertures et les clics sans les associer à votre adresse e-mail. Malgré
+  cela, lorsque l'image se charge ou que vous cliquez sur un lien, votre application de messagerie se connecte aux
+  serveurs de Brevo, qui reçoivent des données techniques telles que votre adresse IP. Nous ne consultons ni n'utilisons
+  ces informations. Si vous préférez l'éviter, bloquez les images externes dans votre application de messagerie et
+  n’ouvrez pas les liens de la réponse. Les copier et les coller dans le navigateur ne sert à rien non plus, car ils
+  passent toujours par Brevo : pour aller sur une page, saisissez vous-même son adresse. La réponse se lit tout aussi
+  bien.
+
+Nous conservons la conversation dans Gmail, la copie dans Proton, et la copie et le journal d'envoi chez Brevo pendant
+un an au maximum à compter du dernier message de la conversation, sauf si nous devons les conserver plus longtemps pour
+traiter une réclamation. Nous effectuons un nettoyage tous les trois mois et, à chacun, nous supprimons ce qui
+atteindrait un an avant le suivant. Si nous cessons d'utiliser l'un de ces services, nous supprimons ce qu'il contient.
+Si vous nous demandez de supprimer vos messages plus tôt, nous les supprimons des trois endroits.
 
 Si vous signalez une suggestion de l'IA (« Signaler cette suggestion », dans « Palette »), l'application ouvre votre
 application de messagerie avec un message déjà rédigé à l'adresse inklab@mainshai.com : le motif que vous choisissez, la
@@ -275,20 +309,35 @@ de diagnostic et d'utilisation que ML Kit envoie lorsque l'IA sur l'appareil est
 OpenRouter, la requête décrite ci-dessus est reçue par **OpenRouter** et par le **fournisseur du modèle** que vous
 choisissez, en votre nom et avec votre clé. Si vous nous envoyez un e-mail d'assistance, un retour, un signalement de
 suggestion ou l'historique des erreurs, le titulaire le reçoit à l'adresse inklab@mainshai.com (ou à dev@mainshai.com,
-l'adresse utilisée par l'application jusqu'à la version 0.6.2) via le service de votre choix. Si vous partagez
-l'historique des erreurs avec une autre personne ou un autre service, seul ce destinataire le reçoit. Si vous notez
-l'application dans la boutique, c'est **Google** ou **Apple** qui reçoit directement votre note et votre avis, avec
-votre compte de la boutique ; ils ne passent pas par l'application. Le développeur ne voit ensuite que ce que la
-boutique publie ou lui montre dans sa console (la note, l'avis et votre nom public ; sur Google Play, aussi des données
-techniques comme le modèle de l'appareil et les versions du système et de l'application) et peut vous y répondre.
+l'adresse utilisée par l'application jusqu'à la version 0.6.2) depuis le service de messagerie de votre choix. Les prestataires présentés dans « Si vous nous écrivez » interviennent en chemin :
+
+| Prestataire | Pour quoi faire | Où |
+|---|---|---|
+| Cloudflare, Inc. | Recevoir et transférer l'e-mail d'assistance ; journal technique du transfert | États-Unis |
+| Google Ireland Limited (Gmail) | Boîte aux lettres de l'e-mail d'assistance | Irlande ; Google LLC peut traiter des données aux États-Unis |
+| Proton AG | Copie de sauvegarde de l'e-mail reçu | Suisse |
+| Sendinblue SAS (Brevo), RCS Paris 498 019 298 | Envoyer les réponses ; journal d'envoi et copie de la réponse (au maximum un an à compter du dernier message, avec nettoyage trimestriel) ; pixel d'ouverture et liens de clic, avec le suivi anonyme de Brevo activé | UE (France) |
+
+Si vous partagez l'historique des erreurs avec une autre personne ou un autre service, seul ce destinataire le reçoit.
+Si vous notez l'application dans la boutique, c'est **Google** ou **Apple** qui reçoit directement votre note et votre
+avis, avec votre compte de la boutique ; ils ne passent pas par l'application. Le développeur ne voit ensuite que ce que
+la boutique publie ou lui montre dans sa console (la note, l'avis et votre nom public ; sur Google Play, aussi des
+données techniques comme le modèle de l'appareil et les versions du système et de l'application) et peut vous y
+répondre.
 
 ## 5. Transferts internationaux
-Le développeur n'effectue aucun transfert de données. Si vous utilisez l'IA avec OpenRouter, la requête est adressée au
-fournisseur que vous choisissez, qui peut la traiter dans d'autres régions et selon ses propres conditions. Google peut
-traiter les diagnostics de ML Kit dans d'autres pays, selon ses propres conditions. La boutique où vous notez
-l'application (Google Play ou l'App Store) peut traiter votre note et votre avis dans d'autres pays, selon ses propres
-conditions. Les autres services que vous décidez d'utiliser (messagerie, cloud, destination d'un texte copié ou d'un
-fichier ou d'une image partagés) sont régis par leurs propres conditions.
+Pour l'e-mail d'assistance, Cloudflare et Google peuvent traiter des données aux États-Unis. Cloudflare, Inc. et Google
+LLC adhèrent au cadre de protection des données UE-États-Unis, le Data Privacy Framework (décision d'adéquation de la
+Commission européenne du 10 juillet 2023) ; l'accord de traitement des données de Cloudflare comprend en outre des
+clauses contractuelles types. Proton est établie en Suisse, pays bénéficiant d'une décision d'adéquation de la
+Commission européenne. Brevo est une entreprise française et, selon sa documentation, héberge les données dans l'Union
+européenne. En dehors de l'e-mail d'assistance, le développeur n'effectue aucun transfert de données. Si vous utilisez
+l'IA avec OpenRouter, la requête est adressée au fournisseur que vous choisissez, qui peut la traiter dans d'autres
+régions et selon ses propres conditions. Google peut traiter les diagnostics de ML Kit dans d'autres pays, selon ses
+propres conditions. La boutique où vous notez l'application (Google Play ou l'App Store) peut traiter votre note et
+votre avis dans d'autres pays, selon ses propres conditions. Les autres services que vous décidez d'utiliser
+(messagerie, cloud, destination d'un texte copié ou d'un fichier ou d'une image partagés) sont régis par leurs propres
+conditions.
 
 ## 6. Durée de conservation
 
@@ -300,8 +349,11 @@ fichier ou d'une image partagés) sont régis par leurs propres conditions.
 - **Historique des erreurs :** sur votre téléphone, jusqu'à ce que vous l'effaciez avec « Effacer l’historique des
   erreurs », que vous effaciez les données de l'application ou que vous la désinstalliez. Comme il ne dépasse jamais
   environ 200 Ko plus un fichier précédent, les entrées les plus anciennes sont supprimées au fur et à mesure.
-- **E-mails d'assistance, retours et historiques des erreurs que vous nous envoyez :** le temps nécessaire pour traiter
-  votre demande et, au maximum, un an à compter de la dernière réponse.
+- **E-mails d'assistance, retours et historiques des erreurs que vous nous envoyez :** comme expliqué dans « Si vous
+  nous écrivez » : au maximum un an à compter du dernier message de la conversation dans Gmail, dans la copie Proton et
+  chez Brevo, avec un nettoyage tous les trois mois, sauf si nous devons les conserver plus longtemps pour traiter une
+  réclamation. Nous n'avons pas pu confirmer la durée du journal technique de Cloudflare
+  (voir « Si vous nous écrivez »).
 
 ## 7. Vos droits
 

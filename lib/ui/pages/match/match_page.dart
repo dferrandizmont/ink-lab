@@ -26,6 +26,7 @@ import '../collection/collection_page.dart';
 import 'color_sampling.dart';
 import 'image_picker_service.dart';
 import 'match_empty_state.dart';
+import 'match_example.dart';
 import 'match_result_tile.dart';
 import 'photo_box.dart';
 import 'photo_sampling.dart';
@@ -51,7 +52,7 @@ AppScope? _scopeOf(BuildContext context) =>
 /// own it"). Tapping a result records a [ColorMatchPick] in the recent picks
 /// of the active brand. Photos are decoded on the device and never uploaded.
 class MatchPage extends StatefulWidget {
-  const MatchPage({super.key, this.picker, this.decoder});
+  const MatchPage({super.key, this.picker, this.decoder, this.exampleLoader});
 
   /// Key of the page body, handy for tests and for state restoration.
   static const Key pageKey = Key('match-page');
@@ -71,6 +72,9 @@ class MatchPage extends StatefulWidget {
 
   /// Decoder from encoded photo bytes to raw pixels. Tests inject a fake.
   final PhotoDecoder? decoder;
+
+  /// Reader of the bundled example photo. Tests inject their own.
+  final MatchExampleLoader? exampleLoader;
 
   @override
   State<MatchPage> createState() => _MatchPageState();
@@ -128,6 +132,21 @@ class _MatchPageState extends State<MatchPage> {
   late final ImagePickerService _picker =
       widget.picker ?? PlatformImagePickerService();
   late final PhotoDecoder _decode = widget.decoder ?? decodePhoto;
+  late final MatchExampleLoader _loadExample =
+      widget.exampleLoader ?? loadMatchExample;
+
+  /// The example photo of the empty state, once it was read and decoded, and
+  /// what sampling it gives with the markers of the page.
+  MatchExample? _example;
+  SampledImage? _exampleSampled;
+
+  /// The one read and decode of the example, shared by the preview and the
+  /// button: whoever comes second waits for the first. Cleared when it fails,
+  /// so the next try reads again.
+  Future<({Uint8List bytes, SampledImage sampled})>? _examplePhoto;
+
+  /// Counts the calls of [_reload]: only the last one may apply its result.
+  int _reloadGeneration = 0;
 
   @override
   void didChangeDependencies() {
@@ -182,6 +201,7 @@ class _MatchPageState extends State<MatchPage> {
     final MarkerBrand brand = scope.settings.brand;
     final AppSettings settings = scope.settings.settings;
     final bool suggest = scope.settings.state.matchSuggestUnowned;
+    final int generation = ++_reloadGeneration;
     setState(() => _loading = true);
     List<MarkerColor> catalog;
     try {
@@ -189,7 +209,9 @@ class _MatchPageState extends State<MatchPage> {
     } catch (_) {
       catalog = const <MarkerColor>[];
     }
-    if (!mounted) return;
+    // A newer reload (another brand, say) started while this one was reading:
+    // it owns the page now, and an old brand must not overwrite it.
+    if (!mounted || generation != _reloadGeneration) return;
     final Set<String> dried = scope.dried.ids;
     final List<MarkerColor> available = ownedColors(
       colors: catalog,
@@ -213,7 +235,84 @@ class _MatchPageState extends State<MatchPage> {
       _loading = false;
       // A new collection or brand re-ranks the current sample.
       _rank(_sampledColorInt);
+      _rankExample();
     });
+    unawaited(_prepareExample());
+  }
+
+  /// Reads and decodes the example photo once: the preview and the button
+  /// share the result, so the photo is never decoded twice.
+  Future<({Uint8List bytes, SampledImage sampled})> _readExample() {
+    final Future<({Uint8List bytes, SampledImage sampled})>? cached =
+        _examplePhoto;
+    if (cached != null) return cached;
+    final Future<({Uint8List bytes, SampledImage sampled})> future =
+        _loadAndDecodeExample();
+    _examplePhoto = future;
+    unawaited(
+      future.then<void>(
+        (_) {},
+        onError: (Object _) {
+          if (identical(_examplePhoto, future)) _examplePhoto = null;
+        },
+      ),
+    );
+    return future;
+  }
+
+  Future<({Uint8List bytes, SampledImage sampled})>
+  _loadAndDecodeExample() async {
+    final Uint8List bytes = await _loadExample();
+    return (bytes: bytes, sampled: await _decode(bytes));
+  }
+
+  /// Gets the example ready for the preview of the empty state. Without it
+  /// the preview stays empty and the button reports the failure when it is
+  /// pressed.
+  Future<void> _prepareExample() async {
+    if (_example != null) return;
+    try {
+      final ({Uint8List bytes, SampledImage sampled}) photo =
+          await _readExample();
+      if (!mounted || _example != null) return;
+      setState(() {
+        _exampleSampled = photo.sampled;
+        _example = MatchExample(
+          bytes: photo.bytes,
+          aspectRatio: photo.sampled.aspectRatio,
+          sampleColor: 0,
+          match: null,
+        );
+        _rankExample();
+      });
+    } catch (_) {
+      // The button tries again and says so if it fails.
+    }
+  }
+
+  /// Samples the example where [matchExamplePoint] is and finds its closest
+  /// marker with the same matcher, and the same markers, as a photo of the
+  /// user's.
+  void _rankExample() {
+    final MatchExample? example = _example;
+    final SampledImage? sampled = _exampleSampled;
+    if (example == null || sampled == null) return;
+    final int color = averageColorOfRegion(
+      sampled,
+      matchExamplePoint,
+      radiusFraction: _radiusFraction,
+    );
+    final List<ColorDistanceMatch> best = findClosestMarkerMatches(
+      color,
+      _pool,
+      limit: 1,
+    );
+    _example = MatchExample(
+      bytes: example.bytes,
+      aspectRatio: example.aspectRatio,
+      sampleColor: color,
+      match: best.isEmpty ? null : best.first,
+    );
   }
 
   // ---------------------------------------------------------------------------
@@ -252,6 +351,39 @@ class _MatchPageState extends State<MatchPage> {
     }
   }
 
+  /// Loads the bundled example as if it came from the gallery, and samples
+  /// its point at once, so the result is there without a tap. It needs no
+  /// permission: nothing leaves the app bundle.
+  Future<void> _tryExample() async {
+    if (_picking) return;
+    setState(() {
+      _picking = true;
+      _error = null;
+      _notice = null;
+    });
+    final ({Uint8List bytes, SampledImage sampled}) photo;
+    try {
+      photo = await _readExample();
+    } on PhotoDecodeException {
+      if (!mounted) return;
+      setState(() {
+        _picking = false;
+        _error = context.l10n.matchDecodeFailed;
+      });
+      return;
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _picking = false;
+        _error = context.l10n.matchPickFailed;
+      });
+      return;
+    }
+    if (!mounted) return;
+    _showPhoto(photo.bytes, photo.sampled, sampleAt: matchExamplePoint);
+  }
+
+  /// Decodes [bytes] and shows them as the photo.
   Future<void> _loadPhoto(Uint8List bytes) async {
     SampledImage sampled;
     try {
@@ -272,6 +404,12 @@ class _MatchPageState extends State<MatchPage> {
       return;
     }
     if (!mounted) return;
+    _showPhoto(bytes, sampled);
+  }
+
+  /// Makes [sampled] the photo on screen, whatever it came from; with
+  /// [sampleAt] that point is sampled right away.
+  void _showPhoto(Uint8List bytes, SampledImage sampled, {Offset? sampleAt}) {
     setState(() {
       _bytes = bytes;
       _sampled = sampled;
@@ -286,6 +424,7 @@ class _MatchPageState extends State<MatchPage> {
       _error = null;
       _notice = null;
     });
+    if (sampleAt != null) _sampleAt(sampleAt);
   }
 
   /// Ranks the user's markers, and the whole range, for [sample].
@@ -541,6 +680,8 @@ class _MatchPageState extends State<MatchPage> {
           child: MatchEmptyState(
             onCamera: _picking ? null : () => _pickPhoto(PhotoSource.camera),
             onGallery: _picking ? null : () => _pickPhoto(PhotoSource.gallery),
+            onExample: _picking ? null : _tryExample,
+            example: _example,
           ),
         )
       else ...<Widget>[

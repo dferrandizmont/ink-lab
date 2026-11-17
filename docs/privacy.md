@@ -222,7 +222,7 @@ portapapeles y, además, escribe las fotos del archivo y **borra las fotos del d
 se puede escribir, se deshace y los datos quedan como estaban. La importación nunca activa la IA ni toca la clave.
 
 ## Soporte y enlaces
-La dirección de soporte es **inklab@mainshai.com**. «Acerca de» ofrece **copiar** la URL del repositorio al
+La dirección de soporte es **inklab@mainshai.com** (qué proveedores intervienen en ese correo: política de privacidad, «Si nos escribes»). «Acerca de» ofrece **copiar** la URL del repositorio al
 portapapeles; la app no abre el navegador. Solo abre el correo cuando tocas «Enviar comentarios» (Acerca de) o «Reportar
 esta sugerencia» en un resultado de IA (Paleta), y no se envía nada si no mandas tú el correo. «Enviar comentarios»
 (`lib/ui/pages/settings/feedback_email.dart`) prepara un `mailto:` a inklab@mainshai.com con el asunto

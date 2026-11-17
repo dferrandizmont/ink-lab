@@ -213,7 +213,7 @@ that are not in it**; if a photo cannot be written, it is undone and the data st
 touches the key.
 
 ## Support and links
-The support address is **inklab@mainshai.com**. "About" offers to **copy** the repository URL to the clipboard; the app
+The support address is **inklab@mainshai.com** (which providers handle that email: privacy policy, "If you write to us"). "About" offers to **copy** the repository URL to the clipboard; the app
 never opens the browser. It opens the email client only when you tap "Send feedback" (About) or "Report this suggestion"
 on an AI result (Palette), and nothing is sent unless you send the email. "Send feedback"
 (`lib/ui/pages/settings/feedback_email.dart`) writes a `mailto:` to inklab@mainshai.com with the subject

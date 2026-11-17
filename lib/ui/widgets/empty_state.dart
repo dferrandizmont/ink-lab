@@ -12,12 +12,17 @@ import 'ink_button.dart';
 /// A screen with more than one action (or custom ones) passes [actions]: they
 /// are stacked full width under the text, [InkSpacing.buttonGap] apart, and
 /// replace the single action.
+///
+/// A screen that has something better than an icon to show passes [leading]
+/// (Match shows a small example photo): it takes the place of the icon, as wide
+/// as the column, and a block gap separates it from the headline.
 class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
     required this.title,
     this.message,
     this.icon = InkIcons.search,
+    this.leading,
     this.actionLabel,
     this.onAction,
     this.primaryAction = false,
@@ -33,11 +38,15 @@ class EmptyState extends StatelessWidget {
     this.onAction,
     this.primaryAction = false,
     this.actions = const <Widget>[],
-  }) : icon = InkIcons.alertCircle;
+  }) : icon = InkIcons.alertCircle,
+       leading = null;
 
   final String title;
   final String? message;
   final InkIcons icon;
+
+  /// Shown instead of [icon], the width of the column.
+  final Widget? leading;
   final String? actionLabel;
   final VoidCallback? onAction;
 
@@ -59,8 +68,13 @@ class EmptyState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              InkIcon(icon, size: InkGeometry.iconSize, color: ink.fg2),
-              const SizedBox(height: 8),
+              if (leading != null) ...<Widget>[
+                SizedBox(width: double.infinity, child: leading),
+                const SizedBox(height: InkSpacing.block),
+              ] else ...<Widget>[
+                InkIcon(icon, size: InkGeometry.iconSize, color: ink.fg2),
+                const SizedBox(height: 8),
+              ],
               Text(
                 title,
                 textAlign: TextAlign.center,

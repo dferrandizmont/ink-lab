@@ -1294,6 +1294,8 @@
   "matchOkButton": "OK",
   "matchTakePhotoButton": "Tirar uma foto",
   "matchChooseGalleryButton": "Escolher da galeria",
+  "matchExampleButton": "Experimentar um exemplo",
+  "matchExamplePreviewSemantics": "Foto de exemplo com um ponto de amostra. Toca para a experimentar.",
   "matchValuesButton": "Valores",
   "matchValuesTooltip": "Mostra a foto e as correspondências em tons de cinzento para verificar o contraste de valores",
   "matchPhotoSampleHint": "Toca duas vezes para tirar a cor do centro da foto. Usa as ações para mover o ponto.",

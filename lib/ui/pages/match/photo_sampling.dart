@@ -154,19 +154,28 @@ class WhiteBalancePreview extends StatelessWidget {
 /// a white 3 px ring, a 1 px dark outer ring and a dark crosshair. The ring
 /// colours are fixed, not themed, so the reticle reads on any photo.
 class ReticlePainter extends CustomPainter {
-  ReticlePainter({required this.centre, required this.sampleColor});
+  ReticlePainter({
+    required this.centre,
+    required this.sampleColor,
+    this.outerRadius = defaultOuterRadius,
+  });
 
   final Offset centre;
   final Color sampleColor;
 
-  static const double _outerRadius = 30;
+  /// Radius of the outer line. The example photo of an empty Match draws a
+  /// smaller ring, so it does not cover a thumbnail.
+  final double outerRadius;
+
+  /// Radius of the ring on the photo of Match.
+  static const double defaultOuterRadius = 30;
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(centre, _outerRadius - 1, Paint()..color = sampleColor);
+    canvas.drawCircle(centre, outerRadius - 1, Paint()..color = sampleColor);
     canvas.drawCircle(
       centre,
-      _outerRadius - 2.5,
+      outerRadius - 2.5,
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3
@@ -174,7 +183,7 @@ class ReticlePainter extends CustomPainter {
     );
     canvas.drawCircle(
       centre,
-      _outerRadius - 0.5,
+      outerRadius - 0.5,
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
@@ -198,7 +207,9 @@ class ReticlePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(ReticlePainter oldDelegate) =>
-      oldDelegate.centre != centre || oldDelegate.sampleColor != sampleColor;
+      oldDelegate.centre != centre ||
+      oldDelegate.sampleColor != sampleColor ||
+      oldDelegate.outerRadius != outerRadius;
 }
 
 /// The action that starts choosing the white of the photo.

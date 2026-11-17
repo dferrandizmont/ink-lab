@@ -1,7 +1,7 @@
 # Política de privacidade do Ink Lab
 
 
-Última atualização: 2026-11-13
+Última atualização: 2026-11-17
 
 Tradução de cortesia. Prevalece a [versão espanhola](https://inklab.mainshai.com/es/privacy/).
 
@@ -211,18 +211,51 @@ aplicação (para ler a sua própria versão) pode consultar a data dos ficheiro
 aplicação, no seu espaço privado (motivo C617.1), e essa informação não sai do telemóvel.
 
 ### Dados que NÃO são tratados
-- Não pedimos nem guardamos nome, correio eletrónico, telefone, idade nem qualquer dado de conta: não há contas.
+- A aplicação não pede nem guarda nome, correio eletrónico, telefone, idade nem qualquer dado de conta: não há contas.
+  Só ficamos a conhecer o seu endereço de correio eletrónico se nos escrever (ver «Se nos escrever»).
 - O programador não utiliza análise de utilização nem relatórios de erros, e não há anúncios, publicidade personalizada
-  nem rastreio entre aplicações. A única exceção são os dados de diagnóstico e de utilização que o ML Kit envia à Google
-  quando utiliza a IA no dispositivo (ver «IA opcional»); o programador não os recebe.
+  nem rastreio entre aplicações. A única exceção na aplicação são os dados de diagnóstico e de utilização que o ML Kit
+  envia à Google quando utiliza a IA no dispositivo (ver «IA opcional»); o programador não os recebe. Fora da aplicação,
+  as nossas respostas por correio eletrónico incluem a contagem anónima de aberturas e cliques explicada em «Se nos
+  escrever».
 - O registo de erros (ver «Registo de erros») não é um relatório de falhas automático: nada é enviado por si só, e só
   sai do telemóvel se o partilhar.
 - Não recebemos as suas fotografias, as suas coleções, as suas paletas nem a sua chave.
 
 ### Se nos escrever
-Pode escrever-nos para inklab@mainshai.com. Trataremos o seu endereço de correio eletrónico e o que nos contar apenas
-para lhe responder. Não nos envie a sua chave de API nem cópias de segurança com dados que não queira partilhar: para um
-erro bastam-nos dados de teste.
+Pode escrever-nos para inklab@mainshai.com. Utilizamos o seu endereço de correio eletrónico, o seu nome, se o indicar, e
+o que nos contar apenas para lhe responder e resolver o que nos perguntar. Não nos envie a sua chave de API nem cópias
+de segurança com dados que não queira partilhar: para um erro bastam-nos dados de teste.
+
+Pelo caminho intervêm estes fornecedores (o mesmo vale para dev@mainshai.com, o endereço que as versões até à 0.6.2
+utilizavam):
+
+- **Cloudflare** (Cloudflare, Inc., Estados Unidos) recebe a mensagem no nosso domínio e reencaminha-a de imediato. Não
+  guarda a mensagem, mas guarda um registo técnico do reencaminhamento (remetente, destinatário, assunto, data e
+  resultado). Conserva-o durante o prazo que o seu serviço fixa, que não conseguimos confirmar, tal como as opções para
+  o apagar; se nos pedir a eliminação, transmitiremos também o pedido à Cloudflare e informá-lo-emos do resultado. A
+  Cloudflare trata também o correio nos Estados Unidos.
+- **Google** (Gmail; Google Ireland Limited) é a caixa de correio onde lemos a sua mensagem, lhe respondemos e guardamos
+  a conversa. A Google também pode tratar estes dados nos Estados Unidos.
+- **Proton** (Proton AG, Suíça) guarda uma cópia das mensagens que recebemos, como salvaguarda. Não respondemos a partir
+  daí.
+- **Brevo** (Sendinblue SAS, que opera como Brevo, França) envia as nossas respostas, pelo que trata o seu conteúdo, e
+  guarda um registo de cada envio (destinatário, assunto, data e se foi entregue) e uma cópia da resposta (que pode
+  incluir a sua mensagem, se estiver citada por baixo). Além disso, a Brevo acrescenta a cada resposta uma imagem
+  invisível (um píxel) que regista se a abre, e substitui as ligações por outras suas, que registam se clica nelas. Não
+  o podemos retirar no plano que utilizamos, pelo que temos ativado o acompanhamento anónimo da Brevo: segundo a Brevo,
+  conta as aberturas e os cliques sem os associar ao seu endereço de correio eletrónico. Mesmo assim, ao carregar a
+  imagem ou ao clicar numa ligação, a sua aplicação de correio liga-se aos servidores da Brevo, que recebem dados
+  técnicos como o seu endereço IP. Nós não consultamos nem utilizamos essa informação. Se preferir evitá-lo, bloqueie as
+  imagens externas na sua aplicação de correio e não abra as ligações da resposta. Também não adianta copiá-las e
+  colá-las no navegador, porque continuam a passar pela Brevo: para aceder a uma página, escreva por si o respetivo
+  endereço. A resposta lê-se exatamente da mesma forma.
+
+Guardamos a conversa no Gmail, a cópia na Proton e a cópia e o registo de envio na Brevo, no máximo, durante um ano a
+contar da última mensagem da conversa, salvo se precisarmos de os conservar durante mais tempo para tratar uma
+reclamação. Fazemos uma limpeza de três em três meses e, em cada uma, apagamos o que completaria o ano antes da
+seguinte. Se deixarmos de utilizar algum desses serviços, apagamos o que lá houver. Se nos pedir que apaguemos as suas
+mensagens antes disso, apagamo-las dos três sítios.
 
 Se reportar uma sugestão da IA («Reportar esta sugestão», em «Paleta»), a aplicação abre a sua aplicação de correio
 eletrónico com uma mensagem já escrita para inklab@mainshai.com: o motivo que escolher, a versão da aplicação, o
@@ -256,20 +289,35 @@ A aplicação não transmite dados ao programador. Se ativar a IA, no Android a 
 de utilização que o ML Kit envia quando se utiliza a IA no dispositivo. Se utilizar a IA com o OpenRouter, o pedido
 descrito acima é recebido pelo **OpenRouter** e pelo **fornecedor do modelo** que escolher, em seu nome e com a sua
 chave. Se nos enviar uma mensagem de suporte, comentários, um relatório de uma sugestão ou o registo de erros, recebe-os
-o titular em inklab@mainshai.com (ou em dev@mainshai.com, o endereço que a aplicação utilizava até à versão 0.6.2)
-através do serviço que escolher. Se partilhar o registo de erros com outra pessoa ou serviço, só esse destinatário o
-recebe. Se avaliar a aplicação na loja, quem recebe diretamente a sua classificação e a sua crítica é a **Google** ou a
-**Apple**, com a sua conta da loja; não passam pela aplicação. O programador só vê depois o que a loja publica ou lhe
-mostra na sua consola (a classificação, a crítica e o seu nome público; no Google Play, também dados técnicos como o
-modelo do dispositivo e as versões do sistema e da aplicação) e pode responder-lhe aí.
+o titular em inklab@mainshai.com (ou em dev@mainshai.com, o endereço que a aplicação utilizava até à versão 0.6.2) a
+partir do serviço de correio eletrónico que escolher. Pelo caminho intervêm os fornecedores explicados em «Se nos
+escrever»:
+
+| Fornecedor | Para quê | Onde |
+|---|---|---|
+| Cloudflare, Inc. | Receber e reencaminhar o correio de suporte; registo técnico do reencaminhamento | EUA |
+| Google Ireland Limited (Gmail) | Caixa de correio do correio de suporte | Irlanda; a Google LLC pode tratar dados nos EUA |
+| Proton AG | Cópia de salvaguarda do correio recebido | Suíça |
+| Sendinblue SAS (Brevo), RCS Paris 498 019 298 | Enviar as respostas; registo de envio e cópia da resposta (no máximo, um ano a contar da última mensagem, com limpeza trimestral); píxel de abertura e ligações de clique, com o acompanhamento anónimo da Brevo ativado | UE (França) |
+
+Se partilhar o registo de erros com outra pessoa ou serviço, só esse destinatário o recebe. Se avaliar a aplicação na
+loja, quem recebe diretamente a sua classificação e a sua crítica é a **Google** ou a **Apple**, com a sua conta da
+loja; não passam pela aplicação. O programador só vê depois o que a loja publica ou lhe mostra na sua consola (a
+classificação, a crítica e o seu nome público; no Google Play, também dados técnicos como o modelo do dispositivo e as
+versões do sistema e da aplicação) e pode responder-lhe aí.
 
 ## 5. Transferências internacionais
-O programador não realiza transferências de dados. Se utilizar a IA com o OpenRouter, o pedido vai para o fornecedor que
-escolher, que pode tratá-lo noutras regiões e segundo as suas próprias condições. A Google pode tratar os diagnósticos
-do ML Kit noutros países, segundo as suas próprias condições. A loja em que avaliar a aplicação (Google Play ou a App
-Store) pode tratar a sua classificação e a sua crítica noutros países, segundo as suas próprias condições. Os restantes
-serviços que decida utilizar (correio eletrónico, nuvem, destino de um texto copiado ou de um ficheiro ou imagem
-partilhados) regem-se pelas suas próprias condições.
+Para o correio de suporte, a Cloudflare e a Google podem tratar dados nos Estados Unidos. A Cloudflare, Inc. e a Google
+LLC aderiram ao Quadro de Privacidade de Dados UE-EUA, o Data Privacy Framework (decisão de adequação da Comissão
+Europeia de 10 de julho de 2023); o acordo de tratamento de dados da Cloudflare inclui ainda cláusulas contratuais-tipo.
+A Proton está na Suíça, país com decisão de adequação da Comissão Europeia. A Brevo é uma empresa francesa e, segundo a
+sua documentação, aloja os dados na União Europeia. Fora do correio de suporte, o programador não realiza transferências
+de dados. Se utilizar a IA com o OpenRouter, o pedido vai para o fornecedor que escolher, que pode tratá-lo noutras
+regiões e segundo as suas próprias condições. A Google pode tratar os diagnósticos do ML Kit noutros países, segundo as
+suas próprias condições. A loja em que avaliar a aplicação (Google Play ou a App Store) pode tratar a sua classificação
+e a sua crítica noutros países, segundo as suas próprias condições. Os restantes serviços que decida utilizar (correio
+eletrónico, nuvem, destino de um texto copiado ou de um ficheiro ou imagem partilhados) regem-se pelas suas próprias
+condições.
 
 ## 6. Durante quanto tempo são conservados
 
@@ -280,8 +328,10 @@ partilhados) regem-se pelas suas próprias condições.
 - **Registo de erros:** no seu telemóvel, até o limpar com «Limpar registo de erros», apagar os dados da aplicação ou
   desinstalá-la. Como nunca ultrapassa cerca de 200 KB mais um ficheiro anterior, as entradas mais antigas vão sendo
   descartadas.
-- **Mensagens de suporte, comentários e registos de erros que nos enviar:** o tempo necessário para atender a sua
-  consulta e, no máximo, um ano a contar da última resposta.
+- **Mensagens de suporte, comentários e registos de erros que nos enviar:** tal como se explica em «Se nos escrever»: no
+  máximo, um ano a contar da última mensagem da conversa no Gmail, na cópia da Proton e na Brevo, com uma limpeza de
+  três em três meses, salvo se precisarmos de os conservar durante mais tempo para tratar uma reclamação. Não
+  conseguimos confirmar o prazo do registo técnico da Cloudflare (ver «Se nos escrever»).
 
 ## 7. Os seus direitos
 

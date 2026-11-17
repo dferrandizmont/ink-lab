@@ -1250,6 +1250,28 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         _check(tester, 'match with the whole range, open');
         await _scroll(tester, 'match with the whole range, open');
       },
+  'match: empty state with the example photo':
+      (WidgetTester tester, _Env env) async {
+        await _pump(
+          tester,
+          env,
+          MatchPage(
+            picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+            decoder: fixedDecoder(sampledImage(64, 64, <int>[242, 195, 157])),
+            exampleLoader: () async => tinyPng,
+          ),
+        );
+        // The preview, its chip and the three buttons.
+        _check(tester, 'match empty state with the example');
+        expect(
+          find.byKey(const ValueKey<String>('match-example-chip')),
+          findsOneWidget,
+        );
+        await _scroll(tester, 'match empty state with the example');
+        await _tap(tester, find.byKey(const ValueKey<String>('match-example')));
+        _check(tester, 'match after the example');
+        await _scroll(tester, 'match after the example');
+      },
   'match: white balance, choosing and refusing a point':
       (WidgetTester tester, _Env env) async {
         // Warm paper on the left, a dark stroke on the right.

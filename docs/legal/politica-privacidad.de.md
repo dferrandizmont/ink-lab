@@ -1,7 +1,7 @@
 # Datenschutzerklärung von Ink Lab
 
 
-Zuletzt aktualisiert: 2026-11-13
+Zuletzt aktualisiert: 2026-11-17
 
 Unverbindliche Übersetzung. Maßgeblich ist die [spanische Fassung](https://inklab.mainshai.com/es/privacy/).
 
@@ -219,19 +219,55 @@ eigenen Version) Zeitstempel von Dateien abfragen kann; das geschieht nur für d
 privaten Bereich (Grund C617.1), und diese Angaben verlassen das Handy nicht.
 
 ### Daten, die NICHT verarbeitet werden
-- Wir fragen weder nach Namen, E-Mail-Adresse, Telefonnummer oder Alter noch nach Kontodaten und speichern sie nicht: Es
-  gibt keine Konten.
+- Die App fragt weder nach Namen, E-Mail-Adresse, Telefonnummer oder Alter noch nach Kontodaten und speichert sie
+  nicht: Es gibt keine Konten. Ihre E-Mail-Adresse erfahren wir nur, wenn Sie uns schreiben (siehe „Wenn Sie uns
+  schreiben“).
 - Der Entwickler verwendet keine Analyse und keine Absturzberichte, und es gibt keine Werbung, keine personalisierte
-  Werbung und kein App-übergreifendes Tracking. Die einzige Ausnahme sind die Diagnose- und Nutzungsdaten, die ML Kit an
-  Google sendet, wenn Sie die KI auf dem Gerät nutzen (siehe „Optionale KI“); der Entwickler erhält sie nicht.
+  Werbung und kein App-übergreifendes Tracking. Die einzige Ausnahme in der App sind die Diagnose- und Nutzungsdaten,
+  die ML Kit an Google sendet, wenn Sie die KI auf dem Gerät nutzen (siehe „Optionale KI“); der Entwickler erhält sie
+  nicht. Außerhalb der App enthalten unsere E-Mail-Antworten die anonyme Zählung von Öffnungen und Klicks, die unter
+  „Wenn Sie uns schreiben“ erklärt wird.
 - Das Fehlerprotokoll (siehe „Fehlerprotokoll“) ist kein Absturzbericht: Es wird nichts automatisch gesendet, und es
   verlässt Ihr Handy nur, wenn Sie es selbst teilen.
 - Wir erhalten weder Ihre Fotos noch Ihre Sammlungen, Ihre Paletten oder Ihren Schlüssel.
 
 ### Wenn Sie uns schreiben
-Sie können uns an inklab@mainshai.com schreiben. Wir verarbeiten Ihre E-Mail-Adresse und Ihre Mitteilung nur, um Ihnen
-zu antworten. Senden Sie uns weder Ihren API-Schlüssel noch Sicherungskopien mit Daten, die Sie nicht teilen möchten:
-Für einen Fehler genügen uns Testdaten.
+Sie können uns an inklab@mainshai.com schreiben. Wir verwenden Ihre E-Mail-Adresse, Ihren Namen, falls Sie ihn angeben,
+und Ihre Mitteilung nur, um Ihnen zu antworten und zu klären, was Sie uns fragen. Senden Sie uns weder Ihren
+API-Schlüssel noch Sicherungskopien mit Daten, die Sie nicht teilen möchten: Für einen Fehler genügen uns Testdaten.
+
+Auf dem Weg wirken diese Anbieter mit (dasselbe gilt für dev@mainshai.com, die Adresse, die die Versionen bis 0.6.2
+verwendeten):
+
+- **Cloudflare** (Cloudflare, Inc., Vereinigte Staaten) empfängt die Nachricht an unserer Domain und leitet sie sofort
+  weiter. Cloudflare speichert die Nachricht nicht, wohl aber ein technisches Protokoll der Weiterleitung (Absender,
+  Empfänger, Betreff, Datum und Ergebnis). Cloudflare bewahrt das Protokoll für die Dauer auf, die sein
+  Dienst festlegt; diese Dauer konnten wir ebenso wenig bestätigen wie die Möglichkeiten zum Löschen. Wenn Sie uns um Löschung bitten, leiten wir
+  den Antrag auch an Cloudflare weiter und informieren Sie über das Ergebnis. Cloudflare verarbeitet die E-Mail auch in
+  den Vereinigten Staaten.
+- **Google** (Gmail; Google Ireland Limited) ist das Postfach, in dem wir Ihre Nachricht lesen, Ihnen antworten und die
+  Unterhaltung aufbewahren. Google kann diese Daten auch in den Vereinigten Staaten verarbeiten.
+- **Proton** (Proton AG, Schweiz) bewahrt als Sicherung eine Kopie der Nachrichten auf, die wir erhalten. Von dort aus
+  antworten wir nicht.
+- **Brevo** (Sendinblue SAS, tätig als Brevo, Frankreich) versendet unsere Antworten und verarbeitet deshalb deren
+  Inhalt; außerdem führt es ein Protokoll jedes Versands (Empfänger, Betreff, Datum und ob die Nachricht zugestellt
+  wurde) und bewahrt eine Kopie der Antwort auf (die auch Ihre Nachricht enthalten kann, wenn sie darunter zitiert ist).
+  Darüber hinaus fügt Brevo jeder Antwort ein unsichtbares Bild (ein Pixel) hinzu, das erfasst, ob Sie sie öffnen, und
+  ersetzt die Links durch eigene, die erfassen, ob Sie sie anklicken. Wir können das in dem von uns genutzten Tarif
+  nicht entfernen, daher haben wir das anonyme Tracking von Brevo aktiviert: Laut Brevo zählt es Öffnungen und Klicks,
+  ohne sie Ihrer E-Mail-Adresse zuzuordnen. Dennoch verbindet sich Ihr E-Mail-Programm beim Laden des Bildes oder beim
+  Anklicken eines Links mit den Servern von Brevo, die technische Daten wie Ihre IP-Adresse erhalten. Wir rufen diese
+  Informationen weder ab noch nutzen wir sie. Wenn Sie das vermeiden möchten, blockieren Sie in Ihrem E-Mail-Programm
+  externe Bilder und öffnen Sie die Links der Antwort nicht. Es hilft auch nicht, sie zu kopieren und im Browser
+  einzufügen, denn sie führen weiterhin über Brevo: Um eine Seite aufzurufen, geben Sie deren Adresse selbst ein. Die
+  Antwort lässt sich genauso lesen.
+
+Wir bewahren die Unterhaltung in Gmail, die Kopie in Proton sowie die Kopie und das Versandprotokoll bei Brevo höchstens
+ein Jahr ab der letzten Nachricht der Unterhaltung auf, es sei denn, wir müssen sie länger aufbewahren, um eine
+Beschwerde zu bearbeiten oder Rechtsansprüche zu klären. Wir führen alle drei Monate eine Bereinigung durch und löschen
+dabei jeweils, was vor der nächsten Bereinigung das Jahr erreichen würde. Wenn wir einen dieser Dienste nicht mehr
+nutzen, löschen wir, was sich darin befindet. Wenn Sie uns bitten, Ihre Nachrichten früher zu löschen, löschen wir sie
+an allen drei Orten.
 
 Wenn Sie einen KI-Vorschlag melden („Diesen Vorschlag melden“, in „Palette“), öffnet die App Ihre E-Mail-App mit einer
 vorformulierten Nachricht an inklab@mainshai.com: der von Ihnen gewählte Grund, die App-Version, der KI-Anbieter und das
@@ -266,20 +302,35 @@ Diagnose- und Nutzungsdaten, die ML Kit bei Nutzung der KI auf dem Gerät sendet
 erhalten **OpenRouter** und der von Ihnen gewählte **Modellanbieter** die oben beschriebene Anfrage, in Ihrem Namen und
 mit Ihrem Schlüssel. Wenn Sie uns eine Support-E-Mail, Feedback, eine Meldung zu einem Vorschlag oder das
 Fehlerprotokoll senden, erhält der Inhaber diese unter inklab@mainshai.com (oder unter dev@mainshai.com, der Adresse,
-die die App bis Version 0.6.2 verwendet hat) über den Dienst, den Sie wählen. Teilen Sie das Fehlerprotokoll mit einer
-anderen Person oder einem anderen Dienst, erhält es nur dieser Empfänger. Bewerten Sie die App im Store, erhalten
-**Google** oder **Apple** Ihre Bewertung und Ihre Rezension direkt, mit Ihrem Store-Konto; sie laufen nicht über die
-App. Der Entwickler sieht danach nur, was der Store veröffentlicht oder ihm in seiner Konsole zeigt (die Bewertung, die
-Rezension und Ihren öffentlichen Namen; bei Google Play auch technische Angaben wie das Gerätemodell und die Versionen
-des Systems und der App), und kann Ihnen dort antworten.
+die die App bis Version 0.6.2 verwendet hat) über den E-Mail-Dienst, den Sie wählen. Auf dem Weg wirken die unter „Wenn
+Sie uns schreiben“ erklärten Anbieter mit:
+
+| Anbieter | Wofür | Wo |
+|---|---|---|
+| Cloudflare, Inc. | Support-E-Mail empfangen und weiterleiten; technisches Protokoll der Weiterleitung | USA |
+| Google Ireland Limited (Gmail) | Postfach der Support-E-Mail | Irland; Google LLC kann Daten in den USA verarbeiten |
+| Proton AG | Sicherungskopie der empfangenen E-Mail | Schweiz |
+| Sendinblue SAS (Brevo), RCS Paris 498 019 298 | Antworten versenden; Versandprotokoll und Kopie der Antwort (höchstens ein Jahr ab der letzten Nachricht, mit vierteljährlicher Bereinigung); Öffnungspixel und Klick-Links, mit aktiviertem anonymem Tracking von Brevo | EU (Frankreich) |
+
+Teilen Sie das Fehlerprotokoll mit einer anderen Person oder einem anderen Dienst, erhält es nur dieser Empfänger.
+Bewerten Sie die App im Store, erhalten **Google** oder **Apple** Ihre Bewertung und Ihre Rezension direkt, mit Ihrem
+Store-Konto; sie laufen nicht über die App. Der Entwickler sieht danach nur, was der Store veröffentlicht oder ihm in
+seiner Konsole zeigt (die Bewertung, die Rezension und Ihren öffentlichen Namen; bei Google Play auch technische Angaben
+wie das Gerätemodell und die Versionen des Systems und der App), und kann Ihnen dort antworten.
 
 ## 5. Internationale Übermittlungen
-Der Entwickler nimmt keine Datenübermittlungen vor. Wenn Sie die KI mit OpenRouter nutzen, geht die Anfrage an den von
-Ihnen gewählten Anbieter, der sie in anderen Regionen und nach seinen eigenen Bedingungen verarbeiten kann. Google kann
-die Diagnosedaten von ML Kit nach seinen eigenen Bedingungen in anderen Ländern verarbeiten. Der Store, in dem Sie die
-App bewerten (Google Play oder der App Store), kann Ihre Bewertung und Ihre Rezension nach seinen eigenen Bedingungen in
-anderen Ländern verarbeiten. Die übrigen Dienste, die Sie nutzen möchten (E-Mail, Cloud, Ziel eines kopierten Textes
-oder einer geteilten Datei oder eines geteilten Bildes), unterliegen ihren eigenen Bedingungen.
+Für die Support-E-Mail können Cloudflare und Google Daten in den Vereinigten Staaten verarbeiten. Cloudflare, Inc. und
+Google LLC sind dem EU-US-Datenschutzrahmen, dem Data Privacy Framework, beigetreten (Angemessenheitsbeschluss der
+Europäischen Kommission vom 10. Juli 2023); die Vereinbarung zur Datenverarbeitung von Cloudflare enthält zusätzlich
+Standardvertragsklauseln. Proton hat seinen Sitz in der Schweiz, einem Land mit Angemessenheitsbeschluss der
+Europäischen Kommission. Brevo ist ein französisches Unternehmen und hostet die Daten laut seiner Dokumentation in der
+Europäischen Union. Außerhalb der Support-E-Mail nimmt der Entwickler keine Datenübermittlungen vor. Wenn Sie die KI mit
+OpenRouter nutzen, geht die Anfrage an den von Ihnen gewählten Anbieter, der sie in anderen Regionen und nach seinen
+eigenen Bedingungen verarbeiten kann. Google kann die Diagnosedaten von ML Kit nach seinen eigenen Bedingungen in
+anderen Ländern verarbeiten. Der Store, in dem Sie die App bewerten (Google Play oder der App Store), kann Ihre
+Bewertung und Ihre Rezension nach seinen eigenen Bedingungen in anderen Ländern verarbeiten. Die übrigen Dienste, die
+Sie nutzen möchten (E-Mail, Cloud, Ziel eines kopierten Textes oder einer geteilten Datei oder eines geteilten Bildes),
+unterliegen ihren eigenen Bedingungen.
 
 ## 6. Speicherdauer
 
@@ -290,8 +341,11 @@ oder einer geteilten Datei oder eines geteilten Bildes), unterliegen ihren eigen
 - **Fehlerprotokoll:** auf Ihrem Handy, bis Sie es mit „Fehlerprotokoll löschen“ löschen, die Daten der App löschen oder
   die App deinstallieren. Da es nie größer als etwa 200 KB plus eine vorherige Datei wird, werden die ältesten Einträge
   laufend verworfen.
-- **Support-E-Mails, Feedback und Fehlerprotokolle, die Sie uns senden:** so lange, wie es zur Bearbeitung Ihrer Anfrage
-  erforderlich ist, höchstens jedoch ein Jahr ab der letzten Antwort.
+- **Support-E-Mails, Feedback und Fehlerprotokolle, die Sie uns senden:** wie unter „Wenn Sie uns schreiben“ erklärt:
+  höchstens ein Jahr ab der letzten Nachricht der Unterhaltung in Gmail, in der Proton-Kopie und bei Brevo, mit einer
+  Bereinigung alle drei Monate, es sei denn, wir müssen sie länger aufbewahren, um eine Beschwerde zu bearbeiten oder
+  Rechtsansprüche zu klären. Die Dauer des technischen Protokolls von Cloudflare haben wir nicht bestätigen können
+  (siehe „Wenn Sie uns schreiben“).
 
 ## 7. Ihre Rechte
 

@@ -9,6 +9,7 @@ import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/ui/pages/match/color_sampling.dart';
 import 'package:ink_lab/ui/pages/match/image_picker_service.dart';
+import 'package:ink_lab/ui/pages/match/match_example.dart';
 import 'package:ink_lab/ui/pages/match/match_page.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
 
@@ -72,8 +73,10 @@ MarkerRepository diskMarkerRepository() =>
 AppScope matchScope({
   required ImagePickerService picker,
   required PhotoDecoder decoder,
+  MatchExampleLoader? exampleLoader,
+  MarkerRepository? markers,
 }) => AppScope.inMemory(
-  markers: diskMarkerRepository(),
+  markers: markers ?? diskMarkerRepository(),
   child: MaterialApp(
     locale: const Locale('en'),
     localizationsDelegates: testLocalizationsDelegates,
@@ -81,7 +84,11 @@ AppScope matchScope({
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),
     home: Scaffold(
-      body: MatchPage(picker: picker, decoder: decoder),
+      body: MatchPage(
+        picker: picker,
+        decoder: decoder,
+        exampleLoader: exampleLoader,
+      ),
     ),
   ),
 );
@@ -90,12 +97,15 @@ AppScope matchScope({
 ///
 /// [image] is what the injected decoder returns; [decoder] overrides it for
 /// error cases. [brand] and [ownedMarkerCodes] configure the scope before the
-/// widget tree is built. [size] is the viewport of the phone.
+/// widget tree is built. [size] is the viewport of the phone. The example
+/// photo of the empty state is [tinyPng] unless [exampleLoader] says otherwise.
 Future<AppScope> pumpMatch(
   WidgetTester tester, {
   required ImagePickerService picker,
   required SampledImage image,
   PhotoDecoder? decoder,
+  MatchExampleLoader? exampleLoader,
+  MarkerRepository? markers,
   MarkerBrand brand = MarkerBrand.ohuhuOahu,
   Set<String>? ownedMarkerCodes,
   Size size = const Size(600, 3200),
@@ -107,6 +117,8 @@ Future<AppScope> pumpMatch(
   final AppScope scope = matchScope(
     picker: picker,
     decoder: decoder ?? fixedDecoder(image),
+    exampleLoader: exampleLoader ?? () async => tinyPng,
+    markers: markers,
   );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);

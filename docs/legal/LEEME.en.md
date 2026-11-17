@@ -19,12 +19,12 @@ and the policy also in `*.de.md`, `*.fr.md`, `*.pt.md` and `*.it.md`.
 
 | Policy | Language | Address | Last updated |
 |---|---|---|---|
-| `politica-privacidad.md` | Spanish (original) | Informal | 2026-10-31 |
-| `politica-privacidad.en.md` | English | — | 2026-10-31 |
-| `politica-privacidad.de.md` | German | Formal (Sie) | 2026-10-31 |
-| `politica-privacidad.fr.md` | French | Formal (vous) | 2026-10-31 |
-| `politica-privacidad.pt.md` | Portuguese | Formal (você) | 2026-10-31 |
-| `politica-privacidad.it.md` | Italian | Informal | 2026-10-31 |
+| `politica-privacidad.md` | Spanish (original) | Informal | 2026-11-17 |
+| `politica-privacidad.en.md` | English | — | 2026-11-17 |
+| `politica-privacidad.de.md` | German | Formal (Sie) | 2026-11-17 |
+| `politica-privacidad.fr.md` | French | Formal (vous) | 2026-11-17 |
+| `politica-privacidad.pt.md` | Portuguese | Formal (você) | 2026-11-17 |
+| `politica-privacidad.it.md` | Italian | Informal | 2026-11-17 |
 
 ## How they are kept in sync with the website
 The policy is published on the app's website, **generated from this markdown**, never hand-edited HTML:
@@ -56,7 +56,7 @@ notes used to live inside the policy and moved out when it was published on `ink
 converts the Markdown as is.
 
 Decisions already taken in the text, in case you want to change them: holder Daniel Mont Ferrandiz and email
-`inklab@mainshai.com`; emails kept "one year from the last reply"; the last-updated date (in `YYYY-MM-DD`, which the
+`inklab@mainshai.com`; emails kept "at most one year from the last message in the conversation", with a clean-up every three months; the last-updated date (in `YYYY-MM-DD`, which the
 website reads) is the drafting date; on-device AI is described as Gemini Nano on Android through ML Kit, with its
 diagnostics to Google (iOS does not have it yet, see `docs/privacy.md`). The published URL goes in both store listings;
 check it matches "Data safety" (Play) and "App privacy" (Apple). The English, German, French, Portuguese and Italian

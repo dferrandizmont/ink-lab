@@ -19,12 +19,12 @@ política además en `*.de.md`, `*.fr.md`, `*.pt.md` y `*.it.md`.
 
 | Política | Idioma | Trato | Última actualización |
 |---|---|---|---|
-| `politica-privacidad.md` | Español (original) | Tuteo | 2026-10-31 |
-| `politica-privacidad.en.md` | Inglés | — | 2026-10-31 |
-| `politica-privacidad.de.md` | Alemán | Formal (Sie) | 2026-10-31 |
-| `politica-privacidad.fr.md` | Francés | Formal (vous) | 2026-10-31 |
-| `politica-privacidad.pt.md` | Portugués | Formal (você) | 2026-10-31 |
-| `politica-privacidad.it.md` | Italiano | Tuteo | 2026-10-31 |
+| `politica-privacidad.md` | Español (original) | Tuteo | 2026-11-17 |
+| `politica-privacidad.en.md` | Inglés | — | 2026-11-17 |
+| `politica-privacidad.de.md` | Alemán | Formal (Sie) | 2026-11-17 |
+| `politica-privacidad.fr.md` | Francés | Formal (vous) | 2026-11-17 |
+| `politica-privacidad.pt.md` | Portugués | Formal (você) | 2026-11-17 |
+| `politica-privacidad.it.md` | Italiano | Tuteo | 2026-11-17 |
 
 ## Cómo se mantienen en sincronía con la web
 La política se publica en la web de la app, **generada desde este markdown** y nunca editada a mano en HTML:
@@ -56,7 +56,7 @@ del lanzamiento en las tiendas. Estas notas vivían dentro de la política y sal
 generador convierte el Markdown tal cual.
 
 Decisiones ya tomadas en el texto, por si quieres cambiarlas: titular Daniel Mont Ferrandiz y correo
-`inklab@mainshai.com`; conservación de correos «un año desde la última respuesta»; la fecha de última actualización
+`inklab@mainshai.com`; conservación de correos «como máximo un año desde el último mensaje de la conversación», con limpieza cada tres meses; la fecha de última actualización
 (en formato `AAAA-MM-DD`, la que lee la web) es la de la redacción; la IA en el móvil se describe como Gemini Nano en
 Android mediante ML Kit, con sus diagnósticos a Google (iOS aún no la tiene, véase `docs/privacy.md`). La URL publicada
 va en las fichas de las tiendas; comprueba que coincide con «Seguridad de los datos» (Play) y «Privacidad de la app»

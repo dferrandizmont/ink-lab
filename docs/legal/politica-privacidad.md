@@ -1,7 +1,7 @@
 # Política de privacidad de Ink Lab
 
 
-Última actualización: 2026-11-13
+Última actualización: 2026-11-17
 
 Ink Lab es una app para quien dibuja con rotuladores de alcohol: consulta las muestras de color, empareja el color de
 una foto con un rotulador de tu colección y construye paletas con teoría del color. Es una app independiente: no está
@@ -200,18 +200,46 @@ propia versión) puede consultar la fecha de los ficheros; solo lo hace con los 
 espacio privado (motivo C617.1), y esa información no sale del móvil.
 
 ### Datos que NO se tratan
-- No pedimos ni guardamos nombre, correo, teléfono, edad ni ningún dato de cuenta: no hay cuentas.
+- La app no pide ni guarda nombre, correo, teléfono, edad ni ningún dato de cuenta: no hay cuentas. Solo conocemos tu
+  dirección de correo si nos escribes (ver «Si nos escribes»).
 - El desarrollador no usa analítica ni informes de errores, y no hay anuncios, publicidad personalizada ni rastreo
-  entre apps. La única excepción son los datos de diagnóstico y de uso que ML Kit envía a Google cuando usas la IA en
-  el móvil (ver «IA opcional»); el desarrollador no los recibe.
+  entre apps. La única excepción en la app son los datos de diagnóstico y de uso que ML Kit envía a Google cuando usas
+  la IA en el móvil (ver «IA opcional»); el desarrollador no los recibe. Fuera de la app, nuestras respuestas de correo
+  llevan el recuento anónimo de aperturas y clics que se explica en «Si nos escribes».
 - El registro de errores (ver «Registro de errores») no es un informe de errores automático: no se envía nada por sí
   solo, y solo sale del móvil si lo compartes tú.
 - No recibimos tus fotos, tus colecciones, tus paletas ni tu clave.
 
 ### Si nos escribes
-Puedes escribirnos a inklab@mainshai.com. Trataremos tu dirección de correo y lo que nos cuentes solo para responderte.
+Puedes escribirnos a inklab@mainshai.com. Usamos tu dirección de correo, tu nombre si lo pones y lo que nos cuentes solo
+para contestarte y resolver lo que nos preguntas.
 No nos mandes tu clave de API ni copias de seguridad con datos que no quieras compartir: para un fallo nos basta con
 datos de prueba.
+
+Por el camino intervienen estos proveedores (lo mismo vale para dev@mainshai.com, la dirección que usaban las versiones
+hasta la 0.6.2):
+
+- **Cloudflare** (Cloudflare, Inc., Estados Unidos) recibe el mensaje en nuestro dominio y lo reenvía al momento. No guarda el mensaje, pero sí un registro técnico del reenvío (remitente, destinatario, asunto, fecha y
+  resultado). Lo conserva
+  durante el plazo que fija su servicio, que no hemos podido confirmar, igual que las opciones para borrarlo; si nos
+  pides la supresión, trasladaremos también la solicitud a Cloudflare y te informaremos del resultado. Cloudflare trata el correo también en Estados Unidos.
+- **Google** (Gmail; Google Ireland Limited) es el buzón donde leemos tu mensaje, te respondemos y guardamos la
+  conversación. Google puede tratar estos datos también en Estados Unidos.
+- **Proton** (Proton AG, Suiza) guarda una copia de los mensajes que recibimos, como respaldo. Desde ahí no respondemos.
+- **Brevo** (Sendinblue SAS, que opera como Brevo, Francia) envía nuestras respuestas, por lo que trata su contenido, y
+  guarda un registro de cada envío (destinatario, asunto, fecha y si se entregó) y una copia de la respuesta (que puede incluir tu mensaje, si va citado debajo). Además, Brevo añade a cada respuesta
+  una imagen invisible (un píxel) que registra si la abres, y cambia los enlaces por otros suyos que registran si los
+  pulsas. No podemos quitarlo en el plan que usamos, así que tenemos activado el seguimiento anónimo de Brevo: según
+  Brevo, cuenta las aperturas y los clics sin asociarlos a tu dirección de correo. Aun así, al cargar la imagen o pulsar
+  un enlace, tu programa de correo se conecta a los servidores de Brevo, que reciben datos técnicos como tu dirección
+  IP. Nosotros no consultamos ni usamos esa información. Si prefieres evitarlo, bloquea las imágenes externas en tu
+  programa de correo y no abras los enlaces de la respuesta. Tampoco sirve copiarlos y pegarlos en el navegador, porque
+  siguen pasando por Brevo: para ir a una página, escribe tú su dirección. La respuesta se lee igual.
+
+Guardamos la conversación en Gmail, la copia en Proton y la copia y el registro de envío en Brevo como máximo un año
+desde el último mensaje de la conversación, salvo que necesitemos conservarlos más tiempo para atender una reclamación.
+Hacemos una limpieza cada tres meses y en cada una borramos lo que cumpliría el año antes de la siguiente. Si dejamos de usar alguno de esos servicios, borramos lo que haya en él. Si nos pides que borremos tus
+mensajes antes, los borramos de los tres sitios.
 
 Si reportas una sugerencia de la IA («Reportar esta sugerencia», en Paleta), la app abre tu app de correo con un
 mensaje ya escrito para inklab@mainshai.com: el motivo que elijas, la versión de la app, el proveedor y el modelo de IA,
@@ -243,15 +271,29 @@ La app no transmite datos al desarrollador. Si activas la IA, en Android **Googl
 uso que envía ML Kit al usarse la IA en el móvil. Si usas la IA con OpenRouter, la petición descrita arriba la reciben
 **OpenRouter** y el **proveedor del modelo** que elijas, en tu nombre y con tu clave. Si nos envías un correo de
 soporte, unos comentarios, un reporte de una sugerencia o el registro de errores, lo recibe el titular en
-inklab@mainshai.com (o en dev@mainshai.com, el buzón que usaba la app hasta la versión 0.6.2) mediante el servicio que
-elijas. Si compartes el registro de errores con otra persona o servicio, solo lo recibe ese destinatario. Si valoras la
+inklab@mainshai.com (o en dev@mainshai.com, el buzón que usaba la app hasta la versión 0.6.2) desde el servicio de
+correo que elijas. Por el camino intervienen los proveedores que se explican en «Si nos escribes»:
+
+| Proveedor | Para qué | Dónde |
+|---|---|---|
+| Cloudflare, Inc. | Recibir y reenviar el correo de soporte; registro técnico del reenvío | EE. UU. |
+| Google Ireland Limited (Gmail) | Buzón del correo de soporte | Irlanda; Google LLC puede tratar datos en EE. UU. |
+| Proton AG | Copia de respaldo del correo recibido | Suiza |
+| Sendinblue SAS (Brevo), RCS París 498 019 298 | Enviar las respuestas; registro de envío y copia de la respuesta (como máximo un año desde el último mensaje, con limpieza trimestral); píxel de apertura y enlaces de clic, con el seguimiento anónimo de Brevo activado | UE (Francia) |
+
+Si compartes el registro de errores con otra persona o servicio, solo lo recibe ese destinatario. Si valoras la
 app en la tienda, tu valoración y tu reseña las recibe **Google** o **Apple** directamente, con tu cuenta de la tienda;
 no pasan por la app. El desarrollador solo ve después lo que la tienda publica o le muestra en su consola (la
 valoración, la reseña y tu nombre público; en Google Play, también datos técnicos como el modelo del dispositivo y las
 versiones del sistema y de la app) y puede responderte allí.
 
 ## 5. Transferencias internacionales
-El desarrollador no realiza transferencias de datos. Si usas la IA con OpenRouter, la petición va al proveedor que
+Para el correo de soporte, Cloudflare y Google pueden tratar datos en Estados Unidos. Cloudflare, Inc. y Google LLC
+están adheridas al Marco de Privacidad de Datos UE-EE. UU. (decisión de adecuación de la Comisión Europea de 10 de
+julio de 2023); el acuerdo de tratamiento de datos de Cloudflare incluye además cláusulas contractuales tipo. Proton
+está en Suiza, país con decisión de adecuación de la Comisión Europea. Brevo es una empresa francesa y, según su
+documentación, aloja los datos en la Unión Europea. Fuera del correo de soporte, el desarrollador no realiza
+transferencias de datos. Si usas la IA con OpenRouter, la petición va al proveedor que
 elijas, que puede tratarla en otras regiones y bajo sus propias condiciones. Google puede tratar los diagnósticos de ML
 Kit en otros países, según sus propias condiciones. La tienda en la que valores la app (Google Play o la App Store)
 puede tratar tu valoración y tu reseña en otros países, según sus propias condiciones. Los demás servicios que decidas
@@ -267,8 +309,10 @@ condiciones.
 - **Registro de errores:** en tu móvil, hasta que lo borres con «Borrar registro de errores», borres los datos de la app
   o la desinstales. Como no pasa de unos 200 KB más un fichero anterior, las anotaciones más antiguas se van
   descartando.
-- **Correos de soporte, comentarios y registros de errores que nos mandes:** el tiempo necesario para atender tu
-  consulta y, como máximo, un año desde la última respuesta.
+- **Correos de soporte, comentarios y registros de errores que nos mandes:** como se explica en «Si nos escribes»: como máximo un año desde el
+  último mensaje de la conversación en Gmail, en la copia de Proton y en Brevo, con una limpieza cada tres meses, salvo que necesitemos
+  conservarlos más tiempo para atender una reclamación. El plazo del registro técnico de Cloudflare no lo hemos podido
+  confirmar (ver «Si nos escribes»).
 
 ## 7. Tus derechos
 

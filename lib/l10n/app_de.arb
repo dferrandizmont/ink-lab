@@ -1294,6 +1294,8 @@
   "matchOkButton": "OK",
   "matchTakePhotoButton": "Foto aufnehmen",
   "matchChooseGalleryButton": "Aus der Galerie wählen",
+  "matchExampleButton": "Beispiel ausprobieren",
+  "matchExamplePreviewSemantics": "Beispielfoto mit einem Abtastpunkt. Tippe, um es auszuprobieren.",
   "matchValuesButton": "Tonwerte",
   "matchValuesTooltip": "Foto und Treffer in Graustufen zeigen, um den Tonwertkontrast zu prüfen",
   "matchPhotoSampleHint": "Doppeltippen, um die Fotomitte abzutasten. Mit den Aktionen verschiebst du den Messpunkt.",

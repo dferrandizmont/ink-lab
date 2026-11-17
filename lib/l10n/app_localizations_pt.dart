@@ -5507,6 +5507,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get matchChooseGalleryButton => 'Escolher da galeria';
 
   @override
+  String get matchExampleButton => 'Experimentar um exemplo';
+
+  @override
+  String get matchExamplePreviewSemantics =>
+      'Foto de exemplo com um ponto de amostra. Toca para a experimentar.';
+
+  @override
   String get matchValuesButton => 'Valores';
 
   @override

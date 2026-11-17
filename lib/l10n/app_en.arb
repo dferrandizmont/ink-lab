@@ -1688,6 +1688,14 @@
   "matchOkButton": "OK",
   "matchTakePhotoButton": "Take a photo",
   "matchChooseGalleryButton": "Choose from gallery",
+  "matchExampleButton": "Try an example photo",
+  "@matchExampleButton": {
+    "description": "Third button of the empty Match tab: loads a bundled example photo, already sampled, so the user sees a result without the camera or the gallery."
+  },
+  "matchExamplePreviewSemantics": "Example photo with a sample point. Tap to try it.",
+  "@matchExamplePreviewSemantics": {
+    "description": "Screen reader label of the small example photo in the empty Match tab; tapping it does the same as the example button."
+  },
   "matchValuesButton": "Values",
   "matchValuesTooltip": "Show the photo and the matches in greyscale to check their value contrast",
   "matchPhotoSampleHint": "Double-tap to sample the middle of the photo. Use the actions to move the sample point.",

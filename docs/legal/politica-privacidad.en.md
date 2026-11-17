@@ -1,7 +1,7 @@
 # Ink Lab privacy policy
 
 
-Last updated: 2026-11-13
+Last updated: 2026-11-17
 
 Courtesy translation. The [Spanish version](https://inklab.mainshai.com/es/privacy/) is the one that
 applies.
@@ -197,17 +197,44 @@ library the app uses (to read its own version) may look up file dates; it only d
 its private space (reason C617.1), and that information does not leave the phone.
 
 ### Data that is NOT processed
-- We do not ask for or keep your name, email, phone, age or any account data: there are no accounts.
+- The app does not ask for or keep your name, email, phone, age or any account data: there are no accounts. We only
+  learn your email address if you write to us (see "If you write to us").
 - The developer uses no analytics and no crash reports, and there are no ads, no personalised advertising and no
-  cross-app tracking. The only exception is the diagnostics and usage data ML Kit sends Google when you use the
-  on-device AI (see "Optional AI"); the developer does not receive it.
+  cross-app tracking. The only exception in the app is the diagnostics and usage data ML Kit sends Google when you use
+  the on-device AI (see "Optional AI"); the developer does not receive it. Outside the app, our email replies carry the
+  anonymous open and click counting explained in "If you write to us".
 - The error log (see "Error log") is not a crash report: nothing is sent automatically, and it only leaves your phone if
   you share it yourself.
 - We do not receive your photos, your collections, your palettes or your key.
 
 ### If you write to us
-You can write to inklab@mainshai.com. We will process your email address and what you tell us only to reply to you. Do not
+You can write to inklab@mainshai.com. We use your email address, your name if you give it and what you tell us only to
+answer you and sort out what you ask. Do not
 send your API key or backups containing data you do not want to share: test data is enough to fix a bug.
+
+These providers take part along the way (the same applies to dev@mainshai.com, the address versions up to 0.6.2 used):
+
+- **Cloudflare** (Cloudflare, Inc., United States) receives the message at our domain and forwards it at once. It does not keep the message, but it does keep a technical log of the forwarding (sender, recipient,
+  subject, date and result). It keeps it for the period its
+  service sets; we have not been able to confirm that period or the options to delete it. If you ask us to delete your data, we will also pass the request on to Cloudflare and tell you the outcome. Cloudflare also processes the email in the United States.
+- **Google** (Gmail; Google Ireland Limited) is the mailbox where we read your message, reply to you and keep the
+  conversation. Google may also process this data in the United States.
+- **Proton** (Proton AG, Switzerland) keeps a copy of the messages we receive, as a backup. We do not reply from it.
+- **Brevo** (Sendinblue SAS, trading as Brevo, France) sends our replies, so it processes their content, and keeps a log
+  of each sending (recipient, subject, date and whether it was delivered) and a copy of the reply (which may include your message, if it is quoted below it). Brevo also adds to each reply an invisible
+  image (a pixel) that records whether you open it, and replaces the links with its own, which record whether you click
+  them. We cannot remove this on the plan we use, so we have Brevo's anonymous tracking turned on: according to Brevo,
+  it counts opens and clicks without linking them to your email address. Even so, when the image loads or you click a
+  link, your email app connects to Brevo's servers, which receive technical data such as your IP address. We do not
+  look at or use that information. If you prefer to avoid it, block external images in your
+  email app and do not open the links in the reply. Copying them and pasting them into your browser does not help
+  either, because they still go through Brevo: to visit a page, type its address yourself. The reply reads just the same.
+
+We keep the conversation in Gmail, the copy in Proton, and the copy and sending log in Brevo for at most one year from
+the last message in the conversation, unless we need to keep them longer to deal with a complaint or a legal claim. We run a clean-up every three months, and each one deletes anything
+that would reach one year before the next clean-up. If we
+stop using one of those services, we delete what is in it. If you ask us to delete your messages sooner, we delete them
+from all three places.
 
 If you report an AI suggestion ("Report this suggestion", in Palette), the app opens your email app with a message
 already written to inklab@mainshai.com: the reason you choose, the app version, the AI provider and model, the brand, the
@@ -239,7 +266,16 @@ The app does not transmit data to the developer. If you turn on AI, on Android *
 usage data ML Kit sends when the on-device AI is used. If you use AI with OpenRouter, the request described above is
 received by **OpenRouter** and the **model provider** you choose, on your behalf and with your key. If you send us a
 support email, feedback, a suggestion report or the error log, the holder receives it at inklab@mainshai.com (or at
-dev@mainshai.com, the address the app used up to version 0.6.2) through the service you choose. If you share the error
+dev@mainshai.com, the address the app used up to version 0.6.2) from the email service you choose. The providers explained in "If you write to us" take part along the way:
+
+| Provider | What for | Where |
+|---|---|---|
+| Cloudflare, Inc. | Receiving and forwarding support email; technical forwarding log | USA |
+| Google Ireland Limited (Gmail) | Support email mailbox | Ireland; Google LLC may process data in the USA |
+| Proton AG | Backup copy of the email received | Switzerland |
+| Sendinblue SAS (Brevo), RCS Paris 498 019 298 | Sending replies; sending log and copy of the reply (at most one year from the last message, with quarterly clean-up); open pixel and click links, with Brevo's anonymous tracking turned on | EU (France) |
+
+If you share the error
 log with another person or service, only that recipient receives it. If you rate the app in the store, **Google** or
 **Apple** receives your rating and your review directly, with your store account; they do not go through the app. The
 developer only sees afterwards what the store publishes or shows in its console (the rating, the review and your public
@@ -247,7 +283,10 @@ name; on Google Play, also technical details such as the device model and the sy
 you there.
 
 ## 5. International transfers
-The developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose, which
+For support email, Cloudflare and Google may process data in the United States. Cloudflare, Inc. and Google LLC are certified under the EU-US Data Privacy Framework (European Commission adequacy decision of 10 July 2023); Cloudflare's data
+processing agreement also includes standard contractual clauses. Proton is in Switzerland, a country with an adequacy
+decision from the European Commission. Brevo is a French company and, according to its documentation, hosts the data
+in the European Union. Apart from support email, the developer makes no data transfers. If you use AI with OpenRouter, the request goes to the provider you choose, which
 may process it in other regions and under its own terms. Google may process the ML Kit diagnostics in other countries,
 under its own terms. The store where you rate the app (Google Play or the App Store) may process your rating and your
 review in other countries, under its own terms. Any other service you decide to use (email, cloud, the destination of
@@ -261,8 +300,10 @@ copied text or of a shared file or image) is governed by its own terms.
   you remove the photo, the entry or the recipe.
 - **Error log:** on your phone, until you delete it with "Clear error log", clear the app's data or uninstall the app.
   As it never grows beyond about 200 KB plus one previous file, the oldest entries are discarded along the way.
-- **Support emails, feedback and error logs you send us:** as long as needed to handle your query and, at most, one year
-  after the last reply.
+- **Support emails, feedback and error logs you send us:** as explained in "If you write to us": at most one year from the last
+  message in the conversation in Gmail, in the Proton copy and in Brevo, with a clean-up every three months, unless we need to keep
+  them longer to deal with a complaint or a legal claim. We have not been able to confirm how long Cloudflare keeps its
+  technical forwarding log (see "If you write to us").
 
 ## 7. Your rights
 

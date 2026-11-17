@@ -10,6 +10,13 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.4.0 · 2026-11-17
+
+- Match: the empty tab shows an example photo (a Burano canal at sunset) with a sample point and the marker it matches in your collection, and "Try an example photo" opens it ready to tap, with no camera or gallery.
+- Website: the home page shows Match with the markers it finds, and its animations play once and can be paused (all off with "reduce motion").
+- Website: screenshots follow the light or dark theme and come one at a time with what each screen does.
+- Website: shorter texts that say which phones can use the AI, official store badges (Google Play too, in the closed test), larger tap targets on phones, and a privacy page with a table of contents that explains the support email path.
+
 ## 1.3.2 · 2026-11-15
 
 - Palette: buttons that cannot be used yet now look switched off, and the examples in the marker search and in the

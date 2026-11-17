@@ -8986,6 +8986,18 @@ abstract class AppLocalizations {
   /// **'Choose from gallery'**
   String get matchChooseGalleryButton;
 
+  /// Third button of the empty Match tab: loads a bundled example photo, already sampled, so the user sees a result without the camera or the gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Try an example photo'**
+  String get matchExampleButton;
+
+  /// Screen reader label of the small example photo in the empty Match tab; tapping it does the same as the example button.
+  ///
+  /// In en, this message translates to:
+  /// **'Example photo with a sample point. Tap to try it.'**
+  String get matchExamplePreviewSemantics;
+
   /// No description provided for @matchValuesButton.
   ///
   /// In en, this message translates to:

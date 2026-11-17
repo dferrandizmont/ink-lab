@@ -40,6 +40,12 @@ This project is built with the [Flutter SDK](https://flutter.dev/) and uses the
 packages listed in [`pubspec.yaml`](pubspec.yaml). Those dependencies remain
 under their own licenses; see `LICENSE` files inside the packages for details.
 
+## Images
+
+The one third-party photograph bundled with the app, the example of the empty
+Match tab, is public domain (CC0). Its author and source are recorded in
+[`assets/images/CREDITS.md`](assets/images/CREDITS.md).
+
 ## Colour data sources
 
 The marker datasets under [`assets/data/`](assets/data) are compiled from the

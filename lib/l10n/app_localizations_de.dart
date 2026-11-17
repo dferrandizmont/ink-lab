@@ -5520,6 +5520,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchChooseGalleryButton => 'Aus der Galerie wählen';
 
   @override
+  String get matchExampleButton => 'Beispiel ausprobieren';
+
+  @override
+  String get matchExamplePreviewSemantics =>
+      'Beispielfoto mit einem Abtastpunkt. Tippe, um es auszuprobieren.';
+
+  @override
   String get matchValuesButton => 'Tonwerte';
 
   @override
