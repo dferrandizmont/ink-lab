@@ -35,6 +35,15 @@ class InkSearchField extends StatefulWidget {
   final bool autofocus;
   final TextInputAction textInputAction;
 
+  /// Shared with the Diary action slot, so switching segments keeps its size.
+  static double heightFor(BuildContext context) {
+    final double line =
+        MediaQuery.textScalerOf(context).scale(AppTypography.body.fontSize!) *
+        AppTypography.body.height!;
+    final double height = line + 2 * InkSpacing.s12;
+    return height > InkGeometry.fieldHeight ? height : InkGeometry.fieldHeight;
+  }
+
   @override
   State<InkSearchField> createState() => _InkSearchFieldState();
 }
@@ -67,7 +76,7 @@ class _InkSearchFieldState extends State<InkSearchField> {
     return Semantics(
       label: widget.semanticLabel,
       child: SizedBox(
-        height: InkGeometry.fieldHeight,
+        height: InkSearchField.heightFor(context),
         child: ValueListenableBuilder<TextEditingValue>(
           valueListenable: _controller,
           builder: (BuildContext context, TextEditingValue value, _) {

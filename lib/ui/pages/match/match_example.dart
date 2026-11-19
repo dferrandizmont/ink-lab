@@ -148,30 +148,31 @@ class MatchExamplePreview extends StatelessWidget {
           (box.width - drawn.width) / 2 + matchExamplePoint.dx * drawn.width,
           (box.height - drawn.height) / 2 + matchExamplePoint.dy * drawn.height,
         );
-        return Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            Image.memory(
-              shown.bytes,
-              fit: BoxFit.cover,
-              // A thumbnail: the 1600 px photo is never decoded for it.
-              cacheWidth: (box.width * pixelRatio).ceil(),
-              gaplessPlayback: true,
-              excludeFromSemantics: true,
-              errorBuilder: (
-                BuildContext context,
-                Object error,
-                StackTrace? stack,
-              ) => ColoredBox(color: InkColors.of(context).surface),
-            ),
-            CustomPaint(
-              painter: ReticlePainter(
-                centre: ring,
-                sampleColor: Color(0xFF000000 | shown.sampleColor),
-                outerRadius: ringRadius,
-              ),
-            ),
-          ],
+        return Image.memory(
+          shown.bytes,
+          fit: BoxFit.cover,
+          // A thumbnail: the 1600 px photo is never decoded for it.
+          cacheWidth: (box.width * pixelRatio).ceil(),
+          excludeFromSemantics: true,
+          frameBuilder: (context, child, frame, synchronous) => Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              child,
+              if (frame != null)
+                CustomPaint(
+                  painter: ReticlePainter(
+                    centre: ring,
+                    sampleColor: Color(0xFF000000 | shown.sampleColor),
+                    outerRadius: ringRadius,
+                  ),
+                ),
+            ],
+          ),
+          errorBuilder: (
+            BuildContext context,
+            Object error,
+            StackTrace? stack,
+          ) => ColoredBox(color: InkColors.of(context).surface),
         );
       },
     );
@@ -179,12 +180,14 @@ class MatchExamplePreview extends StatelessWidget {
 }
 
 /// The chip of the marker that matches the example: its swatch, its code and
-/// its name on one line.
+/// its name, wrapping within a slot reserved before the name is known.
 ///
 /// Without a [match] it is drawn the same, invisible, so the row keeps its
 /// height at any text size.
 class _MarkerChip extends StatelessWidget {
   const _MarkerChip({required this.match});
+
+  static const int _nameMaxLines = 4;
 
   final ColorDistanceMatch? match;
 
@@ -192,6 +195,20 @@ class _MarkerChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
     final MarkerColor? color = match?.color;
+    final TextStyle nameStyle = AppTypography.secondary.copyWith(
+      color: ink.fg2,
+    );
+    final TextPainter nameSlot = TextPainter(
+      text: TextSpan(
+        text: List<String>.filled(_nameMaxLines, 'M').join('\n'),
+        style: nameStyle,
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+    )..layout();
+    final double reservedNameHeight = nameSlot.height;
+    nameSlot.dispose();
+    final TextStyle codeStyle = AppTypography.code.copyWith(color: ink.fg);
     return Visibility(
       visible: color != null,
       maintainSize: true,
@@ -208,35 +225,34 @@ class _MarkerChip extends StatelessWidget {
           borderRadius: InkRadii.controlRadius,
           border: Border.all(color: ink.line),
         ),
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SwatchBlock(
-              hex: color?.hex ?? 'ffffff',
-              size: InkGeometry.smallIcon,
-              radius: InkRadii.xs,
-            ),
-            const SizedBox(width: InkSpacing.s8),
-            Text(
-              color?.newCode ?? '0',
-              maxLines: 1,
-              softWrap: false,
-              style: AppTypography.code.copyWith(color: ink.fg),
-            ),
-            const SizedBox(width: InkSpacing.s8),
-            // The name gives way before the code does; its full text is the
-            // tooltip, as everywhere marker names are cut.
-            Flexible(
-              child: Tooltip(
-                message: color?.newName ?? '',
-                excludeFromSemantics: true,
-                child: Text(
-                  color?.newName ?? '',
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  color?.newCode ?? '0',
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                   softWrap: false,
-                  style: AppTypography.secondary.copyWith(color: ink.fg2),
+                  style: codeStyle,
                 ),
+                const SizedBox(width: InkSpacing.s8),
+                SwatchBlock(
+                  hex: color?.hex ?? 'ffffff',
+                  size: InkGeometry.smallIcon,
+                  radius: InkRadii.xs,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: reservedNameHeight,
+              child: Text(
+                color?.newName ?? '',
+                style: nameStyle,
+                maxLines: _nameMaxLines,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

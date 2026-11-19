@@ -5,8 +5,11 @@ import 'package:ink_lab/core/models.dart';
 import 'package:ink_lab/core/white_balance.dart';
 import 'package:ink_lab/ui/pages/match/color_sampling.dart';
 import 'package:ink_lab/ui/pages/match/image_picker_service.dart';
+import 'package:ink_lab/ui/pages/match/photo_sample_loupe.dart';
+import 'package:ink_lab/ui/pages/match/photo_sampling.dart';
 import 'package:ink_lab/ui/pages/swatches/own_color_page.dart';
 import 'package:ink_lab/ui/theme/app_theme.dart';
+import 'package:ink_lab/ui/theme/tokens.dart';
 
 import '../../support/l10n.dart';
 import '../match/match_test_support.dart';
@@ -43,6 +46,7 @@ Future<_Host> _open(
   ImagePickerService? picker,
   PhotoDecoder? decoder,
   Size size = const Size(390, 1400),
+  Locale locale = const Locale('en'),
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -50,7 +54,7 @@ Future<_Host> _open(
   final _Host host = _Host();
   await tester.pumpWidget(
     MaterialApp(
-      locale: const Locale('en'),
+      locale: locale,
       localizationsDelegates: testLocalizationsDelegates,
       supportedLocales: testSupportedLocales,
       theme: AppTheme.light(),
@@ -105,6 +109,125 @@ Future<void> _pickPhoto(WidgetTester tester) async {
 }
 
 void main() {
+  for (final locale in testSupportedLocales) {
+    testWidgets('hint space follows sampling state (${locale.languageCode})', (
+      tester,
+    ) async {
+      await _open(
+        tester,
+        picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+        decoder: fixedDecoder(_paperAndInk()),
+        locale: locale,
+      );
+      await _pickPhoto(tester);
+      final gallery = find.byKey(const ValueKey<String>('own-color-gallery'));
+      final bar = find.byType(WhiteBalanceBar);
+      final start = find.byKey(const ValueKey<String>('white-balance-start'));
+      final cancel = find.byKey(const ValueKey<String>('white-balance-cancel'));
+      final initialGap =
+          tester.getTopLeft(gallery).dy - tester.getBottomLeft(bar).dy;
+      expect(initialGap, greaterThan(InkSpacing.block));
+      await tester.tap(start);
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<PhotoSampleCanvas>(find.byType(PhotoSampleCanvas)).pick,
+        isNull,
+      );
+      expect(
+        tester.getTopLeft(gallery).dy - tester.getBottomLeft(bar).dy,
+        closeTo(InkSpacing.block, 0.01),
+      );
+      await tester.tap(cancel);
+      await tester.pumpAndSettle();
+      final beforeSample = tester.getRect(gallery);
+      await _tapHalf(tester, paper: false);
+      expect(tester.getRect(gallery), beforeSample);
+      await tester.tap(start);
+      await tester.pumpAndSettle();
+      expect(
+        tester.getTopLeft(gallery).dy - tester.getBottomLeft(bar).dy,
+        closeTo(initialGap, 0.01),
+      );
+    });
+  }
+
+  testWidgets('navigating back during a drag removes the loupe safely', (
+    tester,
+  ) async {
+    final host = await _open(
+      tester,
+      picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+      decoder: fixedDecoder(_paperAndInk()),
+    );
+    await _pickPhoto(tester);
+    final gesture = await tester.startGesture(tester.getCenter(_canvas));
+    await gesture.moveBy(const Offset(30, 0));
+    await tester.pump();
+    expect(find.byType(PhotoSampleLoupe), findsOneWidget);
+    await gesture.moveBy(const Offset(20, 0));
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(host.returned, isTrue);
+    expect(host.result, isNull);
+    expect(find.byType(PhotoSampleLoupe), findsNothing);
+    await gesture.up();
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'photo dragging updates my colour without scrolling and shows a loupe',
+    (tester) async {
+      final image = imageFromRgb(100, 100, <List<int>>[
+        for (var y = 0; y < 100; y++)
+          for (var x = 0; x < 100; x++) y < 50 ? _paper : _ink,
+      ]);
+      await _open(
+        tester,
+        picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+        decoder: fixedDecoder(image),
+        size: const Size(390, 844),
+      );
+      final gallery = find.byKey(const ValueKey<String>('own-color-gallery'));
+      await tester.ensureVisible(gallery);
+      await _pickPhoto(tester);
+      await tester.ensureVisible(_canvas);
+      await tester.pumpAndSettle();
+      final rect = tester.getRect(_canvas);
+      final scroll = tester
+          .state<ScrollableState>(
+            find.ancestor(of: _canvas, matching: find.byType(Scrollable)).first,
+          )
+          .position;
+      final offset = scroll.pixels;
+      final gesture = await tester.startGesture(
+        rect.center + Offset(0, rect.height / 4),
+      );
+      for (var i = 0; i < 10; i++) {
+        await gesture.moveBy(Offset(0, -rect.height / 20));
+        await tester.pump();
+      }
+      expect(_typed(tester), colorIntToHex(_int(_paper)));
+      expect(
+        tester
+            .widget<PhotoSampleCanvas>(find.byType(PhotoSampleCanvas))
+            .pick!
+            .dy,
+        closeTo(0.25, 0.01),
+      );
+      expect(scroll.pixels, offset);
+      expect(tester.getRect(_canvas), rect);
+      expect(find.byType(PhotoSampleLoupe), findsOneWidget);
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(find.byType(PhotoSampleLoupe), findsNothing);
+      // The page still scrolls when a gesture starts outside the photo.
+      await tester.dragFrom(Offset(8, rect.center.dy), const Offset(0, 80));
+      await tester.pumpAndSettle();
+      expect(scroll.pixels, lessThan(offset));
+    },
+  );
+
   testWidgets('shows the catalogue colour and starts from the current one', (
     tester,
   ) async {
@@ -190,7 +313,7 @@ void main() {
     await _tapHalf(tester, paper: false);
 
     expect(_typed(tester), colorIntToHex(_int(_ink)));
-    expect(find.text(l10n.ownColorPhotoTap), findsNothing);
+    expect(find.text(l10n.ownColorPhotoTap).hitTestable(), findsNothing);
     await tester.ensureVisible(_save);
     await tester.tap(_save);
     await tester.pumpAndSettle();

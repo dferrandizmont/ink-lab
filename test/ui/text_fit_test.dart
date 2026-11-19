@@ -46,6 +46,7 @@ import 'package:ink_lab/ui/widgets/page_header.dart';
 import 'package:ink_lab/ui/widgets/ink_sheet.dart';
 import 'package:ink_lab/ui/widgets/select_card.dart';
 import 'package:ink_lab/ui/widgets/section_card.dart';
+import 'package:ink_lab/ui/widgets/empty_state.dart';
 
 import '../ai/ai_test_support.dart';
 import '../ai/fake_on_device_platform.dart';
@@ -104,13 +105,14 @@ Future<AppScope> _pump(
   WidgetTester tester,
   _Env env,
   Widget page, {
+  MarkerRepository? markers,
   AiSettingsRepository? aiSettings,
   SecretStore? secrets,
   AiService? aiService,
 }) async {
   _size(tester, env);
   final AppScope scope = AppScope.inMemory(
-    markers: _markers(),
+    markers: markers ?? _markers(),
     aiSettings: aiSettings,
     secrets: secrets,
     aiService: aiService,
@@ -662,7 +664,10 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
     tester.platformDispatcher.textScaleFactorTestValue = env.scale;
     addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
     await tester.pumpWidget(
-      AppScope.inMemory(markers: _markers(), child: const InkLabApp()),
+      AppScope.inMemory(
+        markers: _markers(),
+        child: InkLabApp(ideasToday: DateTime(2026, 10, 29)),
+      ),
     );
     await tester.pumpAndSettle();
     _check(tester, 'swatches tab');
@@ -2612,6 +2617,155 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
 void main() {
   setUpAll(loadAppFonts);
 
+  testWidgets('Swatches empty detail fits a short AX3 window', (tester) async {
+    final _Env env = _Env(const Locale('fr'), 1200, 3, 360);
+    await _pump(
+      tester,
+      env,
+      const SwatchesPage(),
+    );
+    expect(
+      find.byKey(const ValueKey<String>('swatches-detail-pane-empty')),
+      findsOneWidget,
+    );
+    final ScrollableState scrollable = tester.state<ScrollableState>(
+      find.descendant(
+        of: find.byKey(const ValueKey<String>('swatches-detail-pane-empty')),
+        matching: find.byType(Scrollable),
+      ).first,
+    );
+    expect(scrollable.position.maxScrollExtent, greaterThan(0));
+    final Finder pane = find.byKey(
+      const ValueKey<String>('swatches-detail-pane-empty'),
+    );
+    final double before = scrollable.position.pixels;
+    final double textBottomBefore = tester
+        .getBottomLeft(find.text(env.t.swatchesDetailPaneEmpty))
+        .dy;
+    expect(textBottomBefore, greaterThan(tester.getBottomLeft(pane).dy));
+    await tester.drag(pane, const Offset(0, -800));
+    await tester.pumpAndSettle();
+    expect(scrollable.position.pixels, greaterThan(before));
+    expect(
+      tester.getBottomLeft(find.text(env.t.swatchesDetailPaneEmpty)).dy,
+      lessThanOrEqualTo(tester.getBottomLeft(pane).dy + 0.5),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Swatches catalogue error scrolls at AX3 in a short window', (
+    tester,
+  ) async {
+    final _Env env = _Env(const Locale('fr'), 800, 3, 360);
+    await _pump(
+      tester,
+      env,
+      const SwatchesPage(),
+      markers: MarkerRepository(
+        loadAsset: (String path) => throw StateError('catalogue unavailable'),
+      ),
+    );
+    final String message = env.t.swatchesLoadFailedBody;
+    expect(find.text(message), findsOneWidget);
+    final Finder scrollable = find.byType(Scrollable).first;
+    expect(
+      tester.state<ScrollableState>(scrollable).position.maxScrollExtent,
+      greaterThan(0),
+    );
+    await tester.drag(scrollable, const Offset(0, -800));
+    await tester.pumpAndSettle();
+    expect(find.text(message).hitTestable(), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Match empty state scrolls in a short AX3 window', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      _Env(const Locale('fr'), 800, 3, 360),
+      const MatchPage(),
+    );
+    expect(find.byKey(const ValueKey<String>('match-empty')), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey<String>('match-example')),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('bounded empty state scrolls at AX3 in a short window', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      _Env(const Locale('fr'), 800, 3, 360),
+      EmptyState(
+        scrollable: true,
+        title: 'Un titre assez long',
+        message: 'Un message assez long pour plusieurs lignes',
+        actions: [
+          InkButton.secondary(
+            label: 'Une action assez longue',
+            onPressed: () {},
+            maxLines: null,
+          ),
+          InkButton.secondary(
+            label: 'Une autre action assez longue',
+            onPressed: () {},
+            maxLines: null,
+          ),
+          InkButton.secondary(
+            label: 'Une troisième action assez longue',
+            onPressed: () {},
+            maxLines: null,
+          ),
+        ],
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    final scroll = find.descendant(
+      of: find.byType(EmptyState),
+      matching: find.byType(Scrollable),
+    );
+    expect(scroll, findsOneWidget);
+    await tester.drag(scroll, const Offset(0, -600));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Une troisième action assez longue'));
+    await tester.pumpAndSettle();
+    expect(
+      tester.getBottomLeft(find.text('Une troisième action assez longue')).dy,
+      lessThanOrEqualTo(360),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('French long featured title fits', (tester) async {
+    final DateTime start = DateTime(2024);
+    final DateTime day = Iterable<int>.generate(IdeasEngine.presets.length)
+        .map((i) => start.add(Duration(days: i)))
+        .firstWhere((day) => IdeasEngine.featuredFor(day).id == 'low_key');
+    await _pump(
+      tester,
+      _Env(const Locale('fr'), 360, 1.3),
+      IdeasPage(today: day),
+    );
+    final title = find.descendant(
+      of: find.byKey(
+        ValueKey<String>('ideas-open-${IdeasEngine.featuredFor(day).id}'),
+      ),
+      matching: find.text('Que des marqueurs foncés'),
+    );
+    expect(title, findsOneWidget);
+    expect(
+      tester.renderObject<RenderParagraph>(title).didExceedMaxLines,
+      isFalse,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   group('SwatchGridDelegate', () {
     // The count the delegate picks for a device of [deviceWidth] dp with the
     // system text at [scale]. The grid is inset by the page margin on both
@@ -2741,7 +2895,10 @@ final Map<String, _Scenario> _tabletScenarios = <String, _Scenario>{
     _size(tester, env);
     useDeviceLocales(tester, <Locale>[env.locale]);
     await tester.pumpWidget(
-      AppScope.inMemory(markers: _markers(), child: const InkLabApp()),
+      AppScope.inMemory(
+        markers: _markers(),
+        child: InkLabApp(ideasToday: DateTime(2026, 10, 29)),
+      ),
     );
     await tester.pumpAndSettle();
     _check(tester, 'swatches tab');
@@ -2774,7 +2931,7 @@ final Map<String, _Scenario> _tabletScenarios = <String, _Scenario>{
               onboardingCompleted: true,
               railExpanded: true,
             ),
-            child: const InkLabApp(),
+            child: InkLabApp(ideasToday: DateTime(2026, 10, 29)),
           ),
         );
         await tester.pumpAndSettle();

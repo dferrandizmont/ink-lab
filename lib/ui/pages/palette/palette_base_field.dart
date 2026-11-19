@@ -363,7 +363,7 @@ class _BaseFieldButtonState extends State<_BaseFieldButton> {
         color: ink.surface,
         shape: RoundedRectangleBorder(
           borderRadius: InkRadii.inputRadius,
-          side: BorderSide(color: border),
+          side: BorderSide(color: border, width: _focused && enabled ? 3 : 1),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

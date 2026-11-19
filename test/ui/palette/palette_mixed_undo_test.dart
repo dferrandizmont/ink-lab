@@ -450,13 +450,19 @@ void main() {
       expect(brands, hasLength(labels.length));
       expect(brands.toSet(), {'Ohuhu', 'DecoTime'});
       expect(labels.any((l) => l.contains(' ')), isFalse);
-      expect(
-        find.descendant(
-          of: find.byType(PaletteStrip),
-          matching: find.byType(FittedBox),
-        ),
-        findsNothing,
-      );
+      for (final String code in labels) {
+        expect(
+          find.ancestor(
+            of: find.descendant(
+              of: find.byType(PaletteStrip),
+              matching: find.text(code),
+            ),
+            matching: find.byType(FittedBox),
+          ),
+          findsNothing,
+          reason: 'codes retain their readable size',
+        );
+      }
       // Every row names its marker with the one shared widget.
       final rows = tester
           .widgetList<PaletteSuggestionRow>(find.byType(PaletteSuggestionRow))

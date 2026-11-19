@@ -12,6 +12,7 @@ import '../../theme/tokens.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/ink_adaptive.dart';
 import '../../widgets/ink_button.dart';
+import '../../widgets/ink_search_field.dart';
 import '../match/image_picker_service.dart';
 import 'artwork_entry_page.dart';
 import 'artwork_photo_viewer.dart';
@@ -135,8 +136,8 @@ class _ArtworkDiaryViewState extends State<ArtworkDiaryView> {
   }
 }
 
-/// "Add to diary", the primary of the diary segment. It sits in the same 48 dp
-/// slot as the search field of the Ideas segment, so switching segments never
+/// "Add to diary", the primary of the diary segment. It shares the search
+/// field's height (at least 48 dp), so switching segments never
 /// moves anything; the Ideas page puts it in its header.
 class ArtworkDiaryAddSlot extends StatelessWidget {
   const ArtworkDiaryAddSlot({super.key, this.picker});
@@ -172,7 +173,7 @@ class ArtworkDiaryAddSlot extends StatelessWidget {
       ),
       child: SizedBox(
         key: const ValueKey<String>('diary-add-slot'),
-        height: InkGeometry.fieldHeight,
+        height: InkSearchField.heightFor(context),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,

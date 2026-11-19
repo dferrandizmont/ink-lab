@@ -29,6 +29,7 @@ class PaletteActions extends StatelessWidget {
     required this.onRegenerate,
     required this.onGenerate,
     required this.onSave,
+    this.saveSlotKey,
   });
 
   final bool customMode;
@@ -61,6 +62,7 @@ class PaletteActions extends StatelessWidget {
   final VoidCallback onRegenerate;
   final VoidCallback onGenerate;
   final VoidCallback onSave;
+  final GlobalKey? saveSlotKey;
 
   /// Whether the two secondary buttons fit side by side in [width]: each
   /// half has to hold the widest label they can show (with its icon) uncut,
@@ -176,20 +178,23 @@ class PaletteActions extends StatelessWidget {
         // The slot of the primary is always there: before there is a result it
         // is empty, but it keeps its height, so nothing moves below it.
         paletteInset(
-          SizedBox(
-            key: const ValueKey<String>('palette-save-slot'),
-            height: InkGeometry.buttonHeight,
-            child: hasResult
-                ? InkButton(
-                    key: const ValueKey<String>('palette-save'),
-                    label: saved
-                        ? context.l10n.paletteSavedButton
-                        : context.l10n.paletteSaveButton,
-                    icon: saved ? InkIcons.check : null,
-                    expand: true,
-                    onPressed: saved ? null : onSave,
-                  )
-                : null,
+          KeyedSubtree(
+            key: saveSlotKey,
+            child: SizedBox(
+              key: const ValueKey<String>('palette-save-slot'),
+              height: InkGeometry.buttonHeight,
+              child: hasResult
+                  ? InkButton(
+                      key: const ValueKey<String>('palette-save'),
+                      label: saved
+                          ? context.l10n.paletteSavedButton
+                          : context.l10n.paletteSaveButton,
+                      icon: saved ? InkIcons.check : null,
+                      expand: true,
+                      onPressed: saved ? null : onSave,
+                    )
+                  : null,
+            ),
           ),
           top: InkSpacing.buttonGap,
         ),

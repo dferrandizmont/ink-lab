@@ -166,7 +166,13 @@ Key extendedRailItemKey(String id) => ValueKey<String>('extended-rail-$id');
 /// [IndexedStack], built the first time they are visited, so every tab keeps
 /// its state.
 class AppShell extends StatefulWidget {
-  const AppShell({super.key});
+  const AppShell({super.key, this.routeObserver, this.ideasToday});
+
+  /// Overrides the featured idea's date, for deterministic previews and tests.
+  final DateTime? ideasToday;
+
+  /// Observes returns from pushed pages so their notices end with the route.
+  final RouteObserver<ModalRoute<dynamic>>? routeObserver;
 
   /// Width, in logical pixels, from which the shell uses a [NavigationRail]
   /// instead of the bottom bar.
@@ -180,7 +186,7 @@ class AppShell extends StatefulWidget {
   State<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends State<AppShell> with RouteAware {
   /// The tab the app opens on and Back returns to: Swatches.
   static const int _homeIndex = 0;
 
@@ -189,6 +195,10 @@ class _AppShellState extends State<AppShell> {
   // The chrome reparents the tab content when the bottom bar becomes a rail.
   // Keep the whole subtree, including scroll positions and sheet callers.
   final GlobalKey _tabsKey = GlobalKey(debugLabel: 'shell-tabs');
+  final GlobalKey<ScaffoldMessengerState> _pageMessengerKey = GlobalKey();
+  final List<ScrollController> _pageControllers = <ScrollController>[
+    for (final AppDestination _ in appDestinations) ScrollController(),
+  ];
 
   AppScope? _scope;
   StreamSubscription<AppSettingsState>? _brandSubscription;
@@ -255,6 +265,7 @@ class _AppShellState extends State<AppShell> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _observeRoute();
     final AppScope? scope = context
         .dependOnInheritedWidgetOfExactType<AppScope>();
     if (scope == null || identical(scope, _scope)) return;
@@ -286,7 +297,7 @@ class _AppShellState extends State<AppShell> {
         paletteSavedDraft.value = null;
       }
       // Hand-off notices from the old candidates are no longer relevant.
-      ScaffoldMessenger.maybeOf(context)?.removeCurrentSnackBar();
+      _pageMessengerKey.currentState?.removeCurrentSnackBar();
       // Pages react to collection changes themselves: Palette keeps usable
       // colours and their base, and Ideas recomputes from the new candidates.
       setState(() => _brandId = s.brand.id);
@@ -295,11 +306,38 @@ class _AppShellState extends State<AppShell> {
 
   @override
   void dispose() {
+    widget.routeObserver?.unsubscribe(this);
     ideaDeepLink.removeListener(_onIdeaDeepLink);
     paletteSavedDraft.removeListener(_onSavedPaletteDraft);
     appShortcutRequest.removeListener(_onShortcut);
     _brandSubscription?.cancel();
+    for (final ScrollController controller in _pageControllers) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  void _observeRoute() {
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
+    if (route != null) widget.routeObserver?.subscribe(this, route);
+  }
+
+  @override
+  void didUpdateWidget(AppShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.routeObserver != widget.routeObserver) {
+      oldWidget.routeObserver?.unsubscribe(this);
+      _observeRoute();
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Pushed pages use MaterialApp's messenger. Discard both their visible
+    // notice and queued notices before another route can inherit them.
+    ScaffoldMessenger.maybeOf(context)
+      ?..clearSnackBars()
+      ..removeCurrentSnackBar();
   }
 
   void _goTo(int index) => _onDestinationSelected(index);
@@ -314,6 +352,9 @@ class _AppShellState extends State<AppShell> {
     if (index == _selectedIndex) {
       return;
     }
+    // Notices and Undo actions belong to the destination that showed them.
+    _pageMessengerKey.currentState?.clearSnackBars();
+    _pageMessengerKey.currentState?.removeCurrentSnackBar();
     setState(() {
       _selectedIndex = index;
       _visited.add(index);
@@ -334,7 +375,17 @@ class _AppShellState extends State<AppShell> {
             _visited.contains(i)
                 ? KeyedSubtree(
                     key: ValueKey<String>(appDestinations[i].id),
-                    child: Builder(builder: appDestinations[i].builder),
+                    child: PrimaryScrollController(
+                      controller: _pageControllers[i],
+                      child: Builder(
+                        builder: i == _ideasIndex && widget.ideasToday != null
+                            ? (BuildContext context) => IdeasPage(
+                                today: widget.ideasToday,
+                                onOpenPalette: () => _goTo(_paletteIndex),
+                              )
+                            : appDestinations[i].builder,
+                      ),
+                    ),
                   )
                 : const SizedBox.shrink(),
         ],
@@ -348,7 +399,12 @@ class _AppShellState extends State<AppShell> {
       onPopInvokedWithResult: (bool didPop, Object? result) {
         if (!didPop) _onDestinationSelected(_homeIndex);
       },
-      child: _buildLayout(context, body),
+      child: PrimaryScrollController(
+        controller: _pageControllers[_selectedIndex],
+        // The full-window Scaffold handles status-bar taps, but must never
+        // register with the root messenger used by pushed routes.
+        child: ScaffoldMessenger(child: _buildLayout(context, body)),
+      ),
     );
   }
 
@@ -360,8 +416,10 @@ class _AppShellState extends State<AppShell> {
           // The button only exists where the rail has room to unfold.
           final bool canUnfold =
               constraints.maxWidth >= AppShell.extendedRailBreakpoint;
-          return Material(
-            child: Row(
+          // The primary Scaffold must include the window origin: Flutter
+          // hit-tests it there before handling an iOS status-bar tap.
+          return Scaffold(
+            body: Row(
               children: <Widget>[
                 if (canUnfold)
                   _AnimatedRail(
@@ -376,6 +434,7 @@ class _AppShellState extends State<AppShell> {
                       selectedIndex: _selectedIndex,
                       onDestinationSelected: _onDestinationSelected,
                       labelType: NavigationRailLabelType.all,
+                      scrollable: true,
                       minWidth: InkGeometry.railWidth,
                       destinations: _foldedDestinations(context),
                     ),
@@ -383,17 +442,25 @@ class _AppShellState extends State<AppShell> {
                 const VerticalDivider(width: 1),
                 // Snack bars belong to the page area, so they stay clear of
                 // the rail, including while it unfolds or the device rotates.
-                Expanded(child: Scaffold(body: body)),
+                Expanded(
+                  child: ScaffoldMessenger(
+                    key: _pageMessengerKey,
+                    child: Scaffold(primary: false, body: body),
+                  ),
+                ),
               ],
             ),
           );
         }
-        return Scaffold(
-          body: body,
-          bottomNavigationBar: InkNavigationBar(
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: _onDestinationSelected,
-            destinations: appDestinations,
+        return ScaffoldMessenger(
+          key: _pageMessengerKey,
+          child: Scaffold(
+            body: body,
+            bottomNavigationBar: InkNavigationBar(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: _onDestinationSelected,
+              destinations: appDestinations,
+            ),
           ),
         );
       },
@@ -401,10 +468,9 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
-/// The stock [NavigationRail] in a scroll view: on a window too short for its
-/// five labelled destinations (a phone in landscape, large text) the rail
-/// scrolls instead of overflowing, and the targets keep their size. On a tall
-/// window it fills the height, as it does without this.
+/// Keep the stock rail's internal scroll view off the page controller.
+/// Its own SafeArea encloses its viewport, so scrolling cannot paint under
+/// the status bar. The rail measures every destination at its natural height.
 class _ScrollingRail extends StatelessWidget {
   const _ScrollingRail({required this.child});
 
@@ -412,17 +478,7 @@ class _ScrollingRail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) =>
-          SingleChildScrollView(
-            // The pages take the primary controller (status bar tap).
-            primary: false,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: IntrinsicHeight(child: child),
-            ),
-          ),
-    );
+    return PrimaryScrollController.none(child: child);
   }
 }
 
@@ -681,6 +737,7 @@ class _AnimatedRailState extends State<_AnimatedRail>
         selectedIndex: widget.selectedIndex,
         onDestinationSelected: widget.onDestinationSelected,
         labelType: NavigationRailLabelType.all,
+        scrollable: true,
         minWidth: InkGeometry.railWidth,
         // The rail centres its leading widget, so the button gets a box as
         // wide as the rail: it stays over the icons.
@@ -945,6 +1002,7 @@ class _ExtendedRail extends StatelessWidget {
           // rows start at the top.
           height: double.infinity,
           child: SingleChildScrollView(
+            primary: false,
             child: Semantics(
               container: true,
               explicitChildNodes: true,
@@ -1028,6 +1086,31 @@ class _RailItem extends StatelessWidget {
     final InkColors ink = InkColors.of(context);
     final Color fg = selected ? ink.action : ink.fg2;
     final String label = destination.label(context.l10n);
+    final TextStyle labelStyle =
+        (selected ? AppTypography.railLabelSelected : AppTypography.railLabel)
+            .copyWith(color: fg);
+    // Reserve the tallest label in either selection state, including wraps.
+    double rowHeight = InkGeometry.androidTarget;
+    for (final TextStyle style in <TextStyle>[
+      AppTypography.railLabel,
+      AppTypography.railLabelSelected,
+    ]) {
+      final TextPainter painter =
+          TextPainter(
+            text: TextSpan(text: label, style: style),
+            textDirection: Directionality.of(context),
+            textScaler: MediaQuery.textScalerOf(context),
+          )..layout(
+            maxWidth:
+                fullWidth -
+                start -
+                _railItemEnd -
+                InkGeometry.iconSize -
+                _railIconGap,
+          );
+      rowHeight = math.max(rowHeight, painter.height.ceilToDouble());
+      painter.dispose();
+    }
     final bool moving = progress > 0 && progress < 1;
     // Folded, the pill holds just the icon, centred where it is in the rail.
     final double foldedPill = 2 * start + InkGeometry.iconSize;
@@ -1038,15 +1121,7 @@ class _RailItem extends StatelessWidget {
         : ink.pale.withValues(
             alpha: ink.pale.a * _foldedFade.transform(progress),
           );
-    final Widget text = Text(
-      label,
-      maxLines: 1,
-      softWrap: false,
-      overflow: TextOverflow.ellipsis,
-      style:
-          (selected ? AppTypography.railLabelSelected : AppTypography.railLabel)
-              .copyWith(color: fg),
-    );
+    final Widget text = Text(label, style: labelStyle);
     return Semantics(
       button: true,
       selected: selected,
@@ -1054,7 +1129,7 @@ class _RailItem extends StatelessWidget {
       hint: context.l10n.navTabHint(index + 1, count),
       excludeSemantics: true,
       child: SizedBox(
-        height: InkGeometry.androidTarget,
+        height: rowHeight,
         child: Align(
           alignment: AlignmentDirectional.centerStart,
           child: SizedBox(

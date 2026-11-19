@@ -943,7 +943,6 @@ class _FeaturedCard extends StatelessWidget {
                     header: true,
                     child: Text(
                       l10n.ideaTitle(preset),
-                      maxLines: 2,
                       style: AppTypography.sheetTitle.copyWith(color: ink.fg),
                     ),
                   ),

@@ -143,6 +143,7 @@ class _RecipeTranslatePageState extends State<RecipeTranslatePage> {
   }
 
   Future<void> _share(String text) async {
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
     final AppLocalizations l10n = context.l10n;
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
@@ -150,6 +151,7 @@ class _RecipeTranslatePageState extends State<RecipeTranslatePage> {
     try {
       await _sink.shareTextFile(text, name: 'ink-lab-recipe.txt');
     } catch (_) {
+      if (!mounted || route?.isActive == false) return;
       messenger
         ?..hideCurrentSnackBar()
         ..showSnackBar(

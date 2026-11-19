@@ -387,6 +387,7 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
   /// else.
   Future<void> _share() async {
     if (!_canShare) return;
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
     final AppScope scope = AppScope.of(context);
     final AppLocalizations l10n = context.l10n;
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
@@ -447,6 +448,7 @@ class _ArtworkEntryPageState extends State<ArtworkEntryPage> {
         ),
       );
     } catch (_) {
+      if (!mounted || route?.isActive == false) return;
       messenger
         ?..hideCurrentSnackBar()
         ..showSnackBar(

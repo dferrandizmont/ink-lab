@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/collection_selection.dart';
@@ -14,6 +15,7 @@ import 'package:ink_lab/ui/pages/match/image_picker_service.dart';
 import 'package:ink_lab/ui/pages/match/match_example.dart';
 import 'package:ink_lab/ui/pages/match/match_page.dart';
 import 'package:ink_lab/ui/pages/match/match_result_tile.dart';
+import 'package:ink_lab/ui/pages/match/photo_sampling.dart';
 import 'package:ink_lab/ui/widgets/ink_button.dart';
 
 import '../../support/l10n.dart';
@@ -101,7 +103,49 @@ String _chipCode(WidgetTester tester) => tester
     .first
     .data!;
 
+String _chipName(WidgetTester tester) => tester
+    .widgetList<Text>(
+      find.descendant(of: find.byKey(_chip), matching: find.byType(Text)),
+    )
+    .last
+    .data!;
+
 void main() {
+  testWidgets('the example ring waits for the image frame', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: testLocalizationsDelegates,
+        supportedLocales: testSupportedLocales,
+        home: Scaffold(
+          body: MatchExamplePreview(
+            example: MatchExample(
+              bytes: tinyPng,
+              aspectRatio: 1,
+              sampleColor: 0,
+              match: null,
+            ),
+          ),
+        ),
+      ),
+    );
+    final ring = find.byWidgetPredicate(
+      (widget) => widget is CustomPaint && widget.painter is ReticlePainter,
+    );
+    expect(ring, findsNothing);
+    final ImageFrameBuilder frameBuilder = tester
+        .widget<Image>(find.byType(Image))
+        .frameBuilder!;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) =>
+              frameBuilder(context, const SizedBox.expand(), 0, false),
+        ),
+      ),
+    );
+    expect(ring, findsOneWidget);
+  });
+
   test('the example photo is bundled, registered and credited', () {
     expect(_photoBytes().length, greaterThan(100000));
     expect(
@@ -476,7 +520,52 @@ void main() {
     expect(tester.getSize(find.byKey(_chip)).height, chipHeight);
   });
 
-  for (final double scale in <double>[1.0, 2.0]) {
+  testWidgets('the buttons stay in place when a long chip name loads at 300%', (
+    WidgetTester tester,
+  ) async {
+    await tester.runAsync(loadAppFonts);
+    tester.platformDispatcher.textScaleFactorTestValue = 3.0;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    const String longName = 'Greyish Green Sage Light';
+    final Completer<Uint8List> slow = Completer<Uint8List>();
+    await pumpMatch(
+      tester,
+      picker: FakeImagePickerService(const PhotoPickCancelled()),
+      image: sampledImage(64, 64, <int>[157, 174, 162]),
+      exampleLoader: () => slow.future,
+      brand: MarkerBrand.decoTime,
+      markers: MarkerRepository(
+        loadAsset: (String path) => path == MarkerBrand.decoTime.assetPath
+            ? '[{"code":"228","name":"$longName","hex":"9daea2"}]'
+            : File(path).readAsStringSync(),
+      ),
+      size: const Size(254, 2400),
+    );
+    List<Rect> buttonRects() => <Rect>[
+      for (final ValueKey<String> key in <ValueKey<String>>[
+        const ValueKey<String>('match-camera'),
+        const ValueKey<String>('match-gallery'),
+        _button,
+      ])
+        tester.getRect(find.byKey(key)),
+    ];
+    final List<Rect> buttonsBefore = buttonRects();
+    final double chipHeightBefore = tester.getSize(find.byKey(_chip)).height;
+
+    slow.complete(tinyPng);
+    await tester.pumpAndSettle();
+
+    expect(_chipName(tester), longName);
+    final RenderParagraph name = tester.renderObject<RenderParagraph>(
+      find.text(longName),
+    );
+    expect(name.constraints.maxWidth, 200);
+    expect(name.didExceedMaxLines, isFalse);
+    expect(buttonRects(), buttonsBefore);
+    expect(tester.getSize(find.byKey(_chip)).height, chipHeightBefore);
+  });
+
+  for (final double scale in <double>[1.0, 2.0, 3.0]) {
     testWidgets('360 dp wide at text scale $scale: nothing overflows', (
       WidgetTester tester,
     ) async {
@@ -486,6 +575,7 @@ void main() {
       await _pumpReal(tester, photo);
 
       expect(tester.takeException(), isNull);
+      expect(truncatedTexts(tester), isNot(contains(_chipName(tester))));
       // Everything of the empty state is reachable: the buttons are inside
       // the page (it scrolls) and the chip keeps to one line.
       final Rect chip = tester.getRect(find.byKey(_chip));
@@ -696,9 +786,15 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.ensureVisible(find.byKey(_button));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(_button));
+    await tester.tap(find.byKey(_button).hitTestable());
     await tester.pumpAndSettle();
-    expect(find.byType(BestMatchTile), findsOneWidget);
+    expect(find.byKey(_button), findsNothing);
+
+    // The shorter, loaded state keeps the old scroll offset. Scroll back up
+    // from the gutter, where the photo leaves the gesture to the list.
+    await tester.dragFrom(const Offset(8, 60), const Offset(0, 180));
+    await tester.pumpAndSettle();
+    expect(find.byType(BestMatchTile).hitTestable(), findsOneWidget);
   });
 
   testWidgets('a tablet shows the example in the photo half', (

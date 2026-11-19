@@ -53,6 +53,7 @@ class _SwatchChartCardState extends State<SwatchChartCard> {
 
   Future<void> _share() async {
     if (_busy || widget.markers.isEmpty) return;
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
     final AppLocalizations l10n = context.l10n;
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
@@ -75,6 +76,7 @@ class _SwatchChartCardState extends State<SwatchChartCard> {
     try {
       await shareSwatchChart(_sink, spec);
     } catch (_) {
+      if (!mounted || route?.isActive == false) return;
       messenger
         ?..hideCurrentSnackBar()
         ..showSnackBar(

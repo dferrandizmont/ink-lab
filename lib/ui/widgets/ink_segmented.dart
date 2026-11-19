@@ -17,8 +17,9 @@ class InkSegment<T> {
 
 /// The segmented control (spec §4 "Segmented control").
 ///
-/// Container 48 high, control radius, 1 px `strong`, padding 3, gap 2, `surface`.
-/// Segments 40 high, min width 44, padding 0 10, segment radius. Selected: `action`
+/// Container at least 48 high, control radius, 1 px `strong`, padding 3, gap 2,
+/// `surface`. Segments at least 40 high, min width 44, segment radius, growing
+/// together when scaled or wrapped text needs more room. Selected: `action`
 /// fill, `onAction` text; others transparent with `fg`. [numeric] segments
 /// use `code` type (Palette size 3/4/5), others `button`. Exposed to
 /// assistive technology as a radio group.
@@ -57,8 +58,8 @@ class InkSegmented<T> extends StatelessWidget {
     final TextStyle base = numeric ? AppTypography.code : AppTypography.button;
 
     // Natural (one-line) width of each label, so "expand" shares the width in
-    // proportion to the labels instead of equally: a long option is never cut
-    // or wrapped while a short one ("3", "List") does not hog space.
+    // proportion to the labels instead of equally. At large text sizes every
+    // label may wrap, and the tallest option sets the height for all states.
     final TextScaler scaler = MediaQuery.textScalerOf(context);
     final TextDirection direction = Directionality.of(context);
     double natural(InkSegment<T> s) {
@@ -95,9 +96,11 @@ class InkSegmented<T> extends StatelessWidget {
               key: on ? selectedKey : null,
               duration: duration,
               curve: InkMotion.crossFadeCurve,
-              height: InkGeometry.segmentHeight,
-              constraints: const BoxConstraints(minWidth: InkGeometry.target),
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              constraints: const BoxConstraints(
+                minWidth: InkGeometry.target,
+                minHeight: InkGeometry.segmentHeight,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               alignment: Alignment.center,
               decoration: ShapeDecoration(
                 color: on ? ink.action : Colors.transparent,
@@ -107,9 +110,9 @@ class InkSegmented<T> extends StatelessWidget {
               ),
               child: Text(
                 s.label,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.visible,
+                maxLines: expand ? null : 1,
+                softWrap: expand,
+                textAlign: TextAlign.center,
                 style: base.copyWith(color: on ? ink.onAction : ink.fg),
               ),
             ),
@@ -125,7 +128,9 @@ class InkSegmented<T> extends StatelessWidget {
       container: true,
       label: semanticLabel,
       child: Container(
-        height: InkGeometry.segmentedHeight,
+        constraints: const BoxConstraints(
+          minHeight: InkGeometry.segmentedHeight,
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 3),
         decoration: ShapeDecoration(
           color: ink.surface,
@@ -134,14 +139,17 @@ class InkSegmented<T> extends StatelessWidget {
             side: BorderSide(color: ink.strong),
           ),
         ),
-        child: Row(
-          mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
-          children: <Widget>[
-            for (int i = 0; i < segments.length; i++) ...<Widget>[
-              if (i > 0) const SizedBox(width: 2),
-              segment(segments[i]),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
+            children: <Widget>[
+              for (int i = 0; i < segments.length; i++) ...<Widget>[
+                if (i > 0) const SizedBox(width: 2),
+                segment(segments[i]),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

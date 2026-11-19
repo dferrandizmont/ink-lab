@@ -332,7 +332,6 @@ void main() {
           ),
         );
         expect(tester.takeException(), isNull);
-        expect(find.byType(FittedBox), findsNothing);
         // The label row grows by the caption line only.
         final double caption =
             AppTypography.caption.fontSize! * AppTypography.caption.height!;
@@ -341,6 +340,13 @@ void main() {
           InkGeometry.paletteStripHeight + InkSpacing.group + 22 + caption,
         );
         for (final String code in codes) {
+          expect(
+            find.ancestor(
+              of: find.text(code),
+              matching: find.byType(FittedBox),
+            ),
+            findsNothing,
+          );
           expect(_fontSize(tester, code), AppTypography.code.fontSize);
           final RenderParagraph box = tester.renderObject<RenderParagraph>(
             find.text(code),
@@ -351,7 +357,14 @@ void main() {
         expect(brand.style!.fontSize, AppTypography.caption.fontSize);
         expect(brand.style!.color, InkColors.light.fg2);
         expect(brand.maxLines, 1);
-        expect(brand.overflow, TextOverflow.ellipsis);
+        expect(brand.overflow, isNot(TextOverflow.ellipsis));
+        expect(
+          find.ancestor(
+            of: find.text('Prismacolor'),
+            matching: find.byType(FittedBox),
+          ),
+          findsOneWidget,
+        );
         // Each brand is over its own code.
         expect(
           tester.getBottomLeft(find.text('Prismacolor')).dy,

@@ -27,6 +27,7 @@ class EmptyState extends StatelessWidget {
     this.onAction,
     this.primaryAction = false,
     this.actions = const <Widget>[],
+    this.scrollable = false,
   });
 
   /// Error variant (alert icon).
@@ -38,6 +39,7 @@ class EmptyState extends StatelessWidget {
     this.onAction,
     this.primaryAction = false,
     this.actions = const <Widget>[],
+    this.scrollable = false,
   }) : icon = InkIcons.alertCircle,
        leading = null;
 
@@ -57,10 +59,13 @@ class EmptyState extends StatelessWidget {
   /// instead of [actionLabel] / [onAction].
   final List<Widget> actions;
 
+  /// Enable when this state fills a bounded pane instead of a page scroll view.
+  final bool scrollable;
+
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
-    return Center(
+    final Widget content = Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 300),
         child: Padding(
@@ -118,6 +123,19 @@ class EmptyState extends StatelessWidget {
           ),
         ),
       ),
+    );
+    if (!scrollable) return content;
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (!constraints.hasBoundedHeight) return content;
+        return SingleChildScrollView(
+          primary: false,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: content,
+          ),
+        );
+      },
     );
   }
 }

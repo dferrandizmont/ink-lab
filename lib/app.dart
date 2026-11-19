@@ -16,7 +16,10 @@ import 'ui/theme/app_theme.dart';
 /// It follows the appearance stored in the app settings (System / Light /
 /// Dark). Without an [AppScope] above it (previews) it follows the system.
 class InkLabApp extends StatefulWidget {
-  const InkLabApp({super.key, this.shortcutsService});
+  const InkLabApp({super.key, this.shortcutsService, this.ideasToday});
+
+  /// Overrides the featured idea's date, for deterministic previews and tests.
+  final DateTime? ideasToday;
 
   /// The home-screen shortcuts (long-press menu of the app icon). Tests inject
   /// one over a fake plugin; by default it only works on Android and iOS.
@@ -27,6 +30,7 @@ class InkLabApp extends StatefulWidget {
 }
 
 class _InkLabAppState extends State<InkLabApp> {
+  final RouteObserver<ModalRoute<dynamic>> _routeObserver = RouteObserver();
   AppScope? _scope;
   Stream<AppSettingsState>? _changes;
   late final AppLifecycleListener _lifecycle;
@@ -85,7 +89,13 @@ class _InkLabAppState extends State<InkLabApp> {
   @override
   Widget build(BuildContext context) {
     final AppScope? scope = _scope;
-    if (scope == null) return _app(ThemeMode.system, null, const AppShell());
+    if (scope == null) {
+      return _app(
+        ThemeMode.system,
+        null,
+        AppShell(routeObserver: _routeObserver, ideasToday: widget.ideasToday),
+      );
+    }
     return StreamBuilder<AppSettingsState>(
       stream: _changes,
       initialData: scope.settings.state,
@@ -102,7 +112,10 @@ class _InkLabAppState extends State<InkLabApp> {
                 service: widget.shortcutsService,
                 onboardingCompleted: state.onboardingCompleted,
                 child: state.onboardingCompleted
-                    ? const AppShell()
+                    ? AppShell(
+                        routeObserver: _routeObserver,
+                        ideasToday: widget.ideasToday,
+                      )
                     : const OnboardingPage(),
               ),
             );
@@ -133,6 +146,7 @@ class _InkLabAppState extends State<InkLabApp> {
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),
     themeMode: mode,
+    navigatorObservers: <NavigatorObserver>[_routeObserver],
     home: home,
   );
 }

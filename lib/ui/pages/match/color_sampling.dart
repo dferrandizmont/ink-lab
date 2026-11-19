@@ -19,8 +19,8 @@ const double defaultSamplingRadiusFraction = 0.02;
 
 /// A decoded photo reduced to its raw, opaque RGBA pixels.
 ///
-/// Sampling and the loupe work on this buffer only, so no `ui.Image` (and no
-/// extra decoding) is needed once the photo has been read.
+/// Sampling and the loupe work on this same buffer. The loupe uploads these
+/// pixels once per photo; moving it never decodes the encoded photo again.
 final class SampledImage {
   SampledImage({required this.width, required this.height, required this.rgba})
     : assert(width > 0, 'width must be positive'),
@@ -130,26 +130,17 @@ int averageColorOfRegion(
   ui.Offset centre, {
   double radiusFraction = defaultSamplingRadiusFraction,
 }) {
-  final int centreX = (centre.dx * image.width).round().clamp(
-    0,
-    image.width - 1,
-  );
-  final int centreY = (centre.dy * image.height).round().clamp(
-    0,
-    image.height - 1,
-  );
-  final int radius = math.max(
-    1,
-    (radiusFraction * math.min(image.width, image.height)).round(),
+  final ui.Rect bounds = samplingRegionOf(
+    image,
+    centre,
+    radiusFraction: radiusFraction,
   );
   var red = 0;
   var green = 0;
   var blue = 0;
   var count = 0;
-  for (var y = centreY - radius; y <= centreY + radius; y++) {
-    if (y < 0 || y >= image.height) continue;
-    for (var x = centreX - radius; x <= centreX + radius; x++) {
-      if (x < 0 || x >= image.width) continue;
+  for (var y = bounds.top.toInt(); y < bounds.bottom; y++) {
+    for (var x = bounds.left.toInt(); x < bounds.right; x++) {
       final int index = (y * image.width + x) * 4;
       red += image.rgba[index];
       green += image.rgba[index + 1];
@@ -162,6 +153,33 @@ int averageColorOfRegion(
       ((red ~/ count) << 16) |
       ((green ~/ count) << 8) |
       (blue ~/ count);
+}
+
+/// Pixel edges of the exact square averaged by [averageColorOfRegion], with
+/// an exclusive right/bottom edge. Also used to outline the sample in the loupe.
+ui.Rect samplingRegionOf(
+  SampledImage image,
+  ui.Offset centre, {
+  double radiusFraction = defaultSamplingRadiusFraction,
+}) {
+  final int centreX = (centre.dx * image.width).round().clamp(
+    0,
+    image.width - 1,
+  );
+  final int centreY = (centre.dy * image.height).round().clamp(
+    0,
+    image.height - 1,
+  );
+  final int radius = math.max(
+    1,
+    (radiusFraction * math.min(image.width, image.height)).round(),
+  );
+  return ui.Rect.fromLTRB(
+    math.max(0, centreX - radius).toDouble(),
+    math.max(0, centreY - radius).toDouble(),
+    math.min(image.width, centreX + radius + 1).toDouble(),
+    math.min(image.height, centreY + radius + 1).toDouble(),
+  );
 }
 
 /// The rectangle an image of [aspectRatio] occupies inside [container] when it

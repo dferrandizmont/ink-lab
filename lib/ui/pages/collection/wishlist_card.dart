@@ -67,11 +67,14 @@ class _WishlistCardState extends State<WishlistCard> {
   Future<void> _copy(List<MarkerColor> markers) async {
     final AppLocalizations l10n = context.l10n;
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
     await Clipboard.setData(
       ClipboardData(
         text: shoppingListText(markers, mode: widget.nameDisplayMode),
       ),
     );
+    // Back can end the route before the platform finishes copying.
+    if (!mounted || route?.isActive == false) return;
     messenger
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(l10n.wishlistCopied)));

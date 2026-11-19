@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -389,6 +390,15 @@ class _PalettePageState extends State<PalettePage> {
   /// newer one's) and the one on screen, to take it down (see [_dropUndo]).
   int _undoGeneration = 0;
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _undoSnack;
+  // These keys only measure Save for the notice margin. Keep an anchor per
+  // layout: reparenting the button between the stacked and split lists can
+  // leave stale semantics geometry when this tab is hidden during rotation.
+  final GlobalKey _stackedSaveSlotKey = GlobalKey(
+    debugLabel: 'palette-save-stacked',
+  );
+  final GlobalKey _splitSaveSlotKey = GlobalKey(
+    debugLabel: 'palette-save-split',
+  );
 
   /// The base last resolved, with what it was resolved from (see
   /// [_resolvedBase]: it is read many times in one build).
@@ -780,14 +790,34 @@ class _PalettePageState extends State<PalettePage> {
 
   /// Margin of a floating snack bar of this page: it keeps the final Save
   /// action reachable at the foot of the list.
-  EdgeInsets _snackMargin() => EdgeInsets.fromLTRB(
-    InkSpacing.pageMargin,
-    0,
-    InkSpacing.pageMargin,
-    InkGeometry.buttonHeight +
+  EdgeInsets _snackMargin() {
+    double bottom =
+        InkGeometry.buttonHeight +
         InkSpacing.pageBottomOf(context) +
-        InkSpacing.buttonGap,
-  );
+        InkSpacing.buttonGap;
+    final RenderObject? save =
+        (_splitSaveSlotKey.currentContext ?? _stackedSaveSlotKey.currentContext)
+            ?.findRenderObject();
+    final RenderObject? scaffold = Scaffold.of(context).context
+        .findRenderObject();
+    if (save is RenderBox && scaffold is RenderBox && save.hasSize) {
+      final double top = save.localToGlobal(Offset.zero, ancestor: scaffold).dy;
+      // Protect a visible Save even before the user reaches the list's end.
+      // In the upper half there is room for the notice below the button.
+      if (top >= scaffold.size.height / 2 && top < scaffold.size.height) {
+        bottom = math.max(
+          bottom,
+          scaffold.size.height - top + InkSpacing.buttonGap,
+        );
+      }
+    }
+    return EdgeInsets.fromLTRB(
+      InkSpacing.pageMargin,
+      0,
+      InkSpacing.pageMargin,
+      bottom,
+    );
+  }
 
   /// Shows "Palette changed" (or [message], when the action says what it did
   /// itself, like a variation; or "E08 is now the base" when Swatches handed
@@ -1873,6 +1903,7 @@ class _PalettePageState extends State<PalettePage> {
         ),
     ];
     final Widget actions = PaletteActions(
+      saveSlotKey: split ? _splitSaveSlotKey : _stackedSaveSlotKey,
       customMode: customMode,
       photoMode: _photoMode,
       chainMode: _chainMode,

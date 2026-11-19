@@ -4,8 +4,8 @@ import '../theme/app_typography.dart';
 import '../theme/tokens.dart';
 
 /// The header of every screen (spec §3, §6): padding 24 top / 16 sides /
-/// 16 bottom, `title` (Archivo 800 40/40), optional trailing `data` on the
-/// title baseline (e.g. "160 of 321"), gap 8, `secondary` subtitle in `fg2`.
+/// 16 bottom, `title` (Archivo 800 40/40), optional trailing `data` beside the
+/// title (e.g. "160 of 321"), gap 8, `secondary` subtitle in `fg2`.
 ///
 /// [action] puts one control (an `InkIconButton`, an `InkOverflowMenu`) at
 /// the right end of the title line, before [trailing] when both are given:
@@ -27,6 +27,7 @@ class InkPageHeader extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.trailing,
+    this.reserveTrailingFor,
     this.action,
     this.subtitleWidget,
     this.padding = InkSpacing.header,
@@ -36,8 +37,12 @@ class InkPageHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
 
-  /// Short `data` text right-aligned on the title baseline.
+  /// Short `data` text right-aligned beside the title.
   final String? trailing;
+
+  /// Widest counter for this collection, independent of the active filter.
+  /// Measured with the counter's style and text scale before fitting [title].
+  final String? reserveTrailingFor;
 
   /// A control at the right end of the title line, before [trailing]. It is
   /// at most 44 dp high, so a header with an action is 4 dp taller than the
@@ -58,6 +63,21 @@ class InkPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
+    final TextStyle counterStyle = AppTypography.data.copyWith(color: ink.fg2);
+    double counterWidth = 0;
+    if (trailing != null && reserveTrailingFor != null) {
+      final TextPainter painter = TextPainter(
+        text: TextSpan(
+          text: reserveTrailingFor,
+          style: DefaultTextStyle.of(context).style.merge(counterStyle),
+        ),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+        locale: Localizations.maybeLocaleOf(context),
+      )..layout();
+      counterWidth = painter.width;
+      painter.dispose();
+    }
     final Widget? sub =
         subtitleWidget ??
         (subtitle == null
@@ -74,21 +94,30 @@ class InkPageHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Expanded(
                 child: Semantics(
                   header: true,
-                  // The 40 px display title is already large text: it keeps its
-                  // size at any system scale so it stays on one line.
+                  // Cap the display title at its design size, then fit it to
+                  // the room left by the widest scaled counter. Its reserved
+                  // line height stays fixed when the count or segment changes.
                   child: MediaQuery.withClampedTextScaling(
                     maxScaleFactor: 1,
-                    child: Text(
-                      title,
-                      maxLines: 1,
-                      softWrap: false,
-                      style: AppTypography.title.copyWith(color: ink.fg),
+                    child: SizedBox(
+                      height:
+                          AppTypography.title.fontSize! *
+                          AppTypography.title.height!,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: AppTypography.title.copyWith(color: ink.fg),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -98,10 +127,14 @@ class InkPageHeader extends StatelessWidget {
                 action!,
               ],
               if (trailing != null) ...<Widget>[
-                if (action != null) const SizedBox(width: InkSpacing.group),
-                Text(
-                  trailing!,
-                  style: AppTypography.data.copyWith(color: ink.fg2),
+                const SizedBox(width: InkSpacing.group),
+                ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: counterWidth),
+                  child: Text(
+                    trailing!,
+                    textAlign: TextAlign.end,
+                    style: counterStyle,
+                  ),
                 ),
               ],
             ],
@@ -154,7 +187,8 @@ class _ReservedSubtitleState extends State<_ReservedSubtitle> {
     if (_cachedStyle != style) return false;
     if (_cachedText != widget.text) return false;
     final alts = widget.alternatives;
-    if (_cachedAlternatives == null || _cachedAlternatives!.length != alts.length) {
+    if (_cachedAlternatives == null ||
+        _cachedAlternatives!.length != alts.length) {
       return false;
     }
     for (var i = 0; i < alts.length; i++) {
@@ -181,7 +215,10 @@ class _ReservedSubtitleState extends State<_ReservedSubtitle> {
           _cachedText = widget.text;
           _cachedAlternatives = List<String>.from(widget.alternatives);
           double tallest = 0;
-          for (final String candidate in <String>[widget.text, ...widget.alternatives]) {
+          for (final String candidate in <String>[
+            widget.text,
+            ...widget.alternatives,
+          ]) {
             final TextPainter painter = TextPainter(
               text: TextSpan(text: candidate, style: resolved),
               textDirection: direction,

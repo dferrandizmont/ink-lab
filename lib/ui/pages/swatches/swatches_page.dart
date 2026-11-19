@@ -285,6 +285,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
         key: const ValueKey<String>('swatches-detail-pane'),
         child: EmptyState(
           key: const ValueKey<String>('swatches-detail-pane-empty'),
+          scrollable: true,
           icon: InkIcons.droplet,
           title: context.l10n.swatchesDetailPaneEmpty,
         ),
@@ -412,6 +413,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
             child: EmptyState.error(
               title: context.l10n.swatchesLoadFailedTitle,
               message: context.l10n.swatchesLoadFailedBody,
+              scrollable: true,
             ),
           );
         }
@@ -506,6 +508,7 @@ class _SwatchesPageState extends State<SwatchesPage> {
           InkPageHeader(
             title: context.l10n.swatchesTitle,
             trailing: context.l10n.swatchesCountOf(visible.length, total),
+            reserveTrailingFor: context.l10n.swatchesCountOf(total, total),
             // The count of the range is on the title line already: the subtitle
             // says the brand and its series, never a number.
             subtitle: CollectionSummary.of(state, colors).headline(),

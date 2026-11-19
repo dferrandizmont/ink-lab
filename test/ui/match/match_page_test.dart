@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ink_lab/app_scope.dart';
 import 'package:ink_lab/core/models.dart';
+import 'package:ink_lab/core/marker_repository.dart';
 import 'package:ink_lab/ui/pages/match/color_sampling.dart';
 import 'package:ink_lab/ui/pages/match/image_picker_service.dart';
 import 'package:ink_lab/ui/pages/match/match_page.dart';
@@ -35,6 +39,31 @@ SampledImage widePaperAndInk() => imageFromRgb(96, 16, <List<int>>[
       x < 48 ? <int>[230, 210, 180] : <int>[30, 40, 120],
 ]);
 
+MarkerRepository shortAndLongNameMarkers({required String longName}) =>
+    MarkerRepository(
+      loadAsset: (String path) {
+        final String json = File(path).readAsStringSync();
+        if (path != MarkerBrand.ohuhuOahu.assetPath) return json;
+        final List<Map<String, dynamic>> markers =
+            (jsonDecode(json) as List<dynamic>).cast<Map<String, dynamic>>();
+        for (var i = 0; i < markers.length; i++) {
+          final Map<String, dynamic> marker = markers[i];
+          marker['hex'] = i == 0
+              ? 'ff0000'
+              : i == 1
+              ? '0000ff'
+              : 'ffffff';
+        }
+        final Map<String, dynamic> short = markers[0];
+        short['newName'] = 'Red';
+        short['oldName'] = 'Red';
+        final Map<String, dynamic> long = markers[1];
+        long['newName'] = longName;
+        long['oldName'] = longName;
+        return jsonEncode(markers);
+      },
+    );
+
 void main() {
   testWidgets('picking a photo samples a colour and ranks six markers', (
     WidgetTester tester,
@@ -65,6 +94,85 @@ void main() {
     expect(find.byType(MatchResultTile), findsNWidgets(5));
     expect(find.textContaining('ΔE'), findsWidgets);
   });
+
+  for (final double scale in <double>[2.0, 3.0]) {
+    testWidgets(
+      'alternatives stay in place when the best name wraps at scale $scale',
+      (WidgetTester tester) async {
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+        final String longName = scale == 2.0 ? 'Bright Cerulean' : 'Blue Cyan';
+        final SampledImage halves = imageFromRgb(96, 16, <List<int>>[
+          for (int y = 0; y < 16; y++)
+            for (int x = 0; x < 96; x++)
+              x < 48 ? <int>[255, 0, 0] : <int>[0, 0, 255],
+        ]);
+        await pumpMatch(
+          tester,
+          picker: FakeImagePickerService(PhotoPicked(tinyPng)),
+          image: halves,
+          markers: shortAndLongNameMarkers(longName: longName),
+          size: const Size(600, 3200),
+        );
+        await tester.tap(find.byKey(const ValueKey<String>('match-camera')));
+        await tester.pumpAndSettle();
+        final Rect canvas = tester.getRect(
+          find.byKey(const ValueKey<String>('match-canvas')),
+        );
+        int lineCount(String name) {
+          final RenderParagraph paragraph = tester
+              .renderObject<RenderParagraph>(
+                find.descendant(
+                  of: find.byType(BestMatchTile),
+                  matching: find.text(name),
+                ),
+              );
+          return paragraph
+              .getBoxesForSelection(
+                TextSelection(baseOffset: 0, extentOffset: name.length),
+              )
+              .map((TextBox box) => box.top.round())
+              .toSet()
+              .length;
+        }
+
+        await tester.tapAt(
+          Offset(canvas.left + canvas.width / 4, canvas.center.dy),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .widget<BestMatchTile>(find.byType(BestMatchTile))
+              .match
+              .color
+              .newName,
+          'Red',
+        );
+        expect(lineCount('Red'), 1);
+        final double alternativesTop = tester
+            .getTopLeft(find.byType(MatchResultTile).first)
+            .dy;
+
+        await tester.tapAt(
+          Offset(canvas.left + canvas.width * 3 / 4, canvas.center.dy),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .widget<BestMatchTile>(find.byType(BestMatchTile))
+              .match
+              .color
+              .newName,
+          longName,
+        );
+        expect(lineCount(longName), 2);
+        expect(
+          tester.getTopLeft(find.byType(MatchResultTile).first).dy,
+          closeTo(alternativesTop, 0.01),
+        );
+      },
+    );
+  }
 
   testWidgets('the gallery is used when asked for', (
     WidgetTester tester,

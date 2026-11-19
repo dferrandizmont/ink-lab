@@ -50,6 +50,16 @@ class BestMatchTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final InkColors ink = InkColors.of(context);
     final MarkerColor color = match.color;
+    final TextStyle nameStyle = AppTypography.sheetTitle.copyWith(
+      color: ink.fg,
+    );
+    final TextPainter nameLine = TextPainter(
+      text: TextSpan(text: 'M', style: nameStyle),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+    )..layout();
+    final double reservedNameHeight = nameLine.height * 2;
+    nameLine.dispose();
     final bool hasOldCode =
         color.oldCode.isNotEmpty &&
         color.oldCode.toUpperCase() != color.newCode.toUpperCase();
@@ -90,9 +100,9 @@ class BestMatchTile extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: InkSpacing.s4),
-                  Text(
-                    color.newName,
-                    style: AppTypography.sheetTitle.copyWith(color: ink.fg),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: reservedNameHeight),
+                    child: Text(color.newName, style: nameStyle),
                   ),
                   const SizedBox(height: InkSpacing.group),
                   Wrap(

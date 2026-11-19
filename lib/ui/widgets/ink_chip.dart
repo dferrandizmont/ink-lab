@@ -68,10 +68,13 @@ class InkChip extends StatelessWidget {
 
   /// The visual height of a chip that makes room for [lines] lines.
   static double visualHeight(BuildContext context, int lines) {
-    if (lines <= 1) return InkGeometry.chipHeight;
-    final double line = MediaQuery.textScalerOf(context)
-        .scale(AppTypography.button.fontSize! * AppTypography.button.height!);
-    return math.max(InkGeometry.chipHeight, line * lines + 2 * InkSpacing.s8);
+    final double line =
+        MediaQuery.textScalerOf(context).scale(AppTypography.button.fontSize!) *
+        AppTypography.button.height!;
+    return math.max(
+      InkGeometry.chipHeight,
+      line * lines + (lines > 1 ? 2 * InkSpacing.s8 : 2 * InkSpacing.s4),
+    );
   }
 
   @override
@@ -427,8 +430,8 @@ class _EdgeFadeState extends State<_EdgeFade> {
   }
 }
 
-/// A quality badge (spec §4): 24 high pill, `pale`, padding 0 10, `caps` in
-/// `action`.
+/// A quality badge (spec §4): at least 24 high, grows with the text, `pale`,
+/// padding 2 10, `caps` in `action`.
 ///
 /// It always hugs its label: inside a `Column(crossAxisAlignment: stretch)`
 /// or any other tight box the badge keeps its own width and sits at the
@@ -447,14 +450,18 @@ class QualityBadge extends StatelessWidget {
       widthFactor: 1,
       heightFactor: 1,
       child: Container(
-        height: InkGeometry.badgeHeight,
-        padding: const EdgeInsets.symmetric(horizontal: InkSpacing.s10),
+        constraints: const BoxConstraints(minHeight: InkGeometry.badgeHeight),
+        padding: const EdgeInsets.symmetric(
+          horizontal: InkSpacing.s10,
+          vertical: InkSpacing.s2,
+        ),
         decoration: ShapeDecoration(
           color: ink.pale,
           shape: const RoundedRectangleBorder(borderRadius: InkRadii.xsRadius),
         ),
         child: Center(
           widthFactor: 1,
+          heightFactor: 1,
           child: Text(
             AppTypography.caps(label),
             style: AppTypography.capsStyle.copyWith(color: ink.action),

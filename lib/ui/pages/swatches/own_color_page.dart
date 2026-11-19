@@ -302,13 +302,22 @@ class _OwnColorPageState extends State<OwnColorPage> {
                       _resample();
                     }),
                   ),
-                  if (!_choosingWhite && _pick == null) ...<Widget>[
-                    const SizedBox(height: InkSpacing.group),
-                    Text(
-                      context.l10n.ownColorPhotoTap,
-                      style: AppTypography.secondary.copyWith(color: ink.fg2),
+                  // Keep this slot after the first sample: removing it while
+                  // dragging at the bottom would clamp the scroll position
+                  // and move the photo underneath the finger.
+                  Visibility(
+                    visible: !_choosingWhite && _pick == null,
+                    maintainSize: _pick != null,
+                    maintainAnimation: _pick != null,
+                    maintainState: _pick != null,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: InkSpacing.group),
+                      child: Text(
+                        context.l10n.ownColorPhotoTap,
+                        style: AppTypography.secondary.copyWith(color: ink.fg2),
+                      ),
                     ),
-                  ],
+                  ),
                 ],
                 if (_error != null) ...<Widget>[
                   const SizedBox(height: InkSpacing.group),

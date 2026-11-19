@@ -10,6 +10,23 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+## 1.5.0 · 2026-11-19
+
+- Match and My colour: drag anywhere on a photo to fine-tune the sample, with live colour matches and a magnified preview above your finger.
+- Swatches and Ideas: tapping the iPad status bar now scrolls the active page back to the top beside the navigation rail.
+- Palette: longer notices stay clear of Save palette without moving the button.
+- Palette: Undo and other page notices disappear when you switch tabs.
+- Palette: mixed-brand strip labels fit in full at large text sizes.
+- Large text: chips, segmented controls and search fields grow to fit, and the Swatches title fits beside its counter.
+- Side navigation: scrolling stays below the status bar and above the system navigation area.
+- Side navigation: the first and last destinations can be shown in full on short screens with large text.
+- Palette: the base marker field has a clearer keyboard focus ring in light and dark, and opens with Enter or Space.
+- Palette: notices stay clear of the side navigation, including in landscape.
+- Match: the name of the closest marker now wraps to two lines at large text sizes instead of being cut, and nothing below it jumps when the name changes.
+- Match: the sample ring no longer shows over a blank screen for a moment before the photo appears.
+- Match: the closeness label of the best match (such as Very close) grows with large text instead of being cut at the bottom.
+- Large text: empty panels (Swatches detail and load errors) scroll in short windows instead of overflowing, and the featured idea title is never cut.
+
 ## 1.4.0 · 2026-11-17
 
 - Match: the empty tab shows an example photo (a Burano canal at sunset) with a sample point and the marker it matches in your collection, and "Try an example photo" opens it ready to tap, with no camera or gallery.

@@ -103,6 +103,7 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
   }
 
   Future<void> _share(String text, String name) async {
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
     final AppLocalizations l10n = context.l10n;
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
@@ -110,6 +111,7 @@ class _CollectionTransferPageState extends State<CollectionTransferPage> {
     try {
       await _sink.shareTextFile(text, name: name);
     } catch (_) {
+      if (!mounted || route?.isActive == false) return;
       messenger
         ?..hideCurrentSnackBar()
         ..showSnackBar(

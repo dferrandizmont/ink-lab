@@ -71,7 +71,7 @@ class PaletteStrip extends StatelessWidget {
 
   /// The brand of every colour, for a strip that mixes brands; must match
   /// [colors] in length. Each is a small `caption` line in `fg2` over its
-  /// label (cut with an ellipsis when the segment is narrower), so the code
+  /// label (fitted when the segment is narrower), so the code
   /// below keeps the size it has in a strip of one brand. `null` (one brand)
   /// leaves the labels exactly as they are.
   final List<String>? brandLabels;
@@ -127,13 +127,21 @@ class PaletteStrip extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          Text(
-                            _at(brands, index),
-                            maxLines: 1,
-                            softWrap: false,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: brandStyle,
+                          SizedBox(
+                            height:
+                                MediaQuery.textScalerOf(context)
+                                    .scale(brandStyle.fontSize!) *
+                                brandStyle.height!,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                _at(brands, index),
+                                maxLines: 1,
+                                softWrap: false,
+                                textAlign: TextAlign.center,
+                                style: brandStyle,
+                              ),
+                            ),
                           ),
                           _label(ink, _at(stripLabels, index)),
                         ],

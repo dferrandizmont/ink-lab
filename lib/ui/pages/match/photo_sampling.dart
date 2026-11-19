@@ -1,6 +1,9 @@
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../../core/white_balance.dart';
 import '../../../l10n/l10n.dart';
@@ -10,8 +13,9 @@ import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
 import '../../widgets/value_view.dart';
 import 'color_sampling.dart';
+import 'photo_sample_loupe.dart';
 
-/// A photo with a loupe reticle on the point being sampled.
+/// A photo with a sample-colour reticle and a magnifier while dragging.
 ///
 /// Shared by Match and by the "my colour" editor: both show the photo
 /// contained in the available space, let the user tap or drag to sample and
@@ -21,7 +25,7 @@ import 'color_sampling.dart';
 /// [onPoint] gets the touched point as a fraction of the photo. With
 /// [tapOnly] only a tap counts (a drag does not), which is what choosing the
 /// white of the photo needs.
-class PhotoSampleCanvas extends StatelessWidget {
+class PhotoSampleCanvas extends StatefulWidget {
   const PhotoSampleCanvas({
     super.key,
     required this.bytes,
@@ -60,8 +64,188 @@ class PhotoSampleCanvas extends StatelessWidget {
   /// never changed, and the reticle keeps the [sampleColor] it is given.
   final bool valueView;
 
-  /// Key of the touch layer.
+  /// Key of the canvas bounds; the touch target is the fitted photo inside it.
   final Key? gestureKey;
+
+  @override
+  State<PhotoSampleCanvas> createState() => _PhotoSampleCanvasState();
+}
+
+class _PhotoSampleCanvasState extends State<PhotoSampleCanvas>
+    with SingleTickerProviderStateMixin {
+  final OverlayPortalController _overlay = OverlayPortalController();
+  late final AnimationController _opacity =
+      AnimationController(vsync: this, duration: InkMotion.swatchFade)
+        ..addStatusListener((AnimationStatus status) {
+          if (status == AnimationStatus.dismissed) _overlay.hide();
+        });
+  ui.Image? _pixels;
+  int? _pointer;
+  Offset? _down;
+  Offset _finger = Offset.zero;
+  Offset _fraction = Offset.zero;
+  Offset? _pending;
+  int? _frame;
+  bool _dragging = false;
+  Rect _fitted = Rect.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    _uploadPixels();
+  }
+
+  void _uploadPixels() {
+    final SampledImage image = widget.image;
+    ui.decodeImageFromPixels(
+      image.rgba,
+      image.width,
+      image.height,
+      ui.PixelFormat.rgba8888,
+      (ui.Image pixels) {
+        if (!mounted || widget.image != image) {
+          pixels.dispose();
+          return;
+        }
+        setState(() {
+          _pixels?.dispose();
+          _pixels = pixels;
+        });
+      },
+    );
+  }
+
+  @override
+  void didUpdateWidget(PhotoSampleCanvas oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.image != widget.image ||
+        oldWidget.tapOnly != widget.tapOnly) {
+      _cancelPointer();
+      _opacity.stop();
+      // OverlayPortal cannot be shown/hidden during a build (for example when
+      // the parent switches to choosing white or replaces the photo).
+      if (_overlay.isShowing) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          if (mounted && !_dragging) _overlay.hide();
+        });
+      }
+    }
+    if (oldWidget.image != widget.image) {
+      _pixels?.dispose();
+      _pixels = null;
+      _uploadPixels();
+    }
+  }
+
+  void _cancelPointer() {
+    _pointer = null;
+    _down = null;
+    _dragging = false;
+    _pending = null;
+    final int? frame = _frame;
+    if (frame != null) {
+      SchedulerBinding.instance.cancelFrameCallbackWithId(frame);
+    }
+    _frame = null;
+  }
+
+  @override
+  void dispose() {
+    _cancelPointer();
+    _opacity.dispose();
+    _pixels?.dispose();
+    super.dispose();
+  }
+
+  // Pointer events only retain the latest position. Sampling (including Match's
+  // ranking) and rebuilding the overlay happen once at the start of a frame.
+  void _queuePoint(Offset local) {
+    _finger = local + _fitted.topLeft;
+    _fraction = fractionForPoint(_finger, _fitted);
+    _pending = _fraction;
+    _frame ??= SchedulerBinding.instance.scheduleFrameCallback((_) {
+      _frame = null;
+      if (!mounted) return;
+      final Offset? point = _pending;
+      _pending = null;
+      if (point != null) widget.onPoint(point);
+      setState(() {});
+    });
+  }
+
+  void _pointerDown(PointerDownEvent event) {
+    if (_pointer != null || event.buttons != kPrimaryButton) return;
+    _pointer = event.pointer;
+    _down = event.position;
+  }
+
+  void _pointerMove(PointerMoveEvent event) {
+    if (event.pointer != _pointer) return;
+    if (!_dragging) {
+      final double slop = computeHitSlop(
+        event.kind,
+        MediaQuery.gestureSettingsOf(context),
+      );
+      if ((event.position - _down!).distance <= slop) return;
+      _dragging = true;
+      _opacity.value = 1;
+      _overlay.show();
+    }
+    _queuePoint(event.localPosition);
+  }
+
+  void _finishLoupe() {
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _overlay.hide();
+    } else {
+      _opacity.reverse();
+    }
+    _pointer = null;
+    _down = null;
+    _dragging = false;
+  }
+
+  Widget _buildLoupe(BuildContext context, OverlayChildLayoutInfo info) {
+    final Offset finger = MatrixUtils.transformPoint(
+      info.childPaintTransform,
+      _finger,
+    );
+    // SafeArea/Scaffold may have consumed the canvas's local padding/insets.
+    // Placement uses root-overlay coordinates, so read its screen metrics too.
+    final BuildContext overlayContext = Overlay.of(
+      context,
+      rootOverlay: true,
+    ).context;
+    final EdgeInsets safe = MediaQuery.viewPaddingOf(overlayContext);
+    final EdgeInsets insets = MediaQuery.viewInsetsOf(overlayContext);
+    final Rect viewport = Rect.fromLTRB(
+      safe.left + 8,
+      safe.top + 8,
+      info.overlaySize.width - safe.right - 8,
+      info.overlaySize.height -
+          (insets.bottom > safe.bottom ? insets.bottom : safe.bottom) -
+          8,
+    );
+    final Rect rect = photoLoupeRect(finger, viewport);
+    return Positioned.fromRect(
+      rect: rect,
+      child: IgnorePointer(
+        child: ExcludeSemantics(
+          child: FadeTransition(
+            opacity: _opacity,
+            child: PhotoSampleLoupe(
+              image: widget.image,
+              pixels: _pixels,
+              fraction: _fraction,
+              displayPixelScale: _fitted.width / widget.image.width,
+              balance: widget.balance,
+              valueView: widget.valueView,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,51 +255,105 @@ class PhotoSampleCanvas extends StatelessWidget {
           constraints.maxWidth,
           constraints.maxHeight,
         );
-        final Rect fitted = containRect(container, image.aspectRatio);
-        final Offset? point = pick;
+        final Rect fitted = containRect(container, widget.image.aspectRatio);
+        _fitted = fitted;
+        final Offset? point = widget.pick;
         final Offset? pickLocal = point == null || fitted.isEmpty
             ? null
             : Offset(
                 fitted.left + point.dx * fitted.width,
                 fitted.top + point.dy * fitted.height,
               );
-        void touch(Offset local) => onPoint(fractionForPoint(local, fitted));
-        return GestureDetector(
-          key: gestureKey,
-          behavior: HitTestBehavior.opaque,
-          onTapDown: (TapDownDetails details) => touch(details.localPosition),
-          onPanStart: tapOnly
-              ? null
-              : (DragStartDetails details) => touch(details.localPosition),
-          onPanUpdate: tapOnly
-              ? null
-              : (DragUpdateDetails details) => touch(details.localPosition),
+        // Claim the fitted photo on down, before Scrollable's vertical drag can
+        // beat the larger pan slop. Letterbox margins still scroll. The listener
+        // distinguishes a tap from a drag; tap-only waits for a completed tap.
+        final Widget touchLayer = widget.tapOnly
+            ? GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTapUp: (TapUpDetails details) => widget.onPoint(
+                  fractionForPoint(
+                    details.localPosition + fitted.topLeft,
+                    fitted,
+                  ),
+                ),
+              )
+            : RawGestureDetector(
+                behavior: HitTestBehavior.opaque,
+                gestures: <Type, GestureRecognizerFactory>{
+                  EagerGestureRecognizer:
+                      GestureRecognizerFactoryWithHandlers<
+                        EagerGestureRecognizer
+                      >(
+                        () => EagerGestureRecognizer(
+                          allowedButtonsFilter: (int buttons) =>
+                              buttons == kPrimaryButton,
+                        ),
+                        (EagerGestureRecognizer instance) {},
+                      ),
+                },
+                child: Listener(
+                  behavior: HitTestBehavior.opaque,
+                  onPointerDown: _pointerDown,
+                  onPointerMove: _pointerMove,
+                  onPointerUp: (PointerUpEvent event) {
+                    if (event.pointer != _pointer) return;
+                    _queuePoint(event.localPosition);
+                    _finishLoupe();
+                  },
+                  onPointerCancel: (PointerCancelEvent event) {
+                    if (event.pointer != _pointer) return;
+                    _cancelPointer();
+                    _finishLoupe();
+                  },
+                ),
+              );
+        return OverlayPortal.overlayChildLayoutBuilder(
+          controller: _overlay,
+          overlayLocation: OverlayChildLocation.rootOverlay,
+          overlayChildBuilder: _buildLoupe,
           child: Stack(
+            key: widget.gestureKey,
             fit: StackFit.expand,
             children: <Widget>[
-              ValueViewFilter(
-                enabled: valueView,
-                child: WhiteBalancePreview(
-                  balance: balance,
-                  child: Image.memory(
-                    bytes,
-                    fit: BoxFit.contain,
-                    gaplessPlayback: true,
-                    errorBuilder: (
-                      BuildContext context,
-                      Object error,
-                      StackTrace? stack,
-                    ) => ColoredBox(color: InkColors.of(context).surface),
-                  ),
+              Image.memory(
+                widget.bytes,
+                fit: BoxFit.contain,
+                frameBuilder: (context, child, frame, synchronous) => Stack(
+                  fit: StackFit.expand,
+                  children: <Widget>[
+                    ValueViewFilter(
+                      enabled: widget.valueView,
+                      child: WhiteBalancePreview(
+                        balance: widget.balance,
+                        child: child,
+                      ),
+                    ),
+                    if (frame != null &&
+                        pickLocal != null &&
+                        widget.sampleColor != null)
+                      CustomPaint(
+                        painter: ReticlePainter(
+                          centre: pickLocal,
+                          sampleColor: widget.sampleColor!,
+                        ),
+                      ),
+                  ],
+                ),
+                errorBuilder: (
+                  BuildContext context,
+                  Object error,
+                  StackTrace? stack,
+                ) => ColoredBox(color: InkColors.of(context).surface),
+              ),
+              Positioned.fromRect(
+                rect: fitted,
+                child: Semantics(
+                  onTap: widget.tapOnly
+                      ? null
+                      : () => widget.onPoint(const Offset(0.5, 0.5)),
+                  child: touchLayer,
                 ),
               ),
-              if (pickLocal != null && sampleColor != null)
-                CustomPaint(
-                  painter: ReticlePainter(
-                    centre: pickLocal,
-                    sampleColor: sampleColor!,
-                  ),
-                ),
             ],
           ),
         );
