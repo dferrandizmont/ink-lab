@@ -1,7 +1,7 @@
 # Politique de confidentialité d'Ink Lab
 
 
-Dernière mise à jour : 2026-11-17
+Dernière mise à jour : 2026-11-20
 
 Traduction de courtoisie. Seule la [version espagnole](https://inklab.mainshai.com/es/privacy/) fait foi.
 
@@ -15,7 +15,8 @@ L'application est entièrement gratuite et open source, et ne comporte ni outil 
 pistage. **Si vous n'activez pas l'IA, l'application n'utilise pas le réseau.** Si vous l'activez, sur Android, l'IA sur
 l'appareil utilise ML Kit de Google, qui envoie à Google des données de diagnostic et d'utilisation (jamais vos
 requêtes, vos couleurs ni vos photos) ; et si vous choisissez OpenRouter avec votre propre clé, l'application envoie
-exactement ce qui est expliqué plus bas.
+exactement ce qui est expliqué plus bas. Si vous nous écrivez, Cloudflare transfère votre message à Gmail. Nous en
+gardons une copie dans Proton et répondons via Resend sans suivi des ouvertures ni des clics.
 
 ## 1. Responsable du traitement
 
@@ -232,20 +233,24 @@ ces informations ne quittent pas le téléphone.
 - Le développeur n'utilise ni outil d'analyse ni rapports de plantage, et il n'y a ni publicité, ni publicité
   personnalisée, ni pistage entre applications. La seule exception dans l'application concerne les données de diagnostic
   et d'utilisation que ML Kit envoie à Google lorsque vous utilisez l'IA sur l'appareil (voir « IA facultative ») ; le
-  développeur ne les reçoit pas. En dehors de l'application, nos réponses par e-mail comportent le comptage anonyme des
-  ouvertures et des clics expliqué dans « Si vous nous écrivez ».
+  développeur ne les reçoit pas. En dehors de l'application, nos réponses par e-mail ne comportent aucun suivi des
+  ouvertures ni des clics (voir « Si vous nous écrivez »).
 - L'historique des erreurs (voir « Historique des erreurs ») n'est pas un rapport de plantage : rien n'est envoyé
   automatiquement, et il ne quitte votre téléphone que si vous le partagez vous-même.
 - Nous ne recevons ni vos photos, ni vos collections, ni vos palettes, ni votre clé.
 
 ### Si vous nous écrivez
 Vous pouvez nous écrire à inklab@mainshai.com. Nous utilisons votre adresse e-mail, votre nom si vous l'indiquez et ce
-que vous nous communiquez uniquement pour vous répondre et résoudre ce que vous nous demandez. Ne nous envoyez ni votre
+que vous nous communiquez pour vous répondre et résoudre ce que vous nous demandez. Si vous exercez un droit relatif à
+la protection des données, nous traitons votre demande pour respecter les obligations que nous impose le RGPD (art. 6,
+paragraphe 1, point c)). Si nous devons conserver une conversation en raison d'une réclamation, nous le faisons sur la
+base de notre intérêt légitime à constater, exercer ou défendre nos droits en justice (art. 6, paragraphe 1, point f)),
+pendant le temps nécessaire à cette fin. Ne nous envoyez ni votre
 clé d'API ni des sauvegardes contenant des données que vous ne souhaitez pas partager : pour un bug, des données de test
 nous suffisent.
 
-Les prestataires suivants interviennent en chemin (il en va de même pour dev@mainshai.com, l'adresse utilisée par les
-versions jusqu'à la 0.6.2) :
+Les prestataires suivants interviennent en chemin (Cloudflare, Google et Proton aussi pour les
+messages adressés à dev@mainshai.com, l'adresse utilisée par les versions jusqu'à la 0.6.2) :
 
 - **Cloudflare** (Cloudflare, Inc., États-Unis) reçoit le message sur notre domaine et le transfère aussitôt. Cloudflare
   ne conserve pas le message, mais conserve un journal technique du transfert (expéditeur, destinataire, objet, date et
@@ -256,24 +261,31 @@ versions jusqu'à la 0.6.2) :
   conservons la conversation. Google peut aussi traiter ces données aux États-Unis.
 - **Proton** (Proton AG, Suisse) conserve une copie des messages que nous recevons, à titre de sauvegarde. Nous ne
   répondons pas depuis cette boîte.
-- **Brevo** (Sendinblue SAS, qui opère sous le nom de Brevo, France) envoie nos réponses, et traite donc leur contenu,
-  et conserve un journal de chaque envoi (destinataire, objet, date et remise ou non du message) et une copie de la
-  réponse (qui peut inclure votre message, s’il est cité en dessous). En outre, Brevo ajoute à chaque réponse une image
-  invisible (un pixel) qui enregistre si vous l'ouvrez, et remplace les liens par les siens, qui enregistrent si vous
-  cliquez dessus. Nous ne pouvons pas le retirer avec l'offre que nous utilisons ; nous avons donc activé le suivi
-  anonyme de Brevo : selon Brevo, il compte les ouvertures et les clics sans les associer à votre adresse e-mail. Malgré
-  cela, lorsque l'image se charge ou que vous cliquez sur un lien, votre application de messagerie se connecte aux
-  serveurs de Brevo, qui reçoivent des données techniques telles que votre adresse IP. Nous ne consultons ni n'utilisons
-  ces informations. Si vous préférez l'éviter, bloquez les images externes dans votre application de messagerie et
-  n’ouvrez pas les liens de la réponse. Les copier et les coller dans le navigateur ne sert à rien non plus, car ils
-  passent toujours par Brevo : pour aller sur une page, saisissez vous-même son adresse. La réponse se lit tout aussi
-  bien.
+- **Resend** (Plus Five Five, Inc., États-Unis) envoie nos réponses depuis l'adresse inklab@mainshai.com et en traite
+  donc le contenu. Il les envoie depuis ses serveurs en Irlande, mais conserve les données aux États-Unis : une copie de
+  chaque réponse (qui peut inclure votre message, s'il est cité en dessous) et son journal d'envoi (destinataire, objet,
+  date et remise ou non du message). Resend indique conserver chaque réponse et son journal d'envoi pendant 30 jours à
+  compter de l'envoi ; ses sauvegardes sont conservées pendant sept jours. Nous avons désactivé le suivi des ouvertures
+  et des clics : nos réponses ne comportent aucune image de suivi et leurs liens ne sont pas modifiés. Resend fait appel
+  à ses propres sous-traitants ultérieurs (par exemple, Amazon Web Services pour l'envoi), aux États-Unis ; la liste
+  figure sur https://resend.com/legal/subprocessors.
 
-Nous conservons la conversation dans Gmail, la copie dans Proton, et la copie et le journal d'envoi chez Brevo pendant
-un an au maximum à compter du dernier message de la conversation, sauf si nous devons les conserver plus longtemps pour
+**Brevo, jusqu'au 20 novembre 2026.** Jusqu'à cette date, la présente politique indiquait que les réponses étaient
+envoyées par Brevo (Sendinblue SAS, qui opère sous le nom de Brevo, France), qui ajoute aux e-mails une image invisible
+(un pixel) enregistrant s'ils sont ouverts et remplace les liens par les siens, qui enregistrent si l'on clique dessus.
+Avant le passage à Resend, seuls des e-mails de test du titulaire ont été envoyés par Brevo depuis inklab@mainshai.com,
+et aucune réponse à une personne qui nous avait écrit. Brevo conserve le journal de ces tests et le supprime
+automatiquement douze mois après chaque envoi (la suppression peut prendre jusqu'à un jour de plus). Nous allons
+demander à Brevo de supprimer cet historique plus tôt et fermer le compte.
+
+**Combien de temps nous les conservons.** Nous conservons la conversation dans Gmail et la copie dans Proton pendant un
+an au maximum à compter du dernier message de la conversation, sauf si nous devons les conserver plus longtemps pour
 traiter une réclamation. Nous effectuons un nettoyage tous les trois mois et, à chacun, nous supprimons ce qui
-atteindrait un an avant le suivant. Si nous cessons d'utiliser l'un de ces services, nous supprimons ce qu'il contient.
-Si vous nous demandez de supprimer vos messages plus tôt, nous les supprimons des trois endroits.
+atteindrait un an avant le suivant. Resend indique conserver chaque réponse et son journal d'envoi pendant 30 jours à
+compter de l'envoi ; ses sauvegardes sont conservées pendant sept jours. Lorsque le droit à l'effacement s'applique,
+nous supprimons les messages de Gmail et de Proton et demandons à Resend de supprimer les réponses et les journaux
+d'envoi qu'il conserve encore (seul son support peut le faire). Si nous devons garder certaines données, nous vous
+préciserons lesquelles et pourquoi.
 
 Si vous signalez une suggestion de l'IA (« Signaler cette suggestion », dans « Palette »), l'application ouvre votre
 application de messagerie avec un message déjà rédigé à l'adresse inklab@mainshai.com : le motif que vous choisissez, la
@@ -300,6 +312,8 @@ envoyez l'historique des erreurs, nous ne l'utilisons que pour localiser et corr
 | Diagnostics de ML Kit (uniquement avec l'IA sur l'appareil, sur Android) | Diagnostic et analyse d'utilisation du SDK, selon Google | Envoyés uniquement si vous décidez d'activer l'IA facultative ; Google les traite en tant que fournisseur de ML Kit, selon ses propres conditions et sa politique de confidentialité ; nous ne les recevons pas |
 | IA avec OpenRouter (facultative) | Générer des suggestions de palette | Votre consentement lorsque vous l'activez et utilisez votre propre clé ; le traitement est effectué par OpenRouter selon ses conditions |
 | E-mails d'assistance, retours et signalements de suggestions de l'IA | Répondre à votre demande et examiner le contenu signalé | Votre demande et notre intérêt légitime à y donner suite (art. 6, paragraphe 1, point f)) |
+| Demandes d'exercice des droits relatifs à la protection des données | Traiter et documenter votre demande | Respect des obligations que nous impose le RGPD (art. 6, paragraphe 1, point c)) |
+| Conservation d'une conversation en raison d'une réclamation | Constater, exercer ou défendre nos droits en justice | Notre intérêt légitime (art. 6, paragraphe 1, point f)), pendant le temps nécessaire |
 
 Nous ne prenons aucune décision automatisée et n'établissons aucun profil vous concernant.
 
@@ -309,14 +323,18 @@ de diagnostic et d'utilisation que ML Kit envoie lorsque l'IA sur l'appareil est
 OpenRouter, la requête décrite ci-dessus est reçue par **OpenRouter** et par le **fournisseur du modèle** que vous
 choisissez, en votre nom et avec votre clé. Si vous nous envoyez un e-mail d'assistance, un retour, un signalement de
 suggestion ou l'historique des erreurs, le titulaire le reçoit à l'adresse inklab@mainshai.com (ou à dev@mainshai.com,
-l'adresse utilisée par l'application jusqu'à la version 0.6.2) depuis le service de messagerie de votre choix. Les prestataires présentés dans « Si vous nous écrivez » interviennent en chemin :
+l'adresse utilisée par l'application jusqu'à la version 0.6.2) depuis le service de messagerie de votre choix. Les prestataires présentés dans « Si vous nous écrivez » interviennent en chemin, chacun à l'étape qu'indique le tableau :
 
 | Prestataire | Pour quoi faire | Où |
 |---|---|---|
 | Cloudflare, Inc. | Recevoir et transférer l'e-mail d'assistance ; journal technique du transfert | États-Unis |
 | Google Ireland Limited (Gmail) | Boîte aux lettres de l'e-mail d'assistance | Irlande ; Google LLC peut traiter des données aux États-Unis |
 | Proton AG | Copie de sauvegarde de l'e-mail reçu | Suisse |
-| Sendinblue SAS (Brevo), RCS Paris 498 019 298 | Envoyer les réponses ; journal d'envoi et copie de la réponse (au maximum un an à compter du dernier message, avec nettoyage trimestriel) ; pixel d'ouverture et liens de clic, avec le suivi anonyme de Brevo activé | UE (France) |
+| Plus Five Five, Inc. (Resend) | Envoyer les réponses ; copie de chaque réponse et son journal d'envoi pendant 30 jours à compter de l'envoi (ses sauvegardes sont conservées sept jours) ; aucun suivi des ouvertures ni des clics | États-Unis (les e-mails partent d'Irlande) |
+| Sendinblue SAS (Brevo), RCS Paris 498 019 298 | Jusqu'au 20 novembre 2026, service d'envoi prévu ; n'a envoyé que des e-mails de test du titulaire, dont il supprime automatiquement le journal douze mois après chaque envoi, la suppression pouvant prendre jusqu'à un jour de plus | UE (France) |
+
+Resend traite les réponses en tant que sous-traitant, dans le cadre de l'accord de traitement des données (art. 28 du
+RGPD) qui s'applique à tous ses comptes (https://resend.com/legal/dpa).
 
 Si vous partagez l'historique des erreurs avec une autre personne ou un autre service, seul ce destinataire le reçoit.
 Si vous notez l'application dans la boutique, c'est **Google** ou **Apple** qui reçoit directement votre note et votre
@@ -330,8 +348,12 @@ Pour l'e-mail d'assistance, Cloudflare et Google peuvent traiter des données au
 LLC adhèrent au cadre de protection des données UE-États-Unis, le Data Privacy Framework (décision d'adéquation de la
 Commission européenne du 10 juillet 2023) ; l'accord de traitement des données de Cloudflare comprend en outre des
 clauses contractuelles types. Proton est établie en Suisse, pays bénéficiant d'une décision d'adéquation de la
-Commission européenne. Brevo est une entreprise française et, selon sa documentation, héberge les données dans l'Union
-européenne. En dehors de l'e-mail d'assistance, le développeur n'effectue aucun transfert de données. Si vous utilisez
+Commission européenne. Resend (Plus Five Five, Inc.) conserve les réponses et leur journal aux États-Unis, même si
+l'envoi part d'Irlande ; ce transfert repose sur l'adhésion de Resend au cadre de protection des données UE-États-Unis
+et sur les clauses contractuelles types de la Commission européenne (module 2) intégrées à son accord de traitement des
+données (https://resend.com/legal/dpa) ; vous pouvez aussi nous demander des informations à l'adresse de contact. Brevo,
+le service d'envoi prévu jusqu'au 20 novembre 2026, est une entreprise française et, selon sa documentation,
+héberge les données dans l'Union européenne. En dehors de l'e-mail d'assistance, le développeur n'effectue aucun transfert de données. Si vous utilisez
 l'IA avec OpenRouter, la requête est adressée au fournisseur que vous choisissez, qui peut la traiter dans d'autres
 régions et selon ses propres conditions. Google peut traiter les diagnostics de ML Kit dans d'autres pays, selon ses
 propres conditions. La boutique où vous notez l'application (Google Play ou l'App Store) peut traiter votre note et
@@ -350,10 +372,11 @@ conditions.
   erreurs », que vous effaciez les données de l'application ou que vous la désinstalliez. Comme il ne dépasse jamais
   environ 200 Ko plus un fichier précédent, les entrées les plus anciennes sont supprimées au fur et à mesure.
 - **E-mails d'assistance, retours et historiques des erreurs que vous nous envoyez :** comme expliqué dans « Si vous
-  nous écrivez » : au maximum un an à compter du dernier message de la conversation dans Gmail, dans la copie Proton et
-  chez Brevo, avec un nettoyage tous les trois mois, sauf si nous devons les conserver plus longtemps pour traiter une
-  réclamation. Nous n'avons pas pu confirmer la durée du journal technique de Cloudflare
-  (voir « Si vous nous écrivez »).
+  nous écrivez » : au maximum un an à compter du dernier message de la conversation dans Gmail et dans la copie Proton,
+  avec un nettoyage tous les trois mois, sauf si nous devons les conserver plus longtemps pour traiter une réclamation.
+  Resend indique conserver chaque réponse et son journal d'envoi pendant 30 jours à compter de l'envoi ; ses sauvegardes
+  sont conservées pendant sept jours. Nous n'avons pas pu confirmer la durée du journal technique de Cloudflare ; sur ce
+  journal et sur ce qui reste chez Brevo, voir « Si vous nous écrivez ».
 
 ## 7. Vos droits
 

@@ -1,7 +1,7 @@
 # Política de privacidade do Ink Lab
 
 
-Última atualização: 2026-11-17
+Última atualização: 2026-11-20
 
 Tradução de cortesia. Prevalece a [versão espanhola](https://inklab.mainshai.com/es/privacy/).
 
@@ -13,7 +13,9 @@ Resumo: **não tem conta, não existe servidor próprio e os seus dados ficam no
 gratuita e de código aberto, e não inclui análise de utilização própria, anúncios nem rastreio. **Se não ativar a IA, a
 aplicação não utiliza a rede.** Se a ativar, no Android a IA no dispositivo utiliza o ML Kit da Google, que envia à
 Google dados de diagnóstico e de utilização (nunca os seus pedidos, as suas cores nem as suas fotografias); e, se
-escolher o OpenRouter com a sua própria chave, é enviado exatamente o que se explica mais abaixo.
+escolher o OpenRouter com a sua própria chave, é enviado exatamente o que se explica mais abaixo. Se nos escrever, a
+Cloudflare reencaminha a sua mensagem para o Gmail. Guardamos uma cópia na Proton e respondemos através da Resend sem
+rastrear aberturas nem cliques.
 
 ## 1. Responsável pelo tratamento
 
@@ -216,19 +218,23 @@ aplicação, no seu espaço privado (motivo C617.1), e essa informação não sa
 - O programador não utiliza análise de utilização nem relatórios de erros, e não há anúncios, publicidade personalizada
   nem rastreio entre aplicações. A única exceção na aplicação são os dados de diagnóstico e de utilização que o ML Kit
   envia à Google quando utiliza a IA no dispositivo (ver «IA opcional»); o programador não os recebe. Fora da aplicação,
-  as nossas respostas por correio eletrónico incluem a contagem anónima de aberturas e cliques explicada em «Se nos
-  escrever».
+  as nossas respostas por correio eletrónico não incluem qualquer rastreio de aberturas nem de cliques (ver «Se nos
+  escrever»).
 - O registo de erros (ver «Registo de erros») não é um relatório de falhas automático: nada é enviado por si só, e só
   sai do telemóvel se o partilhar.
 - Não recebemos as suas fotografias, as suas coleções, as suas paletas nem a sua chave.
 
 ### Se nos escrever
 Pode escrever-nos para inklab@mainshai.com. Utilizamos o seu endereço de correio eletrónico, o seu nome, se o indicar, e
-o que nos contar apenas para lhe responder e resolver o que nos perguntar. Não nos envie a sua chave de API nem cópias
+o que nos contar para lhe responder e resolver o que nos perguntar. Se exercer um direito em matéria de proteção de
+dados, tratamos o seu pedido para cumprir as obrigações que o RGPD nos impõe (artigo 6.º, n.º 1, alínea c)). Se
+precisarmos de conservar uma conversa por causa de uma reclamação, fazemo-lo com base no nosso interesse legítimo em
+declarar, exercer ou defender um direito num processo judicial (artigo 6.º, n.º 1, alínea f)), durante o tempo
+necessário para esse fim. Não nos envie a sua chave de API nem cópias
 de segurança com dados que não queira partilhar: para um erro bastam-nos dados de teste.
 
-Pelo caminho intervêm estes fornecedores (o mesmo vale para dev@mainshai.com, o endereço que as versões até à 0.6.2
-utilizavam):
+Pelo caminho intervêm estes fornecedores (a Cloudflare, a Google e a Proton também nas mensagens
+enviadas para dev@mainshai.com, o endereço que as versões até à 0.6.2 utilizavam):
 
 - **Cloudflare** (Cloudflare, Inc., Estados Unidos) recebe a mensagem no nosso domínio e reencaminha-a de imediato. Não
   guarda a mensagem, mas guarda um registo técnico do reencaminhamento (remetente, destinatário, assunto, data e
@@ -239,23 +245,29 @@ utilizavam):
   a conversa. A Google também pode tratar estes dados nos Estados Unidos.
 - **Proton** (Proton AG, Suíça) guarda uma cópia das mensagens que recebemos, como salvaguarda. Não respondemos a partir
   daí.
-- **Brevo** (Sendinblue SAS, que opera como Brevo, França) envia as nossas respostas, pelo que trata o seu conteúdo, e
-  guarda um registo de cada envio (destinatário, assunto, data e se foi entregue) e uma cópia da resposta (que pode
-  incluir a sua mensagem, se estiver citada por baixo). Além disso, a Brevo acrescenta a cada resposta uma imagem
-  invisível (um píxel) que regista se a abre, e substitui as ligações por outras suas, que registam se clica nelas. Não
-  o podemos retirar no plano que utilizamos, pelo que temos ativado o acompanhamento anónimo da Brevo: segundo a Brevo,
-  conta as aberturas e os cliques sem os associar ao seu endereço de correio eletrónico. Mesmo assim, ao carregar a
-  imagem ou ao clicar numa ligação, a sua aplicação de correio liga-se aos servidores da Brevo, que recebem dados
-  técnicos como o seu endereço IP. Nós não consultamos nem utilizamos essa informação. Se preferir evitá-lo, bloqueie as
-  imagens externas na sua aplicação de correio e não abra as ligações da resposta. Também não adianta copiá-las e
-  colá-las no navegador, porque continuam a passar pela Brevo: para aceder a uma página, escreva por si o respetivo
-  endereço. A resposta lê-se exatamente da mesma forma.
+- **Resend** (Plus Five Five, Inc., Estados Unidos) envia as nossas respostas, que saem de inklab@mainshai.com, pelo que
+  trata o seu conteúdo. Envia-as a partir dos seus servidores na Irlanda, mas guarda os dados nos Estados Unidos: uma
+  cópia de cada resposta (que pode incluir a sua mensagem, se estiver citada por baixo) e o respetivo registo de envio
+  (destinatário, assunto, data e se foi entregue). Segundo a Resend, conserva cada resposta e o respetivo registo de
+  envio durante 30 dias a contar do envio, e as suas cópias de segurança são conservadas durante sete dias. Desativámos
+  o rastreio de aberturas e de cliques: as nossas respostas não incluem nenhuma imagem de rastreio e as suas ligações
+  não são alteradas. A Resend recorre aos seus próprios subcontratantes ulteriores (por exemplo, a Amazon Web Services
+  para o envio), nos Estados Unidos; a lista está em https://resend.com/legal/subprocessors.
 
-Guardamos a conversa no Gmail, a cópia na Proton e a cópia e o registo de envio na Brevo, no máximo, durante um ano a
-contar da última mensagem da conversa, salvo se precisarmos de os conservar durante mais tempo para tratar uma
+**Brevo, até 20 de novembro de 2026.** Até essa data, esta política dizia que as respostas eram enviadas através da
+Brevo (Sendinblue SAS, que opera como Brevo, França), que acrescenta às mensagens uma imagem invisível (um píxel) que
+regista se são abertas e substitui as ligações por outras suas, que registam se são clicadas. Antes da mudança para a
+Resend, a partir de inklab@mainshai.com só foram enviados através da Brevo testes do titular, nenhuma resposta a quem
+nos tivesse escrito. A Brevo conserva o registo desses testes e apaga-o automaticamente doze meses após cada envio (a
+eliminação pode demorar até mais um dia). Vamos pedir à Brevo que apague esse histórico mais cedo e encerrar a conta.
+
+**Durante quanto tempo os guardamos.** Guardamos a conversa no Gmail e a cópia na Proton, no máximo, durante um ano a
+contar da última mensagem da conversa, salvo se precisarmos de as conservar durante mais tempo para tratar uma
 reclamação. Fazemos uma limpeza de três em três meses e, em cada uma, apagamos o que completaria o ano antes da
-seguinte. Se deixarmos de utilizar algum desses serviços, apagamos o que lá houver. Se nos pedir que apaguemos as suas
-mensagens antes disso, apagamo-las dos três sítios.
+seguinte. Segundo a Resend, conserva cada resposta e o respetivo registo de envio durante 30 dias a contar do envio, e
+as suas cópias de segurança são conservadas durante sete dias. Quando se aplica o direito ao apagamento, apagamos as
+mensagens do Gmail e da Proton e pedimos à Resend que apague as respostas e os registos de envio que ainda conserve (só
+é possível pedindo-o ao seu serviço de apoio). Se tivermos de conservar alguns dados, explicamos-lhe quais e porquê.
 
 Se reportar uma sugestão da IA («Reportar esta sugestão», em «Paleta»), a aplicação abre a sua aplicação de correio
 eletrónico com uma mensagem já escrita para inklab@mainshai.com: o motivo que escolher, a versão da aplicação, o
@@ -281,6 +293,8 @@ apenas para localizar e corrigir a falha.
 | Diagnósticos do ML Kit (apenas com a IA no dispositivo, no Android) | Diagnóstico e análise de utilização do SDK, segundo a Google | São enviados apenas se decidir ativar a IA opcional; são tratados pela Google enquanto fornecedora do ML Kit, segundo as suas próprias condições e a sua política de privacidade; não os recebemos |
 | IA com o OpenRouter (opcional) | Gerar sugestões de paleta | O seu consentimento ao ativá-la e utilizar a sua própria chave; o tratamento é feito pelo OpenRouter segundo as suas condições |
 | Mensagens de suporte, comentários e relatórios de sugestões da IA | Responder à sua consulta e rever o conteúdo reportado | O seu pedido e o nosso interesse legítimo em atendê-lo (artigo 6.º, n.º 1, alínea f)) |
+| Pedidos de exercício de direitos em matéria de proteção de dados | Atender e documentar o seu pedido | Cumprir as obrigações que o RGPD nos impõe (artigo 6.º, n.º 1, alínea c)) |
+| Conservação de uma conversa por causa de uma reclamação | Declarar, exercer ou defender um direito num processo judicial | O nosso interesse legítimo (artigo 6.º, n.º 1, alínea f)), durante o tempo necessário |
 
 Não tomamos decisões automatizadas nem definimos perfis sobre si.
 
@@ -291,14 +305,18 @@ descrito acima é recebido pelo **OpenRouter** e pelo **fornecedor do modelo** q
 chave. Se nos enviar uma mensagem de suporte, comentários, um relatório de uma sugestão ou o registo de erros, recebe-os
 o titular em inklab@mainshai.com (ou em dev@mainshai.com, o endereço que a aplicação utilizava até à versão 0.6.2) a
 partir do serviço de correio eletrónico que escolher. Pelo caminho intervêm os fornecedores explicados em «Se nos
-escrever»:
+escrever», cada um no passo que a tabela indica:
 
 | Fornecedor | Para quê | Onde |
 |---|---|---|
 | Cloudflare, Inc. | Receber e reencaminhar o correio de suporte; registo técnico do reencaminhamento | EUA |
 | Google Ireland Limited (Gmail) | Caixa de correio do correio de suporte | Irlanda; a Google LLC pode tratar dados nos EUA |
 | Proton AG | Cópia de salvaguarda do correio recebido | Suíça |
-| Sendinblue SAS (Brevo), RCS Paris 498 019 298 | Enviar as respostas; registo de envio e cópia da resposta (no máximo, um ano a contar da última mensagem, com limpeza trimestral); píxel de abertura e ligações de clique, com o acompanhamento anónimo da Brevo ativado | UE (França) |
+| Plus Five Five, Inc. (Resend) | Enviar as respostas; cópia de cada resposta e o respetivo registo de envio durante 30 dias a contar do envio (as suas cópias de segurança são conservadas sete dias); sem rastreio de aberturas nem de cliques | EUA (as mensagens saem da Irlanda) |
+| Sendinblue SAS (Brevo), RCS Paris 498 019 298 | Até 20 de novembro de 2026, serviço de envio previsto; só enviou testes do titular, cujo registo apaga automaticamente doze meses após cada envio, embora a eliminação possa demorar até mais um dia | UE (França) |
+
+A Resend trata as respostas na qualidade de subcontratante, ao abrigo do acordo de tratamento de dados (artigo 28.º do
+RGPD) que se aplica a todas as suas contas (https://resend.com/legal/dpa).
 
 Se partilhar o registo de erros com outra pessoa ou serviço, só esse destinatário o recebe. Se avaliar a aplicação na
 loja, quem recebe diretamente a sua classificação e a sua crítica é a **Google** ou a **Apple**, com a sua conta da
@@ -310,8 +328,11 @@ versões do sistema e da aplicação) e pode responder-lhe aí.
 Para o correio de suporte, a Cloudflare e a Google podem tratar dados nos Estados Unidos. A Cloudflare, Inc. e a Google
 LLC aderiram ao Quadro de Privacidade de Dados UE-EUA, o Data Privacy Framework (decisão de adequação da Comissão
 Europeia de 10 de julho de 2023); o acordo de tratamento de dados da Cloudflare inclui ainda cláusulas contratuais-tipo.
-A Proton está na Suíça, país com decisão de adequação da Comissão Europeia. A Brevo é uma empresa francesa e, segundo a
-sua documentação, aloja os dados na União Europeia. Fora do correio de suporte, o programador não realiza transferências
+A Proton está na Suíça, país com decisão de adequação da Comissão Europeia. A Resend (Plus Five Five, Inc.) guarda as
+respostas e o respetivo registo nos Estados Unidos, embora o envio saia da Irlanda; essa transferência assenta na adesão
+da Resend ao Quadro de Privacidade de Dados UE-EUA e nas cláusulas contratuais-tipo da Comissão Europeia (módulo 2)
+incluídas no seu acordo de tratamento de dados (https://resend.com/legal/dpa); também nos pode pedir informações no
+endereço de contacto. A Brevo, o serviço de envio previsto até 20 de novembro de 2026, é uma empresa francesa e, segundo a sua documentação, aloja os dados na União Europeia. Fora do correio de suporte, o programador não realiza transferências
 de dados. Se utilizar a IA com o OpenRouter, o pedido vai para o fornecedor que escolher, que pode tratá-lo noutras
 regiões e segundo as suas próprias condições. A Google pode tratar os diagnósticos do ML Kit noutros países, segundo as
 suas próprias condições. A loja em que avaliar a aplicação (Google Play ou a App Store) pode tratar a sua classificação
@@ -329,9 +350,11 @@ condições.
   desinstalá-la. Como nunca ultrapassa cerca de 200 KB mais um ficheiro anterior, as entradas mais antigas vão sendo
   descartadas.
 - **Mensagens de suporte, comentários e registos de erros que nos enviar:** tal como se explica em «Se nos escrever»: no
-  máximo, um ano a contar da última mensagem da conversa no Gmail, na cópia da Proton e na Brevo, com uma limpeza de
-  três em três meses, salvo se precisarmos de os conservar durante mais tempo para tratar uma reclamação. Não
-  conseguimos confirmar o prazo do registo técnico da Cloudflare (ver «Se nos escrever»).
+  máximo, um ano a contar da última mensagem da conversa no Gmail e na cópia da Proton, com uma limpeza de três em três
+  meses, salvo se precisarmos de os conservar durante mais tempo para tratar uma reclamação. Segundo a Resend, conserva cada resposta e
+  o respetivo registo de envio durante 30 dias a contar do envio, e as suas cópias de segurança são conservadas durante
+  sete dias. Não conseguimos confirmar o prazo do registo técnico da Cloudflare; sobre esse registo e sobre o que resta
+  na Brevo, ver «Se nos escrever».
 
 ## 7. Os seus direitos
 

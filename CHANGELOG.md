@@ -10,6 +10,8 @@ and the App Store may get several at once, so they can skip numbers.
 
 ## Unreleased
 
+- Privacy policy (20 November 2026): support replies are now sent through Resend, with open and click tracking turned off (no tracking pixel, links left unchanged); Resend keeps a copy of each reply and its sending log for 30 days. Brevo, which added a tracking pixel and rewrote links, was only ever used for the owner's test emails; the policy explains what remains there and when it is deleted.
+
 ## 1.5.0 · 2026-11-19
 
 - Match and My colour: drag anywhere on a photo to fine-tune the sample, with live colour matches and a magnified preview above your finger.

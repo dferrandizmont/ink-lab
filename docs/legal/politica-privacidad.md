@@ -1,17 +1,18 @@
 # Política de privacidad de Ink Lab
 
 
-Última actualización: 2026-11-17
+Última actualización: 2026-11-20
 
 Ink Lab es una app para quien dibuja con rotuladores de alcohol: consulta las muestras de color, empareja el color de
 una foto con un rotulador de tu colección y construye paletas con teoría del color. Es una app independiente: no está
 creada, revisada ni respaldada por Ohuhu, DecoTime ni ninguna otra marca.
 
-Resumen: **no tienes cuenta, no hay servidor propio y tus datos se quedan en tu móvil.** La app es totalmente gratuita
-y de código abierto, y no incluye analítica propia, anuncios ni rastreo. **Si no activas la IA, la app no usa la red.**
-Si la activas, en Android la IA en el móvil usa ML Kit de Google, que envía a Google datos de diagnóstico y de uso
-(nunca tus peticiones, tus colores ni tus fotos); y si eliges OpenRouter con tu propia clave, se envía justo lo que se
-explica más abajo.
+Resumen: **no tienes cuenta, no hay servidor propio y tus datos se quedan en tu móvil.** La app es totalmente gratuita y
+de código abierto, y no incluye analítica propia, anuncios ni rastreo. **Si no activas la IA, la app no usa la red.** Si
+la activas, en Android la IA en el móvil usa ML Kit de Google, que envía a Google datos de diagnóstico y de uso (nunca
+tus peticiones, tus colores ni tus fotos); y si eliges OpenRouter con tu propia clave, se envía justo lo que se explica
+más abajo. Si nos escribes, Cloudflare reenvía tu mensaje a Gmail, guardamos una copia en Proton y respondemos por
+Resend sin seguimiento de aperturas ni de clics.
 
 ## 1. Responsable del tratamiento
 
@@ -205,19 +206,22 @@ espacio privado (motivo C617.1), y esa información no sale del móvil.
 - El desarrollador no usa analítica ni informes de errores, y no hay anuncios, publicidad personalizada ni rastreo
   entre apps. La única excepción en la app son los datos de diagnóstico y de uso que ML Kit envía a Google cuando usas
   la IA en el móvil (ver «IA opcional»); el desarrollador no los recibe. Fuera de la app, nuestras respuestas de correo
-  llevan el recuento anónimo de aperturas y clics que se explica en «Si nos escribes».
+  no llevan seguimiento de aperturas ni de clics (ver «Si nos escribes»).
 - El registro de errores (ver «Registro de errores») no es un informe de errores automático: no se envía nada por sí
   solo, y solo sale del móvil si lo compartes tú.
 - No recibimos tus fotos, tus colecciones, tus paletas ni tu clave.
 
 ### Si nos escribes
-Puedes escribirnos a inklab@mainshai.com. Usamos tu dirección de correo, tu nombre si lo pones y lo que nos cuentes solo
-para contestarte y resolver lo que nos preguntas.
+Puedes escribirnos a inklab@mainshai.com. Usamos tu dirección de correo, tu nombre si lo pones y lo que nos cuentes para
+contestarte y resolver lo que nos preguntas. Si ejerces un derecho de protección de datos, tratamos tu solicitud para
+cumplir las obligaciones que nos impone el RGPD (art. 6.1.c). Si necesitamos conservar una conversación por una
+reclamación, lo hacemos por nuestro interés legítimo en formularla, ejercerla o defendernos frente a ella (art. 6.1.f),
+durante el tiempo necesario para ello.
 No nos mandes tu clave de API ni copias de seguridad con datos que no quieras compartir: para un fallo nos basta con
 datos de prueba.
 
-Por el camino intervienen estos proveedores (lo mismo vale para dev@mainshai.com, la dirección que usaban las versiones
-hasta la 0.6.2):
+Por el camino intervienen estos proveedores (Cloudflare, Google y Proton, también en los mensajes que lleguen a
+dev@mainshai.com, la dirección que usaban las versiones hasta la 0.6.2):
 
 - **Cloudflare** (Cloudflare, Inc., Estados Unidos) recibe el mensaje en nuestro dominio y lo reenvía al momento. No guarda el mensaje, pero sí un registro técnico del reenvío (remitente, destinatario, asunto, fecha y
   resultado). Lo conserva
@@ -226,20 +230,29 @@ hasta la 0.6.2):
 - **Google** (Gmail; Google Ireland Limited) es el buzón donde leemos tu mensaje, te respondemos y guardamos la
   conversación. Google puede tratar estos datos también en Estados Unidos.
 - **Proton** (Proton AG, Suiza) guarda una copia de los mensajes que recibimos, como respaldo. Desde ahí no respondemos.
-- **Brevo** (Sendinblue SAS, que opera como Brevo, Francia) envía nuestras respuestas, por lo que trata su contenido, y
-  guarda un registro de cada envío (destinatario, asunto, fecha y si se entregó) y una copia de la respuesta (que puede incluir tu mensaje, si va citado debajo). Además, Brevo añade a cada respuesta
-  una imagen invisible (un píxel) que registra si la abres, y cambia los enlaces por otros suyos que registran si los
-  pulsas. No podemos quitarlo en el plan que usamos, así que tenemos activado el seguimiento anónimo de Brevo: según
-  Brevo, cuenta las aperturas y los clics sin asociarlos a tu dirección de correo. Aun así, al cargar la imagen o pulsar
-  un enlace, tu programa de correo se conecta a los servidores de Brevo, que reciben datos técnicos como tu dirección
-  IP. Nosotros no consultamos ni usamos esa información. Si prefieres evitarlo, bloquea las imágenes externas en tu
-  programa de correo y no abras los enlaces de la respuesta. Tampoco sirve copiarlos y pegarlos en el navegador, porque
-  siguen pasando por Brevo: para ir a una página, escribe tú su dirección. La respuesta se lee igual.
+- **Resend** (Plus Five Five, Inc., Estados Unidos) envía nuestras respuestas, que salen desde inklab@mainshai.com, por lo
+  que trata su contenido. Las envía desde sus servidores de Irlanda, pero guarda los datos en Estados Unidos: una copia
+  de cada respuesta (que puede incluir tu mensaje, si va citado debajo) y su registro de envío (destinatario, asunto,
+  fecha y si se entregó). Según Resend, conserva cada respuesta y su registro de envío durante 30 días desde el envío, y
+  sus copias de seguridad se conservan durante siete días. Tenemos desactivado el seguimiento de aperturas y de clics:
+  nuestras respuestas no llevan ninguna imagen de seguimiento y sus enlaces no se cambian. Resend usa sus propios
+  subencargados (por ejemplo, Amazon Web Services para el envío), en Estados Unidos; la lista está en
+  https://resend.com/legal/subprocessors.
 
-Guardamos la conversación en Gmail, la copia en Proton y la copia y el registro de envío en Brevo como máximo un año
-desde el último mensaje de la conversación, salvo que necesitemos conservarlos más tiempo para atender una reclamación.
-Hacemos una limpieza cada tres meses y en cada una borramos lo que cumpliría el año antes de la siguiente. Si dejamos de usar alguno de esos servicios, borramos lo que haya en él. Si nos pides que borremos tus
-mensajes antes, los borramos de los tres sitios.
+**Brevo, hasta el 20 de noviembre de 2026.** Hasta esa fecha, esta política decía que las respuestas salían por Brevo
+(Sendinblue SAS, que opera como Brevo, Francia), que añade a los correos una imagen invisible (un píxel) que registra si
+se abren y cambia los enlaces por otros suyos que registran si se pulsan. Antes del cambio a Resend, desde
+inklab@mainshai.com solo se enviaron por Brevo pruebas del titular, ninguna respuesta a quien nos escribiera. Brevo
+conserva el registro de esas pruebas y lo borra automáticamente doce meses después de cada envío (el borrado puede
+tardar hasta un día más). Vamos a pedir a Brevo que borre antes ese historial y a cerrar la cuenta.
+
+**Cuánto lo guardamos.** Guardamos la conversación en Gmail y la copia en Proton como máximo un año desde el último
+mensaje de la conversación, salvo que necesitemos conservarlas más tiempo para atender una reclamación. Hacemos una
+limpieza cada tres meses y en cada una borramos lo que cumpliría el año antes de la siguiente. Según Resend, conserva
+cada respuesta y su registro de envío durante 30 días desde el envío, y sus copias de seguridad se conservan durante
+siete días. Si procede la supresión, borramos los mensajes de Gmail y Proton y pedimos a Resend que elimine las
+respuestas y los registros de envío que aún conserve (solo se puede pidiéndoselo a su servicio de ayuda). Si debemos
+conservar algún dato, te explicaremos cuál y por qué.
 
 Si reportas una sugerencia de la IA («Reportar esta sugerencia», en Paleta), la app abre tu app de correo con un
 mensaje ya escrito para inklab@mainshai.com: el motivo que elijas, la versión de la app, el proveedor y el modelo de IA,
@@ -263,6 +276,8 @@ portapapeles. Si nos mandas el registro de errores, lo usamos solo para localiza
 | Diagnósticos de ML Kit (solo con la IA en el móvil, en Android) | Diagnóstico y analítica de uso del SDK, según Google | Se envían solo si decides activar la IA opcional; los trata Google como proveedor de ML Kit, bajo sus propias condiciones y su política de privacidad; no los recibimos |
 | IA con OpenRouter (opcional) | Generar sugerencias de paleta | Tu consentimiento al activarla y usar tu propia clave; el tratamiento lo hace OpenRouter bajo sus condiciones |
 | Correos de soporte, comentarios y reportes de sugerencias de IA | Responder a tu consulta y revisar el contenido reportado | Tu solicitud y nuestro interés legítimo en atenderla (art. 6.1.f) |
+| Solicitudes de derechos de protección de datos | Atender y documentar tu solicitud | Cumplir las obligaciones que nos impone el RGPD (art. 6.1.c) |
+| Conservación de una conversación por una reclamación | Formular, ejercer o defendernos frente a una reclamación | Nuestro interés legítimo (art. 6.1.f), durante el tiempo necesario |
 
 No tomamos decisiones automatizadas ni elaboramos perfiles sobre ti.
 
@@ -272,14 +287,19 @@ uso que envía ML Kit al usarse la IA en el móvil. Si usas la IA con OpenRouter
 **OpenRouter** y el **proveedor del modelo** que elijas, en tu nombre y con tu clave. Si nos envías un correo de
 soporte, unos comentarios, un reporte de una sugerencia o el registro de errores, lo recibe el titular en
 inklab@mainshai.com (o en dev@mainshai.com, el buzón que usaba la app hasta la versión 0.6.2) desde el servicio de
-correo que elijas. Por el camino intervienen los proveedores que se explican en «Si nos escribes»:
+correo que elijas. Por el camino intervienen los proveedores que se explican en «Si nos escribes», cada uno en el paso que indica la
+tabla:
 
 | Proveedor | Para qué | Dónde |
 |---|---|---|
 | Cloudflare, Inc. | Recibir y reenviar el correo de soporte; registro técnico del reenvío | EE. UU. |
 | Google Ireland Limited (Gmail) | Buzón del correo de soporte | Irlanda; Google LLC puede tratar datos en EE. UU. |
 | Proton AG | Copia de respaldo del correo recibido | Suiza |
-| Sendinblue SAS (Brevo), RCS París 498 019 298 | Enviar las respuestas; registro de envío y copia de la respuesta (como máximo un año desde el último mensaje, con limpieza trimestral); píxel de apertura y enlaces de clic, con el seguimiento anónimo de Brevo activado | UE (Francia) |
+| Plus Five Five, Inc. (Resend) | Enviar las respuestas; copia de cada respuesta y su registro de envío durante 30 días desde el envío (sus copias de seguridad se conservan siete días); sin seguimiento de aperturas ni de clics | EE. UU. (el envío sale de Irlanda) |
+| Sendinblue SAS (Brevo), RCS París 498 019 298 | Hasta el 20 de noviembre de 2026, servicio de envío previsto; solo envió pruebas del titular, cuyo registro borra automáticamente doce meses después de cada envío, aunque el borrado puede tardar hasta un día más | UE (Francia) |
+
+Resend trata las respuestas como encargado del tratamiento, con el acuerdo de tratamiento de datos (art. 28 del RGPD)
+que se aplica a todas sus cuentas (https://resend.com/legal/dpa).
 
 Si compartes el registro de errores con otra persona o servicio, solo lo recibe ese destinatario. Si valoras la
 app en la tienda, tu valoración y tu reseña las recibe **Google** o **Apple** directamente, con tu cuenta de la tienda;
@@ -291,8 +311,11 @@ versiones del sistema y de la app) y puede responderte allí.
 Para el correo de soporte, Cloudflare y Google pueden tratar datos en Estados Unidos. Cloudflare, Inc. y Google LLC
 están adheridas al Marco de Privacidad de Datos UE-EE. UU. (decisión de adecuación de la Comisión Europea de 10 de
 julio de 2023); el acuerdo de tratamiento de datos de Cloudflare incluye además cláusulas contractuales tipo. Proton
-está en Suiza, país con decisión de adecuación de la Comisión Europea. Brevo es una empresa francesa y, según su
-documentación, aloja los datos en la Unión Europea. Fuera del correo de soporte, el desarrollador no realiza
+está en Suiza, país con decisión de adecuación de la Comisión Europea. Resend (Plus Five Five, Inc.) guarda en Estados
+Unidos las respuestas y su registro, aunque el envío salga de Irlanda; esa transferencia se ampara en la adhesión de
+Resend al Marco de Privacidad de Datos UE-EE. UU. y en las cláusulas contractuales tipo de la Comisión Europea (módulo 2)
+que incorpora su acuerdo de tratamiento de datos (https://resend.com/legal/dpa); también puedes pedirnos información en
+el correo de contacto. Brevo, el servicio previsto hasta el 20 de noviembre de 2026, es una empresa francesa y, según su documentación, aloja los datos en la Unión Europea. Fuera del correo de soporte, el desarrollador no realiza
 transferencias de datos. Si usas la IA con OpenRouter, la petición va al proveedor que
 elijas, que puede tratarla en otras regiones y bajo sus propias condiciones. Google puede tratar los diagnósticos de ML
 Kit en otros países, según sus propias condiciones. La tienda en la que valores la app (Google Play o la App Store)
@@ -310,9 +333,11 @@ condiciones.
   o la desinstales. Como no pasa de unos 200 KB más un fichero anterior, las anotaciones más antiguas se van
   descartando.
 - **Correos de soporte, comentarios y registros de errores que nos mandes:** como se explica en «Si nos escribes»: como máximo un año desde el
-  último mensaje de la conversación en Gmail, en la copia de Proton y en Brevo, con una limpieza cada tres meses, salvo que necesitemos
-  conservarlos más tiempo para atender una reclamación. El plazo del registro técnico de Cloudflare no lo hemos podido
-  confirmar (ver «Si nos escribes»).
+  último mensaje de la conversación en Gmail y en la copia de Proton, con una limpieza cada tres meses, salvo que
+  necesitemos conservarlos más tiempo para atender una reclamación. Según Resend, conserva cada respuesta y su
+  registro de envío durante 30 días desde el envío, y sus copias de seguridad se conservan durante siete días. El plazo
+  del registro técnico de Cloudflare no lo hemos podido confirmar; sobre él y sobre lo que queda en Brevo, ver «Si nos
+  escribes».
 
 ## 7. Tus derechos
 

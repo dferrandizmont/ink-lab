@@ -25,24 +25,12 @@ L’IA est facultative et désactivée par défaut.
 ## Téléchargement
 
 <p>
-  <a href="https://play.google.com/apps/testing/es.inklab.app"><img src="https://img.shields.io/badge/Google_Play-B%C3%AAta-414141?logo=googleplay&amp;style=for-the-badge" alt="Bêta sur Google Play"></a>
+  <a href="https://play.google.com/store/apps/details?id=es.inklab.app"><img src="https://img.shields.io/badge/Google_Play-T%C3%A9l%C3%A9charger-414141?logo=googleplay&amp;style=for-the-badge" alt="Disponible sur Google Play"></a>
   <a href="https://github.com/dferrandizmont/ink-lab/releases/latest"><img src="https://img.shields.io/badge/Disponible_sur-GitHub-181717?logo=github&amp;style=for-the-badge" alt="Disponible sur GitHub"></a>
   <a href="https://apps.apple.com/app/ink-lab-marker-palettes/id6830184034"><img src="https://img.shields.io/badge/App_Store-T%C3%A9l%C3%A9charger-0D96F6?logo=appstore&amp;style=for-the-badge" alt="Disponible sur l’App Store"></a>
 </p>
 
-iPhone et iPad sur l’App Store. Android sur GitHub et en test fermé sur Google Play.
-
-<details>
-<summary>Rejoindre la bêta Google Play</summary>
-
-1. Rejoins le groupe [ink-lab-testers](https://groups.google.com/g/ink-lab-testers). Connecte-toi à Google et appuie sur « Rejoindre le groupe ».
-2. Accepte le test : [play.google.com/apps/testing/es.inklab.app](https://play.google.com/apps/testing/es.inklab.app).
-3. Installe l’appli depuis Google Play. Elle se met à jour toute seule.
-
-Reste 14 jours : Google exige 12 testeurs pendant 14 jours avant la
-publication. Retours : inklab@mainshai.com.
-
-</details>
+iPhone et iPad sur l’App Store. Android sur Google Play et sur GitHub.
 
 <details>
 <summary>Installer l’APK depuis GitHub</summary>
