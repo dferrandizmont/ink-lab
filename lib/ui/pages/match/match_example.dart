@@ -60,9 +60,8 @@ final class MatchExample {
 /// A small, tappable preview of the example photo with the sample ring on it,
 /// and the chip of the marker that point matches under it.
 ///
-/// The box is a fixed 2:1 whatever the photo is (it is cropped to fill it) and
-/// the chip row always takes its height, even before the match is known or
-/// when there is none: nothing around it moves when the numbers arrive.
+/// The photo is cropped to a fixed 2:1 box. The chip is laid out separately
+/// from the image frames and keeps one line of space while its name is unknown.
 /// Tapping the preview does what the example button does; a `null` [onTap]
 /// disables it.
 class MatchExamplePreview extends StatelessWidget {
@@ -179,11 +178,7 @@ class MatchExamplePreview extends StatelessWidget {
   }
 }
 
-/// The chip of the marker that matches the example: its swatch, its code and
-/// its name, wrapping within a slot reserved before the name is known.
-///
-/// Without a [match] it is drawn the same, invisible, so the row keeps its
-/// height at any text size.
+/// The chip of the marker that matches the example: its swatch, code and name.
 class _MarkerChip extends StatelessWidget {
   const _MarkerChip({required this.match});
 
@@ -198,16 +193,6 @@ class _MarkerChip extends StatelessWidget {
     final TextStyle nameStyle = AppTypography.secondary.copyWith(
       color: ink.fg2,
     );
-    final TextPainter nameSlot = TextPainter(
-      text: TextSpan(
-        text: List<String>.filled(_nameMaxLines, 'M').join('\n'),
-        style: nameStyle,
-      ),
-      textDirection: Directionality.of(context),
-      textScaler: MediaQuery.textScalerOf(context),
-    )..layout();
-    final double reservedNameHeight = nameSlot.height;
-    nameSlot.dispose();
     final TextStyle codeStyle = AppTypography.code.copyWith(color: ink.fg);
     return Visibility(
       visible: color != null,
@@ -246,14 +231,11 @@ class _MarkerChip extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
-              height: reservedNameHeight,
-              child: Text(
-                color?.newName ?? '',
-                style: nameStyle,
-                maxLines: _nameMaxLines,
-                overflow: TextOverflow.ellipsis,
-              ),
+            Text(
+              color?.newName ?? 'M',
+              style: nameStyle,
+              maxLines: _nameMaxLines,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

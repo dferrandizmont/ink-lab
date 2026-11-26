@@ -152,6 +152,17 @@ class PalettePage extends StatefulWidget {
 class _PalettePageState extends State<PalettePage> {
   /// The title block, which moves in and out of the list (see [_buildBody]).
   final GlobalKey _headerKey = GlobalKey();
+  final GlobalKey _viewportKey = GlobalKey();
+  final GlobalKey _stackedActionsKey = GlobalKey(
+    debugLabel: 'palette-actions-stacked',
+  );
+  final GlobalKey _splitActionsKey = GlobalKey(
+    debugLabel: 'palette-actions-split',
+  );
+  final GlobalKey _paintOrderHeaderKey = GlobalKey(
+    debugLabel: 'palette-paint-order-header',
+  );
+  final GlobalKey _variationsKey = GlobalKey(debugLabel: 'palette-variations');
 
   late final ImagePickerService _picker =
       widget.picker ?? PlatformImagePickerService();
@@ -386,9 +397,8 @@ class _PalettePageState extends State<PalettePage> {
   /// The "Replace this palette?" dialog is open.
   bool _confirmingReplacement = false;
 
-  /// A count of the Undo snack bars shown (a closing one must not clear a
-  /// newer one's) and the one on screen, to take it down (see [_dropUndo]).
-  int _undoGeneration = 0;
+  /// Invalidates scheduled snack bars when an action supersedes them.
+  int _snackGeneration = 0;
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _undoSnack;
   // These keys only measure Save for the notice margin. Keep an anchor per
   // layout: reparenting the button between the stacked and split lists can
@@ -428,7 +438,10 @@ class _PalettePageState extends State<PalettePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final bool visible = Visibility.of(context);
-    if (_tabVisible && !visible) _notice = null;
+    if (_tabVisible && !visible) {
+      _notice = null;
+      ++_snackGeneration;
+    }
     _tabVisible = visible;
     final scope = _scopeOf(context);
     if (scope == null || identical(scope, _scope)) return;
@@ -788,35 +801,184 @@ class _PalettePageState extends State<PalettePage> {
     if (_aiLoading) setState(() => _aiLoading = false);
   }
 
-  /// Margin of a floating snack bar of this page: it keeps the final Save
-  /// action reachable at the foot of the list.
-  EdgeInsets _snackMargin() {
-    double bottom =
+  static const EdgeInsetsDirectional _undoSnackPadding =
+      EdgeInsetsDirectional.only(start: InkSpacing.cardH, end: InkSpacing.s4);
+
+  /// Finds the lowest gap that leaves the visible controls reachable.
+  EdgeInsets _snackMargin(
+    String Function(AppLocalizations) message, {
+    required bool hasUndo,
+  }) {
+    final double defaultBottom =
         InkGeometry.buttonHeight +
         InkSpacing.pageBottomOf(context) +
         InkSpacing.buttonGap;
-    final RenderObject? save =
-        (_splitSaveSlotKey.currentContext ?? _stackedSaveSlotKey.currentContext)
-            ?.findRenderObject();
-    final RenderObject? scaffold = Scaffold.of(context).context
-        .findRenderObject();
-    if (save is RenderBox && scaffold is RenderBox && save.hasSize) {
-      final double top = save.localToGlobal(Offset.zero, ancestor: scaffold).dy;
-      // Protect a visible Save even before the user reaches the list's end.
-      // In the upper half there is room for the notice below the button.
-      if (top >= scaffold.size.height / 2 && top < scaffold.size.height) {
-        bottom = math.max(
-          bottom,
-          scaffold.size.height - top + InkSpacing.buttonGap,
-        );
-      }
-    }
-    return EdgeInsets.fromLTRB(
+
+    EdgeInsets margin(double bottom) => EdgeInsets.fromLTRB(
       InkSpacing.pageMargin,
       0,
       InkSpacing.pageMargin,
       bottom,
     );
+
+    final BuildContext scaffoldContext = Scaffold.of(context).context;
+    final RenderObject? scaffold = scaffoldContext.findRenderObject();
+    if (scaffold is! RenderBox || !scaffold.hasSize) {
+      return margin(defaultBottom);
+    }
+
+    Rect? boundsOf(GlobalKey key) {
+      final RenderObject? box = key.currentContext?.findRenderObject();
+      if (box is! RenderBox || !box.attached || !box.hasSize) return null;
+      final Rect rect =
+          box.localToGlobal(Offset.zero, ancestor: scaffold) & box.size;
+      return rect.isFinite && !rect.isEmpty ? rect : null;
+    }
+
+    final Rect? viewport = boundsOf(_viewportKey);
+    if (viewport == null) return margin(defaultBottom);
+    final Rect? header = InkLayout.isShortPage(context)
+        ? null
+        : boundsOf(_headerKey);
+    final Rect visible = viewport.intersect(
+      Rect.fromLTRB(
+        0,
+        header?.bottom ?? 0,
+        scaffold.size.width,
+        scaffold.size.height,
+      ),
+    );
+    final Rect? actions =
+        boundsOf(_splitActionsKey) ?? boundsOf(_stackedActionsKey);
+    final List<Rect> zones = <Rect>[
+      for (final Rect? rect in <Rect?>[
+        actions,
+        boundsOf(_paintOrderHeaderKey),
+        boundsOf(_variationsKey),
+      ])
+        if (rect != null && rect.overlaps(visible)) rect.intersect(visible),
+    ];
+    if (zones.isEmpty) return margin(defaultBottom);
+
+    // Scaffold positions a floating snack above the navigation bar or bottom
+    // safe area. Use that anchor to express a Scaffold coordinate as a margin.
+    final MediaQueryData media = MediaQuery.of(scaffoldContext);
+    final double anchor = math.min(
+      viewport.bottom,
+      scaffold.size.height - media.viewPadding.bottom,
+    );
+    double above(Rect rect) =>
+        math.max(0, anchor - rect.top + InkSpacing.buttonGap);
+
+    // A visible snack can rebuild in another language while keeping its
+    // margin. Reserve space for the tallest message and button combination.
+    final double width = scaffold.size.width - media.padding.horizontal;
+    double height = 0;
+    for (final Locale locale in AppLocalizations.supportedLocales) {
+      final AppLocalizations strings = lookupAppLocalizations(locale);
+      height = math.max(
+        height,
+        _snackHeight(
+          message(strings),
+          hasUndo ? strings.paletteUndoButton : null,
+          width,
+          locale,
+        ),
+      );
+    }
+    final List<double> candidates = <double>[
+      defaultBottom,
+      for (final Rect rect in zones) above(rect),
+    ]..sort();
+    for (final double bottom in candidates) {
+      final double lower = anchor - bottom;
+      final double upper = lower - height;
+      if (upper >= visible.top &&
+          !zones.any((Rect rect) => upper < rect.bottom && lower > rect.top)) {
+        return margin(bottom);
+      }
+    }
+
+    bool startsInLowerHalf(Rect rect) =>
+        rect.overlaps(visible) &&
+        rect.top >= math.max(visible.top, scaffold.size.height / 2);
+
+    if (actions != null && startsInLowerHalf(actions)) {
+      return margin(above(actions));
+    }
+    final Rect? save =
+        boundsOf(_splitSaveSlotKey) ?? boundsOf(_stackedSaveSlotKey);
+    if (save != null && startsInLowerHalf(save)) {
+      return margin(math.max(defaultBottom, above(save)));
+    }
+    return margin(defaultBottom);
+  }
+
+  double _snackHeight(
+    String message,
+    String? undoLabel,
+    double scaffoldWidth,
+    Locale locale,
+  ) {
+    final ThemeData theme = Theme.of(context);
+    final SnackBarThemeData snackTheme = SnackBarTheme.of(context);
+    final TextDirection direction = Directionality.of(context);
+    final TextPainter painter = TextPainter(
+      textDirection: direction,
+      textScaler: MediaQuery.textScalerOf(context),
+      locale: locale,
+    );
+    // Flutter's default floating SnackBar pads the content by 16 horizontally
+    // and 14 vertically. Undo supplies its own padding around the Row.
+    final double width =
+        snackTheme.width ?? scaffoldWidth - 2 * InkSpacing.pageMargin;
+    double textWidth = width - 32;
+    double verticalPadding = 28;
+    if (undoLabel != null) {
+      final ButtonStyle? style = TextButtonTheme.of(context).style;
+      const Set<WidgetState> states = <WidgetState>{};
+      final TextStyle? labelStyle = theme.textTheme.labelLarge;
+      painter.text = TextSpan(
+        text: undoLabel,
+        style: style?.textStyle?.resolve(states) ?? labelStyle,
+      );
+      painter.layout();
+      final double minWidth = style?.minimumSize?.resolve(states)?.width ?? 64;
+      final EdgeInsetsGeometry padding =
+          style?.padding?.resolve(states) ??
+          ButtonStyleButton.scaledPadding(
+            EdgeInsets.symmetric(horizontal: theme.useMaterial3 ? 12 : 8),
+            const EdgeInsets.symmetric(horizontal: 8),
+            const EdgeInsets.symmetric(horizontal: 4),
+            painter.textScaler.scale(labelStyle?.fontSize ?? 14) / 14,
+          );
+      final double density =
+          (style?.visualDensity ?? theme.visualDensity).baseSizeAdjustment.dx;
+      final double buttonWidth = math.max(
+        minWidth + density,
+        painter.width + padding.horizontal + math.max(0, density),
+      );
+      textWidth = width - _undoSnackPadding.horizontal - buttonWidth;
+      verticalPadding = _undoSnackPadding.vertical;
+    }
+    final TextStyle? defaultStyle = theme.useMaterial3
+        ? theme.textTheme.bodyMedium
+        : ThemeData(
+            brightness: theme.brightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
+            useMaterial3: false,
+          ).textTheme.titleMedium;
+    painter.text = TextSpan(
+      text: message,
+      style: snackTheme.contentTextStyle ?? defaultStyle,
+    );
+    painter.layout(maxWidth: math.max(0, textWidth));
+    final double height =
+        math.max(kMinInteractiveDimension, painter.height + verticalPadding) +
+        4;
+    painter.dispose();
+    return height;
   }
 
   /// Shows "Palette changed" (or [message], when the action says what it did
@@ -826,76 +988,91 @@ class _PalettePageState extends State<PalettePage> {
   void _offerUndo(
     _PaletteSnapshot previous, {
     MarkerColor? newBase,
-    String? message,
+    String Function(AppLocalizations)? message,
   }) {
-    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
-      context,
+    final String? baseCode = newBase == null ? null : _codeLabel(newBase);
+    _scheduleSnack(
+      baseCode == null ? 'palette-changed' : 'palette-base-replaced',
+      (AppLocalizations strings) => baseCode == null
+          ? message?.call(strings) ?? strings.paletteChanged
+          : strings.paletteBaseReplaced(baseCode),
+      previous: previous,
     );
-    if (messenger == null) return;
-    messenger.hideCurrentSnackBar();
-    final int generation = ++_undoGeneration;
-    final ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snack =
-        messenger.showSnackBar(
-          SnackBar(
-            key: ValueKey<String>(
-              newBase == null ? 'palette-changed' : 'palette-base-replaced',
-            ),
-            duration: InkMotion.undoSnack,
-            behavior: SnackBarBehavior.floating,
-            margin: _snackMargin(),
-            // The Undo button is drawn here, not as a SnackBarAction: the
-            // snack bar forces the Material default pill shape on its action.
-            padding: const EdgeInsetsDirectional.only(
-              start: InkSpacing.cardH,
-              end: InkSpacing.s4,
-            ),
-            content: Builder(
-              builder: (BuildContext context) => Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      newBase == null
-                          ? message ?? context.l10n.paletteChanged
-                          : context.l10n.paletteBaseReplaced(
-                              _codeLabel(newBase),
-                            ),
-                    ),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: InkColors.of(context).pale,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: InkRadii.controlRadius,
+  }
+
+  void _scheduleSnack(
+    String key,
+    String Function(AppLocalizations) message, {
+    _PaletteSnapshot? previous,
+  }) {
+    final int generation = ++_snackGeneration;
+    final WidgetsBinding binding = WidgetsBinding.instance;
+    binding.addPostFrameCallback((_) {
+      if (!mounted || !_tabVisible || generation != _snackGeneration) return;
+      // Another route covers the page: the notice would wait in the shared
+      // messenger and show up over whatever is in front.
+      if (!(ModalRoute.of(context)?.isCurrent ?? true)) return;
+      final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
+        context,
+      );
+      if (messenger == null) return;
+      final bool hasUndo = previous != null;
+      // Removed at once, not hidden: the new notice is then the current one,
+      // so [_dropUndo] always closes the notice it holds.
+      messenger.removeCurrentSnackBar();
+      final ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snack =
+          messenger.showSnackBar(
+            SnackBar(
+              key: ValueKey<String>(key),
+              duration: InkMotion.undoSnack,
+              behavior: SnackBarBehavior.floating,
+              margin: _snackMargin(message, hasUndo: hasUndo),
+              // Draw Undo here to keep the app's button shape.
+              padding: hasUndo ? _undoSnackPadding : null,
+              content: Builder(
+                builder: (BuildContext context) {
+                  final Text text = Text(message(context.l10n));
+                  if (previous == null) return text;
+                  return Row(
+                    children: <Widget>[
+                      Expanded(child: text),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: InkColors.of(context).pale,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: InkRadii.controlRadius,
+                          ),
+                        ),
+                        onPressed: () {
+                          messenger.hideCurrentSnackBar();
+                          if (!mounted) return;
+                          setState(() => previous.restore(this));
+                        },
+                        child: Text(context.l10n.paletteUndoButton),
                       ),
-                    ),
-                    onPressed: () {
-                      messenger.hideCurrentSnackBar();
-                      if (!mounted) return;
-                      setState(() => previous.restore(this));
-                    },
-                    child: Text(context.l10n.paletteUndoButton),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
             ),
-          ),
-        );
-    _undoSnack = snack;
-    snack.closed.whenComplete(() {
-      // The snack bar is gone (its time, Undo, or the page left).
-      if (generation == _undoGeneration) {
-        _undoSnack = null;
-      }
+          );
+      if (!hasUndo) return;
+      _undoSnack = snack;
+      snack.closed.whenComplete(() {
+        if (identical(_undoSnack, snack)) _undoSnack = null;
+      });
     });
+    // A brand notice can be requested without changing the palette.
+    binding.ensureVisualUpdate();
   }
 
   /// Takes the Undo snack bar down: what it would
   /// bring back no longer fits the collection (see [_reload]).
   void _dropUndo() {
+    ++_snackGeneration;
     final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? snack =
         _undoSnack;
     if (snack == null) return;
-    ++_undoGeneration;
     _undoSnack = null;
     snack.close();
   }
@@ -952,7 +1129,7 @@ class _PalettePageState extends State<PalettePage> {
     bool dropsLocks = false,
     int? wanted,
     bool edit = false,
-    String? undoMessage,
+    String Function(AppLocalizations)? undoMessage,
   }) async {
     final _Approval approval = await _approveReplacement(
       dropsLocks: dropsLocks,
@@ -978,7 +1155,7 @@ class _PalettePageState extends State<PalettePage> {
     _PaletteSnapshot? previous, {
     bool edit = false,
     MarkerColor? newBase,
-    String? undoMessage,
+    String Function(AppLocalizations)? undoMessage,
   }) {
     final bool changed = previous == null
         ? _suggestions.isNotEmpty
@@ -1454,9 +1631,8 @@ class _PalettePageState extends State<PalettePage> {
     await _replacePalette(
       () => _applyVariationNow(variation),
       edit: true,
-      undoMessage: context.l10n.paletteVariationApplied(
-        context.l10n.variationName(variation),
-      ),
+      undoMessage: (AppLocalizations strings) =>
+          strings.paletteVariationApplied(strings.variationName(variation)),
     );
   }
 
@@ -1650,7 +1826,7 @@ class _PalettePageState extends State<PalettePage> {
         example,
       ),
       PaletteFailureReason.invalidBaseColor =>
-        _baseOfUnusedBrand(example) ??
+        _baseOfUnusedBrand(example)?.call(context.l10n) ??
             context.l10n.paletteNotAvailable(_brandSelector, input, example),
       PaletteFailureReason.baseDried => context.l10n.paletteBaseDried(input),
       PaletteFailureReason.noSuggestions => context.l10n.paletteNoSuggestions,
@@ -1673,14 +1849,12 @@ class _PalettePageState extends State<PalettePage> {
 
   /// What to say when the base is a marker of a brand that is not in use
   /// (see [_baseOfOtherBrand]); `null` for any other base.
-  String? _baseOfUnusedBrand(String example) {
+  String Function(AppLocalizations)? _baseOfUnusedBrand(String example) {
     final MarkerColor? base = _baseOfOtherBrand;
     if (base == null) return null;
-    return context.l10n.paletteBaseOtherBrand(
-      base.newCode,
-      MarkerBrand.fromId(base.brandId).label,
-      example,
-    );
+    final String brand = MarkerBrand.fromId(base.brandId).label;
+    return (AppLocalizations strings) =>
+        strings.paletteBaseOtherBrand(base.newCode, brand, example);
   }
 
   /// Whether Regenerate or a variation would have to rebuild the palette
@@ -1701,22 +1875,10 @@ class _PalettePageState extends State<PalettePage> {
   /// Says why the palette on screen stays as it is. A snack bar, not a note
   /// on the page: nothing on the page moves, and nothing changed to undo.
   void _explainOtherBrandBase() {
-    final String? message = _baseOfUnusedBrand(_exampleCode);
-    final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
-      context,
+    final String Function(AppLocalizations)? message = _baseOfUnusedBrand(
+      _exampleCode,
     );
-    if (message == null || messenger == null) return;
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          key: const ValueKey<String>('palette-other-brand-snack'),
-          duration: InkMotion.undoSnack,
-          behavior: SnackBarBehavior.floating,
-          margin: _snackMargin(),
-          content: Text(message),
-        ),
-      );
+    if (message != null) _scheduleSnack('palette-other-brand-snack', message);
   }
 
   /// Selector of the brand-aware messages, with ICU's `other` fallback
@@ -1902,23 +2064,26 @@ class _PalettePageState extends State<PalettePage> {
           top: InkSpacing.block,
         ),
     ];
-    final Widget actions = PaletteActions(
-      saveSlotKey: split ? _splitSaveSlotKey : _stackedSaveSlotKey,
-      customMode: customMode,
-      photoMode: _photoMode,
-      chainMode: _chainMode,
-      aiAvailable: _aiAvailable,
-      aiLoading: _aiLoading,
-      aiError: _aiError,
-      hasResult: hasResult,
-      saved: hasResult && _isSaved,
-      canRegenerate: _canRegenerate,
-      canGenerate: _canBuild,
-      canSuggestAi: _canBuild,
-      onSuggestAi: _suggestWithAi,
-      onRegenerate: _regenerate,
-      onGenerate: () => _replacePalette(_recompute),
-      onSave: _save,
+    final Widget actions = KeyedSubtree(
+      key: split ? _splitActionsKey : _stackedActionsKey,
+      child: PaletteActions(
+        saveSlotKey: split ? _splitSaveSlotKey : _stackedSaveSlotKey,
+        customMode: customMode,
+        photoMode: _photoMode,
+        chainMode: _chainMode,
+        aiAvailable: _aiAvailable,
+        aiLoading: _aiLoading,
+        aiError: _aiError,
+        hasResult: hasResult,
+        saved: hasResult && _isSaved,
+        canRegenerate: _canRegenerate,
+        canGenerate: _canBuild,
+        canSuggestAi: _canBuild,
+        onSuggestAi: _suggestWithAi,
+        onRegenerate: _regenerate,
+        onGenerate: () => _replacePalette(_recompute),
+        onSave: _save,
+      ),
     );
     final EdgeInsets listPadding = EdgeInsets.only(
       bottom: InkSpacing.pageBottomOf(context),
@@ -1941,13 +2106,9 @@ class _PalettePageState extends State<PalettePage> {
       key: PalettePage.pageKey,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        if (split)
-          ...header
-        else if (short)
-          const SizedBox.shrink()
-        else
-          headerBox,
+        if (short) const SizedBox.shrink() else headerBox,
         Expanded(
+          key: _viewportKey,
           child: split
               // The controls and the buttons on one side, the palette they
               // make on the other.

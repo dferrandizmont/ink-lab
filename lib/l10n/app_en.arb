@@ -1665,6 +1665,10 @@
   "matchEmptyPhotoTitle": "Match a colour from a photo",
   "matchEmptyPhotoMessage": "Photograph something, tap a colour on it and see the closest markers.",
   "matchPhotoSemantics": "Photo to sample a colour from",
+  "matchRemovePhoto": "Remove photo",
+  "@matchRemovePhoto": {
+    "description": "Button over the loaded photo in Match: removes the photo and goes back to the empty state with the example"
+  },
   "matchPickToSample": "Tap or drag on the photo to sample a colour.",
   "matchSampledLabel": "Sampled",
   "matchBestMatchTitle": "Best match",
@@ -2703,6 +2707,10 @@
   },
   "matchWholeRangeAction": "Go to My collection",
   "collectionTitle": "My collection",
+  "collectionAddedMarkers": "{count, plural, =1{Added 1 marker} other{Added {count} markers}}",
+  "collectionAddedFamilyMarkers": "{count, plural, =1{Added 1 marker from {family}} other{Added {count} markers from {family}}}",
+  "@collectionAddedMarkers": {"placeholders": {"count": {"type": "int"}}},
+  "@collectionAddedFamilyMarkers": {"placeholders": {"count": {"type": "int"}, "family": {"type": "String"}}},
   "collectionMarkers": "{count, plural, =0{No markers} =1{1 marker} other{{count} markers}}",
   "@collectionMarkers": {
     "placeholders": {

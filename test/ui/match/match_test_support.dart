@@ -75,14 +75,18 @@ AppScope matchScope({
   required PhotoDecoder decoder,
   MatchExampleLoader? exampleLoader,
   MarkerRepository? markers,
+  Locale locale = const Locale('en'),
+  TextDirection textDirection = TextDirection.ltr,
 }) => AppScope.inMemory(
   markers: markers ?? diskMarkerRepository(),
   child: MaterialApp(
-    locale: const Locale('en'),
+    locale: locale,
     localizationsDelegates: testLocalizationsDelegates,
     supportedLocales: testSupportedLocales,
     theme: AppTheme.light(),
     darkTheme: AppTheme.dark(),
+    builder: (context, child) =>
+        Directionality(textDirection: textDirection, child: child!),
     home: Scaffold(
       body: MatchPage(
         picker: picker,
@@ -109,6 +113,8 @@ Future<AppScope> pumpMatch(
   MarkerBrand brand = MarkerBrand.ohuhuOahu,
   Set<String>? ownedMarkerCodes,
   Size size = const Size(600, 3200),
+  Locale locale = const Locale('en'),
+  TextDirection textDirection = TextDirection.ltr,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1.0;
@@ -119,6 +125,8 @@ Future<AppScope> pumpMatch(
     decoder: decoder ?? fixedDecoder(image),
     exampleLoader: exampleLoader ?? () async => tinyPng,
     markers: markers,
+    locale: locale,
+    textDirection: textDirection,
   );
   if (brand != MarkerBrand.ohuhuOahu) {
     await scope.settings.setBrand(brand);

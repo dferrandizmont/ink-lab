@@ -68,6 +68,7 @@ extension _PaletteResultSection on _PalettePageState {
         Padding(
           padding: const EdgeInsets.only(top: InkSpacing.block),
           child: InkChipRow(
+            key: _variationsKey,
             // Side by side on a tablet there is room for the lines: no chip
             // is cut by the edge of its half.
             wrap: split,
@@ -397,6 +398,7 @@ extension _PaletteResultSection on _PalettePageState {
     if (steps.isEmpty) return const <Widget>[];
     return <Widget>[
       PaintOrderSection(
+        headerKey: _paintOrderHeaderKey,
         steps: steps,
         hexOf: (String code) =>
             seenHex(_hexForCode(code), _vision, values: _values),

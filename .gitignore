@@ -67,3 +67,5 @@ local.properties
 # Evidencias de la skill probar-como-humano (capturas, logs); el informe sí se versiona
 qa/*/evidencias/
 qa/*/evidence/
+# APK de pruebas copiados a qa/ (p. ej. versiones antiguas para comparar): nunca al repo
+qa/**/*.apk

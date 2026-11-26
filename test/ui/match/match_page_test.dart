@@ -795,11 +795,6 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    Future<void> valueView() async {
-      await tester.tap(find.byKey(const ValueKey<String>('match-values')));
-      await tester.pumpAndSettle();
-    }
-
     await expectStableAcrossSegments(
       tester,
       env: env,
@@ -809,15 +804,12 @@ void main() {
         'camera': inRow('match-camera'),
         'gallery': inRow('match-gallery'),
         'white balance': inRow('white-balance-start'),
-        'values': inRow('match-values'),
         'canvas': find.byKey(const ValueKey<String>('match-canvas')),
       },
       segments: <StabilitySegment>[
         (name: 'no photo', activate: () async {}),
         (name: 'with photo', activate: pickPhoto),
         (name: 'whites fixed', activate: fixWhites),
-        (name: 'values on', activate: valueView),
-        (name: 'values off', activate: valueView),
       ],
     );
   });

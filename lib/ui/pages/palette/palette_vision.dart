@@ -34,8 +34,8 @@ String colorVisionLabel(BuildContext context, ColorVisionType? type) =>
 
 /// "Colour vision": a compact control that previews the palette as seen with
 /// protanopia, deuteranopia, tritanopia or achromatopsia, or in plain
-/// greyscale ("Values", the [ValueViewToggle] of Match, for judging light and
-/// dark), and says which of its colours become hard to tell apart.
+/// greyscale ("Values", for judging light and dark), and says which of its
+/// colours become hard to tell apart.
 ///
 /// The control only picks [selected] (`null` is normal vision) or [values];
 /// the two exclude each other, and the page draws the simulated colours. [colors] and [labels] are the palette on

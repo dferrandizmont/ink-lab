@@ -1317,7 +1317,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         _check(tester, 'match results, white balance on');
         await _scroll(tester, 'match results, white balance on');
       },
-  'match: empty state, value view and the sample read aloud':
+  'match: empty state and the sample read aloud':
       (WidgetTester tester, _Env env) async {
         await _pump(
           tester,
@@ -1333,9 +1333,7 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
         await _tap(tester, find.byKey(const ValueKey<String>('match-camera')));
         await _tap(tester, find.byKey(const ValueKey<String>('match-canvas')));
         _check(tester, 'match with a sample');
-        await _tap(tester, find.byKey(const ValueKey<String>('match-values')));
-        _check(tester, 'match, value view on');
-        await _scroll(tester, 'match, value view on');
+        await _scroll(tester, 'match with a sample');
       },
   'swatches: a hex search shows the closest markers':
       (WidgetTester tester, _Env env) async {
@@ -2330,6 +2328,11 @@ final Map<String, _Scenario> _scenarios = <String, _Scenario>{
           find.byKey(const ValueKey<String>('collection-family-decotime_base')),
         );
         _check(tester, 'collection decotime, colours owned');
+        // The add shows an Undo notice at the bottom; let it go before
+        // reaching the buttons it may cover for a few seconds.
+        ScaffoldMessenger.of(tester.element(find.byType(CollectionPage)))
+            .removeCurrentSnackBar();
+        await tester.pumpAndSettle();
         _check(tester, 'collection decotime');
         await _tap(
           tester,
@@ -2619,20 +2622,20 @@ void main() {
 
   testWidgets('Swatches empty detail fits a short AX3 window', (tester) async {
     final _Env env = _Env(const Locale('fr'), 1200, 3, 360);
-    await _pump(
-      tester,
-      env,
-      const SwatchesPage(),
-    );
+    await _pump(tester, env, const SwatchesPage());
     expect(
       find.byKey(const ValueKey<String>('swatches-detail-pane-empty')),
       findsOneWidget,
     );
     final ScrollableState scrollable = tester.state<ScrollableState>(
-      find.descendant(
-        of: find.byKey(const ValueKey<String>('swatches-detail-pane-empty')),
-        matching: find.byType(Scrollable),
-      ).first,
+      find
+          .descendant(
+            of: find.byKey(
+              const ValueKey<String>('swatches-detail-pane-empty'),
+            ),
+            matching: find.byType(Scrollable),
+          )
+          .first,
     );
     expect(scrollable.position.maxScrollExtent, greaterThan(0));
     final Finder pane = find.byKey(

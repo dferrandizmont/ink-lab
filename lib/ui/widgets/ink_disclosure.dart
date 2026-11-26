@@ -31,6 +31,7 @@ import '../theme/tokens.dart';
 class InkDisclosure extends StatelessWidget {
   const InkDisclosure({
     super.key,
+    this.headerKey,
     required this.title,
     required this.expanded,
     required this.onToggle,
@@ -43,6 +44,8 @@ class InkDisclosure extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: InkSpacing.cardH),
   });
 
+  /// Identifies the tappable header independently of the expanded content.
+  final Key? headerKey;
   final String title;
 
   /// A short line under the title, for example "2 of 27 packs selected".
@@ -88,6 +91,7 @@ class InkDisclosure extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Semantics(
+          key: headerKey,
           button: true,
           expanded: expanded,
           label:

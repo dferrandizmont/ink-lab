@@ -119,6 +119,20 @@ class OwnColorMark extends StatelessWidget {
   }
 }
 
+typedef _SwatchNameLayout = ({
+  String name,
+  TextStyle style,
+  TextDirection direction,
+  TextScaler scaler,
+  Locale? locale,
+  TextAlign align,
+  TextWidthBasis widthBasis,
+  TextHeightBehavior? heightBehavior,
+  int maxLines,
+  double width,
+  double height,
+});
+
 /// A swatch cell of the Swatches grid (spec §4 "Swatch cell").
 ///
 /// `surface` card, radius 10, 1 px `line` (or `action` when [selected]):
@@ -229,6 +243,87 @@ class ColorSwatchTile extends StatelessWidget {
   static double _line(BuildContext context, double height, double fontSize) =>
       MediaQuery.textScalerOf(context).scale(fontSize) * height / fontSize;
 
+  // Grid tiles can be disposed when they scroll away. Share a bounded cache
+  // so returning to a name at the same size can reuse its measured fit.
+  static const int _nameLineCacheLimit = 1024;
+  static final Map<_SwatchNameLayout, int> _nameLineCache =
+      _createNameLineCache();
+
+  static Map<_SwatchNameLayout, int> _createNameLineCache() {
+    final cache = <_SwatchNameLayout, int>{};
+    PaintingBinding.instance.systemFonts.addListener(cache.clear);
+    return cache;
+  }
+
+  /// The nominal slot sets the card layout. Measure the wrapped text to account
+  /// for font metrics and rounding before deciding where to draw an ellipsis.
+  int _fittingNameLines(
+    BuildContext context,
+    TextStyle style, {
+    required int maxLines,
+    required double width,
+    required double height,
+  }) {
+    if (maxLines == 0) return 0;
+
+    final DefaultTextStyle defaults = DefaultTextStyle.of(context);
+    final TextStyle effectiveStyle = defaults.style
+        .merge(style)
+        .copyWith(
+          fontWeight: MediaQuery.boldTextOf(context) ? FontWeight.bold : null,
+          height: MediaQuery.maybeLineHeightScaleFactorOverrideOf(context),
+          letterSpacing: MediaQuery.maybeLetterSpacingOverrideOf(context),
+          wordSpacing: MediaQuery.maybeWordSpacingOverrideOf(context),
+        );
+    final _SwatchNameLayout layout = (
+      name: name!,
+      style: effectiveStyle,
+      direction: Directionality.of(context),
+      scaler: MediaQuery.textScalerOf(context),
+      locale: Localizations.maybeLocaleOf(context),
+      align: defaults.textAlign ?? TextAlign.start,
+      widthBasis: defaults.textWidthBasis,
+      heightBehavior:
+          defaults.textHeightBehavior ??
+          DefaultTextHeightBehavior.maybeOf(context),
+      maxLines: maxLines,
+      width: width,
+      height: height,
+    );
+    final int? cached = _nameLineCache[layout];
+    if (cached != null) return cached;
+
+    final int lines = _measureNameLines(layout);
+    if (_nameLineCache.length == _nameLineCacheLimit) {
+      _nameLineCache.remove(_nameLineCache.keys.first);
+    }
+    _nameLineCache[layout] = lines;
+    return lines;
+  }
+
+  static int _measureNameLines(_SwatchNameLayout layout) {
+    final TextPainter painter = TextPainter(
+      text: TextSpan(text: layout.name, style: layout.style),
+      textDirection: layout.direction,
+      textScaler: layout.scaler,
+      locale: layout.locale,
+      textAlign: layout.align,
+      textWidthBasis: layout.widthBasis,
+      textHeightBehavior: layout.heightBehavior,
+      ellipsis: '…',
+    );
+    try {
+      for (int lines = layout.maxLines; lines > 0; lines--) {
+        painter.maxLines = lines;
+        painter.layout(maxWidth: layout.width);
+        if (painter.height <= layout.height) return lines;
+      }
+      return 0;
+    } finally {
+      painter.dispose();
+    }
+  }
+
   /// The grid delegate for a grid of [ColorSwatchTile]s, from the system text
   /// scale and whether the cells show the hex (the grid leaves it out).
   ///
@@ -312,6 +407,23 @@ class ColorSwatchTile extends StatelessWidget {
                     nameLines = 2;
                   }
                 }
+                final TextStyle nameStyle = AppTypography.secondary.copyWith(
+                  color: ink.fg,
+                );
+                final double nameHeight = nameLine * nameLines;
+                final int fittingNameLines = _fittingNameLines(
+                  context,
+                  nameStyle,
+                  maxLines: nameLines,
+                  width: constraints
+                      .deflate(
+                        const EdgeInsets.symmetric(
+                          horizontal: InkSpacing.cardV,
+                        ),
+                      )
+                      .maxWidth,
+                  height: nameHeight,
+                );
                 final Widget block = _ColourBlock(
                   background: background,
                   edge: ink.swatchEdge(background),
@@ -376,22 +488,23 @@ class ColorSwatchTile extends StatelessWidget {
                           ),
                           if (nameLines > 0)
                             SizedBox(
-                              height: nameLine * nameLines,
+                              height: nameHeight,
                               // A name can be longer than the cell: the tile opens
                               // the full detail on tap, and a long press shows
                               // the whole name.
-                              child: Tooltip(
-                                message: name!,
-                                excludeFromSemantics: true,
-                                child: Text(
-                                  name!,
-                                  maxLines: nameLines,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTypography.secondary.copyWith(
-                                    color: ink.fg,
-                                  ),
-                                ),
-                              ),
+                              child: fittingNameLines == 0
+                                  ? null
+                                  : Tooltip(
+                                      message: name!,
+                                      excludeFromSemantics: true,
+                                      child: Text(
+                                        name!,
+                                        maxLines: fittingNameLines,
+                                        softWrap: true,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: nameStyle,
+                                      ),
+                                    ),
                             ),
                           if (hexVisible)
                             Text(

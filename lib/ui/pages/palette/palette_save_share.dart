@@ -45,6 +45,8 @@ extension _PaletteSaveShare on _PalettePageState {
     final ScaffoldMessengerState? messenger = ScaffoldMessenger.maybeOf(
       context,
     );
+    // A notice still waiting for its frame must not replace this one.
+    ++_snackGeneration;
     messenger
       ?..hideCurrentSnackBar()
       ..showSnackBar(

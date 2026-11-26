@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../core/color_utils.dart';
 import '../../../core/models.dart';
-import '../../../core/value_view.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/color_swatch_tile.dart';
@@ -31,7 +30,6 @@ class BestMatchTile extends StatelessWidget {
     required this.match,
     required this.onRecord,
     this.notOwned = false,
-    this.valueView = false,
   });
 
   /// The marker is not in the user's collection ("You don't own it").
@@ -42,9 +40,6 @@ class BestMatchTile extends StatelessWidget {
 
   /// Called when the tile is tapped.
   final VoidCallback onRecord;
-
-  /// Whether the swatch is drawn as a grey (its value only).
-  final bool valueView;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +69,7 @@ class BestMatchTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SwatchBlock(
-              hex: valueView ? ValueView.greyHex(color.hex) : color.hex,
+              hex: color.hex,
               size: InkGeometry.heroSwatch,
               radius: InkRadii.card,
               own: color.hasOwnColor,
@@ -146,7 +141,6 @@ class MatchResultTile extends StatelessWidget {
     super.key,
     required this.match,
     required this.onRecord,
-    this.valueView = false,
   });
 
   /// The match, with its marker and CIELAB76 distance.
@@ -154,9 +148,6 @@ class MatchResultTile extends StatelessWidget {
 
   /// Called when the tile is tapped.
   final VoidCallback onRecord;
-
-  /// Whether the swatch is drawn as a grey (its value only).
-  final bool valueView;
 
   @override
   Widget build(BuildContext context) {
@@ -177,11 +168,7 @@ class MatchResultTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              SwatchBlock(
-                hex: valueView ? ValueView.greyHex(color.hex) : color.hex,
-                height: 32,
-                own: color.hasOwnColor,
-              ),
+              SwatchBlock(hex: color.hex, height: 32, own: color.hasOwnColor),
               const SizedBox(height: InkSpacing.group),
               Text(
                 color.newCode,

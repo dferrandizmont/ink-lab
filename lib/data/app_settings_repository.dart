@@ -74,7 +74,8 @@ abstract class AppSettingsRepository {
   /// runs: a marker the user added elsewhere in between is never lost. Two
   /// calls that overlap are applied one after the other, never on the same
   /// state.
-  Future<void> addExtraMarkerIds(Set<String> ids);
+  /// Returns the canonical IDs actually inserted by this write.
+  Future<Set<String>> addExtraMarkerIds(Set<String> ids);
 
   /// Removes [ids] from the single markers the user owns.
   ///
@@ -404,11 +405,23 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
       _mutate((AppSettings settings) => settings.copyWith(extraMarkerIds: ids));
 
   @override
-  Future<void> addExtraMarkerIds(Set<String> ids) => _mutate(
-    (AppSettings settings) => settings.copyWith(
-      extraMarkerIds: <String>{...settings.extraMarkerIds, ...ids},
-    ),
-  );
+  Future<Set<String>> addExtraMarkerIds(Set<String> ids) {
+    final Set<String> requested = scopedColorIds(ids);
+    return _enqueue(() async {
+      final Set<String> inserted = requested.difference(
+        _state.settings.extraMarkerIds,
+      );
+      await _writeCollection(
+        _state.settings.copyWith(
+          extraMarkerIds: <String>{
+            ..._state.settings.extraMarkerIds,
+            ...inserted,
+          },
+        ),
+      );
+      return inserted;
+    });
+  }
 
   @override
   Future<void> removeExtraMarkerIds(Set<String> ids) =>
@@ -585,9 +598,9 @@ final class StoredAppSettingsRepository implements AppSettingsRepository {
   /// waits for the previous one to finish, then runs. A failed job is swallowed
   /// for the chain (the error still reaches its own caller) so the next job
   /// still runs from the stored state.
-  Future<void> _enqueue(Future<void> Function() action) {
-    final Future<void> run = _writes.then((_) => action());
-    _writes = run.catchError((Object _) {});
+  Future<T> _enqueue<T>(Future<T> Function() action) {
+    final Future<T> run = _writes.then((_) => action());
+    _writes = run.then<void>((_) {}, onError: (Object _, StackTrace stack) {});
     return run;
   }
 

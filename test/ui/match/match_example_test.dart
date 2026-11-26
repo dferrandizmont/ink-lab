@@ -146,6 +146,50 @@ void main() {
     expect(ring, findsOneWidget);
   });
 
+  testWidgets('a one-line example name uses only one line of chip height', (
+    tester,
+  ) async {
+    await tester.runAsync(loadAppFonts);
+    tester.platformDispatcher.textScaleFactorTestValue = 3;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await pumpMatch(
+      tester,
+      picker: FakeImagePickerService(const PhotoPickCancelled()),
+      image: sampledImage(64, 64, <int>[157, 174, 162]),
+      brand: MarkerBrand.decoTime,
+      markers: MarkerRepository(
+        loadAsset: (_) => '[{"code":"228","name":"Sage","hex":"9daea2"}]',
+      ),
+      size: const Size(360, 1800),
+    );
+    const String name = 'Sage';
+    expect(_chipName(tester), name);
+    final RenderParagraph paragraph = tester.renderObject<RenderParagraph>(
+      find.text(name),
+    );
+    final TextPainter painter = TextPainter(
+      text: TextSpan(
+        text: '$name\n$name\n$name\n$name',
+        style: paragraph.text.style,
+      ),
+      textDirection: paragraph.textDirection,
+      textScaler: paragraph.textScaler,
+    )..layout();
+    final double fourLineHeight = painter.height;
+    painter.dispose();
+    final Rect chip = tester.getRect(find.byKey(_chip));
+    expect(chip.height, lessThan(fourLineHeight));
+    final Finder image = find.descendant(
+      of: find.byKey(_preview),
+      matching: find.byType(Image),
+    );
+    final BuildContext context = tester.element(image);
+    final ImageProvider provider = tester.widget<Image>(image).image;
+    await tester.runAsync(() => precacheImage(provider, context));
+    await tester.pumpAndSettle();
+    expect(tester.getRect(find.byKey(_chip)), chip);
+  });
+
   test('the example photo is bundled, registered and credited', () {
     expect(_photoBytes().length, greaterThan(100000));
     expect(
@@ -520,7 +564,7 @@ void main() {
     expect(tester.getSize(find.byKey(_chip)).height, chipHeight);
   });
 
-  testWidgets('the buttons stay in place when a long chip name loads at 300%', (
+  testWidgets('a long chip name at 300% reserves only the lines it needs', (
     WidgetTester tester,
   ) async {
     await tester.runAsync(loadAppFonts);
@@ -561,8 +605,24 @@ void main() {
     );
     expect(name.constraints.maxWidth, 200);
     expect(name.didExceedMaxLines, isFalse);
-    expect(buttonRects(), buttonsBefore);
-    expect(tester.getSize(find.byKey(_chip)).height, chipHeightBefore);
+    final double chipHeight = tester.getSize(find.byKey(_chip)).height;
+    final double addedHeight = chipHeight - chipHeightBefore;
+    expect(addedHeight, greaterThan(0));
+    expect(
+      buttonRects(),
+      buttonsBefore.map((rect) => rect.shift(Offset(0, addedHeight))),
+    );
+    final List<Rect> buttons = buttonRects();
+    final Finder image = find.descendant(
+      of: find.byKey(_preview),
+      matching: find.byType(Image),
+    );
+    final BuildContext context = tester.element(image);
+    final ImageProvider provider = tester.widget<Image>(image).image;
+    await tester.runAsync(() => precacheImage(provider, context));
+    await tester.pumpAndSettle();
+    expect(buttonRects(), buttons);
+    expect(tester.getSize(find.byKey(_chip)).height, chipHeight);
   });
 
   for (final double scale in <double>[1.0, 2.0, 3.0]) {

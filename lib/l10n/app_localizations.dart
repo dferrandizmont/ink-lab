@@ -8848,6 +8848,12 @@ abstract class AppLocalizations {
   /// **'Photo to sample a colour from'**
   String get matchPhotoSemantics;
 
+  /// Button over the loaded photo in Match: removes the photo and goes back to the empty state with the example
+  ///
+  /// In en, this message translates to:
+  /// **'Remove photo'**
+  String get matchRemovePhoto;
+
   /// No description provided for @matchPickToSample.
   ///
   /// In en, this message translates to:
@@ -11226,6 +11232,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'My collection'**
   String get collectionTitle;
+
+  /// No description provided for @collectionAddedMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Added 1 marker} other{Added {count} markers}}'**
+  String collectionAddedMarkers(int count);
+
+  /// No description provided for @collectionAddedFamilyMarkers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Added 1 marker from {family}} other{Added {count} markers from {family}}}'**
+  String collectionAddedFamilyMarkers(int count, String family);
 
   /// No description provided for @collectionMarkers.
   ///

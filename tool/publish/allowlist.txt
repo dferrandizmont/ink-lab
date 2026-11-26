@@ -344,6 +344,7 @@ lib/ui/pages/match/image_picker_service.dart
 lib/ui/pages/match/match_page.dart
 lib/ui/pages/match/match_result_tile.dart
 lib/ui/pages/match/photo_box.dart
+lib/ui/pages/match/photo_sample_loupe.dart
 lib/ui/pages/match/photo_sampling.dart
 lib/ui/pages/palette/palette_draft.dart
 lib/ui/pages/palette/palette_page.dart

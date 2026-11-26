@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import '../../../core/collection_selection.dart';
 import '../../../core/color_utils.dart';
 import '../../../core/match_quality.dart';
 import '../../../core/models.dart';
-import '../../../core/value_view.dart';
 import '../../../core/white_balance.dart';
 import '../../../data/data.dart';
 import '../../icons/ink_icons.dart';
@@ -21,7 +21,6 @@ import '../../widgets/ink_button.dart';
 import '../../widgets/ink_disclosure.dart';
 import '../../widgets/ink_sheet.dart';
 import '../../widgets/page_header.dart';
-import '../../widgets/value_view.dart';
 import '../collection/collection_page.dart';
 import 'color_sampling.dart';
 import 'image_picker_service.dart';
@@ -107,6 +106,14 @@ class _MatchPageState extends State<MatchPage> {
 
   Uint8List? _bytes;
   SampledImage? _sampled;
+  int _photoRemovalGeneration = 0;
+
+  /// One controller per list the page can show (one column, or the photo
+  /// and result sides of a tablet in landscape), so removing the photo can
+  /// take each back to its top.
+  final ScrollController _singleScroll = ScrollController();
+  final ScrollController _photoSideScroll = ScrollController();
+  final ScrollController _resultSideScroll = ScrollController();
   Offset? _pick;
   int? _sampledColorInt;
 
@@ -124,10 +131,6 @@ class _MatchPageState extends State<MatchPage> {
   /// Whether the best of the whole range is open (the disclosure of the
   /// range suggestion).
   bool _rangeOpen = false;
-
-  /// Whether the photo and the swatches show their values only (greyscale).
-  /// Per session: it is never stored and starts off with every new page.
-  bool _valueView = false;
 
   late final ImagePickerService _picker =
       widget.picker ?? PlatformImagePickerService();
@@ -177,6 +180,9 @@ class _MatchPageState extends State<MatchPage> {
   void dispose() {
     _settingsSubscription?.cancel();
     _ownColorsSubscription?.cancel();
+    _singleScroll.dispose();
+    _photoSideScroll.dispose();
+    _resultSideScroll.dispose();
     super.dispose();
   }
 
@@ -411,20 +417,44 @@ class _MatchPageState extends State<MatchPage> {
   /// [sampleAt] that point is sampled right away.
   void _showPhoto(Uint8List bytes, SampledImage sampled, {Offset? sampleAt}) {
     setState(() {
+      _resetPhotoState();
       _bytes = bytes;
       _sampled = sampled;
-      _pick = null;
-      _sampledColorInt = null;
-      _balance = null;
-      _choosingWhite = false;
-      _whiteRejection = null;
-      _matches = const <ColorDistanceMatch>[];
-      _rangeBest = null;
       _picking = false;
-      _error = null;
-      _notice = null;
     });
     if (sampleAt != null) _sampleAt(sampleAt);
+  }
+
+  /// Back to the page as it opens: no photo, the example preview, and the
+  /// lists at their top.
+  void _removePhoto() {
+    // A pick started in the same frame owns the photo slot now.
+    if (_picking) return;
+    setState(() {
+      _photoRemovalGeneration++;
+      _bytes = null;
+      _sampled = null;
+      _resetPhotoState();
+      _rangeOpen = false;
+    });
+    for (final ScrollController scroll in <ScrollController>[
+      _singleScroll,
+      _photoSideScroll,
+      _resultSideScroll,
+    ]) {
+      if (scroll.hasClients) scroll.jumpTo(0);
+    }
+  }
+
+  void _resetPhotoState() {
+    _pick = null;
+    _sampledColorInt = null;
+    _balance = null;
+    _choosingWhite = false;
+    _whiteRejection = null;
+    _rank(null);
+    _error = null;
+    _notice = null;
   }
 
   /// Ranks the user's markers, and the whole range, for [sample].
@@ -578,6 +608,7 @@ class _MatchPageState extends State<MatchPage> {
     final AppScope? scope = _scope;
     final int? colorInt = _sampledColorInt;
     if (scope == null || colorInt == null) return;
+    final int removalGeneration = _photoRemovalGeneration;
     final DateTime now = DateTime.now();
     await scope.matchHistory.record(
       ColorMatchPick(
@@ -591,7 +622,7 @@ class _MatchPageState extends State<MatchPage> {
         createdAtEpochMs: now.millisecondsSinceEpoch,
       ),
     );
-    if (!mounted) return;
+    if (!mounted || removalGeneration != _photoRemovalGeneration) return;
     setState(() => _notice = context.l10n.matchRecorded(match.color.newCode));
   }
 
@@ -736,6 +767,7 @@ class _MatchPageState extends State<MatchPage> {
                 Expanded(
                   child: ListView(
                     key: const ValueKey<String>('match-photo-side'),
+                    controller: _photoSideScroll,
                     padding: EdgeInsets.only(
                       bottom: InkSpacing.pageBottomOf(context),
                     ),
@@ -745,6 +777,7 @@ class _MatchPageState extends State<MatchPage> {
                 Expanded(
                   child: ListView(
                     key: const ValueKey<String>('match-result-side'),
+                    controller: _resultSideScroll,
                     // Level with the title of the header on the other side.
                     padding: EdgeInsets.only(
                       top: InkSpacing.header.top,
@@ -760,6 +793,7 @@ class _MatchPageState extends State<MatchPage> {
         return InkReadableWidth(
           child: ListView(
             key: MatchPage.pageKey,
+            controller: _singleScroll,
             padding: EdgeInsets.only(bottom: InkSpacing.pageBottomOf(context)),
             children: <Widget>[...photoSide, ...resultSide],
           ),
@@ -824,7 +858,6 @@ class _MatchPageState extends State<MatchPage> {
             key: ValueKey<String>('match-range-${match.color.newCode}'),
             match: match,
             notOwned: true,
-            valueView: _valueView,
             onRecord: () => _record(match),
           ),
         ),
@@ -836,6 +869,7 @@ class _MatchPageState extends State<MatchPage> {
     final SampledImage sampled = _sampled!;
     final String? spoken = _spokenSample();
     final AppLocalizations l10n = context.l10n;
+    final InkColors ink = InkColors.of(context);
     const Offset middle = Offset(0.5, 0.5);
     const double step = MatchPage.sampleStep;
     // The loupe has no equivalent for a screen reader but these: the photo
@@ -844,31 +878,64 @@ class _MatchPageState extends State<MatchPage> {
     return _Gutter(
       child: Semantics(
         container: true,
-        label: l10n.matchPhotoSemantics,
-        value: spoken,
-        hint: l10n.matchPhotoSampleHint,
-        onTap: () => _onPhotoPoint(middle),
-        customSemanticsActions: _choosingWhite
-            ? null
-            : <CustomSemanticsAction, VoidCallback>{
-                CustomSemanticsAction(label: l10n.matchSampleMiddle): () =>
-                    _sampleAt(middle),
-                CustomSemanticsAction(label: l10n.matchMoveLeft): () =>
-                    _moveSample(-step, 0),
-                CustomSemanticsAction(label: l10n.matchMoveRight): () =>
-                    _moveSample(step, 0),
-                CustomSemanticsAction(label: l10n.matchMoveUp): () =>
-                    _moveSample(0, -step),
-                CustomSemanticsAction(label: l10n.matchMoveDown): () =>
-                    _moveSample(0, step),
-              },
-        // The touch layer under it is tappable and draggable but has no
-        // label of its own: this node speaks for it.
-        child: ExcludeSemantics(
-          child: PhotoBox(
-            aspectRatio: sampled.aspectRatio,
-            child: _buildCanvas(),
-          ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: <Widget>[
+            Semantics(
+              container: true,
+              sortKey: const OrdinalSortKey(0),
+              label: l10n.matchPhotoSemantics,
+              value: spoken,
+              hint: l10n.matchPhotoSampleHint,
+              onTap: () => _onPhotoPoint(middle),
+              customSemanticsActions: _choosingWhite
+                  ? null
+                  : <CustomSemanticsAction, VoidCallback>{
+                      CustomSemanticsAction(
+                        label: l10n.matchSampleMiddle,
+                      ): () =>
+                          _sampleAt(middle),
+                      CustomSemanticsAction(label: l10n.matchMoveLeft): () =>
+                          _moveSample(-step, 0),
+                      CustomSemanticsAction(label: l10n.matchMoveRight): () =>
+                          _moveSample(step, 0),
+                      CustomSemanticsAction(label: l10n.matchMoveUp): () =>
+                          _moveSample(0, -step),
+                      CustomSemanticsAction(label: l10n.matchMoveDown): () =>
+                          _moveSample(0, step),
+                    },
+              // This node speaks for the tappable and draggable photo.
+              child: ExcludeSemantics(
+                child: PhotoBox(
+                  aspectRatio: sampled.aspectRatio,
+                  child: _buildCanvas(),
+                ),
+              ),
+            ),
+            PositionedDirectional(
+              top: InkSpacing.s4,
+              end: InkSpacing.s4,
+              child: Semantics(
+                container: true,
+                sortKey: const OrdinalSortKey(1),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: ink.surface.withValues(alpha: InkOpacity.overPhoto),
+                    borderRadius: InkRadii.controlRadius,
+                  ),
+                  child: SizedBox.square(
+                    dimension: InkGeometry.androidTarget,
+                    child: InkIconButton(
+                      key: const ValueKey<String>('match-remove-photo'),
+                      icon: InkIcons.x,
+                      tooltip: l10n.matchRemovePhoto,
+                      onPressed: _picking ? null : _removePhoto,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -883,17 +950,16 @@ class _MatchPageState extends State<MatchPage> {
       onPoint: _onPhotoPoint,
       tapOnly: _choosingWhite,
       balance: _balance,
-      valueView: _valueView,
       pick: _choosingWhite ? null : _pick,
       sampleColor: sampledColor == null
           ? null
-          : Color(0xFF000000 | _shown(sampledColor)),
+          : Color(0xFF000000 | sampledColor),
     );
   }
 
   Widget _buildSampled(int colorInt) {
     final InkColors ink = InkColors.of(context);
-    final Color sample = Color(0xFF000000 | _shown(colorInt));
+    final Color sample = Color(0xFF000000 | colorInt);
     return _Gutter(
       top: InkSpacing.block,
       // The hex is the colour: the RGB triple would only repeat it. A live
@@ -932,11 +998,6 @@ class _MatchPageState extends State<MatchPage> {
     );
   }
 
-  /// The colour to draw for [colorInt]: itself, or its grey in the value
-  /// view.
-  int _shown(int colorInt) =>
-      _valueView ? ValueView.greyInt(colorInt) : colorInt;
-
   Widget _buildBestMatch() {
     final ColorDistanceMatch best = _matches.first;
     return _Gutter(
@@ -944,7 +1005,6 @@ class _MatchPageState extends State<MatchPage> {
       child: BestMatchTile(
         key: ValueKey<String>('match-best-${best.color.newCode}'),
         match: best,
-        valueView: _valueView,
         onRecord: () => _record(best),
       ),
     );
@@ -967,7 +1027,6 @@ class _MatchPageState extends State<MatchPage> {
                 MatchResultTile(
                   key: ValueKey<String>('match-result-${match.color.newCode}'),
                   match: match,
-                  valueView: _valueView,
                   onRecord: () => _record(match),
                 ),
             ],
@@ -977,14 +1036,12 @@ class _MatchPageState extends State<MatchPage> {
     );
   }
 
-  /// The row of actions, right under the photo: the camera and the gallery,
-  /// and the white balance and the value view at the right.
+  /// The camera, gallery and white balance actions right under the photo.
   ///
   /// Without a photo the empty state has the camera and gallery actions
   /// instead (see [MatchEmptyState]). Once there is a photo the row stays
-  /// where it is whatever is sampled or fixed. When the four do not fit on
-  /// one line (a long translation at a large text size) the white balance and
-  /// the value view drop to their own line, right-aligned.
+  /// where it is whatever is sampled or fixed. When space is tight, white
+  /// balance moves to the end of its own line.
   Widget _buildActions() {
     return _Gutter(
       key: const ValueKey<String>('match-actions'),
@@ -1022,24 +1079,7 @@ class _MatchPageState extends State<MatchPage> {
           );
           final Widget balance = Align(
             alignment: AlignmentDirectional.centerEnd,
-            // A Wrap: when the two do not fit side by side (a long
-            // translation at a large text size) they stack instead of
-            // overflowing.
-            child: Wrap(
-              alignment: WrapAlignment.end,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: InkSpacing.s8,
-              children: <Widget>[
-                WhiteBalanceAction(
-                  onPressed: _sampled == null ? null : _startWhite,
-                ),
-                ValueViewToggle(
-                  key: const ValueKey<String>('match-values'),
-                  selected: _valueView,
-                  onChanged: (bool on) => setState(() => _valueView = on),
-                ),
-              ],
-            ),
+            child: WhiteBalanceAction(onPressed: _startWhite),
           );
           if (_actionsFitOnOneLine(context, constraints.maxWidth)) {
             return Row(
@@ -1063,8 +1103,7 @@ class _MatchPageState extends State<MatchPage> {
     );
   }
 
-  /// Whether the camera, the gallery, the white balance and the value view
-  /// fit on one line.
+  /// Whether the two equal-width photo actions and white balance fit in a row.
   bool _actionsFitOnOneLine(BuildContext context, double width) {
     final double camera = _buttonWidth(
       context,
@@ -1081,17 +1120,7 @@ class _MatchPageState extends State<MatchPage> {
       context.l10n.matchWhiteBalanceButton,
       withIcon: false,
     );
-    final double values = _buttonWidth(
-      context,
-      context.l10n.matchValuesButton,
-      withIcon: false,
-    );
-    return camera +
-            gallery +
-            balance +
-            values +
-            3 * InkSpacing.buttonGap +
-            InkSpacing.s8 <=
+    return 2 * math.max(camera, gallery) + balance + 2 * InkSpacing.buttonGap <=
         width;
   }
 

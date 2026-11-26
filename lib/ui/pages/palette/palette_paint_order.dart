@@ -226,6 +226,7 @@ String _groupTip(AppLocalizations t, int group) => switch (group) {
 class PaintOrderSection extends StatelessWidget {
   const PaintOrderSection({
     super.key,
+    this.headerKey,
     required this.steps,
     required this.hexOf,
     required this.open,
@@ -233,6 +234,7 @@ class PaintOrderSection extends StatelessWidget {
   });
 
   final List<PlanStep> steps;
+  final Key? headerKey;
 
   /// The colour a step's marker is drawn in (already seen through the colour
   /// vision preview, if one is on).
@@ -246,6 +248,7 @@ class PaintOrderSection extends StatelessWidget {
     return paletteInset(
       InkDisclosure(
         key: const ValueKey<String>('palette-paint-order'),
+        headerKey: headerKey,
         title: AppTypography.caps(context.l10n.palettePaintPlanTitle),
         subtitle: context.l10n.palettePaintPlanSummary(steps.length),
         expanded: open,

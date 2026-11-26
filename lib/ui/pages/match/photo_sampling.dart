@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -11,7 +12,6 @@ import '../../icons/ink_icons.dart';
 import '../../theme/app_typography.dart';
 import '../../theme/tokens.dart';
 import '../../widgets/ink_button.dart';
-import '../../widgets/value_view.dart';
 import 'color_sampling.dart';
 import 'photo_sample_loupe.dart';
 
@@ -35,14 +35,13 @@ class PhotoSampleCanvas extends StatefulWidget {
     this.sampleColor,
     this.balance,
     this.tapOnly = false,
-    this.valueView = false,
     this.gestureKey,
   });
 
   /// The encoded photo, as picked.
   final Uint8List bytes;
 
-  /// The decoded pixels, for the aspect ratio.
+  /// The sampling pixels and the original photo's aspect ratio.
   final SampledImage image;
 
   /// Called with the touched point, as a fraction of the photo.
@@ -59,10 +58,6 @@ class PhotoSampleCanvas extends StatefulWidget {
 
   /// Whether only a tap (not a drag) calls [onPoint].
   final bool tapOnly;
-
-  /// Whether the photo is drawn in greyscale (its values only). The pixels are
-  /// never changed, and the reticle keeps the [sampleColor] it is given.
-  final bool valueView;
 
   /// Key of the canvas bounds; the touch target is the fitted photo inside it.
   final Key? gestureKey;
@@ -239,7 +234,6 @@ class _PhotoSampleCanvasState extends State<PhotoSampleCanvas>
               fraction: _fraction,
               displayPixelScale: _fitted.width / widget.image.width,
               balance: widget.balance,
-              valueView: widget.valueView,
             ),
           ),
         ),
@@ -255,14 +249,27 @@ class _PhotoSampleCanvasState extends State<PhotoSampleCanvas>
           constraints.maxWidth,
           constraints.maxHeight,
         );
+        // Match the original bytes painted by Image.memory.
         final Rect fitted = containRect(container, widget.image.aspectRatio);
         _fitted = fitted;
         final Offset? point = widget.pick;
+        final double ringRadius = math.min(
+          ReticlePainter.defaultOuterRadius,
+          fitted.shortestSide / 2,
+        );
+        // Keep the drawn ring inside the photo while sampling the true point.
+        final Rect ringCentres = fitted.deflate(ringRadius);
         final Offset? pickLocal = point == null || fitted.isEmpty
             ? null
             : Offset(
-                fitted.left + point.dx * fitted.width,
-                fitted.top + point.dy * fitted.height,
+                (fitted.left + point.dx * fitted.width).clamp(
+                  ringCentres.left,
+                  math.max(ringCentres.left, ringCentres.right),
+                ),
+                (fitted.top + point.dy * fitted.height).clamp(
+                  ringCentres.top,
+                  math.max(ringCentres.top, ringCentres.bottom),
+                ),
               );
         // Claim the fitted photo on down, before Scrollable's vertical drag can
         // beat the larger pan slop. Letterbox margins still scroll. The listener
@@ -321,13 +328,7 @@ class _PhotoSampleCanvasState extends State<PhotoSampleCanvas>
                 frameBuilder: (context, child, frame, synchronous) => Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
-                    ValueViewFilter(
-                      enabled: widget.valueView,
-                      child: WhiteBalancePreview(
-                        balance: widget.balance,
-                        child: child,
-                      ),
-                    ),
+                    WhiteBalancePreview(balance: widget.balance, child: child),
                     if (frame != null &&
                         pickLocal != null &&
                         widget.sampleColor != null)
@@ -335,6 +336,7 @@ class _PhotoSampleCanvasState extends State<PhotoSampleCanvas>
                         painter: ReticlePainter(
                           centre: pickLocal,
                           sampleColor: widget.sampleColor!,
+                          outerRadius: ringRadius,
                         ),
                       ),
                   ],
@@ -410,18 +412,23 @@ class ReticlePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(centre, outerRadius - 1, Paint()..color = sampleColor);
+    // A very narrow fitted photo can require a ring smaller than the crosshair.
+    final double radius = math.max(outerRadius, 10);
+    canvas.save();
+    canvas.translate(centre.dx, centre.dy);
+    canvas.scale(outerRadius / radius);
+    canvas.drawCircle(Offset.zero, radius - 1, Paint()..color = sampleColor);
     canvas.drawCircle(
-      centre,
-      outerRadius - 2.5,
+      Offset.zero,
+      radius - 2.5,
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3
         ..color = InkColors.reticleRing,
     );
     canvas.drawCircle(
-      centre,
-      outerRadius - 0.5,
+      Offset.zero,
+      radius - 0.5,
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1
@@ -439,8 +446,9 @@ class ReticlePainter extends CustomPainter {
       Offset(0, 1),
       Offset(0, -1),
     ]) {
-      canvas.drawLine(centre + dir * inner, centre + dir * outer, cross);
+      canvas.drawLine(dir * inner, dir * outer, cross);
     }
+    canvas.restore();
   }
 
   @override
@@ -481,6 +489,7 @@ class WhiteBalanceAction extends StatelessWidget {
         key: const ValueKey<String>('white-balance-start'),
         label: label,
         icon: icon,
+        maxLines: null,
         onPressed: onPressed,
       ),
       _ => InkButton(

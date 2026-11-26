@@ -5444,6 +5444,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get matchPhotoSemantics => 'Foto zum Abtasten einer Farbe';
 
   @override
+  String get matchRemovePhoto => 'Foto entfernen';
+
+  @override
   String get matchPickToSample =>
       'Tippe oder ziehe auf dem Foto, um eine Farbe abzutasten.';
 
@@ -6932,6 +6935,28 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get collectionTitle => 'Meine Sammlung';
+
+  @override
+  String collectionAddedMarkers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Marker hinzugefügt',
+      one: '1 Marker hinzugefügt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String collectionAddedFamilyMarkers(int count, String family) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Marker aus $family hinzugefügt',
+      one: '1 Marker aus $family hinzugefügt',
+    );
+    return '$_temp0';
+  }
 
   @override
   String collectionMarkers(int count) {

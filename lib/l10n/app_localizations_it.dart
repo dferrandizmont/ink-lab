@@ -5450,6 +5450,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get matchPhotoSemantics => 'Foto da cui campionare un colore';
 
   @override
+  String get matchRemovePhoto => 'Rimuovi foto';
+
+  @override
   String get matchPickToSample =>
       'Tocca o trascina sulla foto per campionare un colore.';
 
@@ -6944,6 +6947,28 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get collectionTitle => 'La mia collezione';
+
+  @override
+  String collectionAddedMarkers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Aggiunti $count pennarelli',
+      one: 'Aggiunto 1 pennarello',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String collectionAddedFamilyMarkers(int count, String family) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Aggiunti $count pennarelli di $family',
+      one: 'Aggiunto 1 pennarello di $family',
+    );
+    return '$_temp0';
+  }
 
   @override
   String collectionMarkers(int count) {

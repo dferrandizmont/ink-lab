@@ -29,6 +29,16 @@ import 'swatch_chart_card.dart';
 import 'loose_markers_page.dart';
 import 'wishlist_card.dart';
 
+/// What the family Undo notice of "My collection" says: the add it belongs
+/// to, the ids that add inserted, the family (null for the whole range) and
+/// whether its Undo still acts.
+typedef _FamilyNotice = ({
+  int generation,
+  Set<String> ids,
+  String? name,
+  bool active,
+});
+
 /// "My collection": the one place where the user says which markers they
 /// own (see `AppSettings`).
 ///
@@ -77,10 +87,46 @@ class _CollectionPageState extends State<CollectionPage> {
   /// collection are open (both start folded).
   bool _seriesOpen = false;
   bool _setsOpen = false;
+  int _undoGeneration = 0;
+  int _routeGeneration = 0;
+
+  /// The family Undo notice of this page: what it says and whether its Undo
+  /// still acts. At most one snack bar of ours is ever in the app's
+  /// messenger (shown or queued): a later add updates it instead of queueing
+  /// another, so this page never has to remove a notice it cannot be sure is
+  /// its own. The only removal is from its own Undo button, which the user
+  /// can only press while it is the notice on screen.
+  final ValueNotifier<_FamilyNotice?> _notice = ValueNotifier<_FamilyNotice?>(
+    null,
+  );
+  bool _noticeOpen = false;
+  bool _noticeDisposed = false;
+
+  /// Ends the family Undo: its button stops acting at once and disappears
+  /// from the notice, which then runs out on its own.
+  void _dismissNotice({bool invalidateRoute = false}) {
+    _undoGeneration++;
+    if (invalidateRoute) _routeGeneration++;
+    // Called from didChangeDependencies and dispose: redraw after the frame.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final _FamilyNotice? notice = _noticeDisposed ? null : _notice.value;
+      if (notice != null && notice.active) {
+        _notice.value = (
+          generation: notice.generation,
+          ids: notice.ids,
+          name: notice.name,
+          active: false,
+        );
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (ModalRoute.isCurrentOf(context) == false) {
+      _dismissNotice(invalidateRoute: true);
+    }
     final AppScope scope = AppScope.of(context);
     if (!identical(scope, _scope)) {
       _scope = scope;
@@ -94,6 +140,14 @@ class _CollectionPageState extends State<CollectionPage> {
 
   @override
   void dispose() {
+    _undoGeneration++;
+    _routeGeneration++;
+    // A notice still in the messenger keeps listening; it disposes the
+    // notifier when it closes.
+    if (!_noticeOpen) {
+      _noticeDisposed = true;
+      _notice.dispose();
+    }
     _driedChanges?.cancel();
     super.dispose();
   }
@@ -640,9 +694,101 @@ class _CollectionPageState extends State<CollectionPage> {
       await scope.settings.removeExtraMarkerIds(owned);
       return;
     }
-    await scope.settings.addExtraMarkerIds(<String>{
+    final Set<String> requested = <String>{
       for (final MarkerColor color in colors) color.colorId,
-    });
+    };
+    final int routeGeneration = _routeGeneration;
+    final Set<String> toAdd = await scope.settings.addExtraMarkerIds(requested);
+    if (!mounted ||
+        routeGeneration != _routeGeneration ||
+        toAdd.isEmpty ||
+        ModalRoute.isCurrentOf(this.context) == false) {
+      return;
+    }
+    final int generation = ++_undoGeneration;
+    _notice.value = (
+      generation: generation,
+      ids: toAdd,
+      name: name,
+      active: true,
+    );
+    // A notice of ours already on screen or queued now says this add.
+    if (_noticeOpen) return;
+    _noticeOpen = true;
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(this.context);
+    // A plain floating notice at the bottom, like the app's other notices: it
+    // is short-lived and the page scrolls, so a chip it may cover for a few
+    // seconds stays reachable. (Placing it around the chips proved fragile.)
+    final double safeBottom = MediaQuery.paddingOf(this.context).bottom;
+    final snack = messenger.showSnackBar(
+      SnackBar(
+        duration: InkMotion.undoSnack,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.fromLTRB(15, 0, 15, 15 + safeBottom),
+        padding: const EdgeInsetsDirectional.only(
+          start: InkSpacing.cardH,
+          end: InkSpacing.s4,
+        ),
+        content: ValueListenableBuilder<_FamilyNotice?>(
+          valueListenable: _notice,
+          builder: (BuildContext context, _FamilyNotice? notice, Widget? _) {
+            if (notice == null) return const SizedBox.shrink();
+            return Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    notice.name == null
+                        ? context.l10n.collectionAddedMarkers(notice.ids.length)
+                        : context.l10n.collectionAddedFamilyMarkers(
+                            notice.ids.length,
+                            notice.name!,
+                          ),
+                  ),
+                ),
+                if (notice.active)
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: InkColors.of(context).pale,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: InkRadii.controlRadius,
+                      ),
+                    ),
+                    onPressed: () {
+                      if (!mounted || notice.generation != _undoGeneration) {
+                        return;
+                      }
+                      _undoGeneration++;
+                      // The user pressed this notice's own button: it is the
+                      // one on screen, so removing the current one is safe.
+                      messenger.removeCurrentSnackBar();
+                      unawaited(
+                        scope.settings.removeExtraMarkerIds(notice.ids),
+                      );
+                    },
+                    child: Text(context.l10n.paletteUndoButton),
+                  ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+    unawaited(
+      snack.closed.whenComplete(() {
+        _noticeOpen = false;
+        final _FamilyNotice? last = _noticeDisposed ? null : _notice.value;
+        // The Undo ends with its notice.
+        if (last != null && last.generation == _undoGeneration) {
+          _undoGeneration++;
+        }
+        if (!mounted && !_noticeDisposed) {
+          _noticeDisposed = true;
+          _notice.dispose();
+        } else if (mounted) {
+          _notice.value = null;
+        }
+      }),
+    );
   }
 
   /// The ids of [colors] the user owns right now: the collection of the

@@ -22,13 +22,18 @@ const double defaultSamplingRadiusFraction = 0.02;
 /// Sampling and the loupe work on this same buffer. The loupe uploads these
 /// pixels once per photo; moving it never decodes the encoded photo again.
 final class SampledImage {
-  SampledImage({required this.width, required this.height, required this.rgba})
-    : assert(width > 0, 'width must be positive'),
-      assert(height > 0, 'height must be positive'),
-      assert(
-        rgba.length >= width * height * 4,
-        'rgba must hold four bytes per pixel',
-      );
+  SampledImage({
+    required this.width,
+    required this.height,
+    required this.rgba,
+    double? aspectRatio,
+  }) : assert(width > 0, 'width must be positive'),
+       assert(height > 0, 'height must be positive'),
+       assert(
+         rgba.length >= width * height * 4,
+         'rgba must hold four bytes per pixel',
+       ),
+       aspectRatio = aspectRatio ?? width / height;
 
   /// Width, in pixels.
   final int width;
@@ -39,8 +44,8 @@ final class SampledImage {
   /// Raw pixels, four bytes (red, green, blue, alpha) per pixel, row-major.
   final Uint8List rgba;
 
-  /// Width divided by height.
-  double get aspectRatio => width / height;
+  /// Aspect ratio of the displayed photo, before rounding the sampling size.
+  final double aspectRatio;
 
   /// Number of pixels in the buffer.
   int get pixelCount => width * height;
@@ -104,6 +109,7 @@ Future<SampledImage> decodePhoto(
         width: image.width,
         height: image.height,
         rgba: data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
+        aspectRatio: descriptor.width / descriptor.height,
       );
     } finally {
       image.dispose();
