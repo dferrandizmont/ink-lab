@@ -970,27 +970,37 @@ class _MatchPageState extends State<MatchPage> {
         liveRegion: true,
         label: _spokenSample(),
         excludeSemantics: true,
-        child: Row(
+        // A Wrap, not a Row: at the largest text sizes the label and the
+        // swatch with its hex do not fit side by side, so the swatch and the
+        // hex drop to a second line whole. Never cut, never overflowing.
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: InkSpacing.s8,
+          runSpacing: InkSpacing.s4,
           children: <Widget>[
             Text(
               AppTypography.caps(context.l10n.matchSampledLabel),
               style: AppTypography.capsStyle.copyWith(color: ink.fg2),
             ),
-            const SizedBox(width: InkSpacing.s8),
-            Container(
-              width: InkGeometry.smallIcon,
-              height: InkGeometry.smallIcon,
-              decoration: BoxDecoration(
-                color: sample,
-                borderRadius: InkRadii.xsRadius,
-                border: Border.all(color: ink.swatchEdge(sample)),
-              ),
-            ),
-            const SizedBox(width: InkSpacing.s8),
-            Text(
-              '#${colorIntToHex(colorInt)}',
-              key: const ValueKey<String>('match-sampled-hex'),
-              style: AppTypography.data.copyWith(color: ink.fg),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  width: InkGeometry.smallIcon,
+                  height: InkGeometry.smallIcon,
+                  decoration: BoxDecoration(
+                    color: sample,
+                    borderRadius: InkRadii.xsRadius,
+                    border: Border.all(color: ink.swatchEdge(sample)),
+                  ),
+                ),
+                const SizedBox(width: InkSpacing.s8),
+                Text(
+                  '#${colorIntToHex(colorInt)}',
+                  key: const ValueKey<String>('match-sampled-hex'),
+                  style: AppTypography.data.copyWith(color: ink.fg),
+                ),
+              ],
             ),
           ],
         ),
@@ -1041,47 +1051,70 @@ class _MatchPageState extends State<MatchPage> {
   /// Without a photo the empty state has the camera and gallery actions
   /// instead (see [MatchEmptyState]). Once there is a photo the row stays
   /// where it is whatever is sampled or fixed. When space is tight, white
-  /// balance moves to the end of its own line.
+  /// balance moves to the end of its own line; when the labels do not fit
+  /// whole side by side, camera and gallery stack, each the full width.
   Widget _buildActions() {
     return _Gutter(
       key: const ValueKey<String>('match-actions'),
       top: InkSpacing.block,
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final Widget buttons = Row(
-            children: <Widget>[
-              Expanded(
-                child: InkButton(
-                  key: const ValueKey<String>('match-camera'),
-                  label: context.l10n.matchCameraButton,
-                  icon: InkIcons.camera,
-                  variant: InkButtonVariant.smallSecondary,
-                  expand: true,
-                  onPressed: _picking
-                      ? null
-                      : () => _pickPhoto(PhotoSource.camera),
-                ),
-              ),
-              const SizedBox(width: InkSpacing.buttonGap),
-              Expanded(
-                child: InkButton(
-                  key: const ValueKey<String>('match-gallery'),
-                  label: context.l10n.matchGalleryButton,
-                  icon: InkIcons.image,
-                  variant: InkButtonVariant.smallSecondary,
-                  expand: true,
-                  onPressed: _picking
-                      ? null
-                      : () => _pickPhoto(PhotoSource.gallery),
-                ),
-              ),
-            ],
+          final bool sideBySide = _photoButtonsFitSideBySide(
+            context,
+            constraints.maxWidth,
           );
+          Widget photoButton({
+            required String key,
+            required String label,
+            required InkIcons icon,
+            required PhotoSource source,
+          }) => InkButton(
+            key: ValueKey<String>(key),
+            label: label,
+            icon: icon,
+            variant: InkButtonVariant.smallSecondary,
+            expand: true,
+            // A last resort when even a full-width button is too narrow: the
+            // label wraps at a word, it is never cut.
+            maxLines: sideBySide ? 1 : null,
+            onPressed: _picking ? null : () => _pickPhoto(source),
+          );
+          final Widget camera = photoButton(
+            key: 'match-camera',
+            label: context.l10n.matchCameraButton,
+            icon: InkIcons.camera,
+            source: PhotoSource.camera,
+          );
+          final Widget gallery = photoButton(
+            key: 'match-gallery',
+            label: context.l10n.matchGalleryButton,
+            icon: InkIcons.image,
+            source: PhotoSource.gallery,
+          );
+          // Side by side while both labels fit whole; one above the other,
+          // each the full width, when they do not (the largest text sizes).
+          final Widget buttons = sideBySide
+              ? Row(
+                  children: <Widget>[
+                    Expanded(child: camera),
+                    const SizedBox(width: InkSpacing.buttonGap),
+                    Expanded(child: gallery),
+                  ],
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    camera,
+                    const SizedBox(height: InkSpacing.buttonGap),
+                    gallery,
+                  ],
+                );
           final Widget balance = Align(
             alignment: AlignmentDirectional.centerEnd,
             child: WhiteBalanceAction(onPressed: _startWhite),
           );
-          if (_actionsFitOnOneLine(context, constraints.maxWidth)) {
+          if (sideBySide &&
+              _actionsFitOnOneLine(context, constraints.maxWidth)) {
             return Row(
               children: <Widget>[
                 Expanded(child: buttons),
@@ -1101,6 +1134,22 @@ class _MatchPageState extends State<MatchPage> {
         },
       ),
     );
+  }
+
+  /// Whether the camera and gallery labels fit whole in two equal-width
+  /// buttons side by side.
+  bool _photoButtonsFitSideBySide(BuildContext context, double width) {
+    final double camera = _buttonWidth(
+      context,
+      context.l10n.matchCameraButton,
+      withIcon: true,
+    );
+    final double gallery = _buttonWidth(
+      context,
+      context.l10n.matchGalleryButton,
+      withIcon: true,
+    );
+    return 2 * math.max(camera, gallery) + InkSpacing.buttonGap <= width;
   }
 
   /// Whether the two equal-width photo actions and white balance fit in a row.

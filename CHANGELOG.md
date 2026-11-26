@@ -19,6 +19,7 @@ and the App Store may get several at once, so they can skip numbers.
 - Match: the sample ring stays fully inside the photo when you drag to an edge.
 - Palette: the «Palette changed · Undo» and brand notices no longer cover Regenerate, Save or the Paint order heading.
 - Swatches: marker names end in an ellipsis instead of being cut at large text sizes.
+- Match: at the largest text sizes the camera and gallery buttons and the sampled colour row show whole, stacking instead of being cut.
 - Privacy policy (20 November 2026): support replies are now sent through Resend, with open and click tracking turned off (no tracking pixel, links left unchanged); Resend keeps a copy of each reply and its sending log for 30 days. Brevo, which added a tracking pixel and rewrote links, was only ever used for the owner's test emails; the policy explains what remains there and when it is deleted.
 
 ## 1.5.0 · 2026-11-19
